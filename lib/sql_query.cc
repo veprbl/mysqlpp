@@ -1,7 +1,7 @@
 #define MYSQLPP_NOT_HEADER
 #include "platform.h"
 
-#include "sql_query3.hh"
+#include "sql_query.h"
 
 #include "exceptions.h"
 

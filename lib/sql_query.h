@@ -263,4 +263,15 @@ public:
   mysql_query_define0(std::string, str);
 };  
 
+
+inline SQLString &SQLQueryParms::operator[] (const char *str) {
+  if (parent) return operator[] (parent->parsed_nums[str]);
+  throw; // only here temporary 
+}
+inline const SQLString &SQLQueryParms::operator[] (const char *str) const {
+  if (parent) return operator[] (parent->parsed_nums[str]);
+  throw; // only here temporary 
+}
+
+
 #endif

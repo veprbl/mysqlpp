@@ -7,9 +7,7 @@
 #include <coldata.h>
 #include <connection.h>
 #include <result1.hh>
-#include <sql_query1.hh>
-#include <sql_query2.hh>
-#include <sql_query3.hh>
+#include <sql_query.h>
 
 #include <mysql.h>
 

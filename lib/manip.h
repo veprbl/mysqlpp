@@ -6,7 +6,7 @@
 #include <datetime.h>
 #include <define_short.hh>
 #include <sql_string.h>
-#include <sql_query1.hh>
+#include <sql_query.h>
 #include <set.h>
 
 #include <mysql.h>

@@ -19,7 +19,7 @@
 #include <result1.hh>
 #include <row1.hh>
 #include <set.h>
-#include <sql_query1.hh>
+#include <sql_query.h>
 #include <sql_string.h>
 #include <stream2string.h>
 #include <tiny_int.h>
@@ -29,11 +29,9 @@
 #include <fields2.hh>
 #include <result2.hh>
 #include <row2.hh>
-#include <sql_query2.hh>
 
 #include <result3.hh>
 #include <row3.hh>
-#include <sql_query3.hh>
 
 #ifdef MYSQL_NO_SHORT_NAMES
 #include <undef_short.hh>

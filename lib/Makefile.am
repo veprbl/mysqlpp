@@ -12,7 +12,7 @@ lib_LTLIBRARIES=libmysqlpp.la
 libmysqlpp_la_LDFLAGS=-version-info 1:0:0
 
 libmysqlpp_la_SOURCES = coldata.cc connection.cc datetime.cc field_names.cc \
-	field_types.cc manip.cc query.cc result.cc  set.cc sql_query.cc \
+	field_types.cc manip.cc query.cc result.cc set.cc sql_query.cc \
 	type_info.cc vallist.cc string_util.cc
 
 include_HEADERS = \
@@ -40,7 +40,7 @@ include_HEADERS = \
 	row1.hh row2.hh row3.hh \
 	set.h \
 	sqlplus.hh \
-	sql_query1.hh sql_query2.hh sql_query3.hh \
+	sql_query.h \
 	sql_string.h \
 	stream2string.h \
 	tiny_int.h \
