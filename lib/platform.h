@@ -19,6 +19,8 @@
 #		pragma warning(disable: 4355)
 		// Disable whining about implicit conversions to bool
 #		pragma warning(disable: 4800)
+		// Call _snprintf() for VC++ version of snprintf() function
+#		define snprintf _snprintf
 #	endif
 #else
 	// If not Windows, we assume some sort of Unixy build environment,
