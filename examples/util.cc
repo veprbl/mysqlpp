@@ -43,17 +43,40 @@ print_stock_table(mysqlpp::Query& query)
 }
 
 
-void
+bool
 connect_sample_db(int argc, char *argv[], mysqlpp::Connection& con,
 				  const char *kdb)
 {
-	if (argc == 1)
-		con.connect(kdb);
-	else if (argc == 2)
-		con.connect(kdb, argv[1]);
-	else if (argc == 3)
-		con.connect(kdb, argv[1], argv[2]);
-	else if (argc >= 4)
-		con.connect(kdb, argv[1], argv[2], argv[3]);
+	if (argv[1][0] == '-') {
+		cout << "usage: " << argv[0] << " [host] [user] [password]" <<
+				endl;
+		cout << endl << "\tConnects to database \"" << kdb << 
+				"\" on localhost using your user" << endl;
+		cout << "\tname and no password by default." << endl << endl;
+		return false;
+	}
+	else {
+		bool success;
+		if (argc == 1) {
+			success = con.connect(kdb);
+		}
+		else if (argc == 2) {
+			success = con.connect(kdb, argv[1]);
+		}
+		else if (argc == 3) {
+			success = con.connect(kdb, argv[1], argv[2]);
+		}
+		else if (argc >= 4) {
+			success = con.connect(kdb, argv[1], argv[2], argv[3]);
+		}
+		else {
+			cerr << "Bad argument count " << argc << '!' << endl;
+			return false;
+		}
+
+		if (!success) {
+			cerr << "Database connection failed." << endl << endl;
+		}
+	}
 }
 
