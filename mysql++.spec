@@ -1,7 +1,7 @@
 Summary: C++ API for MySQL
 Name: mysql++
 Version: 1.7.11
-Release: 1
+Release: 2
 Copyright: LGPL
 Group: Development/Databases
 Source: http://tangentsoft.net/mysql++/releases/mysql++-1.7.11.tar.gz
@@ -32,7 +32,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc doc examples LGPL README
+%doc doc/*.ps doc/man-text LGPL README
 
 /usr/include/mysql++
 /usr/lib/libmysqlpp.a
@@ -40,6 +40,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/libmysqlpp.so.1.0.0
 
 %changelog
+* Tue Aug 18 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.10-2
+- Removed examples from documentation.
+- Limited documentation to just the generated files, not the sources.
+
 * Tue Aug 17 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.10-1
 - Updated for v1.7.10
 
