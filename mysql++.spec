@@ -36,17 +36,18 @@ mkdir -p $RPM_BUILD_ROOT/usr/src/mysql++/examples
 install -m640 examples/*.cc examples/*.h $RPM_BUILD_ROOT/usr/src/mysql++/examples
 install -m640 examples/Makefile.simple $RPM_BUILD_ROOT/usr/src/mysql++/examples/Makefile
 cp examples/README doc/README.examples
+cp LGPL doc/LICENSE
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-rm doc/README.examples
+rm -f doc/README.examples doc/LICENSE
 
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root)
-%doc LGPL doc/README
+%doc doc/LICENSE doc/README
 
 /usr/lib/libmysqlpp.*
 
