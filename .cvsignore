@@ -13,3 +13,6 @@ stamp-h1 stamp-h
 ## Visual Studio generated stuff
 *.suo *.ncb
 Debug Release
+
+## Other generated files
+mysql++-*.gz
