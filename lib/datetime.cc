@@ -1,6 +1,5 @@
-#ifdef __WIN32__
-#include <winsock.h>
-#endif
+#define MYSQLPP_NOT_HEADER
+#include "platform.h"
 
 #include "datetime.h"
 

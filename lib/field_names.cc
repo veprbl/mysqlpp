@@ -1,8 +1,8 @@
-#ifdef __WIN32__
-#include <winsock.h>
-#endif
+#define MYSQLPP_NOT_HEADER
+#include "platform.h"
 
 #include "field_names3.hh"
+
 #include "result2.hh"
 
 void FieldNames::init(const ResUse *res) {

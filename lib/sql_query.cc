@@ -1,8 +1,8 @@
-#ifdef __WIN32__
-#include <winsock.h>
-#endif
+#define MYSQLPP_NOT_HEADER
+#include "platform.h"
 
 #include "sql_query3.hh"
+
 #include "exceptions.hh"
 
 using namespace std;
