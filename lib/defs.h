@@ -18,7 +18,7 @@ typedef unsigned long long ulonglong;
 typedef long long longlong;
 #endif
 
-typedef MYSQL_FIELD MysqlField;
+typedef MYSQL_FIELD Field;
 typedef const char cchar;
 typedef longlong longgint;
 #ifndef uint
