@@ -116,7 +116,7 @@ class BadFieldName {
 public:
   std::string error;
 
-  BadFieldName(const char *bad)
+  BadFieldName(const char *bad_field)
   {
       error = "Unknown field name: ";
       error += bad_field;
