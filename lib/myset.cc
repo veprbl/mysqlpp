@@ -1,4 +1,4 @@
-#include "set.h"
+#include "myset.h"
 
 using namespace mysqlpp;
 
