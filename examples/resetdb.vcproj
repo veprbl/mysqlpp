@@ -135,9 +135,6 @@
 				<Tool
 					Name="VCCLCompilerTool"
 					AdditionalIncludeDirectories=""
-					StringPooling="TRUE"
-					RuntimeLibrary="0"
-					EnableFunctionLevelLinking="TRUE"
 					UsePrecompiledHeader="0"/>
 			</FileConfiguration>
 		</File>
