@@ -43,6 +43,9 @@ New Feature Requests
 	  independent.  This is considered a new feature because it breaks
 	  the ABI.
 
+	o Add a way to temporarily disable exceptions to various classes.
+	  (Make it an interface?)  This breaks ABI.
+
 
 Bug Fix/Maintenance Items
 -------------------------
