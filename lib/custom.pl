@@ -10,6 +10,11 @@ print OUT0 << "---";
 #ifndef __sql_custom_h__
 #define __sql_custom_h__
 
+#include <defs.hh>
+#include <tiny_int.h>
+
+#include <string>
+
 enum sql_dummy_type {sql_dummy};
 enum sql_cmp_type {sql_use_compare};
 
