@@ -1,14 +1,15 @@
 #ifndef __sql_query_1_hh
 #define __sql_query_1_hh
 
+#include <custom.hh>
+#include <define_short.hh>
+#include <sql_query0.hh>
+#include <sql_string1.hh>
+#include <tiny_int.h>
+
 #include <sstream>
 #include <vector>
 #include <map>
-#include "define_short.hh"
-#include "sql_query0.hh"
-#include "sql_string1.hh"
-#include "tiny_int1.hh"
-#include "custom.hh"
 
 class Query;
 class SQLQuery;

@@ -1,16 +1,16 @@
 #ifndef __datetime1_hh__
 #define __datetime1_hh__
 
+#include <coldata.h>
+#include <defs.hh>
+#include <define_short.hh>
+#include <stream2string1.hh>
+#include <stream2string2.hh>
+#include <tiny_int.h>
+
 #include <string>
 #include <sstream>
 #include <iostream>
-
-#include "defs.hh"
-#include "define_short.hh"
-#include "coldata.h"
-#include "stream2string1.hh"
-#include "stream2string2.hh"
-#include "tiny_int1.hh"
 
 struct mysql_dt_base {
   virtual std::ostream& out_stream(std::ostream&) const = 0;
