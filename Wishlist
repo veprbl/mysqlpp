@@ -3,6 +3,14 @@ Patches for any of these thoughtfully considered!
 New Feature Requests
 --------------------
 
+	o Transaction support.  Considering block-level semantics: create
+	  a "transaction object" on the stack, which takes a ref to the
+	  Connection object (?) as a ctor parameter.  Transaction object's
+	  ctor calls a function on the conn telling it to tell the server to
+	  begin a transaction set.  When the transaction object is destroyed,
+	  it tells the conn object to commit everything.  Conn object in
+	  this situation must be created in a higher scope, or on the heap.
+	
 	o User-settable floating-point comparison precisions?  Something
 	  like this: http://lists.mysql.com/plusplus/3984
 	
