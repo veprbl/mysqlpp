@@ -5,7 +5,7 @@
     <VERSION value="BCB.06.00"/>
     <PROJECT value="P:\mtkProject\StableBins\mysqlpp.lib"/>
     <OBJFILES value="field_types.obj connection.obj datetime.obj field_names.obj coldata.obj 
-      manip.obj query.obj result.obj set.obj sql_query.obj string_util.obj 
+      manip.obj query.obj result.obj set.obj sql_query.obj sql_string.obj string_util.obj 
       type_info.obj vallist.obj"/>
     <RESFILES value=""/>
     <DEFFILE value=""/>
@@ -51,6 +51,7 @@
       <FILE FILENAME="result.cpp" FORMNAME="" UNITNAME="result.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="set.cpp" FORMNAME="" UNITNAME="set.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="sql_query.cpp" FORMNAME="" UNITNAME="sql_query.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="sql_string.cpp" FORMNAME="" UNITNAME="sql_string.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="string_util.cpp" FORMNAME="" UNITNAME="string_util.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="type_info.cpp" FORMNAME="" UNITNAME="type_info.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="vallist.cpp" FORMNAME="" UNITNAME="vallist.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
