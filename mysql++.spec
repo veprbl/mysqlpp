@@ -4,7 +4,7 @@ Version: 1.7.21
 Release: 1
 Copyright: LGPL
 Group: Development/Databases
-Requires: libmysqlclient
+Requires: MySQL-shared
 Source: http://tangentsoft.net/mysql++/releases/mysql++-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-buildroot
 %description
