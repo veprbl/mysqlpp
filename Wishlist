@@ -40,3 +40,5 @@ Patches for any of these thoughtfully considered!
 	  based systems, and still have the necessary defines on other
 	  systems.  Perhaps put them in mysql++-windows.hh, and make editing
 	  that a necessary step in building the library?
+
+	o Fix: "coldata4.hh:11: warning: unused parameter `int dummy'".
