@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mysqlclient.lib wsock32.lib"
+				AdditionalDependencies="libmysql.lib wsock32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="c:\Program Files\mysql\lib\debug"
@@ -81,7 +81,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mysqlclient.lib wsock32.lib"
+				AdditionalDependencies="libmysql.lib wsock32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="c:\Program Files\mysql\lib\opt"
@@ -118,15 +118,15 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\dummy.cpp">
+		</File>
+		<File
 			RelativePath=".\simple1.cc">
 			<FileConfiguration
 				Name="Debug|Win32">
 				<Tool
 					Name="VCCLCompilerTool"
 					AdditionalIncludeDirectories=""
-					MinimalRebuild="TRUE"
-					BasicRuntimeChecks="3"
-					RuntimeLibrary="1"
 					UsePrecompiledHeader="0"
 					WarningLevel="2"/>
 			</FileConfiguration>
@@ -136,7 +136,6 @@
 					Name="VCCLCompilerTool"
 					AdditionalIncludeDirectories=""
 					StringPooling="TRUE"
-					RuntimeLibrary="0"
 					EnableFunctionLevelLinking="TRUE"
 					UsePrecompiledHeader="0"/>
 			</FileConfiguration>

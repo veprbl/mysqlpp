@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mysqlclient.lib wsock32.lib"
+				AdditionalDependencies="libmysql.lib wsock32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="c:\Program Files\mysql\lib\debug"
@@ -81,7 +81,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mysqlclient.lib wsock32.lib"
+				AdditionalDependencies="libmysql.lib wsock32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="c:\Program Files\mysql\lib\opt"
@@ -117,6 +117,9 @@
 			RelativePath="System.Data.dll"/>
 	</References>
 	<Files>
+		<File
+			RelativePath=".\dummy.cpp">
+		</File>
 		<File
 			RelativePath=".\updel_x_.cc">
 		</File>
