@@ -1,14 +1,15 @@
 #ifndef __result1_hh__
 #define __result1_hh__
 
+#include <row1.hh>
+#include <resiter1.hh>
+
 #include <define_short.hh>
 #include <exceptions.hh>
 #include <field_names1.hh>
 #include <field_types1.hh>
 #include <fields1.hh>
 #include <mysql++-windows.hh>
-#include <resiter1.hh>
-#include <row1.hh>
 
 #include <mysql.h>
 
