@@ -11,6 +11,7 @@ int
 main(int argc, char *argv[])
 {
 	try {
+		// Connect to the sample database
 		mysqlpp::Connection con(mysqlpp::use_exceptions);
 		if (!connect_sample_db(argc, argv, con)) {
 			return 1;
@@ -19,38 +20,8 @@ main(int argc, char *argv[])
 		// Create a query object that is bound to con.
 		mysqlpp::Query query = con.query();
 
-		// You can write to the query object like you would any other
-		// ostream.
-		query << "select * from stock";
-
-		// Display the query string.
-		cout << "Query: " << query.preview() << endl;
-
-		// Execute the query and save the results
-		mysqlpp::Result res = query.store();
-		cout << "Records Found: " << res.size() << endl << endl;
-
-		// Display the result table header.
-		cout.setf(ios::left);
-		cout << setw(17) << "Item" <<
-				setw(4) << "Num" <<
-				setw(7) << "Weight" <<
-				setw(7) << "Price" << "Date" << endl << endl;
-
-		// Use the Result class's read-only random access iterator to 
-		// step through the results.
-		mysqlpp::Row row;
-		mysqlpp::Result::iterator i;
-		for (i = res.begin(); i != res.end(); i++) {
-			row = *i;
-			// Note that you can use either the column index or name
-			// to retrieve the data.
-			cout << setw(17) << row[0].c_str() <<
-					setw(4) << row[1].c_str() <<
-					setw(7) << row.lookup_by_name("weight").c_str() <<
-					setw(7) << row[3].c_str() <<
-					row[4] << endl;
-		}
+		// Print out the stock table
+		print_stock_table(query);
 	}
 	catch (mysqlpp::BadQuery& er) {
 		// handle any connection or query errors that may come up
