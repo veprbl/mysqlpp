@@ -25,7 +25,7 @@ void SQLQuery::reset() {
 
 char * SQLQuery::preview_char() {
   *this << std::ends;
-  uint length = rdbuf()->str().size();
+  size_t length = rdbuf()->str().size();
   char *s = new char[length + 1];
   get(s, length, '\0'); 
   seekg (0,std::ios::beg);
