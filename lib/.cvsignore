@@ -1,5 +1,5 @@
 *.la *.lo
 .deps .libs
-Makefile
-custom-macros.hh custom.hh
+Makefile Makefile.in
+custom-macros.hh custom.hh exceptions.hh
 stamp-h2
