@@ -9,6 +9,7 @@
 #include "define_short.hh"
 #include "coldata.h"
 #include "stream2string1.hh"
+#include "stream2string2.hh"
 #include "tiny_int1.hh"
 
 struct mysql_dt_base {
@@ -139,5 +140,22 @@ struct DateTime : public mysql_date, public mysql_time,
 
 inline std::ostream& operator << (std::ostream& s, const DateTime& d)
                                                    {return d.out_stream(s);}
+
+
+inline mysql_dt_base::operator std::string () {
+  return stream2string<std::string>(*this);
+}
+
+inline Date::Date (const ColData &str) {convert(str.c_str());}
+inline Date::Date (const std::string &str)  {convert(str.c_str());}
+
+inline Time::Time (const ColData &str) {convert(str.c_str());}
+inline Time::Time (const std::string &str)  {convert(str.c_str());}
+
+inline DateTime::DateTime (const ColData &str) {convert(str.c_str());}
+inline DateTime::DateTime (const std::string &str) {convert(str.c_str());}
+
+
+
 #endif //__datetime1_hh__
 

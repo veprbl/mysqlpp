@@ -1,8 +1,8 @@
-#include <platform.h>
+#include "platform.h"
 
-#include <datetime1.hh>
-#include <set1.hh>
-#include <type_info3.hh>
+#include "datetime.h"
+#include "set1.hh"
+#include "type_info3.hh"
 
 #include <mysql.h>
 

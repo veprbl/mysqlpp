@@ -25,7 +25,7 @@ include_HEADERS = \
 	custom-macros.hh \
 	defs.hh \
 	define_short.hh \
-	datetime1.hh datetime2.hh datetime3.hh \
+	datetime.h \
 	exceptions.hh \
 	field_names1.hh field_names2.hh field_names3.hh \
 	field_types1.hh field_types2.hh field_types3.hh \

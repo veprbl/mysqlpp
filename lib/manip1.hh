@@ -3,7 +3,7 @@
 
 #include <platform.h>
 
-#include <datetime1.hh>
+#include <datetime.h>
 #include <define_short.hh>
 #include <sql_string1.hh>
 #include <sql_query1.hh>

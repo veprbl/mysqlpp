@@ -8,7 +8,7 @@
 #include <connection.h>
 #include <const_string.h>
 #include <convert.h>
-#include <datetime1.hh>
+#include <datetime.h>
 #include <field_names1.hh>
 #include <field_types1.hh>
 #include <fields1.hh>
@@ -26,7 +26,6 @@
 #include <type_info1.hh>
 #include <vallist1.hh>
 
-#include <datetime2.hh>
 #include <field_names2.hh>
 #include <field_types2.hh>
 #include <fields2.hh>
@@ -42,7 +41,6 @@
 #include <type_info2.hh>
 #include <vallist2.hh>
 
-#include <datetime3.hh>
 #include <field_names3.hh>
 #include <field_types3.hh>
 #include <manip3.hh>
