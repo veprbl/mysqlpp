@@ -24,10 +24,14 @@ sql_create_5 (stock,		// struct name,
 // defined as well methods to help populate the class from a mysql row
 // among other things that I'll get too in a latter example
 
-int main () {
+int main (int argc, char *argv[]) {
   try {				// its in one big try block
-    Connection con (use_exceptions);
-    con.connect ("mysql_cpp_data");
+	Connection con(use_exceptions);
+	if (argc == 1) connection.connect("mysql_cpp_data");
+	else if (argc == 2) connection.connect("mysql_cpp_data",argv[1]);
+	else if (argc == 3) connection.connect("mysql_cpp_data",argv[1],argv[2]);
+	else if (argc >= 4) connection.connect("mysql_cpp_data",argv[1],argv[2],argv[3]);
+
     Query query = con.query ();
     query << "select * from stock";
 

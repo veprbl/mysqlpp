@@ -4,7 +4,7 @@
 
 using namespace std;
 
-int main() {
+int main (int argc, char *argv[]) {
   // The full format for the Connection constructor is
   // Connection(cchar *db, cchar *host="", 
   //            cchar *user="", cchar *passwd="") 
@@ -12,7 +12,12 @@ int main() {
   // the local machine or you database username is not the same as your
   // login name, etc..
   try {
-		Connection con("mysql_cpp_data");
+		Connection con(use_exceptions);
+		if (argc == 1) connection.connect("mysql_cpp_data");
+		else if (argc == 2) connection.connect("mysql_cpp_data",argv[1]);
+		else if (argc == 3) connection.connect("mysql_cpp_data",argv[1],argv[2]);
+		else if (argc >= 4) connection.connect("mysql_cpp_data",argv[1],argv[2],argv[3]);
+
 		Query query = con.query();
 		// This creates a query object that is bound to con.
 

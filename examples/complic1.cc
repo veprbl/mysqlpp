@@ -5,16 +5,14 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
   try { // its in one big try block
+	Connection con(use_exceptions);
+	if (argc == 1) connection.connect("mysql_cpp_data");
+	else if (argc == 2) connection.connect("mysql_cpp_data",argv[1]);
+	else if (argc == 3) connection.connect("mysql_cpp_data",argv[1],argv[2]);
+	else if (argc >= 4) connection.connect("mysql_cpp_data",argv[1],argv[2],argv[3]);
 
-    Connection con(use_exceptions);
-    con.connect("mysql_cpp_data");
-    // Here I broke making the connection into two calls.
-    // The first one creates the Connection object with the 
-    // use exceptions option turned on and the second one
-    // makes the connection
-    
     Query query = con.query();
     
     query << "select * from stock";

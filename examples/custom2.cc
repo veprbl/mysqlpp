@@ -14,11 +14,14 @@ using namespace std;
 sql_create_5(stock, 1, 5, string, item, longlong, num, 
 	     double, weight, double, price, Date, sdate)
 
-int main() {
+int main(int argc, char *argv[]) {
   try { // its in one big try block
+	Connection con(use_exceptions);
+	if (argc == 1) connection.connect("mysql_cpp_data");
+	else if (argc == 2) connection.connect("mysql_cpp_data",argv[1]);
+	else if (argc == 3) connection.connect("mysql_cpp_data",argv[1],argv[2]);
+	else if (argc >= 4) connection.connect("mysql_cpp_data",argv[1],argv[2],argv[3]);
 
-    Connection con(use_exceptions);
-    con.connect("mysql_cpp_data");
     Query query = con.query();
 
     stock row;
