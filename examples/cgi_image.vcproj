@@ -70,6 +70,7 @@
 			ManagedExtensions="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\sqlplusint, c:\program files\mysql\include"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="0"
@@ -116,6 +117,9 @@
 			RelativePath="System.Data.dll"/>
 	</References>
 	<Files>
+		<File
+			RelativePath=".\bla.cpp">
+		</File>
 		<File
 			RelativePath=".\cgi_image.cc">
 			<FileConfiguration
