@@ -8,7 +8,7 @@ noinst_PROGRAMS = resetdb simple1 custom1 custom2 custom3 custom4 \
 
 noinst_HEADERS = util.hh
 
-simple1_SOURCES = simple1.cc
+simple1_SOURCES = simple1.cc util.cc
 simple1_DEPENDENCIES = $(SQLPLUSLIBS)
 
 sinisa_ex_SOURCES = sinisa_ex.cc
@@ -20,7 +20,7 @@ cgi_image_DEPENDENCIES = $(SQLPLUSLIBS)
 resetdb_SOURCES = resetdb.cc util.cc
 resetdb_DEPENDENCIES = $(SQLPLUSLIBS)
 
-custom1_SOURCES = custom1.cc
+custom1_SOURCES = custom1.cc util.cc
 custom1_DEPENDENCIES = $(SQLPLUSLIBS)
 
 custom2_SOURCES = custom2.cc util.cc
@@ -29,13 +29,13 @@ custom2_DEPENDENCIES = $(SQLPLUSLIBS)
 custom3_SOURCES = custom3.cc util.cc
 custom3_DEPENDENCIES = $(SQLPLUSLIBS)
 
-custom4_SOURCES = custom4.cc
+custom4_SOURCES = custom4.cc util.cc
 custom4_DEPENDENCIES = $(SQLPLUSLIBS)
 
-complic1_SOURCES = complic1.cc
+complic1_SOURCES = complic1.cc util.cc
 complic1_DEPENDENCIES = $(SQLPLUSLIBS)
 
-fieldinf1_SOURCES = fieldinf1.cc
+fieldinf1_SOURCES = fieldinf1.cc util.cc
 fieldinf1_DEPENDENCIES = $(SQLPLUSLIBS)
 
 updel_ex_SOURCES = updel_x_.cc
