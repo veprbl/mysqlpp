@@ -12,9 +12,11 @@
 	o Renamed sinisa_ex example to dbinfo.
 
 	o Several Standard C++ syntax fixes to quash errors emitted by
-	  GCC 3.4 and Borland C++ Builder 6.
+	  GCC 3.4 and Borland C++ Builder 6.  Thanks to Steffen Schumacher
+	  and Totte Karlsson for their testing and help with these.
 
 	o Added proper #includes for BCBuilder, plus project files for same.
+	  Thanks to Tottle Karlsson for these.
 
 
 1.7.12, 2004.08.19
