@@ -5,9 +5,16 @@
 #include <vector>
 #include <deque>
 #include <list>
-#include <ext/slist>
 #include <set>
 #include <map>
+
+#ifdef HAVE_EXT_SLIST
+#	include <ext/slist>
+#else
+#	ifdef HAVE_STD_SLIST
+#		include <slist>
+#	endif
+#endif
 
 #include "define_short.hh"
 #include "exceptions.hh"
