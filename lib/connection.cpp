@@ -174,19 +174,28 @@ string Connection::info()
 ResNSel Connection::execute(const string& str, bool throw_excptns)
 {
 	Success = false;
-	if (lock())
-		if (throw_excptns)
+	if (lock()) {
+		if (throw_excptns) {
 			throw BadQuery(error());
-	else
-	return ResNSel();
+		}
+		else {
+			return ResNSel();
+		}
+	}
+
 	Success = !mysql_query(&mysql, str.c_str());
 	unlock();
-	if (!Success)
-		if (throw_excptns)
+	if (Success) {
+		return ResNSel(this);
+	}
+	else {
+		if (throw_excptns) {
 			throw BadQuery(error());
-	else
-	return ResNSel();
-	return ResNSel(this);
+		}
+		else {
+			return ResNSel();
+		}
+	}
 }
 
 bool Connection::exec(const string& str)
@@ -202,44 +211,60 @@ Result Connection::store(const string& str, bool throw_excptns)
 	Success = false;
 
 	if (lock()) {
-		if (throw_excptns)
+		if (throw_excptns) {
 			throw BadQuery(error());
-		else
-		return Result();
+		}
+		else {
+			return Result();
+		}
 	}
 
 	Success = !mysql_query(&mysql, str.c_str());
 	unlock();
 
-	if (!Success) {
-		if (throw_excptns)
-			throw BadQuery(error());
-		else
-		return Result();
+	if (Success) {
+		MYSQL_RES* res = mysql_store_result(&mysql);
+		if (res) {
+			return Result(res);
+		}
+		else {
+			return Result();
+		}
 	}
-
-	MYSQL_RES *res = mysql_store_result(&mysql);
-	if (res)
-		return Result(res);
-	else
-		return Result();
+	else {
+		if (throw_excptns) {
+			throw BadQuery(error());
+		}
+		else {
+			return Result();
+		}
+	}
 }
 
 ResUse Connection::use(const string& str, bool throw_excptns)
 {
 	Success = false;
-	if (lock())
-		if (throw_excptns)
+	if (lock()) {
+		if (throw_excptns) {
 			throw BadQuery(error());
-	else
-	return ResUse();
+		}
+		else {
+			return ResUse();
+		}
+	}
+
 	Success = !mysql_query(&mysql, str.c_str());
-	if (!Success)
-		if (throw_excptns)
+	if (Success) {
+		return ResUse(mysql_use_result(&mysql), this);
+	}
+	else {
+		if (throw_excptns) {
 			throw BadQuery(error());
-	else
-	return ResUse();
-	return ResUse(mysql_use_result(&mysql), this);
+		}
+		else {
+			return ResUse();
+		}
+	}
 }
 
 Query Connection::query()
