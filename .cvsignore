@@ -1,0 +1,5 @@
+Makefile
+config.*
+libtool ltconfig
+stamp-h1 stamp-h
+install-sh

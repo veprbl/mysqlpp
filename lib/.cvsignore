@@ -1,0 +1,5 @@
+*.la *.lo
+.deps .libs
+Makefile
+custom-macros.hh custom.hh
+stamp-h2
