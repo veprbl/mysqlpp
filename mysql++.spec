@@ -31,10 +31,10 @@ make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/lib
 mkdir -p $RPM_BUILD_ROOT/usr/include
-mkdir -p -m666 $RPM_BUILD_ROOT/usr/src/mysql++/examples
+mkdir -p $RPM_BUILD_ROOT/usr/src/mysql++/examples
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-install -m666 examples/*.cc examples/*.h examples/README $RPM_BUILD_ROOT/usr/src/mysql++/examples
-install -m666 examples/Makefile.simple $RPM_BUILD_ROOT/usr/src/mysql++/examples/Makefile
+install -m640 examples/*.cc examples/*.h examples/README $RPM_BUILD_ROOT/usr/src/mysql++/examples
+install -m640 examples/Makefile.simple $RPM_BUILD_ROOT/usr/src/mysql++/examples/Makefile
 
 %clean
 rm -rf $RPM_BUILD_ROOT
