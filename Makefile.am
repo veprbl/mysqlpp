@@ -6,4 +6,4 @@ SUBDIRS = sqlplusint examples
 rpm: dist
 	cp $(distdir).tar.gz /usr/src/redhat/SOURCES
 	cp mysql++.spec /usr/src/redhat/SPECS
-	( cd /usr/src/redhat/SPECS ; rpmbuild -bb mysql++.spec )
+	( cd /usr/src/redhat/SPECS ; rpmbuild -ba mysql++.spec )
