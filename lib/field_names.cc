@@ -7,16 +7,16 @@
 
 namespace mysqlpp {
 
-void FieldNames::init(const ResUse *res)
+void FieldNames::init(const ResUse * res)
 {
-  int num = res->num_fields();
-  reserve(num);
-  for (int i = 0; i < num; i++) {
+	int num = res->num_fields();
+	reserve(num);
+
+	for (int i = 0; i < num; i++) {
 		std::string p(res->fields()[i].name);
 		str_to_lwr(p);
 		push_back(p);
-  }
+	}
 }
 
-}; // end namespace mysqlpp
-
+};							// end namespace mysqlpp
