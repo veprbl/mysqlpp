@@ -29,14 +29,10 @@ Bug Fix/Maintenance Items
 	o Factor tests out of configure.in into individual files in a config
 	  subdir.
 
-	o Fix: "coldata4.hh:11: warning: unused parameter `int dummy'".
-
 	o SQLQuery shouldn't derive from std::stringstream.  It should
 	  have a private std::stringstream member, and add the function
 	  definitions it needs to look like a stringstream.  The Standard
 	  C++ library classes were not designed to be subclassed.
-
-	o Rename *.cc to *.cpp.
 
 	o Visual C++ project files should build a DLL version of the library
 	  only, for LGPL reasons.
