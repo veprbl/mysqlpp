@@ -18,7 +18,7 @@ extern bool dont_quote_auto;
 
 class SQLQueryParms;
 
-enum quote_type0 {mysql_quote};
+enum quote_type0 {quote};
 
 struct quote_type1 {
   std::ostream *ostr;
@@ -92,7 +92,7 @@ inline std::ostream& operator << (quote_type1 o, const Set<ST> &in) {
 
 // quote only manipulator
 
-enum quote_only_type0 {mysql_quote_only};
+enum quote_only_type0 {quote_only};
 
 struct quote_only_type1 {
   std::ostream *ostr;
@@ -152,7 +152,7 @@ inline std::ostream& operator << (quote_only_type1 o, const Set<ST> &in) {
 
 // quote double (") only manipulator
 
-enum quote_double_only_type0 {mysql_quote_double_only};
+enum quote_double_only_type0 {quote_double_only};
 struct quote_double_only_type1 {
   std::ostream *ostr;
   quote_double_only_type1(std::ostream *o) : ostr(o) {}
