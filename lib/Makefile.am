@@ -40,7 +40,7 @@ include_HEADERS = \
 	set1.hh set2.hh set3.hh \
 	sqlplus.hh \
 	sql_query0.hh sql_query1.hh sql_query2.hh sql_query3.hh \
-	sql_string1.hh sql_string2.hh sql_string3.hh \
+	sql_string.h \
 	stream2string1.hh stream2string2.hh stream2string3.hh \
 	tiny_int.h \
 	type_info1.hh type_info2.hh type_info3.hh \
