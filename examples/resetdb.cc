@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <mysql++.hh>
 
@@ -11,7 +10,7 @@ int main (int argc, char *argv[]) {
     if (argc == 1) connection.connect("");
     else if (argc == 2) connection.connect("",argv[1]);
     else if (argc == 3) connection.connect("",argv[1],argv[2]);
-    else if (argc <= 4) connection.connect("",argv[1],argv[2],argv[3]);
+    else if (argc >= 4) connection.connect("",argv[1],argv[2],argv[3]);
     // create a new object and connect based on any (if any) arguments
     // passed to main();
     
@@ -79,23 +78,4 @@ int main (int argc, char *argv[]) {
 #endif		
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
