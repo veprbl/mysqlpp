@@ -32,7 +32,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc doc/*.ps doc/man-text LGPL README
+%doc doc/*.ps doc/man-text/*.txt LGPL README
 
 /usr/include/mysql++
 /usr/lib/libmysqlpp.a
