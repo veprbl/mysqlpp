@@ -8,8 +8,8 @@
 
 // base.h           
 #define BadQuery    MysqlBadQuery
-#define MysqlCon    MysqlConnection
-#define Connection  MysqlConnection
+//#define MysqlCon    MysqlConnection
+//#define Connection  MysqlConnection
 
 // result.h
 #define ResNSel     MysqlResNSel
@@ -30,7 +30,7 @@
 #define FieldNames  MysqlFieldNames
 
 //query.h
-#define Query       MysqlQuery
+//#define Query       MysqlQuery
 
 //string.h
 #define BadConversion  MysqlBadConversion
