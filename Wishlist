@@ -3,11 +3,14 @@ Patches for any of these thoughtfully considered!
 New Feature Requests
 --------------------
 
-	o Look through my own code for uses of hand-rolled SQL queries, and
-	  try to reduce them to API features.
-
+	o User-settable floating-point comparison precisions?  Something
+	  like this: http://lists.mysql.com/plusplus/3984
+	
 	o Overload SQLQuery::insert() to accept a pair of STL iterators
 	  for mass insertion of a range within a container.
+
+	o Look through my own code for uses of hand-rolled SQL queries, and
+	  try to reduce them to API features.
 
 	o Get PDF documentation generation working.
 
