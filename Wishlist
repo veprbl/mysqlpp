@@ -3,8 +3,8 @@ Patches for any of these thoughtfully considered!
 New Feature Requests
 --------------------
 
-	o Look through my own code for uses of custom SQL queries, and try
-	  to reduce them to API features.
+	o Look through my own code for uses of hand-rolled SQL queries, and
+	  try to reduce them to API features.
 
 	o Overload SQLQuery::insert() to accept a pair of STL iterators
 	  for mass insertion of a range within a container.
@@ -12,6 +12,10 @@ New Feature Requests
 	o Detect thread-safety libraries on systems where this is
 	  appropritate.  (e.g., add -pthread when building on Linux.)
 	  Without this, using MySQL++ in a threaded program causes crashes.
+
+	o None of the 'custom' examples do an insert.  Make one that does.
+
+	o Get PDF documentation generation working.
 
 
 Bug Fix/Maintenance Items
