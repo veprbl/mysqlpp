@@ -11,7 +11,7 @@ print OUT0 << "---";
 #ifndef __mysqlpp_custom_h__
 #define __mysqlpp_custom_h__
 
-#include <defs.hh>
+#include <defs.h>
 #include <tiny_int.h>
 
 #include <string>
@@ -300,16 +300,16 @@ foreach $i (1..26) {
   struct NAME { 
 $defs 
     NAME () {} 
-    NAME (const MysqlRow &row);
+    NAME (const Row &row);
     sql_compare_define_##CMP(NAME, $parmC)
   }; 
 
   template <sql_dummy_type dummy> 
-    void populate_##NAME (NAME *s, const MysqlRow &row) { 
+    void populate_##NAME (NAME *s, const Row &row) { 
 $popul 
   } 
 
-  inline NAME::NAME (const MysqlRow &row) 
+  inline NAME::NAME (const Row &row) 
     {populate_##NAME<sql_dummy>(this, row);} 
 
   sql_COMPARE__##CMP(NAME, $parmc )
@@ -422,8 +422,8 @@ $enums
   struct NAME { 
 $defs 
     NAME () {} 
-    NAME (const MysqlRow &row);
-    void set (const MysqlRow &row);
+    NAME (const Row &row);
+    void set (const Row &row);
     sql_compare_define_##CMP(NAME, $parmC)
     sql_construct_define_##CONTR(NAME, $parmC)
     static char *names[];
@@ -782,13 +782,13 @@ $cus_equal_list
   }
 
   template <sql_dummy_type dummy> 
-  void populate_##NAME (NAME *s, const MysqlRow &row) { 
+  void populate_##NAME (NAME *s, const Row &row) { 
 $popul
   } 
 
-  inline NAME::NAME (const MysqlRow &row) 
+  inline NAME::NAME (const Row &row) 
                                         {populate_##NAME<sql_dummy>(this, row);}
-  inline void NAME::set (const MysqlRow &row)
+  inline void NAME::set (const Row &row)
                                         {populate_##NAME<sql_dummy>(this, row);}
 
   sql_COMPARE__##CMP(NAME, $parmc )
