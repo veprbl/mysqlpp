@@ -1,12 +1,5 @@
 #ifndef __query1_hh__
 #define __query1_hh__
-#ifdef __WIN32__
-#include <Windows32/Base.h>
-#include <Windows32/Defines.h>
-#include <Windows32/Structures.h>
-#include <winsock.h>
-#define errno WSAGetLastError()
-#endif
 #include <mysql.h>
 #include "define_short.hh"
 #include "sql_query1.hh"
