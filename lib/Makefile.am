@@ -16,7 +16,7 @@ libmysqlpp_la_SOURCES = coldata.cc connection.cc datetime.cc field_names.cc \
 	type_info.cc vallist.cc string_util.cc
 
 include_HEADERS = \
-	coldata1.hh coldata2.hh coldata3.hh coldata4.hh \
+	coldata.h \
 	compare1.hh compare2.hh compare3.hh \
 	connection0.hh connection1.hh connection2.hh connection3.hh \
 	const_string1.hh const_string2.hh const_string3.hh \
@@ -31,13 +31,15 @@ include_HEADERS = \
 	field_types1.hh field_types2.hh field_types3.hh \
 	fields1.hh fields2.hh \
 	manip1.hh manip2.hh manip3.hh \
-	mysql++.hh mysql++-windows.hh \
+	mysql++.h mysql++.hh \
 	null1.hh null2.hh null3.hh \
+	platform.h \
 	query1.hh query2.hh query3.hh \
 	resiter1.hh \
 	result1.hh result2.hh result3.hh \
 	row1.hh row2.hh row3.hh \
 	set1.hh set2.hh set3.hh \
+	sqlplus.hh \
 	sql_query0.hh sql_query1.hh sql_query2.hh sql_query3.hh \
 	sql_string1.hh sql_string2.hh sql_string3.hh \
 	stream2string1.hh stream2string2.hh stream2string3.hh \
