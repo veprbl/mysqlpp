@@ -1,4 +1,4 @@
-EXTRA_DIST = bootstrap Configure doc devel
+EXTRA_DIST = bootstrap Configure doc devel LGPL
 
 #SUBDIRS = sqlplusint examples doc
 SUBDIRS = sqlplusint examples
