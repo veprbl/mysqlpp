@@ -1,12 +1,13 @@
 #ifndef __compare1_hh__
 #define __compare1_hh__
 
-#include <functional>
+#include <row.h>
+
 #include <cstring>
-#include "row1.hh"
+#include <functional>
 
 template <class BinaryPred, class CmpType>
-class MysqlCmp : public std::unary_function<const MysqlRow&, bool>
+class MysqlCmp : public std::unary_function<const Row&, bool>
 {
 protected:
   unsigned int index;
@@ -14,7 +15,7 @@ protected:
   CmpType      cmp2;
 public:
   MysqlCmp(uint i, const BinaryPred &f, const CmpType &c) : index(i),func(f),cmp2(c) {}
-  bool operator () (const MysqlRow& cmp1) const {return func(cmp2,cmp1[index]);}
+  bool operator () (const Row& cmp1) const {return func(cmp2,cmp1[index]);}
 };
 
 template <class BinaryPred>
@@ -22,7 +23,7 @@ class MysqlCmpCStr : public MysqlCmp<BinaryPred, const char *>
 {
 public:
   MysqlCmpCStr(uint i, const BinaryPred &f, const char* c) : MysqlCmp<BinaryPred, const char *> (i,f,c) {}
-  bool operator () (const MysqlRow& cmp1) const 
+  bool operator () (const Row& cmp1) const 
     {return MysqlCmp<BinaryPred, const char*>::func(
 			MysqlCmp<BinaryPred, const char*>::cmp2, cmp1[index]);}
 };
