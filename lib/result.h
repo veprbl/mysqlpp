@@ -170,7 +170,7 @@ public:
   }
 
   //: Raw c api function
-  int  num_rows() const {
+  my_ulonglong  num_rows() const {
   	if (initialized) return mysql_num_rows(mysql_res);
 	else return 0;
   }
