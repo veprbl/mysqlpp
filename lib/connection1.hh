@@ -123,7 +123,7 @@ public:
      {storein_sequence(con,s);}
   template <class T>        void storein(std::list<T> &con, const std::string &s)
     {storein_sequence(con,s);}
-#ifdef HAVE_STD_SLIST
+#ifdef HAVE_STD_SLIST || HAVE_EXT_SLIST
   template <class T>        void storein(std::slist<T> &con, const std::string &s)
     {storein_sequence(con,s);}
 #endif
