@@ -221,23 +221,19 @@ Result Connection::store(const string& str, bool throw_excptns)
 
 	Success = !mysql_query(&mysql, str.c_str());
 	unlock();
-
 	if (Success) {
 		MYSQL_RES* res = mysql_store_result(&mysql);
 		if (res) {
 			return Result(res);
 		}
-		else {
-			return Result();
-		}
+	}
+
+	// One of the mysql_* calls failed, so decide how we should fail.
+	if (throw_excptns) {
+		throw BadQuery(error());
 	}
 	else {
-		if (throw_excptns) {
-			throw BadQuery(error());
-		}
-		else {
-			return Result();
-		}
+		return Result();
 	}
 }
 
@@ -255,15 +251,18 @@ ResUse Connection::use(const string& str, bool throw_excptns)
 
 	Success = !mysql_query(&mysql, str.c_str());
 	if (Success) {
-		return ResUse(mysql_use_result(&mysql), this);
+		MYSQL_RES* res = mysql_use_result(&mysql);
+		if (res) {
+			return ResUse(res, this);
+		}
+	}
+
+	// One of the mysql_* calls failed, so decide how we should fail.
+	if (throw_excptns) {
+		throw BadQuery(error());
 	}
 	else {
-		if (throw_excptns) {
-			throw BadQuery(error());
-		}
-		else {
-			return ResUse();
-		}
+		return ResUse();
 	}
 }
 
