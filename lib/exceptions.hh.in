@@ -65,6 +65,7 @@ public:
 #else //original, default exception style
 
 struct BadQuery {
+  BadQuery(const char* pc) : error(pc) {}
   BadQuery(std::string& er) : error(er) {}
   std::string error; //: The error message
 };
