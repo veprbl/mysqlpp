@@ -16,6 +16,7 @@ static ostream&
 separator(ostream& os)
 {
 	os << endl << "---------------------------" << endl << endl;
+	return os;
 }
 
 int
