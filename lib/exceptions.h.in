@@ -126,7 +126,7 @@ public:
 
 #endif
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 
