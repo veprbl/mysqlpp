@@ -37,3 +37,5 @@ Patches for any of these thoughtfully considered!
 	  make a simple non-autotools Makefile that looks in the same
 	  directory as the lib and devel RPMs unpack into for the library
 	  and headers.
+
+	o Rename *.cc to *.cpp.
