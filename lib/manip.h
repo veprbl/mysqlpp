@@ -1,5 +1,5 @@
-#ifndef __manip1_hh__
-#define __manip1_hh__
+#ifndef MYSQLPP_MANIP_H
+#define MYSQLPP_MANIP_H
 
 #include <platform.h>
 

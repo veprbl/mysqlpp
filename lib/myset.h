@@ -1,5 +1,5 @@
-#ifndef __myset_h__
-#define __myset_h__
+#ifndef MYSQLPP_MYSET_H
+#define MYSQLPP_MYSET_H
 
 #include <platform.h>
 
