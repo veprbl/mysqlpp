@@ -28,7 +28,7 @@ the configure command, to segregate the header files in their own
 directory.
 
 If you wish to install mysql++ in a root directory other than /usr/local,
-run configure with --with-prefix=.....
+run configure with --prefix=.....
 
 You may want to try out the programs in the examples subdirectory to
 ensure that the MySQL++ API and your MySQL database are both working
