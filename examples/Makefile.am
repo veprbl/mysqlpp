@@ -3,7 +3,7 @@ include $(top_srcdir)/common.am
 LDFLAGS = 
 LDADD = $(MYSQLPP_LIB)
 
-EXTRA_DIST = *.vcproj *.bpf *.bpr *.bpg dummy.cpp Makefile.simple
+EXTRA_DIST = *.vcproj *.bpf *.bpr *.bpg Makefile.simple
 
 noinst_PROGRAMS = resetdb simple1 custom1 custom2 custom3 custom4 \
 		complic1 fieldinf1 dbinfo updel load_file cgi_image
