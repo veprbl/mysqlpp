@@ -1,12 +1,12 @@
 #ifndef MYSQLPP_MANIP_H
 #define MYSQLPP_MANIP_H
 
-#include <defs.h>
+#include "defs.h"
 
-#include <datetime.h>
-#include <myset.h>
-#include <sql_string.h>
-#include <sql_query.h>
+#include "datetime.h"
+#include "myset.h"
+#include "sql_string.h"
+#include "sql_query.h"
 
 #include <mysql.h>
 

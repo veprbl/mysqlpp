@@ -1,11 +1,11 @@
 #ifndef MYSQLPP_DATETIME_H
 #define MYSQLPP_DATETIME_H
 
-#include <defs.h>
+#include "defs.h"
 
-#include <coldata.h>
-#include <stream2string.h>
-#include <tiny_int.h>
+#include "coldata.h"
+#include "stream2string.h"
+#include "tiny_int.h"
 
 #include <string>
 #include <sstream>

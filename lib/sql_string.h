@@ -1,7 +1,7 @@
 #ifndef MYSQLPP_SQL_STRING_H
 #define MYSQLPP_SQL_STRING_H
 
-#include <defs.h>
+#include "defs.h"
 
 #include <stdio.h>
 #include <string>

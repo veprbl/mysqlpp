@@ -1,12 +1,12 @@
 #ifndef MYSQLPP_QUERY_H
 #define MYSQLPP_QUERY_H
 
-#include <defs.h>
+#include "defs.h"
 
-#include <coldata.h>
-#include <connection.h>
-#include <result.h>
-#include <sql_query.h>
+#include "coldata.h"
+#include "connection.h"
+#include "result.h"
+#include "sql_query.h"
 
 #include <mysql.h>
 

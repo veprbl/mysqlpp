@@ -1,7 +1,7 @@
 #ifndef MYSQLPP_DEFS_H
 #define MYSQLPP_DEFS_H
 
-#include <platform.h>
+#include "platform.h"
 
 #include <mysql.h>
 

@@ -1,10 +1,10 @@
 #ifndef MYSQLPP_MYSET_H
 #define MYSQLPP_MYSET_H
 
-#include <defs.h>
+#include "defs.h"
 
-#include <coldata.h>
-#include <stream2string.h>
+#include "coldata.h"
+#include "stream2string.h"
 
 #include <iostream>
 #include <set>

@@ -1,11 +1,11 @@
 #ifndef MYSQLPP_SQL_QUERY_H
 #define MYSQLPP_SQL_QUERY_H
 
-#include <defs.h>
+#include "defs.h"
 
-#include <custom.h>
-#include <sql_string.h>
-#include <tiny_int.h>
+#include "custom.h"
+#include "sql_string.h"
+#include "tiny_int.h"
 
 #include <sstream>
 #include <vector>

@@ -1,7 +1,7 @@
 #ifndef MYSQLPP_FIELDS_H
 #define MYSQLPP_FIELDS_H
 
-#include <resiter.h>
+#include "resiter.h"
 
 namespace mysqlpp {
 

@@ -1,7 +1,7 @@
 #ifndef MYSQLPP_RESITER_H
 #define MYSQLPP_RESITER_H
 
-#include <defs.h>
+#include "defs.h"
 
 #include <iterator>
 

@@ -1,7 +1,7 @@
 #ifndef MYSQLPP_VALLIST_H
 #define MYSQLPP_VALLIST_H
 
-#include <manip.h>
+#include "manip.h"
 
 #include <string>
 #include <vector>

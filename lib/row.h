@@ -1,10 +1,10 @@
 #ifndef MYSQLPP_ROW_H
 #define MYSQLPP_ROW_H
 
-#include <coldata.h>
-#include <exceptions.h>
-#include <resiter.h>
-#include <vallist.h>
+#include "coldata.h"
+#include "exceptions.h"
+#include "resiter.h"
+#include "vallist.h"
 
 #include <vector>
 #include <string>

@@ -1,7 +1,7 @@
 #ifndef MYSQLPP_NULL_H
 #define MYSQLPP_NULL_H
 
-#include <exceptions.h>
+#include "exceptions.h"
 
 #include <iostream>
 

@@ -1,10 +1,10 @@
 #ifndef MYSQLPP_CONNECTION_H
 #define MYSQLPP_CONNECTION_H
 
-#include <platform.h>
+#include "platform.h"
 
-#include <exceptions.h>
-#include <result.h>
+#include "exceptions.h"
+#include "result.h"
 
 #include <mysql.h>
 

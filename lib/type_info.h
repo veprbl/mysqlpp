@@ -1,7 +1,7 @@
 #ifndef MYSQLPP_TYPE_INFO_H
 #define MYSQLPP_TYPE_INFO_H
 
-#include <defs.h>
+#include "defs.h"
 
 #include <mysql.h>
 

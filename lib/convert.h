@@ -1,9 +1,9 @@
 #ifndef MYSQLPP_CONVERT_H
 #define MYSQLPP_CONVERT_H
 
-#include <platform.h>
+#include "platform.h"
 
-#include <defs.h>
+#include "defs.h"
 
 #include <stdlib.h>
 

@@ -1,7 +1,7 @@
 #ifndef MYSQLPP_COMPARE_H
 #define MYSQLPP_COMPARE_H
 
-#include <row.h>
+#include "row.h"
 
 #include <cstring>
 #include <functional>
