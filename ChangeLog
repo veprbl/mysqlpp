@@ -389,10 +389,10 @@
 	  new member function lookup_by_name() was added to maintain the old
 	  by-field-name functionality.
 
-	o Fixed another operator overloading problem in SQLSS macro
+	o Fixed another operator overloading problem in SSQLS macro
 	  generation with GCC 3.3.
 
-	o The _table member of SQLSS-defined structures is now const char*,
+	o The _table member of SSQLS-defined structures is now const char*,
 	  so you can assign to it from a const char* string.
 
 	o Got autoconf/automake build system working with current versions
