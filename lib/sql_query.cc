@@ -5,6 +5,8 @@
 #include "sql_query3.hh"
 #include "exceptions.hh"
 
+using namespace std;
+
 SQLQuery::SQLQuery(const SQLQuery &q) {
   *this << q.str();
   Success = q.Success;
