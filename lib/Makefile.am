@@ -17,7 +17,7 @@ libmysqlpp_la_SOURCES = coldata.cc connection.cc datetime.cc field_names.cc \
 
 include_HEADERS = \
 	coldata.h \
-	compare1.hh compare2.hh compare3.hh \
+	compare.h \
 	connection0.hh connection1.hh connection2.hh connection3.hh \
 	const_string1.hh const_string2.hh const_string3.hh \
 	convert1.hh convert2.hh convert3.hh \

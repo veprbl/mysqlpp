@@ -3,8 +3,8 @@
 #include <defs.hh>
 #include <define_short.hh>
 
-#include <coldata1.hh>
-#include <compare1.hh>
+#include <coldata.h>
+#include <compare.h>
 #include <connection1.hh>
 #include <const_string1.hh>
 #include <convert1.hh>
@@ -26,8 +26,6 @@
 #include <type_info1.hh>
 #include <vallist1.hh>
 
-#include <coldata2.hh>
-#include <compare2.hh>
 #include <connection2.hh>
 #include <const_string2.hh>
 #include <convert2.hh>
@@ -48,9 +46,6 @@
 #include <type_info2.hh>
 #include <vallist2.hh>
 
-#include <coldata3.hh>
-#include <coldata4.hh>
-#include <compare3.hh>
 #include <connection3.hh>
 #include <const_string3.hh>
 #include <convert3.hh>
