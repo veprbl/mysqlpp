@@ -7,8 +7,7 @@
 #include <convert.h>
 #include <defs.hh>
 #include <exceptions.hh>
-#include <null1.hh>
-#include <null3.hh>
+#include <null.h>
 #include <string_util.hh>
 #include <type_info1.hh>
 

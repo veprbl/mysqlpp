@@ -13,7 +13,7 @@
 #include <field_types.h>
 #include <fields1.hh>
 #include <manip1.hh>
-#include <null1.hh>
+#include <null.h>
 #include <query.h>
 #include <resiter1.hh>
 #include <result1.hh>
@@ -28,7 +28,6 @@
 
 #include <fields2.hh>
 #include <manip2.hh>
-#include <null2.hh>
 #include <result2.hh>
 #include <row2.hh>
 #include <set2.hh>
@@ -40,7 +39,6 @@
 #include <vallist2.hh>
 
 #include <manip3.hh>
-#include <null3.hh>
 #include <result3.hh>
 #include <row3.hh>
 #include <set3.hh>

@@ -32,7 +32,7 @@ include_HEADERS = \
 	fields1.hh fields2.hh \
 	manip1.hh manip2.hh manip3.hh \
 	mysql++.h mysql++.hh \
-	null1.hh null2.hh null3.hh \
+	null.h \
 	platform.h \
 	query.h \
 	resiter1.hh \
