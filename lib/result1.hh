@@ -7,7 +7,7 @@
 #include <resiter.h>
 
 #include <define_short.hh>
-#include <exceptions.hh>
+#include <exceptions.h>
 #include <field_names.h>
 #include <field_types.h>
 #include <fields1.hh>

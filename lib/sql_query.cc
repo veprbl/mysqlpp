@@ -3,7 +3,7 @@
 
 #include "sql_query3.hh"
 
-#include "exceptions.hh"
+#include "exceptions.h"
 
 using namespace std;
 
