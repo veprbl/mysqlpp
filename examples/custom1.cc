@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <vector>
 #include <mysql++.h>
-#include <custom.hh>
+#include <custom.h>
 
 #include "util.hh"
 

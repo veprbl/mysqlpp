@@ -1,7 +1,7 @@
 #include "util.hh"
 
 #include <mysql++.h>
-#include <custom.hh>
+#include <custom.h>
 
 #include <iostream>
 #include <string>
