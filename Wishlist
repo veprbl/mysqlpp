@@ -21,7 +21,10 @@ Bug Fix/Maintenance Items
 -------------------------
 
 	o Is there any reason not to make standard C++ exceptions the
-	  default, instead of the, um, exception?
+	  default, instead of the, um, exception?  If we remove legacy
+	  exceptions (and with it all the conditional code and
+	  exceptions.h.in stuff that goes with it), we should accept Chris
+	  Frey's Row::operator[] at() patch.
 
 	o Some way to skip building examples.  Particularly useful when
 	  building RPM, but not useful when building library as a developer,
