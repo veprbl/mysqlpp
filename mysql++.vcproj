@@ -114,6 +114,9 @@
 				RelativePath="sqlplusint\datetime.cc">
 			</File>
 			<File
+				RelativePath=".\examples\dummy.cpp">
+			</File>
+			<File
 				RelativePath="sqlplusint\field_names.cc">
 			</File>
 			<File
@@ -130,12 +133,6 @@
 			</File>
 			<File
 				RelativePath="sqlplusint\set.cc">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						BufferSecurityCheck="TRUE"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="sqlplusint\sql_query.cc">
