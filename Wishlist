@@ -34,8 +34,5 @@ Patches for any of these thoughtfully considered!
 	  instead of strtoll(), and use __int64 instead of long long.  To do
 	  this portably, it isn't a trivial conversion.
 
-	o Add autoconf test for mysql_shutdown's extra second argument
-	  (SHUTDOWN_DEFAULT) in MySQL 4.1.3 and 5.0.1 and later.
-
 	o Factor tests out of configure.in into individual files in a config
 	  subdir.
