@@ -21,11 +21,9 @@ main()
 		Query query = con.query();
 
 		query << "show databases";
-
-		Result res = query.store();
-
 		cout << "Query: " << query.preview() << endl;
 
+		Result res = query.store();
 		cout << "Records Found: " << res.size() << endl << endl;
 
 		Row row;
@@ -41,11 +39,9 @@ main()
 		con.select_db(database);
 
 		query << "show tables";
-
-		res = query.store();
-
 		cout << "Query: " << query.preview() << endl;
 
+		res = query.store();
 		cout << "Records Found: " << res.size() << endl << endl;
 
 		cout.setf(ios::left);
@@ -78,9 +74,10 @@ main()
 		}
 
 		query << "select * from user";
+		cout << query.preview() << endl << endl;
+
 		res = query.store();
 		int columns = res.num_fields();
-		cout << query.preview() << endl << endl;
 		cout << "fields = " << res.num_fields() << "rows = " << res.
 			size() << endl;
 		volatile MYSQL_RES *ress = res.mysql_result();

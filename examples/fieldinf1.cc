@@ -19,9 +19,9 @@ main(int argc, char *argv[])
 
 		Query query = con.query();
 		query << "select * from stock";
-		Result res = query.store();
-
 		cout << "Query: " << query.preview() << endl;
+
+		Result res = query.store();
 		cout << "Records Found: " << res.size() << endl << endl;
 
 		cout << "Query Info:\n";
