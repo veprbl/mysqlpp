@@ -2,7 +2,6 @@
 #define __sql_query_1_hh
 
 #include <custom.h>
-#include <define_short.hh>
 #include <sql_string.h>
 #include <tiny_int.h>
 

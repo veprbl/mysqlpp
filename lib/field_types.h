@@ -2,7 +2,6 @@
 #define __field_types1_hh__
 
 #include <defs.h>
-#include <define_short.hh>
 #include <type_info.h>
 
 #include <vector>

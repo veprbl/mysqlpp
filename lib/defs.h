@@ -3,8 +3,6 @@
 
 #include <platform.h>
 
-#include <define_short.hh>
-
 #include <mysql.h>
 
 #if defined(NO_LONG_LONGS)

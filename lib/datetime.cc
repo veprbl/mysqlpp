@@ -29,7 +29,7 @@ ostream& mysql_time::out_stream (ostream& s) const {
   return s;
 }
 
-ostream& MysqlDateTime::out_stream (ostream& s) const {
+ostream& DateTime::out_stream (ostream& s) const {
   mysql_date::out_stream(s);
   s << " ";
   mysql_time::out_stream(s);
@@ -62,7 +62,7 @@ cchar* mysql_time::convert (cchar* str) {
   return str;
 }
 
-cchar* MysqlDateTime::convert (cchar* str) {
+cchar* DateTime::convert (cchar* str) {
   str = mysql_date::convert(str);
   if (*str == ' ') str++;
   str = mysql_time::convert(str);
@@ -81,7 +81,7 @@ short int mysql_time::compare(const mysql_time* other) const {
   return second - other->second;
 }
 
-short int MysqlDateTime::compare(const MysqlDateTime &other) const {
+short int DateTime::compare(const DateTime &other) const {
   int x;
   x = mysql_date::compare(&other);
   if (x) return x;

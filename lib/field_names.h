@@ -3,7 +3,6 @@
 #define __field_names1_hh__
 
 #include <defs.h>
-#include <define_short.hh>
 #include <coldata.h>
 #include <string_util.h>
 

@@ -3,10 +3,8 @@
 
 #include <coldata.h>
 #include <defs.h>
-#include <define_short.hh>
 #include <exceptions.h>
 #include <resiter.h>
-//#include <result.h>
 #include <vallist.h>
 
 #include <vector>

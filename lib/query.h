@@ -3,7 +3,6 @@
 
 #include <platform.h>
 
-#include <define_short.hh>
 #include <coldata.h>
 #include <connection.h>
 #include <result.h>
@@ -46,29 +45,6 @@ public:
   std::string   preview () {return str(def);}       //:
   std::string   preview (parms &p) {return str(p);} //:
 	bool     exec (const std::string &str);
-  //!dummy: MysqlResNSel execute (...);
-  //: Executes the query in the string buffer.
-  // Executes the query in the string buffer and returns a structure
-  // that contains the information of the success of the query. Use
-  // this for queries that don't return a result set such as INSERT,
-  // UPDATE, etc.
-  //
-  // The parameters can be anything in a valid SQLQuery::str.
-
-  //!dummy: MysqlRes store (...);
-  //: Executes the query in the string buffer.
-  // Executes a query in the string buffer and returns the result.
-  //
-  // The parameters can be anything in a valid SQLQuery::str.
-
-  //!dummy: MysqlResUse use (...); 
-  //: Executes the query in the string buffer.
-  // Executes the query in the string buffer and returns the
-  // results. This method used the mysql_use_result(MYSQL_RES)
-  // function and thus should be used sparingly. Also the Result set is
-  // a lot more limited and DOES NOT have an iterator.
-  //
-  // The parameters can be anything in a valid SQLQuery::str.
 
   mysql_query_define0(std::string,preview)
 

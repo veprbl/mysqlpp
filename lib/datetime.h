@@ -3,7 +3,6 @@
 
 #include <coldata.h>
 #include <defs.h>
-#include <define_short.hh>
 #include <stream2string.h>
 #include <tiny_int.h>
 
@@ -18,7 +17,7 @@ struct mysql_dt_base {
 };
 
 template <class T>
-struct MysqlDTbase {
+struct DTbase {
   virtual short int compare(const T &other) const = 0;
 
   bool operator == (const T &other) const {return !compare(other);}
@@ -60,7 +59,7 @@ protected:
   };
 */
 
-struct Date : public mysql_date, public MysqlDTbase<Date>
+struct Date : public mysql_date, public DTbase<Date>
 {
   Date () {};
   Date (cchar* str) {convert(str);}
@@ -105,7 +104,7 @@ protected:
   };
 */
 
-struct Time : public mysql_time, public MysqlDTbase<Time>
+struct Time : public mysql_time, public DTbase<Time>
 {
   Time () {};
   Time (cchar* str) {convert(str);}
@@ -124,7 +123,7 @@ inline std::ostream& operator << (std::ostream& s, const Time& d)
 //!dummy: struct DateTime {};
 
 struct DateTime : public mysql_date, public mysql_time,
-		       public MysqlDTbase<DateTime>
+		       public DTbase<DateTime>
 {
   DateTime () {}
   DateTime (cchar* str) {convert(str);}

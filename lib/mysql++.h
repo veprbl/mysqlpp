@@ -1,7 +1,6 @@
 #include <platform.h>
 
 #include <defs.h>
-#include <define_short.hh>
 
 #include <coldata.h>
 #include <compare.h>
@@ -9,6 +8,7 @@
 #include <const_string.h>
 #include <convert.h>
 #include <datetime.h>
+#include <exceptions.h>
 #include <field_names.h>
 #include <field_types.h>
 #include <fields.h>
@@ -26,8 +26,3 @@
 #include <type_info.h>
 #include <vallist.h>
 
-#ifdef MYSQL_NO_SHORT_NAMES
-#include <undef_short.hh>
-#endif
-
-#include <exceptions.h>

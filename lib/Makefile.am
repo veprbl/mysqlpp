@@ -17,11 +17,11 @@ libmysqlpp_la_SOURCES = coldata.cc connection.cc datetime.cc fields.cc \
 
 include_HEADERS = \
 	bad_query.h coldata.h compare.h connection.h const_string.h \
-	convert.h custom.h custom-macros.h defs.h define_short.hh \
-	datetime.h exceptions.h field_names.h field_types.h fields.h \
-	manip.h mysql++.h mysql++.hh null.h platform.h query.h resiter.h \
-	result.h row.h set.h sqlplus.hh sql_query.h sql_string.h \
-	stream2string.h tiny_int.h type_info.h string_util.h vallist.h
+	convert.h custom.h custom-macros.h defs.h datetime.h exceptions.h \
+	field_names.h field_types.h fields.h manip.h mysql++.h mysql++.hh \
+	null.h platform.h query.h resiter.h result.h row.h set.h \
+	sqlplus.hh sql_query.h sql_string.h stream2string.h tiny_int.h \
+	type_info.h string_util.h vallist.h
 
 all-local: custom.h custom-macros.h
 

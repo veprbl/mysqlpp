@@ -81,19 +81,19 @@ Connection::~Connection () {
 
 bool Connection::select_db (const char *db) {
   bool suc = !(mysql_select_db(&mysql, db));
-  if (throw_exceptions && !suc) throw MysqlBadQuery(error());
+  if (throw_exceptions && !suc) throw BadQuery(error());
   else return suc;
 }
 
 bool Connection::reload() {
   bool suc = !mysql_reload(&mysql);
-  if (throw_exceptions && !suc) throw MysqlBadQuery(error());
+  if (throw_exceptions && !suc) throw BadQuery(error());
   else return suc;
 }
 
 bool Connection::shutdown () {
   bool suc = !(mysql_shutdown(&mysql SHUTDOWN_ARG));
-  if (throw_exceptions && !suc) throw MysqlBadQuery(error());
+  if (throw_exceptions && !suc) throw BadQuery(error());
   else return suc;
 }  
 

@@ -3,7 +3,6 @@
 
 #include <platform.h>
 
-#include <define_short.hh>
 #include <exceptions.h>
 #include <query.h>
 #include <result.h>

@@ -2,7 +2,6 @@
 #define __sql_string1_hh__
 
 #include <defs.h>
-#include <define_short.hh>
 
 #include <stdio.h>
 #include <string>

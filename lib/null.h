@@ -1,7 +1,6 @@
 #ifndef __null1_hh__
 #define __null1_hh__
 
-#include <define_short.hh>
 #include <exceptions.h>
 
 #include <ostream>
