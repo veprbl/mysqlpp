@@ -1,3 +1,18 @@
+1.7.13, 2004.08.20
+
+	o Removed USL CC support.  (System V stock system compiler.)  Use
+	  GCC on these platforms instead.
+
+	o Added examples/README, explaining how to use the examples, and
+	  what they all do.
+
+	o Most of the example programs now accept command line arguments for
+	  host name, user name and password, like resetdb does.
+
+	o Several Standard C++ syntax fixes to quash errors emitted by
+	  GCC 3.4 and Borland C++ Builder 6.
+
+
 1.7.12, 2004.08.19
 
 	o Many Standard C++ fixes, most from the GCC 3.4 patch by
