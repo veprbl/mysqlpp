@@ -1,6 +1,6 @@
 Summary: C++ API for MySQL
 Name: mysql++
-Version: 1.7.12
+Version: 1.7.13
 Release: 1
 Copyright: LGPL
 Group: Development/Databases
