@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="c:\mysql\include, sqlplusint"
+				AdditionalIncludeDirectories="c:\mysql\include, lib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -64,7 +64,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="c:\mysql\include, sqlplusint"
+				AdditionalIncludeDirectories="c:\mysql\include, lib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -105,143 +105,143 @@
 			Name="Source Files"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="sqlplusint\coldata.cc">
+				RelativePath="lib\coldata.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\connection.cc">
+				RelativePath="lib\connection.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\datetime.cc">
+				RelativePath="lib\datetime.cc">
 			</File>
 			<File
 				RelativePath=".\examples\dummy.cpp">
 			</File>
 			<File
-				RelativePath="sqlplusint\field_names.cc">
+				RelativePath="lib\field_names.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\field_types.cc">
+				RelativePath="lib\field_types.cc">
 			</File>
 			<File
-				RelativePath=".\sqlplusint\fields.cc">
+				RelativePath=".\lib\fields.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\manip.cc">
+				RelativePath="lib\manip.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\query.cc">
+				RelativePath="lib\query.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\result.cc">
+				RelativePath="lib\result.cc">
 			</File>
 			<File
-				RelativePath=".\sqlplusint\row.cc">
+				RelativePath=".\lib\row.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\set.cc">
+				RelativePath="lib\set.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\sql_query.cc">
+				RelativePath="lib\sql_query.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\string_util.cc">
+				RelativePath="lib\string_util.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\type_info.cc">
+				RelativePath="lib\type_info.cc">
 			</File>
 			<File
-				RelativePath="sqlplusint\vallist.cc">
+				RelativePath="lib\vallist.cc">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hh;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="sqlplusint\bad_query.h">
+				RelativePath="lib\bad_query.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\coldata.h">
+				RelativePath="lib\coldata.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\compare.h">
+				RelativePath="lib\compare.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\connection.h">
+				RelativePath="lib\connection.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\const_string.h">
+				RelativePath="lib\const_string.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\convert.h">
+				RelativePath="lib\convert.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\custom-macros.h">
+				RelativePath="lib\custom-macros.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\custom.h">
+				RelativePath="lib\custom.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\datetime.h">
+				RelativePath="lib\datetime.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\defs.h">
+				RelativePath="lib\defs.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\field_names.h">
+				RelativePath="lib\field_names.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\field_types.h">
+				RelativePath="lib\field_types.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\fields.h">
+				RelativePath="lib\fields.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\manip.h">
+				RelativePath="lib\manip.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\mysql++.h">
+				RelativePath="lib\mysql++.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\null.h">
+				RelativePath="lib\null.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\platform.h">
+				RelativePath="lib\platform.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\query.h">
+				RelativePath="lib\query.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\resiter.h">
+				RelativePath="lib\resiter.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\result.h">
+				RelativePath="lib\result.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\row.h">
+				RelativePath="lib\row.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\set.h">
+				RelativePath="lib\set.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\sql_query.h">
+				RelativePath="lib\sql_query.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\sql_string.h">
+				RelativePath="lib\sql_string.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\stream2string.h">
+				RelativePath="lib\stream2string.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\string_util.h">
+				RelativePath="lib\string_util.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\tiny_int.h">
+				RelativePath="lib\tiny_int.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\type_info.h">
+				RelativePath="lib\type_info.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\vallist.h">
+				RelativePath="lib\vallist.h">
 			</File>
 		</Filter>
 	</Files>
