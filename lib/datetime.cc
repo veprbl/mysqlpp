@@ -6,7 +6,8 @@
 #include <iomanip>
 
 using namespace std;
-using namespace mysqlpp;
+
+namespace mysqlpp {
 
 ostream& mysql_date::out_stream (ostream& s) const {
   char fill = s.fill('0');
@@ -89,7 +90,5 @@ short int DateTime::compare(const DateTime &other) const {
   return mysql_time::compare(&other);
 }
 
-
-
-
+}; // end namespace mysqlpp
 

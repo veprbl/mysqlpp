@@ -5,7 +5,7 @@
 
 #include "result.h"
 
-using namespace mysqlpp;
+namespace mysqlpp {
 
 void FieldNames::init(const ResUse *res)
 {
@@ -17,4 +17,6 @@ void FieldNames::init(const ResUse *res)
 		push_back(p);
   }
 }
+
+}; // end namespace mysqlpp
 

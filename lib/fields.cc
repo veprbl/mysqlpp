@@ -2,8 +2,7 @@
 
 #include "result.h"
 
-using namespace mysqlpp;
-
+namespace mysqlpp {
 
 Fields::size_type Fields::size() const 
 {
@@ -16,4 +15,5 @@ const Field& Fields::operator[](Fields::size_type i) const
     return res->fetch_field();
 }
 
+}; // end namespace mysqlpp
 

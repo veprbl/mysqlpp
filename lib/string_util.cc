@@ -1,7 +1,6 @@
 #include "string_util.h"
 
-using namespace mysqlpp;
-
+namespace mysqlpp {
 
 void strip (std::string& s) {
 	size_t i,j = s.size() - 1;  if (!s.size()) return;
@@ -48,3 +47,6 @@ void escape_string (std::string& s) {
     }
 	}
 }
+
+}; // end namespace mysqlpp
+

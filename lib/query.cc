@@ -1,7 +1,6 @@
 #include "query.h"
 
-using namespace mysqlpp;
-
+namespace mysqlpp {
 
 Query::Query(const Query &q) :
 SQLQuery(q),
@@ -69,4 +68,6 @@ std::string Query::error () {
 void Query::unlock() {
   mysql->unlock();
 }
+
+}; // end namespace mysqlpp
 

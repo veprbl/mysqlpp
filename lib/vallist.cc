@@ -4,8 +4,8 @@
 #include "row.h"
 
 using std::string;
-using namespace mysqlpp;
 
+namespace mysqlpp {
 
 void create_vector(int size, std::vector<bool>& v, bool t0,
 		   bool t1, bool t2, bool t3, bool t4,
@@ -54,4 +54,6 @@ template void create_vector (const Row &c, std::vector<bool>&v, string s0, strin
 		   string s2, string s3, string s4, string s5, string s6,
 		   string s7, string s8, string s9, string sa, string sb,
 		   string sc);
+
+}; // end namespace mysqlpp
 

@@ -293,7 +293,5 @@ ostream& operator << (escape_type1 o, const ColData_Tmpl<const_string>& in) {
   return _manip(o,in);
 }
 
-
 }; // end namespace mysqlpp
-
 

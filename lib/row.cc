@@ -2,8 +2,7 @@
 
 #include "result.h"
 
-using namespace mysqlpp;
-
+namespace mysqlpp {
 
 Row::size_type Row::size() const 
 {
@@ -24,4 +23,5 @@ const ColData Row::lookup_by_name(const char* i) const
   return (*this)[res->field_num(std::string(i))];
 }
 
+}; // end namespace mysqlpp
 

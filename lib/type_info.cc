@@ -9,8 +9,8 @@
 #include <string>
 
 using namespace std;
-using namespace mysqlpp;
 
+namespace mysqlpp {
 
 typedef string Enum;
 
@@ -130,3 +130,6 @@ bool mysql_type_info::escape_q() const {
   else 
     return false;
 }
+
+}; // end namespace mysqlpp
+

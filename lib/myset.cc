@@ -1,6 +1,8 @@
 #include "myset.h"
 
-using namespace mysqlpp;
-
+namespace mysqlpp {
 
 template class Set<std::set<std::string> >;
+
+}; // end namespace mysqlpp
+

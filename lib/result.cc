@@ -2,8 +2,7 @@
 
 #include "connection.h"
 
-using namespace mysqlpp;
-
+namespace mysqlpp {
 
 ResNSel::ResNSel (Connection *q) :
 success(q->success()),
@@ -52,3 +51,6 @@ void ResUse::copy(const ResUse& other) {
   mysql     = other.mysql;
 	initialized = true;
 }
+
+}; // end namespace mysqlpp
+

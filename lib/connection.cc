@@ -12,7 +12,7 @@
 #	define SHUTDOWN_ARG
 #endif
 
-using namespace mysqlpp;
+namespace mysqlpp {
 
 Connection::Connection (const char *db, const char *host, const char *user, 
 			const char *passwd, bool te) 
@@ -185,3 +185,4 @@ Query Connection::query()
 	return Query(this, throw_exceptions);
 }
 
+}; // end namespace mysqlpp
