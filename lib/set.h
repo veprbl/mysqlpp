@@ -5,6 +5,7 @@
 
 #include <coldata.h>
 #include <define_short.hh>
+#include <stream2string.h>
 
 #include <iostream>
 #include <set>
@@ -64,13 +65,39 @@ inline std::ostream& operator << (std::ostream &s, const Set<Container> &d)
   return d.out_stream(s); 
 }
 
+
+template <class Container> 
+inline Set<Container>::operator std::string () {
+  return stream2string<std::string>(*this);
+}
+
+
+template <class Insert>
+void set2container (const char *str, Insert insert) {
+  while (1) {
+    MutableColData s("");
+    while (*str != ',' && *str) {
+      s += *str;
+      str++;
+    }
+    insert(s);
+    if (!*str) break;
+    str++;
+  }
+}
+
+template <class Container>
+std::ostream& Set<Container>::out_stream (std::ostream &s) const {
+  typename Container::const_iterator i = Container::begin();
+  typename Container::const_iterator e = Container::end();
+  while (true) {
+    s << *i;
+    i++;
+    if (i==e) break;
+    s << ",";
+  }
+  return s;
+}
+
 #endif
-
-
-
-
-
-
-
-
 

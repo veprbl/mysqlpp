@@ -18,7 +18,7 @@
 #include <resiter.h>
 #include <result1.hh>
 #include <row1.hh>
-#include <set1.hh>
+#include <set.h>
 #include <sql_query1.hh>
 #include <sql_string.h>
 #include <stream2string.h>
@@ -29,12 +29,10 @@
 #include <fields2.hh>
 #include <result2.hh>
 #include <row2.hh>
-#include <set2.hh>
 #include <sql_query2.hh>
 
 #include <result3.hh>
 #include <row3.hh>
-#include <set3.hh>
 #include <sql_query3.hh>
 
 #ifdef MYSQL_NO_SHORT_NAMES

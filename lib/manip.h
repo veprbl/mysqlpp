@@ -7,7 +7,7 @@
 #include <define_short.hh>
 #include <sql_string.h>
 #include <sql_query1.hh>
-#include <set1.hh>
+#include <set.h>
 
 #include <mysql.h>
 

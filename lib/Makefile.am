@@ -38,7 +38,7 @@ include_HEADERS = \
 	resiter.h \
 	result1.hh result2.hh result3.hh \
 	row1.hh row2.hh row3.hh \
-	set1.hh set2.hh set3.hh \
+	set.h \
 	sqlplus.hh \
 	sql_query1.hh sql_query2.hh sql_query3.hh \
 	sql_string.h \
