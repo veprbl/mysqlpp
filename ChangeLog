@@ -13,6 +13,13 @@
 	  still quietly broken within the code.  (It's in the SQLQuery
 	  copy ctor implementation; it should be harmless.)
 
+	o Removed operator=() in Query and SQLQuery classes.  It cannot take
+	  a const argument for the same reason we have to cast away const
+	  in the SQLQuery copy ctor.  It's tolerable to do this in the copy
+	  ctor, but intolerable in an operator.  Since the copy ctor is good
+	  enough for all code within the library and within my own code, I'm
+	  removing the operator.
+
 	o Visual C++ projects now look for MySQL build files in c:\mysql,
 	  since that's the default install location.  (Previously, it was
 	  c:\program files\mysql.)
