@@ -35,18 +35,12 @@ main(int argc, char *argv[])
 		return 0;
 	}
 	catch (BadQuery& er) {
-#ifdef USE_STANDARD_EXCEPTION
 		cerr << "Error: " << er.what() << " " << con.errnum() << endl;
-#else
-		cerr << "Error: " << er.error << " " << con.errnum() << endl;
-#endif
 		return -1;
 	}
-#ifdef USE_STANDARD_EXCEPTION
 	catch (exception& er) {
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}
-#endif
 }
 
