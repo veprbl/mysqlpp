@@ -118,6 +118,23 @@ AC_C_CONST
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strtol)
 
+dnl Check for 
+AC_CACHE_CHECK([for level argument to mysql_shutdown()], ac_cv_mysql_shutdown_arg,
+[
+	AC_TRY_LINK(
+		[ #include <mysql.h> ],
+		[ mysql_shutdown(0, 0); ],
+		ac_cv_mysql_shutdown_arg=yes,
+		ac_cv_mysql_shutdown_arg=no)
+])
+
+if test x"$ac_cv_mysql_shutdown_arg" = "xyes"
+then
+	AC_DEFINE(HAVE_MYSQL_SHUTDOWN_LEVEL_ARG, 1, 
+		[ Define if mysql_shutdown() has a second 'level' argument ])
+fi
+
+
 dnl Use C++ compiler for remaining tests
 AC_LANG_CPLUSPLUS
 
