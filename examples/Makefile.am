@@ -4,15 +4,15 @@ LDFLAGS =
 LDADD = $(SQLPLUSLIBS)
 
 noinst_PROGRAMS = resetdb simple1 custom1 custom2 custom3 custom4 \
-		complic1 fieldinf1 sinisa_ex updel_ex load_file cgi_image
+		complic1 fieldinf1 dbinfo updel_ex load_file cgi_image
 
 noinst_HEADERS = util.hh
 
 simple1_SOURCES = simple1.cc util.cc
 simple1_DEPENDENCIES = $(SQLPLUSLIBS)
 
-sinisa_ex_SOURCES = sinisa_ex.cc
-sinisa_ex_DEPENDENCIES = $(SQLPLUSLIBS)
+dbinfo_SOURCES = dbinfo.cc
+dbinfo_DEPENDENCIES = $(SQLPLUSLIBS)
 
 cgi_image_SOURCES = cgi_image.cc
 cgi_image_DEPENDENCIES = $(SQLPLUSLIBS)
