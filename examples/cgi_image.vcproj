@@ -33,10 +33,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libmysql.lib wsock32.lib"
+				AdditionalDependencies="libmysql.lib mysql++.lib wsock32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="c:\mysql\lib\debug"
+				AdditionalLibraryDirectories="c:\mysql\lib\debug, ..\debug"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
 				AssemblyDebug="1"/>
