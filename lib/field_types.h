@@ -32,7 +32,7 @@ public:
   //: Returns the field type for the field with an offset of i.
 };
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

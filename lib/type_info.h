@@ -206,7 +206,7 @@ inline bool operator != (const mysql_type_info &a, const std::type_info &b)
   return a.c_type() != b;
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

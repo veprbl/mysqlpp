@@ -41,7 +41,7 @@ public:
 	}
 };
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

@@ -318,7 +318,7 @@ inline ResUse& ResUse::operator = (const ResUse &other)
   return *this;
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

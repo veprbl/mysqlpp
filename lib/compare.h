@@ -79,6 +79,7 @@ mysql_cmp_cstr (uint i, const BinaryPred &func, const char *cmp2) {
   return MysqlCmpCStr<BinaryPred>(i, func, cmp2);
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
+

@@ -45,7 +45,7 @@ inline void strip_all_non_num (std::string& s)
 		if (!isdigit(s[counter])) { s.erase(counter,1); counter--;}
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

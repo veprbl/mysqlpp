@@ -40,7 +40,7 @@ public:
   //: returns the index number of the field with that name
 };
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

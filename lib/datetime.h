@@ -179,7 +179,7 @@ inline DateTime::DateTime(const std::string &str)
 	convert(str.c_str());
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif // !defined(MYSQLPP_DATETIME_H)
 

@@ -149,7 +149,7 @@ void Query::storein (T &con, const char *s)
   mysql->storein (con, s);
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

@@ -242,7 +242,7 @@ inline const SQLString &SQLQueryParms::operator[] (const char *str) const
   throw; // only here temporary 
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

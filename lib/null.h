@@ -84,7 +84,7 @@ inline std::ostream& operator << (std::ostream &o, const Null<Type,Behavior> &n)
   else return o << n.data;
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

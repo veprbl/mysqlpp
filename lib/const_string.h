@@ -118,7 +118,7 @@ inline bool operator >= (const_string &lhs, const_string &rhs)
   return compare(lhs,rhs) >= 0;
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

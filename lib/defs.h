@@ -27,7 +27,7 @@ typedef unsigned int uint;
 
 const bool use_exceptions = true;
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

@@ -276,7 +276,7 @@ public:
 	~Row() {data.clear(); is_nulls.clear(); initialized = false;}	
 }; 
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

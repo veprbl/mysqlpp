@@ -316,7 +316,7 @@ inline SQLQueryParms & operator << (ignore_type2 p, SQLString &in) {
   return *p.qparms << in;
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

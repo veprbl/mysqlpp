@@ -183,7 +183,7 @@ Type ColData_Tmpl<Str>::conv (Type dummy) const {
   return num;
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

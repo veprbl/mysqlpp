@@ -100,7 +100,7 @@ inline subscript_iterator<OnType,ReturnType,SizeType,DiffType> operator +
   return y + x;
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

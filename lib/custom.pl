@@ -65,7 +65,7 @@ print OUT0 << "---";
 
 #include "custom-macros.h"
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

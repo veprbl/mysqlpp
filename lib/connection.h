@@ -188,7 +188,7 @@ void Connection::storein_set (Set &sett, const std::string &str) {
 	}
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

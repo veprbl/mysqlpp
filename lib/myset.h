@@ -105,7 +105,7 @@ std::ostream& Set<Container>::out_stream (std::ostream &s) const
   return s;
 }
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 

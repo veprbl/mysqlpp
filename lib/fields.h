@@ -21,7 +21,7 @@ public:
   const Field& operator [] (int i) const {return operator [](size_type(i));} 
 };
 
-}; // end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif
 
