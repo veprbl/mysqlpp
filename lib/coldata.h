@@ -5,10 +5,10 @@
 
 #include <const_string.h>
 #include <convert.h>
-#include <defs.hh>
-#include <exceptions.hh>
+#include <defs.h>
+#include <exceptions.h>
 #include <null.h>
-#include <string_util.hh>
+#include <string_util.h>
 #include <type_info.h>
 
 #include <mysql.h>

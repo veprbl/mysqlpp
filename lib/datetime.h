@@ -2,7 +2,7 @@
 #define __datetime1_hh__
 
 #include <coldata.h>
-#include <defs.hh>
+#include <defs.h>
 #include <define_short.hh>
 #include <stream2string.h>
 #include <tiny_int.h>

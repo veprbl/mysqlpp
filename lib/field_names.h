@@ -2,13 +2,13 @@
 #ifndef __field_names1_hh__
 #define __field_names1_hh__
 
-#include "defs.hh"
-#include "define_short.hh"
-#include "coldata.h"
-#include "string_util.hh"
+#include <defs.h>
+#include <define_short.hh>
+#include <coldata.h>
+#include <string_util.h>
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 //: A vector of the field names.
 class FieldNames : public std::vector<std::string> {

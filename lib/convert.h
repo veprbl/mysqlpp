@@ -3,7 +3,7 @@
 
 #include <platform.h>
 
-#include <defs.hh>
+#include <defs.h>
 
 #include <stdlib.h>
 

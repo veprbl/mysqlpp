@@ -1,7 +1,7 @@
 #ifndef __field_types1_hh__
 #define __field_types1_hh__
 
-#include <defs.hh>
+#include <defs.h>
 #include <define_short.hh>
 #include <type_info.h>
 

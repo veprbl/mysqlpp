@@ -1,6 +1,6 @@
 #include <platform.h>
 
-#include <defs.hh>
+#include <defs.h>
 #include <define_short.hh>
 
 #include <coldata.h>
@@ -41,4 +41,4 @@
 #include <undef_short.hh>
 #endif
 
-#include <exceptions.hh>
+#include <exceptions.h>

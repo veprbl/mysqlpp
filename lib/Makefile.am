@@ -16,16 +16,17 @@ libmysqlpp_la_SOURCES = coldata.cc connection.cc datetime.cc field_names.cc \
 	type_info.cc vallist.cc string_util.cc
 
 include_HEADERS = \
+	bad_query.h \
 	coldata.h \
 	compare.h \
 	connection.h \
 	const_string.h \
 	convert.h \
 	custom.h custom-macros.h \
-	defs.hh \
+	defs.h \
 	define_short.hh \
 	datetime.h \
-	exceptions.hh \
+	exceptions.h \
 	field_names.h \
 	field_types.h \
 	fields1.hh fields2.hh \
@@ -44,7 +45,7 @@ include_HEADERS = \
 	stream2string.h \
 	tiny_int.h \
 	type_info.h \
-	string_util.hh \
+	string_util.h \
 	vallist.h
 
 all-local: custom.h custom-macros.h

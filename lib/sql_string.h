@@ -1,10 +1,11 @@
 #ifndef __sql_string1_hh__
 #define __sql_string1_hh__
 
+#include <defs.h>
+#include <define_short.hh>
+
 #include <stdio.h>
 #include <string>
-#include "defs.hh"
-#include "define_short.hh"
 
 //: A special string that will convert from anything.
 // A class subclassed from string that has the additional ability to

@@ -2,9 +2,9 @@
 #define __row1_hh__
 
 #include <coldata.h>
-#include <defs.hh>
+#include <defs.h>
 #include <define_short.hh>
-#include <exceptions.hh>
+#include <exceptions.h>
 #include <resiter.h>
 #include <vallist.h>
 
