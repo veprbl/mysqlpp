@@ -215,7 +215,7 @@ inline std::ostream& operator << (quote_double_only_type1 o,
 
 // escape manipulator
 
-enum escape_type0 {mysql_escape};
+enum escape_type0 {escape};
 struct escape_type1 {
   std::ostream *ostr;
   escape_type1(std::ostream *o) : ostr(o) {}
@@ -261,7 +261,7 @@ inline std::ostream& operator << (escape_type1 o, char* const &in) {
 
 //do nothing manipulator
 
-enum do_nothing_type0 {mysql_do_nothing};
+enum do_nothing_type0 {do_nothing};
 struct do_nothing_type1 {
   std::ostream *ostr;
   do_nothing_type1(std::ostream *o) : ostr(o) {}
@@ -290,7 +290,7 @@ inline SQLQueryParms & operator << (do_nothing_type2 p, SQLString &in) {
   return *p.qparms << in;
 }
 
-enum ignore_type0 {mysql_ignore};
+enum ignore_type0 {ignore};
 
 struct ignore_type2 {
   SQLQueryParms *qparms;
