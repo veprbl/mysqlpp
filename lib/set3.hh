@@ -2,7 +2,7 @@
 #define __set3_hh__
 
 #include "set2.hh"
-#include "coldata2.hh"
+#include "coldata.h"
 
 template <class Insert>
 void set2container (const char *str, Insert insert) {

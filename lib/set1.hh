@@ -3,7 +3,7 @@
 
 #include <platform.h>
 
-#include <coldata1.hh>
+#include <coldata.h>
 #include <define_short.hh>
 
 #include <iostream>

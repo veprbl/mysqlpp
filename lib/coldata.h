@@ -1,14 +1,24 @@
 #ifndef __coldata1_hh__
 #define __coldata1_hh__
 
+#include <platform.h>
+
 #include <const_string1.hh>
+#include <convert3.hh>
 #include <defs.hh>
 #include <exceptions.hh>
 #include <null1.hh>
+#include <null3.hh>
+#include <string_util.hh>
 #include <type_info1.hh>
+
+#include <mysql.h>
 
 #include <typeinfo>
 #include <string>
+
+#include <stdlib.h>
+
 
 //!  with_class = mysql_ColData
 
@@ -101,5 +111,81 @@ typedef mysql_ColData<std::string>       MutableColData;
 typedef ColData MysqlString;
 //: For backwards compatibility. Do not use.
 typedef ColData MysqlStr;
+
+
+
+#ifndef NO_BINARY_OPERS
+
+#define oprsw(opr, other, conv) \
+  template<class Str> \
+  inline other operator opr (mysql_ColData<Str> x, other y) \
+    {return (conv)x opr y;} \
+  template<class Str> \
+  inline other operator opr (other x, mysql_ColData<Str> y) \
+    {return x opr (conv)y;}
+
+#define operator_binary(other, conv) \
+  oprsw(+, other, conv) \
+  oprsw(-, other, conv) \
+  oprsw(*, other, conv) \
+  oprsw(/, other, conv) 
+
+#define operator_binary_int(other, conv) \
+  operator_binary(other, conv) \
+  oprsw(%, other, conv) \
+  oprsw(&, other, conv) \
+  oprsw(^, other, conv) \
+  oprsw(|, other, conv) \
+  oprsw(<<, other, conv) \
+  oprsw(>>, other, conv) 
+
+operator_binary(float, double)
+operator_binary(double, double)
+
+operator_binary_int(char,long int)
+operator_binary_int(int, long int)
+operator_binary_int(short int, long int)
+operator_binary_int(long int, long int)
+
+operator_binary_int(unsigned char, unsigned long int)
+operator_binary_int(unsigned int, unsigned long int)
+operator_binary_int(unsigned short int, unsigned long int)
+operator_binary_int(unsigned long int, unsigned long int)
+
+#if !defined(NO_LONG_LONGS)
+operator_binary_int(longlong, longlong)
+operator_binary_int(ulonglong, ulonglong)
+#endif
+
+#endif // NO_BINARY_OPERS
+
+
+template <class Str> template<class T, class B> 
+mysql_ColData<Str>::operator Null<T,B> () const {
+  if ((*this)[0] == 'N' && (*this)[1] == 'U' && 
+      (*this)[2] == 'L' && (*this)[3] == 'L' && Str::size() == 4)
+    return Null<T,B>(null);
+  else return Null<T,B>(conv(T()));
+}
+
+
+template <class Str> template<class Type> 
+Type mysql_ColData<Str>::conv (Type dummy) const {
+	std::string strbuf = buf;
+	strip_all_blanks(strbuf);
+  size_t len = strbuf.size();
+  const char *str = strbuf.c_str();
+  const char *end = str;
+  Type num = mysql_convert<Type>(str, end);
+  if (*end == '.') {
+    end++;
+    for (;*end == '0'; end++);
+  }
+  if (*end != '\0' && end != NULL ) {
+    throw BadConversion (typeid(Type).name(), Str::c_str(), end - str, len);
+  }
+  return num;
+}
+
 
 #endif

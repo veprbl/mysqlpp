@@ -6,7 +6,7 @@
 #include "exceptions.hh"
 #include "defs.hh"
 #include "define_short.hh"
-#include "coldata1.hh"
+#include "coldata.h"
 #include "resiter1.hh"
 #include "vallist1.hh"
 

@@ -2,7 +2,7 @@
 #define __datetime2_hh__
 
 #include "datetime1.hh"
-#include "coldata2.hh"
+#include "coldata.h"
 #include "stream2string2.hh"
 
 inline mysql_dt_base::operator std::string () {

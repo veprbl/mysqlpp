@@ -4,7 +4,7 @@
 
 #include "query1.hh"
 #include "connection2.hh"
-#include "coldata2.hh"
+#include "coldata.h"
 
 inline bool Query::success() {
   if (!Success) return false;

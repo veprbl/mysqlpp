@@ -7,7 +7,7 @@
 
 #include "defs.hh"
 #include "define_short.hh"
-#include "coldata1.hh"
+#include "coldata.h"
 #include "stream2string1.hh"
 #include "tiny_int1.hh"
 

@@ -4,7 +4,7 @@
 
 #include "defs.hh"
 #include "define_short.hh"
-#include "coldata1.hh"
+#include "coldata.h"
 #include "string_util.hh"
 
 #include <vector>
