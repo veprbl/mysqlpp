@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <sqlplus.hh>
 
+using namespace std;
+
 int main() {
   // The full format for the Connection constructor is
   // Connection(cchar *db, cchar *host="", 
@@ -14,7 +16,7 @@ int main() {
 		Query query = con.query();
 		// This creates a query object that is bound to con.
 
-		(std::ostream&)query << "select * from stock";
+		query << "select * from stock";
 		// You can write to the query object like you would any other ostrem
 
 		Result res = query.store();
@@ -28,10 +30,10 @@ int main() {
   
 		Row row;
 		cout.setf(ios::left);
-		cout << std::setw(17) << "Item"
-			<< std::setw(4)  << "Num"
-			<< std::setw(7)  << "Weight"
-			<< std::setw(7)  << "Price"
+		cout << setw(17) << "Item" 
+			<< setw(4)  << "Num"
+			<< setw(7)  << "Weight"
+			<< setw(7)  << "Price" 
 			<< "Date" << endl
 			<< endl;
   
@@ -39,12 +41,12 @@ int main() {
 		// The Result class has a read-only Random Access Iterator
 		for (i = res.begin(); i != res.end(); i++) {
 			row = *i;
-			cout << std::setw(17) << row[0].c_str()
-				<< std::setw(4)  << row[1].c_str()
-				<< std::setw(7)  << row.lookup_by_name("weight").c_str()
+			cout << setw(17) << row[0].c_str()
+				<< setw(4)  << row[1].c_str()
+				<< setw(7)  << row.lookup_by_name("weight").c_str()
 				// you can use either the index number or column name when
 				// retrieving the colume data as demonstrated above.
-				<< std::setw(7)  << row[3].c_str()
+				<< setw(7)  << row[3].c_str()
 				<< row[4] << endl;
 		}
   } catch (BadQuery &er) { // handle any connection or

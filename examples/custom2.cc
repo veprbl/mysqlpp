@@ -11,11 +11,11 @@ using namespace std;
 
 // util.hh/cc contains the print_stock_table function
 
-sql_create_5(stock, 1, 5, string, item, longlong, num,
+sql_create_5(stock, 1, 5, string, item, longlong, num, 
 	     double, weight, double, price, Date, sdate)
 
 int main() {
-    try { // its in one big try block
+  try { // its in one big try block
 
     Connection con(use_exceptions);
     con.connect("mysql_cpp_data");

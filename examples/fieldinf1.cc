@@ -2,15 +2,16 @@
 #include <iostream>
 #include <iomanip>
 #include <sqlplus.hh>
-using std::setw;
-using std::string;
+
+using namespace std;
+
 int main() {
   try { // its in one big try block
 
     Connection con(use_exceptions);
     con.connect("mysql_cpp_data");
     Query query = con.query();
-    (std::ostream&)query << "select * from stock";
+    query << "select * from stock";
     Result res = query.store();
     
     cout << "Query: " << query.preview() << endl;

@@ -2,6 +2,8 @@
 #include <iostream>
 #include <sqlplus.hh>
 
+using namespace std;
+
 int main (int argc, char *argv[]) {
   Connection connection(use_exceptions);
   try { // the entire main block is one big try block;
@@ -29,14 +31,14 @@ int main (int argc, char *argv[]) {
       query.execute("drop table stock");
     } catch (BadQuery &er) {}
     
-    (std::ostream&)query << "create table stock  (item char(20) not null, num bigint,"
+    query << "create table stock  (item char(20) not null, num bigint,"
 	  << "weight double, price double, sdate date)";
     query.execute(RESET_QUERY);
     // send the query to create the table and execute it.  The
     // RESET_QUERY tells the query object to reset it self after
     // execution
     
-    (std::ostream&)query << "insert into %5:table values (%0q, %1q, %2, %3, %4q)";
+    query << "insert into %5:table values (%0q, %1q, %2, %3, %4q)";
     query.parse();
     // set up the template query I will use to insert the data.  The
     // parse method call is important as it is what lets the query
