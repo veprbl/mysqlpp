@@ -21,7 +21,7 @@ main()
 		ostringstream strbuf;
 		unsigned int i = 0;
 		con.real_connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD, 3306,
-						 (int) 0, 60, NULL);
+						 0, 60, NULL);
 		Query query = con.query();
 		query << MY_QUERY;
 		ResUse res = query.use();
@@ -36,7 +36,7 @@ main()
 		string output(strbuf.str());
 		output.erase(output.size() - 1, 1);
 		output += ")";
-		query.exec((const string &) output);	// cout << output << endl;
+		query.exec(output);	// cout << output << endl;
 		return 0;
 	}
 	catch (BadQuery& er) {
