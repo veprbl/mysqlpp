@@ -19,7 +19,7 @@ Patches for any of these thoughtfully considered!
 
 	o Does it build under GCC 3.4 yet?
 	
-	o One report says it still doesn't build under GCC 3.5.
+	o One report says it doesn't build under what will become GCC 4.0.
 
 	o Why can Query objects not be reused?
 
