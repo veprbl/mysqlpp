@@ -6,7 +6,7 @@
 extern const char* kpcSampleDatabase;
 
 void print_stock_table(mysqlpp::Query& query);
-bool connect_sample_db(int argc, char *argv[], mysqlpp::Connection& con,
+bool connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 		const char* kdb = 0);
 
 #endif

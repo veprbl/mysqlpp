@@ -50,7 +50,7 @@ print_stock_table(mysqlpp::Query& query)
 
 
 bool
-connect_sample_db(int argc, char *argv[], mysqlpp::Connection& con,
+connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 		const char *kdb)
 {
 	if (argc < 1) {
