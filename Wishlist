@@ -23,8 +23,6 @@ Patches for any of these thoughtfully considered!
 
 	o Why can Query objects not be reused?
 
-	o Get VC++ to build project without warnings on at least /W3.
-
 	o Documentation could probably use a thorough reworking.
 
 	o Overload SQLQuery::insert() to accept a pair of STL iterators
