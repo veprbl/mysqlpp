@@ -90,17 +90,17 @@ Comments=
 Count=6
 Item0=$(BCB)\include;$(BCB)\include\vcl;$(MySQL)\include
 Item1=$(BCB)\include;$(BCB)\include\vcl;$(MySQL)\include;P:\mtkProject\mysqlpp
-Item2=sqlplusint;$(BCB)\include;$(BCB)\include\vcl;$(MySQL)\include
-Item3=sqlplusint;P:\MySQL\NewBuild\sqlplusint;$(BCB)\include;$(BCB)\include\vcl;$(MySQL)\include
-Item4=P:\MySQL\NewBuild\sqlplusint;$(BCB)\include;$(BCB)\include\vcl;$(MySQL)\include
-Item5=P:\MySQL\NewBuild\sqlplusint;$(BCB)\include;$(BCB)\include\vcl
+Item2=lib;$(BCB)\include;$(BCB)\include\vcl;$(MySQL)\include
+Item3=lib;P:\MySQL\NewBuild\lib;$(BCB)\include;$(BCB)\include\vcl;$(MySQL)\include
+Item4=P:\MySQL\NewBuild\lib;$(BCB)\include;$(BCB)\include\vcl;$(MySQL)\include
+Item5=P:\MySQL\NewBuild\lib;$(BCB)\include;$(BCB)\include\vcl
 
 [HistoryLists\hlLibraryPath]
 Count=4
 Item0=$(BCB)\lib\obj;$(BCB)\lib
-Item1=sqlplusint;$(BCB)\lib\obj;$(BCB)\lib
-Item2=sqlplusint;P:\MySQL\NewBuild\sqlplusint;$(BCB)\lib\obj;$(BCB)\lib
-Item3=P:\MySQL\NewBuild\sqlplusint;$(BCB)\lib\obj;$(BCB)\lib
+Item1=lib;$(BCB)\lib\obj;$(BCB)\lib
+Item2=lib;P:\MySQL\NewBuild\lib;$(BCB)\lib\obj;$(BCB)\lib
+Item3=P:\MySQL\NewBuild\lib;$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1
