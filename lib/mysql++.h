@@ -13,12 +13,12 @@
 #include <field_types.h>
 #include <fields.h>
 #include <manip.h>
+#include <myset.h>
 #include <null.h>
 #include <query.h>
 #include <resiter.h>
 #include <result.h>
 #include <row.h>
-#include <set.h>
 #include <sql_query.h>
 #include <sql_string.h>
 #include <stream2string.h>

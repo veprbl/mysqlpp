@@ -1,5 +1,5 @@
-#ifndef __set1_hh__
-#define __set1_hh__
+#ifndef __myset_h__
+#define __myset_h__
 
 #include <platform.h>
 
