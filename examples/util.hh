@@ -3,8 +3,8 @@
 
 #include <mysql++.h>
 
-void print_stock_table(Query& query);
-void connect_sample_db(int argc, char *argv[], Connection& con,
+void print_stock_table(mysqlpp::Query& query);
+void connect_sample_db(int argc, char *argv[], mysqlpp::Connection& con,
 		const char* kdb = "mysql_cpp_data");
 
 #endif
