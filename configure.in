@@ -118,7 +118,7 @@ AC_C_CONST
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strtol)
 
-dnl Check for 
+dnl Check for additional argument to mysql_shutdown() in later versions.
 AC_CACHE_CHECK([for level argument to mysql_shutdown()], ac_cv_mysql_shutdown_arg,
 [
 	AC_TRY_LINK(
