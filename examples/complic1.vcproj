@@ -118,13 +118,10 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\complic1.cc">
+			RelativePath=".\complic1.cpp">
 		</File>
 		<File
-			RelativePath=".\dummy.cpp">
-		</File>
-		<File
-			RelativePath=".\util.cc">
+			RelativePath=".\util.cpp">
 		</File>
 		<File
 			RelativePath=".\util.hh">

@@ -105,52 +105,49 @@
 			Name="Source Files"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="lib\coldata.cc">
+				RelativePath=".\lib\coldata.cpp">
 			</File>
 			<File
-				RelativePath="lib\connection.cc">
+				RelativePath=".\lib\connection.cpp">
 			</File>
 			<File
-				RelativePath="lib\datetime.cc">
+				RelativePath=".\lib\datetime.cpp">
 			</File>
 			<File
-				RelativePath=".\examples\dummy.cpp">
+				RelativePath=".\lib\field_names.cpp">
 			</File>
 			<File
-				RelativePath="lib\field_names.cc">
+				RelativePath=".\lib\field_types.cpp">
 			</File>
 			<File
-				RelativePath="lib\field_types.cc">
+				RelativePath=".\lib\fields.cpp">
 			</File>
 			<File
-				RelativePath=".\lib\fields.cc">
+				RelativePath=".\lib\manip.cpp">
 			</File>
 			<File
-				RelativePath="lib\manip.cc">
+				RelativePath=".\lib\myset.cpp">
 			</File>
 			<File
-				RelativePath=".\lib\myset.cc">
+				RelativePath=".\lib\query.cpp">
 			</File>
 			<File
-				RelativePath="lib\query.cc">
+				RelativePath=".\lib\result.cpp">
 			</File>
 			<File
-				RelativePath="lib\result.cc">
+				RelativePath=".\lib\row.cpp">
 			</File>
 			<File
-				RelativePath=".\lib\row.cc">
+				RelativePath=".\lib\sql_query.cpp">
 			</File>
 			<File
-				RelativePath="lib\sql_query.cc">
+				RelativePath=".\lib\string_util.cpp">
 			</File>
 			<File
-				RelativePath="lib\string_util.cc">
+				RelativePath=".\lib\type_info.cpp">
 			</File>
 			<File
-				RelativePath="lib\type_info.cc">
-			</File>
-			<File
-				RelativePath="lib\vallist.cc">
+				RelativePath=".\lib\vallist.cpp">
 			</File>
 		</Filter>
 		<Filter

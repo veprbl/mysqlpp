@@ -118,10 +118,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\dummy.cpp">
-		</File>
-		<File
-			RelativePath=".\updel.cc">
+			RelativePath=".\updel.cpp">
 		</File>
 	</Files>
 	<Globals>

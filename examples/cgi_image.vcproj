@@ -118,7 +118,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\cgi_image.cc">
+			RelativePath=".\cgi_image.cpp">
 			<FileConfiguration
 				Name="Debug|Win32">
 				<Tool
@@ -134,9 +134,6 @@
 					AdditionalIncludeDirectories=""
 					UsePrecompiledHeader="0"/>
 			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\dummy.cpp">
 		</File>
 	</Files>
 	<Globals>

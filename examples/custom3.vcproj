@@ -118,7 +118,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\custom3.cc">
+			RelativePath=".\custom3.cpp">
 			<FileConfiguration
 				Name="Debug|Win32">
 				<Tool
@@ -136,10 +136,7 @@
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath=".\dummy.cpp">
-		</File>
-		<File
-			RelativePath=".\util.cc">
+			RelativePath=".\util.cpp">
 		</File>
 		<File
 			RelativePath=".\util.hh">
