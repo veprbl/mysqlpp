@@ -1,3 +1,7 @@
+#ifdef __WIN32__
+#include <winsock.h>
+#endif
+
 #include "defs.hh"
 #include "define_short.hh"
 
