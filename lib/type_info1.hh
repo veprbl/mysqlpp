@@ -1,7 +1,7 @@
 #ifndef __type_info1_hh__
 #define __type_info1_hh__
 
-#include <mysql++-windows.hh>
+#include <platform.h>
 
 #include <mysql.h>
 

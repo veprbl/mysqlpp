@@ -1,9 +1,10 @@
 #ifndef __set1_hh__
 #define __set1_hh__
 
+#include <platform.h>
+
 #include <coldata1.hh>
 #include <define_short.hh>
-#include <mysql++-windows.hh>
 
 #include <iostream>
 #include <set>

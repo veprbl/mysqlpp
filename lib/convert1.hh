@@ -1,8 +1,9 @@
 #ifndef __convert1_hh__
 #define __convert1_hh__
 
+#include <platform.h>
+
 #include <defs.hh>
-#include <mysql++-windows.hh>
 
 #include <stdlib.h>
 

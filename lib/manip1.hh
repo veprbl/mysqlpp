@@ -1,9 +1,10 @@
 #ifndef __manip1_hh__
 #define __manip1_hh__
 
+#include <platform.h>
+
 #include <datetime1.hh>
 #include <define_short.hh>
-#include <mysql++-windows.hh>
 #include <sql_string1.hh>
 #include <sql_query1.hh>
 #include <set1.hh>

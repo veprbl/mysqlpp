@@ -1,6 +1,8 @@
 #ifndef __result1_hh__
 #define __result1_hh__
 
+#include <platform.h>
+
 #include <row1.hh>
 #include <resiter1.hh>
 
@@ -9,7 +11,6 @@
 #include <field_names1.hh>
 #include <field_types1.hh>
 #include <fields1.hh>
-#include <mysql++-windows.hh>
 
 #include <mysql.h>
 

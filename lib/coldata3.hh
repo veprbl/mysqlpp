@@ -1,9 +1,10 @@
 #ifndef __coldata3_hh__
 #define __coldata3_hh__
 
+#include <platform.h>
+
 #include <coldata2.hh>
 #include <convert3.hh>
-#include <mysql++-windows.hh>
 #include <null3.hh>
 
 #include <mysql.h>

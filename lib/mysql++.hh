@@ -1,4 +1,4 @@
-#include <mysql++-windows.hh>
+#include <platform.h>
 
 #include <defs.hh>
 #include <define_short.hh>

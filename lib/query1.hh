@@ -1,9 +1,10 @@
 #ifndef __query1_hh__
 #define __query1_hh__
 
+#include <platform.h>
+
 #include <connection1.hh>
 #include <define_short.hh>
-#include <mysql++-windows.hh>
 #include <result1.hh>
 #include <sql_query1.hh>
 

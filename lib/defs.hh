@@ -1,9 +1,10 @@
 #ifndef __mysql_defs_h_
 #define __mysql_defs_h_
 
+#include <platform.h>
+
 #include <define_short.hh>
 
-#include <mysql++-windows.hh>
 #include <mysql.h>
 
 #if defined(NO_LONG_LONGS)

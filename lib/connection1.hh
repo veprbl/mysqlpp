@@ -1,7 +1,8 @@
 #ifndef __connection1_hh__
 #define __connection1_hh__
 
-#include <mysql++-windows.hh>
+#include <platform.h>
+
 #include <define_short.hh>
 #include <exceptions.hh>
 #include <query1.hh>
