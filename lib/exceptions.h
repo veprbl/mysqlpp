@@ -1,15 +1,10 @@
 #ifndef MYSQLPP_EXCEPTIONS_H
 #define MYSQLPP_EXCEPTIONS_H
+
+#include <exception>
 #include <string>
 
 namespace mysqlpp {
-
-#undef USE_STANDARD_EXCEPTION
-
-
-#ifdef USE_STANDARD_EXCEPTION //new non-default exception style.
-                              // to use these new exceptions run configure
-                              // with --enable-exception flag.
 
 //: Exception thrown when a BadQuery is encountered
 class BadQuery : public std::exception {
@@ -42,7 +37,7 @@ public:
   virtual const char* what( void ) const throw () { return _what.c_str(); }
 };
 
-//: Thrown when a *Null* value is trying to be converted into a type 
+//: Thrown when a *Null* value is trying to be converted into a type
 //: it can't convert to.
 class BadNullConversion : public std::exception {
   const std::string _what;
@@ -53,7 +48,7 @@ public:
 };
 
 //: Exception thrown when not enough parameters are provided
-// Thrown when not enough parameters are provided for a 
+// Thrown when not enough parameters are provided for a
 // template query.
 class SQLQueryNEParms : public std::exception {
   const std::string _what;
@@ -76,55 +71,6 @@ public:
   ~BadFieldName() throw() {}
   virtual const char* what( void ) const throw () { return _what.c_str(); }
 };
-
-#else //original, default exception style
-
-struct BadQuery {
-  BadQuery(const char* pc) : error(pc) {}
-  BadQuery(std::string& er) : error(er) {}
-  std::string error; //: The error message
-};
-
-
-//: Exception structure thrown when a bad conversion takes place
-struct BadConversion {
-  const char*  type_name;  //:
-  const std::string data;       //:
-  size_t       retrieved;  //:
-  size_t       actual_size;//:
-  BadConversion(const char* tn, const char* d, size_t r, size_t a) : type_name(tn), data(d), retrieved(r), actual_size(a) {};
-};
-
-
-//: Thrown when a *Null* value is trying to be converted into a type 
-//: it can't convert to.
-class BadNullConversion {};
-
-
-
-//: Exception thrown when not enough parameters are provided
-// Thrown when not enough parameters are provided for a 
-// template query.
-struct SQLQueryNEParms {
-  SQLQueryNEParms(const char *c) : error(c) {}
-  const char* error; //:
-};
-
-
-//: Exception thrown when lookup_by_name can't find the specified field.
-class BadFieldName {
-public:
-  std::string error;
-
-  BadFieldName(const char *bad_field)
-  {
-      error = "Unknown field name: ";
-      error += bad_field;
-  }
-};
-
-
-#endif
 
 } // end namespace mysqlpp
 
