@@ -4,6 +4,7 @@ Version: 1.7.21
 Release: 1
 Copyright: LGPL
 Group: Development/Databases
+Requires: libmysqlclient
 Source: http://tangentsoft.net/mysql++/releases/mysql++-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-buildroot
 %description
@@ -15,6 +16,7 @@ programs, you also need to install the -devel package.
 %package devel
 Summary: MySQL++ developer files (headers, examples, documentation, etc.)
 Group: Development/Databases
+Requires: mysql++
 %description devel
 These are the files needed to compile MySQL++ based programs, and to
 learn how to use the library.  If you aren't building your own programs,
