@@ -12,18 +12,18 @@
 //#define Connection  MysqlConnection
 
 // result.h
-#define ResNSel     MysqlResNSel
-#define ResUse      MysqlResUse
-#define Result      MysqlRes
-#define Field       MysqlField
-#define Fields      MysqlFields
+//#define ResNSel     MysqlResNSel
+//#define ResUse      MysqlResUse
+//#define Result      MysqlRes
+//#define Field       MysqlField
+//#define Fields      MysqlFields
 
 // resiter.h
 #define ResIter     MysqlResIter
 #define ResultIter  MysqlResIter
 
 // row.h
-#define Row          MysqlRow
+//#define Row          MysqlRow
 // #define MutableRow   MysqlMutableRow
 
 // field_names.h
