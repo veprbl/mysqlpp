@@ -31,6 +31,9 @@ New Feature Requests
 Bug Fix/Maintenance Items
 -------------------------
 
+	o The examples appear to be linking against installed libmysqlpp if
+	  it exists, not the one in ../lib.  Why?
+
 	o Examples should fail more gracefully when run on a system where
 	  the sample database has not yet been created by resetdb.
 
