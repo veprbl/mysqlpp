@@ -13,7 +13,7 @@ with other STL Containers.
 
 %prep
 %setup -q
-./configure --with-prefix=/usr --includedir=/usr/include/mysql++
+./configure --prefix=/usr --includedir=/usr/include/mysql++
 
 %build
 make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
@@ -23,7 +23,6 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/lib
 mkdir -p $RPM_BUILD_ROOT/usr/include
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-cd $RPM_BUILD_ROOT/usr/lib
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -35,12 +34,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc doc examples LGPL README
 
+/usr/include/mysql++
 /usr/lib/libmysqlpp.a
 /usr/lib/libmysqlpp.la
-/usr/lib/libmysqlpp.so
-/usr/lib/libmysqlpp.so.1
 /usr/lib/libmysqlpp.so.1.0.0
-/usr/include/mysql++
 
 %changelog
 * Tue Aug 17 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.10-1
