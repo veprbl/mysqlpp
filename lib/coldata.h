@@ -3,7 +3,7 @@
 
 #include <platform.h>
 
-#include <const_string1.hh>
+#include <const_string.h>
 #include <convert3.hh>
 #include <defs.hh>
 #include <exceptions.hh>
