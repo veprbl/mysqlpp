@@ -19,6 +19,7 @@ AC_CHECK_FUNCS(strtol)
 
 
 dnl Checks for libraries and local system features
+ACX_PTHREAD
 MYSQL_API_LOCATION
 MYSQL_SHUTDOWN_ARG
 AC_CHECK_HEADERS(zlib.h, AC_CHECK_LIB(z, gzread, [],
