@@ -36,9 +36,9 @@ AC_DEFUN([MYSQL_API_LOCATION],
 	#
 	if test "x$acx_pthread_ok" = xyes
 	then
-		MYSQLLIB=mysqlclient_r
+		MYSQL_C_LIB=mysqlclient_r
 	else
-		MYSQLLIB=mysqlclient
+		MYSQL_C_LIB=mysqlclient
 	fi
 
 	#
@@ -49,7 +49,7 @@ AC_DEFUN([MYSQL_API_LOCATION],
 	for m in $MYSQL_lib_check
 	do
 		if test -d "$m" && \
-			(test -f "$m/lib$MYSQLLIB.so" || test -f "$m/lib$MYSQLLIB.a")
+			(test -f "$m/lib$MYSQL_C_LIB.so" || test -f "$m/lib$MYSQL_C_LIB.a")
 		then
 			MYSQL_libdir=$m
 			break
@@ -102,7 +102,8 @@ AC_DEFUN([MYSQL_API_LOCATION],
 
 	CPPFLAGS="$CPPFLAGS -I${MYSQL_incdir}"
 
-	AC_CHECK_LIB($MYSQLLIB, mysql_store_result, [], [
+	AC_CHECK_LIB($MYSQL_C_LIB, mysql_store_result, [], [
 			AC_MSG_ERROR([Could not find working MySQL client library!]) ])
+	AC_SUBST(MYSQL_C_LIB)
 ]) dnl MYSQL_API_LOCATION
 
