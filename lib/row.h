@@ -6,10 +6,13 @@
 #include <define_short.hh>
 #include <exceptions.h>
 #include <resiter.h>
+//#include <result.h>
 #include <vallist.h>
 
 #include <vector>
 #include <string>
+
+#include <string.h>
 
 template <class ThisType, class Res>
 class RowTemplate {
@@ -257,12 +260,12 @@ public:
   Row& self() {return *this;}
 
   const ResUse&  parent() const {return *res;}
-  inline size_type     size() const;
+  size_type     size() const;
   //: Returns the number of columns.
-  inline const ColData   operator [] (size_type i) const;
+  const ColData   operator [] (size_type i) const;
   //: Returns the value of the field with the index of i.
 
-  inline const ColData lookup_by_name(const char*) const;
+  const ColData lookup_by_name(const char*) const;
 
   const char *raw_data(int i) const {return data[i].data();}
 
@@ -273,5 +276,4 @@ public:
 
 
 #endif
-
 
