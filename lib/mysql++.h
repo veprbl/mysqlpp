@@ -11,13 +11,13 @@
 #include <datetime.h>
 #include <field_names.h>
 #include <field_types.h>
-#include <fields1.hh>
+#include <fields.h>
 #include <manip.h>
 #include <null.h>
 #include <query.h>
 #include <resiter.h>
-#include <result1.hh>
-#include <row1.hh>
+#include <result.h>
+#include <row.h>
 #include <set.h>
 #include <sql_query.h>
 #include <sql_string.h>
@@ -25,13 +25,6 @@
 #include <tiny_int.h>
 #include <type_info.h>
 #include <vallist.h>
-
-#include <fields2.hh>
-#include <result2.hh>
-#include <row2.hh>
-
-#include <result3.hh>
-#include <row3.hh>
 
 #ifdef MYSQL_NO_SHORT_NAMES
 #include <undef_short.hh>
