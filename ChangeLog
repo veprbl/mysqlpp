@@ -1,3 +1,24 @@
+1.7.11, 2004.08.17
+
+	o Renamed mysql++, defs and define_short files, adding .hh to the
+	  end of each.  (They're header files!)  This shouldn't impact
+	  library users, since these are hopefully used internal to the
+	  library only.
+
+	o Removed sqlplus.hh file.  Use mysql++.hh instead.
+	
+	o Added mysql++.spec, extracted from contributed 1.7.9 source RPM, 
+	  and updated it significantly.  Also, added an 'rpm' target to
+	  Makefile.am to automate the process of building RPMs.
+
+	o Added bootstrap and LGPL files to distribution tarball.
+
+	o Added pre-1.7.10 history to this file.
+
+	o Removed .version file.  Apparently it's something required by old
+	  versions of libtool.
+
+
 1.7.10, 2004.08.16
 
 	o Maintenance taken over by Warren Young (mysqlpp at etr dash usa
