@@ -28,7 +28,7 @@ include_HEADERS = \
 	datetime.h \
 	exceptions.hh \
 	field_names.h \
-	field_types1.hh field_types2.hh field_types3.hh \
+	field_types.h \
 	fields1.hh fields2.hh \
 	manip1.hh manip2.hh manip3.hh \
 	mysql++.h mysql++.hh \

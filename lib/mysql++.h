@@ -10,7 +10,7 @@
 #include <convert.h>
 #include <datetime.h>
 #include <field_names.h>
-#include <field_types1.hh>
+#include <field_types.h>
 #include <fields1.hh>
 #include <manip1.hh>
 #include <null1.hh>
@@ -26,7 +26,6 @@
 #include <type_info1.hh>
 #include <vallist1.hh>
 
-#include <field_types2.hh>
 #include <fields2.hh>
 #include <manip2.hh>
 #include <null2.hh>
@@ -40,7 +39,6 @@
 #include <type_info2.hh>
 #include <vallist2.hh>
 
-#include <field_types3.hh>
 #include <manip3.hh>
 #include <null3.hh>
 #include <result3.hh>

@@ -9,7 +9,7 @@
 #include <define_short.hh>
 #include <exceptions.hh>
 #include <field_names.h>
-#include <field_types1.hh>
+#include <field_types.h>
 #include <fields1.hh>
 
 #include <mysql.h>
