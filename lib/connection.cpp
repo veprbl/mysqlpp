@@ -176,7 +176,7 @@ ResNSel Connection::execute(const string& str, bool throw_excptns)
 	Success = false;
 	if (lock()) {
 		if (throw_excptns) {
-			throw BadQuery(error());
+			throw BadQuery("lock failed");
 		}
 		else {
 			return ResNSel();
@@ -212,7 +212,7 @@ Result Connection::store(const string& str, bool throw_excptns)
 
 	if (lock()) {
 		if (throw_excptns) {
-			throw BadQuery(error());
+			throw BadQuery("lock failed");
 		}
 		else {
 			return Result();
@@ -246,7 +246,7 @@ ResUse Connection::use(const string& str, bool throw_excptns)
 	Success = false;
 	if (lock()) {
 		if (throw_excptns) {
-			throw BadQuery(error());
+			throw BadQuery("lock failed");
 		}
 		else {
 			return ResUse();
