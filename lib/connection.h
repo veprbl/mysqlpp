@@ -6,7 +6,7 @@
 #include <define_short.hh>
 #include <exceptions.h>
 #include <query.h>
-#include <result1.hh>
+#include <result.h>
 
 #include <mysql.h>
 
@@ -119,19 +119,27 @@ public:
   my_ulonglong affected_rows()  {return mysql_affected_rows((MYSQL*) &mysql);}
   my_ulonglong insert_id () {return mysql_insert_id(&mysql);}
 
-  template <class Sequence> void storein_sequence(Sequence &, const std::string &); //:
-  template <class Set>      void storein_set(Set &, const std::string &);  //:
+  template <class Sequence>
+  void storein_sequence(Sequence &, const std::string &); //:
+  template <class Set>
+  void storein_set(Set &, const std::string &);  //:
 
   //!dummy: void storein(TYPE &con, const string &s);
   //: Stores the results in TYPE.  
   // Stores the result in TYPE. TYPE must be some sort of STL container.  
 
-  template <class T>        void storein(std::vector<T> &con, const std::string &s)
+  template <class T>
+  void storein(std::vector<T> &con, const std::string &s)
     {storein_sequence(con,s);}
-  template <class T>        void storein(std::deque<T> &con, const std::string &s)
+
+  template <class T>
+  void storein(std::deque<T> &con, const std::string &s)
      {storein_sequence(con,s);}
-  template <class T>        void storein(std::list<T> &con, const std::string &s)
+
+  template <class T>
+  void storein(std::list<T> &con, const std::string &s)
     {storein_sequence(con,s);}
+
 #if defined(HAVE_EXT_SLIST)
   template <class T>        void storein(__gnu_cxx::slist<T> &con, const std::string &s)
     {storein_sequence(con,s);}
@@ -139,9 +147,13 @@ public:
   template <class T>        void storein(slist<T> &con, const std::string &s)
     {storein_sequence(con,s);}
 #endif
-  template <class T>        void storein(std::set<T> &con, const std::string &s)
+
+  template <class T>
+  void storein(std::set<T> &con, const std::string &s)
     {storein_set(con,s);}
-  template <class T>        void storein(std::multiset<T> &con, const std::string &s)
+	
+  template <class T>
+  void storein(std::multiset<T> &con, const std::string &s)
     {storein_set(con,s);}
 };
 
@@ -152,9 +164,10 @@ template <class Sequence>
 void Connection::storein_sequence (Sequence &seq, const std::string &str) {
   ResUse result = use(str);
   while (1) {
-	  MYSQL_ROW d = mysql_fetch_row(result.mysql_res);
+	  MYSQL_ROW d = mysql_fetch_row(result.mysql_result());
 		if (!d) break;
-	  Row row(d,&result,(unsigned int *)mysql_fetch_lengths(result.mysql_res),true);
+	  Row row(d,&result,(unsigned int
+	  *)mysql_fetch_lengths(result.mysql_result()),true);
 		if (!row) break;
     seq.push_back(typename Sequence::value_type(row));
 	}
@@ -164,10 +177,11 @@ template <class Set>
 void Connection::storein_set (Set &sett, const std::string &str) {
   ResUse result = use(str);
 	while (1) {
-	  MYSQL_ROW d = mysql_fetch_row(result.mysql_res);	
+	  MYSQL_ROW d = mysql_fetch_row(result.mysql_result());	
 		if (!d) return;
-	  Row row(d,&result,(unsigned int *)mysql_fetch_lengths(result.mysql_res),true);
-		if (!row) break;
+	  Row row(d, &result,
+	  	(unsigned int *)mysql_fetch_lengths(result.mysql_result()),true);
+	  if (!row) break;
     sett.insert(typename Set::value_type(row));
 	}
 }
