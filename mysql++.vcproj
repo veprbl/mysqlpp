@@ -23,7 +23,8 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="5"
+				RuntimeLibrary="1"
+				BufferSecurityCheck="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="TRUE"
@@ -108,6 +109,12 @@
 			</File>
 			<File
 				RelativePath="sqlplusint\connection.cc">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						RuntimeLibrary="1"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="sqlplusint\datetime.cc">
@@ -129,6 +136,12 @@
 			</File>
 			<File
 				RelativePath="sqlplusint\set.cc">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						BufferSecurityCheck="TRUE"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="sqlplusint\sql_query.cc">

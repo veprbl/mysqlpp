@@ -3,6 +3,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mysql++", "mysql++.vcproj",
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "resetdb", "examples\resetdb.vcproj", "{2365B3B5-A119-4F10-A6A7-5CE3265F5650}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07B537E5-ABA8-4053-A97B-82A2AD8B76FE} = {07B537E5-ABA8-4053-A97B-82A2AD8B76FE}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -13,6 +18,10 @@ Global
 		{07B537E5-ABA8-4053-A97B-82A2AD8B76FE}.Debug.Build.0 = Debug|Win32
 		{07B537E5-ABA8-4053-A97B-82A2AD8B76FE}.Release.ActiveCfg = Release|Win32
 		{07B537E5-ABA8-4053-A97B-82A2AD8B76FE}.Release.Build.0 = Release|Win32
+		{2365B3B5-A119-4F10-A6A7-5CE3265F5650}.Debug.ActiveCfg = Debug|Win32
+		{2365B3B5-A119-4F10-A6A7-5CE3265F5650}.Debug.Build.0 = Debug|Win32
+		{2365B3B5-A119-4F10-A6A7-5CE3265F5650}.Release.ActiveCfg = Release|Win32
+		{2365B3B5-A119-4F10-A6A7-5CE3265F5650}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
