@@ -2,4 +2,8 @@
 
 set -x
 
-aclocal && libtoolize --force --copy && autoheader && automake --add-missing --copy --foreign && autoconf
+aclocal && \
+libtoolize --force --copy && \
+autoheader && \
+automake --add-missing --copy --foreign && \
+autoconf
