@@ -33,24 +33,26 @@ mkdir -p $RPM_BUILD_ROOT/usr/lib
 mkdir -p $RPM_BUILD_ROOT/usr/include
 mkdir -p $RPM_BUILD_ROOT/usr/src/mysql++/examples
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-install -m640 examples/*.cc examples/*.h examples/README $RPM_BUILD_ROOT/usr/src/mysql++/examples
+install -m640 examples/*.cc examples/*.h $RPM_BUILD_ROOT/usr/src/mysql++/examples
 install -m640 examples/Makefile.simple $RPM_BUILD_ROOT/usr/src/mysql++/examples/Makefile
+cp examples/README doc/README.examples
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+rm doc/README.examples
 
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root)
-%doc LGPL README
+%doc LGPL doc/README
 
 /usr/lib/libmysqlpp.*
 
 %files devel
 %defattr(-,root,root)
-%doc doc/*.ps doc/man-text/*.txt
+%doc doc/*.ps doc/man-text/*.txt doc/README.devel doc/README.examples
 
 /usr/include/mysql++
 /usr/src/mysql++/examples
