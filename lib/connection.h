@@ -63,7 +63,10 @@ public:
 		       cchar *socket_name= "", unsigned int client_flag=0); //:
 				
   ~Connection (); //:
-  void         close() {mysql_close(&mysql);}	 //:
+  void         close() {
+  	mysql_close(&mysql);
+	is_connected = false;
+  }
   std::string       info ();	//:
 
   bool   connected() const {return is_connected;}
@@ -79,7 +82,7 @@ public:
   bool   lock() {if (locked) return true; locked = true; return false;}
   void   unlock() {locked = false;}
 
-  void purge (void) {mysql_close(&mysql); }
+  void purge() { close(); }
   //:
 
   Query query();
@@ -89,7 +92,7 @@ public:
   const char* error () {return mysql_error(&mysql);} //: last error message()
 	int errnum () {return mysql_errno(&mysql);}
 	int   refresh (unsigned int refresh_options){ return mysql_refresh (&mysql,refresh_options); }
-	int ping (void) { return mysql_ping(&mysql);}
+	int ping () { return mysql_ping(&mysql);}
 	int kill (unsigned long pid) { return mysql_kill (&mysql,pid);}
   std::string client_info () {return std::string(mysql_get_client_info());} //:
   
@@ -115,7 +118,7 @@ public:
   bool   select_db (const char *db); //:
   bool   reload(); //:
   bool   shutdown (); //:
-	std::string infoo (void) {return info ();}
+	std::string infoo () {return info ();}
 	st_mysql_options get_options (void) const {return mysql.options;}
 	int read_options(enum mysql_option option,const char *arg) {return  mysql_options(&mysql, option,arg);}
   my_ulonglong affected_rows()  {return mysql_affected_rows(&mysql);}
