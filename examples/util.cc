@@ -5,6 +5,8 @@
 
 using namespace std;
 
+const char* kpcSampleDatabase = "mysql_cpp_data";
+
 void
 print_stock_table(mysqlpp::Query& query)
 {
@@ -45,7 +47,7 @@ print_stock_table(mysqlpp::Query& query)
 
 bool
 connect_sample_db(int argc, char *argv[], mysqlpp::Connection& con,
-				  const char *kdb)
+		const char *kdb)
 {
 	if (argc < 1) {
 		cerr << "Bad argument count: " << argc << '!' << endl;
@@ -55,10 +57,20 @@ connect_sample_db(int argc, char *argv[], mysqlpp::Connection& con,
 	if ((argc > 1) && (argv[1][0] == '-')) {
 		cout << "usage: " << argv[0] << " [host] [user] [password]" <<
 				endl;
-		cout << endl << "\tConnects to database \"" << kdb << 
-				"\" on localhost using your user" << endl;
+		cout << endl << "\tConnects to database ";
+		if (kdb) {
+			cout << '"' << kdb << '"';
+		}
+		else {
+			cout << "server";
+		}
+		cout << " on localhost using your user" << endl;
 		cout << "\tname and no password by default." << endl << endl;
 		return false;
+	}
+
+	if (!kdb) {
+		kdb = kpcSampleDatabase;
 	}
 
 	bool success;
