@@ -1,7 +1,7 @@
 #ifndef __result2_hh__
 #define __result2_hh__
 
-#include "connection2.hh"
+#include "connection.h"
 #include "result1.hh"
 #include "row2.hh"
 #include "fields2.hh"

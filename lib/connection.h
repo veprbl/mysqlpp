@@ -5,7 +5,7 @@
 
 #include <define_short.hh>
 #include <exceptions.hh>
-#include <query1.hh>
+#include <query.h>
 #include <result1.hh>
 
 #include <mysql.h>
@@ -23,6 +23,12 @@
 #      include <slist>
 #  endif
 #endif
+
+class MysqlChild {
+public:
+  virtual void parent_leaving() = 0;
+  virtual ~MysqlChild() {}
+};
 
 //: The main database handle
 class Connection {
@@ -74,7 +80,7 @@ public:
   void purge (void) {mysql_close(&mysql); }
   //:
 
-  inline Query query();
+  Query query();
   //:
 
   operator bool () {return success();}                  //: returns success()
@@ -138,12 +144,31 @@ public:
 
 //! with_class = Connection 
 
-//: For backwards companablity, don't use
-typedef Connection Mysql;
+
+template <class Sequence>
+void Connection::storein_sequence (Sequence &seq, const std::string &str) {
+  ResUse result = use(str);
+  while (1) {
+	  MYSQL_ROW d = mysql_fetch_row(result.mysql_res);
+		if (!d) break;
+	  Row row(d,&result,(unsigned int *)mysql_fetch_lengths(result.mysql_res),true);
+		if (!row) break;
+    seq.push_back(typename Sequence::value_type(row));
+	}
+}
+
+template <class Set>
+void Connection::storein_set (Set &sett, const std::string &str) {
+  ResUse result = use(str);
+	while (1) {
+	  MYSQL_ROW d = mysql_fetch_row(result.mysql_res);	
+		if (!d) return;
+	  Row row(d,&result,(unsigned int *)mysql_fetch_lengths(result.mysql_res),true);
+		if (!row) break;
+    sett.insert(typename Set::value_type(row));
+	}
+}
+
 
 #endif
-
-
-
-
 

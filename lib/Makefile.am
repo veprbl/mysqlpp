@@ -18,7 +18,7 @@ libmysqlpp_la_SOURCES = coldata.cc connection.cc datetime.cc field_names.cc \
 include_HEADERS = \
 	coldata.h \
 	compare.h \
-	connection0.hh connection1.hh connection2.hh connection3.hh \
+	connection.h \
 	const_string1.hh const_string2.hh const_string3.hh \
 	convert1.hh convert2.hh convert3.hh \
 	custom.hh \
@@ -34,7 +34,7 @@ include_HEADERS = \
 	mysql++.h mysql++.hh \
 	null1.hh null2.hh null3.hh \
 	platform.h \
-	query1.hh query2.hh query3.hh \
+	query.h \
 	resiter1.hh \
 	result1.hh result2.hh result3.hh \
 	row1.hh row2.hh row3.hh \

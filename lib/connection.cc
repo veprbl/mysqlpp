@@ -1,4 +1,4 @@
-#include "connection3.hh"
+#include "connection.h"
 #include "result3.hh"
 
 #define MYSQLPP_NOT_HEADER
@@ -176,5 +176,8 @@ ResUse Connection::use(const std::string &str, bool throw_excptns) {
   return ResUse(mysql_use_result(&mysql), this);
 }
 
-
+Query Connection::query()
+{
+	return Query(this, throw_exceptions);
+}
 
