@@ -62,8 +62,8 @@ main(int argc, char *argv[])
 		// The last parameter "table" is not specified here.  Thus
 		// the default value for "table" is used, which is "stock".
 		query.execute("Hamburger Buns", 56, 1.25, 1.1, "1998-04-26");
-		query.execute("Hotdogs' Buns", 65, 1.1, 1.1, "1998-04-23");
-		query.execute("Dinner Roles", 75, .95, .97, "1998-05-25");
+		query.execute("Hotdog Buns", 65, 1.1, 1.1, "1998-04-23");
+		query.execute("Dinner Rolls", 75, .95, .97, "1998-05-25");
 		query.execute("White Bread", 87, 1.5, 1.75, "1998-09-04");
 
 		if (created) {
