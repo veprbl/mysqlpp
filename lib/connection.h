@@ -39,7 +39,7 @@ class Connection {
 	friend class ResUse;
 	friend class Query;
 
-	bool throw_exceptions;
+	bool throw_exceptions, old_throw_exceptions;
 	MYSQL mysql;
 	bool is_connected;
 	bool locked;
@@ -170,6 +170,16 @@ class Connection {
 	}
 	my_ulonglong affected_rows() { return mysql_affected_rows(&mysql); }
 	my_ulonglong insert_id() { return mysql_insert_id(&mysql); }
+
+	void disable_exceptions()
+	{
+		old_throw_exceptions = throw_exceptions;
+		throw_exceptions = false;
+	}
+	void restore_exceptions()
+	{
+		throw_exceptions = old_throw_exceptions;
+	}
 
 	template <class Sequence>
 	void storein_sequence(Sequence&, const std::string&);

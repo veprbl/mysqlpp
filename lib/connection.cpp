@@ -18,6 +18,7 @@ namespace mysqlpp {
 
 Connection::Connection() :
 throw_exceptions(true),
+old_throw_exceptions(true),
 locked(false) 
 {
 	mysql_init(&mysql);
@@ -25,6 +26,7 @@ locked(false)
 
 Connection::Connection(bool te) :
 throw_exceptions(te),
+old_throw_exceptions(te),
 is_connected(false),
 locked(true),
 Success(false)
@@ -35,6 +37,7 @@ Success(false)
 Connection::Connection(const char* db, const char* host,
 		const char* user, const char* passwd, bool te) :
 throw_exceptions(te),
+old_throw_exceptions(te),
 locked(false)
 {
 	mysql_init(&mysql);
@@ -56,6 +59,7 @@ Connection::Connection(const char* db, const char* host,
 		bool te, const char* socket_name,
 		unsigned client_flag) :
 throw_exceptions(te),
+old_throw_exceptions(te),
 locked(false)
 {
 	mysql_init(&mysql);
@@ -111,11 +115,13 @@ Connection::~Connection()
 
 bool Connection::select_db(const char *db)
 {
-	bool suc = !(mysql_select_db(&mysql, db));
-	if (throw_exceptions && !suc)
+	bool suc = !mysql_select_db(&mysql, db);
+	if (throw_exceptions && !suc) {
 		throw BadQuery(error());
-	else
-	return suc;
+	}
+	else {
+		return suc;
+	}
 }
 
 bool Connection::reload()
