@@ -6,4 +6,4 @@ aclocal && \
 libtoolize --force --copy && \
 autoheader && \
 automake --add-missing --copy --foreign && \
-autoconf
+autoconf --enable-maintainer-mode $*

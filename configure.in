@@ -12,6 +12,8 @@ AC_PROG_MAKE_SET
 
 AC_PROG_LIBTOOL
 
+AM_MAINTAINER_MODE
+
 dnl Should the standard C++ exception class be used as a base for our exceptions?
 AC_ARG_ENABLE(exception,
 [  --enable-exception      use standard C++ exception class as the base class
