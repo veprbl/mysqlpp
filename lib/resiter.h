@@ -2,7 +2,6 @@
 #define __resiter1_hh__
 
 #include <defs.h>
-#include <row1.hh>
 
 #include <iterator>
 
