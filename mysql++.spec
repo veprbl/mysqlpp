@@ -37,6 +37,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/include/mysql++
 /usr/lib/libmysqlpp.a
 /usr/lib/libmysqlpp.la
+/usr/lib/libmysqlpp.so
 /usr/lib/libmysqlpp.so.1.0.0
 
 %changelog
