@@ -148,12 +148,7 @@ AC_CHECK_HEADER([slist],
 AC_CHECK_HEADER([ext/slist],
 		[AC_DEFINE(HAVE_EXT_SLIST, 1,
 		[Define if <ext/slist> exists on your system])], [])
-AC_CHECK_HEADER([ostream],
-		[AC_DEFINE(HAVE_OSTREAM, 1,
-		[Define if <ostream> exists on your system])], [])
-AC_CHECK_HEADER([ostream.h],
-		[AC_DEFINE(HAVE_OSTREAM_H, 1,
-		[Define if <ostream.h> exists on your system])], [])
+
 
 #
 # Done with checks!
