@@ -1,4 +1,4 @@
-#include <mysql++.hh>
+#include <mysql++.h>
 
 #include <sys/stat.h>
 

@@ -1,6 +1,6 @@
 #include "util.hh"
 
-#include <mysql++.hh>
+#include <mysql++.h>
 
 #include <iostream>
 #include <iomanip>

@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <vector>
-#include <mysql++.hh>
+#include <mysql++.h>
 #include <custom.hh>
 #include "util.hh"
 

@@ -1,8 +1,9 @@
+#include "util.hh"
+
+#include <mysql++.h>
+
 #include <iostream>
 #include <iomanip>
-#include <mysql++.hh>
-
-#include "util.hh"
 
 using namespace std;
 

@@ -1,6 +1,7 @@
+#include "util.hh"
+
 #include <iostream>
 #include <iomanip>
-#include "util.hh"
 
 using namespace std;
 

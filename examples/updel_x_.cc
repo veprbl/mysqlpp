@@ -1,4 +1,5 @@
-#include <mysql++.hh>
+#include <mysql++.h>
+
 #include <string>
 
 using namespace std;
