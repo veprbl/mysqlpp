@@ -1,5 +1,8 @@
 #ifndef __type_info1_hh__
 #define __type_info1_hh__
+#ifdef __WIN32__
+#include <winsock.h>
+#endif
 #include <mysql.h>
 #include <typeinfo>
 #include <map>

@@ -1,5 +1,8 @@
 #ifndef __query1_hh__
 #define __query1_hh__
+#ifdef __WIN32__
+#include <winsock.h>
+#endif
 #include <mysql.h>
 #include "define_short.hh"
 #include "sql_query1.hh"

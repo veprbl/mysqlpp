@@ -1,6 +1,10 @@
 #ifndef __result1_hh__
 #define __result1_hh__
 
+#ifdef __WIN32__
+#include <winsock.h>
+#endif
+
 #include <mysql.h>
 
 #include <map>

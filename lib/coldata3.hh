@@ -1,5 +1,8 @@
 #ifndef __coldata3_hh__
 #define __coldata3_hh__
+#ifdef __WIN32__
+#include <winsock.h>
+#endif
 #include <mysql.h>
 #include <string>
 #include "coldata2.hh"

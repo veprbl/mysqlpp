@@ -1,6 +1,10 @@
 #ifndef __set1_hh__
 #define __set1_hh__
 
+#ifdef __WIN32__
+#include <winsock.h>
+#endif
+
 #include <iostream>
 #include <set>
 #include <vector>

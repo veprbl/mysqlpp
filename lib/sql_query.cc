@@ -1,14 +1,9 @@
 #ifdef __WIN32__
-#include <Windows32/Base.h>
-#include <Windows32/Defines.h>
-#include <Windows32/Structures.h>
 #include <winsock.h>
-#define errno WSAGetLastError()
 #endif
 
 #include "sql_query3.hh"
 #include "exceptions.hh"
-//#include "result3.hh"
 
 SQLQuery::SQLQuery(const SQLQuery &q) {
   *this << q.str();

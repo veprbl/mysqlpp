@@ -1,5 +1,9 @@
 #ifndef __connection1_hh__
 #define __connection1_hh__
+#ifdef __WIN32__
+#include <winsock.h>
+#endif
+
 #include <mysql.h>
 
 #include <vector>
@@ -9,11 +13,11 @@
 #include <map>
 
 #ifdef HAVE_EXT_SLIST
-#	include <ext/slist>
+#  include <ext/slist>
 #else
-#	ifdef HAVE_STD_SLIST
-#		include <slist>
-#	endif
+#  ifdef HAVE_STD_SLIST
+#      include <slist>
+#  endif
 #endif
 
 #include "define_short.hh"
