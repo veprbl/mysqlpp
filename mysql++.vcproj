@@ -141,6 +141,9 @@
 				RelativePath=".\lib\sql_query.cpp">
 			</File>
 			<File
+				RelativePath=".\lib\sql_string.cpp">
+			</File>
+			<File
 				RelativePath=".\lib\string_util.cpp">
 			</File>
 			<File
