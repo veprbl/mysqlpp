@@ -18,12 +18,18 @@ AC_C_CONST
 AC_CHECK_FUNCS(strtol)
 
 
-dnl Checks for libraries and local system features
+dnl Figure out how to handle threading support, if available.
 ACX_PTHREAD
-MYSQL_API_LOCATION
-MYSQL_SHUTDOWN_ARG
+LIBS="$PTHREAD_LIBS $LIBS"
+CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+CC="$PTHREAD_CC"
+
+
+dnl Checks for libraries and local system features
 AC_CHECK_HEADERS(zlib.h, AC_CHECK_LIB(z, gzread, [],
 		[ AC_MSG_ERROR([zlib is required]) ]))
+MYSQL_API_LOCATION
+MYSQL_SHUTDOWN_ARG
 AC_CHECK_LIB(intl, main)
 AC_CHECK_LIB(socket, main)
 AC_CHECK_LIB(nsl, main)
