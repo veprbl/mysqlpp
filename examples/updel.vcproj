@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="updel_ex"
+	Name="updel"
 	ProjectGUID="{2365B3B5-A119-4F10-A6A7-5CE3265F5650}"
-	RootNamespace="updel_ex"
+	RootNamespace="updel"
 	Keyword="ManagedCProj">
 	<Platforms>
 		<Platform
@@ -121,7 +121,7 @@
 			RelativePath=".\dummy.cpp">
 		</File>
 		<File
-			RelativePath=".\updel_x_.cc">
+			RelativePath=".\updel.cc">
 		</File>
 	</Files>
 	<Globals>

@@ -3,8 +3,8 @@
 <PROJECT>
   <MACROS>
     <VERSION value="BCB.06.00"/>
-    <PROJECT value="updel_x_.exe"/>
-    <OBJFILES value="updel_x_.obj"/>
+    <PROJECT value="updel.exe"/>
+    <OBJFILES value="updel.obj"/>
     <RESFILES value=""/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -26,7 +26,7 @@
     <LINKER value="ilink32"/>
     <USERDEFINES value="_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_NO_VCL;_RTLDLL;USEPACKAGES"/>
-    <MAINSOURCE value="updel_x_.bpf"/>
+    <MAINSOURCE value="updel.bpf"/>
     <INCLUDEPATH value="$(BCB)\include;$(mtkProject)\mysqlpp;$(MySQL)\include"/>
     <LIBPATH value="..\sqlplus;..\..\LIB\DEB;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-pck -w-par"/>
@@ -50,8 +50,8 @@
     <OTHERFILES value=""/>
   </LINKER>
   <FILELIST>
-      <FILE FILENAME="updel_x_.bpf" FORMNAME="" UNITNAME="updel_x_" CONTAINERID="BPF" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="updel_x_.cpp" FORMNAME="" UNITNAME="updel_x_" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="updel.bpf" FORMNAME="" UNITNAME="updel" CONTAINERID="BPF" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="updel.cpp" FORMNAME="" UNITNAME="updel" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\StableBins\mysql.lib" FORMNAME="" UNITNAME="mysql.lib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\StableBins\mysqlpp.lib" FORMNAME="" UNITNAME="mysqlpp.lib" CONTAINERID="LibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>

@@ -9,7 +9,7 @@ MAKE = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f$**
 DCC = $(ROOT)\bin\dcc32.exe $**
 BRCC = $(ROOT)\bin\brcc32.exe $**
 #------------------------------------------------------------------------------
-PROJECTS = resetdb.exe simple1.exe cgi_image.exe fieldinf1.exe updel_x_.exe \
+PROJECTS = resetdb.exe simple1.exe cgi_image.exe fieldinf1.exe updel.exe \
   complic1.exe load_file.exe populate.exe sinisa_ex.exe
 #------------------------------------------------------------------------------
 default: $(PROJECTS)
@@ -35,7 +35,7 @@ fieldinf1.exe: fieldinf1.bpr
   $(ROOT)\bin\bpr2mak $**
   $(ROOT)\bin\make -$(MAKEFLAGS) -f$*.mak
 
-updel_x_.exe: updel_x_.bpr
+updel.exe: updel.bpr
   $(ROOT)\bin\bpr2mak $**
   $(ROOT)\bin\make -$(MAKEFLAGS) -f$*.mak
 

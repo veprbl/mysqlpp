@@ -6,7 +6,7 @@ LDADD = $(SQLPLUSLIBS)
 EXTRA_DIST = *.vcproj *.bpf *.bpr *.bpg dummy.cpp
 
 noinst_PROGRAMS = resetdb simple1 custom1 custom2 custom3 custom4 \
-		complic1 fieldinf1 dbinfo updel_ex load_file cgi_image
+		complic1 fieldinf1 dbinfo updel load_file cgi_image
 
 noinst_HEADERS = util.hh
 
@@ -40,8 +40,8 @@ complic1_DEPENDENCIES = $(SQLPLUSLIBS)
 fieldinf1_SOURCES = fieldinf1.cc util.cc
 fieldinf1_DEPENDENCIES = $(SQLPLUSLIBS)
 
-updel_ex_SOURCES = updel_x_.cc
-updel_ex_DEPENDENCIES = $(SQLPLUSLIBS)
+updel_SOURCES = updel.cc
+updel_DEPENDENCIES = $(SQLPLUSLIBS)
 
 load_file_SOURCES = load_file.cc
 load_file_DEPENDENCIES = $(SQLPLUSLIBS)
