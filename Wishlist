@@ -12,6 +12,7 @@ New Feature Requests
 	o Detect thread-safety libraries on systems where this is
 	  appropritate.  (e.g., add -pthread when building on Linux.)
 	  Without this, using MySQL++ in a threaded program causes crashes.
+	  http://lists.mysql.com/plusplus/3936
 
 	o Get PDF documentation generation working.
 
