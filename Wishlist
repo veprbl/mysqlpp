@@ -36,3 +36,6 @@ Bug Fix/Maintenance Items
 	  C++ library classes were not designed to be subclassed.
 
 	o Rename *.cc to *.cpp.
+
+	o Visual C++ project files should build a DLL version of the library
+	  only, for LGPL reasons.
