@@ -41,7 +41,7 @@ include_HEADERS = \
 	sqlplus.hh \
 	sql_query1.hh sql_query2.hh sql_query3.hh \
 	sql_string.h \
-	stream2string1.hh stream2string2.hh stream2string3.hh \
+	stream2string.h \
 	tiny_int.h \
 	type_info1.hh type_info2.hh type_info3.hh \
 	string_util.hh \

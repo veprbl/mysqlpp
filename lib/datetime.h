@@ -4,8 +4,7 @@
 #include <coldata.h>
 #include <defs.hh>
 #include <define_short.hh>
-#include <stream2string1.hh>
-#include <stream2string2.hh>
+#include <stream2string.h>
 #include <tiny_int.h>
 
 #include <string>

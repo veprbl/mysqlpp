@@ -1,10 +1,14 @@
-#ifndef __stream2string3_hh__
-#define __stream2string3_hh__
+#ifndef __stream2string_hh__
+#define __stream2string_hh__
 
 #include <sstream>
 
 template<class Strng, class T>
-Strng stream2string(const T &object) {
+Strng stream2string(const T &object);
+
+template<class Strng, class T>
+Strng stream2string(const T &object)
+{
   std::ostringstream str;
   object.out_stream(str);
   str << std::ends;
@@ -13,3 +17,4 @@ Strng stream2string(const T &object) {
 }
 
 #endif
+

@@ -21,7 +21,7 @@
 #include <set1.hh>
 #include <sql_query1.hh>
 #include <sql_string.h>
-#include <stream2string1.hh>
+#include <stream2string.h>
 #include <tiny_int.h>
 #include <type_info1.hh>
 #include <vallist1.hh>
@@ -31,7 +31,6 @@
 #include <row2.hh>
 #include <set2.hh>
 #include <sql_query2.hh>
-#include <stream2string2.hh>
 #include <type_info2.hh>
 #include <vallist2.hh>
 
@@ -39,7 +38,6 @@
 #include <row3.hh>
 #include <set3.hh>
 #include <sql_query3.hh>
-#include <stream2string3.hh>
 #include <type_info3.hh>
 #include <vallist3.hh>
 
