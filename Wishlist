@@ -37,9 +37,4 @@ Bug Fix/Maintenance Items
 	  definitions it needs to look like a stringstream.  The Standard
 	  C++ library classes were not designed to be subclassed.
 
-	o Split RPM into lib, devel and examples sections.  For the latter,
-	  make a simple non-autotools Makefile that looks in the same
-	  directory as the lib and devel RPMs unpack into for the library
-	  and headers.
-
 	o Rename *.cc to *.cpp.
