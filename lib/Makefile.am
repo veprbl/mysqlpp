@@ -21,8 +21,7 @@ include_HEADERS = \
 	connection.h \
 	const_string.h \
 	convert.h \
-	custom.hh \
-	custom-macros.hh \
+	custom.h custom-macros.h \
 	defs.hh \
 	define_short.hh \
 	datetime.h \
@@ -48,10 +47,10 @@ include_HEADERS = \
 	string_util.hh \
 	vallist1.hh vallist2.hh vallist3.hh
 
-all-local: custom.hh custom-macros.hh
+all-local: custom.h custom-macros.h
 
-custom.hh custom-macros.hh: custom.pl
-	perl custom.pl
+custom.h custom-macros.h: custom.pl
+	./custom.pl
 
 distclean-local:
-	rm -f custom.hh custom-macros.hh
+	rm -f custom.h custom-macros.h

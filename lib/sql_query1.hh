@@ -1,7 +1,7 @@
 #ifndef __sql_query_1_hh
 #define __sql_query_1_hh
 
-#include <custom.hh>
+#include <custom.h>
 #include <define_short.hh>
 #include <sql_query0.hh>
 #include <sql_string1.hh>

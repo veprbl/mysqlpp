@@ -1,14 +1,15 @@
+#!/usr/bin/perl
 
-open (OUT0, ">custom.hh");
-open (OUT, ">custom-macros.hh");
+open (OUT0, ">custom.h");
+open (OUT, ">custom-macros.h");
 
 print OUT0 << "---";
 
 // This file is generated from the perl script custom.pl, please do 
 // not modify this file directly.
 
-#ifndef __sql_custom_h__
-#define __sql_custom_h__
+#ifndef __mysqlpp_custom_h__
+#define __mysqlpp_custom_h__
 
 #include <defs.hh>
 #include <tiny_int.h>
@@ -67,7 +68,7 @@ print OUT0 << "---";
 
 #endif // NO_LONG_LONGS
 
-#include "custom-macros.hh"
+#include "custom-macros.h"
 
 #endif
 
