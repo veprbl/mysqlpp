@@ -41,10 +41,13 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/libmysqlpp.so.1.0.0
 
 %changelog
-* Thu Aug 19 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.11-1
+* Mon Aug 23 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.13-1
+- Updated for 1.7.13
+
+* Thu Aug 19 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.12-1
 - Updated for 1.7.12
 
-* Wed Aug 18 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.10-2
+* Wed Aug 18 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.11-1
 - Updated for 1.7.11
 - Removed examples from documentation.
 - Limited documentation to just the generated files, not the sources.
