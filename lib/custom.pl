@@ -370,7 +370,7 @@ $enums
     ~NAME##_cus_value_list () {if (del_vector) delete include;} 
     NAME##_cus_value_list (const NAME *o, cchar *d, Manip m, $cusparms11);
     NAME##_cus_value_list (const NAME *o, cchar *d, Manip m, $cusparms22); 
-    NAME##_cus_value_list (const NAME *o, cchar *d, Manip m ,std::vector<bool>)
+    NAME##_cus_value_list (const NAME *o, cchar *d, Manip m ,std::vector<bool>* i)
       : obj(o), include(i), del_vector(false), delem(d), manip(m) {}
   };
 
