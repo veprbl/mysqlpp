@@ -1,6 +1,6 @@
 #include "row.h"
-
 #include "result.h"
+#include "exceptions.h"
 
 namespace mysqlpp {
 
@@ -23,7 +23,13 @@ const ColData Row::operator[] (size_type i) const
 
 const ColData Row::lookup_by_name(const char* i) const
 {
-	return (*this)[res->field_num(std::string(i))];
+	int si = res->field_num(std::string(i));
+	if (si < res->num_fields()) {
+		return (*this)[si];
+	}
+	else {
+		throw BadFieldName(i);
+	}
 }
 
 } // end namespace mysqlpp

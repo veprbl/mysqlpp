@@ -64,6 +64,19 @@ public:
   virtual const char* what( void ) const throw () { return _what.c_str(); }
 };
 
+//: Exception thrown when lookup_by_name can't find the specified field.
+class BadFieldName : public std::exception {
+  std::string _what;
+public:
+  BadFieldName(const char *bad_field)
+	{
+      _what = "Unknown field name: ";
+      _what += bad_field;
+    }
+  ~BadFieldName() throw() {}
+  virtual const char* what( void ) const throw () { return _what.c_str(); }
+};
+
 #else //original, default exception style
 
 struct BadQuery {
@@ -96,6 +109,20 @@ struct SQLQueryNEParms {
   SQLQueryNEParms(const char *c) : error(c) {}
   const char* error; //:
 };
+
+
+//: Exception thrown when lookup_by_name can't find the specified field.
+class BadFieldName {
+public:
+  std::string error;
+
+  BadFieldName(const char *bad)
+  {
+      error = "Unknown field name: ";
+      error += bad_field;
+  }
+};
+
 
 #endif
 
