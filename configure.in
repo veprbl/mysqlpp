@@ -106,7 +106,8 @@ AC_PROG_CXX
 AC_CHECK_LIB(intl, main)
 AC_CHECK_LIB(socket, main)
 AC_CHECK_LIB(nsl, main)
-AC_CHECK_LIB(mysqlclient, mysql_store_result)
+AC_CHECK_LIB(mysqlclient, mysql_store_result, [], [
+		AC_MSG_ERROR([Could not find working MySQL client library!]) ])
 AM_WITH_DMALLOC()
 
 dnl Checks for header files.
