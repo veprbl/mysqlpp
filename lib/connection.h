@@ -132,8 +132,11 @@ public:
      {storein_sequence(con,s);}
   template <class T>        void storein(std::list<T> &con, const std::string &s)
     {storein_sequence(con,s);}
-#if defined(HAVE_STD_SLIST) || defined(HAVE_EXT_SLIST)
-  template <class T>        void storein(std::slist<T> &con, const std::string &s)
+#if defined(HAVE_EXT_SLIST)
+  template <class T>        void storein(__gnu_cxx::slist<T> &con, const std::string &s)
+    {storein_sequence(con,s);}
+#elif defined(HAVE_STD_SLIST)
+  template <class T>        void storein(slist<T> &con, const std::string &s)
     {storein_sequence(con,s);}
 #endif
   template <class T>        void storein(std::set<T> &con, const std::string &s)
