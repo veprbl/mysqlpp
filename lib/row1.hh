@@ -6,7 +6,7 @@
 #include <define_short.hh>
 #include <exceptions.hh>
 #include <resiter.h>
-#include <vallist1.hh>
+#include <vallist.h>
 
 #include <vector>
 #include <string>

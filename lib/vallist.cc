@@ -1,5 +1,7 @@
-#include "vallist3.hh"
+#include "vallist.h"
+
 #include "row2.hh"
+
 using std::string;
 void create_vector(int size, std::vector<bool>& v, bool t0,
 		   bool t1, bool t2, bool t3, bool t4,

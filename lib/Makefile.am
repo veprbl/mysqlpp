@@ -45,7 +45,7 @@ include_HEADERS = \
 	tiny_int.h \
 	type_info.h \
 	string_util.hh \
-	vallist1.hh vallist2.hh vallist3.hh
+	vallist.h
 
 all-local: custom.h custom-macros.h
 
