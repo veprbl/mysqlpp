@@ -6,6 +6,8 @@
 #include "exceptions.h"
 
 using namespace std;
+using namespace mysqlpp;
+
 
 SQLQuery::SQLQuery(const SQLQuery &q) :
 stringstream(const_cast<SQLQuery&>(q).str()),	// yes, the cast is evil -- got a better idea?

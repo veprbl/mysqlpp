@@ -11,6 +11,8 @@
 #	define SHUTDOWN_ARG
 #endif
 
+using namespace mysqlpp;
+
 Connection::Connection (const char *db, const char *host, const char *user, 
 			const char *passwd, bool te) 
   : throw_exceptions(te), locked(false)

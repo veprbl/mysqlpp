@@ -23,6 +23,8 @@
 #  endif
 #endif
 
+namespace mysqlpp {
+
 class MysqlChild {
 public:
   virtual void parent_leaving() = 0;
@@ -185,6 +187,7 @@ void Connection::storein_set (Set &sett, const std::string &str) {
 	}
 }
 
+}; // end namespace mysqlpp
 
 #endif
 

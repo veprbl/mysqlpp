@@ -5,6 +5,8 @@
 
 #include "result.h"
 
+using namespace mysqlpp;
+
 void FieldTypes::init(const ResUse *res)
 {
   int num = res->num_fields();

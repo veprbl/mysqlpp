@@ -9,6 +9,8 @@
 #include <string>
 
 using namespace std;
+using namespace mysqlpp;
+
 
 typedef string Enum;
 

@@ -2,6 +2,8 @@
 
 #include "result.h"
 
+using namespace mysqlpp;
+
 
 Fields::size_type Fields::size() const 
 {

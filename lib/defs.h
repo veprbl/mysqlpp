@@ -5,6 +5,8 @@
 
 #include <mysql.h>
 
+namespace mysqlpp {
+
 #if defined(NO_LONG_LONGS)
 typedef unsigned long ulonglong;
 typedef long longlong;
@@ -29,6 +31,8 @@ class Result;
 class FieldNames;
 
 const bool use_exceptions = true;
+
+}; // end namespace mysqlpp
 
 #endif
 

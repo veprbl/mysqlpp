@@ -4,6 +4,8 @@
 #include "row.h"
 
 using std::string;
+using namespace mysqlpp;
+
 
 void create_vector(int size, std::vector<bool>& v, bool t0,
 		   bool t1, bool t2, bool t3, bool t4,

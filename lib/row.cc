@@ -2,6 +2,8 @@
 
 #include "result.h"
 
+using namespace mysqlpp;
+
 
 Row::size_type Row::size() const 
 {

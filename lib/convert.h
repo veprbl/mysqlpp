@@ -7,6 +7,8 @@
 
 #include <stdlib.h>
 
+namespace mysqlpp {
+
 template <class Type> class mysql_convert;
 
 #define mysql__convert(TYPE, FUNC) \
@@ -80,7 +82,7 @@ mysql__convert(ulonglong, strtoull)
 
 #endif
 
+}; // end namespace mysqlpp
+
 #endif
-
-
 

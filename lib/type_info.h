@@ -8,6 +8,8 @@
 #include <typeinfo>
 #include <map>
 
+namespace mysqlpp {
+
 class mysql_type_info;
 class mysql_ti_sql_type_info_lookup;
 
@@ -193,6 +195,7 @@ inline bool operator != (const mysql_type_info &a, const std::type_info &b) {
 #pragma warning(default: 4800)
 #endif
 
-#endif
+}; // end namespace mysqlpp
 
+#endif
 

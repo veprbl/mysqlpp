@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+namespace mysqlpp {
+
 //: A special string that is created from a existing const char *
 // It contains a small subset of the standard string class.  When an
 // object is created only a link to the const char * is created.  The
@@ -106,10 +108,7 @@ inline bool operator >= (const_string &lhs, const_string &rhs) {
   return compare(lhs,rhs) >= 0;
 }
 
+}; // end namespace mysqlpp
+
 #endif
 
-  
- 
-  
-  
-  

@@ -16,6 +16,8 @@
 #include <set>
 #include <string>
 
+namespace mysqlpp {
+
 class Connection;
 
 class ResUse  {
@@ -301,6 +303,8 @@ inline ResUse& ResUse::operator = (const ResUse &other) {
   copy(other);  other.mysql_res=NULL;
   return *this;
 }
+
+}; // end namespace mysqlpp
 
 #endif
 

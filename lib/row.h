@@ -12,6 +12,8 @@
 
 #include <string.h>
 
+namespace mysqlpp {
+
 template <class ThisType, class Res>
 class RowTemplate {
 protected:
@@ -272,6 +274,7 @@ public:
 	~Row() {data.clear(); is_nulls.clear(); initialized = false;}	
 }; 
 
+}; // end namespace mysqlpp
 
 #endif
 

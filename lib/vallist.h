@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+namespace mysqlpp {
+
 template <class Seq, class Manip>
 struct value_list_b {
   const Seq          *list;
@@ -282,6 +284,8 @@ equal_list(const Seq1 &s1, const Seq2 &s2, bool t0,
   return equal_list_b<Seq1,Seq2,do_nothing_type0> 
     (s1, s2, vb,"," ," = " ,do_nothing);
 }
+
+}; // end namespace mysqlpp
 
 #endif
 

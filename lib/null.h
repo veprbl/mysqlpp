@@ -5,6 +5,8 @@
 
 #include <ostream>
 
+namespace mysqlpp {
+
 //! with_class = Null
 
 class null_type {
@@ -82,4 +84,7 @@ inline std::ostream& operator << (std::ostream &o, const Null<Type,Behavior> &n)
   else return o << n.data;
 }
 
+}; // end namespace mysqlpp
+
 #endif
+

@@ -5,6 +5,8 @@
 
 #include <iterator>
 
+namespace mysqlpp {
+
 template <class OnType, class ReturnType, class SizeType, class DiffType>
 class subscript_iterator;
 
@@ -98,7 +100,7 @@ inline subscript_iterator<OnType,ReturnType,SizeType,DiffType> operator +
   return y + x;
 }
 
+}; // end namespace mysqlpp
+
 #endif
-
-
 

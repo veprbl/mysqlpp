@@ -10,6 +10,8 @@
 #include <set>
 #include <vector>
 
+namespace mysqlpp {
+
 template <class T, class value_type = typename T::value_type>
 class ListInsert {
 private:
@@ -97,6 +99,8 @@ std::ostream& Set<Container>::out_stream (std::ostream &s) const {
   }
   return s;
 }
+
+}; // end namespace mysqlpp
 
 #endif
 

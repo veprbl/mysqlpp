@@ -6,6 +6,8 @@
 #include <cstring>
 #include <functional>
 
+namespace mysqlpp {
+
 template <class BinaryPred, class CmpType>
 class MysqlCmp : public std::unary_function<const Row&, bool>
 {
@@ -76,5 +78,7 @@ MysqlCmpCStr <BinaryPred>
 mysql_cmp_cstr (uint i, const BinaryPred &func, const char *cmp2) {
   return MysqlCmpCStr<BinaryPred>(i, func, cmp2);
 }
+
+}; // end namespace mysqlpp
 
 #endif

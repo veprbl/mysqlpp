@@ -3,6 +3,8 @@
 
 #include <resiter.h>
 
+namespace mysqlpp {
+
 class ResUse;
 
 //: A vector like container with the raw mysql field info.
@@ -18,6 +20,8 @@ public:
   const Field& operator [] (size_type i) const;
   const Field& operator [] (int i) const {return operator [](size_type(i));} 
 };
+
+}; // end namespace mysqlpp
 
 #endif
 

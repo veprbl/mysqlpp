@@ -10,6 +10,7 @@
 
 #include <mysql.h>
 
+namespace mysqlpp {
 
 //: A Query class suitable for executing queries.  
 // This is the class is subclassed from SQLQuery. This class unlike
@@ -105,6 +106,8 @@ template <class T>
 void Query::storein (T &con, const char *s) {
   mysql->storein (con, s);
 }
+
+}; // end namespace mysqlpp
 
 #endif
 

@@ -6,6 +6,7 @@
 #include <iomanip>
 
 using namespace std;
+using namespace mysqlpp;
 
 ostream& mysql_date::out_stream (ostream& s) const {
   char fill = s.fill('0');

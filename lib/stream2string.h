@@ -3,6 +3,8 @@
 
 #include <sstream>
 
+namespace mysqlpp {
+
 template<class Strng, class T>
 Strng stream2string(const T &object);
 
@@ -15,6 +17,8 @@ Strng stream2string(const T &object)
   Strng s = str.str();
   return s;
 }
+
+}; // end namespace mysqlpp
 
 #endif
 

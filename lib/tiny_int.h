@@ -1,6 +1,8 @@
 #ifndef __tiny_int1_hh__
 #define __tiny_int1_hh__
 
+namespace mysqlpp {
+
 class tiny_int {
   char value;
 public:
@@ -34,5 +36,7 @@ public:
   tiny_int operator >> (const tiny_int& i) const {return value >> i;}
 };
 
+}; // end namespace mysqlpp
 
 #endif
+

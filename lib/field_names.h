@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <vector>
 
+namespace mysqlpp {
+
 //: A vector of the field names.
 class FieldNames : public std::vector<std::string> {
 private:
@@ -37,6 +39,8 @@ public:
 	}
   //: returns the index number of the field with that name
 };
+
+}; // end namespace mysqlpp
 
 #endif
 

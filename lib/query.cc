@@ -1,5 +1,8 @@
 #include "query.h"
 
+using namespace mysqlpp;
+
+
 Query::Query(const Query &q) :
 SQLQuery(q),
 mysql(q.mysql),

@@ -10,6 +10,8 @@
 #include <sstream>
 #include <iostream>
 
+namespace mysqlpp {
+
 struct mysql_dt_base {
   virtual std::ostream& out_stream(std::ostream&) const = 0;
 
@@ -153,7 +155,7 @@ inline Time::Time (const std::string &str)  {convert(str.c_str());}
 inline DateTime::DateTime (const ColData &str) {convert(str.c_str());}
 inline DateTime::DateTime (const std::string &str) {convert(str.c_str());}
 
-
+}; // end namespace mysqlpp
 
 #endif //__datetime1_hh__
 

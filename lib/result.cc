@@ -2,6 +2,9 @@
 
 #include "connection.h"
 
+using namespace mysqlpp;
+
+
 ResNSel::ResNSel (Connection *q) :
 success(q->success()),
 insert_id(q->insert_id()),

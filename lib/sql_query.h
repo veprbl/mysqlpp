@@ -72,6 +72,7 @@
 		       ss l)\
     {FUNC (con, parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k <<l);}\
 
+namespace mysqlpp {
 
 class Query;
 class SQLQuery;
@@ -272,5 +273,7 @@ inline const SQLString &SQLQueryParms::operator[] (const char *str) const {
   throw; // only here temporary 
 }
 
+}; // end namespace mysqlpp
 
 #endif
+

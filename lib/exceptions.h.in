@@ -2,6 +2,8 @@
 #define __MYSQLPLUS_EXCEPTIONS__
 #include <string>
 
+namespace mysqlpp {
+
 #undef USE_STANDARD_EXCEPTION
 
 
@@ -95,6 +97,9 @@ struct SQLQueryNEParms {
   const char* error; //:
 };
 
+#endif
+
+}; // end namespace mysqlpp
 
 #endif
-#endif
+

@@ -6,6 +6,8 @@
 
 #include <vector>
 
+namespace mysqlpp {
+
 //: A vector of the field types.
 class FieldTypes : public std::vector<mysql_type_info> {
 private:
@@ -29,9 +31,7 @@ public:
   //: Returns the field type for the field with an offset of i.
 };
 
+}; // end namespace mysqlpp
+
 #endif
-
-
-
-
 

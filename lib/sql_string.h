@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string>
 
+namespace mysqlpp {
+
 //: A special string that will convert from anything.
 // A class subclassed from string that has the additional ability to
 // convert from any valid mysql type.
@@ -50,9 +52,7 @@ public:
     {char s[40]; sprintf(s,"%g",i); *this=s;}
 };
 
+}; // end namespace mysqlpp
+
 #endif
-
-
-
-
 
