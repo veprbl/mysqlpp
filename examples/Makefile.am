@@ -8,7 +8,7 @@ EXTRA_DIST = *.vcproj *.bpf *.bpr *.bpg dummy.cpp
 noinst_PROGRAMS = resetdb simple1 custom1 custom2 custom3 custom4 \
 		complic1 fieldinf1 dbinfo updel load_file cgi_image
 
-noinst_HEADERS = util.hh
+noinst_HEADERS = util.h
 
 simple1_SOURCES = simple1.cc util.cc
 simple1_DEPENDENCIES = $(SQLPLUSLIBS)
