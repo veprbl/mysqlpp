@@ -123,6 +123,9 @@
 				RelativePath="sqlplusint\field_types.cc">
 			</File>
 			<File
+				RelativePath=".\sqlplusint\fields.cc">
+			</File>
+			<File
 				RelativePath="sqlplusint\manip.cc">
 			</File>
 			<File
@@ -130,6 +133,9 @@
 			</File>
 			<File
 				RelativePath="sqlplusint\result.cc">
+			</File>
+			<File
+				RelativePath=".\sqlplusint\row.cc">
 			</File>
 			<File
 				RelativePath="sqlplusint\set.cc">
@@ -151,226 +157,91 @@
 			Name="Header Files"
 			Filter="h;hh;hpp;hxx;hm;inl;inc">
 			<File
-				RelativePath="sqlplusint\bad_query.hh">
+				RelativePath="sqlplusint\bad_query.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\coldata1.hh">
+				RelativePath="sqlplusint\coldata.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\coldata2.hh">
+				RelativePath="sqlplusint\compare.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\coldata3.hh">
+				RelativePath="sqlplusint\connection.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\coldata4.hh">
+				RelativePath="sqlplusint\const_string.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\compare1.hh">
+				RelativePath="sqlplusint\convert.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\compare2.hh">
+				RelativePath="sqlplusint\custom-macros.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\compare3.hh">
+				RelativePath="sqlplusint\custom.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\connection0.hh">
+				RelativePath="sqlplusint\datetime.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\connection1.hh">
+				RelativePath="sqlplusint\defs.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\connection2.hh">
+				RelativePath="sqlplusint\field_names.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\connection3.hh">
+				RelativePath="sqlplusint\field_types.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\const_string1.hh">
+				RelativePath="sqlplusint\fields.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\const_string2.hh">
+				RelativePath="sqlplusint\manip.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\const_string3.hh">
+				RelativePath="sqlplusint\mysql++.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\convert1.hh">
+				RelativePath="sqlplusint\null.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\convert2.hh">
+				RelativePath="sqlplusint\platform.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\convert3.hh">
+				RelativePath="sqlplusint\query.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\custom-macros.hh">
+				RelativePath="sqlplusint\resiter.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\custom.hh">
+				RelativePath="sqlplusint\result.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\datetime1.hh">
+				RelativePath="sqlplusint\row.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\datetime2.hh">
+				RelativePath="sqlplusint\set.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\datetime3.hh">
+				RelativePath="sqlplusint\sql_query.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\define_short.hh">
+				RelativePath="sqlplusint\sql_string.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\defs.hh">
+				RelativePath="sqlplusint\stream2string.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\field_names1.hh">
+				RelativePath="sqlplusint\string_util.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\field_names2.hh">
+				RelativePath="sqlplusint\tiny_int.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\field_names3.hh">
+				RelativePath="sqlplusint\type_info.h">
 			</File>
 			<File
-				RelativePath="sqlplusint\field_types1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\field_types2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\field_types3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\fields1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\fields2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\manip1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\manip2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\manip3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\mysql++-windows.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\mysql++.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\null1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\null2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\null3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\query1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\query2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\query3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\resiter1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\result1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\result2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\result3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\row1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\row2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\row3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\set1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\set2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\set3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\sql_query0.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\sql_query1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\sql_query2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\sql_query3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\sql_string1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\sql_string2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\sql_string3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\stream2string1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\stream2string2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\stream2string3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\string_util.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\tiny_int1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\tiny_int2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\tiny_int3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\type_info1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\type_info2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\type_info3.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\vallist1.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\vallist2.hh">
-			</File>
-			<File
-				RelativePath="sqlplusint\vallist3.hh">
+				RelativePath="sqlplusint\vallist.h">
 			</File>
 		</Filter>
 	</Files>
