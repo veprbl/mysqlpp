@@ -1,7 +1,7 @@
 #define MYSQLPP_NOT_HEADER
 #include "platform.h"
 
-#include "field_names3.hh"
+#include "field_names.h"
 
 #include "result2.hh"
 

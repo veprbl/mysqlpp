@@ -27,7 +27,7 @@ include_HEADERS = \
 	define_short.hh \
 	datetime.h \
 	exceptions.hh \
-	field_names1.hh field_names2.hh field_names3.hh \
+	field_names.h \
 	field_types1.hh field_types2.hh field_types3.hh \
 	fields1.hh fields2.hh \
 	manip1.hh manip2.hh manip3.hh \

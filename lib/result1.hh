@@ -8,7 +8,7 @@
 
 #include <define_short.hh>
 #include <exceptions.hh>
-#include <field_names1.hh>
+#include <field_names.h>
 #include <field_types1.hh>
 #include <fields1.hh>
 
