@@ -16,3 +16,6 @@ Patches for any of these thoughtfully considered!
 
 	o Look through my own code for uses of custom SQL queries, and try
 	  to reduce them to API features.
+
+	o GCC 3.4 and 3.5 have yet more pedantry in them that dislikes
+	  MySQL++.  Fix!
