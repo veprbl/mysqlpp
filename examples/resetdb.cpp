@@ -30,7 +30,8 @@ main(int argc, char *argv[])
 		// with an error.
 		con.disable_exceptions();
 		if (con.create_db(kpcSampleDatabase)) {
-			cerr << "Failed to create sample database." << endl;
+			cerr << "Failed to create sample database: " <<
+					con.error() << endl;
 			return 1;
 		}
 		else if (!con.select_db(kpcSampleDatabase)) {
