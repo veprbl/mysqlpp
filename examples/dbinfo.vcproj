@@ -138,6 +138,9 @@
 		<File
 			RelativePath=".\dummy.cpp">
 		</File>
+		<File
+			RelativePath=".\util.cc">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
