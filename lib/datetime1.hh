@@ -1,4 +1,4 @@
-#ifndef __datatime1_hh__
+#ifndef __datetime1_hh__
 #define __datetime1_hh__
 
 #include <string>
