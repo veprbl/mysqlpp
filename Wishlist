@@ -21,6 +21,9 @@ New Feature Requests
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Attribution and licensing needs attention.  Note LGPL at top of
+	  all source files, and note copyrights where known.
+
 	o 64-bit integer support is not heavily tested.  It may yet have
 	  problems.
 
