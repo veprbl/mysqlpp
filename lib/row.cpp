@@ -18,7 +18,7 @@ const ColData Row::operator[] (size_type i) const
 			return ColData();
 	}
 	
-	return ColData(data[i].c_str(), res->types(i), is_nulls[i]);
+	return ColData(data.at(i).c_str(), res->types(i), is_nulls[i]);
 }
 
 const ColData Row::lookup_by_name(const char* i) const
