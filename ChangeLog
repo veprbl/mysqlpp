@@ -8,6 +8,8 @@
 
 	o Renamed *.cc to *.cpp.
 
+	o Made 'set -> myset' change in VC++ project files.
+
 	o Some style changes (mostly whitespace) in header files.
 
 
