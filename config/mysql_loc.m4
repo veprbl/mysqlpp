@@ -32,14 +32,24 @@ AC_DEFUN([MYSQL_API_LOCATION],
 		[MYSQL_inc_check="$with_mysql_include $with_mysql_include/include $with_mysql_include/include/mysql"])
 
 	#
-	# Look for libmysqlclient
+	# Decide which C API library to use, based on thread support
+	#
+	if test "x$acx_pthread_ok" = xyes
+	then
+		MYSQLLIB=mysqlclient_r
+	else
+		MYSQLLIB=mysqlclient
+	fi
+
+	#
+	# Look for MySQL C API library
 	#
 	AC_MSG_CHECKING([for MySQL library directory])
 	MYSQL_libdir=
 	for m in $MYSQL_lib_check
 	do
 		if test -d "$m" && \
-			(test -f "$m/libmysqlclient.so" || test -f "$m/libmysqlclient.a")
+			(test -f "$m/lib$MYSQLLIB.so" || test -f "$m/lib$MYSQLLIB.a")
 		then
 			MYSQL_libdir=$m
 			break
@@ -92,7 +102,7 @@ AC_DEFUN([MYSQL_API_LOCATION],
 
 	CPPFLAGS="$CPPFLAGS -I${MYSQL_incdir}"
 
-	AC_CHECK_LIB(mysqlclient, mysql_store_result, [], [
+	AC_CHECK_LIB($MYSQLLIB, mysql_store_result, [], [
 			AC_MSG_ERROR([Could not find working MySQL client library!]) ])
 ]) dnl MYSQL_API_LOCATION
 
