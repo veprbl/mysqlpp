@@ -2,7 +2,6 @@
 #ifndef __field_names1_hh__
 #define __field_names1_hh__
 
-#include <defs.h>
 #include <coldata.h>
 #include <string_util.h>
 

@@ -1,7 +1,6 @@
 #ifndef __field_types1_hh__
 #define __field_types1_hh__
 
-#include <defs.h>
 #include <type_info.h>
 
 #include <vector>
