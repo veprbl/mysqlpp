@@ -1,8 +1,9 @@
-#include "connection.h"
-#include "result3.hh"
-
 #define MYSQLPP_NOT_HEADER
 #include "platform.h"
+
+#include "connection.h"
+
+#include "result.h"
 
 #if defined(HAVE_MYSQL_SHUTDOWN_LEVEL_ARG)
 #	define SHUTDOWN_ARG ,SHUTDOWN_DEFAULT
