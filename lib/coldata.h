@@ -18,8 +18,9 @@
 
 #include <stdlib.h>
 
+namespace mysqlpp {
 
-//!  with_class = mysql_ColData
+//!  with_class = ColData_Tmpl
 
 //: Base class for auto-converting column data.  Do not use directly. 
 //
@@ -47,18 +48,18 @@
 // <bf>Do not use this class directly.</bf>
 //  Use the typedef ColData or MutableColData instead.
 template <class Str>
-class mysql_ColData : public Str {
+class ColData_Tmpl : public Str {
 private:
   mysql_type_info _type;
 	std::string buf;
 	bool _null;
 public:
-  explicit mysql_ColData (bool n, mysql_type_info t = mysql_type_info::string_type) 
+  explicit ColData_Tmpl (bool n, mysql_type_info t = mysql_type_info::string_type) 
     : _type(t), _null(n) {}
-  explicit mysql_ColData (const char *str, 
+  explicit ColData_Tmpl (const char *str, 
 		 mysql_type_info t = mysql_type_info::string_type, bool n = false)
     : Str(str), _type(t), _null(n) {buf=str;}
-  mysql_ColData () {}
+  ColData_Tmpl () {}
   mysql_type_info type() {return _type;}
   //: Returns the current mysql type of current item
 
@@ -103,9 +104,9 @@ public:
 };
 
 //: The Type that is returned by constant rows
-typedef mysql_ColData<const_string> ColData;
+typedef ColData_Tmpl<const_string> ColData;
 //: The Type that is returned by mutable rows
-typedef mysql_ColData<std::string>       MutableColData;
+typedef ColData_Tmpl<std::string>       MutableColData;
 //: For backwards compatibility. Do not use.
 typedef ColData MysqlString;
 //: For backwards compatibility. Do not use.
@@ -117,10 +118,10 @@ typedef ColData MysqlStr;
 
 #define oprsw(opr, other, conv) \
   template<class Str> \
-  inline other operator opr (mysql_ColData<Str> x, other y) \
+  inline other operator opr (ColData_Tmpl<Str> x, other y) \
     {return (conv)x opr y;} \
   template<class Str> \
-  inline other operator opr (other x, mysql_ColData<Str> y) \
+  inline other operator opr (other x, ColData_Tmpl<Str> y) \
     {return x opr (conv)y;}
 
 #define operator_binary(other, conv) \
@@ -160,7 +161,7 @@ operator_binary_int(ulonglong, ulonglong)
 
 
 template <class Str> template<class T, class B> 
-mysql_ColData<Str>::operator Null<T,B> () const {
+ColData_Tmpl<Str>::operator Null<T,B> () const {
   if ((*this)[0] == 'N' && (*this)[1] == 'U' && 
       (*this)[2] == 'L' && (*this)[3] == 'L' && Str::size() == 4)
     return Null<T,B>(null);
@@ -169,7 +170,7 @@ mysql_ColData<Str>::operator Null<T,B> () const {
 
 
 template <class Str> template<class Type> 
-Type mysql_ColData<Str>::conv (Type dummy) const {
+Type ColData_Tmpl<Str>::conv (Type dummy) const {
 	std::string strbuf = buf;
 	strip_all_blanks(strbuf);
   size_t len = strbuf.size();
@@ -186,5 +187,7 @@ Type mysql_ColData<Str>::conv (Type dummy) const {
   return num;
 }
 
+}; // end namespace mysqlpp
 
 #endif
+

@@ -12,6 +12,10 @@
 
 #include <iostream>
 
+// Manipulator declarations are _always_ in namespace mysqlpp.
+namespace mysqlpp {
+	extern bool dont_quote_auto;
+
 //quote manipulaor
 
 extern bool dont_quote_auto;
@@ -45,13 +49,13 @@ inline std::ostream& operator << (quote_type1 o, const T &in) {
   return *o.ostr << in;
 }
 
-std::ostream& operator << (std::ostream& o,const mysql_ColData<std::string>& in);
+std::ostream& operator << (std::ostream& o,const ColData_Tmpl<std::string>& in);
 
-std::ostream& operator << (std::ostream& o, const mysql_ColData<const_string>& in);
+std::ostream& operator << (std::ostream& o, const ColData_Tmpl<const_string>& in);
 
-SQLQuery& operator << (SQLQuery& o, const mysql_ColData<std::string>& in);
+SQLQuery& operator << (SQLQuery& o, const ColData_Tmpl<std::string>& in);
 
-SQLQuery& operator << (SQLQuery& o, const mysql_ColData<const_string>& in);
+SQLQuery& operator << (SQLQuery& o, const ColData_Tmpl<const_string>& in);
 
 template <>
 std::ostream& operator << (quote_type1 o, const std::string &in);
@@ -60,10 +64,10 @@ template <>
 std::ostream& operator << (quote_type1 o, const char* const &in);
 
 template <>
-std::ostream& operator << (quote_type1 o, const mysql_ColData<std::string>& in);
+std::ostream& operator << (quote_type1 o, const ColData_Tmpl<std::string>& in);
 
 template <>
-std::ostream& operator << (quote_type1 o, const mysql_ColData<const_string>& in);
+std::ostream& operator << (quote_type1 o, const ColData_Tmpl<const_string>& in);
 
 template <>
 inline std::ostream& operator << (quote_type1 o, char* const &in) {
@@ -125,10 +129,10 @@ inline std::ostream& operator << (quote_only_type1 o, const std::string &in) {
 }
 
 template <>
-std::ostream& operator << (quote_only_type1 o, const mysql_ColData<std::string>& in);
+std::ostream& operator << (quote_only_type1 o, const ColData_Tmpl<std::string>& in);
 
 template <>
-std::ostream& operator << (quote_only_type1 o, const mysql_ColData<const_string>& in);
+std::ostream& operator << (quote_only_type1 o, const ColData_Tmpl<const_string>& in);
 
 template <>
 inline std::ostream& operator << (quote_only_type1 o, const Date &in) {
@@ -186,10 +190,10 @@ inline std::ostream& operator << (quote_double_only_type1 o, const std::string &
 }
 
 template <>
-std::ostream& operator << (quote_double_only_type1 o, const mysql_ColData<std::string>& in);
+std::ostream& operator << (quote_double_only_type1 o, const ColData_Tmpl<std::string>& in);
 
 template <>
-std::ostream& operator << (quote_double_only_type1 o, const mysql_ColData<const_string>& in);
+std::ostream& operator << (quote_double_only_type1 o, const ColData_Tmpl<const_string>& in);
 
 template <>
 inline std::ostream& operator << (quote_double_only_type1 o, const Date &in) {
@@ -248,10 +252,10 @@ template <>
 std::ostream& operator << (escape_type1 o, const char* const &in);
 
 template <>
-std::ostream& operator << (escape_type1 o, const mysql_ColData<std::string>& in);
+std::ostream& operator << (escape_type1 o, const ColData_Tmpl<std::string>& in);
 
 template <>
-std::ostream& operator << (escape_type1 o, const mysql_ColData<const_string>& in);
+std::ostream& operator << (escape_type1 o, const ColData_Tmpl<const_string>& in);
 
 template <>
 inline std::ostream& operator << (escape_type1 o, char* const &in) {
@@ -304,6 +308,8 @@ inline ignore_type2 operator << (SQLQueryParms &p, ignore_type0 esc) {
 inline SQLQueryParms & operator << (ignore_type2 p, SQLString &in) {
   return *p.qparms << in;
 }
+
+}; // end namespace mysqlpp
 
 #endif
 

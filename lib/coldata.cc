@@ -3,5 +3,7 @@
 
 #include <string>
 
-template class mysql_ColData<std::string>;
-template class mysql_ColData<const_string>;
+using namespace mysqlpp;
+
+template class ColData_Tmpl<std::string>;
+template class ColData_Tmpl<const_string>;
