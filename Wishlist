@@ -19,7 +19,7 @@ Bug Fix/Maintenance Items
 -------------------------
 
 	o Thread support should be optional.  Just because the local system
-	  supports threads, doesn't mean it should be required.  Make this a
+	  supports threads doesn't mean it should be required.  Make this a
 	  configure script flag.
 
 	o sql_cmp(double,double) is foolish.  One shouldn't do == comparison
