@@ -28,7 +28,6 @@ main(int argc, char *argv[])
 		// Couldn't switch to the sample database, so assume that it
 		// doesn't exist and create it.  If that doesn't work, exit
 		// with an error.
-		con.disable_exceptions();
 		if (con.create_db(kpcSampleDatabase)) {
 			cerr << "Failed to create sample database: " <<
 					con.error() << endl;
@@ -41,7 +40,6 @@ main(int argc, char *argv[])
 		else {
 			created = true;
 		}
-		con.restore_exceptions();
 	}
 
 	mysqlpp::Query query = con.query();	// create a new query object
