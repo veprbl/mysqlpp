@@ -15,7 +15,7 @@
 #include <manip1.hh>
 #include <null.h>
 #include <query.h>
-#include <resiter1.hh>
+#include <resiter.h>
 #include <result1.hh>
 #include <row1.hh>
 #include <set1.hh>

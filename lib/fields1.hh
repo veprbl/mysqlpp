@@ -1,7 +1,7 @@
 #ifndef __fields1_hh__
 #define __fields1_hh__
 
-#include "resiter1.hh"
+#include <resiter.h>
 
 class ResUse;
 

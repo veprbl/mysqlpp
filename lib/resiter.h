@@ -1,8 +1,8 @@
 #ifndef __resiter1_hh__
 #define __resiter1_hh__
 
-#include "defs.hh"
-#include "row1.hh"
+#include <defs.hh>
+#include <row1.hh>
 
 #include <iterator>
 

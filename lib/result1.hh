@@ -4,7 +4,7 @@
 #include <platform.h>
 
 #include <row1.hh>
-#include <resiter1.hh>
+#include <resiter.h>
 
 #include <define_short.hh>
 #include <exceptions.hh>

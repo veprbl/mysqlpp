@@ -1,14 +1,15 @@
 #ifndef __row1_hh__
 #define __row1_hh__
 
+#include <coldata.h>
+#include <defs.hh>
+#include <define_short.hh>
+#include <exceptions.hh>
+#include <resiter.h>
+#include <vallist1.hh>
+
 #include <vector>
 #include <string>
-#include "exceptions.hh"
-#include "defs.hh"
-#include "define_short.hh"
-#include "coldata.h"
-#include "resiter1.hh"
-#include "vallist1.hh"
 
 template <class ThisType, class Res>
 class RowTemplate {

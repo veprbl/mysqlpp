@@ -34,7 +34,7 @@ include_HEADERS = \
 	null.h \
 	platform.h \
 	query.h \
-	resiter1.hh \
+	resiter.h \
 	result1.hh result2.hh result3.hh \
 	row1.hh row2.hh row3.hh \
 	set1.hh set2.hh set3.hh \
