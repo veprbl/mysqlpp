@@ -4,7 +4,8 @@ autom4te.cache
 config.*
 configure
 depcomp
-libtool ltconfig ltmain.sh
-stamp-h1 stamp-h
 install-sh
+libtool ltconfig ltmain.sh
+missing
+stamp-h1 stamp-h
 
