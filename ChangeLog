@@ -7,6 +7,8 @@
 	  of those tools again.  Removed the generated autotools files from
 	  CVS.
 
+	o Renamed library file from libsqlplus to libmysqlpp.
+
 
 1.7.9, 2001.05.19
 
