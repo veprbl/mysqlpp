@@ -11,9 +11,9 @@
 #include <mysql.h>
 
 #define mysql_query_define1(RETURN, FUNC) \
-  RETURN FUNC (query_reset r = RESET_QUERY) {return FUNC (def,r);} \
+  RETURN FUNC () {return FUNC (def);} \
   RETURN FUNC (const char* str); \
-  RETURN FUNC (parms &p, query_reset r = RESET_QUERY);\
+  RETURN FUNC (parms &p);\
   mysql_query_define0(RETURN,FUNC) \
 
 #define mysql_query_define2(FUNC) \
