@@ -38,13 +38,15 @@ New Feature Requests
 	  because Connection would have to derive from an interface class
 	  for the lock object to be able to call functions on it.
 
+	o Do something similar to above with exception handling.  Derive
+	  from exception-disabling interface, and instantiate an exception
+	  disabler object that turns off exceptions until that object goes
+	  out of scope.
+
 	o Fold SQLQuery class into Query?  The only reason for the
 	  separation goes back to the dream of having MySQL++ be database-
 	  independent.  This is considered a new feature because it breaks
 	  the ABI.
-
-	o Add a way to temporarily disable exceptions to various classes.
-	  (Make it an interface?)  This breaks ABI.
 
 
 Bug Fix/Maintenance Items
