@@ -4,6 +4,12 @@ EXTRA_DIST = bootstrap common.am doc devel LGPL *.spec *.ebuild \
 #SUBDIRS = lib examples doc
 SUBDIRS = lib examples
 
+# Override default aclocal command, to force it to look in config subdir
+# for *.m4 macros when automatically rebuilding configure script when
+# configure.in file changes.
+ACLOCAL=aclocal -I config
+
+
 rpm-setup: dist
 	cp $(distdir).tar.gz /usr/src/redhat/SOURCES
 	cp mysql++.spec /usr/src/redhat/SPECS
