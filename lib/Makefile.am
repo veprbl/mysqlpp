@@ -19,8 +19,8 @@ include_HEADERS = \
 	coldata.h \
 	compare.h \
 	connection.h \
-	const_string1.hh const_string2.hh const_string3.hh \
-	convert1.hh convert2.hh convert3.hh \
+	const_string.h \
+	convert.h \
 	custom.hh \
 	custom-macros.hh \
 	defs.hh \

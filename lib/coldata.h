@@ -4,7 +4,7 @@
 #include <platform.h>
 
 #include <const_string.h>
-#include <convert3.hh>
+#include <convert.h>
 #include <defs.hh>
 #include <exceptions.hh>
 #include <null1.hh>
