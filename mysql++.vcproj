@@ -129,6 +129,9 @@
 				RelativePath="lib\manip.cc">
 			</File>
 			<File
+				RelativePath=".\lib\myset.cc">
+			</File>
+			<File
 				RelativePath="lib\query.cc">
 			</File>
 			<File
@@ -136,9 +139,6 @@
 			</File>
 			<File
 				RelativePath=".\lib\row.cc">
-			</File>
-			<File
-				RelativePath="lib\set.cc">
 			</File>
 			<File
 				RelativePath="lib\sql_query.cc">
@@ -199,6 +199,9 @@
 				RelativePath="lib\manip.h">
 			</File>
 			<File
+				RelativePath=".\lib\myset.h">
+			</File>
+			<File
 				RelativePath="lib\mysql++.h">
 			</File>
 			<File
@@ -218,9 +221,6 @@
 			</File>
 			<File
 				RelativePath="lib\row.h">
-			</File>
-			<File
-				RelativePath="lib\set.h">
 			</File>
 			<File
 				RelativePath="lib\sql_query.h">
