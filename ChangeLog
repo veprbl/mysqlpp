@@ -1,6 +1,6 @@
 1.7.12, 2004.08.19
 
-	o Many Standard C++ fixes, many from the GCC 3.4 patch by
+	o Many Standard C++ fixes, most from the GCC 3.4 patch by
 	  Rune Kleveland.
 
 	o Added Wishlist file to distribution.
@@ -10,7 +10,7 @@
 
 	o RPM building is working properly now.
 
-	o Fixed the indempotency guard in datetime1.hh.
+	o Fixed the idempotency guard in datetime1.hh.
 
 
 1.7.11, 2004.08.17
