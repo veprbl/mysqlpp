@@ -205,7 +205,8 @@ inline void swap (Result &x, Result &y) {
 
 //: This structure holds the information on the success of queries that
 //: don't return any results.
-struct ResNSel {
+class ResNSel {
+public:
   bool     success;   
   int      insert_id; //: 
   int      rows;      //: Number of rows affected
