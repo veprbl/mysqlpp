@@ -220,13 +220,14 @@ Result Connection::store(const string& str, bool throw_excptns)
 	}
 
 	Success = !mysql_query(&mysql, str.c_str());
-	unlock();
 	if (Success) {
 		MYSQL_RES* res = mysql_store_result(&mysql);
 		if (res) {
+			unlock();
 			return Result(res);
 		}
 	}
+	unlock();
 
 	// One of the mysql_* calls failed, so decide how we should fail.
 	if (throw_excptns) {
@@ -253,9 +254,11 @@ ResUse Connection::use(const string& str, bool throw_excptns)
 	if (Success) {
 		MYSQL_RES* res = mysql_use_result(&mysql);
 		if (res) {
+			unlock();
 			return ResUse(res, this);
 		}
 	}
+	unlock();
 
 	// One of the mysql_* calls failed, so decide how we should fail.
 	if (throw_excptns) {
