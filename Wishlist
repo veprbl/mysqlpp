@@ -6,10 +6,6 @@ Patches for any of these thoughtfully considered!
 	o is_connected() may not be returning the right value.
 	  <bayufa@bdg.centrin.net.id>
 
-	o define_short.hh is bad code style.  It should be removed, the
-	  library should use the short names exclusively, and the whole
-	  thing should go into a mysqlpp namespace.
-
 	o Look through my own code for uses of custom SQL queries, and try
 	  to reduce them to API features.
 
@@ -36,3 +32,8 @@ Patches for any of these thoughtfully considered!
 	  have a private std::stringstream member, and add the function
 	  definitions it needs to look like a stringstream.  The Standard
 	  C++ library classes were not designed to be subclassed.
+
+	o Split RPM into lib, devel and examples sections.  For the latter,
+	  make a simple non-autotools Makefile that looks in the same
+	  directory as the lib and devel RPMs unpack into for the library
+	  and headers.
