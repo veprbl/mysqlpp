@@ -1,4 +1,4 @@
-#include "manip3.hh"
+#include "manip.h"
 
 using namespace std;
 

@@ -1,9 +1,10 @@
 #ifndef __vallist1_hh__
 #define __vallist1_hh__
 
+#include <manip.h>
+
 #include <string>
 #include <vector>
-#include "manip1.hh"
 
 template <class Seq, class Manip>
 struct value_list_b {

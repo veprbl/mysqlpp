@@ -29,7 +29,7 @@ include_HEADERS = \
 	field_names.h \
 	field_types.h \
 	fields1.hh fields2.hh \
-	manip1.hh manip2.hh manip3.hh \
+	manip.h \
 	mysql++.h mysql++.hh \
 	null.h \
 	platform.h \
