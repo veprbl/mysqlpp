@@ -12,7 +12,9 @@ main(int argc, char *argv[])
 {
 	try {
 		mysqlpp::Connection con(mysqlpp::use_exceptions);
-		connect_sample_db(argc, argv, con, "");
+		if (!connect_sample_db(argc, argv, con, "")) {
+			return 1;
+		}
 
 		try {
 			con.select_db("mysql_cpp_data");

@@ -18,7 +18,9 @@ main(int argc, char *argv[])
 	// login name, etc..
 	try {
 		mysqlpp::Connection con(mysqlpp::use_exceptions);
-		connect_sample_db(argc, argv, con);
+		if (!connect_sample_db(argc, argv, con)) {
+			return 1;
+		}
 
 		mysqlpp::Query query = con.query();
 		// This creates a query object that is bound to con.
