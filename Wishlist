@@ -20,6 +20,9 @@ New Feature Requests
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Is there any reason not to make standard C++ exceptions the
+	  default, instead of the, um, exception?
+
 	o Some way to skip building examples.  Particularly useful when
 	  building RPM, but not useful when building library as a developer,
 	  since building examples is a simple test of the library.  Some
