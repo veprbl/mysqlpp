@@ -3,7 +3,12 @@ EXTRA_DIST = bootstrap Configure doc devel LGPL mysql++.spec Wishlist
 #SUBDIRS = sqlplusint examples doc
 SUBDIRS = sqlplusint examples
 
-rpm: dist
+rpm-setup: dist
 	cp $(distdir).tar.gz /usr/src/redhat/SOURCES
 	cp mysql++.spec /usr/src/redhat/SPECS
-	( cd /usr/src/redhat/SPECS ; rpmbuild -ba mysql++.spec )
+
+rpm: rpm-setup
+	( cd /usr/src/redhat/SPECS ; rpmbuild -bb mysql++.spec )
+
+srpm: rpm-setup
+	( cd /usr/src/redhat/SPECS ; rpmbuild -bs mysql++.spec )
