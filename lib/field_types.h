@@ -1,9 +1,9 @@
 #ifndef __field_types1_hh__
 #define __field_types1_hh__
 
-#include "defs.hh"
-#include "define_short.hh"
-#include "type_info1.hh"
+#include <defs.hh>
+#include <define_short.hh>
+#include <type_info.h>
 
 #include <vector>
 

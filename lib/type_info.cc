@@ -2,7 +2,7 @@
 
 #include "datetime.h"
 #include "set1.hh"
-#include "type_info3.hh"
+#include "type_info.h"
 
 #include <mysql.h>
 

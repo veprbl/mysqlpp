@@ -43,7 +43,7 @@ include_HEADERS = \
 	sql_string.h \
 	stream2string.h \
 	tiny_int.h \
-	type_info1.hh type_info2.hh type_info3.hh \
+	type_info.h \
 	string_util.hh \
 	vallist1.hh vallist2.hh vallist3.hh
 

@@ -9,7 +9,7 @@
 #include <exceptions.hh>
 #include <null.h>
 #include <string_util.hh>
-#include <type_info1.hh>
+#include <type_info.h>
 
 #include <mysql.h>
 
