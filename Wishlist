@@ -21,6 +21,13 @@ New Feature Requests
 Bug Fix/Maintenance Items
 -------------------------
 
+	o 64-bit support is weak and not heavily tested.  One known problem
+	  is in the conversion functions of SQLString.
+
+	o All uses of sprintf() should be changed to snprintf() or
+	  _snprintf().  This will have to be done conditionally, depending
+	  on platform support.
+
 	o is_connected() may not be returning the right value.
 	  <bayufa@bdg.centrin.net.id>
 
