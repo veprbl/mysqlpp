@@ -49,6 +49,22 @@ AC_LANG_CPLUSPLUS
 STL_SLIST_EXTENSION
 
 
+dnl Decide if examples are to be built or not.
+AC_ARG_ENABLE(examples,
+		[  --enable-examples  Build the examples (built by default) ],
+		[ build_examples=$enableval ],
+		[ build_examples=yes ])
+if test "x$build_examples" = xyes
+then
+	OPTIONAL_EXAMPLES=examples
+	echo will build examples
+else
+	OPTIONAL_EXAMPLES= 
+	echo will NOT build examples
+fi
+AC_SUBST([OPTIONAL_EXAMPLES])
+
+
 #
 # Done with checks!
 #
