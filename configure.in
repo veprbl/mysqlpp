@@ -6,7 +6,7 @@ VERSION=1.7.19
 
 AM_INIT_AUTOMAKE(mysql++, $VERSION)
 
-AM_CONFIG_HEADER(config.h sqlplusint/exceptions.hh)
+AM_CONFIG_HEADER(config.h sqlplusint/exceptions.h)
 
 AC_PROG_MAKE_SET
 
