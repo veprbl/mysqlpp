@@ -11,6 +11,8 @@
 
 namespace mysqlpp {
 
+class ResUse;
+
 //: A vector of the field names.
 class FieldNames : public std::vector<std::string> {
 private:

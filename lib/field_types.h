@@ -8,6 +8,8 @@
 
 namespace mysqlpp {
 
+class ResUse;
+
 //: A vector of the field types.
 class FieldTypes : public std::vector<mysql_type_info> {
 private:
