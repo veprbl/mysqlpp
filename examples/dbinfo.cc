@@ -1,3 +1,5 @@
+#include "util.h"
+
 #include <mysql++.h>
 
 #include <iomanip>
@@ -11,11 +13,11 @@ using namespace mysqlpp;
 vector<string> yy;
 
 int
-main()
+main(int argc, char* argv[])
 {
 	Connection con(use_exceptions);
 	try {
-		con.real_connect("", "localhost", "root", "", 3306, int(0), 60, 0);
+		connect_to_db(argc, argv, con, "");
 
 		cout << con.client_info() << endl << endl;
 		Query query = con.query();
