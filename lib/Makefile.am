@@ -1,6 +1,6 @@
 include $(top_srcdir)/Configure
 
-EXTRA_DIST = custom.pl
+EXTRA_DIST = custom.pl *.bpf *.bpr *.bpg
 
 lib_LTLIBRARIES=libmysqlpp.la
 

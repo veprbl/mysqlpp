@@ -1,6 +1,6 @@
 Summary: C++ API for MySQL
 Name: mysql++
-Version: 1.7.13
+Version: 1.7.14
 Release: 1
 Copyright: LGPL
 Group: Development/Databases
@@ -41,6 +41,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/libmysqlpp.so.1.0.0
 
 %changelog
+* Thu Aug 26 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.14-1
+- Updated for 1.7.14
+
 * Mon Aug 23 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.13-1
 - Updated for 1.7.13
 
