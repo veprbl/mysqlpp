@@ -5,9 +5,9 @@
 #include <sqlplus.hh>
 #include <custom.hh>
 
-sql_create_5 (stock,		// struct name, 
+sql_create_5 (stock, 	   // struct name,
 	      1, 5,		// I'll explain these latter
-	      string, item,	// type, id
+	      std::string, item,	// type, id
 	      longlong, num,
 	      double, weight,
 	      double, price,
@@ -35,10 +35,10 @@ int main () {
     // "stock" which was created my the macro above.
 
     cout.setf (ios::left);
-    cout << setw (17) << "Item"
-	 << setw (4) << "Num"
-	 << setw (7) << "Weight"
-	 << setw (7) << "Price"
+    cout << std::setw (17) << "Item"
+	 << std::setw (4) << "Num"
+	 << std::setw (7) << "Weight"
+	 << std::setw (7) << "Price"
 	 << "Date" << endl
 	 << endl;
 
@@ -52,12 +52,12 @@ int main () {
     cout.precision(3);
     vector <stock>::iterator i;
     for (i = res.begin (); i != res.end (); i++) {
-      cout << setw (17) << i->item.c_str ()
+      cout << std::setw (17) << i->item.c_str ()
 	// unfortunally the gnu string class does not respond to format
 	// modifers so I have to convert it to a conat char *.
-	   << setw (4) << i->num
-	   << setw (7) << i->weight
-	   << setw (7) << i->price
+	   << std::setw (4) << i->num
+	   << std::setw (7) << i->weight
+	   << std::setw (7) << i->price
 	   << i->sdate
 	   << endl;
     }

@@ -1,9 +1,13 @@
 #include <vector>
 #include <string>
-vector<string> yy;
+using std::string;
+std::vector<string> yy;
 #include <iostream>
 #include <iomanip>
+using std::setw;
 #include <mysql++>
+#include <cstring>
+using std::memset;
 
 int main() {
   Connection con(use_exceptions);
@@ -18,7 +22,10 @@ int main() {
 		query.exec("CREATE TABLE dva   (id2 int(11), pisanije char(12), vreme timestamp, INDEX(id2))");
 		query.exec("CREATE TABLE tri   (id3 int(11), pisanije char(12), vreme timestamp, INDEX(id3))");
 		for (unsigned int i=0; i<1000;i++) {
-			char c = 'a' + i % 25; char xx[11]; memset(xx,c,10); xx[10]='\0'; 
+			char c = 'a' + i % 25;
+			char xx[11];
+			memset(xx,c,10);
+			xx[10]='\0';
 			char buff [100];
 			sprintf (buff,"INSERT INTO jedan (pisanije) VALUES('%s')",xx);
 			query.exec(buff);

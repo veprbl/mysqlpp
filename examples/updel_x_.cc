@@ -1,5 +1,6 @@
 #include <sqlplus.hh>
-
+#include <string>
+using std::string;
 #define MY_DATABASE	"telcent"
 #define MY_TABLE		"nazivi"
 #define MY_HOST    "localhost"
@@ -11,9 +12,9 @@
 int  main (void) {
   Connection con(use_exceptions);
 	try {
-		ostrstream strbuf; unsigned int i=0; 
+		std::ostrstream strbuf; unsigned int i=0; 
 		con.real_connect (MY_DATABASE,MY_HOST,MY_USER,MY_PASSWORD,3306,(int)0,60,NULL);
-		Query query = con.query(); query << MY_QUERY; 
+		Query query = con.query(); (std::ostream&)query << MY_QUERY;
 		ResUse res = query.use(); Row row; 
 		strbuf << "delete from " << MY_TABLE << " where " << MY_FIELD << " in (";
 //  for UPDATE just replace the above DELETE FROM with UPDATE statement

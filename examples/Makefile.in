@@ -64,18 +64,20 @@ AS = @AS@
 CC = @CC@
 CXX = @CXX@
 DLLTOOL = @DLLTOOL@
-LD = @LD@
+ECHO = @ECHO@
+EXEEXT = 
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
-NM = @NM@
 OBJDUMP = @OBJDUMP@
+OBJEXT = o
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
 SQLPLUS_MAJOR_VERSION = @SQLPLUS_MAJOR_VERSION@
 SQLPLUS_MICRO_VERSION = @SQLPLUS_MICRO_VERSION@
 SQLPLUS_MINOR_VERSION = @SQLPLUS_MINOR_VERSION@
+STRIP = @STRIP@
 VERSION = @VERSION@
 
 INCLUDES = -I$(top_srcdir)/sqlplusint
@@ -149,24 +151,28 @@ load_file_DEPENDENCIES = $(SQLPLUSLIBS)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h ../sqlplusint/exceptions.hh
 CONFIG_CLEAN_FILES = 
+noinst_PROGRAMS =  resetdb$(EXEEXT) simple1$(EXEEXT) custom1$(EXEEXT) \
+custom2$(EXEEXT) custom3$(EXEEXT) custom4$(EXEEXT) complic1$(EXEEXT) \
+fieldinf1$(EXEEXT) sinisa_ex$(EXEEXT) updel_ex$(EXEEXT) \
+load_file$(EXEEXT) cgi_image$(EXEEXT)
 PROGRAMS =  $(noinst_PROGRAMS)
 
 
 DEFS = @DEFS@ -I. -I$(srcdir) -I.. -I../sqlplusint
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
-resetdb_OBJECTS =  resetdb.o util.o
-simple1_OBJECTS =  simple1.o
-custom1_OBJECTS =  custom1.o
-custom2_OBJECTS =  custom2.o util.o
-custom3_OBJECTS =  custom3.o util.o
-custom4_OBJECTS =  custom4.o
-complic1_OBJECTS =  complic1.o
-fieldinf1_OBJECTS =  fieldinf1.o
-sinisa_ex_OBJECTS =  sinisa_ex.o
-updel_ex_OBJECTS =  updel_x_.o
-load_file_OBJECTS =  load_file.o
-cgi_image_OBJECTS =  cgi_image.o
+resetdb_OBJECTS =  resetdb.$(OBJEXT) util.$(OBJEXT)
+simple1_OBJECTS =  simple1.$(OBJEXT)
+custom1_OBJECTS =  custom1.$(OBJEXT)
+custom2_OBJECTS =  custom2.$(OBJEXT) util.$(OBJEXT)
+custom3_OBJECTS =  custom3.$(OBJEXT) util.$(OBJEXT)
+custom4_OBJECTS =  custom4.$(OBJEXT)
+complic1_OBJECTS =  complic1.$(OBJEXT)
+fieldinf1_OBJECTS =  fieldinf1.$(OBJEXT)
+sinisa_ex_OBJECTS =  sinisa_ex.$(OBJEXT)
+updel_ex_OBJECTS =  updel_x_.$(OBJEXT)
+load_file_OBJECTS =  load_file.$(OBJEXT)
+cgi_image_OBJECTS =  cgi_image.$(OBJEXT)
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -190,7 +196,7 @@ OBJECTS = $(resetdb_OBJECTS) $(simple1_OBJECTS) $(custom1_OBJECTS) $(custom2_OBJ
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .cc .lo .o .s
+.SUFFIXES: .S .c .cc .lo .o .obj .s
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) $(srcdir)/../Configure
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu examples/Makefile
 
@@ -208,6 +214,11 @@ distclean-noinstPROGRAMS:
 
 maintainer-clean-noinstPROGRAMS:
 
+# FIXME: We should only use cygpath when building on Windows,
+# and only if it is available.
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
+
 .s.o:
 	$(COMPILE) -c $<
 
@@ -216,6 +227,7 @@ maintainer-clean-noinstPROGRAMS:
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
 
 clean-compile:
 
@@ -240,55 +252,57 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
-resetdb: $(resetdb_OBJECTS) $(resetdb_DEPENDENCIES)
-	@rm -f resetdb
+resetdb$(EXEEXT): $(resetdb_OBJECTS) $(resetdb_DEPENDENCIES)
+	@rm -f resetdb$(EXEEXT)
 	$(CXXLINK) $(resetdb_LDFLAGS) $(resetdb_OBJECTS) $(resetdb_LDADD) $(LIBS)
 
-simple1: $(simple1_OBJECTS) $(simple1_DEPENDENCIES)
-	@rm -f simple1
+simple1$(EXEEXT): $(simple1_OBJECTS) $(simple1_DEPENDENCIES)
+	@rm -f simple1$(EXEEXT)
 	$(CXXLINK) $(simple1_LDFLAGS) $(simple1_OBJECTS) $(simple1_LDADD) $(LIBS)
 
-custom1: $(custom1_OBJECTS) $(custom1_DEPENDENCIES)
-	@rm -f custom1
+custom1$(EXEEXT): $(custom1_OBJECTS) $(custom1_DEPENDENCIES)
+	@rm -f custom1$(EXEEXT)
 	$(CXXLINK) $(custom1_LDFLAGS) $(custom1_OBJECTS) $(custom1_LDADD) $(LIBS)
 
-custom2: $(custom2_OBJECTS) $(custom2_DEPENDENCIES)
-	@rm -f custom2
+custom2$(EXEEXT): $(custom2_OBJECTS) $(custom2_DEPENDENCIES)
+	@rm -f custom2$(EXEEXT)
 	$(CXXLINK) $(custom2_LDFLAGS) $(custom2_OBJECTS) $(custom2_LDADD) $(LIBS)
 
-custom3: $(custom3_OBJECTS) $(custom3_DEPENDENCIES)
-	@rm -f custom3
+custom3$(EXEEXT): $(custom3_OBJECTS) $(custom3_DEPENDENCIES)
+	@rm -f custom3$(EXEEXT)
 	$(CXXLINK) $(custom3_LDFLAGS) $(custom3_OBJECTS) $(custom3_LDADD) $(LIBS)
 
-custom4: $(custom4_OBJECTS) $(custom4_DEPENDENCIES)
-	@rm -f custom4
+custom4$(EXEEXT): $(custom4_OBJECTS) $(custom4_DEPENDENCIES)
+	@rm -f custom4$(EXEEXT)
 	$(CXXLINK) $(custom4_LDFLAGS) $(custom4_OBJECTS) $(custom4_LDADD) $(LIBS)
 
-complic1: $(complic1_OBJECTS) $(complic1_DEPENDENCIES)
-	@rm -f complic1
+complic1$(EXEEXT): $(complic1_OBJECTS) $(complic1_DEPENDENCIES)
+	@rm -f complic1$(EXEEXT)
 	$(CXXLINK) $(complic1_LDFLAGS) $(complic1_OBJECTS) $(complic1_LDADD) $(LIBS)
 
-fieldinf1: $(fieldinf1_OBJECTS) $(fieldinf1_DEPENDENCIES)
-	@rm -f fieldinf1
+fieldinf1$(EXEEXT): $(fieldinf1_OBJECTS) $(fieldinf1_DEPENDENCIES)
+	@rm -f fieldinf1$(EXEEXT)
 	$(CXXLINK) $(fieldinf1_LDFLAGS) $(fieldinf1_OBJECTS) $(fieldinf1_LDADD) $(LIBS)
 
-sinisa_ex: $(sinisa_ex_OBJECTS) $(sinisa_ex_DEPENDENCIES)
-	@rm -f sinisa_ex
+sinisa_ex$(EXEEXT): $(sinisa_ex_OBJECTS) $(sinisa_ex_DEPENDENCIES)
+	@rm -f sinisa_ex$(EXEEXT)
 	$(CXXLINK) $(sinisa_ex_LDFLAGS) $(sinisa_ex_OBJECTS) $(sinisa_ex_LDADD) $(LIBS)
 
-updel_ex: $(updel_ex_OBJECTS) $(updel_ex_DEPENDENCIES)
-	@rm -f updel_ex
+updel_ex$(EXEEXT): $(updel_ex_OBJECTS) $(updel_ex_DEPENDENCIES)
+	@rm -f updel_ex$(EXEEXT)
 	$(CXXLINK) $(updel_ex_LDFLAGS) $(updel_ex_OBJECTS) $(updel_ex_LDADD) $(LIBS)
 
-load_file: $(load_file_OBJECTS) $(load_file_DEPENDENCIES)
-	@rm -f load_file
+load_file$(EXEEXT): $(load_file_OBJECTS) $(load_file_DEPENDENCIES)
+	@rm -f load_file$(EXEEXT)
 	$(CXXLINK) $(load_file_LDFLAGS) $(load_file_OBJECTS) $(load_file_LDADD) $(LIBS)
 
-cgi_image: $(cgi_image_OBJECTS) $(cgi_image_DEPENDENCIES)
-	@rm -f cgi_image
+cgi_image$(EXEEXT): $(cgi_image_OBJECTS) $(cgi_image_DEPENDENCIES)
+	@rm -f cgi_image$(EXEEXT)
 	$(CXXLINK) $(cgi_image_LDFLAGS) $(cgi_image_OBJECTS) $(cgi_image_LDADD) $(LIBS)
 .cc.o:
 	$(CXXCOMPILE) -c $<
+.cc.obj:
+	$(CXXCOMPILE) -c `cygpath -w $<`
 .cc.lo:
 	$(LTCXXCOMPILE) -c $<
 
@@ -334,7 +348,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \

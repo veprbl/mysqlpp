@@ -1,8 +1,10 @@
 #include <vector>
 #include <string>
-vector<string> yy;
+using std::string;
+std::vector<string> yy;
 #include <iostream>
 #include <iomanip>
+using std::setw;
 #include <sqlplus.hh>
 
 int main() {
@@ -13,7 +15,7 @@ int main() {
 	cout << con.client_info() << endl << endl;
   Query query = con.query();
 
-  query << "show databases";
+  (std::ostream&)query << "show databases";
 
   Result res = query.store();
 
@@ -33,7 +35,7 @@ int main() {
 	char database [] = "mysql";
   con.select_db (database);
 
-  query << "show tables";
+  (std::ostream&)query << "show tables";
 
   res = query.store();
 
@@ -51,7 +53,7 @@ int main() {
 		yy.insert(yy.end(),xx);
   }
 	for (unsigned int j = 0; j < yy.size();j++) {
-		query << "describe " << yy[j] << "";
+		(std::ostream&)query << "describe " << yy[j] << "";
 		cout << query.preview() << endl << endl;
 		res = query.store();
 		unsigned int columns = res.num_fields(), counter;
@@ -68,7 +70,7 @@ int main() {
 			cout << endl;
 		}
 	}
-		query << "select * from user";
+		(std::ostream&)query << "select * from user";
 		res  =  query.store(); int columns =  res.num_fields();
 		cout << query.preview() << endl << endl;
 		cout << "fields = " << res.num_fields() << "rows = " << res.size() << endl;

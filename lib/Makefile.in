@@ -64,18 +64,20 @@ AS = @AS@
 CC = @CC@
 CXX = @CXX@
 DLLTOOL = @DLLTOOL@
-LD = @LD@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
-NM = @NM@
 OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
 SQLPLUS_MAJOR_VERSION = @SQLPLUS_MAJOR_VERSION@
 SQLPLUS_MICRO_VERSION = @SQLPLUS_MICRO_VERSION@
 SQLPLUS_MINOR_VERSION = @SQLPLUS_MINOR_VERSION@
+STRIP = @STRIP@
 VERSION = @VERSION@
 
 INCLUDES = -I$(top_srcdir)/sqlplusint
@@ -131,7 +133,7 @@ OBJECTS = $(libsqlplus_la_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .cc .lo .o .s
+.SUFFIXES: .S .c .cc .lo .o .obj .s
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) $(top_srcdir)/Configure
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu sqlplusint/Makefile
 
@@ -193,6 +195,11 @@ uninstall-libLTLIBRARIES:
 	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
 	done
 
+# FIXME: We should only use cygpath when building on Windows,
+# and only if it is available.
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
+
 .s.o:
 	$(COMPILE) -c $<
 
@@ -201,6 +208,7 @@ uninstall-libLTLIBRARIES:
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
 
 clean-compile:
 
@@ -229,6 +237,8 @@ libsqlplus.la: $(libsqlplus_la_OBJECTS) $(libsqlplus_la_DEPENDENCIES)
 	$(CXXLINK) -rpath $(libdir) $(libsqlplus_la_LDFLAGS) $(libsqlplus_la_OBJECTS) $(libsqlplus_la_LIBADD) $(LIBS)
 .cc.o:
 	$(CXXCOMPILE) -c $<
+.cc.obj:
+	$(CXXCOMPILE) -c `cygpath -w $<`
 .cc.lo:
 	$(LTCXXCOMPILE) -c $<
 
@@ -289,7 +299,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
