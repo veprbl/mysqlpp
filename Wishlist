@@ -21,3 +21,6 @@ Patches for any of these thoughtfully considered!
 	  MySQL++.  Fix!
 
 	o Why can Query objects not be reused?
+
+	o Get VC++ to build project without warnings on at least /W3.
+
