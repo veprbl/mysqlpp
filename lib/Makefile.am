@@ -30,3 +30,6 @@ custom.h custom-macros.h: custom.pl
 
 distclean-local:
 	rm -f custom.h custom-macros.h
+
+ctags:
+	ctags *.cc *.h
