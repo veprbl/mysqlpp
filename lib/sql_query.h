@@ -1,6 +1,7 @@
 #ifndef __sql_query_1_hh
 #define __sql_query_1_hh
 
+#include <custom.h>
 #include <sql_string.h>
 #include <tiny_int.h>
 
