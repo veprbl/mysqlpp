@@ -3,7 +3,7 @@
 
 #include <exceptions.h>
 
-#include <ostream>
+#include <iostream>
 
 namespace mysqlpp {
 
