@@ -5,7 +5,7 @@
 
 	o Added Wishlist file to distribution.
 
-	o Fixed a problem in tne bootstrap script that caused complaints
+	o Fixed a problem in the bootstrap script that caused complaints
 	  from the autotools on some systems.
 
 	o RPM building is working properly now.
@@ -37,7 +37,7 @@
 1.7.10, 2004.08.16
 
 	o Maintenance taken over by Warren Young (mysqlpp at etr dash usa
-      dot com.) See http://lists.mysql.com/plusplus/3326 for details.
+	  dot com.) See http://lists.mysql.com/plusplus/3326 for details.
 
 	o Applied many of the GCC 3.x patches submitted for 1.7.9 over
 	  the years.  This allows it to build on everything from 3.0 to
