@@ -3,9 +3,10 @@
 
 #include "field_types.h"
 
-#include "result2.hh"
+#include "result.h"
 
-void FieldTypes::init(const ResUse *res) {
+void FieldTypes::init(const ResUse *res)
+{
   int num = res->num_fields();
   reserve(num);
   for (int i = 0; i < num; i++) {

@@ -6,7 +6,7 @@
 #include <define_short.hh>
 #include <coldata.h>
 #include <connection.h>
-#include <result1.hh>
+#include <result.h>
 #include <sql_query.h>
 
 #include <mysql.h>
