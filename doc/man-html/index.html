@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 99.2beta8 (1.43)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Mysql++ A C++ API for Mysql
+ver 1.7.9</TITLE>
+<META NAME="description" CONTENT="Mysql++ A C++ API for Mysql
+ver 1.7.9">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v99.2beta8">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="Contents.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html3"
+  HREF="Contents.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_g.png"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev_g.png"> 
+<A NAME="tex2html1"
+  HREF="Contents.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html4"
+  HREF="Contents.html">Contents</A>
+ &nbsp <B>  <A NAME="tex2html2"
+  HREF="Contents.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<P>
+
+<P>
+
+<P>
+<H1 ALIGN="CENTER">Mysql++ 
+<BR>
+A C++ API for Mysql
+<BR>
+ver 1.7.9</H1>
+<P ALIGN="CENTER"><STRONG>Kevin Atkinson
+<BR>&lt;kevinatk@home.com&gt;
+<BR>
+Sinisa Milivojevic
+<BR>&lt;sinisa@mysql.com&gt;
+<BR>
+Michael Widenius
+<BR>&lt;monty@mysql.com&gt;</STRONG></P>
+<BR><HR>
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"></A>
+
+<UL>
+<LI><A NAME="tex2html5"
+  HREF="Contents.html">Contents</A>
+<LI><A NAME="tex2html6"
+  HREF="Introductory_Material.html">Introductory Material</A>
+<UL>
+<LI><A NAME="tex2html7"
+  HREF="1_Introduction.html">1. Introduction</A>
+<UL>
+<LI><A NAME="tex2html8"
+  HREF="1_Introduction.html#SECTION02110000000000000000">1.1 What is Mysql++</A>
+<LI><A NAME="tex2html9"
+  HREF="1_Introduction.html#SECTION02120000000000000000">1.2 Getting Mysql++</A>
+<LI><A NAME="tex2html10"
+  HREF="1_Introduction.html#SECTION02130000000000000000">1.3 Mysql++ Mailing List</A>
+</UL>
+<LI><A NAME="tex2html11"
+  HREF="2_Overview.html">2. Overview</A>
+<UL>
+<LI><A NAME="tex2html12"
+  HREF="2_Overview.html#SECTION02210000000000000000">The Main Database Handle</A>
+<LI><A NAME="tex2html13"
+  HREF="2_Overview.html#SECTION02220000000000000000">The Query Object</A>
+<LI><A NAME="tex2html14"
+  HREF="2_Overview.html#SECTION02230000000000000000">The Result Sets</A>
+<UL>
+<LI><A NAME="tex2html15"
+  HREF="2_Overview.html#SECTION02231000000000000000">The Dramatic Result Set</A>
+<LI><A NAME="tex2html16"
+  HREF="2_Overview.html#SECTION02232000000000000000">The Static Result Sets</A>
+<LI><A NAME="tex2html17"
+  HREF="2_Overview.html#SECTION02233000000000000000">The Dynamic Fully Mutable Sets</A>
+</UL>
+<LI><A NAME="tex2html18"
+  HREF="2_Overview.html#SECTION02240000000000000000">In addition</A>
+</UL>
+<LI><A NAME="tex2html19"
+  HREF="3_Important.html">3. Important Changes </A>
+<UL>
+<LI><A NAME="tex2html20"
+  HREF="3_Important.html#SECTION02310000000000000000">3.1 Current Changes</A>
+<LI><A NAME="tex2html21"
+  HREF="3_Important.html#SECTION02320000000000000000">3.2 Future Changes</A>
+</UL>
+</UL>
+<LI><A NAME="tex2html22"
+  HREF="Usage.html">Usage</A>
+<UL>
+<LI><A NAME="tex2html23"
+  HREF="4_Tutorial.html">4. Tutorial by Example</A>
+<UL>
+<LI><A NAME="tex2html24"
+  HREF="4_Tutorial.html#SECTION03110000000000000000">4.1 Introduction</A>
+<LI><A NAME="tex2html25"
+  HREF="4_Tutorial.html#SECTION03120000000000000000">4.2 Assumptions</A>
+<LI><A NAME="tex2html26"
+  HREF="4_Tutorial.html#SECTION03130000000000000000">4.3 Running the Examples</A>
+<LI><A NAME="tex2html27"
+  HREF="4_Tutorial.html#SECTION03140000000000000000">4.4 The Basics</A>
+<UL>
+<LI><A NAME="tex2html28"
+  HREF="4_Tutorial.html#SECTION03141000000000000000">4.4.1 A Simple Example</A>
+<LI><A NAME="tex2html29"
+  HREF="4_Tutorial.html#SECTION03142000000000000000">4.4.2 A slightly more complicated example</A>
+<LI><A NAME="tex2html30"
+  HREF="4_Tutorial.html#SECTION03143000000000000000">4.4.3 Getting Info about the Fields</A>
+</UL>
+<LI><A NAME="tex2html31"
+  HREF="4_Tutorial.html#SECTION03150000000000000000">4.5 Specialized SQL Structures</A>
+<UL>
+<LI><A NAME="tex2html32"
+  HREF="4_Tutorial.html#SECTION03151000000000000000">4.5.1 Retrieving Data</A>
+<LI><A NAME="tex2html33"
+  HREF="4_Tutorial.html#SECTION03152000000000000000">4.5.2 Adding Data </A>
+<LI><A NAME="tex2html34"
+  HREF="4_Tutorial.html#SECTION03153000000000000000">4.5.3 Modifying Data </A>
+<LI><A NAME="tex2html35"
+  HREF="4_Tutorial.html#SECTION03154000000000000000">4.5.4 Less-Than-Comparable</A>
+</UL>
+<LI><A NAME="tex2html36"
+  HREF="4_Tutorial.html#SECTION03160000000000000000">4.6 Let us be usefull</A>
+<UL>
+<LI><A NAME="tex2html37"
+  HREF="4_Tutorial.html#SECTION03161000000000000000">4.6.1 Loading binary file in a BLOB column</A>
+<LI><A NAME="tex2html38"
+  HREF="4_Tutorial.html#SECTION03162000000000000000">4.6.1 Displaying images in HTML from BLOB column</A>
+<LI><A NAME="tex2html39"
+  HREF="4_Tutorial.html#SECTION03163000000000000000">4.6.2 Delete or Update from Select</A>
+<LI><A NAME="tex2html40"
+  HREF="4_Tutorial.html#SECTION03164000000000000000">4.6.2 And There's More</A>
+</UL>
+<LI><A NAME="tex2html41"
+  HREF="4_Tutorial.html#SECTION03170000000000000000">4.7 Template Queries</A>
+</UL>
+<LI><A NAME="tex2html42"
+  HREF="5_Class.html">5. Class Reference </A>
+<UL>
+<LI><A NAME="tex2html43"
+  HREF="5_Class.html#SECTION03210000000000000000">5.1 Manipulators </A>
+</UL>
+<LI><A NAME="tex2html44"
+  HREF="6_Template.html">6. Template Queries</A>
+<UL>
+<LI><A NAME="tex2html45"
+  HREF="6_Template.html#SECTION03310000000000000000">6.1 Setting Them Up</A>
+<LI><A NAME="tex2html46"
+  HREF="6_Template.html#SECTION03320000000000000000">6.2 Template Format</A>
+<LI><A NAME="tex2html47"
+  HREF="6_Template.html#SECTION03330000000000000000">6.3 Setting the Parameters</A>
+<UL>
+<LI><A NAME="tex2html48"
+  HREF="6_Template.html#SECTION03331000000000000000">6.3.1 At Execution Time</A>
+<LI><A NAME="tex2html49"
+  HREF="6_Template.html#SECTION03332000000000000000">6.3.2 Using Defaults</A>
+<LI><A NAME="tex2html50"
+  HREF="6_Template.html#SECTION03333000000000000000">6.3.3 Combining the Two</A>
+<LI><A NAME="tex2html51"
+  HREF="6_Template.html#SECTION03334000000000000000">6.3.4 Error Handling</A>
+<LI><A NAME="tex2html52"
+  HREF="6_Template.html#SECTION03335000000000000000">6.3.5 More Advanced Stuff</A>
+</UL>
+</UL>
+<LI><A NAME="tex2html53"
+  HREF="7_Specialized.html">7. Specialized SQL Structures</A>
+<UL>
+<LI><A NAME="tex2html54"
+  HREF="7_Specialized.html#SECTION03410000000000000000">7.1 sql_create_basic </A>
+<LI><A NAME="tex2html55"
+  HREF="7_Specialized.html#SECTION03420000000000000000">7.2 sql_create_basic with compare </A>
+<LI><A NAME="tex2html56"
+  HREF="7_Specialized.html#SECTION03430000000000000000">7.3 sql_create_basic with Additional Constructor </A>
+<LI><A NAME="tex2html57"
+  HREF="7_Specialized.html#SECTION03440000000000000000">7.4 sql_create_basic General Format </A>
+<LI><A NAME="tex2html58"
+  HREF="7_Specialized.html#SECTION03450000000000000000">7.5 sql_create_basic_c_order </A>
+<LI><A NAME="tex2html59"
+  HREF="7_Specialized.html#SECTION03460000000000000000">7.6 sql_create_basic_c_order General Format </A>
+<LI><A NAME="tex2html60"
+  HREF="7_Specialized.html#SECTION03470000000000000000">7.7 sql_create </A>
+<LI><A NAME="tex2html61"
+  HREF="7_Specialized.html#SECTION03480000000000000000">7.8 sql_create_c_names </A>
+<LI><A NAME="tex2html62"
+  HREF="7_Specialized.html#SECTION03490000000000000000">7.9 sql_create_c_names General Format </A>
+<LI><A NAME="tex2html63"
+  HREF="7_Specialized.html#SECTION034100000000000000000">7.10 sql_create_c_order </A>
+<LI><A NAME="tex2html64"
+  HREF="7_Specialized.html#SECTION034110000000000000000">7.11 sql_create_complete </A>
+<LI><A NAME="tex2html65"
+  HREF="7_Specialized.html#SECTION034120000000000000000">7.12 Changing the table name </A>
+<LI><A NAME="tex2html66"
+  HREF="7_Specialized.html#SECTION034130000000000000000">7.13 Seeing the actual code </A>
+<LI><A NAME="tex2html67"
+  HREF="7_Specialized.html#SECTION034140000000000000000">7.14 Adding functionality </A>
+<LI><A NAME="tex2html68"
+  HREF="7_Specialized.html#SECTION034150000000000000000">7.15 Other notes </A>
+</UL>
+<LI><A NAME="tex2html69"
+  HREF="8_Long.html">8. Long Names</A>
+</UL>
+<LI><A NAME="tex2html70"
+  HREF="Appendices.html">Appendices</A>
+<UL>
+<LI><A NAME="tex2html71"
+  HREF="A_Changelog.html">A. Changelog</A>
+<UL>
+<LI><A NAME="tex2html72"
+  HREF="A_Changelog.html#SECTION04110000000000000000">1.7.9 (May 1 2001) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html73"
+  HREF="A_Changelog.html#SECTION04120000000000000000">1.7.8 (November 14 2000) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html74"
+  HREF="A_Changelog.html#SECTION04130000000000000000">1.7.6 (September 22 2000) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html75"
+  HREF="A_Changelog.html#SECTION04140000000000000000">1.7.5 (July 30 2000) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html76"
+  HREF="A_Changelog.html#SECTION04150000000000000000">1.7 (May17 2000) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html77"
+  HREF="A_Changelog.html#SECTION04160000000000000000">1.6 (Feb 3 2000) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html78"
+  HREF="A_Changelog.html#SECTION04170000000000000000">1.5 (Dec 1 1999) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html79"
+  HREF="A_Changelog.html#SECTION04180000000000000000">1.4 (Nov 25 1999) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html80"
+  HREF="A_Changelog.html#SECTION04190000000000000000">1.3 (Nov 10 1999) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html81"
+  HREF="A_Changelog.html#SECTION041100000000000000000">1.2 (Oct 15 1999) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html82"
+  HREF="A_Changelog.html#SECTION041110000000000000000">1.1 (Aug 2 1999) Sinisa Milivojevic &lt;sinisa@mysql.com&gt;</A>
+<LI><A NAME="tex2html83"
+  HREF="A_Changelog.html#SECTION041120000000000000000">1.0 (June 9 1999) Michael Widenius &lt;monty@monty.pp.sci.fi&gt;</A>
+<LI><A NAME="tex2html84"
+  HREF="A_Changelog.html#SECTION041130000000000000000">.64.1.1a (Sep 27 1998)</A>
+<LI><A NAME="tex2html85"
+  HREF="A_Changelog.html#SECTION041140000000000000000">.64.1a (Aug 1 1998)</A>
+<LI><A NAME="tex2html86"
+  HREF="A_Changelog.html#SECTION041150000000000000000">.64.0.1a (July 31 1998) </A>
+<LI><A NAME="tex2html87"
+  HREF="A_Changelog.html#SECTION041160000000000000000">.64.a (July 24 1998)</A>
+<LI><A NAME="tex2html88"
+  HREF="A_Changelog.html#SECTION041170000000000000000">.63.1.a</A>
+<LI><A NAME="tex2html89"
+  HREF="A_Changelog.html#SECTION041180000000000000000">.62.a (May 3 1998)</A>
+<LI><A NAME="tex2html90"
+  HREF="A_Changelog.html#SECTION041190000000000000000">.61.1.a (April 28 1998)</A>
+<LI><A NAME="tex2html91"
+  HREF="A_Changelog.html#SECTION041200000000000000000">.61.0.a</A>
+<LI><A NAME="tex2html92"
+  HREF="A_Changelog.html#SECTION041210000000000000000">.60.3a (April 24 1998)</A>
+</UL>
+<LI><A NAME="tex2html93"
+  HREF="B_Do.html">B. To Do</A>
+<LI><A NAME="tex2html94"
+  HREF="C_Credits.html">C. Credits</A>
+<LI><A NAME="tex2html95"
+  HREF="D_Copyright.html">D. Copyright</A>
+<UL>
+<LI><A NAME="tex2html96"
+  HREF="D_Copyright.html#SECTION04410000000000000000">D.1 LGPL</A>
+</UL>
+<LI><A NAME="tex2html97"
+  HREF="E_Feedback.html">E. Feedback</A>
+</UL>
+<LI><A NAME="tex2html98"
+  HREF="About_this.html">About this document ...</A>
+</UL>
+<!--End of Table of Child-Links-->
+<BR><HR>
+<ADDRESS>
+
+2001-05-01
+</ADDRESS>
+</BODY>
+</HTML>

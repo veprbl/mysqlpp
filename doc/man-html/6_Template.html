@@ -1,0 +1,431 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 99.2beta8 (1.43)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>6. Template Queries</TITLE>
+<META NAME="description" CONTENT="6. Template Queries">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v99.2beta8">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="7_Specialized.html">
+<LINK REL="previous" HREF="5_Class.html">
+<LINK REL="up" HREF="Usage.html">
+<LINK REL="next" HREF="7_Specialized.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html369"
+  HREF="7_Specialized.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html365"
+  HREF="Usage.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html359"
+  HREF="5_Class.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html367"
+  HREF="Contents.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html370"
+  HREF="7_Specialized.html">7. Specialized SQL Structures</A>
+<B> Up:</B> <A NAME="tex2html366"
+  HREF="Usage.html">Usage</A>
+<B> Previous:</B> <A NAME="tex2html360"
+  HREF="5_Class.html">5. Class Reference</A>
+ &nbsp <B>  <A NAME="tex2html368"
+  HREF="Contents.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html371"
+  HREF="6_Template.html#SECTION03310000000000000000">6.1 Setting Them Up</A>
+<LI><A NAME="tex2html372"
+  HREF="6_Template.html#SECTION03320000000000000000">6.2 Template Format</A>
+<LI><A NAME="tex2html373"
+  HREF="6_Template.html#SECTION03330000000000000000">6.3 Setting the Parameters</A>
+<UL>
+<LI><A NAME="tex2html374"
+  HREF="6_Template.html#SECTION03331000000000000000">6.3.1 At Execution Time</A>
+<LI><A NAME="tex2html375"
+  HREF="6_Template.html#SECTION03332000000000000000">6.3.2 Using Defaults</A>
+<LI><A NAME="tex2html376"
+  HREF="6_Template.html#SECTION03333000000000000000">6.3.3 Combining the Two</A>
+<LI><A NAME="tex2html377"
+  HREF="6_Template.html#SECTION03334000000000000000">6.3.4 Error Handling</A>
+<LI><A NAME="tex2html378"
+  HREF="6_Template.html#SECTION03335000000000000000">6.3.5 More Advanced Stuff</A>
+</UL></UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION03300000000000000000">
+6. Template Queries</A>
+</H1>
+
+<P>
+The idea of template queries is too provide a query with replaceable
+parameters that can be changed between query calls with out having
+to reform the queries.
+
+<P>
+
+<H1><A NAME="SECTION03310000000000000000">
+6.1 Setting Them Up</A>
+</H1>
+
+<P>
+To set up a template query simply enter the query like it is a normal
+query. For example:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>query&nbsp;&lt;&lt;&nbsp;&#34;select&nbsp;(%2:field1,&nbsp;%3:field2)&nbsp;from&nbsp;stock&nbsp;where&nbsp;%1:wheref&nbsp;=&nbsp;%q0:what&#34;</TT>
+</DD>
+</DL> And then execute the Query::parse() method. For example:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>query.parse()</TT>
+</DD>
+</DL> 
+<P>
+
+<H1><A NAME="SECTION03320000000000000000"></A><A NAME="template_format"></A>
+<BR>
+6.2 Template Format
+</H1>
+
+<P>
+An example template looks like this 
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>select&nbsp;(%2:field1,&nbsp;%3:field2)&nbsp;from&nbsp;stock&nbsp;where&nbsp;%1:wheref&nbsp;=&nbsp;%q0:what</TT>
+</DD>
+</DL> The numbers represent the element number in <B>SQLQueryParms</B>
+(see the next section). 
+
+<P>
+The format of the substation parameter is: 
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>%(modifier)##(:name)(:)</TT>
+</DD>
+</DL> Where Modifier can be any one of the following:
+
+<P>
+<DL>
+<DT><STRONG>%</STRONG></DT>
+<DD>Print an actual &#34;%&#34; 
+</DD>
+<DT><STRONG>&#34;&#34;</STRONG></DT>
+<DD>&#34;&#34; means nothing. Don't quote
+or escape no matter what. 
+</DD>
+<DT><STRONG>q</STRONG></DT>
+<DD>This will quote and escape it using mysql_escape_string if it
+is a string or char *, or another Mysql specific types that needs
+to be quoted. 
+</DD>
+<DT><STRONG>Q</STRONG></DT>
+<DD>Quote but don't escape based on the same rules. This can save a
+bit of time if you know the strings will never need quoting 
+</DD>
+<DT><STRONG>r</STRONG></DT>
+<DD>Always quote and escape even if it is a number. 
+</DD>
+<DT><STRONG>R</STRONG></DT>
+<DD>Always quote but don't escape even if it is a number. 
+</DD>
+</DL>
+## represents a number up to two digits 
+
+<P>
+``:name'' is for an optional name which aids in filling SQLQueryParms.
+Name can contain any alpha-numeric characters or the underscore. If
+you use name it must be proceeded by non-alpha-numeric charter. If
+this is not the case add a column after the name. If you need to represent
+an actual colon after the name follow the name by two-columns. The
+first one will end the name and the second one won't be processed. 
+
+<P>
+
+<H1><A NAME="SECTION03330000000000000000">
+6.3 Setting the Parameters</A>
+</H1>
+
+<P>
+The parameters can either be set when the query is executed or ahead
+of time by using default parameters.
+
+<P>
+
+<H2><A NAME="SECTION03331000000000000000">
+6.3.1 At Execution Time</A>
+</H2>
+
+<P>
+To specify the parameters when you want to execute a query simply
+use <B>Query::store(const SQLString &amp;parm0, [..., const SQLString
+&amp;parm11])</B> (or <B>Query::use</B> or <B>Query::execute</B>).
+Where <B>parm0</B> corresponds to parameter number 0, etc. You may
+specify from 1 to 12 different parameters. For example:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>Result&nbsp;res&nbsp;=&nbsp;query.store(&#34;Dinner&nbsp;Roles&#34;,&nbsp;&#34;item&#34;,&nbsp;&#34;item&#34;,&nbsp;&#34;price&#34;)</TT>
+</DD>
+</DL> with the template query provided in section <A HREF="6_Template.html#template_format">6.2</A>
+would produce:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>select&nbsp;(item,&nbsp;price)&nbsp;from&nbsp;stock&nbsp;where&nbsp;item&nbsp;=&nbsp;&#34;Dinner&nbsp;Roles&#34;</TT>
+</DD>
+</DL> The reason for why  <I>we didn't</I> make the template the more logical:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>select&nbsp;(%0:field1,&nbsp;%1:field2)&nbsp;from&nbsp;stock&nbsp;where&nbsp;%2:wheref&nbsp;=&nbsp;%q3:what</TT>
+</DD>
+</DL> will become apparent shortly.
+
+<P>
+
+<H2><A NAME="SECTION03332000000000000000">
+6.3.2 Using Defaults</A>
+</H2>
+
+<P>
+You can also set the parameters one at a time by means of the public
+data member <B>def</B>. To change the values of the <B>def</B>
+simply use the subscript operator. You can refer to the parameters
+either by number or by name. For example:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>query.def[0]&nbsp;=&nbsp;&#34;Dinner&nbsp;Roles&#34;;&nbsp;
+<BR>
+query.def[1]&nbsp;=&nbsp;&#34;item&#34;;&nbsp;
+<BR>
+query.def[2]&nbsp;=&nbsp;&#34;item&#34;;&nbsp;
+<BR>
+query.def[3]&nbsp;=&nbsp;&#34;price&#34;;</TT>
+</DD>
+</DL> and
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>query.def[&#34;what&#34;]&nbsp;=&nbsp;&#34;Dinner&nbsp;Roles&#34;;&nbsp;
+<BR>
+query.def[&#34;wheref&#34;]&nbsp;=&nbsp;&#34;item&#34;;&nbsp;
+<BR>
+query.def[&#34;field1&#34;]&nbsp;=&nbsp;&#34;item&#34;;&nbsp;
+<BR>
+query.def[&#34;field2&#34;]&nbsp;=&nbsp;&#34;price&#34;;</TT>
+</DD>
+</DL> would both have the same effect.
+
+<P>
+Once all the parameters are set simply execute as you would have executed
+the query before you knew about template queries. For example:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>Result&nbsp;res&nbsp;=&nbsp;query.store()</TT>
+</DD>
+</DL> 
+<P>
+
+<H2><A NAME="SECTION03333000000000000000">
+6.3.3 Combining the Two</A>
+</H2>
+
+<P>
+You can also combine the use of setting the parameters at execution
+time and setting them by use of the <B>def</B> object by simply
+using the extended form of <B>Query::store</B> (or <B>use</B>
+or <B>execute</B>) without all of necessary parameters specified.
+For example:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>query.def[&#34;field1&#34;]&nbsp;=&nbsp;&#34;item&#34;;&nbsp;
+<BR>
+query.def[&#34;field2&#34;]&nbsp;=&nbsp;&#34;price&#34;;&nbsp;
+<BR>
+Result&nbsp;res1&nbsp;=&nbsp;query.store(&#34;Hamburger&nbsp;Buns&#34;,&nbsp;&#34;item&#34;);&nbsp;
+<BR>
+Result&nbsp;res2&nbsp;=&nbsp;query.store(1.25,&nbsp;&#34;price&#34;);</TT>
+</DD>
+</DL> Would store the query:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>select&nbsp;(item,&nbsp;price)&nbsp;from&nbsp;stock&nbsp;where&nbsp;item&nbsp;=&nbsp;&#34;Hamburger&nbsp;Buns&#34;</TT>
+</DD>
+</DL> for <TT>res1</TT> and 
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>select&nbsp;(item,&nbsp;price)&nbsp;from&nbsp;stock&nbsp;where&nbsp;price&nbsp;=&nbsp;1.25</TT>
+</DD>
+</DL> for <TT>res2</TT>.
+
+<P>
+Because the extended form of <B>Query::store</B> can only effect
+the beginning (by number not by location) parameters the more logical
+template query:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>select&nbsp;(%0:field1,&nbsp;%1:field2)&nbsp;from&nbsp;stock&nbsp;where&nbsp;%2:wheref&nbsp;=&nbsp;%q3:what</TT>
+</DD>
+</DL> would <I>not</I> of worked in this case. Thus the more twisted ordering
+of
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>select&nbsp;(%2:field1,&nbsp;%3:field2)&nbsp;from&nbsp;stock&nbsp;where&nbsp;%1:wheref&nbsp;=&nbsp;%q0:what</TT>
+</DD>
+</DL> was needed so that we can specify <B>wheref</B> and <B>what</B>
+each time.
+
+<P>
+One thing to watch out for, however, is that <B>Query::store(const
+char* q)</B> is also defined for executing the query <TT>q</TT>. For
+this reason when you use the <B>Query::store</B> (or <B>use</B>,
+or <B>execute</B>) with only one item and that item is a <B>const
+char*</B> you need to explicitly convert it into a SQLString. For example:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>Result&nbsp;res&nbsp;=&nbsp;query.store(SQLString(&#34;Hamburger&nbsp;Buns&#34;)).</TT>
+</DD>
+</DL> 
+<P>
+
+<H2><A NAME="SECTION03334000000000000000">
+6.3.4 Error Handling</A>
+</H2>
+
+<P>
+If for some reason you did not specify all the parameters when executing
+the query <I>and</I> the remaining parameters do not have there values
+set via <TT>def</TT> the query object will throw a <B>SQLQueryNEParms</B>
+object. In which case you you can find out what happened by checking
+the value of <B>SQLQueryNEParms::string</B>. 
+
+<P>
+For example:
+
+<P>
+
+<DL COMPACT>
+<DT>
+<DD><TT>query.def[&#34;field1&#34;]&nbsp;=&nbsp;&#34;item&#34;;&nbsp;
+<BR>
+query.def[&#34;field2&#34;]&nbsp;=&nbsp;&#34;price&#34;;&nbsp;
+<BR>
+Result&nbsp;res&nbsp;=&nbsp;query.store(1.25);</TT>
+</DD>
+</DL> would throw <B>SQLQueryNEParms</B> because the <TT>wheref</TT> is
+not specified.
+
+<P>
+In theory this exception should never be thrown. If the exception
+is thrown it probably a logic error on you part. (Like in the above
+example)
+
+<P>
+
+<H2><A NAME="SECTION03335000000000000000">
+6.3.5 More Advanced Stuff</A>
+</H2>
+
+<P>
+To be written. However, for now see the class <B>SQLQuery</B> (<A HREF="5_Class.html#SQLQuery">5</A>)
+and <B>SQLQueryParms</B> (<A HREF="5_Class.html#SQLQueryParms">5</A>) for more information.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html369"
+  HREF="7_Specialized.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html365"
+  HREF="Usage.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html359"
+  HREF="5_Class.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html367"
+  HREF="Contents.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html370"
+  HREF="7_Specialized.html">7. Specialized SQL Structures</A>
+<B> Up:</B> <A NAME="tex2html366"
+  HREF="Usage.html">Usage</A>
+<B> Previous:</B> <A NAME="tex2html360"
+  HREF="5_Class.html">5. Class Reference</A>
+ &nbsp <B>  <A NAME="tex2html368"
+  HREF="Contents.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2001-05-01
+</ADDRESS>
+</BODY>
+</HTML>

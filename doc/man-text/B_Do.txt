@@ -1,0 +1,73 @@
+
+   #[1]next [2]previous [3]up [4]next
+   
+   [5]next [6]up [7]previous [8]contents 
+   Next: [9]C. Credits Up: [10]Appendices Previous: [11]A. Changelog
+   [12]Contents
+   
+                                   B. To Do
+                                       
+   These are in the order I plan on implementing them.
+   
+     * Improve the runtime type identification system for the sql types
+       which will be needed for the mutable results sets and the binary
+       operators in particular.
+     * To move properly all 64 int handling to libmysqlclient
+     * To implement dynamic, fully mutable result sets
+     * To improve configure for better detection of mysql includes and
+       libs
+     * Improve the mutable results sets so that they can be assigned
+       types that are not strings setting the sql type aproprestly. Also
+       allow the SQLtype to be fixed so that when the programmer assigned
+       a type to the data field that is not compatible with that sql type
+       it will through an exception. For example setting an string to an
+       int.
+     * Change the behavior of MysqlString when used with binary
+       operators. Instead of converting to the type on the other side of
+       the operator have it convert to the type the Mysql server said it
+       originally was.
+     * Improve the Null adapters to make them more intelligently.
+     * Be able to store the result set in an assignable container that
+       stores the results in the format they were originally stored in on
+       the server. (Not sure what the best way to go about this is. If
+       you have any ideas let me know.)
+     * Better handling of the destruction of the Mysql class. Have it
+       first tell all its children that its parent is getting destroys
+       and have then respond appropreatly. (Partly implemented as of
+       version .63.1.a)
+     * Create a container to hold Mysql enums and sets as a bit set as
+       opposed to a list of STL set.
+       
+   If you have anything else you want to see let us know at
+   sinisa@mysql.com or monty@mysql.com.
+     _________________________________________________________________
+   
+   [13]next [14]up [15]previous [16]contents 
+   Next: [17]C. Credits Up: [18]Appendices Previous: [19]A. Changelog
+   [20]Contents
+   
+   
+    2001-05-01
+
+References
+
+   1. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/C_Credits.html
+   2. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html
+   3. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+   4. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/C_Credits.html
+   5. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/C_Credits.html
+   6. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+   7. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html
+   8. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   9. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/C_Credits.html
+  10. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+  11. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html
+  12. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+  13. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/C_Credits.html
+  14. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+  15. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html
+  16. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+  17. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/C_Credits.html
+  18. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+  19. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html
+  20. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html

@@ -1,0 +1,78 @@
+
+   #[1]previous [2]up [3]next
+   
+   [4]next [5]up [6]previous [7]contents 
+   Next: [8]Appendices Up: [9]Usage Previous: [10]7. Specialized SQL
+   Structures   [11]Contents
+   
+                                 8. Long Names
+                                       
+   By default the Mysql++ API uses both short names with out the Mysql or
+   mysql_ prefix and long names with the Mysql or mysql_ prefix. If this
+   causes name problems define the macro MYSQL_NO_SHORT_NAMES before
+   including mysql++. This will force the use of long names only. The
+   short and long names are mapped as follows:
+   
+   Short Name Long Name
+   BadQuery MysqlBadQuery
+   Connection MysqlConnection
+   ResNSel ResNSel
+   ResUse ResUse MysqlResUse
+   Result MysqlRes
+   Field MysqlField
+   Fields MysqlFields
+   ResIter MysqlResIter
+   ResultIter MysqlResIter
+   Row MysqlRow
+   MutableRow MysqlMutableRow
+   FieldNames MysqlFieldNames
+   Query MysqlQuery
+   BadConversion MysqlBadConversion
+   ColData MysqlColData
+   MutableColData MysqlMutableColData
+   quote mysql_quote
+   quote_only mysql_quote_only
+   quote_double_only mysql_quote_double_only
+   escape mysql_escape
+   do_nothing mysql_do_nothing
+   ignore mysql_ignore
+   Date MysqDate
+   Time MysqlTime
+   DateTime MysqlDateTime
+   Set MysqlSet
+   Null MysqlNull
+   null_type mysql_null_type
+   null mysql_null
+   NullisNull MysqlNullisNull
+   NullisZero MysqlNullisZero
+   NullisBlank MysqlNullisBlank
+     _________________________________________________________________
+   
+   [12]next [13]up [14]previous [15]contents 
+   Next: [16]Appendices Up: [17]Usage Previous: [18]7. Specialized SQL
+   Structures   [19]Contents
+   
+   
+    2001-05-01
+
+References
+
+   1. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html
+   2. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Usage.html
+   3. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+   4. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+   5. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Usage.html
+   6. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html
+   7. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   8. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+   9. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Usage.html
+  10. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html
+  11. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+  12. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+  13. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Usage.html
+  14. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html
+  15. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+  16. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+  17. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Usage.html
+  18. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html
+  19. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html

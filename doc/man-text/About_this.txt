@@ -1,0 +1,43 @@
+
+   #[1]previous [2]up
+   
+   next [3]up [4]previous [5]contents 
+   Up: [6]Mysql++ A C++ API Previous: [7]E. Feedback   [8]Contents
+   
+                            About this document ...
+                                       
+   Mysql++
+   A C++ API for Mysql
+   ver 1.7.9
+   
+   This document was generated using the [9]LaTeX2HTML translator Version
+   99.2beta8 (1.43)
+   
+   Copyright © 1993, 1994, 1995, 1996, [10]Nikos Drakos, Computer Based
+   Learning Unit, University of Leeds.
+   Copyright © 1997, 1998, 1999, [11]Ross Moore, Mathematics Department,
+   Macquarie University, Sydney.
+   
+   The command line arguments were:
+   latex2html -split 3 -toc_depth 3 -dir man-html -long_titles 2
+   -local_icons -show_section_numbers -image_type gif manual.tex
+   
+   The translation was initiated by on 2001-05-01
+     _________________________________________________________________
+   
+   
+    2001-05-01
+
+References
+
+   1. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+   2. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/manual.html
+   3. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/manual.html
+   4. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/E_Feedback.html
+   5. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   6. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/manual.html
+   7. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/E_Feedback.html
+   8. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   9. http://www-dsed.llnl.gov/files/programs/unix/latex2html/manual/
+  10. http://cbl.leeds.ac.uk/nikos/personal.html
+  11. http://www.maths.mq.edu.au/~ross/

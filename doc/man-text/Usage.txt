@@ -1,0 +1,124 @@
+
+   #[1]next [2]previous [3]up [4]next
+   
+   [5]next [6]up [7]previous [8]contents 
+   Next: [9]4. Tutorial by Example Up: [10]Mysql++ A C++ API Previous:
+   [11]3. Important Changes   [12]Contents
+   
+                                     Usage
+     _________________________________________________________________
+   
+   Subsections
+     * [13]4. Tutorial by Example
+          + [14]4.1 Introduction
+          + [15]4.2 Assumptions
+          + [16]4.3 Running the Examples
+          + [17]4.4 The Basics
+               o [18]4.4.1 A Simple Example
+               o [19]4.4.2 A slightly more complicated example
+               o [20]4.4.3 Getting Info about the Fields
+          + [21]4.5 Specialized SQL Structures
+               o [22]4.5.1 Retrieving Data
+               o [23]4.5.2 Adding Data 
+               o [24]4.5.3 Modifying Data 
+               o [25]4.5.4 Less-Than-Comparable
+          + [26]4.6 Let us be usefull
+               o [27]4.6.1 Loading binary file in a BLOB column
+               o [28]4.6.1 Displaying images in HTML from BLOB column
+               o [29]4.6.2 Delete or Update from Select
+               o [30]4.6.2 And There's More
+          + [31]4.7 Template Queries
+     * [32]5. Class Reference 
+          + [33]5.1 Manipulators 
+     * [34]6. Template Queries
+          + [35]6.1 Setting Them Up
+          + [36]6.2 Template Format
+          + [37]6.3 Setting the Parameters
+               o [38]6.3.1 At Execution Time
+               o [39]6.3.2 Using Defaults
+               o [40]6.3.3 Combining the Two
+               o [41]6.3.4 Error Handling
+               o [42]6.3.5 More Advanced Stuff
+     * [43]7. Specialized SQL Structures
+          + [44]7.1 sql_create_basic 
+          + [45]7.2 sql_create_basic with compare 
+          + [46]7.3 sql_create_basic with Additional Constructor 
+          + [47]7.4 sql_create_basic General Format 
+          + [48]7.5 sql_create_basic_c_order 
+          + [49]7.6 sql_create_basic_c_order General Format 
+          + [50]7.7 sql_create 
+          + [51]7.8 sql_create_c_names 
+          + [52]7.9 sql_create_c_names General Format 
+          + [53]7.10 sql_create_c_order 
+          + [54]7.11 sql_create_complete 
+          + [55]7.12 Changing the table name 
+          + [56]7.13 Seeing the actual code 
+          + [57]7.14 Adding functionality 
+          + [58]7.15 Other notes 
+     * [59]8. Long Names
+     _________________________________________________________________
+   
+   
+    2001-05-01
+
+References
+
+   1. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+   2. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Introductory_Material.html
+   3. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/manual.html
+   4. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html
+   5. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html
+   6. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/manual.html
+   7. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/3_Important.html
+   8. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   9. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html
+  10. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/manual.html
+  11. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/3_Important.html
+  12. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+  13. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html
+  14. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03110000000000000000
+  15. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03120000000000000000
+  16. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03130000000000000000
+  17. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03140000000000000000
+  18. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03141000000000000000
+  19. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03142000000000000000
+  20. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03143000000000000000
+  21. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03150000000000000000
+  22. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03151000000000000000
+  23. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03152000000000000000
+  24. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03153000000000000000
+  25. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03154000000000000000
+  26. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03160000000000000000
+  27. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03161000000000000000
+  28. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03162000000000000000
+  29. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03163000000000000000
+  30. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03164000000000000000
+  31. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03170000000000000000
+  32. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/5_Class.html
+  33. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/5_Class.html#SECTION03210000000000000000
+  34. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html
+  35. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03310000000000000000
+  36. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03320000000000000000
+  37. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03330000000000000000
+  38. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03331000000000000000
+  39. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03332000000000000000
+  40. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03333000000000000000
+  41. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03334000000000000000
+  42. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03335000000000000000
+  43. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html
+  44. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03410000000000000000
+  45. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03420000000000000000
+  46. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03430000000000000000
+  47. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03440000000000000000
+  48. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03450000000000000000
+  49. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03460000000000000000
+  50. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03470000000000000000
+  51. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03480000000000000000
+  52. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03490000000000000000
+  53. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034100000000000000000
+  54. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034110000000000000000
+  55. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034120000000000000000
+  56. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034130000000000000000
+  57. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034140000000000000000
+  58. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034150000000000000000
+  59. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/8_Long.html

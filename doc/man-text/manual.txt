@@ -1,0 +1,231 @@
+
+   #[1]next
+   
+   [2]next up previous [3]contents 
+   Next: [4]Contents   [5]Contents
+   
+                                  Mysql++
+                            A C++ API for Mysql
+                                 ver 1.7.9
+                                      
+                               Kevin Atkinson
+                            <kevinatk@home.com>
+                             Sinisa Milivojevic
+                             <sinisa@mysql.com>
+                              Michael Widenius
+                             <monty@mysql.com>
+     _________________________________________________________________
+   
+     * [6]Contents
+     * [7]Introductory Material
+          + [8]1. Introduction
+               o [9]1.1 What is Mysql++
+               o [10]1.2 Getting Mysql++
+               o [11]1.3 Mysql++ Mailing List
+          + [12]2. Overview
+               o [13]The Main Database Handle
+               o [14]The Query Object
+               o [15]The Result Sets
+                    # [16]The Dramatic Result Set
+                    # [17]The Static Result Sets
+                    # [18]The Dynamic Fully Mutable Sets
+               o [19]In addition
+          + [20]3. Important Changes 
+               o [21]3.1 Current Changes
+               o [22]3.2 Future Changes
+     * [23]Usage
+          + [24]4. Tutorial by Example
+               o [25]4.1 Introduction
+               o [26]4.2 Assumptions
+               o [27]4.3 Running the Examples
+               o [28]4.4 The Basics
+                    # [29]4.4.1 A Simple Example
+                    # [30]4.4.2 A slightly more complicated example
+                    # [31]4.4.3 Getting Info about the Fields
+               o [32]4.5 Specialized SQL Structures
+                    # [33]4.5.1 Retrieving Data
+                    # [34]4.5.2 Adding Data 
+                    # [35]4.5.3 Modifying Data 
+                    # [36]4.5.4 Less-Than-Comparable
+               o [37]4.6 Let us be usefull
+                    # [38]4.6.1 Loading binary file in a BLOB column
+                    # [39]4.6.1 Displaying images in HTML from BLOB
+                      column
+                    # [40]4.6.2 Delete or Update from Select
+                    # [41]4.6.2 And There's More
+               o [42]4.7 Template Queries
+          + [43]5. Class Reference 
+               o [44]5.1 Manipulators 
+          + [45]6. Template Queries
+               o [46]6.1 Setting Them Up
+               o [47]6.2 Template Format
+               o [48]6.3 Setting the Parameters
+                    # [49]6.3.1 At Execution Time
+                    # [50]6.3.2 Using Defaults
+                    # [51]6.3.3 Combining the Two
+                    # [52]6.3.4 Error Handling
+                    # [53]6.3.5 More Advanced Stuff
+          + [54]7. Specialized SQL Structures
+               o [55]7.1 sql_create_basic 
+               o [56]7.2 sql_create_basic with compare 
+               o [57]7.3 sql_create_basic with Additional Constructor 
+               o [58]7.4 sql_create_basic General Format 
+               o [59]7.5 sql_create_basic_c_order 
+               o [60]7.6 sql_create_basic_c_order General Format 
+               o [61]7.7 sql_create 
+               o [62]7.8 sql_create_c_names 
+               o [63]7.9 sql_create_c_names General Format 
+               o [64]7.10 sql_create_c_order 
+               o [65]7.11 sql_create_complete 
+               o [66]7.12 Changing the table name 
+               o [67]7.13 Seeing the actual code 
+               o [68]7.14 Adding functionality 
+               o [69]7.15 Other notes 
+          + [70]8. Long Names
+     * [71]Appendices
+          + [72]A. Changelog
+               o [73]1.7.9 (May 1 2001) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [74]1.7.8 (November 14 2000) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [75]1.7.6 (September 22 2000) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [76]1.7.5 (July 30 2000) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [77]1.7 (May17 2000) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [78]1.6 (Feb 3 2000) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [79]1.5 (Dec 1 1999) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [80]1.4 (Nov 25 1999) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [81]1.3 (Nov 10 1999) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [82]1.2 (Oct 15 1999) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [83]1.1 (Aug 2 1999) Sinisa Milivojevic
+                 <sinisa@mysql.com>
+               o [84]1.0 (June 9 1999) Michael Widenius
+                 <monty@monty.pp.sci.fi>
+               o [85].64.1.1a (Sep 27 1998)
+               o [86].64.1a (Aug 1 1998)
+               o [87].64.0.1a (July 31 1998) 
+               o [88].64.a (July 24 1998)
+               o [89].63.1.a
+               o [90].62.a (May 3 1998)
+               o [91].61.1.a (April 28 1998)
+               o [92].61.0.a
+               o [93].60.3a (April 24 1998)
+          + [94]B. To Do
+          + [95]C. Credits
+          + [96]D. Copyright
+               o [97]D.1 LGPL
+          + [98]E. Feedback
+     * [99]About this document ...
+     _________________________________________________________________
+   
+   
+    2001-05-01
+
+References
+
+   1. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   2. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   3. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   4. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   5. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   6. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Contents.html
+   7. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Introductory_Material.html
+   8. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/1_Introduction.html
+   9. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/1_Introduction.html#SECTION02110000000000000000
+  10. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/1_Introduction.html#SECTION02120000000000000000
+  11. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/1_Introduction.html#SECTION02130000000000000000
+  12. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/2_Overview.html
+  13. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/2_Overview.html#SECTION02210000000000000000
+  14. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/2_Overview.html#SECTION02220000000000000000
+  15. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/2_Overview.html#SECTION02230000000000000000
+  16. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/2_Overview.html#SECTION02231000000000000000
+  17. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/2_Overview.html#SECTION02232000000000000000
+  18. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/2_Overview.html#SECTION02233000000000000000
+  19. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/2_Overview.html#SECTION02240000000000000000
+  20. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/3_Important.html
+  21. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/3_Important.html#SECTION02310000000000000000
+  22. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/3_Important.html#SECTION02320000000000000000
+  23. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Usage.html
+  24. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html
+  25. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03110000000000000000
+  26. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03120000000000000000
+  27. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03130000000000000000
+  28. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03140000000000000000
+  29. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03141000000000000000
+  30. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03142000000000000000
+  31. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03143000000000000000
+  32. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03150000000000000000
+  33. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03151000000000000000
+  34. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03152000000000000000
+  35. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03153000000000000000
+  36. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03154000000000000000
+  37. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03160000000000000000
+  38. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03161000000000000000
+  39. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03162000000000000000
+  40. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03163000000000000000
+  41. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03164000000000000000
+  42. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/4_Tutorial.html#SECTION03170000000000000000
+  43. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/5_Class.html
+  44. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/5_Class.html#SECTION03210000000000000000
+  45. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html
+  46. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03310000000000000000
+  47. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03320000000000000000
+  48. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03330000000000000000
+  49. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03331000000000000000
+  50. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03332000000000000000
+  51. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03333000000000000000
+  52. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03334000000000000000
+  53. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/6_Template.html#SECTION03335000000000000000
+  54. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html
+  55. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03410000000000000000
+  56. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03420000000000000000
+  57. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03430000000000000000
+  58. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03440000000000000000
+  59. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03450000000000000000
+  60. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03460000000000000000
+  61. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03470000000000000000
+  62. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03480000000000000000
+  63. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION03490000000000000000
+  64. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034100000000000000000
+  65. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034110000000000000000
+  66. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034120000000000000000
+  67. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034130000000000000000
+  68. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034140000000000000000
+  69. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/7_Specialized.html#SECTION034150000000000000000
+  70. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/8_Long.html
+  71. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/Appendices.html
+  72. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html
+  73. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION04110000000000000000
+  74. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION04120000000000000000
+  75. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION04130000000000000000
+  76. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION04140000000000000000
+  77. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION04150000000000000000
+  78. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION04160000000000000000
+  79. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION04170000000000000000
+  80. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION04180000000000000000
+  81. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION04190000000000000000
+  82. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041100000000000000000
+  83. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041110000000000000000
+  84. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041120000000000000000
+  85. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041130000000000000000
+  86. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041140000000000000000
+  87. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041150000000000000000
+  88. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041160000000000000000
+  89. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041170000000000000000
+  90. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041180000000000000000
+  91. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041190000000000000000
+  92. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041200000000000000000
+  93. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/A_Changelog.html#SECTION041210000000000000000
+  94. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/B_Do.html
+  95. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/C_Credits.html
+  96. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/D_Copyright.html
+  97. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/D_Copyright.html#SECTION04410000000000000000
+  98. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/E_Feedback.html
+  99. file://localhost/home/Sinisa/mysql++-1.7/doc/man-html/About_this.html

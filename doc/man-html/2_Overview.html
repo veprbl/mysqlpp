@@ -1,0 +1,362 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 99.2beta8 (1.43)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>2. Overview</TITLE>
+<META NAME="description" CONTENT="2. Overview">
+<META NAME="keywords" CONTENT="manual">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<META NAME="Generator" CONTENT="LaTeX2HTML v99.2beta8">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="manual.css">
+
+<LINK REL="next" HREF="3_Important.html">
+<LINK REL="previous" HREF="1_Introduction.html">
+<LINK REL="up" HREF="Introductory_Material.html">
+<LINK REL="next" HREF="3_Important.html">
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html236"
+  HREF="3_Important.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html232"
+  HREF="Introductory_Material.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html226"
+  HREF="1_Introduction.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html234"
+  HREF="Contents.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html237"
+  HREF="3_Important.html">3. Important Changes</A>
+<B> Up:</B> <A NAME="tex2html233"
+  HREF="Introductory_Material.html">Introductory Material</A>
+<B> Previous:</B> <A NAME="tex2html227"
+  HREF="1_Introduction.html">1. Introduction</A>
+ &nbsp <B>  <A NAME="tex2html235"
+  HREF="Contents.html">Contents</A></B> 
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+<!--Table of Child-Links-->
+<A NAME="CHILD_LINKS"><STRONG>Subsections</STRONG></A>
+
+<UL>
+<LI><A NAME="tex2html238"
+  HREF="2_Overview.html#SECTION02210000000000000000">The Main Database Handle</A>
+<LI><A NAME="tex2html239"
+  HREF="2_Overview.html#SECTION02220000000000000000">The Query Object</A>
+<LI><A NAME="tex2html240"
+  HREF="2_Overview.html#SECTION02230000000000000000">The Result Sets</A>
+<UL>
+<LI><A NAME="tex2html241"
+  HREF="2_Overview.html#SECTION02231000000000000000">The Dramatic Result Set</A>
+<LI><A NAME="tex2html242"
+  HREF="2_Overview.html#SECTION02232000000000000000">The Static Result Sets</A>
+<LI><A NAME="tex2html243"
+  HREF="2_Overview.html#SECTION02233000000000000000">The Dynamic Fully Mutable Sets</A>
+</UL>
+<LI><A NAME="tex2html244"
+  HREF="2_Overview.html#SECTION02240000000000000000">In addition</A>
+</UL>
+<!--End of Table of Child-Links-->
+<HR>
+
+<H1><A NAME="SECTION02200000000000000000">
+2. Overview</A>
+</H1>
+
+<P>
+<A NAME="Overview"></A>The Mysql++ API has developed into a very complex
+and powerful being. With many different ways to accomplish the same
+task. Unfortunately this means that figuring out how to perform a
+simple task can be frustrating for new users of my library. In this
+section we will attempt to provide an overview of the many different
+components of the library.
+
+<P>
+Like working with most other SQL API the process for executing queries
+is the same. 1) You open the connection, 2) You form and execute the
+queries, 3) You iterate through the result set. It not much different
+in my C++ API. However there is a lot of extra functionality along
+each step of the way.
+
+<P>
+
+<H1><A NAME="SECTION02210000000000000000">
+The Main Database Handle</A>
+</H1>
+
+<P>
+This is a class that handles the connection to the Mysql server. You
+always need at least one of these objects to do anything. It can either
+create a separate queries object or directly execute queries. The
+separate query object is the recommended way as it gives you far more
+power.
+
+<P>
+
+<H1><A NAME="SECTION02220000000000000000">
+The Query Object</A>
+</H1>
+
+<P>
+This object is the recommended way of executing queries. It is subclassed
+from strstream which means you can write to it like any other stream
+to aid in the formation of queries.
+
+<P>
+You can also set up Template queries with this class. Template queries
+are a way of setting up queries with replaceable parameters that you
+can change throughout your program.
+
+<P>
+You can also use specialized structures and even the dramatic result
+sets to aid in creating queries however more on that latter.
+
+<P>
+The Query object returns an object with information about the success
+of a query for non-select queries (queries that don't return a result
+set).
+
+<P>
+
+<H1><A NAME="SECTION02230000000000000000">
+The Result Sets</A>
+</H1>
+
+<P>
+For queries that return a result set you have essentially two different
+ways of handling the results: in a dramatic result set, or in a static
+one.
+
+<P>
+
+<H2><A NAME="SECTION02231000000000000000">
+The Dramatic Result Set</A>
+</H2>
+
+<P>
+The Dramatic Result set is a result set in which the names of the
+columns and the type of information of the columns does not need to
+be determined at compile time. The result set can be completely constant
+in which the data is returned to you in a constant string link class,
+semi-constant in which you can modify the data one row at a time,
+or a truly mutable in which in you can modify the data in any way
+you like.
+
+<P>
+The constant result set is a result set that is closely bound to the
+result set in the C API and is the one that provides the most functionality.
+With this result set you can find out detailed information about the
+type of information stored in each of the columns. This is also the
+fastest because the data does not need to be copied at all.
+
+<P>
+The semi-constant result set is like the constant result set except
+you can modify the data one row at a time. The data you modify is
+actually a copy of the data returned by the server. This means that
+modifying the data does not change the actual result set at all.
+
+<P>
+The semi-constant result set is actually the same thing as the constant
+result set. The only difference is that when you request a row from
+the result set you specifically declare the row as a mutable one.
+This means that you can get some rows back as constant rows and others
+as mutable ones.
+
+<P>
+The truly mutable result set is a result set similar to the constant
+one except that the data is truly mutable in the sense that you can
+change the data in the actual result set. However unlike the first
+one this result set is not bound to the C API result set. Instead
+it containers a copy of the data returned by the C API in a two-dimensional
+vector. Because of this the detailed information about each of the
+columns is not currently available, only the column names and the
+C++ type that most closely matches the original SQL type. Also, because
+it makes a copy of the data returned from the C API, there is a little
+bit of performance penalty to using this one.
+
+<P>
+The rows in all the dramatic result sets are very close to an Standard
+Template Library (STL) random access container. This means that they
+have an iterator which can be used for STL algorithms. There is even
+couple of specialized utility function to aid in the use of the result
+sets in STL algorithms.
+
+<P>
+The columns in all the dramatic result are also very close to an STL
+random access container. However, in addition to accessing the columns
+by there index number you can also access the columns via there field
+names.
+
+<P>
+In addition, because both the rows and the columns are STL like containers,
+you can also treat the result set as a two- dimensional array. For
+example you can get the 5th item on the 2nd row by simply saying result[2][5].
+Because you can also use the field names you can substitute the column
+number by a field name and say result[2][&#34;price&#34;]
+to get &#34;price&#34; of the item on the 2nd row, for example.
+
+<P>
+The actual data that all the dramatic result sets return is stored
+in a special string like class that has some additional magic too
+it. The magic is that the column data will automatically convert itself
+into all of the basic data types as well as some additional types
+types that are designed to handle mysql types which includes types
+for handling dates, times, sets, and types with a null value. If there
+is a problem in the conversion it will either set a warning flag or
+throw an exception depending on how it is configured. Regarding exceptions,
+MySQL++ supports two different methods of tracing exceptions. One
+is by the fixed type (the old one) and one is standard C++ type by
+the usage of what() method. A choice of methods has to be done in
+building a library. If configure script is run with -enable-exception
+option , then new method will be used. If no option is provided, or
+-disable-exception is used, old MySQL++ exceptions will be enforced.
+
+<P>
+The drastic result sets can even be used to help form queries with
+the help of some additional method. There is a method for returns:
+1) A comma separated list of the data (for example: 1.5, 10, &#34;Dog,
+&#34;Brown&#34;), 2) A comma separated list of the field
+names (for example: age, weight, what, color), and 3) An equal list
+(for example: age = 1.5 AND weight = 10 AND what = &#34;Dog&#34;
+AND color = &#34;Brown&#34;).
+
+<P>
+Mutable result sets can be created with out an actual query so that
+you can take advantage of these methods to aid in inserting data into
+the database with out having to first create an unnecessary query.
+
+<P>
+
+<H2><A NAME="SECTION02232000000000000000">
+The Static Result Sets</A>
+</H2>
+
+<P>
+The results from an query can also be stored statically in what  we
+call a specialized SQL structure. These structures are then stored
+in some STL container such a vector or list, or even a set or multi-set
+as the the specialized structures can also be made less-than-comparable.
+Unlike the dramatic result sets it is assumed that the programmer
+knows what the result set is going to look like. Because of this all
+the information about the columns, including the names, are lost.
+
+<P>
+These Specialized Structures are exactly that C++ `structs'. Each
+member item is stored with a unique name within the structure. You
+can in no way use STL algorithms or anything else STL to work with
+the individual elements of the structures. However naturally because
+these structures are then stored in STL containers you can use STL
+algorithms on the containers of these structures. The containers represent
+the rows, and the individual elements of the structure represent the
+columns. For example you can access the item named &#34;price&#34;
+on the second row by saying result[2].price. With the dramatic
+result set you would have probably needed to say result[2][&#34;price&#34;]
+to accomplish the same result.
+
+<P>
+If there is a problem in converting from the result set returned by
+the server to the specialized structures an exception is thrown.
+
+<P>
+To aid in the creating of queries using these specialized structures,
+the same query aiding methods are available to use that are available
+for the dramatic result sets. This includes methods for returning
+a comma separated list of the data, a comma separated list of the
+field names, and an equal list.
+
+<P>
+
+<H2><A NAME="SECTION02233000000000000000">
+The Dynamic Fully Mutable Sets</A>
+</H2>
+
+<P>
+This result set will be implemented when server-side cursors are implemented
+in MySQL. But, based on so far acquired knowledge and experience,
+from designing and implementing both MySQL++ and MySQLGUI, a preliminiary
+layout and design of the most advanced result set so far has been
+achieved. It's implementation is postponed, however, from the above
+reasons. This result set will be fully dynamic and dramatic. This
+result set is fully dynamic in a sense that entire result set is stored
+in a dynamic C++ container. This container will be only a cache ,
+a dynamic cache, to the entire result set, and will have a default
+size. This dynamic container will be a window of M rows into an entire
+result set of N rows, where N is limited by MySQL server , Operating
+System and File System only. This result set will also be fully dramatic
+in a sense that the names of the columns and the type of information
+of the columns will not need to be determined at compile time. But
+all existing functionality of static , mutable sets will be available
+in this set too. However as this set will be dramatic, no advance
+information on result set structure will be necessary, which will
+thus aleviate need for the usage of specialized macros for the construction
+of classes. This set will also have methods for updating, deleting
+and inserting rows in a manner that will be almost identical for use
+as methods for the existing fully mutable sets.
+
+<P>
+
+<H1><A NAME="SECTION02240000000000000000">
+In addition</A>
+</H1>
+
+<P>
+In addition to the material mentioned there are also many generic
+classes that can be used with other programs. Examples of this include
+a special const string class, a const random access adapter that will
+make a random access container out of a class with nothing but the
+size() method and the subscript ([]) operator defined and a generic
+SQL query class that can be used any SQL C or C++ API.
+
+<P>
+As from version 1.7, there is a new addtion to the libraries. Several
+very usefull functions for STL strings can be added, which can be
+used in any C++ aplication, MySQL++ related or not. Those functions
+are contained in source files string_util.hh and string_util.cc.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html236"
+  HREF="3_Important.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next.png"></A> 
+<A NAME="tex2html232"
+  HREF="Introductory_Material.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up.png"></A> 
+<A NAME="tex2html226"
+  HREF="1_Introduction.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev.png"></A> 
+<A NAME="tex2html234"
+  HREF="Contents.html">
+<IMG WIDTH="65" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="contents" SRC="contents.png"></A>  
+<BR>
+<B> Next:</B> <A NAME="tex2html237"
+  HREF="3_Important.html">3. Important Changes</A>
+<B> Up:</B> <A NAME="tex2html233"
+  HREF="Introductory_Material.html">Introductory Material</A>
+<B> Previous:</B> <A NAME="tex2html227"
+  HREF="1_Introduction.html">1. Introduction</A>
+ &nbsp <B>  <A NAME="tex2html235"
+  HREF="Contents.html">Contents</A></B> 
+<!--End of Navigation Panel-->
+<ADDRESS>
+
+2001-05-01
+</ADDRESS>
+</BODY>
+</HTML>
