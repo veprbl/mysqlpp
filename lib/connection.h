@@ -118,7 +118,7 @@ public:
 	std::string infoo (void) {return info ();}
 	st_mysql_options get_options (void) const {return mysql.options;}
 	int read_options(enum mysql_option option,const char *arg) {return  mysql_options(&mysql, option,arg);}
-  my_ulonglong affected_rows()  {return mysql_affected_rows((MYSQL*) &mysql);}
+  my_ulonglong affected_rows()  {return mysql_affected_rows(&mysql);}
   my_ulonglong insert_id () {return mysql_insert_id(&mysql);}
 
   template <class Sequence>
@@ -168,8 +168,7 @@ void Connection::storein_sequence (Sequence &seq, const std::string &str) {
   while (1) {
 	  MYSQL_ROW d = mysql_fetch_row(result.mysql_result());
 		if (!d) break;
-	  Row row(d,&result,(unsigned int
-	  *)mysql_fetch_lengths(result.mysql_result()),true);
+	  Row row(d,&result,mysql_fetch_lengths(result.mysql_result()),true);
 		if (!row) break;
     seq.push_back(typename Sequence::value_type(row));
 	}
@@ -181,8 +180,7 @@ void Connection::storein_set (Set &sett, const std::string &str) {
 	while (1) {
 	  MYSQL_ROW d = mysql_fetch_row(result.mysql_result());	
 		if (!d) return;
-	  Row row(d, &result,
-	  	(unsigned int *)mysql_fetch_lengths(result.mysql_result()),true);
+	  Row row(d, &result, mysql_fetch_lengths(result.mysql_result()),true);
 	  if (!row) break;
     sett.insert(typename Set::value_type(row));
 	}
