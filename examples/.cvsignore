@@ -1,5 +1,5 @@
 .deps .libs
-Makefile
+Makefile Makefile.in
 
 cgi_image complic1 custom1 custom2 custom3 custom4 fieldinf1 
 load_file resetdb simple1 sinisa_ex updel_ex

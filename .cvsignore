@@ -1,5 +1,10 @@
-Makefile
+Makefile Makefile.in
+aclocal.m4
+autom4te.cache
 config.*
-libtool ltconfig
+configure
+depcomp
+libtool ltconfig ltmain.sh
 stamp-h1 stamp-h
 install-sh
+
