@@ -1,15 +1,24 @@
-Summary: C++ API for MySQL
+Summary: C++ wrapper for the MySQL C API
 Name: mysql++
-Version: 1.7.20
+Version: 1.7.21
 Release: 1
 Copyright: LGPL
 Group: Development/Databases
 Source: http://tangentsoft.net/mysql++/releases/mysql++-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-buildroot
-
 %description
-The goal of this API is to make working with queries as easy as working
-with other STL Containers.
+MySQL++ makes working with MySQL server queries as easy as working
+with STL containers.  This package contains only the libraries needed to
+run MySQL++-based programs.  If you are building your own MySQL++-based
+programs, you also need to install the -devel package.
+
+%package devel
+Summary: MySQL++ developer files (headers, examples, documentation, etc.)
+Group: Development/Databases
+%description devel
+These are the files needed to compile MySQL++ based programs, and to
+learn how to use the library.  If you aren't building your own programs,
+you probably don't need to install this package.
 
 %prep
 %setup -q
@@ -22,7 +31,10 @@ make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/lib
 mkdir -p $RPM_BUILD_ROOT/usr/include
+mkdir -p $RPM_BUILD_ROOT/usr/src/mysql++/examples
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
+install -m666 examples/*.cc examples/*.h README.* $RPM_BUILD_ROOT/usr/src/mysql++/examples
+install -m666 examples/Makefile.simple $RPM_BUILD_ROOT/usr/src/mysql++/examples/Makefile
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -32,15 +44,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc doc/*.ps doc/man-text/*.txt LGPL README
+%doc LGPL README
+
+/usr/lib/libmysqlpp.*
+
+%files devel
+%defattr(-,root,root)
+%doc doc/*.ps doc/man-text/*.txt
 
 /usr/include/mysql++
-/usr/lib/libmysqlpp.a
-/usr/lib/libmysqlpp.la
-/usr/lib/libmysqlpp.so
-/usr/lib/libmysqlpp.so.2.0.0
+/usr/src/mysql++/examples
 
 %changelog
+* Fri Nov 05 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.21-1
+- Updated for 1.7.21
+- Split out -devel subpackage, which now includes the examples
+
 * Wed Nov 03 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.20-1
 - Updated for 1.7.20
 
