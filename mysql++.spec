@@ -1,6 +1,6 @@
 Summary: C++ wrapper for the MySQL C API
 Name: mysql++
-Version: 1.7.31
+Version: 1.7.32
 Release: 1
 Copyright: LGPL
 Group: Development/Databases
@@ -24,7 +24,7 @@ you probably don't need to install this package.
 
 %prep
 %setup -q
-./configure --prefix=/usr --includedir=/usr/include/mysql++
+./configure --prefix=/usr --includedir=/usr/include/mysql++ --disable-examples
 
 %build
 make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
@@ -61,6 +61,10 @@ rm -f doc/README.examples doc/LICENSE
 /usr/src/mysql++/examples
 
 %changelog
+* Thu Mar 10 2005 Warren Young <mysqlpp@etr-usa.com> 1.7.32-1
+- Updated for 1.7.32
+- Disabled building of examples, to speed RPM build.
+
 * Fri Mar 5 2005 Warren Young <mysqlpp@etr-usa.com> 1.7.31-1
 - Updated for 1.7.31
 
