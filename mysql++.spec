@@ -1,6 +1,6 @@
 Summary: C++ wrapper for the MySQL C API
 Name: mysql++
-Version: 1.7.29.beta1
+Version: 1.7.30
 Release: 1
 Copyright: LGPL
 Group: Development/Databases
@@ -61,6 +61,9 @@ rm -f doc/README.examples doc/LICENSE
 /usr/src/mysql++/examples
 
 %changelog
+* Mon Feb 28 2005 Warren Young <mysqlpp@etr-usa.com> 1.7.30-1
+- Updated for 1.7.30
+
 * Fri Feb 4 2005 Warren Young <mysqlpp@etr-usa.com> 1.7.28-1
 - Updated for 1.7.28
 
