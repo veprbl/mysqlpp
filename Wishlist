@@ -36,3 +36,6 @@ Patches for any of these thoughtfully considered!
 
 	o Add autoconf test for mysql_shutdown's extra second argument
 	  (SHUTDOWN_DEFAULT) in MySQL 4.1.3 and 5.0.1 and later.
+
+	o Factor tests out of configure.in into individual files in a config
+	  subdir.
