@@ -25,18 +25,18 @@ else
 fi
 
 ## Find out MySQL++ version number, including the package subrev.
-VERSION=`grep ' VERSION' config.h | awk '{ print $3 }' | tr -d \"`
+VERBASE=`grep ' VERSION' config.h | awk '{ print $3 }' | tr -d \"`
 if [ -n "$1" ]
 then
-	VERSION=$VERSION-$1
+	VERSION=$VERBASE-$1
 else
-	VERSION=$VERSION-1
+	VERSION=$VERBASE-1
 fi
 echo Uploading MySQL++ $VERSION...
 
 ## Decide whether the sources should be uploaded...
 SRCRPM=$RPMSRCDIR/mysql++-$VERSION.src.rpm 
-TARBALL=mysql++-$VERSION.tar.gz 
+TARBALL=mysql++-$VERBASE.tar.gz 
 SRCVERFILE=/pub/mysql++-src-ver
 if [ -e $SRCVERFILE ]
 then
