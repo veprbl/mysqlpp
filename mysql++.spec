@@ -1,32 +1,19 @@
-Summary: MySQL++ is a C++ API for MySQL (and other SQL Databases soon.)
+Summary: C++ API for MySQL
 Name: mysql++
-Version: 1.7.9
-Release: 4.rh9
+Version: 1.7.11
+Release: 1
 Copyright: LGPL
 Group: Development/Databases
-Source0: http://www.mysql.com/Downloads/mysql++/mysql++-1.7.9.tar.gz
-Patch0: mysql++-versionfix.patch.gz
-Patch1: http://www.mysql.com/Downloads/mysql++/mysql++-gcc-3.0.patch.gz
-Patch2: http://www.mysql.com/Downloads/mysql++/mysql++-gcc-3.2.patch.gz
-Patch3: http://www.mysql.com/Downloads/mysql++/mysql++-gcc-3.2.2.patch.gz
-Patch4: mysql++-prefix.patch.gz
+Source: http://tangentsoft.net/mysql++/releases/mysql++-1.7.11.tar.gz
 BuildRoot: /var/tmp/%{name}-buildroot
 
 %description
-The goal of this API is to make working with queries as easy as working with other STL Containers.
+The goal of this API is to make working with queries as easy as working
+with other STL Containers.
 
 %prep
-%setup -n mysql++-1.7.9
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-cp /usr/share/libtool/ltmain.sh .
-aclocal
-automake --add-missing
-autoconf
-./configure --with-prefix=/usr
-%patch4 -p1
+%setup -q
+./configure --with-prefix=/usr --includedir=/usr/include/mysql++
 
 %build
 make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
@@ -37,9 +24,6 @@ mkdir -p $RPM_BUILD_ROOT/usr/lib
 mkdir -p $RPM_BUILD_ROOT/usr/include
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 cd $RPM_BUILD_ROOT/usr/lib
-ln -sf libsqlplus.so.1.0.0 libsqlplus.so
-ln -sf libsqlplus.so.1.0.0 libsqlplus.so.0
-ln -sf libsqlplus.so.1.0.0 libsqlplus.so.1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -51,15 +35,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc doc examples LGPL README
 
-/usr/lib/libsqlplus.a
-/usr/lib/libsqlplus.la
-/usr/lib/libsqlplus.so.1.0.0
-/usr/lib/libsqlplus.so
-/usr/lib/libsqlplus.so.0
-/usr/lib/libsqlplus.so.1
-/usr/include/sqlplus
+/usr/lib/libmysqlpp.a
+/usr/lib/libmysqlpp.la
+/usr/lib/libmysqlpp.so
+/usr/lib/libmysqlpp.so.1
+/usr/lib/libmysqlpp.so.1.0.0
+/usr/include/mysql++
 
 %changelog
+* Tue Aug 17 2004 Warren Young <mysqlpp@etr-usa.com> 1.7.10-1
+- Updated for v1.7.10
+
 * Wed Apr 16 2003 Tuan Hoang <tqhoang@bigfoot.com> 1.7.9-4
 - Added gcc 3.2.2 patch.
 - Packaged using Red Hat Linux 8.0 and 9.
