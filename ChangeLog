@@ -1,3 +1,18 @@
+1.7.12, 2004.08.19
+
+	o Many Standard C++ fixes, many from the GCC 3.4 patch by
+	  Rune Kleveland.
+
+	o Added Wishlist file to distribution.
+
+	o Fixed a problem in tne bootstrap script that caused complaints
+	  from the autotools on some systems.
+
+	o RPM building is working properly now.
+
+	o Fixed the indempotency guard in datetime1.hh.
+
+
 1.7.11, 2004.08.17
 
 	o Renamed mysql++, defs and define_short files, adding .hh to the
