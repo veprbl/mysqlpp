@@ -1,5 +1,7 @@
 #include "sql_string.h"
 
+using namespace std;
+
 namespace mysqlpp {
 
 SQLString::SQLString() :
@@ -9,8 +11,8 @@ processed(false)
 {
 }
 
-SQLString::SQLString(const std::string& str) :
-std::string(str),
+SQLString::SQLString(const string& str) :
+string(str),
 is_string(true),
 dont_escape(false),
 processed(false)
@@ -18,7 +20,7 @@ processed(false)
 }
 
 SQLString::SQLString(const char* str) : 
-std::string(str),
+string(str),
 is_string(true),
 dont_escape(false),
 processed(false)
@@ -31,7 +33,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[6];
-	sprintf(s, "%dh", (short int)i);
+	snprintf(s, sizeof(s), "%dh", (short int)i);
 	*this = s;
 }
 
@@ -41,7 +43,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[6];
-	sprintf(s, "%uh", (short int)i);
+	snprintf(s, sizeof(s), "%uh", (short int)i);
 	*this = s;
 }
 
@@ -51,7 +53,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[6];
-	sprintf(s, "%dh", i);
+	snprintf(s, sizeof(s), "%dh", i);
 	*this = s;
 }
 
@@ -61,7 +63,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[6];
-	sprintf(s, "%uh", i);
+	snprintf(s, sizeof(s), "%uh", i);
 	*this = s;
 }
 
@@ -70,8 +72,8 @@ is_string(false),
 dont_escape(false),
 processed(false)
 {
-	char s[11];
-	sprintf(s, "%d", i);
+	char s[22];
+	snprintf(s, sizeof(s), "%d", i);
 	*this = s;
 }
 
@@ -80,8 +82,8 @@ is_string(false),
 dont_escape(false),
 processed(false)
 {
-	char s[11];
-	sprintf(s, "%u", i);
+	char s[22];
+	snprintf(s, sizeof(s), "%u", i);
 	*this = s;
 }
 
@@ -91,7 +93,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[22];
-	sprintf(s, "%dL", i); 
+	snprintf(s, sizeof(s), "%dL", i); 
 	*this = s;
 }
 
@@ -101,7 +103,7 @@ dont_escape(false),
 processed(false) 
 {
 	char s[22];
-	sprintf(s, "%uL", i);
+	snprintf(s, sizeof(s), "%uL", i);
 	*this = s;
 }
 
@@ -111,7 +113,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[40];
-	sprintf(s, "%g", i);
+	snprintf(s, sizeof(s), "%g", i);
 	*this = s;
 }
 
@@ -121,7 +123,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[40];
-	sprintf(s, "%g", i);
+	snprintf(s, sizeof(s), "%g", i);
 	*this = s;
 }
 
