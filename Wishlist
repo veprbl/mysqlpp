@@ -12,6 +12,14 @@ New Feature Requests
 	o Look through my own code for uses of hand-rolled SQL queries, and
 	  try to reduce them to API features.
 
+	o Re-do reference manual using Doxygen or similar:
+	  http://sourceforge.net/projects/doxygen/
+
+	o Write a new tutorial, separate from the reference manual, but
+	  linking to it.  It should be built around the existing examples.
+	  Where insufficient examples exist to support the tutorial, write
+	  more.
+
 	o Get PDF documentation generation working.
 
 	o True thread-awareness in the library.  One place this could
@@ -22,6 +30,10 @@ New Feature Requests
 
 Bug Fix/Maintenance Items
 -------------------------
+
+	o Figure out what doc/sql++pretty is good for, and decide whether to
+	  document it or throw it away.  (Something to do with SSQLS, I
+	  think.)
 
 	o Connection lock mechanism should be extracted into a separate
 	  class, instances of which could be created on the stack so
