@@ -4,7 +4,7 @@ Makefile Makefile.in
 
 ## Binaries
 cgi_image complic1 custom1 custom2 custom3 custom4 dbinfo fieldinf1 
-load_file resetdb simple1 updel_ex
+load_file resetdb simple1 updel
 
 ## VC++ generated files
 Debug Release
