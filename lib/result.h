@@ -211,8 +211,8 @@ inline void swap (Result &x, Result &y) {
 class ResNSel {
 public:
   bool success;   
-  int insert_id;	//: 
-  int rows;		//: Number of rows affected
+  my_ulonglong insert_id;	//: 
+  my_ulonglong rows;		//: Number of rows affected
   std::string info;			//: Additional info
 
   ResNSel() : success(false) {};
