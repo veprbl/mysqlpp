@@ -1,10 +1,11 @@
+#include "util.hh"
+
+#include <mysql++.hh>
+#include <custom.hh>
 
 #include <iostream>
 #include <iomanip>
 #include <vector>
-#include <mysql++.hh>
-#include <custom.hh>
-
 #include <string>
 
 using namespace std;
@@ -23,10 +24,7 @@ sql_create_5(stock,
 int main(int argc, char *argv[]) {
   try { // its in one big try block
 	Connection con(use_exceptions);
-	if (argc == 1) connection.connect("mysql_cpp_data");
-	else if (argc == 2) connection.connect("mysql_cpp_data",argv[1]);
-	else if (argc == 3) connection.connect("mysql_cpp_data",argv[1],argv[2]);
-	else if (argc >= 4) connection.connect("mysql_cpp_data",argv[1],argv[2],argv[3]);
+	connect_sample_db(argc, argv, con);
 		
     Query query = con.query();
 

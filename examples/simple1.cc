@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <mysql++.hh>
 
+#include "util.hh"
+
 using namespace std;
 
 int main (int argc, char *argv[]) {
@@ -13,10 +15,7 @@ int main (int argc, char *argv[]) {
   // login name, etc..
   try {
 		Connection con(use_exceptions);
-		if (argc == 1) connection.connect("mysql_cpp_data");
-		else if (argc == 2) connection.connect("mysql_cpp_data",argv[1]);
-		else if (argc == 3) connection.connect("mysql_cpp_data",argv[1],argv[2]);
-		else if (argc >= 4) connection.connect("mysql_cpp_data",argv[1],argv[2],argv[3]);
+		connect_sample_db(argc, argv, con);
 
 		Query query = con.query();
 		// This creates a query object that is bound to con.
