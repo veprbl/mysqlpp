@@ -33,7 +33,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[6];
-	snprintf(s, sizeof(s), "%dh", (short int)i);
+	snprintf(s, sizeof(s), "%hd", static_cast<short int>(i));
 	*this = s;
 }
 
@@ -43,7 +43,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[6];
-	snprintf(s, sizeof(s), "%uh", (short int)i);
+	snprintf(s, sizeof(s), "%hu", static_cast<short int>(i));
 	*this = s;
 }
 
@@ -53,7 +53,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[6];
-	snprintf(s, sizeof(s), "%dh", i);
+	snprintf(s, sizeof(s), "%hd", i);
 	*this = s;
 }
 
@@ -63,7 +63,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[6];
-	snprintf(s, sizeof(s), "%uh", i);
+	snprintf(s, sizeof(s), "%hu", i);
 	*this = s;
 }
 
@@ -93,7 +93,7 @@ dont_escape(false),
 processed(false)
 {
 	char s[22];
-	snprintf(s, sizeof(s), "%dL", i); 
+	snprintf(s, sizeof(s), "%lld", i); 
 	*this = s;
 }
 
@@ -103,7 +103,7 @@ dont_escape(false),
 processed(false) 
 {
 	char s[22];
-	snprintf(s, sizeof(s), "%uL", i);
+	snprintf(s, sizeof(s), "%llu", i);
 	*this = s;
 }
 
