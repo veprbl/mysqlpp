@@ -8,7 +8,7 @@ lib_LTLIBRARIES=libmysqlpp.la
 # interfaces supported.  Bump the last only if explicit backwards-
 # compatibility is added -- like two different versions of a single 
 # function.  'age' must be less than the current interface version.
-libmysqlpp_la_LDFLAGS=-version-info 2:0:0
+libmysqlpp_la_LDFLAGS=-version-info 3:0:0
 
 libmysqlpp_la_SOURCES = \
 	coldata.cc connection.cc datetime.cc fields.cc field_names.cc \
