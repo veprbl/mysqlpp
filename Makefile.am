@@ -1,5 +1,18 @@
-EXTRA_DIST = bootstrap common.am doc devel LGPL *.spec *.ebuild \
-		Wishlist *.vcproj *.sln README.* config/*.m4
+EXTRA_DIST = \
+	CREDITS \
+	HACKERS \
+	LGPL \
+	README.* \
+	Wishlist \
+	bootstrap \
+	common.am \
+	config/*.m4 \
+	devel \
+	doc \
+	*.ebuild \
+	*.spec \
+	*.sln \
+	*.vcproj
 
 #SUBDIRS = lib examples doc
 SUBDIRS = lib @OPTIONAL_EXAMPLES@
