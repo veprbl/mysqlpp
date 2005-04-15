@@ -1,0 +1,37 @@
+The original creator of the library seems to be Kevin Atkinson
+<kevinatk@home.com>. I say "seems", because he hasn't been heard from
+in years. His involvement is well before my time.
+
+From version 1.2 through 1.7.9, the primary maintainer was Sinisa
+Miliojevic <sinisa@mysql.com>, currently an employee of MySQL AB.
+
+When it became clear that Sinisa was unable to put any more time into the
+library, I (Warren Young <mysqlpp@etr-usa.com>) took over the library.
+The first release under this new leadership was 1.7.10, and it continues
+to this day.
+
+Other frequent contributors since 1.7.10 are:
+
+	Chris Frey <cdfrey@netdirect.ca>: Lots of GCC warning fixes for
+	the bleeding-edge compiler versions, and Gentoo ebuild support.
+	Also, if there were a "steering committee" for MySQL++, he'd be
+	on it.
+
+	Totte Karlsson <tkarlsson@qm.com>: Primary force behind Borland
+	C++ Builder support.
+
+	Evan Wies <evan@athenacr.com>: Contributed several C++ code
+	style cleanups.
+
+See the ChangeLog for further credits, and details about the differences
+between the many versions of this library.
+
+Please do not email any of these people with general questions about
+MySQL++. All of us who are still active in MySQL++ development read the
+mailing list, so questions sent there do get to us:
+
+	http://lists.mysql.com/plusplus
+
+The mailing list is superior to private email because the answers are
+archived for future questioners to find, and because you are likely to
+get answers from more people.
