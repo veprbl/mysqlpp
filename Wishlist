@@ -59,6 +59,10 @@ New Feature Requests
 	  the pprepare() function.  Doing the same in manip.cpp will be more
 	  difficult.
 
+	o Add UTF-8 handling for VC++, in simple1 program?  Umlaut in
+	  first item shows as two high-ASCII characters when run in Win32
+	  console.  (Oddly enough, VC++'s editor understands UTF-8!)
+
 
 Bug Fix/Maintenance Items
 -------------------------
