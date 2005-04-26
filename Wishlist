@@ -51,10 +51,13 @@ New Feature Requests
 	  disabler object that turns off exceptions until that object goes
 	  out of scope.
 
-	o Fold SQLQuery class into Query?  The only reason for the
-	  separation goes back to the dream of having MySQL++ be database-
-	  independent.  This is considered a new feature because it breaks
-	  the ABI.
+	o Fold SQLQuery class into Query.  The separation goes back to the
+	  dream of making MySQL++ database-independent.
+	  
+	o With previous item done, it should be possible to use
+	  mysql_real_escape_string() instead of mysql_escape_string() within
+	  the pprepare() function.  Doing the same in manip.cpp will be more
+	  difficult.
 
 
 Bug Fix/Maintenance Items
