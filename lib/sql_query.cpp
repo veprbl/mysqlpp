@@ -39,7 +39,8 @@ char* SQLQuery::preview_char()
 	return s;
 }
 
-SQLString* pprepare(char option, SQLString& S, bool replace = true)
+static SQLString*
+pprepare(char option, SQLString& S, bool replace = true)
 {
 	if (S.processed) {
 		return &S;
@@ -47,8 +48,7 @@ SQLString* pprepare(char option, SQLString& S, bool replace = true)
 
 	if (option == 'r' || (option == 'q' && S.is_string)) {
 		char *s = new char[S.size() * 2 + 1];
-		mysql_escape_string(s, const_cast < char *>(S.c_str()),
-							S.size());
+		mysql_escape_string(s, S.c_str(), (unsigned long)S.size());
 		SQLString *ss = new SQLString("'");
 		*ss += s;
 		*ss += "'";
