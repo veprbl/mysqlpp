@@ -202,20 +202,28 @@ public:
 
   template <class T> SQLQuery& update(const T &o, const T &n) {
     reset();
-    *this << "UPDATE " << o.table() << " SET " << n.equal_list() 
-          << " WHERE " << o.equal_list(" AND ", sql_use_compare);
+	// Cast required for VC++ 2003 due to error in overloaded operator
+	// lookup logic.  For an explanation of the problem, see:
+	// http://groups-beta.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
+    dynamic_cast<std::stringstream&>(*this) << "UPDATE " << o.table() <<
+			" SET " << n.equal_list() << " WHERE " <<
+			o.equal_list(" AND ", sql_use_compare);
     return *this;
   } //:
   template <class T> SQLQuery& insert(const T &v) {
     reset();
-    *this << "INSERT INTO " << v.table() << " (" << v.field_list()
-		<< ") VALUES (" << v.value_list() << ")";
+	// See above comment for cast rationale
+    dynamic_cast<std::stringstream&>(*this) << "INSERT INTO " <<
+		v.table() << " (" << v.field_list() << ") VALUES (" <<
+		v.value_list() << ")";
     return *this;
   } //:
   template <class T> SQLQuery& replace(const T &v) {
     reset();
-    *this << "REPLACE INTO " << v.table() << " (" << v.field_list()
-          << ") VALUES (" << v.value_list() << ")";
+	// See above comment for cast rationale
+    dynamic_cast<std::stringstream&>(*this) << "REPLACE INTO " <<
+			v.table() << " (" << v.field_list() << ") VALUES (" <<
+			v.value_list() << ")";
     return *this;
   } //:
 
