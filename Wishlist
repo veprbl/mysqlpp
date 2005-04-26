@@ -1,7 +1,7 @@
 Patches for any of these thoughtfully considered!
 
-New Feature Requests
---------------------
+New Feature Requests and ABI Changes
+------------------------------------
 
 	o Transaction support.  Considering block-level semantics: create
 	  a "transaction object" on the stack, which takes a ref to the
@@ -59,6 +59,12 @@ New Feature Requests
 	  the pprepare() function.  Doing the same in manip.cpp will be more
 	  difficult.
 
+	o Consider giving combined Query+SQLQuery class all the members it
+	  needs to look like a std::stringstream and make them use a private
+	  stream data member instead of deriving from it.  C++ library
+	  classes were not designed to be subclassed.  Evidence is the
+	  dynamic_cast<>s required for VC++ in insert() and friends.
+
 	o Add UTF-8 handling for VC++, in simple1 program?  Umlaut in
 	  first item shows as two high-ASCII characters when run in Win32
 	  console.  (Oddly enough, VC++'s editor understands UTF-8!)
@@ -75,21 +81,11 @@ Bug Fix/Maintenance Items
 	  on floating point values.  Same for sql_cmp(float,float).  See
 	  also floating point precision item in previous section.
 
-	o custom2 and custom3 are broken under VC++.  Find out why.  It may
-	  be related to the ostringstream conversion of the query classes.
-	  These two are the only SSQLS examples that update the database.
-	  Is that significant?
-
 	o Attribution and licensing needs attention.  Note LGPL at top of
 	  all source files, and note copyrights where known.
 
 	o 64-bit integer support is not heavily tested.  It may yet have
 	  problems.
-
-	o SQLQuery shouldn't derive from std::stringstream.  It should
-	  have a private std::stringstream member, and add the function
-	  definitions it needs to look like a stringstream.  The Standard
-	  C++ library classes were not designed to be subclassed.
 
 	o Visual C++ project files should build a DLL version of the library
 	  only, for LGPL reasons.
