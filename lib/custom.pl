@@ -595,12 +595,10 @@ $defs
 					    sql_cmp_type sc) const;
   }; 
 
-#if !defined(MYSQLPP_NO_DEFINE_STATICS)
   const char *NAME::names[] = { 
 $names 
   }; 
   const char *NAME::_table = #NAME ;  
-#endif
 
   template <class Manip>
   NAME##_cus_value_list<Manip>::NAME##_cus_value_list
