@@ -243,8 +243,8 @@ public:
 
   std::string str() { return str(def); }
   std::string str(query_reset r) { return str(def,r); }
-  std::string str(SQLQueryParams &p);
-  std::string str(SQLQueryParams &p, query_reset r);
+  std::string str(SQLQueryParms &p);
+  std::string str(SQLQueryParms &p, query_reset r);
 
   mysql_query_define0(std::string, str);
 };  
