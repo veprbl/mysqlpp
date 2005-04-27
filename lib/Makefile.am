@@ -39,3 +39,6 @@ ctags:
 	ctags *.cpp *.h
 
 tags: ctags
+
+refman:
+	doxygen
