@@ -1,6 +1,13 @@
 #ifndef MYSQLPP_MANIP_H
 #define MYSQLPP_MANIP_H
 
+/// \file manip.h
+/// \brief Declares stream manipulators used with mysqlpp::Query.
+///
+/// These manipulators let you automatically quote elements inserted
+/// into a Query stream or escape special characters in those elements.
+/// This makes it easier to make syntactically correct SQL.
+
 #include "defs.h"
 
 #include "datetime.h"
@@ -12,17 +19,28 @@
 
 #include <iostream>
 
-// Manipulator declarations are _always_ in namespace mysqlpp.
+/// All global symbols in MySQL++ are in namespace mysqlpp.  This is
+/// needed because many symbols are rather generic (e.g. Row, Query...),
+/// so there is a serious danger of conflicts.
 namespace mysqlpp {
 	extern bool dont_quote_auto;
 
-//quote manipulaor
+/// \enum quote_type0
+/// The standard 'quote' manipulator.
+///
+/// Insert this into a stream to put single quotes around the next item
+/// in the stream.  Useful for inserting string types into the database.
+
+enum quote_type0 {
+	quote	///< insert into a stream to single-quote next item
+};
 
 extern bool dont_quote_auto;
 
 class SQLQueryParms;
 
-enum quote_type0 {quote};
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
 
 struct quote_type1
 {
@@ -101,10 +119,18 @@ inline std::ostream& operator << (quote_type1 o, const Set<ST> &in) {
   return *o.ostr << "'" << in << "'";
 }
 
-// quote only manipulator
+/// \endif
 
-enum quote_only_type0 {quote_only};
 
+/// \enum quote_only_type0
+/// The 'quote_only' manipulator.
+///
+/// Similar to 'quote' manipulator, but not sure what the distinction
+/// is.  Docs needed!
+
+enum quote_only_type0 { quote_only };
+
+/// Documentation needed!
 struct quote_only_type1 {
   std::ostream *ostr;
   quote_only_type1(std::ostream *o) : ostr(o) {}
@@ -114,6 +140,7 @@ inline quote_only_type1 operator << (std::ostream &o, quote_only_type0 /*esc*/) 
   return quote_only_type1(&o);
 }
 
+/// Documentation needed!
 struct quote_only_type2 {
   SQLQueryParms *qparms;
   quote_only_type2(SQLQueryParms *p) : qparms(p) {}
@@ -161,9 +188,18 @@ inline std::ostream& operator << (quote_only_type1 o, const Set<ST> &in) {
   return *o.ostr << "'" << in << "'";
 }
 
-// quote double (") only manipulator
 
-enum quote_double_only_type0 {quote_double_only};
+/// \enum quote_only_type0
+/// The 'quote_only' manipulator.
+///
+/// Similar to 'quote' manipulator, but using double quotes instead of
+/// single quotes.
+
+enum quote_double_only_type0 { quote_double_only };
+
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
+
 struct quote_double_only_type1 {
   std::ostream *ostr;
   quote_double_only_type1(std::ostream *o) : ostr(o) {}
@@ -224,9 +260,19 @@ inline std::ostream& operator << (quote_double_only_type1 o,
   return *o.ostr << "\"" << in << "\"";
 }
 
-// escape manipulator
+/// \endif
 
-enum escape_type0 {escape};
+
+/// \enum escape_type0
+/// The 'escape' manipulator.
+///
+/// Calls mysql_escape_string() in the MySQL C API on the following
+/// argument to prevent any special SQL characters from being
+/// interpreted.
+
+enum escape_type0 { escape };
+
+/// Documentation needed!
 struct escape_type1 {
   std::ostream *ostr;
   escape_type1(std::ostream *o) : ostr(o) {}
@@ -236,6 +282,7 @@ inline escape_type1 operator << (std::ostream &o, escape_type0 /*esc*/) {
   return escape_type1(&o);
 }
 
+/// Documentation needed!
 struct escape_type2 {
   SQLQueryParms *qparms;
   escape_type2(SQLQueryParms *p) : qparms(p) {}
@@ -270,9 +317,16 @@ inline std::ostream& operator << (escape_type1 o, char* const &in) {
 }
 
 
-//do nothing manipulator
+/// \enum do_nothing_type0
+/// The 'do_nothing' manipulator.
+///
+/// Not sure what this does.  Docs needed!
 
-enum do_nothing_type0 {do_nothing};
+enum do_nothing_type0 { do_nothing };
+
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
+
 struct do_nothing_type1 {
   std::ostream *ostr;
   do_nothing_type1(std::ostream *o) : ostr(o) {}
@@ -301,8 +355,17 @@ inline SQLQueryParms & operator << (do_nothing_type2 p, SQLString &in) {
   return *p.qparms << in;
 }
 
-enum ignore_type0 {ignore};
+/// \endif
 
+
+/// \enum ignore_type0
+/// The 'ignore' manipulator.
+///
+/// Not sure what this does.  Docs needed!
+
+enum ignore_type0 { ignore };
+
+/// Documentation needed!
 struct ignore_type2 {
   SQLQueryParms *qparms;
   ignore_type2(SQLQueryParms *p) : qparms(p) {}
