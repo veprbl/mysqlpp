@@ -78,6 +78,16 @@ New Feature Requests and ABI Changes
 	  first item shows as two high-ASCII characters when run in Win32
 	  console.  (Oddly enough, VC++'s editor understands UTF-8!)
 
+	o SSQLS structures include some static elements (_table and
+	  names[]), which are defined within the macro.  If you put an SSQLS
+	  declaration in a header file and #include that from multiple
+	  locations, you get a multiply-defined symbol warning.  Figure out
+	  some way to separate the definition from the declaration.  One
+	  idea is to give the SSQLS macros another parameter, to suppress
+	  static definition.  Another is to put them in another macro, which
+	  the user must instantiate once in a .cpp file.  (Similar to the
+	  way MFC message maps work.)
+
 
 Bug Fix/Maintenance Items
 -------------------------
