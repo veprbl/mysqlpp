@@ -65,6 +65,15 @@ New Feature Requests and ABI Changes
 	  classes were not designed to be subclassed.  Evidence is the
 	  dynamic_cast<>s required for VC++ in insert() and friends.
 
+	o Why is class ResUse separate from class Result?  They're declared
+	  in the same file, only Result derives from it, and it isn't clear
+	  that all of the other code that uses ResUse couldn't use Result
+	  directly.
+
+	o Same for mysql_date/Date and mysql_time/Time.  Some justification
+	  is that DateTime derives from their base classes, but why can't
+	  it be derived from the leaf classes instead?
+
 	o Add UTF-8 handling for VC++, in simple1 program?  Umlaut in
 	  first item shows as two high-ASCII characters when run in Win32
 	  console.  (Oddly enough, VC++'s editor understands UTF-8!)
