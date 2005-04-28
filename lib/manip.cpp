@@ -5,11 +5,9 @@ using namespace std;
 // Manipulator stuff is _always_ in namespace mysqlpp.
 namespace mysqlpp {
 
-extern bool dont_quote_auto;
+bool dont_quote_auto = false;
 
 // quote manipulator
-
-bool dont_quote_auto = false;
 
 SQLQueryParms& operator <<(quote_type2 p, SQLString& in)
 {
