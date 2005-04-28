@@ -2,11 +2,21 @@
 #define MYSQLPP_MANIP_H
 
 /// \file manip.h
-/// \brief Declares stream manipulators used with mysqlpp::Query.
+/// \brief Declares \c std::ostream manipulators useful with SQL syntax.
 ///
-/// These manipulators let you automatically quote elements inserted
-/// into a Query stream or escape special characters in those elements.
-/// This makes it easier to make syntactically correct SQL.
+/// These manipulators let you automatically quote elements or escape
+/// characters that are special in SQL when inserting them into an
+/// \c std::ostream. Since mysqlpp::SQLQuery is an ostream, these
+/// manipulators make it easier to build syntactically-correct SQL
+/// queries.
+///
+/// This file also includes \c operator<< definitions for ColData_Tmpl,
+/// one of the MySQL++ string-like classes.  When inserting such items
+/// into a stream, they are automatically quoted and escaped as
+/// necessary unless the global variable dont_quote_auto is set to true.
+/// These operators are smart enough to turn this behavior off when
+/// the stream is \c cout or \c cerr, however, since quoting and
+/// escaping are surely not required in that instance.
 
 #include "defs.h"
 
@@ -26,16 +36,17 @@ namespace mysqlpp {
 	extern bool dont_quote_auto;
 
 /// \enum quote_type0
+/// \anchor quote_manip
+///
 /// The standard 'quote' manipulator.
 ///
 /// Insert this into a stream to put single quotes around the next item
-/// in the stream.  Useful for inserting string types into the database.
+/// in the stream, and escape characters within it that are 'special'
+/// in SQL.  This is the most generally useful of the manipulators.
 
 enum quote_type0 {
-	quote	///< insert into a stream to single-quote next item
+	quote	///< insert into a std::ostream to single-quote and escape next item
 };
-
-extern bool dont_quote_auto;
 
 class SQLQueryParms;
 
@@ -123,14 +134,20 @@ inline std::ostream& operator << (quote_type1 o, const Set<ST> &in) {
 
 
 /// \enum quote_only_type0
+/// \anchor quote_only_manip
+///
 /// The 'quote_only' manipulator.
 ///
-/// Similar to 'quote' manipulator, but not sure what the distinction
-/// is.  Docs needed!
+/// Similar to <a href="#quote_manip">quote manipulator</a>, except that
+/// it doesn't escape special SQL characters.
 
-enum quote_only_type0 { quote_only };
+enum quote_only_type0 {
+	quote_only	///< insert into a std::ostream to single-quote next item
+};
 
-/// Documentation needed!
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
+
 struct quote_only_type1 {
   std::ostream *ostr;
   quote_only_type1(std::ostream *o) : ostr(o) {}
@@ -140,7 +157,6 @@ inline quote_only_type1 operator << (std::ostream &o, quote_only_type0 /*esc*/) 
   return quote_only_type1(&o);
 }
 
-/// Documentation needed!
 struct quote_only_type2 {
   SQLQueryParms *qparms;
   quote_only_type2(SQLQueryParms *p) : qparms(p) {}
@@ -188,14 +204,20 @@ inline std::ostream& operator << (quote_only_type1 o, const Set<ST> &in) {
   return *o.ostr << "'" << in << "'";
 }
 
+/// \endif
 
-/// \enum quote_only_type0
-/// The 'quote_only' manipulator.
+
+/// \enum quote_double_only_type0
+/// \anchor quote_double_manip
 ///
-/// Similar to 'quote' manipulator, but using double quotes instead of
-/// single quotes.
+/// The 'double_quote_only' manipulator.
+///
+/// Similar to <a href="#quote_only_manip">quote_only manipulator</a>,
+/// except that it uses double quotes instead of single quotes.
 
-enum quote_double_only_type0 { quote_double_only };
+enum quote_double_only_type0 {
+	quote_double_only	///< insert into a std::ostream to double-quote next item
+};
 
 /// \if INTERNAL
 // Doxygen will not generate documentation for this section.
@@ -318,11 +340,19 @@ inline std::ostream& operator << (escape_type1 o, char* const &in) {
 
 
 /// \enum do_nothing_type0
+/// \anchor do_nothing_manip
+///
 /// The 'do_nothing' manipulator.
 ///
-/// Not sure what this does.  Docs needed!
+/// Does exactly what it says: nothing. Used as a dummy manipulator when
+/// you are required to use some manipulator but don't want anything to
+/// be done to the following item. When used with SQLQueryParms it will
+/// make sure that it does not get formatted in any way, overriding any
+/// setting set by the template query.
 
-enum do_nothing_type0 { do_nothing };
+enum do_nothing_type0 {
+	do_nothing ///< insert into a std::ostream to override manipulation of next item
+};
 
 /// \if INTERNAL
 // Doxygen will not generate documentation for this section.
@@ -358,12 +388,20 @@ inline SQLQueryParms & operator << (do_nothing_type2 p, SQLString &in) {
 /// \endif
 
 
+
 /// \enum ignore_type0
+/// \anchor ignore_manip
+///
 /// The 'ignore' manipulator.
 ///
-/// Not sure what this does.  Docs needed!
+/// Only valid when used with SQLQueryParms. It's a dummy manipulator
+/// like the <a href="#do_nothing_manip>do_nothing manipulator</a>,
+/// except that it will not override formatting set by the template
+/// query.  It is simply ignored.
 
-enum ignore_type0 { ignore };
+enum ignore_type0 {
+	ignore ///< insert into a std::ostream as a dummy manipulator
+};
 
 /// Documentation needed!
 struct ignore_type2 {
