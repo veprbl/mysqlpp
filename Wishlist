@@ -20,9 +20,6 @@ New Feature Requests and ABI Changes
 	o Look through my own code for uses of hand-rolled SQL queries, and
 	  try to reduce them to API features.
 
-	o Re-do reference manual using Doxygen or similar:
-	  http://sourceforge.net/projects/doxygen/
-
 	o Write a new tutorial, separate from the reference manual, but
 	  linking to it.  It should be built around the existing examples.
 	  Where insufficient examples exist to support the tutorial, write
@@ -92,6 +89,12 @@ New Feature Requests and ABI Changes
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Template ListInsert in lib/myset.h isn't being used within the
+	  library.  It could probably be used in place of SetInsert in the
+	  same file, which things like type_info.h do use now, but it isn't
+	  clear how one would go about doing that without changing the
+	  library code.  Document it or throw it away.
+	
 	o Figure out what doc/sql++pretty is good for, and decide whether to
 	  document it or throw it away.  (Something to do with SSQLS, I
 	  think.)
