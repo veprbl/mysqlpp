@@ -38,8 +38,212 @@
 </articleinfo>
 
 <sect1>
-	<title>Foo</title>
-	<para>Bla?</para>
+	<title>Introduction</title>
+
+	<para>MySQL++ is a powerful C++ wrapper for MySQL's C API.
+	Its purpose is too make working with queries as easy as working
+	with STL containers.</para>
+
+	<para>The latest version of MySQL++ can be found at
+	<ulink url="http://tangentsoft.net/mysql++/">the official web
+	site</ulink>.</para>
+
+	<para>Support for MySQL++ can be had on <ulink
+	url="http://lists.mysql.com/plusplus">the mailing
+	list</ulink>. That page hosts the mailing list archives, and
+	tells you how you can subscribe.</para>
+</sect1>
+
+<sect1>
+	<title>Overview</title>
+
+	<para>MySQL++ has developed into a very complex and powerful
+	library, with many different ways to accomplish the same
+	task. Unfortunately, this means that figuring out how to perform
+	a simple task can be frustrating for new users. In this section
+	we will provide an overview of the most important user-facing
+	components of the library.</para>
+
+	<para>The overall process for using MySQL++ is similar to that of
+	most other database access APIs:</para>
+	
+	<orderedlist>
+		<listitem><para>Open the connection</para></listitem>
+		<listitem><para>Form and execute the query</para></listitem>
+		<listitem><para>Iterate through the result set</para></listitem>
+		<listitem><para>Go to 2 :)</para></listitem>
+	</orderedlist>
+
+	<para>There is, however, a lot of extra functionality along each
+	step of the way.</para>
+
+	<sect2>
+		<title>The Connection Object</title>
+
+		<para>A <ulink
+		url="../../refman/html/classmysqlpp_1_1Connection.html">Connection</ulink>
+		object manages the connection to the MySQL server. You
+		need at least one of these objects to do anything. A
+		Connection object can either create Query objects for
+		you, or you can execute queries directly through the
+		Connection object. The separate Query object is the
+		recommended way as it gives you far more power.</para>
+	</sect2>
+
+	<sect2>
+		<title>The Query Object</title>
+
+		<para>A <ulink
+		url="../../refman/html/classmysqlpp_1_1Query.html">Query</ulink>
+		object is the recommended way of building
+		and executing queries. It is subclassed from
+		<computeroutput>std::stringstream</computeroutput>
+		which means you can write to it like any other
+		C++ stream to form a query. The library includes
+		<ulink url="../../refman/html/manip_8h.html">stream
+		manipulators</ulink> that make it easy to generate
+		syntactically-correct SQL.</para>
+
+		<para>You can also set up template queries with this
+		class. Template queries work something like the C
+		<computeroutput>printf()</computeroutput> function:
+		you set up a fixed query string with tags inside that
+		indicate where to insert the variable parts. If you
+		have multiple queries that are structurally similar,
+		you simply set up one template query, and use that in
+		the various locations of your program.</para>
+
+		<para>A third method for building queries is to
+		use Specialized SQL Structures (SSQLS). This feature
+		presents your results as a C++ data structure, instead of
+		making you access the data through MySQL++ intermediary
+		classes. It also reduces the amount of embedded SQL code
+		your program needs.</para>
+	</sect2>
+
+	<sect2>
+		<title>Result Sets</title>
+
+		<para>The actual data elements in
+		a result set are stored in a special
+		<computeroutput>std::string</computeroutput>-like
+		class. Objects of this class can automatically convert
+		themselves to any of the basic C data types as well
+		as some additional MySQL++-specific types that are
+		designed to handle those MySQL that don't map well onto
+		the basic C types. For instance, you can convert a
+		MySQL <computeroutput>DATETIME</computeroutput>
+		field to a MySQL++ <ulink
+		url="../../refman/html/structmysqlpp_1_1DateTime.html">DateTime</ulink>
+		object automatically. If there is a problem in the
+		conversion it will either set a warning flag or throw an
+		exception, depending on how you set the library up.</para>
+
+		<para>MySQL++ has a number of different ways of representing
+		query results.</para>
+
+		<sect3>
+			<title>Queries That Do Not Return Data</title>
+
+			<para>Not all SQL queries return data. An
+			example is <computeroutput>CREATE
+			TABLE</computeroutput>. For these
+			types of queries, there is a <ulink
+			url="../../refman/html/classmysqlpp_1_1ResNSel.html">special
+			result type</ulink> that simply reports the
+			state resulting from the query: whether the
+			query was successful, how many rows it impacted
+			(if any), etc.</para>
+		</sect3>
+
+		<sect3>
+			<title>Queries That Return Data: Dynamic Method</title>
+
+			<para>The easiest way to
+			retrieve data from MySQL uses a <ulink
+			url="../../refman/html/classmysqlpp_1_1Result.html">Result</ulink>
+			object, which includes one or more <ulink
+			url="../../refman/html/classmysqlpp_1_1Row.html">Row</ulink>
+			objects. Because these classes are
+			<computeroutput>std::vector</computeroutput>-like
+			containers, you can treat the result set as a
+			two-dimensional array. For example you can get
+			the 5th item on the 2nd row by simply saying
+			<computeroutput>result[1][4]</computeroutput>. You
+			can also access row elements
+			by field name, like this:
+			<computeroutput>result[2].lookup_by_name("price")</computeroutput>.</para>
+
+			<para>An alternate way of accessing
+			your query results is through a <ulink
+			url="../../refman/html/classmysqlpp_1_1ResUse.html">ResUse</ulink>
+			object. This class acts more like an STL input
+			iterator than a container: you walk through
+			your result set one item at a time, always going
+			forward. You can't seek around in the result set,
+			and you can't know how many results are in the
+			set until you find the end. This method is more
+			efficient when there can be arbitrarily many
+			results, which could pose a memory allocation
+			problem with the previous technique.</para>
+		</sect3>
+
+		<sect3>
+			<title>Queries That Return Data: Static Method</title>
+
+			<para>The Specialized SQL Structures (SSQLS)
+			feature method above defines C++ structures
+			that match the table structures in your database
+			schema.</para>
+
+			<para>We call it the "static" method because
+			the table structure is fixed at compile time;
+			if you change the database schema, you have to
+			change your SSQLS definitions and recompile. If
+			you fail to do this, your program will throw
+			an exception when you try to stuff a result set
+			into an outdated data structure.</para>
+
+			<para>The advantage of this method is that
+			your program will require very little embedded
+			SQL code. You can simply execute a query, and
+			receive your results as C++ data structures,
+			which can be accessed just as you would any
+			other structure. The results can be accessed
+			through the Row object, or you can ask the
+			library to dump the results into a sequential
+			or set-associative STL container for you. Consider
+			this:</para>
+
+			<programlisting>
+	vector&lt;mystruct&gt; v;
+	Query q = connection.query();
+	q &lt;&lt; "SELECT * FROM mytable";
+	q.storein(v);
+	for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++v) {
+		cout &lt;&lt; "Price: " &lt;&lt; v.price &lt;&lt; endl;
+	}
+			</programlisting>
+
+			<para>Isn't that slick?</para>
+		</sect3>
+	</sect2>
+
+	<sect2>
+		<title>Exceptions</title>
+
+		<para>By default, the library throws <ulink
+		url="../../refman/html/exceptions_8h.html">exceptions</ulink>
+		derived from
+		<computeroutput>std::exception</computeroutput>
+		whenever it encounters an error. You can ask the library
+		to set an error flag instead, if you like, but the
+		exceptions carry more information. Not only do they
+		include a string member telling you why the exception
+		was thrown, there are several exception types, so you
+		can distinguish between several types of error within a
+		single <computeroutput>try</computeroutput> block.</para>
+	</sect2>
 </sect1>
 
 
