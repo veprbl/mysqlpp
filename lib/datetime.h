@@ -48,7 +48,13 @@ struct mysql_date : virtual public mysql_dt_base {
   tiny_int  month;
   tiny_int  day;
 
-  std::ostream& out_stream(std::ostream&) const;
+  /// \brief Insert the date into a stream
+  ///
+  /// The date is inserted into the stream in a format that the MySQL
+  /// server can accept.
+  ///
+  /// \param os stream to insert date into
+  std::ostream& out_stream(std::ostream& os) const;
 
   /// \brief Parse a MySQL date string into this object.
   cchar* convert (cchar*);
@@ -86,7 +92,13 @@ struct mysql_time : virtual public mysql_dt_base {
   tiny_int minute;  
   tiny_int second;
 
-  std::ostream& out_stream(std::ostream&) const;
+  /// \brief Insert the time into a stream
+  ///
+  /// The time is inserted into the stream in a format that the MySQL
+  /// server can accept.
+  ///
+  /// \param os stream to insert time into
+  std::ostream& out_stream(std::ostream& os) const;
 
   /// \brief Parse a MySQL time string into this object.
   cchar* convert (cchar*);
@@ -131,7 +143,13 @@ struct DateTime : public mysql_date, public mysql_time,
 
   short int compare(const DateTime& other) const;
 
-  std::ostream& out_stream(std::ostream&) const;
+  /// \brief Insert the date and time into a stream
+  ///
+  /// The date and time are inserted into the stream, in that order,
+  /// with a space between them.
+  ///
+  /// \param os stream to insert date and time into
+  std::ostream& out_stream(std::ostream& os) const;
 
   /// \brief Parse a MySQL date and time string into this object.
   cchar* convert (cchar*);

@@ -1,3 +1,10 @@
+/// \file mysql++.h
+/// \brief The main MySQL++ header file.  It simply #includes all of the
+/// other header files (except for custom.h) in the proper order.
+///
+/// Most programs will have no reason to #include any of the other
+/// MySQL++ headers directly, except for custom.h.
+
 #include "platform.h"
 
 #include "defs.h"

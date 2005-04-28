@@ -123,12 +123,12 @@ class Connection {
 
 	/// \brief Connect to database after object is created.
 	///
-	/// Open connection to the MySQL database.  It's better to use
-	/// one of the connect-on-create constructors if you can.
+	/// It's better to use one of the connect-on-create constructors
+	/// if you can.
 	///
 	/// Despite the name, this function is not a direct wrapper for the
-	/// MySQL C API function \c mysql_real_connect(); it does more than
-	/// that.
+	/// MySQL C API function \c mysql_real_connect(). It also sets some
+	/// connection-related options using \c mysql_options().
 	///
 	/// See <a href="#a3">this</a> for parameter documentation.
 	bool real_connect(cchar* db = "", cchar* host = "",
@@ -177,6 +177,13 @@ class Connection {
 
 	void purge() { close(); }
 
+	/// \brief Return a new query object.
+	///
+	/// The returned query object is tied to this MySQL connection,
+	/// so when you call a method like
+	/// \link mysqlpp::Query::execute() execute() \endlink
+	/// on that object, the query is sent to the server this object
+	/// is connected to.
 	Query query();
 
 	/// \brief Alias for success()

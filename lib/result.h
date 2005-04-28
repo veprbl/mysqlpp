@@ -23,7 +23,15 @@ namespace mysqlpp {
 
 class Connection;
 
-/// \brief Base class of Result
+/// \brief A basic result set class, for use with "use" queries.
+///
+/// A "use" query is one where you make the query and then process just
+/// one row at a time in the result instead of dealing with them all as
+/// a single large chunk.  (The name comes from the MySQL C API function
+/// that initiates this action, \c mysql_use_result().)  By calling
+/// fetch_row() until it throws a mysqlpp::BadQuery exception (or an
+/// empty row if exceptions are disabled), you can process the result
+/// set one row at a time.
 
 class ResUse  {
 protected:
@@ -163,6 +171,11 @@ public:
 
 /// \brief This class manages SQL result sets. 
 ///
+/// Objects of this class are created to manage the result of "store"
+/// queries, where the result set is handed to the program as single
+/// block of row data. (The name comes from the MySQL C API function
+/// \c mysql_store_result() which creates these blocks of row data.)
+///
 /// This class is a random access container (in the STL sense) which
 /// is neither less-than comparable nor assignable.  This container
 /// provides a reverse random-access iterator in addition to the normal
@@ -183,8 +196,9 @@ public:
 
   /// \brief Wraps mysql_fetch_row() in MySQL C API.
   ///
-  /// This is not a thin wrapper. It does a lot of error checking before
-  /// returning the mysqlpp::Row object containing the row data.
+  /// This is simply the const version of the same function in our
+  /// \link mysqlpp::ResUse parent class \endlink . Why this cannot
+  /// actually \e be in our parent class is beyond me.
   const Row fetch_row() const
   {
 	  if (!mysql_res) {  if (throw_exceptions) throw BadQuery("Results not fetched");

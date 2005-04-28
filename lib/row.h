@@ -266,8 +266,10 @@ public:
 		}
   ~Row() {data.clear(); is_nulls.clear(); initialized = false;}	
 
-  /// \brief Return a reference to this object.
+  /// \brief Return a const reference to this object.
   const Row& self() const {return *this;}
+
+  /// \brief Return a reference to this object.
   Row& self() {return *this;}
 
   /// \brief Return a reference to our parent class.
