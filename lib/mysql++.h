@@ -119,6 +119,25 @@
 	has therefore been moved into doc/old, and will eventually be
 	removed once we get around to replacing it all. This Doxygen-based
 	reference manual replaces section 5. The rest will be subsumed
-	into a new user manual, coming Any Day Now<sup>TM</sup>.
+	into a new user manual, coming Any Day Now<sup><small>TM</small></sup>.
+
+
+	\section If You Have Questions...
+
+	If you want to email someone to ask questions about this library,
+	we greatly prefer that you send mail to the MySQL++ mailing list,
+	which you can subscribe to here: http://lists.mysql.com/plusplus
+
+	That mailing list is archived, so if you have questions, do a
+	search to see if the question has been asked before.
+
+	You may find people's individual email addresses in various
+	files within the MySQL++ distribution. Please do not send mail
+	to them unless you are sending something that is inherently
+	personal. Questions that are about MySQL++ usage may well be
+	ignored if you send them to our personal email accounts. Those of
+	us still active in MySQL++ development monitor the mailing list,
+	so you aren't getting any extra "coverage" by sending messages
+	to those addresses in addition to the mailing list.
 */
 
