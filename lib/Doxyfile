@@ -8,7 +8,7 @@
 #---------------------------------------------------------------------------
 
 PROJECT_NAME           = MySQL++
-PROJECT_NUMBER         = 1.7.33
+PROJECT_NUMBER         = 1.7
 OUTPUT_DIRECTORY       = ../doc/refman
 OUTPUT_LANGUAGE        = English
 
