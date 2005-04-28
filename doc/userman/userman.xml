@@ -1,4 +1,6 @@
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.2//EN">
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.2//EN"
+		"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article>
 <articleinfo>
 	<title>MySQL++ User Manual</title>
@@ -12,19 +14,16 @@
 		<author>
 			<firstname>Sinisa</firstname>
 			<surname>Miliojevic</surname>
-			<corpname>MySQL AB</corpname>
 		</author>
 
 		<author>
 			<firstname>Monty</firstname>
 			<surname>Widenius</surname>
-			<corpname>MySQL AB</corpname>
 		</author>
 
 		<author>
 			<firstname>Warren</firstname>
 			<surname>Young</surname>
-			<corpname>Educational Technology Resources, Inc.</corpname>
 		</author>
 	</authorgroup>
 
@@ -38,6 +37,10 @@
 	<pubdate role="rcs">$Date$</pubdate>
 </articleinfo>
 
+<sect1>
+	<title>Foo</title>
+	<para>Bla?</para>
+</sect1>
 
 
 </article>
