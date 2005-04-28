@@ -93,8 +93,8 @@ public:
   void purge(void)
     { if (mysql_res) mysql_free_result(mysql_res); mysql_res=0; if (_names) delete _names; if (_types) delete _types; _names=0; _types=0; _table.erase(); }
   
-  operator bool() const {if (mysql_res) return true; return false;} //:
-  unsigned int columns() const {return num_fields();} //:
+  operator bool() const {if (mysql_res) return true; return false;}
+  unsigned int columns() const {return num_fields();}
 
   /// \brief Get the name of table that the result set comes from.
   std::string& table() {return _table;}

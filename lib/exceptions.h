@@ -75,7 +75,7 @@ class SQLQueryNEParms : public std::exception {
 public:
   SQLQueryNEParms(const char *c) : _what(std::string(c ? c : "")), error(c) {}
   ~SQLQueryNEParms() throw () {}
-  const char* error; //:
+  const char* error;
   virtual const char* what( void ) const throw () { return _what.c_str(); }
 };
 
