@@ -1,0 +1,43 @@
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.2//EN">
+<article>
+<articleinfo>
+	<title>MySQL++ User Manual</title>
+	
+	<authorgroup>
+		<author>
+			<firstname>Kevin</firstname>
+			<surname>Atkinson</surname>
+		</author>
+
+		<author>
+			<firstname>Sinisa</firstname>
+			<surname>Miliojevic</surname>
+			<corpname>MySQL AB</corpname>
+		</author>
+
+		<author>
+			<firstname>Monty</firstname>
+			<surname>Widenius</surname>
+			<corpname>MySQL AB</corpname>
+		</author>
+
+		<author>
+			<firstname>Warren</firstname>
+			<surname>Young</surname>
+			<corpname>Educational Technology Resources, Inc.</corpname>
+		</author>
+	</authorgroup>
+
+	<copyright>
+		<year>2001, 2005</year>
+		<holder>Kevin Atkinson</holder>
+		<holder>MySQL AB</holder>
+		<holder>Educational Technology Resources, Inc.</holder>
+	</copyright>
+
+	<pubdate role="rcs">$Date$</pubdate>
+</articleinfo>
+
+
+
+</article>
