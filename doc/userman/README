@@ -1,0 +1,45 @@
+The user manual is written in XML DocBook format, mostly Simplified
+DocBook 1.1, with some use of DocBook v4.2 when necessary. (Why v4.2?
+Because the oldest system I build MySQL++ on, Red Hat Linux 9, includes
+DTDs up to v4.2.)
+
+Some helpful resources for those looking to hack on the manual and need
+some instruction in DocBook first:
+
+
+Mills' "Installing And Using An XML/SGML DocBook Editing Suite" article:
+
+	http://supportweb.cs.bham.ac.uk/documentation/tutorials/docsystem/build/tutorials/docbooksys/docbooksys.html
+
+	This is the best tutorial I've found, which is also complete.
+	
+
+Walsh and Muellner's _Simplified DocBook: The Definitive Guide_ book:
+
+	http://www.docbook.org/tdg/simple/en/html/sdocbook.html
+
+	This is the most accessible reference.
+
+
+Walsh and Muellner's _DocBook: The Definitive Guide_ book, second
+edition, online version:
+
+	http://www.docbook.org/tdg/en/html/docbook.html
+
+	This is the document from which the Simplified book was derived.
+
+
+DocBook FAQ:
+
+	http://www.dpawson.co.uk/docbook/
+
+	Go here when you have a question that the tutorials and references
+	do not answer.
+
+
+The official DocBook site:
+
+	http://docbook.org/
+
+
+
