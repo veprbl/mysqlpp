@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.2//EN"
-		"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+		"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"
+[
+<!ENTITY % xinclude PUBLIC "-//UBS//CORE//DTD XInclude V1.0//EN"
+		"xinclude.dtd">
+%xinclude;
+]
+>
+
 <article>
 <articleinfo>
 	<title>MySQL++ User Manual</title>
@@ -247,4 +254,97 @@
 </sect1>
 
 
+<sect1>
+	<title>Tutorial</title>
+
+	<para>This tutorial is meant to give you a jump start in using
+	MySQL++. While it is a very complicated and powerful library,
+	it's possible to make quite functional programs without tapping
+	but a fraction of its power. This section will introduce you to
+	the most useful fraction.</para>
+
+	<para>This tutorial assumes you know C++ fairly well,
+	in particuler the Standard Template Library (STL) and
+	exceptions.</para>
+
+	<sect2>
+		<title>Running the Examples</title>
+
+		<para>All of the examples are complete running
+		programs. They may or may not be built for you already,
+		depending on how you installed the library.</para>
+
+		<para>If you installed MySQL++ from the source
+		tarball on a Unixy system, the examples should
+		have been built along with the library. If not,
+		simply go into the examples directory and type
+		<computeroutput>make</computeroutput>.</para>
+
+		<para>If you installed the library via
+		RPM, the examples are in the mysql++-devel
+		RPM. After installing that, the examples are in
+		<computeroutput>/usr/src/mysql++/examples</computeroutput>.
+		To build them, go into that directory
+		and type <computeroutput>make -f
+		Makefile.simple</computeroutput>. See the file
+		<computeroutput>/usr/share/doc/mysql++-devel*/README.examples</computeroutput>
+		for more details.</para>
+
+		<para>If you are on a Windows system, the build process
+		for the library should have built the examples as
+		well. Where the programs are depends on which compiler
+		you're using. There should be a README.* file in the
+		distribution specific to your compiler with further
+		instructions.</para>
+
+		<para>Once you have the examples building, you need
+		to initialize the sample database by running the
+		<computeroutput>resetdb</computeroutput> example. The
+		usage of resetdb is as follows:</para>
+
+		<screen>	resetdb [host [user [password [port]]]]</screen>
+
+		<para>If you leave off host, localhost is assumed. If
+		you leave off user, your current username is assumed. If
+		you leave of the password, it is assumed that you don't
+		need one. And if you leave off the port, it will use
+		the standard MySQL port number.</para>
+
+		<para>The user you give resetdb needs to be an account
+		with permission to create databases. Once the database is
+		created you can use any account that has full permission
+		to the sample database mysql_cpp_data.</para>
+
+		<para>You may also have to re-run resetdb after
+		running some of the other examples, as they change the
+		database.</para>
+	</sect2>
+
+	<sect2>
+		<title>The Basics</title>
+
+		<sect3>
+			<title>A Simple Example</title>
+
+			<para>The following example demonstrates how
+			to open a connection, execute a simple query,
+			and display the results. The code can be found
+			in the file examples/simple1.cpp. Note that,
+			like most of the other examples, it requires
+			the common routines in examples/util.cpp; you
+			can't build it directly.</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/simple1.cpp"
+			parse="text"/></programlisting></blockquote>
+
+			<para>Everything here should be fairly
+			obvious. Take particular notice of how we used
+			an iterator with the result set.</para>
+		</sect3>
+	</sect2>
+</sect1>
+
 </article>
+
