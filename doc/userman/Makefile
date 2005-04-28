@@ -8,4 +8,5 @@ all:
 	$(MAKE) index.html
 
 index.html: $(DOCFILE)
-	xsltproc file://$(STYLESHEETS)/html/chunk.xsl $(DOCFILE)
+	@mkdir -p html
+	xsltproc -o html/ file://$(STYLESHEETS)/html/chunk.xsl $(DOCFILE)
