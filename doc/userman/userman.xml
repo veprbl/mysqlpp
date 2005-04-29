@@ -48,7 +48,7 @@
 	<title>Introduction</title>
 
 	<para>MySQL++ is a powerful C++ wrapper for MySQL's C API.
-	Its purpose is too make working with queries as easy as working
+	Its purpose is to make working with queries as easy as working
 	with STL containers.</para>
 
 	<para>The latest version of MySQL++ can be found at
@@ -572,264 +572,270 @@
 			be added.</para>
 		</sect3>
 	</sect2>
+</sect1>
+
+<sect1>
+	<title>Template Queries</title>
+
+	<para>Another powerful feature of MySQL++ is being able
+	to set up template queries. These are kind of like C's
+	<computeroutput>printf()</computeroutput> facility: you
+	give MySQL++ a string containing the fixed parts of the
+	query and placeholders for the variable parts, and you can
+	later substitute in values into those placeholders.</para>
+
+	<para>The following example demonstrates how to use
+	this feature. This is the program you've run a few
+	times now if you've worked through all the examples,
+	resetdb.cpp:</para>
+
+	<blockquote><programlisting><xi:include
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	href="../../examples/resetdb.cpp"
+	parse="text"/></programlisting></blockquote>
+
+	<para>The line just before the call to
+	<computeroutput>query.parse()</computeroutput> sets the
+	template, and the parse call puts it into effect. From
+	that point on, you can re-use this query by calling any
+	of several Query member functions that accept query
+	template parameters. In this example, we're using
+	<computeroutput>Query::execute()</computeroutput>.</para>
+
+	<para>Let's dig into this feature a little deeper.</para>
 
 	<sect2>
-		<title>Template Queries</title>
+		<title>Setting up template queries</title>
 
-		<para>Another powerful feature of MySQL++ is being able
-		to set up template queries. These are kind of like C's
-		<computeroutput>printf()</computeroutput> facility: you
-		give MySQL++ a string containing the fixed parts of the
-		query and placeholders for the variable parts, and you can
-		later substitute in values into those placeholders.</para>
+		<para>To set up a template query, you simply insert it into
+		the Query object, using numbered placeholders wherever you
+		want to be able to change the query. Then, you call the
+		parse() function to tell the Query object that the query
+		string is a template query, and it needs to parse it:</para>
 
-		<para>The following example demonstrates how to use
-		this feature. This is the program you've run a few
-		times now if you've worked through all the examples,
-		resetdb.cpp:</para>
-
-		<blockquote><programlisting><xi:include
-		xmlns:xi="http://www.w3.org/2001/XInclude"
-		href="../../examples/resetdb.cpp"
-		parse="text"/></programlisting></blockquote>
-
-		<para>The line just before the call to
-		<computeroutput>query.parse()</computeroutput> sets the
-		template, and the parse call puts it into effect. From
-		that point on, you can re-use this query by calling any
-		of several Query member functions that accept query
-		template parameters. In this example, we're using
-		<computeroutput>Query::execute()</computeroutput>.</para>
-
-		<para>Let's dig into this feature a little deeper.</para>
-
-		<sect3>
-			<title>Setting up template queries</title>
-
-			<para>To set up a template query, you simply insert it into
-			the Query object, using numbered placeholders wherever you
-			want to be able to change the query. Then, you call the
-			parse() function to tell the Query object that the query
-			string is a template query, and it needs to parse it:</para>
-
-			<programlisting>
+		<programlisting>
 	query &lt;&lt; "select (%2:field1, %3:field2) from stock where %1:wheref = %q0:what";
 	query.parse();</programlisting>
 
-			<para>The format of the placeholder is:</para>
+		<para>The format of the placeholder is:</para>
 
-			<programlisting>
+		<programlisting>
 	%(modifier)##(:name)(:)</programlisting>
 
-			<para>Where Modifier can be any one of the following:</para>
+		<para>Where Modifier can be any one of the following:</para>
 
-			<blockquote>
-			<informaltable frame="none">
-			<tgroup cols="2">
-			<colspec colsep="1" rowsep="1"/>
-			<tbody>
-				<row>
-					<entry><emphasis role="bold">%</emphasis></entry>
-					<entry>Print an actual "%"</entry>
-				</row>
-				<row>
-					<entry><emphasis role="bold">""</emphasis></entry>
-					<entry>Don't quote or escape no matter what.</entry>
-				</row>
-				<row>
-					<entry><emphasis role="bold">q</emphasis></entry>
-					<entry>This will quote and escape
-					the item using the MySQL C API
-					function mysql_escape_string()
-					if it is a string or char *,
-					or another MySQL-specific type
-					that needs to be quoted.</entry>
-				</row>
-				<row>
-					<entry><emphasis role="bold">Q</emphasis></entry>
-					<entry>Quote but don't escape
-					based on the same rules as for 'q'. This
-					can save a bit of processing time if you
-					know the strings will never need
-					quoting</entry>
-				</row>
-				<row>
-					<entry><emphasis role="bold">r</emphasis></entry>
-					<entry>Always quote and escape
-					even if it is a number.</entry>
-				</row>
-				<row>
-					<entry><emphasis role="bold">R</emphasis></entry>
-					<entry>Always quote but
-					don't escape even if it is
-					a number.</entry>
-				</row>
-			</tbody>
-			</tgroup>
-			</informaltable>
-			</blockquote>
+		<blockquote>
+		<informaltable frame="none">
+		<tgroup cols="2">
+		<colspec colsep="1" rowsep="1"/>
+		<tbody>
+			<row>
+				<entry><emphasis role="bold">%</emphasis></entry>
+				<entry>Print an actual "%"</entry>
+			</row>
+			<row>
+				<entry><emphasis role="bold">""</emphasis></entry>
+				<entry>Don't quote or escape no matter what.</entry>
+			</row>
+			<row>
+				<entry><emphasis role="bold">q</emphasis></entry>
+				<entry>This will quote and escape
+				the item using the MySQL C API
+				function mysql_escape_string()
+				if it is a string or char *,
+				or another MySQL-specific type
+				that needs to be quoted.</entry>
+			</row>
+			<row>
+				<entry><emphasis role="bold">Q</emphasis></entry>
+				<entry>Quote but don't escape
+				based on the same rules as for 'q'. This
+				can save a bit of processing time if you
+				know the strings will never need
+				quoting</entry>
+			</row>
+			<row>
+				<entry><emphasis role="bold">r</emphasis></entry>
+				<entry>Always quote and escape
+				even if it is a number.</entry>
+			</row>
+			<row>
+				<entry><emphasis role="bold">R</emphasis></entry>
+				<entry>Always quote but
+				don't escape even if it is
+				a number.</entry>
+			</row>
+		</tbody>
+		</tgroup>
+		</informaltable>
+		</blockquote>
 
-			<para>## represents a number up to two digits. It is the
-			order of parameters given to a <ulink
-			url="../../refman/html/classmysqlpp_1_1SQLQueryParms.html">SQLQueryParms</ulink>
-			object, starting from 0.</para>
+		<para>## represents a number up to two digits. It is the
+		order of parameters given to a <ulink
+		url="../../refman/html/classmysqlpp_1_1SQLQueryParms.html">SQLQueryParms</ulink>
+		object, starting from 0.</para>
 
-			<para>":name" is for an optional name which aids
-			in filling SQLQueryParms. Name can contain any
-			alpha-numeric characters or the underscore. If
-			you add this, it must start with a letter. If this
-			is not the case, add a colon after the name. If
-			you need to represent an actual colon after the
-			name, follow the name with two colons. The first
-			one will end the name and the second one won't
-			be processed.</para>
-		</sect3>
+		<para>":name" is for an optional name which aids
+		in filling SQLQueryParms. Name can contain any
+		alpha-numeric characters or the underscore. If
+		you add this, it must start with a letter. If this
+		is not the case, add a colon after the name. If
+		you need to represent an actual colon after the
+		name, follow the name with two colons. The first
+		one will end the name and the second one won't
+		be processed.</para>
+	</sect2>
 
-		<sect3>
-			<title>Setting the parameters at execution time</title>
+	<sect2>
+		<title>Setting the parameters at execution time</title>
 
-			<para>To specify the parameters when
-			you want to execute a query simply
-			use <computeroutput>Query::store(const
-			SQLString &amp;parm0, [..., const SQLString
-			&amp;parm11])</computeroutput>. This
-			type of multiple overload also exists for
-			<computeroutput>Query::use()</computeroutput> and
-			<computeroutput>Query::execute()</computeroutput>.
-			'parm0' corresponds to the first parameter,
-			etc. You may specify up to 12 parameters. For
-			example:</para>
+		<para>To specify the parameters when
+		you want to execute a query simply
+		use <computeroutput>Query::store(const
+		SQLString &amp;parm0, [..., const SQLString
+		&amp;parm11])</computeroutput>. This
+		type of multiple overload also exists for
+		<computeroutput>Query::use()</computeroutput> and
+		<computeroutput>Query::execute()</computeroutput>.
+		'parm0' corresponds to the first parameter,
+		etc. You may specify up to 12 parameters. For
+		example:</para>
 
-			<programlisting>
+		<programlisting>
 	Result res = query.store("Dinner Rolls", "item", "item", "price")</programlisting>
 
-			<para>with the template query provided above
-			would produce:</para>
+		<para>with the template query provided above
+		would produce:</para>
 
-			<programlisting>
+		<programlisting>
 	select (item, price) from stock where item = "Dinner Rolls"</programlisting>
 
-			<para>The reason we didn't put the template parameters in
-			numeric order...</para>
+		<para>The reason we didn't put the template parameters in
+		numeric order...</para>
 
-			<programlisting>
+		<programlisting>
 	select (%0:field1, %1:field2) from stock where %2:wheref = %q3:what</programlisting>
 
-			<para>...will become apparent shortly.</para>
-		</sect3>
-
-		<sect3>
-			<title>Using defaults</title>
-
-			<para>You can also set the parameters one at
-			a time by means of class Query's public data
-			member def. To change the values of the def,
-			simply use the subscript operator. You can
-			refer to the parameters either by number or by
-			name. The following two examples have the same effect:</para>
-
-			<programlisting>
-    query.def[0] = "Dinner Rolls"; 
-    query.def[1] = "item"; 
-    query.def[2] = "item"; 
-    query.def[3] = "price";</programlisting>
-
-			<para>and</para>
-
-			<programlisting>
-    query.def["what"] = "Dinner Rolls"; 
-    query.def["wheref"] = "item"; 
-    query.def["field1"] = "item"; 
-    query.def["field2"] = "price";</programlisting>
-
-			<para>Once all the parameters are set simply
-			execute as you would have executed the query
-			before you knew about template queries:</para>
-
-			<programlisting>
-    Result res = query.store()</programlisting>
-		</sect3>
-
-		<sect3>
-			<title>Combining the two</title>
-
-			<para>You can also combine the use of
-			setting the parameters at execution time and
-			setting them via the def object by calling
-			<computeroutput>Query::store()</computeroutput>
-			(or <computeroutput>use()</computeroutput>
-			or <computeroutput>execute()</computeroutput>)
-			without passing the full number of parameters
-			that the template supports:</para>
-
-			<programlisting>
-    query.def["field1"] = "item"; 
-    query.def["field2"] = "price"; 
-    Result res1 = query.store("Hamburger Buns", "item"); 
-    Result res2 = query.store(1.25, "price"); </programlisting>
-
-			<para>Would store the query:</para>
-
-			<programlisting>
-    select (item, price) from stock where item = "Hamburger Buns" </programlisting>
-
-			<para>for res1 and</para>
-
-			<programlisting>
-    select (item, price) from stock where price = 1.25 </programlisting>
-
-			<para>for res2.</para>
-
-			<para>Now you see why we ordered the placeholders
-			in the template above as we did: we used positions
-			0 and 1 for the ones we want to change frequently,
-			and used 2 and 3 for the parameters that seldom
-			change.</para>
-
-			<para>One thing to watch out for, however,
-			is that <computeroutput>Query::store(const
-			char* q)</computeroutput> is also defined for
-			executing the query q. Therefore, when you call
-			<computeroutput>Query::store()</computeroutput>
-			(or <computeroutput>use()</computeroutput>,
-			or <computeroutput>execute()</computeroutput>)
-			with only one item and that item is a const
-			char*, you need to explicitly convert it into
-			a SQLString to get the right overload:</para>
-
-			<programlisting>
-    Result res = query.store(SQLString("Hamburger Buns")); </programlisting>
-			<para></para>
-		</sect3>
-
-		<sect3>
-			<title>Error Handling</title>
-
-			<para>If for some reason you did not specify all
-			the parameters when executing the query and the
-			remaining parameters do not have their values
-			set via def, the query object will throw a <ulink
-			url="../../refman/html/classmysqlpp_1_1SQLQueryNEParms.html">SQLQueryNEParms</ulink>
-			object. If this happens, you
-			can get an explanation of what
-			happened by checking the value of
-			<computeroutput>SQLQueryNEParms::string</computeroutput>,
-			like so:</para>
-
-			<programlisting>
-    query.def["field1"] = "item"; 
-    query.def["field2"] = "price"; 
-    Result res = query.store(1.25); </programlisting>
-
-			<para>This would throw
-			<computeroutput>SQLQueryNEParms</computeroutput>
-			because the wheref is not specified.</para>
-
-			<para>In theory, this exception should never be
-			thrown. If the exception is thrown it probably
-			a logic error in your program.</para>
-		</sect3>
+		<para>...will become apparent shortly.</para>
 	</sect2>
+
+	<sect2>
+		<title>Using defaults</title>
+
+		<para>You can also set the parameters one at
+		a time by means of class Query's public data
+		member def. To change the values of the def,
+		simply use the subscript operator. You can
+		refer to the parameters either by number or by
+		name. The following two examples have the same effect:</para>
+
+		<programlisting>
+	query.def[0] = "Dinner Rolls"; 
+	query.def[1] = "item"; 
+	query.def[2] = "item"; 
+	query.def[3] = "price";</programlisting>
+
+		<para>and</para>
+
+		<programlisting>
+	query.def["what"] = "Dinner Rolls"; 
+	query.def["wheref"] = "item"; 
+	query.def["field1"] = "item"; 
+	query.def["field2"] = "price";</programlisting>
+
+		<para>Once all the parameters are set simply
+		execute as you would have executed the query
+		before you knew about template queries:</para>
+
+		<programlisting>
+	Result res = query.store()</programlisting>
+	</sect2>
+
+	<sect2>
+		<title>Combining the two</title>
+
+		<para>You can also combine the use of
+		setting the parameters at execution time and
+		setting them via the def object by calling
+		<computeroutput>Query::store()</computeroutput>
+		(or <computeroutput>use()</computeroutput>
+		or <computeroutput>execute()</computeroutput>)
+		without passing the full number of parameters
+		that the template supports:</para>
+
+		<programlisting>
+	query.def["field1"] = "item"; 
+	query.def["field2"] = "price"; 
+	Result res1 = query.store("Hamburger Buns", "item"); 
+	Result res2 = query.store(1.25, "price"); </programlisting>
+
+		<para>Would store the query:</para>
+
+		<programlisting>
+	select (item, price) from stock where item = "Hamburger Buns" </programlisting>
+
+		<para>for res1 and</para>
+
+		<programlisting>
+	select (item, price) from stock where price = 1.25 </programlisting>
+
+		<para>for res2.</para>
+
+		<para>Now you see why we ordered the placeholders
+		in the template above as we did: we used positions
+		0 and 1 for the ones we want to change frequently,
+		and used 2 and 3 for the parameters that seldom
+		change.</para>
+
+		<para>One thing to watch out for, however,
+		is that <computeroutput>Query::store(const
+		char* q)</computeroutput> is also defined for
+		executing the query q. Therefore, when you call
+		<computeroutput>Query::store()</computeroutput>
+		(or <computeroutput>use()</computeroutput>,
+		or <computeroutput>execute()</computeroutput>)
+		with only one item and that item is a const
+		char*, you need to explicitly convert it into
+		a SQLString to get the right overload:</para>
+
+		<programlisting>
+	Result res = query.store(SQLString("Hamburger Buns")); </programlisting>
+		<para></para>
+	</sect2>
+
+	<sect2>
+		<title>Error Handling</title>
+
+		<para>If for some reason you did not specify all
+		the parameters when executing the query and the
+		remaining parameters do not have their values
+		set via def, the query object will throw a <ulink
+		url="../../refman/html/classmysqlpp_1_1SQLQueryNEParms.html">SQLQueryNEParms</ulink>
+		object. If this happens, you
+		can get an explanation of what
+		happened by checking the value of
+		<computeroutput>SQLQueryNEParms::string</computeroutput>,
+		like so:</para>
+
+		<programlisting>
+	query.def["field1"] = "item"; 
+	query.def["field2"] = "price"; 
+	Result res = query.store(1.25); </programlisting>
+
+		<para>This would throw
+		<computeroutput>SQLQueryNEParms</computeroutput>
+		because the wheref is not specified.</para>
+
+		<para>In theory, this exception should never be
+		thrown. If the exception is thrown it probably
+		a logic error in your program.</para>
+	</sect2>
+</sect1>
+
+<sect1>
+	<title>Specialized SQL Structures</title>
+
+	<para></para>
 </sect1>
 
 </article>
