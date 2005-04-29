@@ -324,7 +324,7 @@
 		<title>The Basics</title>
 
 		<sect3>
-			<title>A Simple Example</title>
+			<title>A simple example</title>
 
 			<para>The following example demonstrates how
 			to open a connection, execute a simple query,
@@ -342,6 +342,492 @@
 			<para>Everything here should be fairly
 			obvious. Take particular notice of how we used
 			an iterator with the result set.</para>
+		</sect3>
+
+		<sect3>
+			<title>A slightly more complicated example</title>
+
+			<para>This example is almost like the previous
+			one, except that it uses exceptions and the
+			automatic conversion feature of ColData. Pay
+			particular notice to how exceptions are used.
+			This is examples/complic1.cpp:</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/complic1.cpp"
+			parse="text"/></programlisting></blockquote>
+		</sect3>
+
+		<para>Everything should be fairly obvious. A few notes about
+		exceptions, however:</para>
+
+		<orderedlist>
+			<listitem><para>When the use_exceptions flag is
+			set for a parent object it is also set for all
+			of the children it creates after the flag is
+			set. For example when the use_exceptions flag is
+			set for the con object, it is also set for the
+			query object. Please note that the use_exceptions
+			flag is not linked, it is copied. This means that
+			when you change the use_exceptions flag only
+			its new children are affected, not the ones it
+			already created.</para></listitem>
+
+			<listitem><para>ColData will always throw <ulink
+			url="../../refman/html/classmysqlpp_1_1BadConversion.html">an
+			exception</ulink> when it is unable to do
+			a requested conversion. A bad conversion is
+			defined as one where: a) all the charters from
+			the string are not yet processed, and b) the
+			remaining characters are something other than
+			whitespace, zeros (0), or periods (.). This
+			means that an exception is thrown when ``1.25''
+			is converted into an int, but not when ``1.00''
+			is converted into an int. In the latter case,
+			MySQL++ knows that it can safely throw away the
+			fractional part.</para></listitem>
+		</orderedlist>
+
+		<para>To see how the exceptions work, try creating an
+		error. Some good things to try would be misspelling the
+		table name or changing the double to an int.</para>
+
+		<sect3>
+			<title>Getting info about the fields</title>
+
+			<para>The following example demonstrates how to
+			get some basic information about the fields,
+			including the name of the field and the SQL
+			type. This is examples/fieldinf1.cpp:</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/fieldinf1.cpp"
+			parse="text"/></programlisting></blockquote>
+		</sect3>
+	</sect2>
+
+	<sect2>
+		<title>Specialized SQL Structures</title>
+
+		<sect3>
+			<title>Retrieving data</title>
+
+			<para>The next example introduces one of
+			the most powerful features of MySQL++:
+			Specialized SQL Structures (SSQLS). This is
+			examples/custom1.cpp:</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/custom1.cpp"
+			parse="text"/></programlisting></blockquote>
+			
+			<para>As you can see, SSQLS is very powerful.</para>
+		</sect3>
+
+		<sect3>
+			<title>Adding data</title>
+
+			<para>SSQLS can also be used to add data to a table. This
+			is examples/custom2.cpp:</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/custom2.cpp"
+			parse="text"/></programlisting></blockquote>
+
+			<para>That's all there is to it. Because this
+			example modifies the data you should run resetdb
+			after running the example code.</para>
+		</sect3>
+
+		<sect3>
+			<title>Modifying data</title>
+
+			<para>It almost as easy to modify data with
+			SSQLS. This is examples/custom3.cpp:</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/custom3.cpp"
+			parse="text"/></programlisting></blockquote>
+
+			<para>When you run the example you will notice
+			that in the WHERE clause only the 'item' field
+			is checked for. This is because SSQLS also also
+			less-than-comparable.</para>
+
+			<para>Don't forget to run resetdb after running
+			the example.</para>
+		</sect3>
+
+		<sect3>
+			<title>Less-than-comparable</title>
+
+			<para>SSQLS structures can be sorted and stored in
+			STL associative containers as demonstrated in the
+			next example. This is custom4.cpp:</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/custom4.cpp"
+			parse="text"/></programlisting></blockquote>
+		</sect3>
+	</sect2>
+
+	<sect2>
+		<title>Let's Do Something Useful</title>
+
+		<para>These next few examples demonstrate just how powerful
+		C++ can be, allowing you to do a lot of work in few lines of
+		code without losing efficiency.</para>
+
+		<para>Since the code is meant to be re-used as-is,
+		constants that can differ from one case to another have
+		been grouped in order to simplify editing. Also, all of
+		these examples have full error checking code, showing off
+		the power of MySQL++'s exception handling features.</para>
+
+		<sect3>
+			<title>Loading binary file in a BLOB column</title>
+
+			<para>Since MySQL 3.23, BLOB columns have
+			been available, but their use is sometimes not
+			straightforward. Besides showing how easy it
+			can be with MySQL++, this example demonstrates
+			several features of MySQL++. The program requires
+			one command line parameter, which is a full path
+			to the binary file. This is examples/load_file.cpp:</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/load_file.cpp"
+			parse="text"/></programlisting></blockquote>
+
+			<para>One of the features of
+			this example is the use of the <ulink
+			url="../../refman/html/namespacemysqlpp.html#escape_manip">escape
+			manipulator</ulink>. Although the library does
+			have automatic quoting and escaping, it is only
+			supported for ColData, as that class contains
+			the necessary type information. Rather than
+			force MySQL++ to scan the string to determine
+			whether quoting and escaping is necessary, it
+			was decided to leave the choice of quoting and
+			escaping to the user for all other types.</para>
+		</sect3>
+
+		<sect3>
+			<title>Displaying images in HTML from BLOB column</title>
+
+			<para>This example is also a very short
+			one, considering the function that it
+			performs. Although all modern versions of
+			MySQL have a command that dumps data from BLOB
+			column to a binary file, this example shows
+			how to do it in your code instead, without
+			requiring an temporary file on disk. This is
+			examples/cgi_image.cpp:</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/cgi_image.cpp"
+			parse="text"/></programlisting></blockquote>
+		</sect3>
+
+		<sect3>
+			<title>DELETE or UPDATE from SELECT</title>
+
+			<para>MySQL's SELECT statement has more power to
+			winnow out just the items of interest from the
+			database than do DELETE or UPDATE. Therefore,
+			many people have wanted the ability to execute a
+			SELECT statement that in fact deletes or updates
+			the rows matched, rather than returning them. This
+			example implements that feature in just a few
+			lines of code. It is examples/updel.cpp:</para>
+
+			<blockquote><programlisting><xi:include
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			href="../../examples/updel.cpp"
+			parse="text"/></programlisting></blockquote>
+
+			<para>Notice that the row values
+			used in the IN clause aren't escaped or
+			quoted. This is because row elements are <ulink
+			url="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</ulink>
+			types, so they have automatic escaping and
+			quoting, as appropriate to the type being
+			inserted. If you want to disable this feature,
+			it's easily done: click the ColData link for
+			the details.</para>
+
+			<para>Users of this example should beware that
+			one more check is required in order to run this
+			query safely: in some extreme cases, the size
+			of the query might grow larger than MySQL's
+			maximum allowed packet size. This check should
+			be added.</para>
+		</sect3>
+	</sect2>
+
+	<sect2>
+		<title>Template Queries</title>
+
+		<para>Another powerful feature of MySQL++ is being able
+		to set up template queries. These are kind of like C's
+		<computeroutput>printf()</computeroutput> facility: you
+		give MySQL++ a string containing the fixed parts of the
+		query and placeholders for the variable parts, and you can
+		later substitute in values into those placeholders.</para>
+
+		<para>The following example demonstrates how to use
+		this feature. This is the program you've run a few
+		times now if you've worked through all the examples,
+		resetdb.cpp:</para>
+
+		<blockquote><programlisting><xi:include
+		xmlns:xi="http://www.w3.org/2001/XInclude"
+		href="../../examples/resetdb.cpp"
+		parse="text"/></programlisting></blockquote>
+
+		<para>The line just before the call to
+		<computeroutput>query.parse()</computeroutput> sets the
+		template, and the parse call puts it into effect. From
+		that point on, you can re-use this query by calling any
+		of several Query member functions that accept query
+		template parameters. In this example, we're using
+		<computeroutput>Query::execute()</computeroutput>.</para>
+
+		<para>Let's dig into this feature a little deeper.</para>
+
+		<sect3>
+			<title>Setting up template queries</title>
+
+			<para>To set up a template query, you simply insert it into
+			the Query object, using numbered placeholders wherever you
+			want to be able to change the query. Then, you call the
+			parse() function to tell the Query object that the query
+			string is a template query, and it needs to parse it:</para>
+
+			<programlisting>
+	query &lt;&lt; "select (%2:field1, %3:field2) from stock where %1:wheref = %q0:what";
+	query.parse();</programlisting>
+
+			<para>The format of the placeholder is:</para>
+
+			<programlisting>
+	%(modifier)##(:name)(:)</programlisting>
+
+			<para>Where Modifier can be any one of the following:</para>
+
+			<blockquote>
+			<informaltable frame="none">
+			<tgroup cols="2">
+			<colspec colsep="1" rowsep="1"/>
+			<tbody>
+				<row>
+					<entry><emphasis role="bold">%</emphasis></entry>
+					<entry>Print an actual "%"</entry>
+				</row>
+				<row>
+					<entry><emphasis role="bold">""</emphasis></entry>
+					<entry>Don't quote or escape no matter what.</entry>
+				</row>
+				<row>
+					<entry><emphasis role="bold">q</emphasis></entry>
+					<entry>This will quote and escape
+					the item using the MySQL C API
+					function mysql_escape_string()
+					if it is a string or char *,
+					or another MySQL-specific type
+					that needs to be quoted.</entry>
+				</row>
+				<row>
+					<entry><emphasis role="bold">Q</emphasis></entry>
+					<entry>Quote but don't escape
+					based on the same rules as for 'q'. This
+					can save a bit of processing time if you
+					know the strings will never need
+					quoting</entry>
+				</row>
+				<row>
+					<entry><emphasis role="bold">r</emphasis></entry>
+					<entry>Always quote and escape
+					even if it is a number.</entry>
+				</row>
+				<row>
+					<entry><emphasis role="bold">R</emphasis></entry>
+					<entry>Always quote but
+					don't escape even if it is
+					a number.</entry>
+				</row>
+			</tbody>
+			</tgroup>
+			</informaltable>
+			</blockquote>
+
+			<para>## represents a number up to two digits. It is the
+			order of parameters given to a <ulink
+			url="../../refman/html/classmysqlpp_1_1SQLQueryParms.html">SQLQueryParms</ulink>
+			object, starting from 0.</para>
+
+			<para>":name" is for an optional name which aids
+			in filling SQLQueryParms. Name can contain any
+			alpha-numeric characters or the underscore. If
+			you add this, it must start with a letter. If this
+			is not the case, add a colon after the name. If
+			you need to represent an actual colon after the
+			name, follow the name with two colons. The first
+			one will end the name and the second one won't
+			be processed.</para>
+		</sect3>
+
+		<sect3>
+			<title>Setting the parameters at execution time</title>
+
+			<para>To specify the parameters when
+			you want to execute a query simply
+			use <computeroutput>Query::store(const
+			SQLString &amp;parm0, [..., const SQLString
+			&amp;parm11])</computeroutput>. This
+			type of multiple overload also exists for
+			<computeroutput>Query::use()</computeroutput> and
+			<computeroutput>Query::execute()</computeroutput>.
+			'parm0' corresponds to the first parameter,
+			etc. You may specify up to 12 parameters. For
+			example:</para>
+
+			<programlisting>
+	Result res = query.store("Dinner Rolls", "item", "item", "price")</programlisting>
+
+			<para>with the template query provided above
+			would produce:</para>
+
+			<programlisting>
+	select (item, price) from stock where item = "Dinner Rolls"</programlisting>
+
+			<para>The reason we didn't put the template parameters in
+			numeric order...</para>
+
+			<programlisting>
+	select (%0:field1, %1:field2) from stock where %2:wheref = %q3:what</programlisting>
+
+			<para>...will become apparent shortly.</para>
+		</sect3>
+
+		<sect3>
+			<title>Using defaults</title>
+
+			<para>You can also set the parameters one at
+			a time by means of class Query's public data
+			member def. To change the values of the def,
+			simply use the subscript operator. You can
+			refer to the parameters either by number or by
+			name. The following two examples have the same effect:</para>
+
+			<programlisting>
+    query.def[0] = "Dinner Rolls"; 
+    query.def[1] = "item"; 
+    query.def[2] = "item"; 
+    query.def[3] = "price";</programlisting>
+
+			<para>and</para>
+
+			<programlisting>
+    query.def["what"] = "Dinner Rolls"; 
+    query.def["wheref"] = "item"; 
+    query.def["field1"] = "item"; 
+    query.def["field2"] = "price";</programlisting>
+
+			<para>Once all the parameters are set simply
+			execute as you would have executed the query
+			before you knew about template queries:</para>
+
+			<programlisting>
+    Result res = query.store()</programlisting>
+		</sect3>
+
+		<sect3>
+			<title>Combining the two</title>
+
+			<para>You can also combine the use of
+			setting the parameters at execution time and
+			setting them via the def object by calling
+			<computeroutput>Query::store()</computeroutput>
+			(or <computeroutput>use()</computeroutput>
+			or <computeroutput>execute()</computeroutput>)
+			without passing the full number of parameters
+			that the template supports:</para>
+
+			<programlisting>
+    query.def["field1"] = "item"; 
+    query.def["field2"] = "price"; 
+    Result res1 = query.store("Hamburger Buns", "item"); 
+    Result res2 = query.store(1.25, "price"); </programlisting>
+
+			<para>Would store the query:</para>
+
+			<programlisting>
+    select (item, price) from stock where item = "Hamburger Buns" </programlisting>
+
+			<para>for res1 and</para>
+
+			<programlisting>
+    select (item, price) from stock where price = 1.25 </programlisting>
+
+			<para>for res2.</para>
+
+			<para>Now you see why we ordered the placeholders
+			in the template above as we did: we used positions
+			0 and 1 for the ones we want to change frequently,
+			and used 2 and 3 for the parameters that seldom
+			change.</para>
+
+			<para>One thing to watch out for, however,
+			is that <computeroutput>Query::store(const
+			char* q)</computeroutput> is also defined for
+			executing the query q. Therefore, when you call
+			<computeroutput>Query::store()</computeroutput>
+			(or <computeroutput>use()</computeroutput>,
+			or <computeroutput>execute()</computeroutput>)
+			with only one item and that item is a const
+			char*, you need to explicitly convert it into
+			a SQLString to get the right overload:</para>
+
+			<programlisting>
+    Result res = query.store(SQLString("Hamburger Buns")); </programlisting>
+			<para></para>
+		</sect3>
+
+		<sect3>
+			<title>Error Handling</title>
+
+			<para>If for some reason you did not specify all
+			the parameters when executing the query and the
+			remaining parameters do not have their values
+			set via def, the query object will throw a <ulink
+			url="../../refman/html/classmysqlpp_1_1SQLQueryNEParms.html">SQLQueryNEParms</ulink>
+			object. If this happens, you
+			can get an explanation of what
+			happened by checking the value of
+			<computeroutput>SQLQueryNEParms::string</computeroutput>,
+			like so:</para>
+
+			<programlisting>
+    query.def["field1"] = "item"; 
+    query.def["field2"] = "price"; 
+    Result res = query.store(1.25); </programlisting>
+
+			<para>This would throw
+			<computeroutput>SQLQueryNEParms</computeroutput>
+			because the wheref is not specified.</para>
+
+			<para>In theory, this exception should never be
+			thrown. If the exception is thrown it probably
+			a logic error in your program.</para>
 		</sect3>
 	</sect2>
 </sect1>
