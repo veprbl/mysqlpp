@@ -1,11 +1,10 @@
 BASENAME=userman
 DOCFILE=$(BASENAME).xml
-
-STYLESHEETS=/usr/share/sgml/docbook/xsl-stylesheets
+STYLESHEET=$(BASENAME).xsl
 
 all: html/index.html
 
-html/index.html: $(DOCFILE)
+html/index.html: $(DOCFILE) $(STYLESHEET)
 	@mkdir -p html
 	@#xmllint --xinclude --valid --noout $(DOCFILE)
-	xsltproc --xinclude -o html/ file://$(STYLESHEETS)/html/chunk.xsl $(DOCFILE)
+	xsltproc --xinclude -o html/ $(STYLESHEET) $(DOCFILE)
