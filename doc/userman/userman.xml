@@ -84,6 +84,7 @@
 	<para>There is, however, a lot of extra functionality along each
 	step of the way.</para>
 
+
 	<sect2>
 		<title>The Connection Object</title>
 
@@ -96,6 +97,7 @@
 		Connection object. The separate Query object is the
 		recommended way as it gives you far more power.</para>
 	</sect2>
+
 
 	<sect2>
 		<title>The Query Object</title>
@@ -121,12 +123,13 @@
 		the various locations of your program.</para>
 
 		<para>A third method for building queries is to
-		use Specialized SQL Structures (SSQLS). This feature
+		use <xref linkend="ssqls"/> (SSQLS). This feature
 		presents your results as a C++ data structure, instead of
 		making you access the data through MySQL++ intermediary
 		classes. It also reduces the amount of embedded SQL code
 		your program needs.</para>
 	</sect2>
+
 
 	<sect2>
 		<title>Result Sets</title>
@@ -198,10 +201,9 @@
 		<sect3>
 			<title>Queries That Return Data: Static Method</title>
 
-			<para>The Specialized SQL Structures (SSQLS)
-			feature method above defines C++ structures
-			that match the table structures in your database
-			schema.</para>
+			<para>The <xref linkend="ssqls"/> (SSQLS) feature
+			method above defines C++ structures that match the
+			table structures in your database schema.</para>
 
 			<para>We call it the "static" method because
 			the table structure is fixed at compile time;
@@ -236,6 +238,7 @@
 		</sect3>
 	</sect2>
 
+
 	<sect2>
 		<title>Exceptions</title>
 
@@ -266,6 +269,7 @@
 	<para>This tutorial assumes you know C++ fairly well,
 	in particuler the Standard Template Library (STL) and
 	exceptions.</para>
+
 
 	<sect2>
 		<title>Running the Examples</title>
@@ -319,6 +323,7 @@
 		running some of the other examples, as they change the
 		database.</para>
 	</sect2>
+
 
 	<sect2>
 		<title>The Basics</title>
@@ -408,6 +413,7 @@
 		</sect3>
 	</sect2>
 
+
 	<sect2>
 		<title>Specialized SQL Structures</title>
 
@@ -416,7 +422,7 @@
 
 			<para>The next example introduces one of
 			the most powerful features of MySQL++:
-			Specialized SQL Structures (SSQLS). This is
+			<xref linkend="ssqls"/> (SSQLS). This is
 			examples/custom1.cpp:</para>
 
 			<blockquote><programlisting><xi:include
@@ -476,6 +482,7 @@
 			parse="text"/></programlisting></blockquote>
 		</sect3>
 	</sect2>
+
 
 	<sect2>
 		<title>Let's Do Something Useful</title>
@@ -604,6 +611,7 @@
 
 	<para>Let's dig into this feature a little deeper.</para>
 
+
 	<sect2>
 		<title>Setting up template queries</title>
 
@@ -686,6 +694,7 @@
 		be processed.</para>
 	</sect2>
 
+
 	<sect2>
 		<title>Setting the parameters at execution time</title>
 
@@ -719,6 +728,7 @@
 		<para>...will become apparent shortly.</para>
 	</sect2>
 
+
 	<sect2>
 		<title>Using defaults</title>
 
@@ -750,6 +760,7 @@
 		<programlisting>
 	Result res = query.store()</programlisting>
 	</sect2>
+
 
 	<sect2>
 		<title>Combining the two</title>
@@ -803,6 +814,7 @@
 		<para></para>
 	</sect2>
 
+
 	<sect2>
 		<title>Error Handling</title>
 
@@ -832,10 +844,317 @@
 	</sect2>
 </sect1>
 
-<sect1>
-	<title>Specialized SQL Structures</title>
 
-	<para></para>
+<sect1>
+	<title id="ssqls" xreflabel="Specialized SQL Structures"
+			>Specialized SQL Structures</title>
+
+	<para>The Specialized SQL Structure (SSQLS) feature lets you
+	easily define C++ structures that match the form of your SQL
+	tables. Because of the extra functionality that this feature
+	builds into these structures, MySQL++ can populate them
+	automatically when retrieving data from the database; with
+	queries returning many records, you can ask MySQL++ to populate
+	an STL container of your SSQLS records with the results. When
+	updating the database, MySQL++ can use SSQLS structures to match
+	existing data, and it can insert SSQLS structures directly into
+	the database.</para>
+
+	<para>You define an SSQLS using one of several macros. (These
+	are in the file custom.h, and in the file that it includes,
+	custom-macros.h.) There are a bunch of different macros, for
+	different purposes. The following sections will discuss each
+	macro type separately, beginning with the easiest and most
+	generally useful.</para>
+
+
+	<sect2>
+		<title>sql_create</title>
+
+		<para>This is the most basic sort of SSQLS declaration:</para>
+
+		<programlisting>
+    sql_create_5(stock, 0, 0,     
+			string, item,
+			int, num,                  
+			double, weight,  
+			double, price,  
+			mysqlpp::Date, date)</programlisting>
+
+		<para>This creates a C++ structure called 'stock'
+		containing five member variables, along with some
+		constructors and other member functions useful with
+		MySQL++.</para>
+
+		<para>One of the generated constructors takes a reference
+		to a mysqlpp::Row object, allowing you to easily populate
+		a vector of stocks like so:</para>
+
+		<programlisting>
+    vector&lt;stock&gt; result; 
+    query.storein(result);</programlisting>
+
+		<para>That's all there is to it. The only requirements
+		are that the table structure be compatible with the
+		SSQLS's member variables, and that the fields are in
+		the same order.</para>
+
+		<para>The general format of this set of macros is:</para>
+
+		<programlisting>
+    sql_create_#(NAME, KEYS, INITPARMS, TYPE1, ITEM1, ... TYPE#, ITEM#)</programlisting>
+
+		<para>Where # is the number of member variables,
+		NAME is the name of the structure you wish to create,
+		TYPE<emphasis>x</emphasis> is the type name for a
+		member variable, and ITEM<emphasis>x</emphasis> is that
+		variable's name.</para>
+
+		<para>The KEYS and INITPARMS arguments can always be zero,
+		to keep things simple. We will discuss what happens if
+		you use different values in the next few sections.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>sql_create with Compare</title>
+
+		<para>SSQLS structures can also have member functions that
+		allow you to compare one structure to another. You simply
+		change the first 0 in the previous example (KEYS) to a
+		higher value. If this number is N, then two structures
+		are considered equal if the first N members of each
+		are equal.</para>
+
+		<para>For example:</para>
+
+		<programlisting>
+    sql_create_5(stock, 1, 0,     
+			string, item,
+			int, num,                  
+			double, weight,  
+			double, price,  
+			mysqlpp::Date, date)</programlisting>
+
+		<para>Here we are saying that the 'item' field is a kind
+		of key field: it is always unique between any two 'stock'
+		items, so if two stock records have equal item values,
+		they are the same stock item.</para>
+
+		<para>That change adds the following members to the
+		SSQLS:</para>
+
+		<programlisting>
+    struct stock {
+      ...  
+      stock (const std::string &amp;p1); 
+      set (const std::string &amp;p1); 
+      bool operator == (const stock &amp;other) const;  
+      bool operator != (const stock &amp;other) const;   
+      bool operator &gt; (const stock &amp;other) const;   
+      bool operator &lt; (const stock &amp;other) const;   
+      bool operator &gt;= (const stock &amp;other) const;   
+      bool operator &lt;= (const stock &amp;other) const;   
+      int cmp (const stock &amp;other) const;  
+      int compare (const stock &amp;other) const;  
+    }  
+      
+    int compare (const stock &amp;x, const stock &amp;y);</programlisting>
+
+		<para>The global
+		<computeroutput>compare()</computeroutput>
+		function compares x to y and returns &lt;0 if
+		x &lt; y, 0 if x = y, and &gt;0 if x &gt; y.
+		<computeroutput>stock::cmp()</computeroutput> and
+		<computeroutput>stock::compare()</computeroutput>
+		are the same thing as <computeroutput>compare(*this,
+		other)</computeroutput>.</para>
+
+		<para>The additional constructor initializes the key
+		fields of the structure and leaves the other member
+		variables undefined. This is useful for creating temporary
+		objects to use for comparisons like <computeroutput>x
+		&lt;= stock("Hotdog")</computeroutput>.</para>
+
+		<para>Because stock is now less-than-comparable you
+		can store the query results in an STL associative
+		container:</para>
+
+		<programlisting>
+    std::set&lt;stock&gt; result;   
+    query.storein(result);</programlisting>
+
+		<para>And you can now use it like any other set:</para>
+
+		<programlisting>
+    cout &lt;&lt; result.lower_bound(stock("Hamburger"))-&gt;item &lt;&lt; endl;</programlisting>
+
+		<para>This will return the first item that begins with
+		"Hamburger".</para>
+
+		<para>You can also use it will any STL algorithm that
+		require the values to be less-than-comparable.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>sql_create with Additional Initializers</title>
+
+		<para>If third parameter for this macro (INITPARMS) is
+		nonzero, the SSQLS will have two additional members
+		functions that make it easier to initialize the
+		structure's data members. For example:</para>
+
+		<programlisting>
+    sql_create_5(stock, 1, 5,   
+			string, item,
+			int, num,                  
+			double, weight,  
+			double, price,  
+			mysqlpp::Date, date)</programlisting>
+
+		<para>will add these functions to the structure relative to
+		that in the previous example:</para>
+
+		<programlisting>
+    struct stock {   
+      ...  
+      stock(const string&amp;, const int&amp;, const double&amp;,  
+            const double&amp;, const mysqlpp::Date&amp;);  
+      set(const string&amp;, const int&amp;, const double&amp;,  
+          const double&amp;, const mysqlpp::Date&amp;);  
+    }</programlisting>
+
+		<para>There is one trick with this: because each SSQLS
+		has at least one other constructor besides the one
+		defined by this feature, not every logical value for
+		INITPARMS results in working code. A simple example is
+		setting KEYS and INITPARMS to the same value: you get
+		two identical constructor definitions, so the compiler
+		refuses to compile the code. If you are getting compiler
+		errors having to do with duplicate definitions, try
+		changing this value to zero.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>Additional Features of Specialized SQL Structures</title>
+		
+		<para>Up to this point, we haven't been using
+		all of the features in the SSQLS structures
+		we've been generating. We could have used the
+		<computeroutput>sql_create_basic_*</computeroutput>
+		macros instead, which would have worked just as well
+		for what we've seen so far, and the generated code would
+		have been smaller.</para>
+
+		<para>Why is it worth ignoring the "basic" variants of
+		these macros, then? Consider this:</para>
+
+		<programlisting>
+	query.insert(s);</programlisting>
+
+		<para>This does exactly what you think it does:
+		it inserts 's' into the database. This is possible
+		because a standard SSQLS has functions that the
+		Query object can call to get the list of fields
+		and such, which it uses to build an INSERT query.
+		<computeroutput>Query::update()</computeroutput> and
+		<computeroutput>Query::replace()</computeroutput> also
+		rely on this SSQLS feature. A basic SSQLS lacks these
+		functions.</para>
+
+		<para>Another feature of standard SSQLSes you might find
+		a use for is changing the table name used in queries. By
+		default, the table in the MySQL database is assumed to
+		have the same name as the SSQLS structure type.  But if
+		this is inconvenient, you can globally change the table
+		name used in queries like this:</para>
+
+		<programlisting>
+	stock::table() = "MyStockData";</programlisting>
+
+		<para>At this point, we've seen all the major aspects
+		of the SSQLS feature. The following sections look at
+		some alternate methods for constructing SSQLSes.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>Alternate Creation Methods</title>
+
+		<para>If for some reason you want your SSQLS data members to
+		have different names than used in the MySQL database, you can do
+		so like this:</para>
+
+		<programlisting>
+	sql_create_c_names_5(stock, 1, 5,        
+			string, item, "item",
+			int, num, "quantity",  
+			double, weight, "weight",  
+			double, price, "price"  
+			mysqlpp::Date, date, "shipment")</programlisting>
+
+		<para>If you want your SSQLS to have its data members
+		in a different order from those in the MySQL table,
+		you can do it like this:</para>
+
+		<programlisting>
+	sql_create_c_order_5(stock, 2, 5,   
+			mysqlpp::Date, date, 5,
+			double, price, 4,   
+			string, item, 1,    
+			int, num, 2,   
+			double, weight, 3)</programlisting>
+
+		<para>You can combine the custom names and custom ordering like
+		this:</para>
+
+		<programlisting>
+	sql_create_complete_5(stock, 2, 5,   
+			mysqlpp::Date, date, "shipment", 5,
+			double, price, "price", 4,
+			string, item, "item", 1,
+			int, num, "quantity", 2,
+			double, weight, "weight", 3)</programlisting>
+
+		<para>All three of these macro types have "basic"
+		variants that work the same way. Again, basic SSQLSes
+		lack the features necessary for automatic INSERT, UPDATE
+		and REPLACE query creation.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>Expanding SSQLS Macros</title>
+
+		<para>If you ever need to see the code that a given SSQLS
+		declaration expands out to, use the utility
+		<computeroutput>doc/ssqls-pretty</computeroutput>, like so:</para>
+
+		<programlisting>
+	ssqls-pretty &lt; myprog.cpp |less</programlisting>
+
+		<para>This locates the first SSQLS declaration in that
+		file and uses the C++ preprocessor to expand that
+		macro. You may have to change the script to tell it
+		where your MySQL++ header files are.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>Extending the SSQLS Mechanism</title>
+
+		<para>The SSQLS headers, custom.h and custom-macros.h,
+		are automatically generated by the Perl script
+		custom.pl. Although it is possible to change this script
+		to get additional functionality, it's usually better to
+		do that through inheritance. About the only good reason
+		to change the script is to change the limit on SSQLS data
+		members; it's 25 out of the box. A smaller value may speed
+		up compile time a bit, or you may require a higher value
+		because you have more complex tables than that.</para>
+	</sect2>
 </sect1>
 
 </article>
