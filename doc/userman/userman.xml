@@ -485,6 +485,63 @@
 
 
 	<sect2>
+		<title>Which Query Type to Use?</title>
+
+		<para>There are three major ways to execute a query in MySQL++:
+		<computeroutput>Query::execute()</computeroutput>,
+		<computeroutput>Query::store()</computeroutput>, and
+		<computeroutput>Query::use()</computeroutput>. Which should you
+		use, and why?</para>
+
+		<para><computeroutput>execute()</computeroutput>
+		is for queries that do not return data <emphasis>per
+		se</emphasis>. For instance, <computeroutput>CREATE
+		INDEX</computeroutput>. You do get back some
+		information from the MySQL server, which
+		<computeroutput>execute()</computeroutput>
+		returns to its caller in a <ulink
+		url="../../refman/html/classmysqlpp_1_1ResNSel.html">ResNSel</ulink>
+		object. In addition to the obvious &mdash; a flag stating
+		whether the query succeeded or not &mdash; this object also
+		contains things like the number of rows that the query
+		affected. If you only need the success status, there's
+		<computeroutput>Query::exec()</computeroutput>, which
+		just returns bool.</para>
+
+		<para>If your query does pull data from
+		the database, the simplest option is
+		<computeroutput>store()</computeroutput>.
+		This returns a <ulink
+		url="../../refman/html/classmysqlpp_1_1Result.html">Result</ulink>
+		object, which contains an in-memory copy of
+		the result set. The nice thing about this is
+		that <computeroutput>Result</computeroutput>
+		is a sequential container, like
+		<computeroutput>std::vector</computeroutput>, so you
+		can iterate through it forwards and backwards, access
+		elements with subscript notation, etc. There are also
+		the <computeroutput>storein()</computeroutput> methods,
+		which actually put the result set into an STL container
+		of your choice. The downside of these methods is that
+		a sufficiently large result set will give your program
+		memory problems.</para>
+
+		<para>For these large result sets, you should
+		use the <computeroutput>use()</computeroutput>
+		method instead. This returns a <ulink
+		url="../../refman/html/classmysqlpp_1_1ResUse.html">ResUse</ulink>
+		object, which is similar to Result, but without all of
+		the random-access features. This is because a "use"
+		query tells the database server to send the results
+		back one row at a time, to be processed linearly. It's
+		analogous to a C++ stream's input iterator, as opposed
+		to a random-access iterator that a container like
+		vector offers. By accepting this limitation, you can process
+		arbitrarily large result sets.</para>
+	</sect2>
+
+
+	<sect2>
 		<title>Let's Do Something Useful</title>
 
 		<para>These next few examples demonstrate just how powerful
