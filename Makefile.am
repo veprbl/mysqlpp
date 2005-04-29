@@ -8,7 +8,14 @@ EXTRA_DIST = \
 	common.am \
 	config/*.m4 \
 	devel \
-	doc \
+	doc/*.pdf \
+	doc/README* \
+	doc/ssqls-pretty \
+	doc/refman/html \
+	doc/userman/*.x?l \
+	doc/userman/html \
+	doc/userman/Makefile \
+	doc/userman/README \
 	*.ebuild \
 	*.spec \
 	*.sln \
