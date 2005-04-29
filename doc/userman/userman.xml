@@ -35,10 +35,10 @@
 	</authorgroup>
 
 	<copyright>
-		<year>2001, 2005</year>
+		<year>1998-2001, 2005</year>
 		<holder>Kevin Atkinson</holder>
 		<holder>MySQL AB</holder>
-		<holder>Educational Technology Resources, Inc.</holder>
+		<holder>Educational Technology Resources</holder>
 	</copyright>
 
 	<pubdate role="rcs">$Date$</pubdate>
@@ -1157,5 +1157,18 @@
 	</sect2>
 </sect1>
 
+
+<sect1>
+	<title>Licensing</title>
+
+	<para>The primary copyright holders on MySQL++ are Kevin Atkinson
+	(1998), MySQL AB (1999 through 2001) and Educational Technology
+	Resources, Inc. (2004 through the date of this writing). This
+	library is released under the GNU Lesser General Public License
+	(LGPL), so all other contributions are also under the LGPL.</para>
+
+	<xi:include
+	xmlns:xi="http://www.w3.org/2001/XInclude" href="lgpl.xml"/>
+</sect1>
 </article>
 

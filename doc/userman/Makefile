@@ -4,7 +4,7 @@ HTML_SS=html.xsl
 
 all: html/index.html
 
-html/index.html: $(DOCFILE) $(STYLESHEET)
+html/index.html: $(DOCFILE) $(STYLESHEET) lgpl.xml
 	@mkdir -p html
 	@#xmllint --xinclude --valid --noout $(DOCFILE)
 	xsltproc --xinclude -o html/ $(HTML_SS) $(DOCFILE)
