@@ -1,0 +1,17 @@
+#!/bin/sh
+ISSUE=`head -1 /etc/issue`
+echo $ISSUE | grep -q 'Red Hat'
+RH=$?
+echo $ISSUE | grep -q 'Fedora Core'
+FC=$?
+if [ $RH == 0 ]
+then
+	echo -n rh
+	echo $ISSUE | awk '{ print $5 }'
+elif [ $FC == 0 ]
+then
+	echo -n fc
+	echo $ISSUE | awk '{ print $4 }'
+else
+	echo unknown
+fi
