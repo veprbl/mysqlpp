@@ -12,7 +12,8 @@ EXTRA_DIST = \
 	doc/README* \
 	doc/ssqls-pretty \
 	doc/refman/html \
-	doc/userman/*.x?l \
+	doc/userman/*.in \
+	doc/userman/*.xml \
 	doc/userman/html \
 	doc/userman/Makefile \
 	doc/userman/README \
