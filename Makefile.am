@@ -8,7 +8,8 @@ EXTRA_DIST = \
 	common.am \
 	config/*.m4 \
 	devel \
-	doc/*.pdf \
+	doc/mysqlpp-refman.pdf \
+	doc/mysqlpp-userman.pdf \
 	doc/README* \
 	doc/ssqls-pretty \
 	doc/refman/html \
@@ -47,12 +48,12 @@ ebuild: dist
 	cp mysql++.ebuild /usr/portage/dev-db/mysql++/$(distdir).ebuild
 	ebuild /usr/portage/dev-db/mysql++/$(distdir).ebuild digest
 
-doc:
+docs: doc/mysqlpp-refman.pdf doc/mysqlpp-userman.pdf
+
+
+doc/mysqlpp-refman.pdf: lib/*.h
 	( cd lib ; make refman )
+
+doc/mysqlpp-userman.pdf: doc/userman/userman.xml
 	( cd doc/userman ; make && make pdf )
 
-doc/refman/html:
-	( cd lib ; make refman )
-
-doc/userman/html:
-	( cd doc/userman ; make && make pdf )
