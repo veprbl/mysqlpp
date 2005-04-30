@@ -7,7 +7,6 @@ EXTRA_DIST = \
 	bootstrap \
 	common.am \
 	config/*.m4 \
-	devel \
 	doc/mysqlpp-refman.pdf \
 	doc/mysqlpp-userman.pdf \
 	doc/README* \
