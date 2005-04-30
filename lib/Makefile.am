@@ -41,6 +41,7 @@ ctags:
 tags: ctags
 
 refman:
+	rm -rf ../doc/refman
 	doxygen
 	( cd ../doc/refman/latex && make pdf && mv refman.pdf ../../mysqlpp-refman.pdf ) 
 
