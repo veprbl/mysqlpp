@@ -14,10 +14,10 @@ lib_LTLIBRARIES=libmysqlpp.la
 libmysqlpp_la_LDFLAGS=-version-info 4:0:0
 
 libmysqlpp_la_SOURCES = \
-	coldata.cpp connection.cpp datetime.cpp exceptions.cpp fields.cpp \
-	field_names.cpp field_types.cpp manip.cpp myset.cpp query.cpp \
-	result.cpp row.cpp sql_query.cpp sql_string.cpp type_info.cpp \
-	vallist.cpp string_util.cpp
+	coldata.cpp connection.cpp datetime.cpp fields.cpp field_names.cpp \
+	field_types.cpp manip.cpp myset.cpp query.cpp result.cpp row.cpp \
+	sql_query.cpp sql_string.cpp type_info.cpp vallist.cpp \
+	string_util.cpp
 
 include_HEADERS = \
 	coldata.h compare.h connection.h const_string.h convert.h custom.h \

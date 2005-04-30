@@ -11,7 +11,7 @@
 
 namespace mysqlpp {
 
-extern bool use_exceptions;
+const bool use_exceptions = true;
 
 enum sql_cmp_type {sql_use_compare};
 
