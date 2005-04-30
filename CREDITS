@@ -1,14 +1,18 @@
-The original creator of the library seems to be Kevin Atkinson
-<kevinatk@home.com>. I say "seems", because he hasn't been heard from
-in years. His involvement is well before my time.
+MySQL++ was created by Kevin Atkinson <kevinatk@home.com>. We know this
+only by credits left in various files in the distribution, since he
+hasn't been involved with MySQL++ since 1998 or so.
 
-From version 1.2 through 1.7.9, the primary maintainer was Sinisa
-Miliojevic <sinisa@mysql.com>, currently an employee of MySQL AB.
+From version 1.0 (released in June 1999) through 1.7.9 (May 2001), the
+primary maintainer was Sinisa Miliojevic <sinisa@mysql.com>, currently an
+employee of MySQL AB. Although development stopped for over three years
+after 1.7.9 was released, Sinisa continued to run the mailing list and
+support users through that mailing list.
 
-When it became clear that Sinisa was unable to put any more time into the
-library, I (Warren Young <mysqlpp@etr-usa.com>) took over the library.
-The first release under this new leadership was 1.7.10, and it continues
-to this day.
+When it became clear that Sinisa was unable to put any more time
+into the library, Warren Young <mysqlpp@etr-usa.com> took over the
+maintainership. The first release under his leadership was 1.7.10,
+in August 2004.
+
 
 Other frequent contributors since 1.7.10 are:
 
@@ -23,8 +27,37 @@ Other frequent contributors since 1.7.10 are:
 	Evan Wies <evan@athenacr.com>: Contributed several C++ code
 	style cleanups.
 
+
+Here are the personal credits from the old 1.7.9 documentation,
+apparently written by Kevin Atkinson:
+
+	Chris Halverson - For helping me get it to compile under Solaris.
+
+	Fredric Fredricson - For a long talk about automatic conversions.
+
+	Michael Widenius - MySQL developer who has been very supportive of
+		my efforts.
+
+	Paul J. Lucas - For the original idea of treating the query object
+		like a stream.
+
+	Scott Barron - For helping me with the shared libraries.
+
+	Jools Enticknap - For giving me the Template Queries idea.
+
+	M. S. Sriram - For a detailed dission of how the Template Queries
+		should be implemented, the suggestion to throw exceptions on bad
+		queries, and the idea of having a back-end independent query
+		object (ie SQLQuery).
+
+	Sinisa Milivojevic - For becoming the new offical maintainer.
+
+	D. Hawkins and E. Loic for their autoconf + automake contribution.
+
+
 See the ChangeLog for further credits, and details about the differences
 between the many versions of this library.
+
 
 Please do not email any of these people with general questions about
 MySQL++. All of us who are still active in MySQL++ development read the
