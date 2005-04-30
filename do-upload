@@ -18,6 +18,12 @@ then
 	fi
 	cp mysql++-$VERSION.tar.gz $TMPDIR
 
+	if [ ! -e /usr/src/redhat/RPMS/noarch/mysql++-manuals-$VERSION-1.noarch.rpm ]
+	then
+		make rpm
+	fi
+	cp /usr/src/redhat/RPMS/noarch/mysql++-manuals-$VERSION-1.noarch.rpm $TMPDIR
+
 	if [ ! -e /usr/src/redhat/SRPMS/mysql++-$(VERSION)-1.src.rpm ]
 	then
 		make srpm
@@ -29,7 +35,6 @@ cp /usr/src/redhat/RPMS/i386/mysql++-$VERSION-1.i386.rpm \
 		$TMPDIR/mysql++-$VERSION-1.`./osver`.i386.rpm
 cp /usr/src/redhat/RPMS/i386/mysql++-devel-$VERSION-1.i386.rpm \
 		$TMPDIR/mysql++-devel-$VERSION-1.`./osver`.i386.rpm
-cp /usr/src/redhat/RPMS/noarch/mysql++-manuals-$VERSION-1.noarch.rpm $TMPDIR
 
 scp $TMPDIR/* tangent@tangent.dyndns.org:projects/tangentsoft.net/mysql++/releases
 
