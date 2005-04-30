@@ -11,6 +11,8 @@
 
 namespace mysqlpp {
 
+extern bool use_exceptions;
+
 enum sql_cmp_type {sql_use_compare};
 
 #if defined(NO_LONG_LONGS)
