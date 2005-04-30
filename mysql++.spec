@@ -25,7 +25,6 @@ programs, you probably don't need to install this package.
 %package manuals
 Summary: MySQL++ user and reference manuals
 Group: Development/Databases
-Buildarch: noarch
 %description manuals
 This is the MySQL++ documentation.  It's a separate RPM just because
 it's so large, and it doesn't change with every release.
