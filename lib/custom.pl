@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+my $max_parms = 25;
+
 open (OUT0, ">custom.h");
 open (OUT, ">custom-macros.h");
 
@@ -102,11 +104,11 @@ print OUT << "---";
       {return sql_compare_##NAME<sql_dummy>(*this,other);}
 ---
 
-foreach $j (1..26) {
+foreach $j (1..$max_parms) {
     $parm0 .= "T$j, C$j";
-    $parm0 .= ", " unless $j == 26;
+    $parm0 .= ", " unless $j == $max_parms;
     $parm1 .= "C$j";
-    $parm1 .= ", " unless $j == 26;
+    $parm1 .= ", " unless $j == $max_parms;
 }
 
 print OUT << "---";
@@ -128,7 +130,7 @@ print OUT << "---";
 // ---------------------------------------------------
 ---
 
-foreach $i (1..26) {
+foreach $i (1..$max_parms) {
   $compr = ""; $parm2 = ""; $define = "";
   $compr = "    int cmp; \\\n" unless $i == 1;
   $compp = "";
@@ -190,7 +192,7 @@ print OUT << "---";
 ---
 
 
-foreach $i (1..26) {
+foreach $i (1..$max_parms) {
     $parm_complete = ""; 
     $parm_order = ""; $parm_order2c = "";
     $parm_simple = ""; $parm_simple2c = "";
@@ -273,15 +275,15 @@ foreach $i (1..26) {
         $cusparmsv  .= "i$j";
 	$cusparmsv  .= ", " unless $j == $i;
 	$parmC .= "T$j, I$j";
-	$parmC .= ", " unless $j == 26;
+	$parmC .= ", " unless $j == $max_parms;
         $parmc .= "I$j";
-	$parmc .= ", " unless $j == 26;
+	$parmc .= ", " unless $j == $max_parms;
     }
-    foreach $j ($i+1 .. 26) {
+    foreach $j ($i+1 .. $max_parms) {
 	$parmC .= "0, 0";
-	$parmC .= ", " unless $j == 26;
+	$parmC .= ", " unless $j == $max_parms;
         $parmc .= "0";
-	$parmc .= ", " unless $j == 26;
+	$parmc .= ", " unless $j == $max_parms;
     }
 
     print OUT << "---";
