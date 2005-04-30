@@ -19,8 +19,8 @@ function generate_xsl()
 	
 if [ -e /usr/share/xml/docbook/xsl-stylesheets ]
 then
-	generate_xsl '/usr/share/xml/docbook/xsl-stylesheets'
-elif [ -e \/usr\/share\/sgml\/docbook\/xsl-stylesheets ]
+	generate_xsl '\/usr\/share\/xml\/docbook\/xsl-stylesheets'
+elif [ -e /usr/share/sgml/docbook/xsl-stylesheets ]
 then
 	generate_xsl '\/usr\/share\/sgml\/docbook\/xsl-stylesheets'
 else
