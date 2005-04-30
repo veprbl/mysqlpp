@@ -1,3 +1,31 @@
+1.7.34, 2005.04.30
+
+	o Added a multiple-insert method for Query, which lets you insert
+	  a range of records from an STL container (or the whole thing,
+	  if you like) in a single SQL query.  This is faster, and it
+	  reduces coding errors due to less repetition.  Thanks to Mark
+	  Meredino for the patch.
+
+	o Reference and user manual now get rebuilt automatically when
+	  required.  (E.g. on 'make dist', or explicitly now through 'make
+	  docs'.)
+
+	o Made it easier to change the maximum number of SSQLS data members
+	  in generated custom-macros.h file.  It used to be hard-coded in
+	  several places in lib/custom.pl; now it's a variable at the top of
+	  the file.
+
+	o Changed default SSQLS data member limit to 25, which is what it
+	  has been documented as for a long time now.  It was actually 26
+	  within custom.pl.
+
+	o Fixed a regression in previous version.
+
+	o Trimmed some fat from the distribution packages.
+
+	o Some more small doucmentation improvements.
+
+
 1.7.33, 2005.04.29
 
 	o Worked aroudn an overloaded operator lookup bug in VC++ 7.1

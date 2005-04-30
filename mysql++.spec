@@ -1,6 +1,6 @@
 Summary: C++ wrapper for the MySQL C API
 Name: mysql++
-Version: 1.7.33
+Version: 1.7.34
 Release: 1
 Copyright: LGPL
 Group: Development/Databases
@@ -14,13 +14,20 @@ run MySQL++-based programs.  If you are building your own MySQL++-based
 programs, you also need to install the -devel package.
 
 %package devel
-Summary: MySQL++ developer files (headers, examples, documentation, etc.)
+Summary: MySQL++ developer files (headers, examples, etc.)
 Group: Development/Databases
 Requires: mysql++
 %description devel
-These are the files needed to compile MySQL++ based programs, and to
-learn how to use the library.  If you aren't building your own programs,
-you probably don't need to install this package.
+These are the files needed to compile MySQL++ based programs, plus
+some sample code to get you started.  If you aren't building your own
+programs, you probably don't need to install this package.
+
+%package manuals
+Summary: MySQL++ user and reference manuals
+Group: Development/Databases
+%description manuals
+This is the MySQL++ documentation.  It's a separate RPM just because
+it's so large, and it doesn't change with every release.
 
 %prep
 %setup -q
@@ -55,12 +62,20 @@ rm -f doc/README.examples doc/LICENSE
 
 %files devel
 %defattr(-,root,root)
-%doc doc/*.pdf doc/refman doc/userman doc/README.devel doc/README.examples
+%doc doc/README.devel doc/README.examples
 
 /usr/include/mysql++
 /usr/src/mysql++/examples
 
+%files manuals
+%defattr(-,root,root)
+%doc doc/*.pdf doc/refman doc/userman
+
 %changelog
+* Sat Apr 30 2005 Warren Young <mysqlpp@etr-usa.com> 1.7.34-1
+- Updated for 1.7.34
+- Split manuals out into their own sub-package.
+
 * Fri Apr 29 2005 Warren Young <mysqlpp@etr-usa.com> 1.7.33-1
 - Updated for 1.7.33
 
