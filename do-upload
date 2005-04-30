@@ -18,11 +18,11 @@ then
 	fi
 	cp mysql++-$VERSION.tar.gz $TMPDIR
 
-	if [ ! -e /usr/src/redhat/RPMS/noarch/mysql++-manuals-$VERSION-1.noarch.rpm ]
+	if [ ! -e /usr/src/redhat/RPMS/i386/mysql++-manuals-$VERSION-1.i386.rpm ]
 	then
 		make rpm
 	fi
-	cp /usr/src/redhat/RPMS/noarch/mysql++-manuals-$VERSION-1.noarch.rpm $TMPDIR
+	cp /usr/src/redhat/RPMS/i386/mysql++-manuals-$VERSION-1.i386.rpm $TMPDIR
 
 	if [ ! -e /usr/src/redhat/SRPMS/mysql++-$(VERSION)-1.src.rpm ]
 	then
