@@ -7,10 +7,10 @@
 ///
 /// Class SQLQuery contains a large part of the functionality of class
 /// Query, which is the only thing that derives from this class.  It is
-/// separate for historical reasons only: in the beginning, MySQL++ was
-/// called "sqlplus" and was supposed to be a C++ interface to any
-/// database.  It initially only supported MySQL, though, and once
-/// maintenance shifted to MySQL AB, that dream died.
+/// separate for historical reasons only: early on, there was a dream
+/// (and some effort) to make MySQL++ database-independent.  Once
+/// maintainership shifted to MySQL AB employees in 1999, though, that
+/// dream died.
 ///
 /// The current maintainers have no wish to try and revive that dream,
 /// so at some point this class's contents will be folded into the Query
