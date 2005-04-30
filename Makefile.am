@@ -46,3 +46,13 @@ ebuild: dist
 	cp $(distdir).tar.gz /usr/portage/distfiles
 	cp mysql++.ebuild /usr/portage/dev-db/mysql++/$(distdir).ebuild
 	ebuild /usr/portage/dev-db/mysql++/$(distdir).ebuild digest
+
+doc:
+	( cd lib ; make refman )
+	( cd doc/userman ; make && make pdf )
+
+doc/refman/html:
+	( cd lib ; make refman )
+
+doc/userman/html:
+	( cd doc/userman ; make && make pdf )
