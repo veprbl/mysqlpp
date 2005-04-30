@@ -60,90 +60,154 @@ class SQLQuery;
 
 /// \brief This class holds the parameter values for filling
 /// template queries. 
-class SQLQueryParms : public std::vector<SQLString> {
-  friend class Query;
+class SQLQueryParms : public std::vector<SQLString>
+{
+	friend class Query;
+
 private:
-  typedef const SQLString&      ss;
-  SQLQuery                 *parent;
+	typedef const SQLString & ss;
+	SQLQuery *parent;
+
 public:
-  SQLQueryParms () : parent(NULL) {} 
-  SQLQueryParms (SQLQuery *p) : parent(p) {}
-  bool  bound() { return parent != 0; }
+	SQLQueryParms() :
+	parent(NULL)
+	{
+	}
+	
+	SQLQueryParms(SQLQuery * p) :
+	parent(p)
+	{
+	}
+	
+	bool bound()
+	{
+		return parent != 0;
+	}
 
-  /// \brief Clears the list
-  void clear() {erase(begin(),end());}
+	/// \brief Clears the list
+	void clear()
+	{
+		erase(begin(), end());
+	}
 
-  /// \brief Access element number n
-  SQLString &operator [] (size_type n) {
-    if (n >= size()) insert(end(),(n+1) - size(), "");
-    return std::vector<SQLString>::operator [] (n);
-  }
+	/// \brief Access element number n
+	SQLString& operator [](size_type n)
+	{
+		if (n >= size())
+			insert(end(), (n + 1) - size(), "");
+		return std::vector<SQLString>::operator [](n);
+	}
 
-  /// \brief Access element number n
-  const SQLString &operator [] (size_type n) const 
-    {return std::vector<SQLString>::operator [] (n);}
+	/// \brief Access element number n
+	const SQLString& operator [](size_type n) const
+	{
+		return std::vector<SQLString>::operator [](n);
+	}
+	
+	/// \brief Access the value of the element with a key of str.
+	SQLString& operator [](const char *str);
 
-  /// \brief Access the value of the element with a key of str.
-  SQLString &operator [] (const char *str); 
+	/// \brief Access the value of the element with a key of str.
+	const SQLString& operator [](const char *str) const;
 
-  /// \brief Access the value of the element with a key of str.
-  const SQLString &operator [] (const char *str) const; 
+	/// \brief Adds an element to the list
+	SQLQueryParms& operator <<(const SQLString& str)
+	{
+		push_back(str);
+		return *this;
+	}
 
-  /// \brief Adds an element to the list
-  SQLQueryParms &operator << (const SQLString &str)
-  {
-  	push_back(str);return *this;
-  }
+	/// \brief Adds an element to the list
+	SQLQueryParms& operator +=(const SQLString& str)
+	{
+		push_back(str);
+		return *this;
+	}
 
-  /// \brief Adds an element to the list
-  SQLQueryParms &operator += (const SQLString &str)
-  {
-  	push_back(str);
-	return *this;
-  }
+	SQLQueryParms operator +(const SQLQueryParms& other) const;
 
-  SQLQueryParms operator + (const SQLQueryParms &other) const;
-
-  /// \brief Set the template query parameters.
-  ///
-  /// Sets element 0 to a, element 1 to b, etc. May specify up to a
-  /// dozen parameters.
-  void set (ss a)
-    {clear(); *this << a;}
-  void set (ss a, ss b)
-    {clear(); *this << a << b;}
-  void set (ss a, ss b, ss c)
-    {clear(); *this << a << b << c;}
-  void set (ss a, ss b, ss c, ss d)
-    {clear(); *this << a << b << c << d;}
-  void set (ss a, ss b, ss c, ss d, ss e)
-    {clear(); *this << a << b << c << d << e;}
-  void set (ss a, ss b, ss c, ss d, ss e, ss f)
-    {clear(); *this << a << b << c << d << e << f;}
-  void set (ss a, ss b, ss c, ss d, ss e, ss f, ss g)
-    {clear(); *this << a << b << c << d << e << f << g;}
-  void set (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)
-    {clear(); *this << a << b << c << d << e << f << g << h;}
-  void set (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)
-    {clear(); *this << a << b << c << d << e << f << g << h << i;}
-  void set (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j)
-    {clear(); *this <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j;}
-  void set (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k)
-    {clear(); *this <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k;}
-  void set (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k,ss l)
-    {clear(); *this <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k <<l;}
+	/// \brief Set the template query parameters.
+	///
+	/// Sets element 0 to a, element 1 to b, etc. May specify up to a
+	/// dozen parameters.
+	void set(ss a)
+	{
+		clear();
+		*this << a;
+	}
+	void set(ss a, ss b)
+	{
+		clear();
+		*this << a << b;
+	}
+	void set(ss a, ss b, ss c)
+	{
+		clear();
+		*this << a << b << c;
+	}
+	void set(ss a, ss b, ss c, ss d)
+	{
+		clear();
+		*this << a << b << c << d;
+	}
+	void set(ss a, ss b, ss c, ss d, ss e)
+	{
+		clear();
+		*this << a << b << c << d << e;
+	}
+	void set(ss a, ss b, ss c, ss d, ss e, ss f)
+	{
+		clear();
+		*this << a << b << c << d << e << f;
+	}
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g)
+	{
+		clear();
+		*this << a << b << c << d << e << f << g;
+	}
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)
+	{
+		clear();
+		*this << a << b << c << d << e << f << g << h;
+	}
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)
+	{
+		clear();
+		*this << a << b << c << d << e << f << g << h << i;
+	}
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i,
+			 ss j)
+	{
+		clear();
+		*this << a << b << c << d << e << f << g << h << i << j;
+	}
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i,
+			 ss j, ss k)
+	{
+		clear();
+		*this << a << b << c << d << e << f << g << h << i << j << k;
+	}
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i,
+			 ss j, ss k, ss l)
+	{
+		clear();
+		*this << a << b << c << d << e << f << g << h << i << j << k << l;
+	}
 };
+
 
 /// \brief Used for indicating whether a query object should auto-reset
 /// or not.
-enum query_reset {DONT_RESET, RESET_QUERY};
+enum query_reset { DONT_RESET, RESET_QUERY };
+
 
 /// Documentation needed!
 struct SQLParseElement {
-  SQLParseElement(std::string b, char o, char n) : before(b),option(o),num(n) {}
-  std::string before;
-  char   option;
-  char   num;
+	SQLParseElement(std::string b, char o, char n):before(b),
+		option(o), num(n) {
+	} std::string before;
+	char option;
+	char num;
 };
 
 
@@ -167,99 +231,119 @@ struct SQLParseElement {
 	SQLQuery-specific methods except for error() and success().
 */
 
-class SQLQuery : public std::stringstream { 
-  friend class SQLQueryParms;
-private:
-  char* preview_char();
-protected:
-  bool    Success;
-  char*   errmsg;
-  std::vector<SQLParseElement> parsed;
-  std::vector<std::string>          parsed_names;
-  std::map<std::string,int>         parsed_nums;
-  typedef  const SQLString&  ss;
-  typedef  SQLQueryParms  parms;
+class SQLQuery : public std::stringstream
+{
+	friend class SQLQueryParms;
 
-  /// \brief Process a parameterized query list.
-  void     proc(SQLQueryParms &p);
+private:
+	char *preview_char();
+
+protected:
+	bool Success;
+	char *errmsg;
+	std::vector < SQLParseElement > parsed;
+	std::vector < std::string > parsed_names;
+	std::map < std::string, int >parsed_nums;
+	typedef const SQLString & ss;
+	typedef SQLQueryParms parms;
+
+	/// \brief Process a parameterized query list.
+	void proc(SQLQueryParms & p);
 
 public:
-  SQLQuery() :
-  std::stringstream(),
-  Success(false),
-  errmsg(0),
-  def(this)
-  {
-  }
-  SQLQuery(const SQLQuery &q);
+	SQLQuery() :
+	std::stringstream(),
+	Success(false),
+	errmsg(0),
+	def(this)
+	{
+	}
+	
+	SQLQuery(const SQLQuery & q);
 
-  /// \brief The default template parameters
-  ///
-  /// Used for filling in parameterized queries.
-  SQLQueryParms def;
+	/// \brief The default template parameters
+	///
+	/// Used for filling in parameterized queries.
+	SQLQueryParms def;
 
-  void     parse();  
+	void parse();
 
-  std::string   error () const {return errmsg;}
-  bool     success() const {return Success;}
+	std::string error() const
+	{
+		return errmsg;
+	}
+	
+	bool success() const { return Success; }
+	operator bool() { return success(); }
+	bool operator !() { return !success(); }
 
-  operator bool () {return success();}
-  bool operator !    () {return !success();}
+	/// \brief Reset the query object so that it can be reused.
+	///
+	/// This erases the query string and the contents of the parameterized
+	/// query element list.
+	void reset();
 
-  /// \brief Reset the query object so that it can be reused.
-  ///
-  /// This erases the query string and the contents of the parameterized
-  /// query element list.
-  void     reset ();
+	template<class T> SQLQuery& update(const T& o, const T& n)
+	{
+		reset();
+		// Cast required for VC++ 2003 due to error in overloaded operator
+		// lookup logic.  For an explanation of the problem, see:
+		// http://groups-beta.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
+		dynamic_cast<std::stringstream&>(*this) << "UPDATE " <<
+				o.table() << " SET " << n.equal_list() << " WHERE " <<
+				o.equal_list(" AND ", sql_use_compare);
+		return *this;
+	}
 
-  template <class T> SQLQuery& update(const T &o, const T &n) {
-    reset();
-	// Cast required for VC++ 2003 due to error in overloaded operator
-	// lookup logic.  For an explanation of the problem, see:
-	// http://groups-beta.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
-    dynamic_cast<std::stringstream&>(*this) << "UPDATE " << o.table() <<
-			" SET " << n.equal_list() << " WHERE " <<
-			o.equal_list(" AND ", sql_use_compare);
-    return *this;
-  }
+	template<class T> SQLQuery& insert(const T& v)
+	{
+		reset();
+		// See above comment for cast rationale
+		dynamic_cast<std::stringstream&>(*this) << "INSERT INTO " <<
+				v.table() << " (" << v.field_list() << ") VALUES (" <<
+				v.value_list() << ")";
+		return *this;
+	}
 
-  template <class T> SQLQuery& insert(const T &v) {
-    reset();
-	// See above comment for cast rationale
-    dynamic_cast<std::stringstream&>(*this) << "INSERT INTO " <<
-		v.table() << " (" << v.field_list() << ") VALUES (" <<
-		v.value_list() << ")";
-    return *this;
-  }
+	template<class T> SQLQuery& replace(const T& v)
+	{
+		reset();
+		// See above comment for cast rationale
+		dynamic_cast<std::stringstream&>(*this) << "REPLACE INTO " <<
+				v.table() << " (" << v.field_list() << ") VALUES (" <<
+				v.value_list() << ")";
+		return *this;
+	}
 
-  template <class T> SQLQuery& replace(const T &v) {
-    reset();
-	// See above comment for cast rationale
-    dynamic_cast<std::stringstream&>(*this) << "REPLACE INTO " <<
-			v.table() << " (" << v.field_list() << ") VALUES (" <<
-			v.value_list() << ")";
-    return *this;
-  }
+	std::string str()
+	{
+		return str(def);
+	}
+	std::string str(query_reset r)
+	{
+		return str(def, r);
+	}
+	std::string str(SQLQueryParms& p);
+	std::string str(SQLQueryParms& p, query_reset r);
 
-  std::string str() { return str(def); }
-  std::string str(query_reset r) { return str(def,r); }
-  std::string str(SQLQueryParms &p);
-  std::string str(SQLQueryParms &p, query_reset r);
-
-  mysql_query_define0(std::string, str);
-};  
+	mysql_query_define0(std::string, str);
+};
 
 
-inline SQLString &SQLQueryParms::operator[] (const char *str)
+inline SQLString& SQLQueryParms::operator [](const char *str)
 {
-  if (parent) return operator[] (parent->parsed_nums[str]);
-  throw; // only here temporary 
+	if (parent) {
+		return operator [](parent->parsed_nums[str]);
+	}
+	throw;					// only here temporary 
 }
 
-inline const SQLString &SQLQueryParms::operator[] (const char *str) const
+inline const SQLString& SQLQueryParms::operator[] (const char *str) const
 {
-  if (parent) return operator[] (parent->parsed_nums[str]);
-  throw; // only here temporary 
+	if (parent) {
+		return operator [](parent->parsed_nums[str]);
+	}
+	throw;					// only here temporary 
 }
 
 } // end namespace mysqlpp
