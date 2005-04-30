@@ -85,9 +85,12 @@
 
 	\section history A Brief History of MySQL++
 
-	MySQL++ was created in 1998 by Kevin Atkinson. It was initially
-	supposed to be a database-independent library.  (Its original name
-	appears to be "sqlplus", but that's a little uncertain.)
+	MySQL++ was created in 1998 by Kevin Atkinson. It started out
+	MySQL-specific, but there were early efforts to try and make
+	it database-independent, and call it SQL++. This is where the
+	old library name "sqlplus" came from. This is also why the old
+	versions prefixed some class names with "Mysql" but not others:
+	the others were supposed to be the database-independent parts.
 
 	Then in 1999, Sinisa Miliojevic unofficially took over maintenance
 	of the library, releasing versions 1.0 and 1.1. (All of Kevin's
@@ -98,9 +101,9 @@
 	seems to be during this time that the dream of multiple-database
 	compatibility died.
 
-	At that point, MySQL++ went into a period of stasis, lasting over
-	three years. During this time, Sinisa ran the MySQL++ mailing list
-	and supported its users, but made no new releases. There were
+	With version 1.7.9, MySQL++ went into a period of stasis, lasting
+	over three years. During this time, Sinisa ran the MySQL++ mailing
+	list and supported its users, but made no new releases. There were
 	many patches submitted during this period, some of which were
 	ignored, others which were just put on the MySQL++ web site for
 	people to try. A lot of these patches were mutually-incompatible,
@@ -114,12 +117,9 @@
 	got fed up with this situation and took over. He released 1.7.10
 	later that month.
 
-	There have been many changes to the library since 1.7.9, but the
-	documentation that shipped with that version was never updated. It
-	has therefore been moved into doc/old, and will eventually be
-	removed once we get around to replacing it all. This Doxygen-based
-	reference manual replaces section 5. The rest will be subsumed
-	into a new user manual, coming Any Day Now<sup><small>TM</small></sup>.
+	This Doxygen-based reference manual replaces section 5 from the
+	old v1.7.9 manual. The remaining sections of that manual are in
+	the new user manual, in ../doc/userman.
 
 
 	\section If You Have Questions...
