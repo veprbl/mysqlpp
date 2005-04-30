@@ -14,9 +14,6 @@ New Feature Requests and ABI Changes
 	o User-settable floating-point comparison precisions?  Something
 	  like this: http://lists.mysql.com/plusplus/3984
 	
-	o Overload SQLQuery::insert() to accept a pair of STL iterators
-	  for mass insertion of a range within a container.
-
 	o Look through my own code for uses of hand-rolled SQL queries, and
 	  try to reduce them to API features.
 
@@ -83,20 +80,24 @@ New Feature Requests and ABI Changes
 	  the user must instantiate once in a .cpp file.  (Similar to the
 	  way MFC message maps work.)
 
+	o Deprecate sql_create_basic_* ? They have less functionality and
+	  they're no easier to use than sql_create and friends, so
+	  why bother with them?  I suppose the code generated is a bit
+	  smaller, but *really*....  Only possible saving grace is if BC++
+	  can compile them due to the macro code being shorter.
+
 
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Move SQLQueryNEParms into exceptions.h?
+	
 	o Template ListInsert in lib/myset.h isn't being used within the
 	  library.  It could probably be used in place of SetInsert in the
 	  same file, which things like type_info.h do use now, but it isn't
 	  clear how one would go about doing that without changing the
 	  library code.  Document it or throw it away.
 	
-	o Figure out what doc/sql++pretty is good for, and decide whether to
-	  document it or throw it away.  (Something to do with SSQLS, I
-	  think.)
-
 	o sql_cmp(double,double) is foolish.  One shouldn't do == comparison
 	  on floating point values.  Same for sql_cmp(float,float).  See
 	  also floating point precision item in previous section.
