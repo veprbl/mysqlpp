@@ -7,7 +7,7 @@ then
 	exit 1
 fi
 
-VERSION=grep " VERSION" config.h |cut -c 18- |tr -d \"
+VERSION=`grep " VERSION" config.h |cut -c 18- |tr -d \"`
 TMPDIR=`mktemp -d /tmp/mysqlpp-up.XXXXXXXXXX`
 
 if [ "$1" = "src" ]
@@ -29,6 +29,7 @@ cp /usr/src/redhat/RPMS/i386/mysql++-$VERSION-1.i386.rpm \
 		$TMPDIR/mysql++-$VERSION-1.`./osver`.i386.rpm
 cp /usr/src/redhat/RPMS/i386/mysql++-devel-$VERSION-1.i386.rpm \
 		$TMPDIR/mysql++-devel-$VERSION-1.`./osver`.i386.rpm
+cp /usr/src/redhat/RPMS/noarch/mysql++-manuals-$VERSION-1.noarch.rpm $TMPDIR
 
 scp $TMPDIR/* tangent@tangent.dyndns.org:projects/tangentsoft.net/mysql++/releases
 
