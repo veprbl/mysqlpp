@@ -59,3 +59,6 @@ html/index.html: $(DOCFILE) $(HTML_SS)
 
 $(EX_SRC):
 	expand -t4 < ../../examples/$@ > $@
+
+$(HTML_SS): $(HTML_SS).in
+	./findxsl

@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 		version="1.0">
 	
 	<!-- Basic stylesheet: standard DocBook chunked HTML -->
-	<xsl:import href="/usr/share/sgml/docbook/xsl-stylesheets/html/chunk.xsl"/>
+	<xsl:import href="XSLDIR/html/chunk.xsl"/>
 
 	<!-- Local overrides -->
 	<!-- Number sections, but only the first two levels; from DocBook FAQ -->
