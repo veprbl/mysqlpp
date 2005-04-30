@@ -15,6 +15,7 @@ EXTRA_DIST = \
 	doc/userman/*.in \
 	doc/userman/*.xml \
 	doc/userman/html \
+	doc/userman/findxsl \
 	doc/userman/Makefile \
 	doc/userman/README \
 	*.ebuild \
