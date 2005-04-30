@@ -283,7 +283,7 @@ public:
 	/// query element list.
 	void reset();
 
-	template<class T> SQLQuery& update(const T& o, const T& n)
+	template <class T> SQLQuery& update(const T& o, const T& n)
 	{
 		reset();
 		// Cast required for VC++ 2003 due to error in overloaded operator
@@ -295,7 +295,7 @@ public:
 		return *this;
 	}
 
-	template<class T> SQLQuery& insert(const T& v)
+	template <class T> SQLQuery& insert(const T& v)
 	{
 		reset();
 		// See above comment for cast rationale
@@ -305,7 +305,29 @@ public:
 		return *this;
 	}
 
-	template<class T> SQLQuery& replace(const T& v)
+	template <class Iter> SQLQuery& insert(Iter first, Iter last)
+	{
+		reset();
+		if (first == last) {
+			return *this;	// empty set!
+		}
+		
+		// See above comment for cast rationale
+		dynamic_cast<std::stringstream&>(*this) << "INSERT INTO " <<
+				first->table() << " (" << first->field_list() <<
+				") VALUES (" << fist->value_list() << ')';
+
+		Iter it = first + 1;
+		while (it != last) {
+			dynamic_cast<std::stringstream&>(*this) << ",(" <<
+					it->value_list() << ')';
+			++it;
+		}
+
+		return *this;
+	} 
+
+	template <class T> SQLQuery& replace(const T& v)
 	{
 		reset();
 		// See above comment for cast rationale
