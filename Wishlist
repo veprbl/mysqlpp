@@ -90,6 +90,9 @@ New Feature Requests and ABI Changes
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Add nmake Makefiles for the project, for those using only the
+	  free command-line tools.
+	
 	o Move SQLQueryNEParms into exceptions.h?
 	
 	o Template ListInsert in lib/myset.h isn't being used within the
