@@ -92,7 +92,7 @@
 	versions prefixed some class names with "Mysql" but not others:
 	the others were supposed to be the database-independent parts.
 
-	Then in 1999, Sinisa Miliojevic unofficially took over maintenance
+	Then in 1999, Sinisa Milivojevic unofficially took over maintenance
 	of the library, releasing versions 1.0 and 1.1. (All of Kevin's
 	releases were pre-1.0 point releases.) Kevin gave over maintenance
 	to Sinisa officially with 1.2, and Sinisa went on to maintain
