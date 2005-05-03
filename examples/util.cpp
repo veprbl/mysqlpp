@@ -8,14 +8,48 @@ using namespace std;
 
 // Uncomment this macro if you want the 'item' strings to be converted
 // from UTF-8 to UCS-2LE (i.e. Win32's native Unicode encoding) using
-// the iconv library.  This is not necessary on modern Unices, because
-// they handle UTF-8 directly.
-//#define USE_ICONV_UCS2
-#ifdef USE_ICONV_UCS2
-#	include <iconv.h>
-#endif
+// the Win32 API function MultiByteToWideChar().  We use a native Win32
+// function because Unix compatibility isn't necessary: modern Unices
+// handle UTF-8 directly.
+//#define USE_WIN32_UCS2
 
 const char* kpcSampleDatabase = "mysql_cpp_data";
+
+#ifdef USE_WIN32_UCS2
+static bool
+utf8_to_win32_ansi(const char* utf8_str, char* ansi_str,
+		int ansi_len)
+{
+	wchar_t ucs2_buf[100];
+	static const int ub_chars = sizeof(ucs2_buf) / sizeof(ucs2_buf[0]);
+
+	int err = MultiByteToWideChar(CP_UTF8, 0, utf8_str, -1,
+			ucs2_buf, ub_chars);
+	if (err == 0) {
+		cerr << "Unknown error in Unicode translation: " <<
+				GetLastError() << endl;
+		return false;
+	}
+	else if (err == ERROR_NO_UNICODE_TRANSLATION) {
+		cerr << "Bad data in UTF-8 string" << endl;
+		return false;
+	}
+	else {
+		// This last step is only necessary when outputting to the 
+		// Win32 console, because it doesn't support UCS-2 by default.
+		// If you somehow convince the console to accept UCS-2, or are
+		// using other Win32 functions that do accept UCS-2 data, then
+		// you want to use the ucs2_buf above instead.  See the MySQL++
+		// user guide for more on this topic.
+		CPINFOEX cpi;
+		GetCPInfoEx(CP_OEMCP, 0, &cpi);
+		WideCharToMultiByte(cpi.CodePage, 0, ucs2_buf, -1,
+				ansi_str, ansi_len, 0, 0);
+		cout << ':' << ansi_str[0] << ':' << endl;
+		return true;
+	}
+}
+#endif
 
 void
 print_stock_table(mysqlpp::Query& query)
@@ -42,13 +76,8 @@ print_stock_table(mysqlpp::Query& query)
 			setw(10) << "Price" <<
 			"Date" << endl << endl;
 
-#ifdef USE_ICONV_UCS2
-	iconv_t ich = iconv_open("UCS-2LE", "UTF-8");
-	if (int(ich) == -1) {
-		cerr << "iconv doesn't support the necessary character sets!" <<
-				endl;
-		return;
-	}
+#ifdef USE_WIN32_UCS2
+	char ansi[100];
 #endif
 
 	// Use the Result class's read-only random access iterator to walk
@@ -58,20 +87,13 @@ print_stock_table(mysqlpp::Query& query)
 	for (i = res.begin(); i != res.end(); ++i) {
 		row = *i;
 
-		// Output first column, the item string.  The ICONV option
-		// shows just one way to convert the UTF-8 data returned by 
-		// MySQL to little-endian UCS-2 characters.  One might be able
-		// to convince the Win32 API function MultiByteToWideChar to do
-		// this, but I couldn't make it work.
-#ifdef USE_ICONV_UCS2
-		wchar_t wideItem[100];
-		char* wideItemPtr = (char*)wideItem;
-		size_t in_bytes = row[0].length() + 1;
-		size_t out_bytes = sizeof(wideItem);
-		const char* narrowItem = row[0].c_str();
-		iconv(ich, &narrowItem, &in_bytes, &wideItemPtr, &out_bytes);
-		wcout.setf(ios::left);
-		wcout << setw(20) << wstring(wideItem) << ' ';
+		// Output first column, the item string.  The UCS2 option shows
+		// how we can convert the data to get Unicode output on Windows.
+		// On Unix, the terminal code interprets UTF-8 data directly.
+#ifdef USE_WIN32_UCS2
+		if (utf8_to_win32_ansi(row[0].c_str(), ansi, sizeof(ansi))) {
+			cout << setw(20) << ansi << ' ';
+		}
 #else
 		cout << setw(20) << row[0].c_str() << ' ';
 #endif
@@ -83,10 +105,6 @@ print_stock_table(mysqlpp::Query& query)
 				setw(9) << row[3].c_str() << ' ' <<
 				row[4] << endl;
 	}
-
-#ifdef USE_ICONV_UCS2
-	iconv_close(ich);
-#endif
 }
 
 
