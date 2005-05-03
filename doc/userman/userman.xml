@@ -2045,6 +2045,223 @@ main(int argc, char *argv[])
 
 
 <sect1>
+	<title>Using Unicode with MySQL++</title>
+
+	<sect2>
+		<title>A Short History of Unicode</title>
+		<subtitle>...with a focus on relevance to MySQL++</subtitle>
+
+		<para>In the old days, computer operating systems only
+		dealt with 8-bit character sets &mdash; or even less,
+		in the really old days!  Since there are more than
+		256 different characters in all the written languages
+		of North America and Europe alone, and no standards
+		body held sway over these matters in the early days of
+		computing, many incompatible 8-bit character encodings
+		were invented. Data created on a Russian operating system
+		wouldn't move directly to a Spanish version of the same
+		operating system, and heaven help you if you wanted to
+		move data between different operating systems! Since most
+		of these encodings were extensions of the 7-bit ASCII
+		standard, international communications standardized on
+		the common ASCII subset; the German "&ouml;" became "oe",
+		the French "&ccedil;" became a plain "c", etc.</para>
+
+		<para>To fix this problem, Unicode was invented. It
+		uses a 4-byte "wide" character system, with most of
+		the world's characters in the 2-byte subset. Since this
+		subset covers 99% of all economically-valuable cases,
+		most Unicode-aware programs limit themselves to this set,
+		for efficiency.</para>
+
+		<para>Unfortunately, Unicode came about 20 years too
+		late for Unix and C. Unix is tightly tied to the
+		notion of 8-bit characters; you'd have to break a
+		bunch of the system calls to retrofit wide-character
+		Unicode support into a Unix kernel. The C standard
+		was ammended to add wide character support in 1995,
+		but this facility can only be described as a <ulink
+		url="http://www.jargon.net/jargonfile/s/sidecar.html">sidecar</ulink>.</para>
+
+		<para>As Unicode began to take off in the early 1990s,
+		it became clear that some sort of accommodation
+		with Unicode was needed in Unix. As I said above,
+		a complete conversion was out of the quesiton:
+		too many pieces of code assumed that all strings
+		used 8-bit characters, null-terminated. The
+		dilemma was solved when two of the original Unix/C
+		pioneers &mdash; Ken Thompson and Rob Pike &mdash; <ulink
+		url="http://www.absoluteastronomy.com/encyclopedia/U/UT/UTF-82.htm">invented</ulink>
+		<ulink url="http://www.faqs.org/rfcs/rfc3629.html">the
+		UTF-8 encoding</ulink>. Since UTF-8 is a superset of
+		7-bit ASCII, many programs that deal in text actually
+		get by okay without any explicit support for UTF-8.</para>
+
+		<para>The MySQL database server comes out of the original
+		C/Unix tradition, so it was not engineered to support
+		wide characters natively. It was therefore decided that
+		UTF-8 also made the most sense for MySQL. You always
+		could store UTF-8 data in a MySQL database, but since the
+		database engine must sometimes understand the contents of
+		the database &mdash; when sorting, for instance &mdash;
+		they had to add explicit UTF-8 support.</para>
+
+		<para>As a result of all this, MySQL++ does
+		not have explicit support for Unicode. C++'s
+		<computeroutput>std::string</computeroutput> will
+		store UTF-8 data just fine. But, your program probably
+		<emphasis>does</emphasis> care about the data coming
+		from MySQL++. The remainder of this chapter covers some
+		of the tools you can use to transform this UTF-8 data
+		into something your platform can use.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>Unicode and Unix</title>
+
+		<para>Modern Unices support UTF-8 natively. Red Hat Linux,
+		for instance, has had system-wide UTF-8 support since
+		version 8. (This continues in the commercial and Fedora
+		forks of Red Hat Linux, of course.) This changeover is
+		actually still in progress out on the edges, but the
+		core OS copes with UTF-8 just fine.</para>
+
+		<para>On such a Unix, UTF-8 is handled at the C library
+		(<computeroutput>libc</computeroutput>) level. Since
+		virtually all programs on a Unix system go through
+		<computeroutput>libc</computeroutput> to do I/O,
+		you don't usually have to do anything special to
+		display a UTF-8 using the correct characters. If
+		your program is run in a Unicode-aware locale,
+		<computeroutput>libc</computeroutput>'s I/O code looks
+		for UTF-8 data in the I/O stream and translates it
+		appropriately. If you aren't sure whether your system
+		supports UTF-8 natively, just run the simple1 example:
+		if the first item has two high-ASCII characters in place
+		of the "&uuml;" in "N&uuml;rnberger Brats", you know
+		it's not handling UTF-8.</para>
+
+		<para>If your Unix doesn't support UTF-8 natively, it
+		likely doesn't support any form of Unicode at all, for the
+		historical reasons I gave above. Therefore, you will have
+		to convert the UTF-8 data to the local 8-bit character
+		set, probably some variant on US-ASCII. The standard
+		Unix function <computeroutput>iconv()</computeroutput>
+		can help here. If your system doesn't have the
+		<computeroutput>iconv()</computeroutput> facility, there
+		is <ulink url="http://www.gnu.org/software/libiconv/">a
+		free implementation</ulink> available from the GNU
+		Project. Another library you might check out is IBM's
+		<ulink url="http://icu.sourceforge.net/">ICU</ulink>. This
+		is rather heavy-weight, so if you just need basic
+		conversions, <computeroutput>iconv()</computeroutput>
+		should suffice.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>Unicode and Win32</title>
+
+		<para>Win32 has two modes, with regards to Unicode. There
+		are actually two versions of each API function that
+		takes a string. One version supports only 8-bit ASCII
+		(also called "ANSI") characters, so they end in 'A'. The
+		other version supports the 2-byte subset of Unicode
+		called "UCS-2"; these are so-called "wide" characters,
+		so these functions end in 'W'. The <computeroutput><ulink
+		url="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/windowing/dialogboxes/dialogboxreference/dialogboxfunctions/messagebox.asp">MessageBox</ulink>()</computeroutput>
+		API, for instance, is actually a macro,
+		not a real function. If you define the
+		<computeroutput>UNICODE</computeroutput>
+		macro when building your program, the
+		<computeroutput>MessageBox()</computeroutput>
+		macro evaluates to
+		<computeroutput>MessageBoxW()</computeroutput>; otherwise,
+		to <computeroutput>MessageBoxA()</computeroutput>.</para>
+
+		<para>While the 'W' APIs exist in all flavors of Win32,
+		only the Windows NT derivatives actually support Unicode.
+		On the other three flavors of Win32 (Win32s, Windows
+		95/98/ME, and Windows CE), the 'W' variant of a function
+		simply smashes the data down to 8-bit and calls the 'A'
+		version for you.</para>
+
+		<para>In Windows (and in DOS before it) the particular
+		8-bit character set being used is called a "<ulink
+		url="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/unicode_81rn.asp">code
+		page</ulink>". Even on the modern Windows NT derivatives,
+		code pages are still in use, in the legacy 'A' APIs. The
+		Greek version of Windows XP has a different default code
+		page than the Spanish version, for instance.</para>
+
+		<para>Since MySQL uses UTF-8 and Win32 uses UCS-2,
+		you must convert data going between the Win32
+		API and MySQL++. Since there's no point in trying
+		for portability &mdash; no other OS I'm aware of
+		uses UCS-2 &mdash; you might as well use native
+		Win32 functions for doing this translation. The
+		<computeroutput>utf8_to_win32_ansi()</computeroutput>
+		routine in
+		<computeroutput>examples/util.cpp</computeroutput>
+		shows how this is done.  You enable the
+		function by uncommenting the definition for the
+		<computeroutput>USE_WIN32_UCS2</computeroutput> macro
+		a the top of util.cpp. When you run the simple1 program
+		in a Win32 console on a Windows NT derivative, the first
+		item should be "N&uuml;rnberger Brats". If the "&uuml;"
+		shows up as some other character or as two symbols,
+		you are either running a non-NT variant of Windows,
+		or you've encountered some strange bug.</para>
+
+		<para>Defining that macro enables code that converts
+		the 'item' string in the sample 'stock' database from
+		UTF-8 to UCS-2, and then from UCS-2 to the local
+		code page. "Waitaminnit," you shout! "I thought we
+		were trying to get away from the dozens of local
+		code pages!" Well, while Windows NT derivatives
+		do handle UCS-2 nicely in most cases, the console
+		("DOS box") is one exception. It can be <ulink
+		url="http://www.answers.com/topic/win32-console">put
+		into UCS-2 mode</ulink>, but it seems like more work
+		than we'd like to go to in a portable example program.
+		Since the sample database only uses regular European
+		accented characters and the default code page used in
+		English and Western European versions of Windows (CP
+		1252, a hacked version of ISO Latin-1) supports these
+		characters, the second conversion works out fine.</para>
+
+		<para>Now, what if your system isn't using CP 1252,
+		or you have non-European characters in your database,
+		such as Cyrillic? You can either try to force the
+		console into UCS-2 mode as described in the link
+		above, or you can use other Win32 functions such as
+		<computeroutput>MessageBox()</computeroutput> to display
+		the data. In either case, you will need to modify the
+		<computeroutput>utf8_to_win32_ansi()</computeroutput>
+		routine in util.cpp to return
+		<computeroutput>ucs2_buf</computeroutput>; in other words,
+		you're eliminating the second data conversion.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>For More Information</title>
+			<para>The <ulink
+			url="http://www.unicode.org/faq/">Unicode
+			FAQs</ulink> page has copious information on
+			this complex topic.</para>
+
+			<para>When it comes to Unix
+			and UTF-8 specific items, the <ulink
+			url="http://www.cl.cam.ac.uk/~mgk25/unicode.html">UTF-8
+			and Unicode FAQ for Unix/Linux</ulink> is a
+			quicker way to find basic information.</para>
+		</sect2>
+</sect1>
+
+
+<sect1>
 	<title>Licensing</title>
 
 	<para>The primary copyright holders on MySQL++ are Kevin Atkinson
