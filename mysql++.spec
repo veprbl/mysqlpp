@@ -56,7 +56,7 @@ rm -f doc/README.examples doc/LICENSE
 
 %files
 %defattr(-,root,root)
-%doc doc/LICENSE doc/README
+%doc doc/LICENSE doc/README.mysql++
 
 /usr/lib/libmysqlpp.*
 
