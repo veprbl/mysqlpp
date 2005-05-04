@@ -38,15 +38,8 @@
 
 	\section getting_started Getting Started
 
-	Currently, there is no tutorial or other new user documentation.
-	(There is an old manual in the doc/old directory, but it's
-	badly outdated.)
-
-	Until we can make some good user documentation, the best way
-	to get started is to read through the example programs. Start
-	with the simple1 program, and progress from there. The custom*
-	programs are of particular interest. See the examples/README
-	file for further details.
+	The best place to get started is the new user manual. It provides
+	a guide to the example programs and more.
 
 
 	\section classes Major Classes
@@ -59,10 +52,10 @@
 	that parallel the definition of the tables in your database
 	schema. These let you manipulate the data in your database
 	using native C++ data structures. Many programs using this
-	feature never directly use SQL, because MySQL++ generates it
-	all automatically. See the custom.* programs in the examples
-	directory to see how to use this feature. It is not necessary to
-	use MySQL++ this way, but it sure makes some things a lot easier.
+	feature never directly use SQL, because MySQL++ generates it all
+	automatically. There is a chapter in the user manual on how to
+	use this feature of the library. It isn't the only way to use
+	MySQL++, but it sure makes some things a lot easier.
 
 
 	\section files Major Files
@@ -81,45 +74,6 @@
 	other code on your system. If you're on a Unixy platform, you do
 	this by passing the \c --includedir option to the \c configure
 	script. See the package's main README file for details.
-
-
-	\section history A Brief History of MySQL++
-
-	MySQL++ was created in 1998 by Kevin Atkinson. It started out
-	MySQL-specific, but there were early efforts to try and make
-	it database-independent, and call it SQL++. This is where the
-	old library name "sqlplus" came from. This is also why the old
-	versions prefixed some class names with "Mysql" but not others:
-	the others were supposed to be the database-independent parts.
-
-	Then in 1999, Sinisa Milivojevic unofficially took over maintenance
-	of the library, releasing versions 1.0 and 1.1. (All of Kevin's
-	releases were pre-1.0 point releases.) Kevin gave over maintenance
-	to Sinisa officially with 1.2, and Sinisa went on to maintain
-	the library through 1.7.9, released in mid-2001. Since Sinisa
-	is an employee of <a href="http://mysql.com/">MySQL AB</a>, it
-	seems to be during this time that the dream of multiple-database
-	compatibility died.
-
-	With version 1.7.9, MySQL++ went into a period of stasis, lasting
-	over three years. During this time, Sinisa ran the MySQL++ mailing
-	list and supported its users, but made no new releases. There were
-	many patches submitted during this period, some of which were
-	ignored, others which were just put on the MySQL++ web site for
-	people to try. A lot of these patches were mutually-incompatible,
-	and not all of them gave a fully-functional copy of MySQL++. Most
-	of them centered on GCC compatibility, because GCC 3 was created
-	around this same time. The continual tightening of the rules
-	starting with GCC 3.0 exposed a lot of places in MySQL++ that
-	used deprecated and non-conforming facilities.
-
-	In early August of 2004, the current maintainer (Warren Young)
-	got fed up with this situation and took over. He released 1.7.10
-	later that month.
-
-	This Doxygen-based reference manual replaces section 5 from the
-	old v1.7.9 manual. The remaining sections of that manual are in
-	the new user manual, in ../doc/userman.
 
 
 	\section If You Have Questions...
