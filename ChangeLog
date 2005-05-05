@@ -1,3 +1,30 @@
+1.7.35, 2005.05.05 The "Cinco de Mayo" release (r601)
+
+	o Added a "how to use Unicode with MySQL++" chapter to the user
+	  manual.  (Too bad "Cinco de Mayo" doesn't have any accented
+	  characters.  That would be just _too_ precious.)
+
+	o VC++ examples now use the Unicode Win32 APIs, so they can display
+	  Unicode data from MySQL++.
+
+	o Added an optional conversion function to examples/util.cpp to
+	  handle the conversion from UTF-8 to UCS-2 on Win32.
+
+	o Moved "brief history of MySQL++" from intro section of refman to
+	  intro section of userman.
+
+	o Lots of small bits of documentation polishing.
+	
+	o Made some minor constness fixes.  Thanks to "Erwin" (erwin at 
+	  leastwanted dot nl) for this patch.
+	
+	o Made some warning fixes for GCC 4.0.  Not all warnings are fixed,
+	  because some of the needed changes would break the ABI.  Thanks
+	  to Chris Frey for this patch.
+
+	o Added lib/Doxyfile to distribution.
+	
+
 1.7.34, 2005.04.30 (r573)
 
 	o Added a multiple-insert method for Query, which lets you insert
