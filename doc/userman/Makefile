@@ -33,11 +33,12 @@ clean:
 ## ------------------------
 
 pdf:
-	$(FOPDIR)/fop.sh -q -xml $(DOCFILE) -xsl $(FO_SS) $(BASENAME).pdf
+	xsltproc --stringparam ulink.show 0 $(FO_SS) $(DOCFILE) > $(BASENAME).fo
+	$(FOPDIR)/fop.sh -q -fo $(BASENAME).fo $(BASENAME).pdf
 	mv $(BASENAME).pdf ../mysqlpp-$(BASENAME).pdf
 
 oldpdf:
-	xsltproc --xinclude $(FO_SS) $(DOCFILE) > $(BASENAME).fo
+	xsltproc $(FO_SS) $(DOCFILE) > $(BASENAME).fo
 	pdfxmltex $(BASENAME).fo 2>&1 > /dev/null
 	mv $(BASENAME).pdf ../mysqlpp-$(BASENAME).pdf
 
