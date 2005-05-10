@@ -271,6 +271,25 @@ public:
 		return *this;
 	}
 
+	/// \brief Insert multiple new rows.
+	///
+	/// Builds an INSERT SQL query using items from a range within an
+	/// STL container.  Insert the entire contents of the container by
+	/// using the begin() and end() iterators of the container as
+	/// parameters to this function.
+	///
+	/// \param first iterator pointing to first element in range to
+	///    insert
+	/// \param last iterator pointing to one past the last element to
+	///    insert
+	///
+	/// \sa replace(), update()
+	template<class Iter> Query& insert(Iter first, Iter last)
+	{
+		SQLQuery::insert(first, last);
+		return *this;
+	}
+
 	/// \brief Insert new row unless there is an existing row that
 	/// matches on a unique index, in which case we replace it.
 	///
