@@ -1,4 +1,6 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+<xsl:stylesheet
+		xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+		xmlns:fo="http://www.w3.org/1999/XSL/Format"
 		version="1.0">
 	
 	<!-- Basic stylesheet: standard DocBook FO output -->
@@ -29,4 +31,10 @@
 
 	  </l:l10n>
 	</l:i18n>
+
+	<!-- Allow insertion of hard page breaks.  Used between
+	  chapters. From "DocBook XSL: The Complete Guide - 3rd Edition" -->
+	<xsl:template match="processing-instruction('hard-pagebreak')">
+	  <fo:block break-before='page'/>
+	</xsl:template>
 </xsl:stylesheet>

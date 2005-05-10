@@ -38,6 +38,8 @@
 	<pubdate role="rcs">$Date$</pubdate>
 </articleinfo>
 
+
+<?hard-pagebreak?>
 <sect1>
 	<title>Introduction</title>
 
@@ -119,6 +121,7 @@
 </sect1>
 
 
+<?hard-pagebreak?>
 <sect1>
 	<title>Overview</title>
 
@@ -314,6 +317,7 @@
 </sect1>
 
 
+<?hard-pagebreak?>
 <sect1>
 	<title>Tutorial</title>
 
@@ -1419,6 +1423,8 @@ main()
 	</sect2>
 </sect1>
 
+
+<?hard-pagebreak?>
 <sect1>
 	<title>Template Queries</title>
 
@@ -1786,6 +1792,7 @@ main(int argc, char *argv[])
 </sect1>
 
 
+<?hard-pagebreak?>
 <sect1>
 	<title id="ssqls" xreflabel="Specialized SQL Structures"
 			>Specialized SQL Structures</title>
@@ -2108,6 +2115,7 @@ main(int argc, char *argv[])
 </sect1>
 
 
+<?hard-pagebreak?>
 <sect1>
 	<title>Using Unicode with MySQL++</title>
 
@@ -2320,6 +2328,7 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 </sect1>
 
 
+<?hard-pagebreak?>
 <sect1>
 	<title>Licensing</title>
 
@@ -2987,6 +2996,7 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 </sect2>
 
 
+<?hard-pagebreak?>
 <sect2>
 	<title>Creative Commons Attribution-ShareAlike License</title>
 	<subtitle>Version 2.0</subtitle>
