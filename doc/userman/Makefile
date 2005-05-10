@@ -22,7 +22,7 @@ EX_TXT=cgi_image.txt complic1.txt custom1.txt custom2.txt \
 ## Standard Makefile targets
 ## ------------------------
 
-all: $(EX_TXT) html/index.html
+all: $(EX_TXT) $(HTML_SS) $(FO_SS) html/index.html
 
 clean:
 	rm -rf html *.aux *.cpp *.fo *.log *.out *.pdf *.txt
@@ -42,7 +42,7 @@ oldpdf:
 	pdfxmltex $(BASENAME).fo 2>&1 > /dev/null
 	mv $(BASENAME).pdf ../mysqlpp-$(BASENAME).pdf
 
-html/index.html: $(DOCFILE) $(HTML_SS)
+html/index.html: $(DOCFILE)
 	@xmllint --valid --noout $(DOCFILE)
 	@mkdir -p html
 	xsltproc -o html/ $(HTML_SS) $(DOCFILE)
@@ -57,3 +57,7 @@ $(EX_TXT):
 
 $(HTML_SS): $(HTML_SS).in
 	./findxsl
+
+$(FO_SS): $(FO_SS).in
+	./findxsl
+
