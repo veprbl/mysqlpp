@@ -50,12 +50,14 @@
 	In addition, MySQL++ has a mechanism called Specialized SQL
 	Structures (SSQLS), which allow you to create C++ structures
 	that parallel the definition of the tables in your database
-	schema. These let you manipulate the data in your database
-	using native C++ data structures. Many programs using this
-	feature never directly use SQL, because MySQL++ generates it all
-	automatically. There is a chapter in the user manual on how to
-	use this feature of the library. It isn't the only way to use
-	MySQL++, but it sure makes some things a lot easier.
+	schema. These let you manipulate the data in your database using
+	native C++ data structures. Programs using this feature often
+	include very little SQL code, because MySQL++ can generate most
+	of what you need automatically when using SSQLSes. There is a
+	whole chapter in the user manual on how to use this feature of
+	the library, plus a section in the user manual's tutorial chapter
+	to introduce it. It's possible to use MySQL++ effectively without
+	using SSQLS, but it sure makes some things a lot easier.
 
 
 	\section files Major Files
@@ -76,7 +78,7 @@
 	script. See the package's main README file for details.
 
 
-	\section If You Have Questions...
+	\section user_questions If You Have Questions...
 
 	If you want to email someone to ask questions about this library,
 	we greatly prefer that you send mail to the MySQL++ mailing list,
@@ -93,5 +95,23 @@
 	us still active in MySQL++ development monitor the mailing list,
 	so you aren't getting any extra "coverage" by sending messages
 	to those addresses in addition to the mailing list.
+
+
+	\section licensing Licensing
+
+	The library itself is licensed under the GNU Lesser General Public
+	License, which you should have received with the distribution
+	package in a file called "LGPL" or "LICENSE". You can also view
+	it here: http://www.gnu.org/licenses/lgpl.html or receive a copy
+	by writing to Free Software Foundation, Inc., 51 Franklin Street,
+	Fifth Floor, Boston, MA 02110-1301, USA.
+
+	The MySQL++ documentation (this Reference Manual, and
+	the User Manual) is licensed under the Creative Commons
+	Attribution-ShareAlike License. To view a copy of this license,
+	visit http://creativecommons.org/licenses/by-sa/2.0/ or send
+	a letter to Creative Commons, 559 Nathan Abbott Way, Stanford,
+	California 94305, USA.
+
 */
 
