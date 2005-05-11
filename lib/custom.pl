@@ -405,10 +405,10 @@ $enums
   				  const NAME##_cus_value_list<Manip>&); */
   public:
     const NAME *obj;
-    cchar *delem;
-    Manip manip;
     std::vector<bool> *include;
     bool del_vector;
+    cchar *delem;
+    Manip manip;
   public: 
     ~NAME##_cus_value_list () {if (del_vector) delete include;} 
     NAME##_cus_value_list (const NAME *o, cchar *d, Manip m, $cusparms11);
@@ -423,10 +423,10 @@ $enums
      				  const NAME##_cus_field_list<Manip>&); */
   public:
     const NAME *obj; 
-    cchar *delem;
-    Manip manip;
     std::vector<bool> *include; 
     bool del_vector; 
+    cchar *delem;
+    Manip manip;
   public: 
     ~NAME##_cus_field_list () {if (del_vector) delete include;} 
     NAME##_cus_field_list (const NAME *o, cchar *d, Manip m, $cusparms11); 
@@ -799,6 +799,24 @@ $cus_equal_list
 							 $cusparms22) const { 
     return NAME##_cus_equal_list<Manip> (this, d, c, m, $cusparmsv); 
   } 
+
+  template <class Manip>
+  inline NAME##_cus_value_list<Manip> NAME::value_list(cchar *d, Manip m,
+                                                       std::vector<bool> *i) const {
+    return NAME##_cus_value_list<Manip> (this, d, m, i);
+  }
+
+  template <class Manip>
+  inline NAME##_cus_field_list<Manip> NAME::field_list(cchar *d, Manip m,
+                                                       std::vector<bool> *i) const {
+    return NAME##_cus_field_list<Manip> (this, d, m, i);
+  }
+
+  template <class Manip>
+  inline NAME##_cus_equal_list<Manip> NAME::equal_list(cchar *d, cchar *c, Manip m,
+                                                       std::vector<bool> *i) const {
+    return NAME##_cus_equal_list<Manip> (this, d, c, m, i);
+  }
 
   template <class Manip>
   inline NAME##_cus_value_list<Manip> 
