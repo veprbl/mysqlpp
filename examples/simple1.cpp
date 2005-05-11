@@ -37,6 +37,8 @@ using namespace std;
 int
 main(int argc, char *argv[])
 {
+	// Wrap all MySQL++ interactions in one big try block, so any
+	// errors are handled gracefully.
 	try {
 		// Connect to the sample database
 		mysqlpp::Connection con(mysqlpp::use_exceptions);

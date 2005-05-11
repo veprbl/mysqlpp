@@ -38,8 +38,8 @@
 using namespace std;
 using namespace mysqlpp;
 
-sql_create_5(stock,				// struct name, 
-			 1, 5,				// see custom4.cpp for notes
+sql_create_5(stock,
+			 1, 5,
 			 string, item,
 			 longlong, num,
 			 double, weight,
@@ -49,7 +49,7 @@ sql_create_5(stock,				// struct name,
 int
 main(int argc, char *argv[])
 {
-	try {						// its in one big try block
+	try {
 		Connection con(use_exceptions);
 		if (!connect_to_db(argc, argv, con)) {
 			return 1;

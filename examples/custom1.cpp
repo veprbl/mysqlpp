@@ -38,26 +38,26 @@
 using namespace std;
 using namespace mysqlpp;
 
-sql_create_5(stock,				// struct name, 
-			 1, 5,				// I'll explain these latter
-			 string, item,		// type, id
+// The following is calling a very complex macro which will create
+// "struct stock", which has the member variables:
+//   string item
+//   int num
+//   ...
+//   Date sdate
+// plus methods to help populate the class from a MySQL row
+// among other things that I'll get too in a later example.
+sql_create_5(stock,
+			 1, 5,				// explained in the user manual
+			 string, item,
 			 longlong, num,
 			 double, weight,
 			 double, price,
 			 Date, sdate)
 
-// this is calling a very complex macro which will create a custom
-// struct "stock" which has the variables:
-//   string item
-//    int num
-//    ...
-//    Date sdate
-// defined as well methods to help populate the class from a mysql row
-// among other things that I'll get too in a latter example
 int
 main(int argc, char *argv[])
 {
-	try {						// its in one big try block
+	try {						
 		Connection con(use_exceptions);
 		if (!connect_to_db(argc, argv, con)) {
 			return 1;
