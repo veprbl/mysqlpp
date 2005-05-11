@@ -45,7 +45,7 @@ namespace mysqlpp {
 struct mysql_dt_base {
   virtual std::ostream& out_stream(std::ostream&) const = 0;
 
-  operator std::string ();
+  operator std::string () const;
 };
 
 /// \if INTERNAL
@@ -184,7 +184,7 @@ inline std::ostream& operator << (std::ostream& s, const DateTime& d)
 	return d.out_stream(s);
 }
 
-inline mysql_dt_base::operator std::string()
+inline mysql_dt_base::operator std::string() const
 {
   return stream2string<std::string>(*this);
 }
