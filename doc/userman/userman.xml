@@ -2002,37 +2002,37 @@ main(int argc, char *argv[])
 		<programlisting>
     query.insert(s);</programlisting>
 
-		<para>this does exactly what you think it does:
-		it inserts 's' into the database. this is possible
-		because a standard ssqls has functions that the
+		<para>This does exactly what you think it does:
+		it inserts 's' into the database. This is possible
+		because a standard SSQLS has functions that the
 		query object can call to get the list of fields
 		and such, which it uses to build an insert query.
 		<computeroutput>query::update()</computeroutput> and
 		<computeroutput>query::replace()</computeroutput> also
-		rely on this ssqls feature. a basic ssqls lacks these
+		rely on this SSQLS feature. A basic SSQLS lacks these
 		functions.</para>
 
-		<para>another feature of standard ssqlses you might find
-		a use for is changing the table name used in queries. by
-		default, the table in the mysql database is assumed to
-		have the same name as the ssqls structure type.  but if
+		<para>Another feature of standard SSQLSes you might find
+		a use for is changing the table name used in queries. By
+		default, the table in the MySQL database is assumed to
+		have the same name as the SSQLS structure type. But if
 		this is inconvenient, you can globally change the table
 		name used in queries like this:</para>
 
 		<programlisting>
-    stock::table() = "mystockdata";</programlisting>
+    stock::table() = "MyStockData";</programlisting>
 
-		<para>at this point, we've seen all the major aspects
-		of the ssqls feature. the following sections look at
-		some alternate methods for constructing ssqlses.</para>
+		<para>At this point, we've seen all the major aspects
+		of the SSQLS feature. The following sections look at
+		some of the peripheral aspects of SSQLS feature.</para>
 	</sect2>
 
 
 	<sect2>
-		<title>alternate creation methods</title>
+		<title>Alternate Creation Methods</title>
 
-		<para>if for some reason you want your ssqls data members to
-		have different names than used in the mysql database, you can do
+		<para>If for some reason you want your SSQLS data members to
+		have different names than used in the MySQL database, you can do
 		so like this:</para>
 
 		<programlisting>
@@ -2066,17 +2066,17 @@ main(int argc, char *argv[])
             int, num, "quantity", 2,
             double, weight, "weight", 3)</programlisting>
 
-		<para>all three of these macro types have "basic"
-		variants that work the same way. again, basic ssqlses
+		<para>All three of these macro types have "basic"
+		variants that work the same way. Again, basic SSQLSes
 		lack the features necessary for automatic insert, update
 		and replace query creation.</para>
 	</sect2>
 
 
 	<sect2>
-		<title>expanding ssqls macros</title>
+		<title>Expanding SSQLS Macros</title>
 
-		<para>if you ever need to see the code that a given ssqls
+		<para>If you ever need to see the code that a given SSQLS
 		declaration expands out to, use the utility
 		<computeroutput>doc/ssqls-pretty</computeroutput>, like so:</para>
 
