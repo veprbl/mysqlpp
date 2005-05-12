@@ -73,7 +73,9 @@ struct NullisBlank {
 ///
 /// This template is necessary because there is nothing in the C++ type
 /// system with the same semantics as SQL's null.  (No, NULL from
-/// stddef.h is not the same!)
+/// stddef.h is not the same!)  This template mechanism also
+/// makes the typeid() unique for each C++-equivalent of nullable
+/// SQL field types, which are listed in type_info.cpp.
 template <class Type, class Behavior = NullisNull>
 class Null {
 public:
