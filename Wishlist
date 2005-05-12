@@ -98,6 +98,10 @@ New Feature Requests and ABI Changes
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Rework print_stock_table() in util module to make it more useful
+	  for more of the examples.  There's too much custom formatting code
+	  in the examples.
+
 	o Add nmake Makefiles for the project, for those using only the
 	  free command-line tools.
 	
@@ -113,9 +117,7 @@ Bug Fix/Maintenance Items
 	  on floating point values.  Same for sql_cmp(float,float).  See
 	  also floating point precision item in previous section.
 
-	o Attribution and licensing needs attention.  Note LGPL at top of
-	  all source files, and note copyrights where known.  Also, a
-	  license needs to be picked for the new documentation. 
+	o Settle on new license for documentation, or make LGPL explicit.
 
 	o 64-bit integer support is not heavily tested.  It may yet have
 	  problems.
