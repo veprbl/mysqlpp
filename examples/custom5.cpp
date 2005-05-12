@@ -73,7 +73,6 @@ main(int argc, char *argv[])
 		}
 
 		return 0;
-
 	}
 	catch (BadQuery& er) {
 		// handle any connection or query errors that may come up
