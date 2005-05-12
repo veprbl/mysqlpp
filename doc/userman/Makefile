@@ -14,8 +14,8 @@ DOCFILE=$(BASENAME).xml
 HTML_SS=html.xsl
 FO_SS=fo.xsl
 EX_TXT=cgi_image.txt complic1.txt custom1.txt custom2.txt \
-		custom3.txt custom4.txt fieldinf1.txt load_file.txt \
-		resetdb.txt simple1.txt updel.txt 
+		custom3.txt custom4.txt custom5.txt fieldinf1.txt \
+		load_file.txt resetdb.txt simple1.txt updel.txt 
 
 
 ## ------------------------
@@ -33,8 +33,7 @@ clean:
 ## ------------------------
 
 pdf:
-	xsltproc --stringparam ulink.show 0 $(FO_SS) $(DOCFILE) > $(BASENAME).fo
-	$(FOPDIR)/fop.sh -q -fo $(BASENAME).fo $(BASENAME).pdf
+	$(FOPDIR)/fop.sh -q -xml $(DOCFILE) -xsl $(FO_SS) $(BASENAME).pdf
 	mv $(BASENAME).pdf ../mysqlpp-$(BASENAME).pdf
 
 oldpdf:
