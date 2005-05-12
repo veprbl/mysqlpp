@@ -94,9 +94,23 @@ New Feature Requests and ABI Changes
 	  dtor.  This concern over releasing resources is why the warning
 	  exists in the first place.
 
+	o mysql_type_info in type_info.h has multiple public and private
+	  sections.  Collapse into one of each.  This will break the ABI.
+
+	o mysql_type_info::types is arguably brittle, as it uses hard-coded
+	  integer values which mostly-but-not-quite map onto the values
+	  in the enum_field_types enum in the MySQL C API.  It might be
+	  better to use the MySQL C API enum constants here instead of bare
+	  integers so that we will follow any changes in the C API.  Doing
+	  so will break the ABI and a lot of infrastructure logic, though,
+	  so this change should not be done casually.
+
 
 Bug Fix/Maintenance Items
 -------------------------
+
+	o Wrap each #include in mysql++.h with the idempotency guard for
+	  that header so there are no attempts to #include something twice.
 
 	o Rework print_stock_table() in util module to make it more useful
 	  for more of the examples.  There's too much custom formatting code
