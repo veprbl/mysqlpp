@@ -2021,10 +2021,211 @@ main(int argc, char *argv[])
 
 		<programlisting>
     stock::table() = "MyStockData";</programlisting>
+	</sect2>
+
+
+	<sect2>
+		<title>Harnessing SSQLS Internals</title>
+
+		<para>Continuing the discussion in the
+		previous section, there is a further set of
+		methods that the non-"basic" versions of the
+		<computeroutput>sql_create</computeroutput> macros
+		define for each SSQLS. These methods are mostly for
+		use within the library, but some of them are useful
+		enough that you might want to harness them for your
+		own ends. Here is some pseudocode showing how the
+		most useful of these methods would be defined for the
+		<computeroutput>stock</computeroutput> structure used
+		in all the <computeroutput>custom*.cpp</computeroutput>
+		examples:</para>
+
+		<blockquote><programlisting>
+// Basic form
+template &lt;class Manip&gt;   
+stock_value_list&lt;Manip&gt; value_list(cchar *d = &#34;,&#34;,
+    Manip m = mysqlpp::quote) const;  
+
+template &lt;class Manip&gt;   
+stock_field_list&lt;Manip&gt; field_list(cchar *d = &#34;,&#34;,   
+    Manip m = mysqlpp::do_nothing) const;  
+
+template &lt;class Manip&gt;   
+stock_equal_list&lt;Manip&gt; equal_list(cchar *d = &#34;,&#34;,
+    cchar *e = &#34; = &#34;, Manip m = mysqlpp::quote) const;  
+
+
+// Boolean argument form
+template &lt;class Manip&gt;
+stock_cus_value_list&lt;Manip&gt; value_list([cchar *d, [Manip m,] ]   
+    bool i1, bool i2 = false, ... , bool i5 = false) const;  
+
+// List form  
+template &lt;class Manip&gt;
+stock_cus_value_list&lt;Manip&gt; value_list([cchar *d, [Manip m,] ]  
+    stock_enum i1, stock_enum i2 = stock_NULL, ...,
+    stock_enum i5 = stock_NULL) const;  
+
+// Vector form  
+template &lt;class Manip&gt;
+stock_cus_value_list&lt;Manip&gt; value_list([cchar *d, [Manip m,] ]  
+    vector&lt;bool&gt; *i) const;  
+
+...Plus the obvious equivalents for field_list() and equal_list()</programlisting></blockquote>
+
+		<para>Rather than try to learn what all of these methods
+		do at once, let's ease into the subject. Consider this
+		code:</para>
+
+		<blockquote><programlisting>
+stock s("Dinner Rolls", 75, 0.95, 0.97, "1998-05-25");   
+cout &lt;&lt; "Value list: " &lt;&lt; s.comma_list() &lt;&lt; endl;  
+cout &lt;&lt; "Field list: " &lt;&lt; s.field_list() &lt;&lt; endl;  
+cout &lt;&lt; "Equal list: " &lt;&lt; s.equal_list() &lt;&lt; endl;</programlisting></blockquote>
+
+		<para>That would produce something like:</para>
+
+		<blockquote><programlisting>
+Value list: 'Dinner Rolls',75,0.95,0.97,'1998-05-25'   
+Field list: item,num,weight,price,date  
+Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,date = '1998-05-25'</programlisting></blockquote>
+
+		<para>That is, a "value list" is a list of data member
+		values within a particular SSQLS instance, a "field list"
+		is a list of the fields (columns) within that SSQLS,
+		and an "equal list" is a list in the form of an SQL
+		equals clause.</para>
+		
+		<para>Just knowing that much, it
+		shouldn't surprise you to learn that
+		<computeroutput>Query::insert()</computeroutput> is
+		implemented more or less like this:</para>
+
+		<blockquote><programlisting>
+*this &lt;&lt; "INSERT INTO " &lt;&lt; v.table() &lt;&lt; " (" &lt;&lt; v.field_list() &lt;&lt;
+        ") VALUES (" &lt;&lt; v.value_list() &lt;&lt; ")";</programlisting></blockquote>
+
+		<para>where 'v' is the SSQLS you're asking the
+		Query object to insert into the database.</para>
+
+		<para>Now let's look at a complete example,
+		which uses one of the more complicated forms of
+		<computeroutput>equal_list()</computeroutput>. This
+		example builds a query with fewer hard-coded strings
+		than the most obvious technique requires, which
+		makes it more robust in the face of change. Here is
+		examples/custom5.cpp:</para>
+
+		<blockquote><programlisting>
+#include "util.h"
+
+#include &lt;mysql++.h&gt;
+#include &lt;custom.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+using namespace mysqlpp;
+
+sql_create_5(stock,
+             1, 5,
+             string, item,
+             longlong, num,
+             double, weight,
+             double, price,
+             Date, sdate)
+
+int
+main(int argc, char *argv[])
+{
+    try {
+        Connection con(use_exceptions);
+        if (!connect_to_db(argc, argv, con)) {
+            return 1;
+        }
+
+        // Get all the rows in the stock table.
+        Query query = con.query();
+        query &lt;&lt; "select * from stock";
+        vector&lt;stock&gt; res;
+        query.storein(res);
+
+        if (res.size() &gt; 0) {
+            // Build a select query using the data from the first row
+            // returned by our previous query.
+            query.reset();
+            query &lt;&lt; "select * from stock where " &lt;&lt;
+                res[0].equal_list(" and ", stock_weight, stock_price);
+
+            // Display the finished query.
+            cout &lt;&lt; "Custom query:\n" &lt;&lt; query.preview() &lt;&lt; endl;
+        }
+
+        return 0;
+    }
+    catch (BadQuery&amp; er) {
+        // handle any connection or query errors that may come up
+        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+    catch (BadConversion&amp; er) {
+        // handle bad conversions
+        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl
+            &lt;&lt; "retrieved data size: " &lt;&lt; er.retrieved
+            &lt;&lt; " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
+        return -1;
+    }
+    catch (exception &amp; er) {
+        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+}</programlisting></blockquote>
+
+		<para>This example uses the list form of
+		<computeroutput>equal_list()</computeroutput>. The
+		arguments <computeroutput>stock_weight</computeroutput>
+		and <computeroutput>stock_price</computeroutput>
+		are enum values equal to the position of these columns
+		within the <computeroutput>stock</computeroutput> table.
+		<computeroutput>sql_create_</computeroutput><emphasis>x</emphasis>
+		generates this enum for you automatically.</para>
+
+		<para>The boolean argument form of that
+		<computeroutput>equal_list()</computeroutput> call would
+		look like this:</para>
+
+		<blockquote><programlisting>
+query &lt;&lt; "select * from stock where " &lt;&lt;
+        res[0].equal_list(" and ", false, false, true, true, false);</programlisting></blockquote>
+
+		<para>It's a little more verbose, as you can
+		see. And if you want to get really complicated,
+		use the vector form:</para>
+
+		<blockquote><programlisting>
+vector&lt;bool&gt; v(5, false);
+v[stock_weight] = true;
+v[stock_price] = true;
+query &lt;&lt; "select * from stock where " &lt;&lt;
+        res[0].equal_list(" and ", v);</programlisting></blockquote>
+
+		<para>This form makes the most sense if you are
+		building many other queries, and so can re-use that
+		vector object.</para>
+
+		<para>Many of these methods accept manipulators and custom
+		delimiters. The defaults are suitable for building SQL
+		queries, but if you're using these methods in a different
+		context, you may need to override these defaults. For
+		instance, you could use these methods to dump data to a
+		text file using different delimiters and quoting rules
+		than SQL.</para>
 
 		<para>At this point, we've seen all the major aspects
-		of the SSQLS feature. The following sections look at
-		some of the peripheral aspects of SSQLS feature.</para>
+		of the SSQLS feature. The final sections of this chapter
+		look at some of the peripheral aspects.</para>
 	</sect2>
 
 
