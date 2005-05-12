@@ -41,7 +41,6 @@ using namespace mysqlpp;
 // The following is calling a very complex macro which will create
 // "struct stock", which has the member variables:
 //   string item
-//   int num
 //   ...
 //   Date sdate
 // plus methods to help populate the class from a MySQL row
