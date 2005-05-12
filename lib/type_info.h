@@ -131,6 +131,21 @@ private:
 
 	static const sql_type_info_lookup lookups;
 
+	/// \brief Return an index into mysql_type_info::types array given
+	/// MySQL type information.
+	///
+	/// This function is used in mapping from MySQL type information
+	/// (a type enum, and flags indicating whether it is unsigned and
+	/// whether it can be 'null') to the closest C++ types available
+	/// within MySQL++.  Notice that nulls have to be handled specially:
+	/// the SQL null concept doesn't map directly onto the C++ type
+	/// system.  See null.h for details.
+	///
+	/// \param t MySQL C API type constant, from mysql_com.h
+	/// \param _unsigned if true, indicates the unsigned variant of a
+	/// MySQL type
+	/// \param _null if true, indicates the variant of the MySQL type
+	/// that can also hold an SQL 'null' instead of regular data.
 	static unsigned char type(enum_field_types t, bool _unsigned,
 			bool _null = false);
 
