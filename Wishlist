@@ -129,3 +129,8 @@ Bug Fix/Maintenance Items
 	  reorganization in 1.7.20: if you move everything from row.cc to
 	  a new row2.h file and include it in a few strategic locations, it
 	  works.  But, this is a bogus fix.  Find the right one.
+
+	o Document the header layout, and which headers can be included alone,
+	  and which can't.  Do this to optimize compile times, and allow
+	  users to do the same.
+
