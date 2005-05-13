@@ -455,102 +455,10 @@ main(int argc, char *argv[])
 		</sect3>
 
 		<sect3>
-			<title>A slightly more complicated example</title>
-
-			<para>This example is almost like the previous
-			one, except that it uses exceptions and the
-			automatic conversion feature of ColData. Pay
-			particular notice to how exceptions are used.
-			This is examples/complic1.cpp:</para>
-
-			<blockquote><programlisting>
-#include "util.h"
-
-#include &lt;mysql++.h&gt;
-
-#include &lt;iostream&gt;
-#include &lt;iomanip&gt;
-
-using namespace std;
-using namespace mysqlpp;
-
-int
-main(int argc, char *argv[])
-{
-    try {
-        Connection con(use_exceptions);
-        if (!connect_to_db(argc, argv, con)) {
-            return 1;
-        }
-
-        Query query = con.query();
-
-        query &lt;&lt; "select * from stock";
-        cout &lt;&lt; "Query: " &lt;&lt; query.preview() &lt;&lt; endl;
-
-        Result res = query.store();
-        cout &lt;&lt; "Records Found: " &lt;&lt; res.size() &lt;&lt; endl &lt;&lt; endl;
-
-        Row row;
-        cout.setf(ios::left);
-        cout &lt;&lt; setw(17) &lt;&lt; "Item" &lt;&lt;
-                setw(4) &lt;&lt; "Num" &lt;&lt;
-                setw(7) &lt;&lt; "Weight" &lt;&lt;
-                setw(7) &lt;&lt; "Price" &lt;&lt; "Date" &lt;&lt; endl &lt;&lt; endl;
-
-        Result::iterator i;
-
-        cout.precision(3);
-        for (i = res.begin(); i != res.end(); i++) {
-            row = *i;
-            // Regarding the casts to double, we do this so that we can
-            // set the display precision.  ColData has the nice feature
-            // that it will convert to any of the basic C++ types.  If
-            // there is a problem in the conversion it will throw an
-            // exception (caught below).  To test it, try changing the
-            // row[2] to row[0] below.
-            cout &lt;&lt; setw(17) &lt;&lt; row.lookup_by_name("ITEM") &lt;&lt;
-                    setw(4) &lt;&lt; row[1] &lt;&lt;
-                    setw(7) &lt;&lt; double(row[2]) &lt;&lt;
-                    setw(7) &lt;&lt; double(row[3]);
-
-            // The ColData is implicitly converted to a date here.
-            Date date = row.lookup_by_name("SDATE");
-            cout.setf(ios::right);
-            cout.fill('0');
-            cout &lt;&lt; setw(2) &lt;&lt; date.month &lt;&lt; "-" &lt;&lt; setw(2) &lt;&lt;
-                    date.day &lt;&lt; endl;
-            cout.fill(' ');
-            cout.unsetf(ios::right);
-        }
-
-        return 0;
-    }
-    catch (BadQuery&amp; er) {
-        // Handle any connection or query errors that may come up
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
-        return -1;
-    }
-    catch (BadConversion&amp; er) {
-        // Handle bad conversions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl
-            &lt;&lt; "retrieved data size: " &lt;&lt; er.retrieved
-            &lt;&lt; " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
-        return -1;
-    }
-    catch (exception&amp; er) {
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
-        return -1;
-    }
-}
-			</programlisting></blockquote>
-		</sect3>
-
-		<sect3>
 			<title>Notes on exceptions</title>
 
-			<para>Everything should be fairly obvious. A few notes about
-			exceptions, however:</para>
+			<para>Everything should be fairly obvious in the simple1 example.
+			A few notes about exceptions, however:</para>
 
 			<orderedlist>
 				<listitem><para>When the use_exceptions flag is
