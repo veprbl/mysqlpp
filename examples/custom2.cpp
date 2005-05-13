@@ -49,46 +49,45 @@ int
 main(int argc, char *argv[])
 {
 	try {
+		// Establish the connection to the database server.
 		Connection con(use_exceptions);
 		if (!connect_to_db(argc, argv, con)) {
 			return 1;
 		}
 
+		// Create and populate a stock object.  We could also have used
+		// the set() member, which takes the same parameters as this
+		// constructor.
+		stock row("Hot Dogs", 100, 1.5, 1.75, "1998-09-25");
+
+		// Form the query to insert the row into the stock table.
 		Query query = con.query();
-
-		// create an empty stock object
-		stock row;
-
-		// populate stock
-		row.set("Hot Dogs", 100, 1.5, 1.75, "1998-09-25");
-
-		// form the query to insert the row
-		// the table name is the name of the struct by default
 		query.insert(row);
 
-		// show the query about to be executed
-		cout << "Query : " << query.preview() << endl;
+		// Show the query about to be executed.
+		cout << "Query: " << query.preview() << endl;
 
-		// execute a query that does not return a result set
+		// Execute the query.  We use execute() because INSERT doesn't
+		// return a result set.
 		query.execute();
 
-		// now print the new table;
+		// Print the new table.
 		print_stock_table(query);
-
 	}
 	catch (BadQuery& er) {
-		// handle any connection or query errors that may come up
+		// Handle any connection or query errors
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}
 	catch (BadConversion& er) {	
-		// handle bad conversions
-		cerr << "Error: " << er.what() << "\"." << endl
-			<< "retrieved data size: " << er.retrieved
-			<< " actual data size: " << er.actual_size << endl;
+		// Handle bad conversions
+		cerr << "Error: " << er.what() << "\"." << endl <<
+				"retrieved data size: " << er.retrieved <<
+				" actual data size: " << er.actual_size << endl;
 		return -1;
 	}
 	catch (exception& er) {
+		// Catch-all for any other standard C++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}

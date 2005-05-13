@@ -71,63 +71,57 @@ int
 main(int argc, char *argv[])
 {
 	try {
+		// Establish the connection to the database server.
 		Connection con(use_exceptions);
 		if (!connect_to_db(argc, argv, con)) {
 			return 1;
 		}
 
+		// Retrieve all rows from the stock table and put them in an
+		// STL set.  Notice that this works just as well as storing them
+		// in a vector, which we did in custom1.cpp.  It works because
+		// SSQLS objects are less-than comparable.
 		Query query = con.query();
-
 		query << "select * from stock";
-
-		// here we are storing the elements in a set not a vector.
-		set <stock> res;
+		set<stock> res;
 		query.storein(res);
 
-		cout.setf(ios::left);
-		cout << setw(17) << "Item"
-			<< setw(4) << "Num"
-			<< setw(7) << "Weight"
-			<< setw(7) << "Price" << "Date" << endl << endl;
-
-		// Now we we iterate through the set.  Since it is a set the list will
-		// naturally be in order.
-		set<stock>::iterator i;
+		// Display the result set.  Since it is an STL set and we set up
+		// the SSQLS to compare based on the item column, the rows will
+		// be sorted by item.
+		print_stock_header(res.size());
+		set<stock>::iterator it;
 		cout.precision(3);
-		for (i = res.begin(); i != res.end(); ++i) {
-			cout << setw(17) << i->item.c_str()
-				<< setw(4) << i->num
-				<< setw(7) << i->weight
-				<< setw(7) << i->price << i->sdate << endl;
+		for (it = res.begin(); it != res.end(); ++it) {
+			print_stock_row(it->item.c_str(), it->num, it->weight,
+					it->price, it->sdate);
 		}
 
-		i = res.find(stock("Hamburger Buns"));
-		if (i != res.end()) {
-			cout << "Hamburger Buns found.  Currently " << i->num <<
-					" in stock.\n";
+		// Use set's find method to look up a stock item by item name.
+		// This also uses the SSQLS comparison setup.
+		it = res.find(stock("Hotdog Buns"));
+		if (it != res.end()) {
+			cout << endl << "Currently " << it->num <<
+					" hotdog buns in stock." << endl;
 		}
 		else {
-			cout << "Sorry no Hamburger Buns found in stock\n";
+			cout << endl << "Sorry, no hotdog buns in stock." << endl;
 		}
-
-		// Now we are using the set's find method to find out how many
-		// Hamburger Buns are in stock.
-
-		return 0;
 	}
 	catch (BadQuery& er) {
-		// handle any connection or query errors that may come up
+		// Handle any connection or query errors
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}
 	catch (BadConversion& er) {
-		// handle bad conversions
-		cerr << "Error: " << er.what() << "\"." << endl
-			<< "retrieved data size: " << er.retrieved
-			<< " actual data size: " << er.actual_size << endl;
+		// Handle bad conversions
+		cerr << "Error: " << er.what() << "\"." << endl <<
+				"retrieved data size: " << er.retrieved <<
+				" actual data size: " << er.actual_size << endl;
 		return -1;
 	}
 	catch (exception& er) {
+		// Catch-all for any other standard C++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}

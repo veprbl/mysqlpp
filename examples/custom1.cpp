@@ -1,7 +1,7 @@
 /***********************************************************************
- custom1.cpp - Example very similar to simple1, except that it accesses
- 	the query results through a Specialized SQL Structure instead of
-	through Row objects.
+ custom1.cpp - Example that produces the same results as simple1, but it
+ 	uses a Specialized SQL Structure to store the results instead of a
+	MySQL++ Result object.
  
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
  MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
@@ -40,11 +40,13 @@ using namespace mysqlpp;
 
 // The following is calling a very complex macro which will create
 // "struct stock", which has the member variables:
+//
 //   string item
 //   ...
 //   Date sdate
+//
 // plus methods to help populate the class from a MySQL row
-// among other things that I'll get too in a later example.
+// among other things that I'll get to in a later example.
 sql_create_5(stock,
 			 1, 5,				// explained in the user manual
 			 string, item,
@@ -57,59 +59,44 @@ int
 main(int argc, char *argv[])
 {
 	try {						
+		// Establish the connection to the database server.
 		Connection con(use_exceptions);
 		if (!connect_to_db(argc, argv, con)) {
 			return 1;
 		}
 
+		// Retrieve the entire contents of the stock table, and store
+		// the data in a vector of 'stock' SSQLS structures.
 		Query query = con.query();
 		query << "select * from stock";
-
-		vector < stock > res;
+		vector<stock> res;
 		query.storein(res);
-		// this is storing the results into a vector of the custom struct
-		// "stock" which was created my the macro above.
 
-		cout.setf(ios::left);
-		cout << setw(17) << "Item"
-			<< setw(4) << "Num"
-			<< setw(7) << "Weight"
-			<< setw(7) << "Price" << "Date" << endl << endl;
-
-		// Now we we iterate through the vector using an iterator and
-		// produce output similar to that using Row
-		// Notice how we call the actual variables in i and not an index
-		// offset.  This is because the macro at the begging of the file
-		// set up an *actual* struct of type stock which contains the 
-		// variables item, num, weight, price, and data.
-
-		cout.precision(3);
-		vector<stock>::iterator i;
-		for (i = res.begin(); i != res.end(); i++) {
-			cout << setw(17) << i->item.c_str()
-				// unfortunally the gnu string class does not respond to format
-				// modifers so I have to convert it to a conat char *.
-				<< setw(4) << i->num
-				<< setw(7) << i->weight
-				<< setw(7) << i->price << i->sdate << endl;
+		// Display the result set
+		print_stock_header(res.size());
+		vector<stock>::iterator it;
+		for (it = res.begin(); it != res.end(); ++it) {
+			print_stock_row(it->item.c_str(), it->num, it->weight,
+					it->price, it->sdate);
 		}
-		return 0;
-
 	}
 	catch (BadQuery& er) {
-		// handle any connection or query errors that may come up
+		// Handle any connection or query errors
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}
 	catch (BadConversion& er) {
-		// handle bad conversions
-		cerr << "Error: " << er.what() << "\"." << endl
-			<< "retrieved data size: " << er.retrieved
-			<< " actual data size: " << er.actual_size << endl;
+		// Handle bad conversions
+		cerr << "Error: " << er.what() << "\"." << endl <<
+				"retrieved data size: " << er.retrieved <<
+				" actual data size: " << er.actual_size << endl;
 		return -1;
 	}
-	catch (exception & er) {
+	catch (exception& er) {
+		// Catch-all for any other standard C++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}
+
+	return 0;
 }
