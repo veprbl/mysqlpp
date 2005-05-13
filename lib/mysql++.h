@@ -1,20 +1,17 @@
 /// \file mysql++.h
 /// \brief The main MySQL++ header file.
 ///
-/// This file brings in all other MySQL++ headers except for custom*.h,
+/// This file brings in all required MySQL++ headers except for custom*.h,
 /// which is a strictly optional feature of MySQL++.
 ///
-/// User programs should only include this file, and optionally custom.h.
 /// There is no point in trying to optimize which headers you include,
 /// because every MySQL++ program needs query.h, and that #includes
 /// all the other headers indirectly, except for custom*.h and
-/// compare.h.  The only reason including query.h doesn't bring in
-/// compare.h is that no library code uses its facilities; they're for
-/// end-user programs only.
-///
-/// The only possible optimization is to include query.h instead of
-/// mysql++.h, and this results only in trivial compile time reductions
-/// at the expense of code clarity.
+/// compare.h.  (query.h doesn't bring in compare.h because it's not
+/// used within the library anywhere; its facilities are only for
+/// end-user programs.)  The only possible optimization is to include
+/// query.h instead of mysql++.h, and this results only in trivial
+/// compile time reductions at the expense of code clarity.
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
