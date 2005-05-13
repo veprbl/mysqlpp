@@ -1,7 +1,7 @@
 /// \file mysql++.h
 /// \brief The main MySQL++ header file.
 ///
-/// This file brings in all required MySQL++ headers except for custom*.h,
+/// This file brings in all MySQL++ headers except for custom*.h,
 /// which is a strictly optional feature of MySQL++.
 ///
 /// There is no point in trying to optimize which headers you include,
