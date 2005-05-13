@@ -1,9 +1,20 @@
 /// \file mysql++.h
-/// \brief The main MySQL++ header file.  It simply #includes all of the
-/// other header files (except for custom.h) in the proper order.
+/// \brief The main MySQL++ header file.
 ///
-/// Most programs will have no reason to #include any of the other
-/// MySQL++ headers directly, except for custom.h.
+/// This file brings in all other MySQL++ headers except for custom*.h,
+/// which is a strictly optional feature of MySQL++.
+///
+/// User programs should only include this file, and optionally custom.h.
+/// There is no point in trying to optimize which headers you include,
+/// because every MySQL++ program needs query.h, and that #includes
+/// all the other headers indirectly, except for custom*.h and
+/// compare.h.  The only reason including query.h doesn't bring in
+/// compare.h is that no library code uses its facilities; they're for
+/// end-user programs only.
+///
+/// The only possible optimization is to include query.h instead of
+/// mysql++.h, and this results only in trivial compile time reductions
+/// at the expense of code clarity.
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
@@ -29,33 +40,16 @@
  USA
 ***********************************************************************/
 
-#include "platform.h"
+#if !defined(MYSQLPP_MYSQLPP_H)
+#define MYSQLPP_MYSQLPP_H
 
-#include "defs.h"
-
-#include "coldata.h"
-#include "compare.h"
-#include "connection.h"
-#include "const_string.h"
-#include "convert.h"
-#include "datetime.h"
-#include "exceptions.h"
-#include "field_names.h"
-#include "field_types.h"
-#include "fields.h"
-#include "manip.h"
-#include "myset.h"
-#include "null.h"
+// This #include order gives the fewest redundancies in the #include
+// dependency chain.
 #include "query.h"
-#include "resiter.h"
-#include "result.h"
-#include "row.h"
-#include "sql_query.h"
-#include "sql_string.h"
-#include "stream2string.h"
-#include "tiny_int.h"
-#include "type_info.h"
-#include "vallist.h"
+#include "compare.h"
+
+#endif // !defined(MYSQLPP_MYSQLPP_H)
+
 
 /**
 	\mainpage MySQL++ Reference Manual
@@ -95,11 +89,12 @@
 	the headers into their own subdirectory, you might consider
 	reinstalling the package to remedy that. MySQL++ has a number
 	of generically-named files (\link convert.h convert.h, \endlink
-	\link fields.h fields.h, \endlink row.h...), so it's best to put
-	them into a separate directory where they can't interfere with
-	other code on your system. If you're on a Unixy platform, you do
-	this by passing the \c --includedir option to the \c configure
-	script. See the package's main README file for details.
+	\link fields.h fields.h, \endlink \link row.h row.h \endlink...),
+	so it's best to put them into a separate directory where they
+	can't interfere with other code on your system. If you're on a
+	Unixy platform, you do this by passing the \c --includedir option
+	to the \c configure script. See the package's main README file
+	for details.
 
 
 	\section user_questions If You Have Questions...
