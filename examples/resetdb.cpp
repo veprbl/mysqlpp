@@ -114,7 +114,7 @@ main(int argc, char *argv[])
 		cout << " sample database successfully." << endl;
 	}
 	catch (mysqlpp::BadQuery& er) {
-		// Handle any connection or query errors that may come up
+		// Handle any connection or query errors
 		cerr << "Error: " << er.what() << endl;
 		return 1;
 	}
@@ -126,8 +126,10 @@ main(int argc, char *argv[])
 		return 1;
 	}
 	catch (exception& er) {
+		// Catch-all for any other standard C++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return 1;
 	}
-}
 
+	return 0;
+}

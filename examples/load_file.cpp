@@ -81,18 +81,19 @@ main(int argc, char *argv[])
 
 	}
 	catch (BadQuery& er) {
-		// handle any connection or query errors that may come up
+		// Handle any connection or query errors
 		cerr << "Error: " << er.what() << " " << con.errnum() << endl;
 		return -1;
 	}
 	catch (BadConversion& er) {
-		// handle bad conversions
-		cerr << "Error: " << er.what() << "\"." << endl
-			<< "retrieved data size: " << er.retrieved
-			<< " actual data size: " << er.actual_size << endl;
+		// Handle bad conversions
+		cerr << "Error: " << er.what() << "\"." << endl <<
+				"retrieved data size: " << er.retrieved <<
+				" actual data size: " << er.actual_size << endl;
 		return -1;
 	}
 	catch (exception& er) {
+		// Catch-all for any other standard C++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}

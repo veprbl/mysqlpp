@@ -46,25 +46,25 @@ main(int argc, char *argv[])
 			return 1;
 		}
 
-		// Create a query object that is bound to con.
+		// Retrieve the entire stock table from the database server
+		// we're connected to, and print its contents out.
 		mysqlpp::Query query = con.query();
-
-		// Print out the stock table
 		print_stock_table(query);
 	}
 	catch (mysqlpp::BadQuery& er) {
-		// handle any connection or query errors that may come up
+		// Handle any connection or query errors that
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}
 	catch (mysqlpp::BadConversion& er) {
-		// handle bad conversions
-		cerr << "Error: " << er.what() << "\"." << endl
-			<< "retrieved data size: " << er.retrieved
-			<< " actual data size: " << er.actual_size << endl;
+		// Handle bad conversions
+		cerr << "Error: " << er.what() << "\"." << endl <<
+				"retrieved data size: " << er.retrieved <<
+				" actual data size: " << er.actual_size << endl;
 		return -1;
 	}
-	catch (exception & er) {
+	catch (exception& er) {
+		// Catch-all for any other standard C++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}

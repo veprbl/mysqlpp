@@ -63,22 +63,26 @@ main()
 		string output(strbuf.str());
 		output.erase(output.size() - 1, 1);
 		output += ")";
-		query.exec(output);	// cout << output << endl;
-		return 0;
+		query.exec(output);
+		//cout << output << endl;
 	}
 	catch (BadQuery& er) {
-		// handle any connection or query errors that may come up
+		// Handle any connection or query errors
 		cerr << "Error: " << er.what() << " " << con.errnum() << endl;
 		return -1;
 	}
 	catch (BadConversion& er) {
+		// Handle bad conversions
 		cerr << "Error: " << er.what() << "\"." << endl
 			<< "retrieved data size: " << er.retrieved
 			<< " actual data size: " << er.actual_size << endl;
 		return -1;
 	}
 	catch (exception& er) {
+		// Catch-all for any other standard C++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}
+
+	return 0;
 }
