@@ -1,5 +1,9 @@
 /// \file compare.h
-/// Documentation needed!
+/// 
+/// Declares several function objects and templates for creating
+/// function objects for comparing various things.  These are useful
+/// when using STL algorithms like std::find_if() on containers
+/// of data retreived from a database with MySQL++.
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
@@ -35,10 +39,13 @@
 
 namespace mysqlpp {
 
-/// Documentation needed!
+/// \brief Template for making function objects that can compare
+/// something against a Row element.
+///
+/// \sa mysql_cmp
 
 template <class BinaryPred, class CmpType>
-class MysqlCmp : public std::unary_function<const Row &, bool>
+class MysqlCmp : public std::unary_function<const Row&, bool>
 {
 protected:
 	unsigned int index;
@@ -60,7 +67,9 @@ public:
 };
 
 
-/// Documentation needed!
+/// \brief const char* specialization of MysqlCmp
+///
+/// \sa mysql_cmp_cstr
 
 template <class BinaryPred>
 class MysqlCmpCStr : public MysqlCmp<BinaryPred, const char*>
@@ -80,16 +89,11 @@ public:
 };
 
 
-/// \brief For comparing any two objects, as long as they can be
-/// converted to SQLString.
+/// \brief Template for function objects that compare any two objects,
+/// as long as they can be converted to SQLString.
 ///
-/// This template is for creating predicate objects for use with
-/// STL algorithms like std::find_if().
-///
-/// This is a more generic form of mysql_cmp_cstr() which will work
-/// with any C++ type that can be converted to mysqlpp::SQLString.
-/// This is not nearly as efficient as that function, so use this only
-/// when absolutely necessary.
+/// This is a more generic form of mysql_cmp_cstr(), and is therefore
+/// less efficient.  Use this form only when necessary.
 ///
 /// \param i field index number
 /// \param func one of the functors in compare.h, or any compatible functor
@@ -101,13 +105,29 @@ mysql_cmp(uint i, const BinaryPred& func, const CmpType& cmp2)
 }
 
 
+/// \brief Template for function objects that compare any two things
+/// that can be converted to <tt>const char*</tt>.
+///
+/// \param i field index number
+/// \param func one of cstr_equal_to, cstr_not_equal_to,
+///     cstr_less, cstr_less_equal, cstr_less_equal, or
+///     cstr_less_equal.
+/// \param cmp2 what to compare to
+///
+/// \sa mysql_cmp()
+template <class BinaryPred> MysqlCmpCStr<BinaryPred>
+mysql_cmp_cstr(uint i, const BinaryPred& func, const char* cmp2)
+{
+	return MysqlCmpCStr<BinaryPred>(i, func, cmp2);
+}
+
+
 typedef std::binary_function<const char*, const char*, bool>
 		bin_char_pred;
 
 
-/// \brief Documentation needed!
-///
-/// Document me!
+/// \brief Function object that returns true if one const char* is equal
+/// to another.
 struct cstr_equal_to : bin_char_pred
 {
 	bool operator ()(const char* x, const char* y) const
@@ -117,9 +137,8 @@ struct cstr_equal_to : bin_char_pred
 };
 
 
-/// \brief Documentation needed!
-///
-/// Document me!
+/// \brief Function object that returns true if one const char* is not
+/// equal to another.
 struct cstr_not_equal_to : bin_char_pred
 {
 	bool operator ()(const char* x, const char* y) const
@@ -129,9 +148,8 @@ struct cstr_not_equal_to : bin_char_pred
 };
 
 
-/// \brief Documentation needed!
-///
-/// Document me!
+/// \brief Function object that returns true if one const char* is
+/// lexically "less than" another.
 struct cstr_less : bin_char_pred
 {
 	bool operator ()(const char* x, const char* y) const
@@ -141,9 +159,8 @@ struct cstr_less : bin_char_pred
 };
 
 
-/// \brief Documentation needed!
-///
-/// Document me!
+/// \brief Function object that returns true if one const char* is
+/// lexically "less than or equal to" another.
 struct cstr_less_equal : bin_char_pred
 {
 	bool operator ()(const char* x, const char* y) const
@@ -153,9 +170,8 @@ struct cstr_less_equal : bin_char_pred
 };
 
 
-/// \brief Documentation needed!
-///
-/// Document me!
+/// \brief Function object that returns true if one const char* is
+/// lexically "greater than" another.
 struct cstr_greater : bin_char_pred
 {
 	bool operator ()(const char* x, const char* y) const
@@ -165,9 +181,8 @@ struct cstr_greater : bin_char_pred
 };
 
 
-/// \brief Documentation needed!
-///
-/// Document me!
+/// \brief Function object that returns true if one const char* is
+/// lexically "greater than or equal to" another.
 struct cstr_greater_equal : bin_char_pred
 {
 	bool operator ()(const char* x, const char* y) const
@@ -176,22 +191,6 @@ struct cstr_greater_equal : bin_char_pred
 	}
 };
 
-
-/// \brief For comparing anything to a <tt>const char*</tt>.
-///
-/// This template is for creating predicate objects for use with
-/// STL algorithms like std::find_if().
-///
-/// \param i field index number
-/// \param func one of \c cstr_equal_to(), \c cstr_not_equal_to(),
-///     \c cstr_less(), \c cstr_less_equal(), \c cstr_less_equal(), or
-///     \c cstr_less_equal().
-/// \param cmp2 what to compare to
-template <class BinaryPred> MysqlCmpCStr<BinaryPred>
-mysql_cmp_cstr(uint i, const BinaryPred& func, const char* cmp2)
-{
-	return MysqlCmpCStr<BinaryPred>(i, func, cmp2);
-}
 
 } // end namespace mysqlpp
 
