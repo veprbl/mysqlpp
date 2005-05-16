@@ -67,7 +67,7 @@ public:
 	{
 	}
 	
-	/// \brief Run the predicat function on this row and the object's
+	/// \brief Run the predicate function on this row and the object's
 	/// data, and return its value.
 	///
 	/// See the constructor's parameters for what we compare against.
@@ -98,7 +98,7 @@ public:
 	{
 	}
 	
-	/// \brief Run the predicat function on this row and the object's
+	/// \brief Run the predicate function on this row and the object's
 	/// data, and return its value.
 	///
 	/// See the constructor's parameters for what we compare against.
