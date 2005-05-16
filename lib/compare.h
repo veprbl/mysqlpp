@@ -53,6 +53,13 @@ protected:
 	CmpType cmp2;
 	
 public:
+	/// \brief MysqlCmp constructor
+	///
+	/// \param i field number within a row to compare against
+	/// \param f predicate function
+	/// \param c what to compare row element against
+	///
+	/// operator() for this object compares Row[i] to c using f.
 	MysqlCmp(uint i, const BinaryPred& f, const CmpType& c) :
 	index(i),
 	func(f),
@@ -60,6 +67,10 @@ public:
 	{
 	}
 	
+	/// \brief Run the predicat function on this row and the object's
+	/// data, and return its value.
+	///
+	/// See the constructor's parameters for what we compare against.
 	bool operator ()(const Row& cmp1) const
 	{
 		return func(cmp2, cmp1[this->index]);
@@ -75,11 +86,22 @@ template <class BinaryPred>
 class MysqlCmpCStr : public MysqlCmp<BinaryPred, const char*>
 {
 public:
+	/// \brief MysqlCmpCStr constructor
+	///
+	/// \param i field number within a row to compare against
+	/// \param f predicate function
+	/// \param c what to compare row element against
+	///
+	/// operator() for this object compares Row[i] to c using f.
 	MysqlCmpCStr(uint i, const BinaryPred& f, const char *c) :
 	MysqlCmp<BinaryPred, const char*>(i, f, c)
 	{
 	}
 	
+	/// \brief Run the predicat function on this row and the object's
+	/// data, and return its value.
+	///
+	/// See the constructor's parameters for what we compare against.
 	bool operator ()(const Row& cmp1) const
 	{
 		return MysqlCmp<BinaryPred, const char*>::func(

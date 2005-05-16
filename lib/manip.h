@@ -318,7 +318,9 @@ inline std::ostream& operator << (quote_double_only_type1 o,
 
 enum escape_type0 { escape };
 
-/// Documentation needed!
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
+
 struct escape_type1 {
   std::ostream *ostr;
   escape_type1(std::ostream *o) : ostr(o) {}
@@ -328,7 +330,6 @@ inline escape_type1 operator << (std::ostream &o, escape_type0 /*esc*/) {
   return escape_type1(&o);
 }
 
-/// Documentation needed!
 struct escape_type2 {
   SQLQueryParms *qparms;
   escape_type2(SQLQueryParms *p) : qparms(p) {}
@@ -337,6 +338,8 @@ struct escape_type2 {
 inline escape_type2 operator << (SQLQueryParms &p, escape_type0 /*esc*/) {
   return escape_type2(&p);
 }
+
+/// \endif
 
 SQLQueryParms & operator << (escape_type2 p, SQLString &in);
 
@@ -427,19 +430,23 @@ enum ignore_type0 {
 	ignore ///< insert into a std::ostream as a dummy manipulator
 };
 
-/// Documentation needed!
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
+
 struct ignore_type2 {
   SQLQueryParms *qparms;
   ignore_type2(SQLQueryParms *p) : qparms(p) {}
 };
 
-inline ignore_type2 operator << (SQLQueryParms &p, ignore_type0 /*esc*/) {
+inline ignore_type2 operator <<(SQLQueryParms& p, ignore_type0 /*esc*/) {
   return ignore_type2(&p);
 }
 
-inline SQLQueryParms & operator << (ignore_type2 p, SQLString &in) {
+inline SQLQueryParms& operator <<(ignore_type2 p, SQLString& in) {
   return *p.qparms << in;
 }
+
+/// \endif
 
 } // end namespace mysqlpp
 
