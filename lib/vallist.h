@@ -36,6 +36,26 @@
 namespace mysqlpp {
 
 
+/// \brief Holds two lists of items, typically used to construct a
+/// SQL "equals clause".
+///
+/// The WHERE clause in a SQL SELECT statment is an example of an
+/// equals clause.
+///
+/// Imagine an object of this type contains the lists (a, b) (c, d),
+/// and that the object's delimiter and equals symbols are set to ", "
+/// and " = " respectively.  When you insert that object into a C++
+/// stream, you would get "a = c, b = d".
+///
+/// This class is never instantiated by hand.  The equal_list()
+/// functions build instances of this structure template to do their
+/// work.  MySQL++'s SSQLS mechanism calls those functions when
+/// building SQL queries; you can call them yourself to do similar work.
+/// The "Harnessing SSQLS Internals" section of the user manual has
+/// some examples of this.
+///
+/// \sa equal_list_b
+
 template <class Seq1, class Seq2, class Manip>
 struct equal_list_ba
 {
@@ -56,6 +76,17 @@ struct equal_list_ba
 	}
 };
 
+
+/// \brief Same as equal_list_ba, plus the option to have some elements
+/// of the equals clause suppressed.
+///
+/// Imagine an object of this type contains the lists (a, b, c)
+/// (d, e, f), that the object's 'fields' list is (true, false, true),
+/// and that the object's delimiter and equals symbols are set to
+/// " AND " and " = " respectively.  When you insert that object into a
+/// C++ stream, you would get "a = d AND c = f".
+///
+/// See equal_list_ba's documentation for more details.
 
 template <class Seq1, class Seq2, class Manip>
 struct equal_list_b
@@ -81,6 +112,25 @@ struct equal_list_b
 };
 
 
+/// \brief Holds a list of items, typically used to construct a SQL
+/// "value list".
+///
+/// The SQL INSERT statement has a VALUES clause; this class can
+/// be used to construct the list of items for that clause.
+///
+/// Imagine an object of this type contains the list (a, b, c), and
+/// that the object's delimiter symbol is set to ", ".  When you
+/// insert that object into a C++ stream, you would get "a, b, c".
+///
+/// This class is never instantiated by hand.  The value_list()
+/// functions build instances of this structure template to do their
+/// work.  MySQL++'s SSQLS mechanism calls those functions when
+/// building SQL queries; you can call them yourself to do similar work.
+/// The "Harnessing SSQLS Internals" section of the user manual has
+/// some examples of this.
+///
+/// \sa value_list_b
+
 template <class Seq, class Manip>
 struct value_list_ba
 {
@@ -96,6 +146,16 @@ struct value_list_ba
 	}
 };
 
+
+/// \brief Same as value_list_ba, plus the option to have some elements
+/// of the list suppressed.
+///
+/// Imagine an object of this type contains the list (a, b, c), that
+/// the object's 'fields' list is (true, false, true), and that the
+/// object's delimiter is set to ":".  When you insert that object
+/// into a C++ stream, you would get "a:c".
+///
+/// See value_list_ba's documentation for more details.
 
 template <class Seq, class Manip>
 struct value_list_b
@@ -116,6 +176,15 @@ struct value_list_b
 };
 
 
+/// \brief Inserts an equal_list_ba into an std::ostream.
+///
+/// Given two lists (a, b) and (c, d), a delimiter D, and an equals
+/// symbol E, this operator will insert "aEcDbEd" into the stream.
+///
+/// See equal_list_ba's documentation for concrete examples.
+///
+/// \sa equal_list()
+
 template <class Seq1, class Seq2, class Manip>
 std::ostream& operator <<(std::ostream& o,
 		const equal_list_ba<Seq1, Seq2, Manip>& el)
@@ -134,6 +203,11 @@ std::ostream& operator <<(std::ostream& o,
 	return o;
 }
 
+
+/// \brief Same as operator<< for equal_list_ba, plus the option to
+/// suppress insertion of some list items in the stream.
+///
+/// See equal_list_b's documentation for examples of how this works.
 
 template <class Seq1, class Seq2, class Manip>
 std::ostream& operator <<(std::ostream& o,
@@ -159,6 +233,15 @@ std::ostream& operator <<(std::ostream& o,
 }
 
 
+/// \brief Inserts a value_list_ba into an std::ostream.
+///
+/// Given a list (a, b) and a delimiter D, this operator will insert
+/// "aDb" into the stream.
+///
+/// See value_list_ba's documentation for concrete examples.
+///
+/// \sa value_list()
+
 template <class Seq, class Manip>
 std::ostream& operator <<(std::ostream& o,
 		const value_list_ba<Seq, Manip>& cl)
@@ -176,6 +259,11 @@ std::ostream& operator <<(std::ostream& o,
 	return o;
 }
 
+
+/// \brief Same as operator<< for value_list_ba, plus the option to
+/// suppress insertion of some list items in the stream.
+///
+/// See value_list_b's documentation for examples of how this works.
 
 template <class Seq, class Manip>
 std::ostream& operator <<(std::ostream& o,
@@ -226,18 +314,37 @@ public:
 /// \endif
 
 
-//
-// create vector
-//
+/// \brief Create a vector of bool with the given arguments as values.
+///
+/// This function takes up to 13 bools, with the size parameter
+/// controlling the actual number of parameters we pay attention to.
+///
+/// This function is used within the library to build the vector used
+/// in calling the vector form of Row::equal_list(), Row::value_list(),
+/// and Row::field_list().  See the "Harnessing SSQLS Internals" section
+/// of the user manual to see that feature at work.
 
-void create_vector(int size, std::vector < bool > &v, bool t0,
+void create_vector(int size, std::vector<bool>& v, bool t0,
 		bool t1 = false, bool t2 = false, bool t3 = false,
 		bool t4 = false, bool t5 = false, bool t6 = false,
 		bool t7 = false, bool t8 = false, bool t9 = false,
 		bool ta = false, bool tb = false, bool tc = false);
 
+
+/// \brief Create a vector of bool using a list of named fields.
+///
+/// This function is used with the ResUse and Result containers,
+/// which have a field_num() member function that maps a field name
+/// to its position number.  So for each named field, we set the
+/// bool in the vector at the corresponding position to true.
+///
+/// This function is used within the library to build the vector used
+/// in calling the vector form of Row::equal_list(), Row::value_list(),
+/// and Row::field_list().  See the "Harnessing SSQLS Internals" section
+/// of the user manual to see that feature at work.
+
 template <class Container>
-void create_vector(const Container & c, std::vector < bool > &v,
+void create_vector(const Container& c, std::vector<bool>& v,
 		std::string s0, std::string s1, std::string s2,
 		std::string s3, std::string s4, std::string s5,
 		std::string s6, std::string s7, std::string s8,
@@ -245,9 +352,16 @@ void create_vector(const Container & c, std::vector < bool > &v,
 		std::string sc);
 
 
-//
-// value list
-//
+
+/// \brief Constructs a value_list_ba
+///
+/// This function returns a value list that uses the 'do_nothing'
+/// manipulator.  That is, the items are not quoted or escaped in any
+/// way.  See value_list(Seq, const char*, Manip) if you need to
+/// specify a manipulator.
+///
+/// \param s an STL sequence of items in the value list
+/// \param d delimiter operator<< should place between items
 
 template <class Seq>
 value_list_ba<Seq, do_nothing_type0>
@@ -257,6 +371,12 @@ value_list(const Seq& s, const char* d = ",")
 }
 
 
+/// \brief Constructs a value_list_ba
+///
+/// \param s an STL sequence of items in the value list
+/// \param d delimiter operator<< should place between items
+/// \param m manipulator to use when inserting items into a stream
+
 template <class Seq, class Manip>
 value_list_ba<Seq, Manip>
 value_list(const Seq& s, const char* d, Manip m) 
@@ -264,6 +384,15 @@ value_list(const Seq& s, const char* d, Manip m)
 	return value_list_ba<Seq, Manip>(s, d, m);
 }
 
+
+/// \brief Constructs a value_list_b (sparse value list)
+///
+/// \param s an STL sequence of items in the value list
+/// \param d delimiter operator<< should place between items
+/// \param m manipulator to use when inserting items into a stream
+/// \param vb for each item in this vector that is true, the
+/// corresponding item in the value list is inserted into a stream;
+/// the others are suppressed
 
 template <class Seq, class Manip>
 inline value_list_b<Seq, Manip>
@@ -273,6 +402,12 @@ value_list(const Seq& s, const char* d, Manip m,
 	return value_list_b<Seq, Manip>(s, vb, d, m);
 }
 
+
+/// \brief Constructs a value_list_b (sparse value list)
+///
+/// Same as value_list(Seq&, const char*, Manip, const vector<bool>&),
+/// except that it takes the bools as arguments instead of wrapped up
+/// in a vector object.
 
 template <class Seq, class Manip>
 value_list_b<Seq, Manip>
@@ -288,6 +423,13 @@ value_list(const Seq& s, const char* d, Manip m, bool t0,
 	return value_list_b<Seq, Manip>(s, vb, d, m);
 }
 
+/// \brief Constructs a sparse value list
+///
+/// Same as value_list(Seq&, const char*, Manip, bool, bool...) but
+/// without the Manip parameter.  We use the do_nothing manipulator,
+/// meaning that the value list items are neither escaped nor quoted
+/// when being inserted into a stream.
+
 template <class Seq>
 value_list_b<Seq, do_nothing_type0>
 value_list(const Seq& s, const char* d, bool t0,
@@ -301,6 +443,16 @@ value_list(const Seq& s, const char* d, bool t0,
 				  ta, tb, tc);
 	return value_list_b<Seq, do_nothing_type0>(s, vb, d, do_nothing);
 }
+
+
+/// \brief Constructs a sparse value list
+///
+/// Same as value_list(Seq&, const char*, Manip, bool, bool...) but
+/// without the Manip or delimiter parameters.  We use the do_nothing
+/// manipulator, meaning that the value list items are neither escaped
+/// nor quoted when being inserted into a stream.  The delimiter is a
+/// comma.  This form is suitable for lists of simple data, such as
+/// integers.
 
 template <class Seq>
 value_list_b<Seq, do_nothing_type0>
@@ -317,9 +469,26 @@ value_list(const Seq& s, bool t0,
 }
 
 
-//
-// equal list
-//
+/// \brief Constructs an equal_list_ba
+///
+/// This function returns an equal list that uses the 'do_nothing'
+/// manipulator.  That is, the items are not quoted or escaped in any
+/// way when inserted into a stream.  See equal_list(Seq, Seq,
+/// const char*, const char*, Manip) if you need a different
+/// manipulator.
+///
+/// The idea is for both lists to be of equal length because
+/// corresponding elements from each list are handled as pairs, but if
+/// one list is shorter than the other, the generated list will have
+/// that many elements.
+///
+/// \param s1 items on the left side of the equals sign when the
+/// equal list is inserted into a stream
+/// \param s2 items on the right side of the equals sign
+/// \param d delimiter operator<< should place between pairs
+/// \param e what operator<< should place between items in each pair;
+/// by default, an equals sign, as that is the primary use for this
+/// mechanism.
 
 template <class Seq1, class Seq2>
 equal_list_ba<Seq1, Seq2, do_nothing_type0>
@@ -331,6 +500,12 @@ equal_list(const Seq1& s1, const Seq2& s2, const char *d = ",",
 }
 
 
+/// \brief Constructs an equal_list_ba
+///
+/// Same as equal_list(Seq&, Seq&, const char*, const char*) except that
+/// it also lets you specify the manipulator.  Use this version if the
+/// data must be escaped or quoted when being inserted into a stream.
+
 template <class Seq1, class Seq2, class Manip>
 equal_list_ba<Seq1, Seq2, Manip>
 equal_list(const Seq1& s1, const Seq2& s2, const char* d,
@@ -339,6 +514,14 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d,
 	return equal_list_ba<Seq1, Seq2, Manip>(s1, s2, d, e, m);
 }
 
+
+/// \brief Constructs a equal_list_b (sparse equal list)
+///
+/// Same as equal_list(Seq&, Seq&, const char*, const char*, Manip) except
+/// that you can pass a vector of bools. For each true item in that
+/// list, operator<< adds the corresponding item is put in the equal
+/// list.  This lets you pass in sequences when you don't want all of
+/// the elements to be inserted into a stream.
 
 template <class Seq1, class Seq2, class Manip>
 equal_list_b<Seq1, Seq2, Manip>
@@ -349,7 +532,12 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d,
 }
 
 
-// complete
+/// \brief Constructs a equal_list_b (sparse equal list)
+///
+/// Same as equal_list(Seq&, Seq&, const char*, const char*, Manip,
+/// vector<bool>&) except that it takes boolean parameters
+/// instead of a list of bools.
+
 template <class Seq1, class Seq2, class Manip>
 equal_list_b<Seq1, Seq2, Manip>
 equal_list(const Seq1& s1, const Seq2& s2, const char* d,
@@ -366,7 +554,13 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d,
 }
 
 
-// delem, equl
+/// \brief Constructs a equal_list_b (sparse equal list)
+///
+/// Same as equal_list(Seq&, Seq&, const char*, const char*, Manip,
+/// bool, bool...) except that it doesn't take the Manip argument.
+/// It uses the do_nothing manipulator instead, meaning that none of
+/// the elements are escaped when being inserted into a stream.
+
 template <class Seq1, class Seq2>
 equal_list_b<Seq1, Seq2, do_nothing_type0>
 equal_list(const Seq1& s1, const Seq2& s2, const char* d,
@@ -384,7 +578,12 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d,
 }
 
 
-// delem
+/// \brief Constructs a equal_list_b (sparse equal list)
+///
+/// Same as equal_list(Seq&, Seq&, const char*, const char*, bool,
+/// bool...) except that it doesn't take the second const char*
+/// argument.  It uses " = " for the equals symbol.
+
 template <class Seq1, class Seq2>
 equal_list_b<Seq1, Seq2, do_nothing_type0>
 equal_list(const Seq1& s1, const Seq2& s2, const char* d, bool t0,
@@ -401,7 +600,14 @@ equal_list(const Seq1& s1, const Seq2& s2, const char* d, bool t0,
 }
 
 
-// nothing
+/// \brief Constructs a equal_list_b (sparse equal list)
+///
+/// Same as equal_list(Seq&, Seq&, const char*, bool, bool...) except
+/// that it doesn't take the const char* argument.  It uses a comma for
+/// the delimiter.  This form is useful for building simple equals
+/// lists, where no manipulators are necessary, and the default
+/// delimiter and equals symbol are suitable.
+
 template <class Seq1, class Seq2>
 equal_list_b<Seq1, Seq2, do_nothing_type0>
 equal_list(const Seq1& s1, const Seq2& s2, bool t0, bool t1 = false,
