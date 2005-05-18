@@ -231,7 +231,11 @@ public:
 		return num;
 	}
 	
-	/// \brief Returns true if the SQL type is of a type that needs to/// be quoted.////// \return true if the type needs to be quoted for syntactically/// correct SQL.
+	/// \brief Returns true if the SQL type is of a type that needs to
+	/// be quoted.
+	///
+	/// \return true if the type needs to be quoted for syntactically
+	/// correct SQL.
 	bool quote_q() const;
 
 	/// \brief Returns true if the SQL type is of a type that needs to
