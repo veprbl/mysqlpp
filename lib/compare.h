@@ -144,6 +144,8 @@ mysql_cmp_cstr(uint i, const BinaryPred& func, const char* cmp2)
 }
 
 
+/// \brief Base class for the other predicate types defined in compare.h
+
 typedef std::binary_function<const char*, const char*, bool>
 		bin_char_pred;
 

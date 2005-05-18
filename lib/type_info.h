@@ -304,31 +304,41 @@ inline mysql_type_info::mysql_type_info(const MYSQL_FIELD& f)
 	_max_length = f.max_length;
 }
 
+/// \brief Returns true if two mysql_type_info objects are equal.
 inline bool operator ==(const mysql_type_info& a, const mysql_type_info& b)
 {
 	return a.id() == b.id();
 }
 
+/// \brief Returns true if two mysql_type_info objects are not equal.
 inline bool operator !=(const mysql_type_info& a, const mysql_type_info& b)
 {
 	return a.id() != b.id();
 }
 
+/// \brief Returns true if a given mysql_type_info object is equal
+/// to a given C++ type_info object.
 inline bool operator ==(const std::type_info& a, const mysql_type_info& b)
 {
 	return a == b.c_type();
 }
 
+/// \brief Returns true if a given mysql_type_info object is not equal
+/// to a given C++ type_info object.
 inline bool operator !=(const std::type_info& a, const mysql_type_info& b)
 {
 	return a != b.c_type();
 }
 
+/// \brief Returns true if a given mysql_type_info object is equal
+/// to a given C++ type_info object.
 inline bool operator ==(const mysql_type_info& a, const std::type_info& b)
 {
 	return a.c_type() == b;
 }
 
+/// \brief Returns true if a given mysql_type_info object is not equal
+/// to a given C++ type_info object.
 inline bool operator !=(const mysql_type_info& a, const std::type_info& b)
 {
 	return a.c_type() != b;

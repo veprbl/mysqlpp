@@ -104,7 +104,9 @@ struct Date : public mysql_date, public DTbase<Date>
   }
 };
 
-inline std::ostream& operator << (std::ostream& s, const Date& d)
+/// \brief Inserts a Date object into a C++ stream in a MySQL-compatible
+/// format.
+inline std::ostream& operator <<(std::ostream& s, const Date& d)
 {
 	return d.out_stream(s);
 }
@@ -146,7 +148,9 @@ struct Time : public mysql_time, public DTbase<Time>
     {return mysql_time::compare(&other);}
 };
 
-inline std::ostream& operator << (std::ostream& s, const Time& d)
+/// \brief Inserts a Time object into a C++ stream in a MySQL-compatible
+/// format.
+inline std::ostream& operator <<(std::ostream& s, const Time& d)
 {
 	return d.out_stream(s);
 }
@@ -179,7 +183,9 @@ struct DateTime : public mysql_date, public mysql_time,
   cchar* convert (cchar*);
 };
 
-inline std::ostream& operator << (std::ostream& s, const DateTime& d)
+/// \brief Inserts a DateTime object into a C++ stream in a
+/// MySQL-compatible format.
+inline std::ostream& operator <<(std::ostream& s, const DateTime& d)
 {
 	return d.out_stream(s);
 }

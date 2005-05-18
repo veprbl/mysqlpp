@@ -38,7 +38,13 @@ using namespace std;
 
 namespace mysqlpp {
 
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
+
 typedef string Enum;
+
+/// \endif
+
 
 // The first half of this array roughly parallels enum_field_types
 // in mysql/mysql_com.h.  It is a lookup table used by the type() method

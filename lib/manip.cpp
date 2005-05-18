@@ -325,7 +325,7 @@ SQLQueryParms& operator<<(escape_type2 p, SQLString& in)
 }
 
 template<>
-ostream& operator<<(escape_type1 o, const string& in)
+std::ostream& operator<<(escape_type1 o, const std::string& in)
 {
 	char *s = new char[in.size() * 2 + 1];
 	mysql_escape_string(s, in.c_str(), static_cast <unsigned long> (in.size()));
@@ -362,13 +362,13 @@ inline ostream& _manip(escape_type1 o, const ColData_Tmpl<Str>& in)
 }
 
 template<>
-ostream& operator<<(escape_type1 o, const ColData_Tmpl<string>& in)
+std::ostream& operator<<(escape_type1 o, const ColData_Tmpl<std::string>& in)
 {
 	return _manip(o, in);
 }
 
 template<>
-ostream& operator<<(escape_type1 o, const ColData_Tmpl<const_string>& in)
+std::ostream& operator<<(escape_type1 o, const ColData_Tmpl<const_string>& in)
 {
 	return _manip(o, in);
 }

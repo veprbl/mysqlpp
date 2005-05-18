@@ -44,6 +44,8 @@ namespace mysqlpp {
 
 template <class Type> class mysql_convert;
 
+/// \brief Internal macro, used in defining mysql_convert<T> templates
+/// that convert floating point data to strings.
 #define mysql__convert(TYPE, FUNC) \
   template <> \
   class mysql_convert<TYPE> {\
@@ -66,6 +68,8 @@ template <class Type> class mysql_convert;
 #	pragma warning(default: 4244)
 #endif
 
+/// \brief Internal macro, used in defining mysql_convert<T> templates
+/// that convert integer data to strings.
 #undef mysql__convert
 #define mysql__convert(TYPE, FUNC) \
   template <> \

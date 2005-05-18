@@ -257,14 +257,16 @@ public:
 };
 
 
-inline void swap (ResUse &x, ResUse &y)
+/// \brief Swaps two ResUse objects
+inline void swap(ResUse &x, ResUse &y)
 {
   ResUse tmp = x;
   x = y;
   y = tmp;
 }
 
-inline void swap (Result &x, Result &y)
+/// \brief Swaps two Result objects
+inline void swap(Result &x, Result &y)
 {
   Result tmp = x;
   x = y;

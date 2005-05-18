@@ -99,8 +99,9 @@ public:
 };
 
 
+/// \brief Inserts a Set object into a C++ stream
 template <class Container>
-inline std::ostream& operator << (std::ostream &s, const Set<Container> &d)
+inline std::ostream& operator <<(std::ostream& s, const Set<Container>& d)
 { 
   return d.out_stream(s); 
 }
@@ -113,8 +114,11 @@ inline Set<Container>::operator std::string ()
 }
 
 
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
+
 template <class Insert>
-void set2container (const char *str, Insert insert)
+void set2container(const char* str, Insert insert)
 {
   while (1) {
     MutableColData s("");
@@ -128,8 +132,11 @@ void set2container (const char *str, Insert insert)
   }
 }
 
+/// \endif
+
+
 template <class Container>
-std::ostream& Set<Container>::out_stream (std::ostream &s) const
+std::ostream& Set<Container>::out_stream(std::ostream& s) const
 {
   typename Container::const_iterator i = Container::begin();
   typename Container::const_iterator e = Container::end();

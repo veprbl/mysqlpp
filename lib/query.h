@@ -53,11 +53,13 @@
 
 #include <mysql.h>
 
+/// \brief Used to define many similar member functions in class Query.
 #define mysql_query_define1(RETURN, FUNC) \
   RETURN FUNC (const char* str); \
   RETURN FUNC (parms &p);\
   mysql_query_define0(RETURN,FUNC) \
 
+/// \brief Used to define many similar member functions in class Query.
 #define mysql_query_define2(FUNC) \
   template <class T1> void FUNC (T1 &con, const char* str); \
   template <class T1> void FUNC (T1 &con, parms &p, query_reset r = RESET_QUERY);\

@@ -49,6 +49,7 @@
 #include <vector>
 #include <map>
 
+/// \brief Used to define many similar functions in class SQLQuery.
 #define mysql_query_define0(RETURN, FUNC)\
   RETURN FUNC (ss a)\
     {return FUNC (parms() << a);}\

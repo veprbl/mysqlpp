@@ -146,46 +146,55 @@ public:
 };
 
 
+/// \brief Inserts a const_string into a C++ stream
 inline std::ostream& operator <<(std::ostream& o,
-		const const_string& str) {
+		const const_string& str)
+{
 	return o << str.c_str();
 }
 
+/// \brief Calls lhs.compare(), passing rhs
 inline int compare(const const_string& lhs, const const_string& rhs)
 {
 	return lhs.compare(rhs);
 }
 
+/// \brief Returns true if lhs is the same as rhs
 inline bool operator ==(const_string& lhs, const_string& rhs)
 {
 	return compare(lhs, rhs) == 0;
 }
 
+/// \brief Returns true if lhs is not the same as rhs
 inline bool operator !=(const_string& lhs, const_string& rhs)
 {
 	return compare(lhs, rhs) != 0;
 }
 
+/// \brief Returns true if lhs is lexically less than rhs
 inline bool operator <(const_string& lhs, const_string& rhs)
 {
 	return compare(lhs, rhs) < 0;
 }
 
+/// \brief Returns true if lhs is lexically less or equal to rhs
 inline bool operator <=(const_string& lhs, const_string& rhs)
 {
 	return compare(lhs, rhs) <= 0;
 }
 
+/// \brief Returns true if lhs is lexically greater than rhs
 inline bool operator >(const_string& lhs, const_string& rhs)
 {
 	return compare(lhs, rhs) > 0;
 }
 
+/// \brief Returns true if lhs is lexically greater than or equal to rhs
 inline bool operator >=(const_string& lhs, const_string& rhs)
 {
 	return compare(lhs, rhs) >= 0;
 }
 
-}								// end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif

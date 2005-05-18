@@ -48,6 +48,8 @@ public:
   template <class Type> operator Type () {throw BadNullConversion();}
 };
 
+/// \brief Global 'null' instance.  Use wherever you need a SQL null.
+/// (As opposed to a C language null pointer or null character.)
 const null_type null = null_type();
 
 /// \brief Used for the behavior parameter for template Null
@@ -122,8 +124,13 @@ public:
 /// \endif
  
 
+/// \brief Inserts null-able data into a C++ stream if it is not
+/// actually null.  Otherwise, insert something appropriate for null
+/// data.
 template <class Type, class Behavior>
-inline std::ostream& operator << (std::ostream &o, const Null<Type,Behavior> &n) {
+inline std::ostream& operator <<(std::ostream& o,
+		const Null<Type,Behavior>& n)
+{
   if (n.is_null) return Behavior::null_ostr(o);
   else return o << n.data;
 }

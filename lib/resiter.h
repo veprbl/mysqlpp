@@ -131,6 +131,10 @@ public:
     {if (d == j.d) return static_cast<SizeType>(i) - j.i; return 0;}
 };
 
+
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
+
 template <class OnType, class ReturnType, class SizeType, class DiffType>
 inline subscript_iterator<OnType,ReturnType,SizeType,DiffType>
 operator +(SizeType x,
@@ -138,6 +142,8 @@ operator +(SizeType x,
 {
   return y + x;
 }
+
+/// \endif
 
 } // end namespace mysqlpp
 
