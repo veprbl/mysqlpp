@@ -43,7 +43,7 @@ namespace mysqlpp {
 class FieldNames;
 class ResUse;
 
-/// Documentation needed!
+/// \brief Base class for class Row
 
 template <class ThisType, class Res>
 class RowTemplate {

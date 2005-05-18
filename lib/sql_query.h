@@ -225,7 +225,9 @@ public:
 enum query_reset { DONT_RESET, RESET_QUERY };
 
 
-/// Documentation needed!
+/// \brief Used within SQLQuery to hold elements for parameterized
+/// queries.
+
 struct SQLParseElement {
 	SQLParseElement(std::string b, char o, char n):before(b),
 		option(o), num(n) {

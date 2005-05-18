@@ -77,9 +77,7 @@ private:
 	}
 };
 
-/// \endif
 
-/// Documentation needed!
 struct type_info_cmp
 {
 	bool operator() (const std::type_info* lhs,
@@ -88,9 +86,6 @@ struct type_info_cmp
 		return lhs->before(*rhs) != 0;
 	}
 };
-
-/// \if INTERNAL
-// Doxygen will not generate documentation for this section.
 
 class mysql_ti_sql_type_info_lookup
 {
