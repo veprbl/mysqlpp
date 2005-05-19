@@ -804,6 +804,63 @@ main(int argc, char *argv[])
 
 
 	<sect2>
+		<title>Quoting and Escaping</title>
+
+		<para>SQL syntax often requires certain data to be
+		quoted. Consider this query:</para>
+
+		<programlisting>
+        SELECT * FROM stock WHERE item = 'Hotdog Buns' </programlisting>
+
+		<para>Because the string "Hotdog Buns" contains a space,
+		it must be quoted. With MySQL++, you don't have to add
+		these quote marks manually:</para>
+
+		<programlisting>
+        string s = "Hotdog Buns";
+        Query q = conn.query();
+        q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; s; </programlisting>
+
+		<para>That code produces the same query string
+		as in the previous example. We used the MySQL++
+		<computeroutput>quote_only</computeroutput>
+		manipulator, which causes single quotes to be
+		added around the next item inserted into the
+		stream. This works for various string types, for any
+		type of data that can be converted to MySQL++'s <ulink
+		url="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</ulink>
+		type, and for <xref linkend="ssqls"/>. (The next section
+		introduces the SSQLS feature.)</para>
+
+		<para>Quoting is pretty simple, but SQL syntax also often
+		requires that certain characters be "escaped". Imagine
+		if the string in the previous example was "Frank's Brand Hotdog
+		Buns" instead. The resulting query would be:</para>
+
+		<programlisting>
+        SELECT * FROM stock WHERE item = 'Frank's Brand Hotdog Buns' </programlisting>
+
+		<para>That's not valid SQL syntax. The correct syntax is:</para>
+
+		<programlisting>
+        SELECT * FROM stock WHERE item = 'Frank''s Brand Hotdog Buns' </programlisting>
+
+		<para>As you might expect, MySQL++ provides that feature,
+		too, through its 'escape' manipulator. But here, we want
+		both quoting and escaping. That brings us to the most
+		widely useful manipulator:</para>
+
+		<programlisting>
+        string s = "Hotdogs' Buns";
+        Query q = conn.query();
+        q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </programlisting>
+
+		<para>The regular quote manipulator both quotes strings,
+		and escapes any characters that are special in SQL.</para>
+	</sect2>
+
+
+	<sect2>
 		<title>Specialized SQL Structures</title>
 
 		<sect3>
