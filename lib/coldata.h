@@ -52,23 +52,28 @@
 namespace mysqlpp {
 
 /// \brief Template for string data that can convert itself to any
-/// standard C data type.  Do not use directly. 
+/// standard C data type.
 ///
-/// This template is used to construct std::string-like classes with
-/// additional MySQL-related smarts. It is for taking data from the
-/// MySQL database, which is always in string form, and converting it to
-/// any of the basic C types. 
+/// Do not use this class directly. Use the typedef ColData or
+/// MutableColData instead. ColData is a \c ColData_Tmpl<const
+/// \c std::string> and MutableColData is a
+/// \c ColData_Tmpl<std::string>.
 ///
-/// These conversions are implicit, so you can do things like this:
+/// The ColData types add to the C++ string type the ability to
+/// automatically convert the string data to any of the basic C types.
+/// This is important with SQL, because all data coming from the
+/// database is in string form.  MySQL++ uses this class internally
+/// to hold the data it receives from the server, so you can use it
+/// naturally, because it does the conversions implicitly:
 ///
 /// \code ColData("12.86") + 2.0 \endcode
 ///
-/// But be careful.  If you had said this instead:
+/// That works fine, but be careful.  If you had said this instead:
 /// 
 /// \code ColData("12.86") + 2 \endcode
 /// 
-/// the result would be 14 because 2 is an integer, so the string data
-/// is converted to that same type before the binary operator is applied.
+/// the result would be 14 because 2 is an integer, and C++'s type
+/// conversion rules put the ColData object in an integer context.
 ///
 /// If these automatic conversions scare you, define the micro
 /// NO_BINARY_OPERS to disable this behavior.
@@ -76,9 +81,6 @@ namespace mysqlpp {
 /// This class also has some basic information about the type of data
 /// stored in it, to allow it to do the conversions more intelligently
 /// than a trivial implementation would allow.
-///
-/// <b>Do not use this class directly.</b> Use the typedef ColData or
-/// MutableColData instead.
 
 template <class Str> class ColData_Tmpl : public Str
 {
