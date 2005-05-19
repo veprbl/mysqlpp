@@ -206,7 +206,6 @@ typedef ColData_Tmpl < std::string > MutableColData;
 /// \if INTERNAL
 // Doxygen will not generate documentation for this section.
 
-/// \brief Internal macro, for defining all binary operators.
 #define oprsw(opr, other, conv) \
   template<class Str> \
   inline other operator opr (ColData_Tmpl<Str> x, other y) \
@@ -215,16 +214,12 @@ typedef ColData_Tmpl < std::string > MutableColData;
   inline other operator opr (other x, ColData_Tmpl<Str> y) \
     {return x opr static_cast<conv>(y);}
 
-/// \brief Internal macro, for defining binary arithmetic operators
-/// involving C POD types and ColData.
 #define operator_binary(other, conv) \
   oprsw(+, other, conv) \
   oprsw(-, other, conv) \
   oprsw(*, other, conv) \
   oprsw(/, other, conv)
 
-/// \brief Internal macro, for defining binary bit manipulation
-/// operators involving C POD types and ColData.
 #define operator_binary_int(other, conv) \
   operator_binary(other, conv) \
   oprsw(%, other, conv) \
@@ -249,7 +244,7 @@ operator_binary_int(unsigned long int, unsigned long int)
 
 operator_binary_int(longlong, longlong)
 operator_binary_int(ulonglong, ulonglong)
-#endif							// NO_BINARY_OPERS
+#endif // NO_BINARY_OPERS
 
 /// \endif
 
