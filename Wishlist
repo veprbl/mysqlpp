@@ -46,6 +46,9 @@ New Feature Requests and ABI Changes
 	o Fold SQLQuery class into Query.  The separation goes back to the
 	  dream of making MySQL++ database-independent.
 	  
+	o Fold RowTemplate class into Row.  This is probably another
+	  obsolete bid for database-independence.
+	  
 	o With previous item done, it should be possible to use
 	  mysql_real_escape_string() instead of mysql_escape_string() within
 	  the pprepare() function.  Doing the same in manip.cpp will be more
@@ -105,24 +108,39 @@ New Feature Requests and ABI Changes
 	  so will break the ABI and a lot of infrastructure logic, though,
 	  so this change should not be done casually.
 
+	o Remove simp_list_b from vallist.h.  It doesn't seem to be used
+	  anywhere, and it doesn't seem to be useful for end-user code.
+
 
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Have resetdb also create a table that load_file and
+	  cgi_image can use.  Remove "fax"ness from these examples,
+	  and encourage people to load up JPEGs or something else that
+	  a browser can display, so one can easily drop cgi_image into
+	  a cgi-bin directory to try it out.  Make load_image use the
+	  standard command line parameters, so you can manually load up
+	  some images for cgi_image to retrieve.
+
+	o There's no way to disable exceptions with a method call on all
+	  classes.  There should be a standard way to do this.
+
 	o Add nmake Makefiles for the project, for those using only the
 	  free command-line tools.
-	
+
 	o Move SQLQueryNEParms into exceptions.h?
-	
+
 	o Template ListInsert in lib/myset.h isn't being used within the
-	  library.  It could probably be used in place of SetInsert in the
-	  same file, which things like type_info.h do use now, but it isn't
-	  clear how one would go about doing that without changing the
-	  library code.  Document it or throw it away.
-	
-	o sql_cmp(double,double) is foolish.  One shouldn't do == comparison
-	  on floating point values.  Same for sql_cmp(float,float).  See
-	  also floating point precision item in previous section.
+	  library.  It could probably be used in place of SetInsert
+	  in the same file, which things like type_info.h do use now,
+	  but it isn't clear how one would go about doing that without
+	  changing the library code.  Document it or throw it away.
+
+	o sql_cmp(double,double) is foolish.  One shouldn't do ==
+	comparison
+	  on floating point values.  Same for sql_cmp(float,float).
+	  See also floating point precision item in previous section.
 
 	o Settle on new license for documentation, or make LGPL explicit.
 
