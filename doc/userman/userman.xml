@@ -1431,7 +1431,7 @@ main(int argc, char *argv[])
 			<para>This example is also a very short
 			one, considering the function that it
 			performs. Although all modern versions of
-			MySQL have a command that dumps data from BLOB
+			MySQL have a command that dumps data from a BLOB
 			column to a binary file, this example shows
 			how to do it in your code instead, without
 			requiring an temporary file on disk. This is
@@ -1490,7 +1490,7 @@ main(int argc, char *argv[])
 
 			<para>MySQL's SELECT statement has more power to
 			winnow out just the items of interest from the
-			database than do DELETE or UPDATE. Therefore,
+			database than do DELETE or UPDATE queries. Therefore,
 			many people have wanted the ability to execute a
 			SELECT statement that in fact deletes or updates
 			the rows matched, rather than returning them. This
