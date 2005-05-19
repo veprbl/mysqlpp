@@ -267,15 +267,15 @@ private:
 
 protected:
 	bool Success;
-	char *errmsg;
-	std::vector < SQLParseElement > parsed;
-	std::vector < std::string > parsed_names;
-	std::map < std::string, int >parsed_nums;
-	typedef const SQLString & ss;
+	char* errmsg;
+	std::vector<SQLParseElement> parsed;
+	std::vector<std::string> parsed_names;
+	std::map<std::string, int> parsed_nums;
+	typedef const SQLString& ss;
 	typedef SQLQueryParms parms;
 
 	/// \brief Process a parameterized query list.
-	void proc(SQLQueryParms & p);
+	void proc(SQLQueryParms& p);
 
 public:
 	SQLQuery() :
@@ -286,7 +286,7 @@ public:
 	{
 	}
 	
-	SQLQuery(const SQLQuery & q);
+	SQLQuery(const SQLQuery& q);
 
 	/// \brief The default template parameters
 	///
@@ -379,20 +379,20 @@ public:
 };
 
 
-inline SQLString& SQLQueryParms::operator [](const char *str)
+inline SQLString& SQLQueryParms::operator [](const char* str)
 {
 	if (parent) {
 		return operator [](parent->parsed_nums[str]);
 	}
-	throw;					// only here temporary 
+	throw; // only here temporary 
 }
 
-inline const SQLString& SQLQueryParms::operator[] (const char *str) const
+inline const SQLString& SQLQueryParms::operator[] (const char* str) const
 {
 	if (parent) {
 		return operator [](parent->parsed_nums[str]);
 	}
-	throw;					// only here temporary 
+	throw; // only here temporary 
 }
 
 } // end namespace mysqlpp
