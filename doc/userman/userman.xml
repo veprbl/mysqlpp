@@ -1027,9 +1027,18 @@ main(int argc, char *argv[])
     return 0;
 }</programlisting></blockquote>
 
-			<para>That's all there is to it. Because this
-			example modifies the data you should run resetdb
-			after running the example code.</para>
+			<para>That's all there is to it!</para>
+			
+			<para>There is one subtlety: MySQL++ automatically
+			quotes and escapes the data when building SQL
+			queries using SSQLS structures. It's efficient,
+			too: MySQL++ is smart enough to apply quoting
+			and escaping only for those data types that
+			actually require it.</para>
+
+			<para>Because this example modifies the sample
+			database, you may want to run resetdb after
+			running this program.</para>
 		</sect3>
 
 		<sect3>
@@ -1408,17 +1417,12 @@ main(int argc, char *argv[])
     }
 } </programlisting></blockquote>
 
-			<para>One of the features of
-			this example is the use of the <ulink
-			url="../../refman/html/namespacemysqlpp.html#escape_manip">escape
-			manipulator</ulink>. Although the library does
-			have automatic quoting and escaping, it is only
-			supported for ColData, as that class contains
-			the necessary type information. Rather than
-			force MySQL++ to scan the string to determine
-			whether quoting and escaping is necessary, it
-			was decided to leave the choice of quoting and
-			escaping to the user for all other types.</para>
+			<para>Notice that we used the
+			<computeroutput>escape</computeroutput>
+			manipulator when building the INSERT query
+			above. This is because we're not using one of
+			the MySQL++ types that does automatic escaping
+			and quoting.</para>
 		</sect3>
 
 		<sect3>
