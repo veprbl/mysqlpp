@@ -76,8 +76,8 @@ SQLQueryParms& operator <<(quote_type2 p, SQLString& in)
 /// Because std::string lacks the type information we need, the string
 /// is both quoted and escaped, always.
 
-template<>
-ostream& operator<<(quote_type1 o, const string& in)
+template <>
+ostream& operator <<(quote_type1 o, const string& in)
 {
 	char* s = new char[in.size() * 2 + 1];
 	mysql_escape_string(s, in.c_str(),
@@ -93,8 +93,8 @@ ostream& operator<<(quote_type1 o, const string& in)
 /// Because C strings lack the type information we need, the string
 /// is both quoted and escaped, always.
 
-template<>
-ostream& operator<<(quote_type1 o, const char* const& in)
+template <>
+ostream& operator <<(quote_type1 o, const char* const& in)
 {
 	unsigned int size = strlen(in);
 	char* s = new char[size * 2 + 1];
@@ -135,8 +135,8 @@ inline ostream& _manip(quote_type1 o, const ColData_Tmpl<Str>& in)
 /// choose not to actually quote or escape the data, if it is not
 /// needed.
 
-template<>
-ostream& operator<<(quote_type1 o, const ColData_Tmpl<string>& in)
+template <>
+ostream& operator <<(quote_type1 o, const ColData_Tmpl<string>& in)
 {
 	return _manip(o, in);
 }
@@ -149,8 +149,8 @@ ostream& operator<<(quote_type1 o, const ColData_Tmpl<string>& in)
 /// choose not to actually quote or escape the data, if it is not
 /// needed.
 
-template<>
-ostream& operator<<(quote_type1 o, const ColData_Tmpl<const_string>& in)
+template <>
+ostream& operator <<(quote_type1 o, const ColData_Tmpl<const_string>& in)
 {
 	return _manip(o, in);
 }
@@ -163,7 +163,7 @@ ostream& operator<<(quote_type1 o, const ColData_Tmpl<const_string>& in)
 /// the data as it is inserted into the stream, even if you don't use
 /// any of the quoting or escaping manipulators.
 
-ostream& operator<<(ostream& o, const ColData_Tmpl<string>& in)
+ostream& operator <<(ostream& o, const ColData_Tmpl<string>& in)
 {
 	if (dont_quote_auto || (o.rdbuf() == cout.rdbuf()) ||
 			(o.rdbuf() == cerr.rdbuf())) {
@@ -196,7 +196,7 @@ ostream& operator<<(ostream& o, const ColData_Tmpl<string>& in)
 /// the data as it is inserted into the stream, even if you don't use
 /// any of the quoting or escaping manipulators.
 
-ostream& operator<<(ostream& o, const ColData_Tmpl<const_string>& in)
+ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
 {
 	if (dont_quote_auto || (o.rdbuf() == cout.rdbuf()) ||
 			(o.rdbuf() == cerr.rdbuf())) {
@@ -228,7 +228,7 @@ ostream& operator<<(ostream& o, const ColData_Tmpl<const_string>& in)
 /// compiler's implementation of the C++ type system.  See Wishlist for
 /// current plan on what to do about this.
 
-SQLQuery& operator<<(SQLQuery& o, const ColData_Tmpl<string>& in)
+SQLQuery& operator <<(SQLQuery& o, const ColData_Tmpl<string>& in)
 {
 	if (dont_quote_auto) {
 		o << in.get_string();
@@ -259,7 +259,7 @@ SQLQuery& operator<<(SQLQuery& o, const ColData_Tmpl<string>& in)
 /// compiler's implementation of the C++ type system.  See Wishlist for
 /// current plan on what to do about this.
 
-SQLQuery& operator<<(SQLQuery& o, const ColData_Tmpl<const_string>& in)
+SQLQuery& operator <<(SQLQuery& o, const ColData_Tmpl<const_string>& in)
 {
 	if (dont_quote_auto) {
 		o << in.get_string();
@@ -291,7 +291,7 @@ SQLQuery& operator<<(SQLQuery& o, const ColData_Tmpl<const_string>& in)
 /// flag.  You can set it yourself, but SQLString's ctors should set
 /// it correctly for you.
 
-SQLQueryParms& operator<<(quote_only_type2 p, SQLString& in)
+SQLQueryParms& operator <<(quote_only_type2 p, SQLString& in)
 {
 	if (in.is_string) {
 		SQLString in2 = '\'' + in + '\'';
@@ -310,8 +310,8 @@ SQLQueryParms& operator<<(quote_only_type2 p, SQLString& in)
 /// Because ColData was designed to contain MySQL type data, we may
 /// choose not to actually quote the data, if it is not needed.
 
-template<>
-ostream& operator<<(quote_only_type1 o, const ColData_Tmpl<string>& in)
+template <>
+ostream& operator <<(quote_only_type1 o, const ColData_Tmpl<string>& in)
 {
 	if (in.quote_q()) {
 		*o.ostr << '\'' << in << '\'';
@@ -328,8 +328,8 @@ ostream& operator<<(quote_only_type1 o, const ColData_Tmpl<string>& in)
 /// Because ColData was designed to contain MySQL type data, we may
 /// choose not to actually quote the data, if it is not needed.
 
-template<>
-ostream& operator<<(quote_only_type1 o,
+template <>
+ostream& operator <<(quote_only_type1 o,
 		const ColData_Tmpl<const_string>& in)
 {
 	if (in.quote_q()) {
@@ -349,7 +349,7 @@ ostream& operator<<(quote_only_type1 o,
 /// flag.  You can set it yourself, but SQLString's ctors should set
 /// it correctly for you.
 
-SQLQueryParms& operator<<(quote_double_only_type2 p, SQLString& in)
+SQLQueryParms& operator <<(quote_double_only_type2 p, SQLString& in)
 {
 	if (in.is_string) {
 		SQLString in2 = "\"" + in + "\"";
@@ -368,8 +368,8 @@ SQLQueryParms& operator<<(quote_double_only_type2 p, SQLString& in)
 /// Because ColData was designed to contain MySQL type data, we may
 /// choose not to actually quote the data, if it is not needed.
 
-template<>
-ostream& operator<<(quote_double_only_type1 o,
+template <>
+ostream& operator <<(quote_double_only_type1 o,
 		const ColData_Tmpl<string>& in)
 {
 	if (in.quote_q()) {
@@ -388,8 +388,8 @@ ostream& operator<<(quote_double_only_type1 o,
 /// Because ColData was designed to contain MySQL type data, we may
 /// choose not to actually quote the data, if it is not needed.
 
-template<>
-ostream& operator<<(quote_double_only_type1 o,
+template <>
+ostream& operator <<(quote_double_only_type1 o,
 		const ColData_Tmpl<const_string>& in)
 {
 	if (in.quote_q()) {
@@ -402,14 +402,7 @@ ostream& operator<<(quote_double_only_type1 o,
 }
 
 
-/// \brief Inserts a SQLString into a stream, escaping special SQL
-/// characters
-///
-/// We actually only do the escaping if in.is_string is set but
-/// in.dont_escape is not.  If that is not the case, we insert the
-/// string data directly.
-
-SQLQueryParms& operator<<(escape_type2 p, SQLString& in)
+SQLQueryParms& operator <<(escape_type2 p, SQLString& in)
 {
 	if (in.is_string && ! in.dont_escape) {
 		char* s = new char[in.size() * 2 + 1];
@@ -433,8 +426,8 @@ SQLQueryParms& operator<<(escape_type2 p, SQLString& in)
 /// Because std::string lacks the type information we need, the string
 /// is always escaped, even if it doesn't need it.
 
-template<>
-std::ostream& operator<<(escape_type1 o, const std::string& in)
+template <>
+std::ostream& operator <<(escape_type1 o, const std::string& in)
 {
 	char* s = new char[in.size() * 2 + 1];
 	mysql_escape_string(s, in.c_str(),
@@ -452,8 +445,8 @@ std::ostream& operator<<(escape_type1 o, const std::string& in)
 /// guess this manipulator, we always run the escaping algorithm on
 /// the data, even if it's not needed.
 
-template<>
-ostream& operator<<(escape_type1 o, const char* const& in)
+template <>
+ostream& operator <<(escape_type1 o, const char* const& in)
 {
 	unsigned int size = strlen(in);
 	char* s = new char[size * 2 + 1];
@@ -466,7 +459,7 @@ ostream& operator<<(escape_type1 o, const char* const& in)
 
 /// \brief Utility function used by operator<<(escape_type1, ColData)
 
-template<class Str>
+template <class Str>
 inline ostream& _manip(escape_type1 o, const ColData_Tmpl<Str>& in)
 {
 	if (in.escape_q()) {
@@ -487,8 +480,9 @@ inline ostream& _manip(escape_type1 o, const ColData_Tmpl<Str>& in)
 /// Because ColData was designed to contain MySQL type data, we may
 /// choose not to escape the data, if it is not needed.
 
-template<>
-std::ostream& operator<<(escape_type1 o, const ColData_Tmpl<std::string>& in)
+template <>
+std::ostream& operator <<(escape_type1 o,
+		const ColData_Tmpl<std::string>& in)
 {
 	return _manip(o, in);
 }
@@ -500,8 +494,8 @@ std::ostream& operator<<(escape_type1 o, const ColData_Tmpl<std::string>& in)
 /// Because ColData was designed to contain MySQL type data, we may
 /// choose not to escape the data, if it is not needed.
 
-template<>
-std::ostream& operator<<(escape_type1 o, const ColData_Tmpl<const_string>& in)
+template <>
+std::ostream& operator <<(escape_type1 o, const ColData_Tmpl<const_string>& in)
 {
 	return _manip(o, in);
 }

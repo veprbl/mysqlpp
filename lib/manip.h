@@ -461,6 +461,14 @@ inline escape_type2 operator <<(SQLQueryParms& p, escape_type0 /*esc */)
 
 /// \endif
 
+
+/// \brief Inserts a SQLString into a stream, escaping special SQL
+/// characters
+///
+/// We actually only do the escaping if in.is_string is set but
+/// in.dont_escape is not.  If that is not the case, we insert the
+/// string data directly.
+
 SQLQueryParms& operator <<(escape_type2 p, SQLString& in);
 
 
