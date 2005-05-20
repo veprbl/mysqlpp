@@ -1262,6 +1262,50 @@ main(int argc, char *argv[])
 
 
 	<sect2>
+		<title>Handling SQL Nulls</title>
+
+		<para>There is no equivalent of SQL's null in the standard
+		C++ type system. The <computeroutput>NULL</computeroutput>
+		constant from <computeroutput>stddef.h</computeroutput> is
+		not at all the same. (From here on, when I write "null" in
+		lowercase, I mean SQL null, not the C++ constant.)</para>
+
+		<para>The distinction is one of type: in SQL,
+		null is a column attribute, which affects whether
+		that column can hold a SQL null. This effectively
+		doubles the number of types in SQL. MySQL++ handles
+		this the same way SQL does: it provides the <ulink
+		url="../../refman/html/classmysqlpp_1_1null.html">Null</ulink>
+		template to allow the creation of distinct "null-able"
+		versions of existing C++ types. For each column type MySQL
+		understands, the library instantiates this template for
+		the closest C++ type.</para>
+
+		<para>Template instantiations are first-class types in
+		the C++ language, on par with any other type. You can
+		use instantiations of this template anywhere you'd use
+		the plain version of that type, you can convert between
+		the plain version and the null-able version, etc.</para>
+
+		<para>The library lets you choose from three
+		different "behaviors" for null when instantiating
+		the Null template. The type you pass for this
+		template parameter affects the object's value
+		when converting it to another type and when
+		inserting it into a C++ stream. The default is <ulink
+		url="../../refman/html/structmysqlpp_1_1NullisNull.html">NullisNull</ulink>,
+		which defines null as of type <ulink
+		url="../../refman/html/classmysqlpp_1_1null__type.html">null_type</ulink>
+		and equal to "(NULL)" when inserted into a
+		stream. The second possible definition is <ulink
+		url="../../refman/html/structmysqlpp_1_1NullisZero.html">NullisZero</ulink>,
+		which defines null as zero. The third definition is <ulink
+		url="../../refman/html/structmysqlpp_1_1NullisBlank.html">NullisBlank</ulink>,
+		which defines null as a blank C string.</para>
+	</sect2>
+
+
+	<sect2>
 		<title>Which Query Type to Use?</title>
 
 		<para>There are three major ways to execute a query in MySQL++:
