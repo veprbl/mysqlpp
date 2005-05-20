@@ -52,7 +52,7 @@ public:
 	{
 		throw BadNullConversion();
 	}
-	/// \param str query to execute
+	/// \endif
 };
 
 /// \brief Global 'null' instance.  Use wherever you need a SQL null.
