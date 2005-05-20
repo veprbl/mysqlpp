@@ -32,7 +32,12 @@ using namespace std;
 // Manipulator stuff is _always_ in namespace mysqlpp.
 namespace mysqlpp {
 
+/// \brief Set to true if you want to suppress automatic quoting
+///
+/// Works only for ColData inserted into C++ streams.
+
 bool dont_quote_auto = false;
+
 
 /// \brief Inserts a SQLString into a stream, quoted and escaped.
 ///

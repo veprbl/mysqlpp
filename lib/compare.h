@@ -48,8 +48,13 @@ template <class BinaryPred, class CmpType>
 class MysqlCmp : public std::unary_function<const Row&, bool>
 {
 protected:
+	/// \brief Index of field within Row object to compare against
 	unsigned int index;
+
+	/// \brief Predicate function to use for the comparison
 	BinaryPred func;
+
+	/// \brief What to compare the Row's field against
 	CmpType cmp2;
 	
 public:
@@ -154,10 +159,13 @@ typedef std::binary_function<const char*, const char*, bool>
 /// to another.
 struct cstr_equal_to : bin_char_pred
 {
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; struct docs are sufficient
 	bool operator ()(const char* x, const char* y) const
 	{
 		return !std::strcmp(x, y);
 	}
+	/// \endif
 };
 
 
@@ -165,10 +173,13 @@ struct cstr_equal_to : bin_char_pred
 /// equal to another.
 struct cstr_not_equal_to : bin_char_pred
 {
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; struct docs are sufficient
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) != 0;
 	}
+	/// \endif
 };
 
 
@@ -176,10 +187,13 @@ struct cstr_not_equal_to : bin_char_pred
 /// lexically "less than" another.
 struct cstr_less : bin_char_pred
 {
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; struct docs are sufficient
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) > 0;
 	}
+	/// \endif
 };
 
 
@@ -187,10 +201,13 @@ struct cstr_less : bin_char_pred
 /// lexically "less than or equal to" another.
 struct cstr_less_equal : bin_char_pred
 {
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; struct docs are sufficient
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) >= 0;
 	}
+	/// \endif
 };
 
 
@@ -198,10 +215,13 @@ struct cstr_less_equal : bin_char_pred
 /// lexically "greater than" another.
 struct cstr_greater : bin_char_pred
 {
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; struct docs are sufficient
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) < 0;
 	}
+	/// \endif
 };
 
 
@@ -209,10 +229,13 @@ struct cstr_greater : bin_char_pred
 /// lexically "greater than or equal to" another.
 struct cstr_greater_equal : bin_char_pred
 {
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; struct docs are sufficient
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) <= 0;
 	}
+	/// \endif
 };
 
 

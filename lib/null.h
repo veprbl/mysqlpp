@@ -46,19 +46,31 @@ namespace mysqlpp {
 class null_type
 {
 public:
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; class docs are sufficient
 	template <class Type> operator Type()
 	{
 		throw BadNullConversion();
 	}
+	/// \param str query to execute
 };
 
 /// \brief Global 'null' instance.  Use wherever you need a SQL null.
-/// (As opposed to a C language null pointer or null character.)
+/// (As opposed to a C++ language null pointer or null character.)
 const null_type null = null_type();
 
-/// \brief Used for the behavior parameter for template Null
+
+/// \brief Class for objects that define SQL null in terms of
+/// MySQL++'s null_type.
+///
+/// Returns a null_type instance when you ask what null is, and is
+/// "(NULL)" when you insert it into a C++ stream.
+///
+/// Used for the behavior parameter for template Null
 struct NullisNull
 {
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; struct docs are sufficient
 	static null_type null_is() { return null_type(); }
 
 	static std::ostream& null_ostr(std::ostream& o)
@@ -66,11 +78,20 @@ struct NullisNull
 		o << "(NULL)";
 		return o;
 	}
+	/// \endif
 };
 
-/// \brief Used for the behavior parameter for template Null
+
+/// \brief Class for objects that define SQL null as 0.
+///
+/// Returns 0 when you ask what null is, and is zero when you insert it
+/// into a C++ stream.
+///
+/// Used for the behavior parameter for template Null
 struct NullisZero
 {
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; struct docs are sufficient
 	static int null_is() { return 0; }
 	
 	static std::ostream& null_ostr(std::ostream& o)
@@ -78,11 +99,19 @@ struct NullisZero
 		o << 0;
 		return o;
 	}
+	/// \endif
 };
 
-/// \brief Used for the behavior parameter for template Null
+/// \brief Class for objects that define SQL null as a blank C string.
+///
+/// Returns "" when you ask what null is, and is empty when you insert
+/// it into a C++ stream.
+///
+/// Used for the behavior parameter for template Null
 struct NullisBlank
 {
+	/// \if INTERNAL
+	// Make Doxygen ignore this function; struct docs are sufficient
 	static const char *null_is() { return ""; }
 	
 	static std::ostream& null_ostr(std::ostream& o)
@@ -90,45 +119,84 @@ struct NullisBlank
 		o << "";
 		return o;
 	}
+	/// \endif
 };
 
 
-/// \brief Container class for holding SQL nulls.
+/// \brief Class for holding data from a SQL column with the NULL
+/// attribute.
 ///
 /// This template is necessary because there is nothing in the C++ type
-/// system with the same semantics as SQL's null.  (No, NULL from
-/// stddef.h is not the same!)  This template mechanism also
-/// makes the typeid() unique for each C++-equivalent of nullable
-/// SQL field types, which are listed in type_info.cpp.
+/// system with the same semantics as SQL's null.  In SQL, a column can
+/// have the optional 'NULL' attribute, so there is a difference in 
+/// type between, say an \c int column that can be null and one that
+/// cannot be.  C++'s NULL constant does not have these features.
+///
+/// It's important to realize that this class doesn't hold nulls,
+/// it holds data that \e can \e be null.  It can hold a non-null
+/// value, you can then assign null to it (using MySQL++'s global
+/// \c null object), and then assign a regular value to it again; the
+/// object will behave as you expect throughout this process.
+///
+/// Because one of the template parameters is a C++ type, the typeid()
+/// for a null \c int is different than for a null \c string, to pick
+/// two random examples.  See type_info.cpp for the table SQL types that
+/// can be null.
 template <class Type, class Behavior = NullisNull> class Null
 {
 public:
+	/// \brief The object's value, when it is not SQL null
 	Type data;
+	
+	/// \brief If set, this object is considered equal to SQL null.
+	///
+	/// This flag affects how the Type() and << operators work.
 	bool is_null;
+
+	/// \brief Type of the data stored in this object, when it is not
+	/// equal to SQL null.
 	typedef Type value_type;
 
+	/// \brief Default constructor
+	///
+	/// This ctor doesn't initialize any of the object's data members!
 	Null()
 	{
 	}
 
+	/// \brief Initialize the object with a particular value.
+	///
+	/// The object is marked as "not null" if you use this ctor.  This
+	/// behavior exists because the class doesn't encode nulls, but
+	/// rather data which \e can \e be null.  The distinction is
+	/// necessary because 'NULL' is an optional attribute of SQL
+	/// columns.
 	Null(Type x) :
 	data(x),
 	is_null(false)
 	{
 	}
 
-	/// \brief Gives Null the null value
+	/// \brief Construct a Null equal to SQL null
 	///
-	/// The global const \c null (not to be confused with C's NULL type)
-	/// is of type null_type, so you can say something like:
+	/// This is typically used with the global \c null object. (Not to
+	/// be confused with C's NULL type.)  You can say something like...
 	/// \code
-	/// Null<Type> foo = null;
+	/// Null<int> foo = null;
 	/// \endcode
-	Null(const null_type & n) :
+	/// ...to get a null \c int.
+	Null(const null_type& n) :
 	is_null(true)
 	{
 	}
 
+	/// \brief Converts this object to Type
+	///
+	/// If is_null is set, returns whatever we consider that null "is",
+	/// according to the Behavior parameter you used when instantiating
+	/// this template.  See NullisNull, NullisZero and NullisBlank.
+	///
+	/// Otherwise, just returns the 'data' member.
 	operator Type&()
 	{
 		if (is_null)
@@ -137,6 +205,9 @@ public:
 			return data;
 	}
 
+	/// \brief Assign a value to the object.
+	///
+	/// This marks the object as "not null" as a side effect.
 	Null& operator =(const Type& x)
 	{
 		data = x;
@@ -144,6 +215,10 @@ public:
 		return *this;
 	}
 
+	/// \brief Assign SQL null to this object.
+	///
+	/// This just sets the is_null flag; the data member is not
+	/// affected.
 	Null& operator =(const null_type& n)
 	{
 		is_null = true;

@@ -137,32 +137,30 @@ public:
 
 	/// \brief Return the query string currently in the buffer.
 	std::string preview() { return str(def); }
+
+	/// \brief Return the query string currently in the buffer.
 	std::string preview(parms& p) { return str(p); }
 
-	/// \brief Execute an SQL query.
+	/// \brief Execute a query
 	///
-	/// Use this method for queries that do not return data, and for
-	/// which you only require a success or failure indication. See
-	/// execute() if you need more information about the status of a
-	/// query.  See store(), storein(), and use() for alternative
-	/// query execution methods.
-	///
-	/// This method is basically a thin wrapper around the MySQL C
-	/// API function \c mysql_query().
+	/// Same as execute(), except that it only returns a flag indicating
+	/// whether the query succeeded or not.  It is basically a thin
+	/// wrapper around the C API function \c mysql_query().
 	///
 	/// \param str the query to execute
 	///
 	/// \return true if query was executed successfully
+	///
+	/// \sa execute(), store(), storein(), and use()
 	bool exec(const std::string& str);
 
-	/// \fn ResNSel execute()
-	/// \brief Execute a query and returns status information about the
-	/// results of the query.
+	/// \brief Execute a query
 	///
-	/// Use this method for queries that do not return data as such.
-	/// (For example, CREATE INDEX, or OPTIMIZE TABLE.) See exec(),
-	/// store(), storein(), and use() for alternative query execution
-	/// methods.
+	/// Use this function if you don't expect the server to return a
+	/// result set.  For instance, a DELETE query.  The returned ResNSel
+	/// object contains status information from the server, such as
+	/// whether the query succeeded, and if so how many rows were
+	/// affected.
 	///
 	/// There are a number of overloaded versions of this function. The
 	/// one without parameters simply executes a query that you have
@@ -172,79 +170,96 @@ public:
 	/// a SQLQueryParms object, or as many as 12 SQLStrings. The latter
 	/// two (or is it 13?) overloads are for filling out template queries.
 	///
-	/// See exec(), store(), storein_sequence(), storein_set() and use()
-	/// for alternate query execution mechanisms.  
+	/// \param str the query to execute
 	///
-	/// \return mysqlpp::ResNSel object containing the state
-	/// information resulting from the query
+	/// \return ResNSel status information about the query
+	///
+	/// \sa exec(), store(), storein(), and use()
 	ResNSel execute() { return execute(def); }
 
-	/// \fn ResUse use()
-	/// \brief Execute a query returning data, when you wish to deal with
-	/// the data one row at a time.
+	/// \brief Execute a query that can return a result set
+	/// 
+	/// Unlike store(), this function does not return the result set
+	/// directly.  Instead, it returns an object that can walk through
+	/// the result records one by one.  This is superior to store()
+	/// when there are a large number of results; store() would have to
+	/// allocate a large block of memory to hold all those records,
+	/// which could cause problems.
 	///
-	/// "Use" queries tell the server to send you the results one row at
-	/// a time.  (The name comes from the MySQL C API function that
-	/// initiates this process, \c mysql_use_result() .) This saves memory
-	/// in the client program, but it potentially allows the client to tie
-	/// up a connection with the database server until the result set is
-	/// consumed.
+	/// A potential downside of this method is that MySQL database
+	/// resources are tied up until the result set is completely
+	/// consumed.  Do your best to walk through the result set as
+	/// expeditiously as possible.
 	///
-	/// See the documentation for execute() regarding the various
-	/// overloads.  This function has the same set of overloads.
+	/// The name of this method comes from the MySQL C API function
+	/// that initiates the retrieval process, \c mysql_use_result().
+	/// This method is implemented in terms of that function.
 	///
-	/// See exec(), execute(), store() and storein() for alternative
-	/// query execution mechanisms.
+	/// This function has the same set of overloads as execute().
+	///
+	/// \return ResUse object that can walk through result set serially
+	///
+	/// \sa exec(), execute(), store() and storein()
 	ResUse use() { return use(def); }
 
-	/// \fn ResUse store()
-	/// \brief Execute a query, and store the entire result set
-	/// immediately in memory.
+	/// \brief Execute a query that can return a result set
 	///
-	/// "Store" queries tell the server to send you the result set as
-	/// a single block of data.  (The name comes from the MySQL C API
-	/// function that initiates this process, \c mysql_store_result() .)
-	/// Compared to "use" queries, this mechanism keeps your code simpler,
-	/// and minimizes the amount of resources that the database server has
-	/// to keep tied up for you.  The downside is, it can cause memory
-	/// problems if the result set is sufficiently large.
+	/// This function returns the entire result set immediately.  This
+	/// is useful if you actually need all of the records at once, but
+	/// if not, consider using use() instead, which returns the results
+	/// one at a time.  As a result of this difference, use() doesn't
+	/// need to allocate as much memory as store().
 	///
-	/// See the documentation for execute() regarding the various
-	/// overloads.  This function has the same set of overloads.
+	/// You must use store(), storein() or use() for \c SELECT, \c SHOW,
+	/// \c DESCRIBE and \c EXPLAIN queries.  You can use these functions
+	/// with other query types, but since they don't return a result
+	/// set, exec() and execute() are more efficient.
 	///
-	/// See exec(), execute(), storein(), and use() for alternative
-	/// query execution mechanisms.
+	/// The name of this method comes from the MySQL C API function it
+	/// is implemented in terms of, \c mysql_store_result().
+	///
+	/// This function has the same set of overloads as execute().
+	///
+	/// \return Result object containing entire result set
+	///
+	/// \sa exec(), execute(), storein(), and use()
 	Result store() { return store(def); }
 
-	/// \brief Execute a query, and store the entire result set
-	/// in the given STL sequence container.
+	/// \brief Execute a query, storing the result set in an STL
+	/// sequence container.
 	///
-	/// This is a sort of marriage between "use" queries and "store"
-	/// queries.  It is implemented with a "use" query, but it immediately
-	/// consumes the results in a loop to populate the given sequence
-	/// container. (For example, an \c std::vector.)
+	/// This function works much like store() from the caller's
+	/// perspective, because it returns the entire result set at once.
+	/// It's actually implemented in terms of use(), however, so that
+	/// memory for the result set doesn't need to be allocated twice.
 	///
 	/// There are many overloads for this function, pretty much the same
 	/// as for execute(), except that there is a Container parameter at
 	/// the front of the list.  So, you can pass a container and a query
 	/// string, or a container and template query parameters.
 	///
-	/// See exec(), execute(), store(), and use() for alternative
-	/// query execution mechanisms.
-	///
 	/// \param con any STL sequence container, such as \c std::vector
 	/// \param r whether the query automatically resets after being used
-	template<class T1> void storein_sequence(T1& con,
+	///
+	/// \sa exec(), execute(), store(), and use()
+	template <class Sequence> void storein_sequence(Sequence& con,
 			query_reset r = RESET_QUERY)
-			{ storein_sequence_(con, def, r); }
+	{
+		storein_sequence_(con, def, r);
+	}
 
-	/// \brief Execute a query, and store the entire result set
-	/// in the given associative STL container.
+	/// \brief Execute a query, storing the result set in an STL
+	/// associative container.
 	///
 	/// The same thing as storein_sequence(), except that it's used with
-	/// associative STL containers, such as \c std::set.
-	template<class T1> void storein_set(T1& con,
-			query_reset r = RESET_QUERY) { storein_set(con, def, r); }
+	/// associative STL containers, such as \c std::set.  Other than
+	/// that detail, that method's comments apply equally well to this
+	/// one.
+	template <class Set> void storein_set(Set& con,
+			query_reset r = RESET_QUERY)
+	{
+		storein_set(con, def, r);
+	}
 
 	/// \brief Execute a query, and store the entire result set
 	/// in an STL container.
@@ -264,7 +279,7 @@ public:
 	///
 	/// See exec(), execute(), store(), and use() for alternative
 	/// query execution mechanisms.
-	template<class T1> void storein(T1& con,
+	template<class Container> void storein(Container& con,
 			query_reset r = RESET_QUERY) { storein(con, def, r); }
 
 	/// \brief Replace an existing row's data with new data.

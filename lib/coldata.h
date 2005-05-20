@@ -90,13 +90,35 @@ private:
 	bool _null;
 
 public:
+	/// \brief Default constructor
+	///
+	/// Null flag is set to false, type data is not set, and string
+	/// data is left empty.
+	///
+	/// It's probably a bad idea to use this ctor, becuase there's no
+	/// way to set the type data once the object's constructed.
+	ColData_Tmpl() :
+	_null(false)
+	{
+	}
+
+	/// \brief Constructor allowing you to set the null flag and the
+	/// type data.
+	///
+	/// \param n if true, data is a SQL null
+	/// \param t MySQL type information for data being stored
 	explicit ColData_Tmpl(bool n,
 			mysql_type_info t = mysql_type_info::string_type) :
 	_type(t),
 	_null(n)
 	{
 	}
-	
+
+	/// \brief Full constructor.
+	///
+	/// \param str the string this object represents
+	/// \param t MySQL type information for data within str
+	/// \param n if true, str is a SQL null
 	explicit ColData_Tmpl(const char* str,
 			mysql_type_info t = mysql_type_info::string_type,
 			bool n = false) :
@@ -105,12 +127,6 @@ public:
 	_null(n)
 	{
 		buf = str;
-	}
-
-	/// \brief Default constructor
-	ColData_Tmpl() :
-	_null(false)
-	{
 	}
 
 	/// \brief Get this object's current MySQL type.
@@ -248,6 +264,11 @@ operator_binary_int(ulonglong, ulonglong)
 
 /// \endif
 
+/// \brief Converts this object to a SQL null
+///
+/// Returns null directly if the string data held by the object is
+/// exactly equal to "NULL".  Else, it 
+/// data.
 template <class Str> template<class T, class B>
 ColData_Tmpl<Str>::operator Null<T, B>() const
 {
