@@ -218,7 +218,7 @@ public:
 	/// \brief Assign SQL null to this object.
 	///
 	/// This just sets the is_null flag; the data member is not
-	/// affected.
+	/// affected until you call the Type() operator on it.
 	Null& operator =(const null_type& n)
 	{
 		is_null = true;
