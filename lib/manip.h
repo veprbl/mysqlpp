@@ -343,12 +343,12 @@ inline escape_type2 operator << (SQLQueryParms &p, escape_type0 /*esc*/) {
 
 SQLQueryParms & operator << (escape_type2 p, SQLString &in);
 
-/// \brief Inserts an type T into a stream that has an operator<<
+/// \brief Inserts any type T into a stream that has an operator<<
 /// defined for it.
 ///
 /// Does not actually escape that data!  Use one of the other forms of
 /// operator<< for the escape manipulator if you need escaping.  This
-/// template exists to catch cases like inserting an int after the
+/// template exists to catch cases like inserting an \c int after the
 /// escape manipulator: you don't actually want escaping in this
 /// instance.
 template <class T>
