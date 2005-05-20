@@ -1276,7 +1276,7 @@ main(int argc, char *argv[])
 		doubles the number of types in SQL. MySQL++ handles
 		this the same way SQL does: it provides the <ulink
 		url="../../refman/html/classmysqlpp_1_1null.html">Null</ulink>
-		template to allow the creation of distinct "null-able"
+		template to allow the creation of distinct "nullable"
 		versions of existing C++ types. For each column type MySQL
 		understands, the library instantiates this template for
 		the closest C++ type.</para>
@@ -1285,23 +1285,28 @@ main(int argc, char *argv[])
 		the C++ language, on par with any other type. You can
 		use instantiations of this template anywhere you'd use
 		the plain version of that type, you can convert between
-		the plain version and the null-able version, etc.</para>
+		the plain version and the nullable version, etc.</para>
 
 		<para>The library lets you choose from three
-		different "behaviors" for null when instantiating
-		the Null template. The type you pass for this
-		template parameter affects the object's value
-		when converting it to another type and when
-		inserting it into a C++ stream. The default is <ulink
+		different "behaviors" for null when instantiating the
+		<computeroutput>Null</computeroutput> template. The
+		type you pass for this template parameter affects
+		the object's value when it contains a SQL null and
+		you try to convert it to the non-nullable version of
+		that type; it also affects what you get when you insert
+		such an object into a C++ stream. The default is <ulink
 		url="../../refman/html/structmysqlpp_1_1NullisNull.html">NullisNull</ulink>,
-		which defines null as of type <ulink
-		url="../../refman/html/classmysqlpp_1_1null__type.html">null_type</ulink>
-		and equal to "(NULL)" when inserted into a
-		stream. The second possible definition is <ulink
+		which causes a <ulink
+		url="../../refman/html/classmysqlpp_1_1BadNullConversion.html">BadNullConversion</ulink>
+		exception to be thrown when converting a SQL null
+		to the non-nullable version of the type; when you
+		insert such an object into a stream, you get the
+		string "(NULL)". The second possible definition is <ulink
 		url="../../refman/html/structmysqlpp_1_1NullisZero.html">NullisZero</ulink>,
-		which defines null as zero. The third definition is <ulink
+		which defines simply defines null as zero for
+		both of these conversions. The third definition, <ulink
 		url="../../refman/html/structmysqlpp_1_1NullisBlank.html">NullisBlank</ulink>,
-		which defines null as a blank C string.</para>
+		gives blank C strings when converting SQL nulls.</para>
 	</sect2>
 
 
