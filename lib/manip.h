@@ -73,7 +73,7 @@ extern bool dont_quote_auto;
 
 enum quote_type0
 {
-	quote	///< insert into a std::ostream to single-quote and escape next item
+	quote					///< insert into a std::ostream to single-quote and escape next item
 };
 
 /// \if INTERNAL
@@ -81,34 +81,35 @@ enum quote_type0
 
 struct quote_type1
 {
-  std::ostream *ostr;
-  quote_type1(std::ostream *o) :
-  ostr(o)
-  {
-  }
-}; 
+	std::ostream * ostr;
+	quote_type1(std::ostream * o) :
+	ostr(o)
+	{
+	}
+};
 
 
-inline quote_type1 operator <<(std::ostream& o, quote_type0 /*esc*/)
+inline quote_type1 operator <<(std::ostream& o, quote_type0 /*esc */)
 {
-  return quote_type1(&o);
+	return quote_type1(&o);
 }
 
 
 class SQLQueryParms;
 struct quote_type2
 {
-  SQLQueryParms *qparms;
-  quote_type2(SQLQueryParms *p) :
-  qparms(p)
-  {
-  }
+	SQLQueryParms *qparms;
+	quote_type2(SQLQueryParms* p) :
+	qparms(p)
+	{
+	}
 };
 
 
-inline quote_type2 operator <<(SQLQueryParms& p, quote_type0 /*esc*/)
+inline quote_type2 operator <<(SQLQueryParms& p,
+		quote_type0 /*esc */)
 {
-  return quote_type2(&p);
+	return quote_type2(&p);
 }
 
 
@@ -116,24 +117,26 @@ SQLQueryParms& operator <<(quote_type2 p, SQLString& in);
 
 
 template <class T>
-inline std::ostream& operator <<(quote_type1 o, const T& in)
+	inline std::ostream& operator <<(quote_type1 o, const T & in)
 {
-  return *o.ostr << in;
+	return *o.ostr << in;
 }
 
 
-std::ostream&
-operator << (std::ostream& o, const ColData_Tmpl<std::string>& in);
+std::ostream& operator <<(std::ostream& o,
+		const ColData_Tmpl<std::string>& in);
 
 
-std::ostream&
-operator << (std::ostream& o, const ColData_Tmpl<const_string>& in);
+std::ostream& operator <<(std::ostream& o,
+		const ColData_Tmpl<const_string>& in);
 
 
-SQLQuery& operator <<(SQLQuery& o, const ColData_Tmpl<std::string>& in);
+SQLQuery& operator <<(SQLQuery& o,
+		const ColData_Tmpl<std::string>& in);
 
 
-SQLQuery& operator <<(SQLQuery& o, const ColData_Tmpl<const_string>& in);
+SQLQuery& operator <<(SQLQuery& o,
+		const ColData_Tmpl<const_string>& in);
 
 
 template <>
@@ -155,37 +158,38 @@ std::ostream& operator <<(quote_type1 o,
 
 
 template <>
-inline std::ostream& operator << (quote_type1 o, char* const& in)
+inline std::ostream& operator <<(quote_type1 o, char* const& in)
 {
-  return operator <<(o, const_cast<const char* const&>(in));
+	return operator <<(o, const_cast<const char* const&>(in));
 }
 
 
 template <>
-inline std::ostream& operator << (quote_type1 o, const Date& in)
+inline std::ostream& operator <<(quote_type1 o, const Date& in)
 {
-  return *o.ostr << "'" << in << "'";
+	return *o.ostr << "'" << in << "'";
 }
 
 
 template <>
-inline std::ostream& operator << (quote_type1 o, const Time& in)
+inline std::ostream& operator <<(quote_type1 o, const Time& in)
 {
-  return *o.ostr << "'" << in << "'";
+	return *o.ostr << "'" << in << "'";
 }
 
 
 template <>
-inline std::ostream& operator << (quote_type1 o, const DateTime& in)
+inline std::ostream& operator <<(quote_type1 o,
+		const DateTime& in)
 {
-  return *o.ostr << "'" << in << "'";
+	return *o.ostr << "'" << in << "'";
 }
 
 
 template <class ST>
-inline std::ostream& operator << (quote_type1 o, const Set<ST>& in)
+inline std::ostream& operator <<(quote_type1 o, const Set<ST>& in)
 {
-  return *o.ostr << "'" << in << "'";
+	return *o.ostr << "'" << in << "'";
 }
 
 /// \endif
@@ -201,7 +205,7 @@ inline std::ostream& operator << (quote_type1 o, const Set<ST>& in)
 
 enum quote_only_type0
 {
-	quote_only	///< insert into a std::ostream to single-quote next item
+	quote_only				///< insert into a std::ostream to single-quote next item
 };
 
 
@@ -210,35 +214,35 @@ enum quote_only_type0
 
 struct quote_only_type1
 {
-  std::ostream *ostr;
-  quote_only_type1(std::ostream *o) :
-  ostr(o)
-  {
-  }
-}; 
+	std::ostream* ostr;
+	quote_only_type1(std::ostream* o) :
+	ostr(o)
+	{
+	}
+};
 
 
 inline quote_only_type1 operator <<(std::ostream& o,
-		quote_only_type0 /*esc*/)
+		quote_only_type0 /*esc */)
 {
-  return quote_only_type1(&o);
+	return quote_only_type1(&o);
 }
 
 
 struct quote_only_type2
 {
-  SQLQueryParms *qparms;
-  quote_only_type2(SQLQueryParms *p) :
-  qparms(p)
-  {
-  }
+	SQLQueryParms* qparms;
+	quote_only_type2(SQLQueryParms* p) :
+	qparms(p)
+	{
+	}
 };
 
 
-inline quote_only_type2 operator <<(SQLQueryParms &p,
-		quote_only_type0 /*esc*/)
+inline quote_only_type2 operator <<(SQLQueryParms& p,
+		quote_only_type0 /*esc */)
 {
-  return quote_only_type2(&p);
+	return quote_only_type2(&p);
 }
 
 SQLQueryParms& operator <<(quote_only_type2 p, SQLString& in);
@@ -247,7 +251,7 @@ SQLQueryParms& operator <<(quote_only_type2 p, SQLString& in);
 template <class T>
 inline std::ostream& operator <<(quote_only_type1 o, const T& in)
 {
-  return *o.ostr << in;
+	return *o.ostr << in;
 }
 
 
@@ -255,7 +259,7 @@ template <>
 inline std::ostream& operator <<(quote_only_type1 o,
 		const std::string& in)
 {
-  return *o.ostr << "'" << in << "'";
+	return *o.ostr << "'" << in << "'";
 }
 
 
@@ -270,30 +274,30 @@ std::ostream& operator <<(quote_only_type1 o,
 
 
 template <>
-inline std::ostream& operator <<(quote_only_type1 o, const Date &in)
+inline std::ostream& operator <<(quote_only_type1 o, const Date& in)
 {
-  return *o.ostr << "'" << in << "'";
+	return *o.ostr << "'" << in << "'";
 }
 
 
 template <>
-inline std::ostream& operator <<(quote_only_type1 o, const Time &in)
+inline std::ostream& operator <<(quote_only_type1 o, const Time& in)
 {
-  return *o.ostr << "'" << in << "'";
+	return *o.ostr << "'" << in << "'";
 }
 
 
 template <>
-inline std::ostream& operator <<(quote_only_type1 o, const DateTime &in)
+inline std::ostream& operator <<(quote_only_type1 o, const DateTime& in)
 {
-  return *o.ostr << "'" << in << "'";
+	return *o.ostr << "'" << in << "'";
 }
 
 
 template <class ST>
-inline std::ostream& operator <<(quote_only_type1 o, const Set<ST> &in)
+inline std::ostream& operator <<(quote_only_type1 o, const Set<ST>& in)
 {
-  return *o.ostr << "'" << in << "'";
+	return *o.ostr << "'" << in << "'";
 }
 
 /// \endif
@@ -309,38 +313,44 @@ inline std::ostream& operator <<(quote_only_type1 o, const Set<ST> &in)
 
 enum quote_double_only_type0
 {
-	quote_double_only	///< insert into a std::ostream to double-quote next item
+	quote_double_only		///< insert into a std::ostream to double-quote next item
 };
 
 
 /// \if INTERNAL
 // Doxygen will not generate documentation for this section.
 
-struct quote_double_only_type1 
+struct quote_double_only_type1
 {
-  std::ostream *ostr;
-  quote_double_only_type1(std::ostream *o) : ostr(o) {}
-}; 
+	std::ostream* ostr;
+	quote_double_only_type1(std::ostream* o) :
+	ostr(o)
+	{
+	}
+};
 
 
-inline quote_double_only_type1 operator << (std::ostream &o,
-					    quote_double_only_type0 /*esc*/)
+inline quote_double_only_type1 operator <<(std::ostream& o,
+		quote_double_only_type0 /*esc */)
 {
-  return quote_double_only_type1(&o);
+	return quote_double_only_type1(&o);
 }
 
 
 struct quote_double_only_type2
 {
-  SQLQueryParms *qparms;
-  quote_double_only_type2(SQLQueryParms *p) : qparms(p) {}
+	SQLQueryParms *qparms;
+	quote_double_only_type2(SQLQueryParms* p) :
+	qparms(p)
+	{
+	}
 };
 
 
-inline quote_double_only_type2 operator << (SQLQueryParms &p, 
-		quote_double_only_type0 /*esc*/)
+inline quote_double_only_type2 operator <<(SQLQueryParms& p,
+		quote_double_only_type0 /*esc */)
 {
-  return quote_double_only_type2(&p);
+	return quote_double_only_type2(&p);
 }
 
 
@@ -348,9 +358,9 @@ SQLQueryParms& operator <<(quote_double_only_type2 p, SQLString& in);
 
 
 template <class T>
-inline std::ostream& operator <<(quote_double_only_type1 o, const T& in) 
+inline std::ostream& operator <<(quote_double_only_type1 o, const T& in)
 {
-  return *o.ostr << in;
+	return *o.ostr << in;
 }
 
 
@@ -358,7 +368,7 @@ template <>
 inline std::ostream& operator <<(quote_double_only_type1 o,
 		const std::string& in)
 {
-  return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << "\"" << in << "\"";
 }
 
 
@@ -368,23 +378,22 @@ std::ostream& operator <<(quote_double_only_type1 o,
 
 
 template <>
-std::ostream& operator <<(quote_double_only_type1 o,
+std::ostream & operator <<(quote_double_only_type1 o,
 		const ColData_Tmpl<const_string>& in);
 
 
 template <>
 inline std::ostream& operator <<(quote_double_only_type1 o,
-		const Date &in)
+		const Date& in)
 {
-  return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << "\"" << in << "\"";
 }
 
 
 template <>
-inline std::ostream& operator <<(quote_double_only_type1 o,
-		const Time& in)
+inline std::ostream& operator <<(quote_double_only_type1 o, const Time& in)
 {
-  return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << "\"" << in << "\"";
 }
 
 
@@ -392,15 +401,15 @@ template <>
 inline std::ostream& operator <<(quote_double_only_type1 o,
 		const DateTime& in)
 {
-  return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << "\"" << in << "\"";
 }
 
 
 template <class ST>
 inline std::ostream& operator <<(quote_double_only_type1 o,
-			     const Set<ST>& in)
+		const Set<ST>& in)
 {
-  return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << "\"" << in << "\"";
 }
 
 /// \endif
@@ -421,33 +430,33 @@ enum escape_type0 { escape };
 
 struct escape_type1
 {
-  std::ostream *ostr;
-  escape_type1(std::ostream *o) :
-  ostr(o)
-  {
-  }
-}; 
+	std::ostream* ostr;
+	escape_type1(std::ostream* o) :
+	ostr(o)
+	{
+	}
+};
 
 
-inline escape_type1 operator <<(std::ostream& o, escape_type0 /*esc*/)
+inline escape_type1 operator <<(std::ostream& o, escape_type0 /*esc */)
 {
-  return escape_type1(&o);
+	return escape_type1(&o);
 }
 
 
 struct escape_type2
 {
-  SQLQueryParms *qparms;
-  escape_type2(SQLQueryParms *p) :
-  qparms(p)
-  {
-  }
+	SQLQueryParms *qparms;
+	escape_type2(SQLQueryParms* p) :
+	qparms(p)
+	{
+	}
 };
 
 
-inline escape_type2 operator <<(SQLQueryParms& p, escape_type0 /*esc*/)
+inline escape_type2 operator <<(SQLQueryParms& p, escape_type0 /*esc */)
 {
-  return escape_type2(&p);
+	return escape_type2(&p);
 }
 
 /// \endif
@@ -467,12 +476,12 @@ SQLQueryParms& operator <<(escape_type2 p, SQLString& in);
 template <class T>
 inline std::ostream& operator <<(escape_type1 o, const T& in)
 {
-  return *o.ostr << in;
+	return *o.ostr << in;
 }
 
 
 template <>
-std::ostream& operator <<(escape_type1 o, const std::string &in);
+std::ostream& operator <<(escape_type1 o, const std::string& in);
 
 
 template <>
@@ -499,7 +508,7 @@ std::ostream& operator <<(escape_type1 o,
 template <>
 inline std::ostream& operator <<(escape_type1 o, char* const& in)
 {
-  return operator <<(o, const_cast<const char* const&>(in));
+	return operator <<(o, const_cast<const char* const&>(in));
 }
 
 
@@ -516,7 +525,7 @@ inline std::ostream& operator <<(escape_type1 o, char* const& in)
 
 enum do_nothing_type0
 {
-	do_nothing ///< insert into a std::ostream to override manipulation of next item
+	do_nothing				///< insert into a std::ostream to override manipulation of next item
 };
 
 
@@ -525,47 +534,49 @@ enum do_nothing_type0
 
 struct do_nothing_type1
 {
-  std::ostream* ostr;
-  do_nothing_type1(std::ostream *o) :
-  ostr(o)
-  {
-  }
-}; 
+	std::ostream* ostr;
+	do_nothing_type1(std::ostream* o) :
+	ostr(o)
+	{
+	}
+};
 
 
-inline do_nothing_type1 operator <<(std::ostream& o, do_nothing_type0 /*esc*/)
+inline do_nothing_type1 operator <<(std::ostream& o,
+		do_nothing_type0 /*esc */)
 {
-  return do_nothing_type1(&o);
+	return do_nothing_type1(&o);
 }
 
 
-template <class T>
-inline std::ostream& operator <<(do_nothing_type1 o, const T& in)
+template < class T >
+	inline std::ostream & operator <<(do_nothing_type1 o, const T & in)
 {
-  return *o.ostr << in;
+	return *o.ostr << in;
 }
 
 
 struct do_nothing_type2
 {
-  SQLQueryParms* qparms;
-  do_nothing_type2(SQLQueryParms* p) :
-  qparms(p)
-  {
-  }
+	SQLQueryParms *qparms;
+	do_nothing_type2(SQLQueryParms* p) :
+	qparms(p)
+	{
+	}
 };
 
 
-inline do_nothing_type2 operator <<(SQLQueryParms& p, do_nothing_type0 /*esc*/)
+inline do_nothing_type2 operator <<(SQLQueryParms& p,
+		do_nothing_type0 /*esc */)
 {
-  return do_nothing_type2(&p);
+	return do_nothing_type2(&p);
 }
 
 
 inline SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
 {
-  in.processed = true;
-  return *p.qparms << in;
+	in.processed = true;
+	return *p.qparms << in;
 }
 
 /// \endif
@@ -584,31 +595,36 @@ inline SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
 
 enum ignore_type0
 {
-	ignore ///< insert into a std::ostream as a dummy manipulator
+	ignore					///< insert into a std::ostream as a dummy manipulator
 };
+
 
 /// \if INTERNAL
 // Doxygen will not generate documentation for this section.
 
 struct ignore_type2
 {
-  SQLQueryParms *qparms;
-  ignore_type2(SQLQueryParms *p) : qparms(p) {}
+	SQLQueryParms* qparms;
+	ignore_type2(SQLQueryParms* p) :
+	qparms(p)
+	{
+	}
 };
+
 
 inline ignore_type2 operator <<(SQLQueryParms& p, ignore_type0 /*esc*/)
 {
-  return ignore_type2(&p);
+	return ignore_type2(&p);
 }
+
 
 inline SQLQueryParms& operator <<(ignore_type2 p, SQLString& in)
 {
-  return *p.qparms << in;
+	return *p.qparms << in;
 }
 
 /// \endif
 
-} // end namespace mysqlpp
+}								// end namespace mysqlpp
 
 #endif
-
