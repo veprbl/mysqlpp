@@ -196,7 +196,7 @@ Bug Fix/Maintenance Items
 	  a new row2.h file and include it in a few strategic locations, it
 	  works.  But, this is a bogus fix.  Find the right one.
 
-	o Document the header layout, and which headers can be included alone,
-	  and which can't.  Do this to optimize compile times, and allow
-	  users to do the same.
+	o Define CSS stylesheet for userman to try and match its appearance
+	  to that of the refman.  Perhaps we can just copy the stylesheet
+	  from Doxygen?
 
