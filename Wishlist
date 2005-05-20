@@ -27,9 +27,26 @@ New Feature Requests and ABI Changes
 	  where available.  Enable via configure script flag on Unixy
 	  systems.
 
-	o Why does Connection::create_db() return true on failure?
-	  (This is in this section, because changing it would break a lot of
-	  code.  This sort of thing should be put off to v1.8 or v2.0.)
+	o Change Connection::create_db() and drop_db() to return true on
+	  success.  They're the other way 'round now, but changing it would
+	  break a lot of code, so put it off to the next major version.
+
+	o Connection::create_db(), drop_db() and select_db() should take
+	  their arguments by reference, and be const.
+
+	o Why does Connection::infoo() exist?  Remove it if there is
+	  no good reason.
+
+	o Rename Connection::read_options() to set_option()?  Much more
+	  accurate w.r.t. what the function actually does.
+
+	o Why is there a duplicate query interface in Connection?  Sure,
+	  it means you can get by without using a Query object, but is
+	  that a big enough advantage to justify the extra complexity?
+	  Everything in the tutorial uses Query objects, so I'd be stunned
+	  if there's a significant body of end-user code that actually uses
+	  the Connection query interface directly.  (Hell, I'd be surprised
+	  if there was _any_ such code.)
 
 	o Connection lock mechanism should be extracted into a separate
 	  class, instances of which could be created on the stack so
@@ -59,6 +76,14 @@ New Feature Requests and ABI Changes
 	  stream data member instead of deriving from it.  C++ library
 	  classes were not designed to be subclassed.  Evidence is the
 	  dynamic_cast<>s required for VC++ in insert() and friends.
+
+	o There are operator<<(SQLQuery&, ColData...) functions in addition
+	  to the normal (ostream&, ColData) ones.  (See manip.h)  It looks
+	  like a workaround for a compiler's type system weakness.  If this
+	  is no longer needed, the obvious change plays into the decision for
+	  the previous item: if Query is no longer an ostream, those
+	  separate operators still need to exist, but the casts in the
+	  implementation will break things.
 
 	o Why is class ResUse separate from class Result?  They're declared
 	  in the same file, only Result derives from it, and it isn't clear
@@ -108,13 +133,29 @@ New Feature Requests and ABI Changes
 	  so will break the ABI and a lot of infrastructure logic, though,
 	  so this change should not be done casually.
 
+	o Collapse store(string&) and store(string&, bool) into a single
+	  function by making bool argument default to false.  Same for
+	  use() and execute().
+
 	o Remove simp_list_b from vallist.h.  It doesn't seem to be used
 	  anywhere, and it doesn't seem to be useful for end-user code.
+
+	o Null's copy ctor should take its parameter by reference.
 
 
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Connection::execute() should probably use mysql_real_query()
+	  instead of mysql_query() so it could handle binary data.
+	
+	o Shouldn't ColData_Tmpl default ctor set type information to some
+	  default?
+	
+	o There are comments in sql_query.h saying "only here temporary".
+	  They've been there for literally years.  Time to decide what to do
+	  about them!
+	
 	o Have resetdb also create a table that load_file and
 	  cgi_image can use.  Remove "fax"ness from these examples,
 	  and encourage people to load up JPEGs or something else that
@@ -138,9 +179,9 @@ Bug Fix/Maintenance Items
 	  changing the library code.  Document it or throw it away.
 
 	o sql_cmp(double,double) is foolish.  One shouldn't do ==
-	comparison
-	  on floating point values.  Same for sql_cmp(float,float).
-	  See also floating point precision item in previous section.
+	  comparison on floating point values.	Same for
+	  sql_cmp(float,float).  See also floating point precision item
+	  in previous section.
 
 	o Settle on new license for documentation, or make LGPL explicit.
 
