@@ -52,69 +52,100 @@ private:
 	const char* str_data;
 
 public:
+	/// \brief Type of the data stored in this object, when it is not
+	/// equal to SQL null.
 	typedef const char value_type;
+
+	/// \brief Type of "size" integers
 	typedef unsigned int size_type;
-	typedef int difference_type;
 
+	/// \brief Type used when returning a reference to a character in
+	/// the string.
 	typedef const char& const_reference;
-	typedef const_reference reference;
-	typedef const char* const_pointer;
-	typedef const_pointer pointer;
 
+	/// \brief Type of iterators
 	typedef const char* const_iterator;
 
 	/// \brief Same as const_iterator because the data cannot be
 	/// changed.
 	typedef const_iterator iterator;
 
+/// \if INTERNAL
+// Doxygen will not generate documentation for this section.
+	typedef int difference_type;
+	typedef const_reference reference;
+	typedef const char* const_pointer;
+	typedef const_pointer pointer;
+/// \endif
+
+	/// \brief Create empty string
 	const_string() :
 	str_data("")
 	{
 	}
 	
+	/// \brief Initialize string from existing C string
 	const_string(const char* str) :
 	str_data(str)
 	{
 	}
 	
+	/// \brief Assignment operator
 	const_string& operator=(const char* str)
 	{
 		str_data = str;
 		return *this;
 	}
 
-	size_type size() const {
+	/// \brief Return number of characters in string
+	size_type size() const
+	{
 		register int i = 0;
 		while (str_data[i])
 			 i++;
 		 return i;
 	}
 	
+	/// \brief Return iterator pointing to the first character of
+	/// the string
 	const_iterator begin() const
 	{
 		return str_data;
 	}
 	
+	/// \brief Return iterator pointing to one past the last character
+	/// of the string.
 	const_iterator end() const
 	{
 		return str_data + size();
 	}
 	
+	/// \brief Return number of characters in the string
 	size_type length() const
 	{
 		return size();
 	}
 	
+	/// \brief Return the maximum number of characters in the string.
+	///
+	/// Because this is a \c const string, this is just an alias for
+	/// size(); its size is always equal to the amount of data currently
+	/// stored.
 	size_type max_size() const
 	{
 		return size();
 	}
 	
-	const_reference operator[] (size_type pos) const
+	/// \brief Return a reference to a character within the string.
+	const_reference operator [](size_type pos) const
 	{
 		return str_data[pos];
 	}
 	
+	/// \brief Return a reference to a character within the string.
+	///
+	/// Unlike \c operator[](), this function throws an 
+	/// \c std::out_of_range exception if the index isn't within range.
 	const_reference at(size_type pos) const
 	{
 		if (pos >= size())
@@ -123,16 +154,24 @@ public:
 			return str_data[pos];
 	}
 	
+	/// \brief Return a const pointer to the string data,
+	/// null-terminated.
 	const char* c_str() const
 	{
 		return str_data;
 	}
 	
+	/// \brief Alias for c_str()
 	const char* data() const
 	{
 		return str_data;
 	}
 	
+	/// \brief Lexically compare this string to another.
+	///
+	/// \retval <0 if str1 is lexically "less than" str2
+	/// \retval 0 if str1 is equal to str2
+	/// \retval >0 if str1 is lexically "greater than" str2
 	int compare(const const_string& str) const
 	{
 		const char* str1 = str_data;
