@@ -52,35 +52,57 @@ struct mysql_dt_base
 };
 
 
-/// \if INTERNAL
-// Doxygen will not generate documentation for this section.
-
+/// \brief Base class template for MySQL++ date and time classes.
+///
+/// This template defines the comparison operators, which are all
+/// implemented in terms of compare(). Each subclass implements that
+/// as a protected method, because these operators are the only
+/// supported comparison method.
 template <class T> struct DTbase
 {
+	/// \brief Compare this object to another of the same type
+	///
+	/// Returns < 0 if this object is "before" the other, 0 of they are
+	/// equal, and > 0 if this object is "after" the other.
 	virtual short int compare(const T& other) const = 0;
 
+	/// \brief Returns true if "other" is equal to this object
 	bool operator ==(const T& other) const { return !compare(other); }
+
+	/// \brief Returns true if "other" is not equal to this object
 	bool operator !=(const T& other) const { return compare(other); }
+
+	/// \brief Returns true if "other" is less than this object
 	bool operator <(const T& other) const { return compare(other) < 0; }
+
+	/// \brief Returns true if "other" is less than or equal to this object
 	bool operator <=(const T& other) const { return compare(other) <= 0; }
+
+	/// \brief Returns true if "other" is greater than this object
 	bool operator >(const T& other) const { return compare(other) > 0; }
+
+	/// \brief Returns true if "other" is greater than or equal to this object
 	bool operator >=(const T& other) const { return compare(other) >= 0; }
 };
-
-/// \endif
 
 
 /// \brief Base class of Date
 struct mysql_date : virtual public mysql_dt_base
 {
+	/// \brief the year
+	///
+	/// No surprises; the year 2005 is stored as the integer 2005.
 	short int year;
+
+	/// \brief the month, 1-12
 	tiny_int month;
+
+	/// \brief the day, 1-31
 	tiny_int day;
 
 	/// \brief Insert the date into a stream
 	///
-	/// The date is inserted into the stream in a format that the MySQL
-	/// server can accept.
+	/// The format is YYYY-MM-DD, zero-padded.
 	///
 	/// \param os stream to insert date into
 	std::ostream& out_stream(std::ostream& os) const;
@@ -89,6 +111,13 @@ struct mysql_date : virtual public mysql_dt_base
 	cchar* convert(cchar*);
 
 protected:
+	/// \brief Compare this date to another.
+	///
+	/// Returns < 0 if this date is before the other, 0 of they are
+	/// equal, and > 0 if this date is after the other.
+	///
+	/// This method is protected because it is merely the engine used
+	/// by the various operators in DTbase.
 	short int compare(const mysql_date* other) const;
 };
 
@@ -96,21 +125,32 @@ protected:
 /// \brief Holds MySQL dates.
 ///
 /// Objects of this class can be inserted into streams, and
-/// initialized from a stream.
+/// initialized from MySQL DATE strings.
 
 struct Date : public mysql_date, public DTbase<Date>
 {
+	/// \brief Default constructor
 	Date() { };
 
-	Date(cchar* str)
-	{
-		convert(str);
-	}
+	/// \brief Initialize object from a MySQL date string
+	///
+	/// String must be in the YYYY-MM-DD format.  It doesn't have to be
+	/// zero-padded.
+	Date(cchar* str) { convert(str); }
 	
-	Date(const ColData& str);
+	/// \brief Initialize object from a MySQL date string
+	///
+	/// \sa Date(cchar*)
+	Date(const ColData& str) { convert(str.c_str()); }
 
-	Date(const std::string& str);
+	/// \brief Initialize object from a MySQL date string
+	///
+	/// \sa Date(cchar*)
+	Date(const std::string& str) { convert(str.c_str()); }
 
+	/// \brief Compare this date to another
+	///
+	/// \sa mysql_date::compare() for implementation
 	short int compare(const Date& other) const
 	{
 		return mysql_date::compare(&other);
@@ -131,14 +171,18 @@ inline std::ostream& operator <<(std::ostream& s, const Date& d)
 
 struct mysql_time : virtual public mysql_dt_base
 {
+	/// \brief hour, 0-23
 	tiny_int hour;
+
+	/// \brief minute, 0-59
 	tiny_int minute;
+	
+	/// \brief second, 0-59
 	tiny_int second;
 
 	/// \brief Insert the time into a stream
 	///
-	/// The time is inserted into the stream in a format that the MySQL
-	/// server can accept.
+	/// The format is HH:MM:SS, zero-padded.
 	///
 	/// \param os stream to insert time into
 	std::ostream& out_stream(std::ostream& os) const;
@@ -147,6 +191,13 @@ struct mysql_time : virtual public mysql_dt_base
 	cchar* convert(cchar*);
 
 protected:
+	/// \brief Compare this time to another.
+	///
+	/// Returns < 0 if this time is before the other, 0 of they are
+	/// equal, and > 0 if this time is after the other.
+	///
+	/// This method is protected because it is merely the engine used
+	/// by the various operators in DTbase.
 	short int compare(const mysql_time* other) const;
 };
 
@@ -154,20 +205,34 @@ protected:
 /// \brief Holds MySQL times.
 ///
 /// Objects of this class can be inserted into streams, and
-/// initialized from a stream.
+/// initialized from MySQL TIME strings.
 struct Time : public mysql_time, public DTbase<Time>
 {
+	/// \brief Default constructor
 	Time() { };
 
+	/// \brief Initialize object from a MySQL time string
+	///
+	/// String must be in the HH:MM:SS format.  It doesn't have to be
+	/// zero-padded.
 	Time(cchar* str)
 	{
 		convert(str);
 	}
 
+	/// \brief Initialize object from a MySQL time string
+	///
+	/// \sa Time(cchar*)
 	Time(const ColData& str);
 
+	/// \brief Initialize object from a MySQL time string
+	///
+	/// \sa Time(cchar*)
 	Time(const std::string& str);
 
+	/// \brief Compare this time to another
+	///
+	/// \sa mysql_time::compare() for implementation
 	short int compare(const Time& other) const
 	{
 		return mysql_time::compare(&other);
@@ -188,22 +253,40 @@ inline std::ostream& operator <<(std::ostream& s, const Time& d)
 /// MySQL DateTimes.
 ///
 /// Objects of this class can be inserted into streams, and
-/// initialized from a stream.
+/// initialized from MySQL DATETIME strings.
 
 struct DateTime : public mysql_date, public mysql_time,
 		public DTbase<DateTime>
 {
+	/// \brief Default constructor
 	DateTime() { }
 	
+	/// \brief Initialize object from a MySQL date-and-time string
+	///
+	/// String must be in the HH:MM:SS format.  It doesn't have to be
+	/// zero-padded.
 	DateTime(cchar* str)
 	{
 		convert(str);
 	}
 	
+	/// \brief Initialize object from a MySQL date-and-time string
+	///
+	/// \sa DateTime(cchar*)
 	DateTime(const ColData& str);
 
+	/// \brief Initialize object from a MySQL date-and-time string
+	///
+	/// \sa DateTime(cchar*)
 	DateTime(const std::string& str);
 
+	/// \brief Compare this datetime to another.
+	///
+	/// Returns < 0 if this datetime is before the other, 0 of they are
+	/// equal, and > 0 if this datetime is after the other.
+	///
+	/// This method is protected because it is merely the engine used
+	/// by the various operators in DTbase.
 	short int compare(const DateTime& other) const;
 
 	/// \brief Insert the date and time into a stream
@@ -230,18 +313,6 @@ inline std::ostream& operator <<(std::ostream& s, const DateTime& d)
 inline mysql_dt_base::operator std::string() const
 {
 	return stream2string<std::string>(*this);
-}
-
-
-inline Date::Date(const ColData& str)
-{
-	convert(str.c_str());
-}
-
-
-inline Date::Date(const std::string& str)
-{
-	convert(str.c_str());
 }
 
 
