@@ -176,7 +176,7 @@ public:
 	{
 		const char* str1 = str_data;
 		const char* str2 = str.str_data;
-		while (*str1 == *str2 && (*str1 || *str2)) {
+		while (*str1 == *str2 && (*str1 && *str2)) {
 			str1++;
 			str2++;
 		}
