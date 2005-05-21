@@ -39,39 +39,64 @@ namespace mysqlpp {
 class ResUse;
 
 /// \brief Holds a list of SQL field names
-class FieldNames : public std::vector<std::string> {
+class FieldNames : public std::vector<std::string>
+{
 private:
-  void init (const ResUse *res);
+	void init(const ResUse * res);
+
 public:
-  FieldNames () {}
-  FieldNames (const ResUse *res) {init(res);}
-  FieldNames (int i) : std::vector<std::string>(i) {}
+	/// \brief Default constructor
+	FieldNames() { }
+	
+	/// \brief Create field name list from a result set
+	FieldNames(const ResUse* res)
+	{
+		init(res);
+	}
 
-  /// \brief Creates a new list from the data in res.
-  FieldNames& operator = (const ResUse *res) {init(res); return *this;}  
+	/// \brief Create empty field name list, reserving space for
+	/// a fixed number of field names.
+	FieldNames(int i) :
+	std::vector<std::string>(i)
+	{
+	}
 
-  /// \brief Creates a new list with i field names.
-  FieldNames& operator = (int i) {insert(begin(), i, ""); return *this;} 
-  
-  /// \brief Get the name of a field given its index.
-  std::string& operator [] (int i)
-  {
-  	return std::vector<std::string>::operator [] (i);
-  }
-  const std::string& operator [] (int i) const
-  {
-  	return std::vector<std::string>::operator [] (i);
-  }
+	/// \brief Initializes the field list from a result set
+	FieldNames& operator =(const ResUse* res)
+	{
+		init(res);
+		return *this;
+	}
 
-  /// \brief Get the index number of a field given its name
-  uint operator [] (std::string i) const
-  {
-	  std::string temp(i); str_to_lwr(temp);
-	  return uint(std::find(begin(),end(), temp) - begin());
-  }
+	/// \brief Insert \c i empty field names at beginning of list
+	FieldNames& operator =(int i)
+	{
+		insert(begin(), i, "");
+		return *this;
+	}
+
+	/// \brief Get the name of a field given its index.
+	std::string& operator [](int i)
+	{
+		return std::vector<std::string>::operator [](i);
+	}
+
+	/// \brief Get the name of a field given its index, in const
+	/// context.
+	const std::string& operator [](int i) const
+	{
+		return std::vector<std::string>::operator [](i);
+	}
+
+	/// \brief Get the index number of a field given its name
+	uint operator [](std::string i) const
+	{
+		std::string temp(i);
+		str_to_lwr(temp);
+		return uint(std::find(begin(), end(), temp) - begin());
+	}
 };
 
 } // end namespace mysqlpp
 
 #endif
-
