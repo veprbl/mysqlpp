@@ -47,7 +47,10 @@ struct mysql_dt_base
 	/// \if INTERNAL
 	// Make Doxygen ignore this function; struct docs are sufficient
 	virtual std::ostream& out_stream(std::ostream&) const = 0;
-	operator std::string() const;
+	operator std::string() const
+	{
+		return stream2string<std::string>(*this);
+	}
 	/// \endif
 };
 
@@ -307,12 +310,6 @@ struct DateTime : public mysql_date, public mysql_time,
 inline std::ostream& operator <<(std::ostream& s, const DateTime& d)
 {
 	return d.out_stream(s);
-}
-
-
-inline mysql_dt_base::operator std::string() const
-{
-	return stream2string<std::string>(*this);
 }
 
 
