@@ -136,11 +136,18 @@ New Feature Requests and ABI Changes
 	o Collapse store(string&) and store(string&, bool) into a single
 	  function by making bool argument default to false.  Same for
 	  use() and execute().
+	
+	o Collapse mysql_* date and time classes into their subclasses,
+	  Date, Time, and DateTime.
 
 	o Remove simp_list_b from vallist.h.  It doesn't seem to be used
 	  anywhere, and it doesn't seem to be useful for end-user code.
 
 	o Null's copy ctor should take its parameter by reference.
+
+	o Exception objects are a hodge-podge.	Hoist all common
+	  functionality up into a superclass.  This will eliminate all
+	  of the interface differences between these classes.
 
 
 Bug Fix/Maintenance Items
@@ -170,7 +177,7 @@ Bug Fix/Maintenance Items
 	o Add nmake Makefiles for the project, for those using only the
 	  free command-line tools.
 
-	o Move SQLQueryNEParms into exceptions.h?
+	o Move SQLQueryNEParms into exceptions.h.
 
 	o Template ListInsert in lib/myset.h isn't being used within the
 	  library.  It could probably be used in place of SetInsert
