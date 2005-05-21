@@ -37,21 +37,34 @@ class ResUse;
 
 /// \brief A container similar to \c std::vector for holding
 /// mysqlpp::Field records.
+
 class Fields : public const_subscript_container<Fields, Field>
 {
 private:
-  mutable ResUse *res;
-public:
-  Fields() {}
-  Fields(ResUse *r) : res(r) {}
-  size_type size() const; ///< get the number of fields
+	mutable ResUse* res;
 
-  /// \brief Returns a field given its index.
-  const Field& operator [] (size_type i) const;
-  const Field& operator [] (int i) const {return operator [](size_type(i));} 
+public:
+	/// \brief Default constructor
+	Fields() { }
+	
+	/// \brief Create a field list from a result set
+	Fields(ResUse* r) :
+	res(r)
+	{
+	}
+	
+	/// \brief Returns a field given its index.
+	const Field& operator [](size_type i) const;
+
+	/// \brief Returns a field given its index.
+	const Field& operator [](int i) const
+	{
+		return operator [](size_type(i));
+	}
+
+	size_type size() const;	///< get the number of fields
 };
 
 } // end namespace mysqlpp
 
 #endif
-

@@ -37,41 +37,58 @@ namespace mysqlpp {
 class ResUse;
 
 /// \brief A vector of SQL field types.
-class FieldTypes : public std::vector<mysql_type_info> {
+class FieldTypes : public std::vector<mysql_type_info>
+{
 private:
-  void init (const ResUse *res);
+	void init(const ResUse* res);
+
 public:
-  FieldTypes () {}
-  FieldTypes (const ResUse *res) {init(res);}
-  FieldTypes (int i) : std::vector<mysql_type_info>(i) {}
+	/// \brief Default constructor
+	FieldTypes() { }
+	
+	/// \brief Create list of field types from a result set
+	FieldTypes(const ResUse* res)
+	{
+		init(res);
+	}
 
-  /// \brief Creates a new list based on the info in res
-  FieldTypes& operator =(const ResUse *res) {init(res); return *this;}
+	/// \brief Create fixed-size list of uninitialized field types
+	FieldTypes(int i) :
+	std::vector<mysql_type_info>(i)
+	{
+	}
 
-  /// \brief Creates a new list with a given number of fields.
-  ///
-  /// Initializes the list from the data returned by MySQL C API
-  /// function \c mysql_type_info().
-  ///
-  /// \param i size of field list to create
-  FieldTypes& operator =(int i)
-  {
-  	insert(begin(), i, mysql_type_info());
-	return *this;
-  }
-  
-  /// \brief Returns a field type within the list given its index.
-  mysql_type_info& operator [](int i)
-  {
-  	return std::vector<mysql_type_info>::operator[](i);
-  }
-  const mysql_type_info& operator [](int i) const 
-  {
-  	return std::vector<mysql_type_info>::operator[](i);
-  }
+	/// \brief Initialize field list based on a result set
+	FieldTypes& operator =(const ResUse* res)
+	{
+		init(res);
+		return *this;
+	}
+
+	/// \brief Insert a given number of uninitialized field type
+	/// objects at the beginning of the list
+	///
+	/// \param i number of field type objects to insert
+	FieldTypes& operator =(int i)
+	{
+		insert(begin(), i, mysql_type_info());
+		return *this;
+	}
+
+	/// \brief Returns a field type within the list given its index.
+	mysql_type_info& operator [](int i)
+	{
+		return std::vector<mysql_type_info>::operator [](i);
+	}
+
+	/// \brief Returns a field type within the list given its index,
+	/// in const context.
+	const mysql_type_info& operator [](int i) const
+	{
+		return std::vector<mysql_type_info>::operator [](i);
+	}
 };
 
 } // end namespace mysqlpp
 
 #endif
-
