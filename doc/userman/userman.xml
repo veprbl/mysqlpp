@@ -1282,7 +1282,7 @@ main(int argc, char *argv[])
 
 		<para>Template instantiations are first-class types in
 		the C++ language, on par with any other type. You can
-		nullable MySQL++ types anywhere you'd use the plain
+		use nullable MySQL++ types anywhere you'd use the plain
 		version of that type, you can assign plain values to a
 		nullable object and vice versa, etc.</para>
 
@@ -1298,18 +1298,17 @@ main(int argc, char *argv[])
 		<para>By default, if you try to convert a SQL
 		null to a plain C++ data type, MySQL++ will throw a <ulink
 		url="../../refman/html/classmysqlpp_1_1BadNullConversion.html">BadNullConversion</ulink>
-		exception to enforce the distinction. If
-		you insert a SQL null into a C++ stream, you
-		get "(NULL)". This behavior is due to the <ulink
+		exception to enforce this distinction. If you insert
+		a SQL null into a C++ stream, you get "(NULL)". The <ulink
 		url="../../refman/html/structmysqlpp_1_1NullisNull.html">NullisNull</ulink>
-		"behavior" object, which is the default for one of
-		template <computeroutput>Null</computeroutput>'s
-		parameters. To relax this distinction between
-		the two type systems, you can instantiate the
-		<computeroutput>Null</computeroutput> template
-		with one of two alternate behavior objects: <ulink
+		"behavior" type encapsulates these two
+		rules; it is the default for one of template
+		<computeroutput>Null</computeroutput>'s
+		parameters. To relax this distinction, you can
+		instantiate the <computeroutput>Null</computeroutput>
+		template with a different behavior type: <ulink
 		url="../../refman/html/structmysqlpp_1_1NullisZero.html">NullisZero</ulink>
-		and <ulink
+		or <ulink
 		url="../../refman/html/structmysqlpp_1_1NullisBlank.html">NullisBlank</ulink>.
 		As you might guess from their names, SQL nulls using
 		these behaviors get converted to 0 or a blank C string,
