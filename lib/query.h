@@ -170,8 +170,6 @@ public:
 	/// a SQLQueryParms object, or as many as 12 SQLStrings. The latter
 	/// two (or is it 13?) overloads are for filling out template queries.
 	///
-	/// \param str the query to execute
-	///
 	/// \return ResNSel status information about the query
 	///
 	/// \sa exec(), store(), storein(), and use()
