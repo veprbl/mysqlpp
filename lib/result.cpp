@@ -88,15 +88,17 @@ void ResUse::copy(const ResUse& other)
 		_names = new FieldNames(*other._names);
 	}
 	else {
-		_names = NULL;
+		_names = 0;
 	}
 	
 	if (other._types) {
 		_types = new FieldTypes(*other._types);
 	}
 	else {
-		_types = NULL;
+		_types = 0;
 	}
+
+	_table = other._table;
 
 	mysql = other.mysql;
 	initialized = true;
