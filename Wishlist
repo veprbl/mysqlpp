@@ -145,6 +145,13 @@ New Feature Requests and ABI Changes
 
 	o Null's copy ctor should take its parameter by reference.
 
+	o It's not helpful for Connection to have both connect() and
+	  real_connect().  That's a result of weaknesses in the C API
+	  leaking through.  Because C++ allows default parameters,
+	  real_connect() effectively presents a superset of the
+	  connect() interface.	Drop connect() and rename real_connect()
+	  to connect().
+
 	o Exception objects are a hodge-podge.	Hoist all common
 	  functionality up into a superclass.  This will eliminate all
 	  of the interface differences between these classes.
