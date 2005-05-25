@@ -35,7 +35,7 @@ Row::size_type Row::size() const
 	return res->num_fields();
 }
 
-const ColData Row::operator[] (size_type i) const
+const ColData Row::operator [](size_type i) const
 {
 	if (!initialized) {
 		if (throw_exceptions)
