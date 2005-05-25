@@ -3,10 +3,5 @@
 /// new code instead.
 
 #warning This header is obsolete. Please use mysql++.h instead.
-
-/// \if INTERNAL
-// Doxygen will not generate documentation for this section.
 #include "mysql++.h"
-/// \endif
-
 using namespace mysqlpp;
