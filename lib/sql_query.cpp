@@ -74,7 +74,8 @@ static SQLString* pprepare(char option, SQLString& S,
 
 	if (option == 'r' || (option == 'q' && S.is_string)) {
 		char *s = new char[S.size() * 2 + 1];
-		mysql_escape_string(s, S.c_str(), static_cast <unsigned long> (S.size()));
+		mysql_escape_string(s, S.c_str(),
+				static_cast<unsigned long>(S.size()));
 		SQLString *ss = new SQLString("'");
 		*ss += s;
 		*ss += "'";
@@ -122,9 +123,9 @@ void SQLQuery::proc(SQLQueryParms& p)
 		*this << i->before;
 		num = i->num;
 		if (num != -1) {
-			if (num < static_cast < int >(p.size()))
+			if (num < static_cast<int>(p.size()))
 				c = &p;
-			else if (num < static_cast < int >(def.size()))
+			else if (num < static_cast<int>(def.size()))
 				c = &def;
 			else {
 				*this << " ERROR";
@@ -210,7 +211,7 @@ void SQLQuery::parse()
 					num[1] = 0;
 				}
 
-				n = strtol(num, NULL, 10);
+				n = strtol(num, 0, 10);
 				option = ' ';
 
 				if (*s == 'q' || *s == 'Q' || *s == 'r' || *s == 'R') {
@@ -228,21 +229,17 @@ void SQLQuery::parse()
 						s++;
 					}
 
-					if (n >= static_cast <
-						long int >(parsed_names.size())) {
+					if (n >= static_cast<long int>(parsed_names.size())) {
 						parsed_names.insert(parsed_names.end(),
-											static_cast < vector <
-											string >::size_type >
-											(n + 1) -
-											parsed_names.size(),
-											string());
+								static_cast<vector<string>::size_type>(
+										n + 1) - parsed_names.size(),
+								string());
 					}
 					parsed_names[n] = name;
 					parsed_nums[name] = n;
 				}
 
-				parsed.
-					push_back(SQLParseElement(str, option, char (n)));
+				parsed.push_back(SQLParseElement(str, option, char(n)));
 				str = "";
 				name = "";
 			}
