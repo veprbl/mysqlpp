@@ -84,7 +84,8 @@
 		o Documentation is now being built in HTML and PDF forms.
 
 	o ebuild file updated to take advantage of recent configure script
-	  features.
+	  features.  Thanks to Chris Frey for this patch.
+
 
 
 1.7.32, 2005.03.10 (r479)
@@ -122,7 +123,7 @@
 
 	o Example programs using standard command line format now accept a
 	  fourth optional parameter, a port number for the server.  Thanks
-	  for Chris Frey for this patch.
+	  to Chris Frey for this patch.
 
 	o One more g++ 3.4 pedantic warning fix by Chris Frey.
 
