@@ -46,30 +46,82 @@ namespace mysqlpp {
 
 class SQLString : public std::string {
 public:
+	/// \brief If true, the object's string data is a copy of another
+	/// string.  Otherwise, it's the string form of an integral type.
 	bool is_string;
+
+	/// \brief If true, the string data doesn't need to be SQL-escaped
+	/// when building a query.
 	bool dont_escape;
+
+	/// \brief If true, one of the MySQL++ manipulators has processed
+	/// the string data.
+	///
+	/// "Processing" is escaping special SQL characters, and/or adding
+	/// quotes.  See the documentation for manip.h for details.
+	///
+	/// This flag is used by the template query mechanism, to prevent a
+	/// string from being re-escaped or re-quoted each time that query
+	/// is reused.
 	bool processed;
 
+	/// \brief Default constructor; empty string
 	SQLString();
+
+	/// \brief Create object as a copy of a C++ string
 	SQLString(const std::string& str);
+
+	/// \brief Create object as a copy of a C string
 	SQLString(const char* str);
+
+	/// \brief Create object as the string form of a \c char value
 	SQLString(char i);
+
+	/// \brief Create object as the string form of an \c unsigned
+	/// \c char value
 	SQLString(unsigned char i);
+
+	/// \brief Create object as the string form of a \c short \c int
+	/// value
 	SQLString(short int i);
+
+	/// \brief Create object as the string form of an \c unsigned
+	/// \c short \c int value
 	SQLString(unsigned short int i);
+
+	/// \brief Create object as the string form of an \c int value
 	SQLString(int i);
+
+	/// \brief Create object as the string form of an \c unsigned
+	/// \c int value
 	SQLString(unsigned int i);
+
+	/// \brief Create object as the string form of a \c longlong
+	/// value
 	SQLString(longlong i);
+
+	/// \brief Create object as the string form of an \c unsigned
+	/// \c longlong value
 	SQLString(ulonglong i);
+
+	/// \brief Create object as the string form of a \c float
+	/// value
 	SQLString(float i);
+
+	/// \brief Create object as the string form of a \c double
+	/// value
 	SQLString(double i);
 
-	SQLString& operator =(const char* str) {
+	/// \brief Copy a C string into this object
+	SQLString& operator =(const char* str)
+	{
 		std::string::operator =(str);
 		return *this;
 	}
 
-	SQLString& operator =(const std::string& str) {
+	/// \brief Copy a C++ \c string into this object
+	SQLString& operator =(const std::string& str)
+	{
 		std::string::operator =(str);
 		return *this;
 	}
