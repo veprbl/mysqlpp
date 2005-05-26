@@ -168,14 +168,14 @@ inline std::ostream& operator <<(quote_type1 o, char* const& in)
 template <>
 inline std::ostream& operator <<(quote_type1 o, const Date& in)
 {
-	return *o.ostr << "'" << in << "'";
+	return *o.ostr << '\'' << in << '\'';
 }
 
 
 template <>
 inline std::ostream& operator <<(quote_type1 o, const Time& in)
 {
-	return *o.ostr << "'" << in << "'";
+	return *o.ostr << '\'' << in << '\'';
 }
 
 
@@ -183,14 +183,14 @@ template <>
 inline std::ostream& operator <<(quote_type1 o,
 		const DateTime& in)
 {
-	return *o.ostr << "'" << in << "'";
+	return *o.ostr << '\'' << in << '\'';
 }
 
 
 template <class ST>
 inline std::ostream& operator <<(quote_type1 o, const Set<ST>& in)
 {
-	return *o.ostr << "'" << in << "'";
+	return *o.ostr << '\'' << in << '\'';
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -260,7 +260,7 @@ template <>
 inline std::ostream& operator <<(quote_only_type1 o,
 		const std::string& in)
 {
-	return *o.ostr << "'" << in << "'";
+	return *o.ostr << '\'' << in << '\'';
 }
 
 
@@ -277,28 +277,28 @@ std::ostream& operator <<(quote_only_type1 o,
 template <>
 inline std::ostream& operator <<(quote_only_type1 o, const Date& in)
 {
-	return *o.ostr << "'" << in << "'";
+	return *o.ostr << '\'' << in << '\'';
 }
 
 
 template <>
 inline std::ostream& operator <<(quote_only_type1 o, const Time& in)
 {
-	return *o.ostr << "'" << in << "'";
+	return *o.ostr << '\'' << in << '\'';
 }
 
 
 template <>
 inline std::ostream& operator <<(quote_only_type1 o, const DateTime& in)
 {
-	return *o.ostr << "'" << in << "'";
+	return *o.ostr << '\'' << in << '\'';
 }
 
 
 template <class ST>
 inline std::ostream& operator <<(quote_only_type1 o, const Set<ST>& in)
 {
-	return *o.ostr << "'" << in << "'";
+	return *o.ostr << '\'' << in << '\'';
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -369,7 +369,7 @@ template <>
 inline std::ostream& operator <<(quote_double_only_type1 o,
 		const std::string& in)
 {
-	return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << '"' << in << '"';
 }
 
 
@@ -387,14 +387,14 @@ template <>
 inline std::ostream& operator <<(quote_double_only_type1 o,
 		const Date& in)
 {
-	return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << '"' << in << '"';
 }
 
 
 template <>
 inline std::ostream& operator <<(quote_double_only_type1 o, const Time& in)
 {
-	return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << '"' << in << '"';
 }
 
 
@@ -402,7 +402,7 @@ template <>
 inline std::ostream& operator <<(quote_double_only_type1 o,
 		const DateTime& in)
 {
-	return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << '"' << in << '"';
 }
 
 
@@ -410,7 +410,7 @@ template <class ST>
 inline std::ostream& operator <<(quote_double_only_type1 o,
 		const Set<ST>& in)
 {
-	return *o.ostr << "\"" << in << "\"";
+	return *o.ostr << '"' << in << '"';
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
