@@ -557,11 +557,12 @@ public:
 	/// the underlying vector container should throw an exception.
 	/// Whether it actually does is probably implementation-dependent.
 	///
-	/// Note that we return the mysqlpp::ColData object by value.  The
-	/// purpose of ColData is to make it easy to convert the string data
-	/// returned by the MySQL server to some more appropriate type, so
-	/// you're almost certain to use this operator in a construct like
-	/// this:
+	/// Note that we return the
+	/// \link mysqlpp::ColData_Tmpl ColData \endlink object by value.
+	/// The purpose of ColData is to make it easy to convert the string
+	/// data returned by the MySQL server to some more appropriate type,
+	/// so you're almost certain to use this operator in a construct
+	/// like this:
 	///
 	/// \code
 	///  string s = row[2];
@@ -577,7 +578,7 @@ public:
 	/// \endcode
 	///
 	/// This one line of code does what you expect, but \c pc is then a
-	/// a dangling pointer: it points to memory owned by the temporary
+	/// dangling pointer: it points to memory owned by the temporary
 	/// ColData object, which will have been destroyed by the time you
 	/// get around to actually \e using the pointer.
 	const ColData operator [](size_type i) const;
