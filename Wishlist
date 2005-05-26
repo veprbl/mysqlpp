@@ -202,6 +202,9 @@ New Feature Requests and ABI Changes
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Add symlinks from MySQL++ manuals to MySQL manuals online
+	  when we reference C API functions and such.
+
 	o It may be possible to optimize the use of ColData in the return
 	  from Row::operator[]. Currently, that operator returns
 	  a temporary ColData object, which contains a std::string
