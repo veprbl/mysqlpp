@@ -43,7 +43,7 @@ namespace mysqlpp {
 class mysql_type_info;
 class mysql_ti_sql_type_info_lookup;
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 class mysql_ti_sql_type_info
@@ -105,7 +105,7 @@ private:
 	}
 };
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 /// \brief Holds basic type information for ColData.

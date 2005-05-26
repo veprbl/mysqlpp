@@ -39,7 +39,7 @@
 
 namespace mysqlpp {
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 template <class Type> class mysql_convert;
@@ -109,7 +109,7 @@ mysql__convert(ulonglong, _strtoui64)
 #endif
 #endif // !defined(NO_LONG_LONGS)
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp
 

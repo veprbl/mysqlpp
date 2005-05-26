@@ -32,6 +32,9 @@
  USA
 ***********************************************************************/
 
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for the following stuff.
+
 #if defined(__WIN32__) || defined(_WIN32)
 #	define MYSQLPP_PLATFORM_WINDOWS
 
@@ -82,3 +85,5 @@
 	#define MYSQLPP_DLLEXPORT
 	#define MYSQLPP_DLLEXPORT_DATA(type) type
 #endif
+
+#endif // !defined(DOXYGEN_IGNORE)

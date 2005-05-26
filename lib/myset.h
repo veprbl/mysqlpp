@@ -40,7 +40,7 @@
 
 namespace mysqlpp {
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 template <class T, class value_type = typename T::value_type>
@@ -80,7 +80,7 @@ inline ListInsert< std::vector<T> > set_insert(std::vector<T> *o)
 template <class Insert>
 void set2container(const char* str, Insert insert);
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 /// \brief A special std::set derivative for holding MySQL data sets.
@@ -147,7 +147,7 @@ inline Set<Container>::operator std::string()
 }
 
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 template <class Insert>
@@ -170,7 +170,7 @@ void set2container(const char* str, Insert insert)
 	}
 }
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 } // end namespace mysqlpp

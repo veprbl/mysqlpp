@@ -46,13 +46,13 @@ namespace mysqlpp {
 class null_type
 {
 public:
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; class docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	template <class Type> operator Type()
 	{
 		throw BadNullConversion();
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 /// \brief Global 'null' instance.  Use wherever you need a SQL null.
@@ -69,8 +69,8 @@ const null_type null = null_type();
 /// Used for the behavior parameter for template Null
 struct NullisNull
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	static null_type null_is() { return null_type(); }
 
 	static std::ostream& null_ostr(std::ostream& o)
@@ -78,7 +78,7 @@ struct NullisNull
 		o << "(NULL)";
 		return o;
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 
@@ -90,8 +90,8 @@ struct NullisNull
 /// Used for the behavior parameter for template Null
 struct NullisZero
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	static int null_is() { return 0; }
 	
 	static std::ostream& null_ostr(std::ostream& o)
@@ -99,7 +99,7 @@ struct NullisZero
 		o << 0;
 		return o;
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 /// \brief Class for objects that define SQL null as a blank C string.
@@ -110,8 +110,8 @@ struct NullisZero
 /// Used for the behavior parameter for template Null
 struct NullisBlank
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	static const char *null_is() { return ""; }
 	
 	static std::ostream& null_ostr(std::ostream& o)
@@ -119,7 +119,7 @@ struct NullisBlank
 		o << "";
 		return o;
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 
@@ -227,7 +227,7 @@ public:
 };
 
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 // Specialization the Null template for \c void
@@ -254,7 +254,7 @@ public:
 	}
 };
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 /// \brief Inserts null-able data into a C++ stream if it is not

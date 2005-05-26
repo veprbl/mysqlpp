@@ -76,7 +76,8 @@ enum quote_type0
 	quote					///< insert into a std::ostream to single-quote and escape next item
 };
 
-/// \if INTERNAL
+
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 struct quote_type1
@@ -192,7 +193,7 @@ inline std::ostream& operator <<(quote_type1 o, const Set<ST>& in)
 	return *o.ostr << "'" << in << "'";
 }
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 /// \enum quote_only_type0
@@ -209,7 +210,7 @@ enum quote_only_type0
 };
 
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 struct quote_only_type1
@@ -300,7 +301,7 @@ inline std::ostream& operator <<(quote_only_type1 o, const Set<ST>& in)
 	return *o.ostr << "'" << in << "'";
 }
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 /// \enum quote_double_only_type0
@@ -317,7 +318,7 @@ enum quote_double_only_type0
 };
 
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 struct quote_double_only_type1
@@ -412,7 +413,7 @@ inline std::ostream& operator <<(quote_double_only_type1 o,
 	return *o.ostr << "\"" << in << "\"";
 }
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 /// \enum escape_type0
@@ -425,7 +426,7 @@ inline std::ostream& operator <<(quote_double_only_type1 o,
 enum escape_type0 { escape };
 
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 struct escape_type1
@@ -459,7 +460,7 @@ inline escape_type2 operator <<(SQLQueryParms& p, escape_type0 /*esc */)
 	return escape_type2(&p);
 }
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 /// \brief Inserts a SQLString into a stream, escaping special SQL
@@ -537,7 +538,7 @@ enum do_nothing_type0
 };
 
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 struct do_nothing_type1
@@ -587,8 +588,7 @@ inline SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
 	return *p.qparms << in;
 }
 
-/// \endif
-
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 /// \enum ignore_type0
@@ -607,7 +607,7 @@ enum ignore_type0
 };
 
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 struct ignore_type2
@@ -631,8 +631,8 @@ inline SQLQueryParms& operator <<(ignore_type2 p, SQLString& in)
 	return *p.qparms << in;
 }
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
-}								// end namespace mysqlpp
+} // end namespace mysqlpp
 
 #endif

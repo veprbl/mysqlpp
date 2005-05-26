@@ -159,13 +159,13 @@ typedef std::binary_function<const char*, const char*, bool>
 /// to another.
 struct cstr_equal_to : bin_char_pred
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	bool operator ()(const char* x, const char* y) const
 	{
 		return !std::strcmp(x, y);
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 
@@ -173,13 +173,13 @@ struct cstr_equal_to : bin_char_pred
 /// equal to another.
 struct cstr_not_equal_to : bin_char_pred
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) != 0;
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 
@@ -187,13 +187,13 @@ struct cstr_not_equal_to : bin_char_pred
 /// lexically "less than" another.
 struct cstr_less : bin_char_pred
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) > 0;
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 
@@ -201,13 +201,13 @@ struct cstr_less : bin_char_pred
 /// lexically "less than or equal to" another.
 struct cstr_less_equal : bin_char_pred
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) >= 0;
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 
@@ -215,13 +215,13 @@ struct cstr_less_equal : bin_char_pred
 /// lexically "greater than" another.
 struct cstr_greater : bin_char_pred
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) < 0;
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 
@@ -229,13 +229,13 @@ struct cstr_greater : bin_char_pred
 /// lexically "greater than or equal to" another.
 struct cstr_greater_equal : bin_char_pred
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) <= 0;
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 

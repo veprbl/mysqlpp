@@ -259,7 +259,7 @@ public:
 };
 
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 template <class OnType, class ReturnType, class SizeType,
@@ -271,7 +271,7 @@ operator +(SizeType x,
 	return y + x;
 }
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp
 

@@ -70,13 +70,13 @@ public:
 	/// changed.
 	typedef const_iterator iterator;
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 	typedef int difference_type;
 	typedef const_reference reference;
 	typedef const char* const_pointer;
 	typedef const_pointer pointer;
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 	/// \brief Create empty string
 	const_string() :

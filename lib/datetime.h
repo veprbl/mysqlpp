@@ -44,14 +44,14 @@ namespace mysqlpp {
 /// \brief Base class for mysql_date and mysql_time
 struct mysql_dt_base
 {
-	/// \if INTERNAL
-	// Make Doxygen ignore this function; struct docs are sufficient
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	virtual std::ostream& out_stream(std::ostream&) const = 0;
 	operator std::string() const
 	{
 		return stream2string<std::string>(*this);
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 

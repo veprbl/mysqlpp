@@ -1,6 +1,13 @@
-// Do not add a Doxygen \file comment.  It just takes extra time to
-// parse this file (and it's one of the biggest ones, because mysql++.h
-// includes almost all the other files!), with no serious benefit.
+/// \file mysql++.hh
+/// \brief Deprecated backwards-compatibility header. Use mysql++.h in
+/// new code instead.
+
+#if !defined(DOXYGEN_IGNORE)
+// Make Doxygen ignore the #include graph for this function.  It takes
+// time to generate it, and there's little point.
+
 #warning This header is obsolete. Please use mysql++.h instead.
 #include "mysql++.h"
 using namespace mysqlpp;
+
+#endif // !defined(DOXYGEN_IGNORE)

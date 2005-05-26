@@ -168,8 +168,8 @@ public:
 	/// the \c other list, a copy of this list is returned.
 	SQLQueryParms operator +(const SQLQueryParms& other) const;
 
-	/// \if INTERNAL
-	// Doxygen will not generate documentation for this section.
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
 	void set(ss a)
 	{
 		clear();
@@ -227,7 +227,7 @@ public:
 		clear();
 		*this << a << b << c << d << e << f << g << h << i << j << k;
 	}
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 	/// \brief Set the template query parameters.
 	///
@@ -495,10 +495,10 @@ public:
 	/// after this call
 	std::string str(SQLQueryParms& p, query_reset r);
 
-	/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 	// Make Doxygen ignore this macro; declaration below is sufficient.
 	mysql_query_define0(std::string, str);
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
 

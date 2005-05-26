@@ -217,10 +217,11 @@ typedef ColData_Tmpl < const_string > ColData;
 typedef ColData_Tmpl < std::string > MutableColData;
 
 
-#ifndef NO_BINARY_OPERS
-
-/// \if INTERNAL
-// Doxygen will not generate documentation for this section.
+#if !defined(NO_BINARY_OPERS) && !defined(DOXYGEN_IGNORE)
+// Ignore this section is NO_BINARY_OPERS is defined, or if this section
+// is being parsed by Doxygen.  In the latter case, it's ignored because
+// Doxygen doesn't understand it correctly, and we can't be bothered to
+// explain it to Doxygen.
 
 #define oprsw(opr, other, conv) \
   template<class Str> \

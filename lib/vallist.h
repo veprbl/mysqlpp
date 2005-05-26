@@ -372,7 +372,7 @@ std::ostream& operator <<(std::ostream& o,
 }
 
 
-/// \if INTERNAL
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 template <class Iter>
@@ -395,7 +395,7 @@ public:
 	Iter end() const { return _end; }
 };
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 /// \brief Create a vector of bool with the given arguments as values.

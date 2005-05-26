@@ -344,11 +344,11 @@ public:
 		return *this;
 	}
 
+#if !defined(DOXYGEN_IGNORE)
 	// Declare the remaining overloads.  These are hidden down here partly
 	// to keep the above code clear, but also so that we may hide them
 	// from Doxygen, which gets confused by macro instantiations that look
 	// like method declarations.
-	/// \if INTERNAL
 	mysql_query_define0(std::string, preview)
 	mysql_query_define1(ResNSel, execute)
 	mysql_query_define1(ResUse, use)
@@ -356,10 +356,11 @@ public:
 	mysql_query_define2(storein_sequence)
 	mysql_query_define2(storein_set)
 	mysql_query_define2(storein)
-	/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 };
 
-/// \if INTERNAL
+
+#if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
 template<class Seq>
@@ -401,7 +402,7 @@ void Query::storein(T& con, const char *s)
 	mysql->storein(con, s);
 }
 
-/// \endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp
 
