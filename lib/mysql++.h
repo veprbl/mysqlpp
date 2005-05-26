@@ -115,19 +115,11 @@
 
 	\section licensing Licensing
 
-	The library itself is licensed under the GNU Lesser General Public
-	License, which you should have received with the distribution
-	package in a file called "LGPL" or "LICENSE". You can also view
-	it here: http://www.gnu.org/licenses/lgpl.html or receive a copy
-	by writing to Free Software Foundation, Inc., 51 Franklin Street,
+	MySQL++ is licensed under the GNU Lesser General Public License,
+	which you should have received with the distribution package in
+	a file called "LGPL" or "LICENSE". You can also view it here:
+	http://www.gnu.org/licenses/lgpl.html or receive a copy by
+	writing to Free Software Foundation, Inc., 51 Franklin Street,
 	Fifth Floor, Boston, MA 02110-1301, USA.
-
-	The MySQL++ documentation (this Reference Manual, and
-	the User Manual) is licensed under the Creative Commons
-	Attribution-ShareAlike License. To view a copy of this license,
-	visit http://creativecommons.org/licenses/by-sa/2.0/ or send
-	a letter to Creative Commons, 559 Nathan Abbott Way, Stanford,
-	California 94305, USA.
-
 */
 
