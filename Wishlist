@@ -191,6 +191,13 @@ New Feature Requests and ABI Changes
 	  let you overload the operator on both strings and integers,
 	  but the string form probably is the most useful.
 
+	o Work out a new soname scheme?  Something that at least partially
+	  mirrors the library version scheme, so it's obvious which
+	  version a .so file belongs to.  We could actually go with
+	  a 1:1 relationship, and simply override the default library
+	  symlink scheme to handle things correctly if libraries from
+	  the old scheme are still present.
+
 
 Bug Fix/Maintenance Items
 -------------------------
