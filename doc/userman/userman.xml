@@ -174,9 +174,9 @@
 		manipulators</ulink> that make it easy to generate
 		syntactically-correct SQL.</para>
 
-		<para>You can also set up template queries with this
-		class. Template queries work something like the C
-		<computeroutput>printf()</computeroutput> function:
+		<para>You can also set up <xref linkend="tquery"/> with
+		this class. Template queries work something like the
+		C <computeroutput>printf()</computeroutput> function:
 		you set up a fixed query string with tags inside that
 		indicate where to insert the variable parts. If you
 		have multiple queries that are structurally similar,
@@ -195,23 +195,23 @@
 	<sect2>
 		<title>Result Sets</title>
 
-		<para>The actual data elements in
-		a result set are stored in a special
-		<computeroutput>std::string</computeroutput>-like
-		class. Objects of this class can automatically convert
-		themselves to any of the basic C data types as well
-		as some additional MySQL++-specific types that are
-		designed to handle those MySQL that don't map well onto
-		the basic C types. For instance, you can convert a
-		MySQL <computeroutput>DATETIME</computeroutput>
-		field to a MySQL++ <ulink
-		url="../../refman/html/structmysqlpp_1_1DateTime.html">DateTime</ulink>
-		object automatically. If there is a problem in the
-		conversion it will either set a warning flag or throw an
+		<para>The field data in a result set are stored in a
+		special <computeroutput>std::string</computeroutput>-like
+		class called <ulink
+		url="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</ulink>.
+		This class has conversion operators
+		that let you automatically convert these
+		objects to any of the basic C data types.
+		Additionally, MySQL++ defines classes like <ulink
+		url="../../refman/html/structmysqlpp_1_1DateTime.html">DateTime</ulink>,
+		which you can initialize from a MySQL
+		<computeroutput>DATETIME</computeroutput> string. These
+		automatic conversions are protected against bad
+		conversions, and can either set a warning flag or throw an
 		exception, depending on how you set the library up.</para>
 
-		<para>MySQL++ has a number of different ways of representing
-		query results.</para>
+		<para>As for the result sets as a whole, MySQL++ has a
+		number of different ways of representing them:</para>
 
 		<sect3>
 			<title>Queries That Do Not Return Data</title>
@@ -238,7 +238,7 @@
 			objects. Because these classes are
 			<computeroutput>std::vector</computeroutput>-like
 			containers, you can treat the result set as a
-			two-dimensional array. For example you can get
+			two-dimensional array. For example, you can get
 			the 5th item on the 2nd row by simply saying
 			<computeroutput>result[1][4]</computeroutput>. You
 			can also access row elements
@@ -266,13 +266,17 @@
 			method above defines C++ structures that match the
 			table structures in your database schema.</para>
 
-			<para>We call it the "static" method because
-			the table structure is fixed at compile time;
-			if you change the database schema, you have to
-			change your SSQLS definitions and recompile. If
-			you fail to do this, your program will throw
-			an exception when you try to stuff a result set
-			into an outdated data structure.</para>
+			<para>We call it the "static" method because the
+			table structure is fixed at compile time. Indeed,
+			some schema changes require that you update your
+			SSQLS definitions and recompile, or else the
+			program could crash or throw "bad conversion"
+			exceptions when MySQL++ tries to stuff the new
+			data into an outdated data structure.  (Not all
+			changes require a recompile. Adding a column to
+			a table is safe, for instance, as the program
+			will ignore the new column until you update the
+			SSQLS definition.)</para>
 
 			<para>The advantage of this method is that
 			your program will require very little embedded
@@ -291,7 +295,7 @@
     q &lt;&lt; "SELECT * FROM mytable";
     q.storein(v);
     for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++v) {
-        cout &lt;&lt; "Price: " &lt;&lt; v.price &lt;&lt; endl;
+        cout &lt;&lt; "Price: " &lt;&lt; it-&gt;price &lt;&lt; endl;
     }</programlisting>
 
 			<para>Isn't that slick?</para>
@@ -311,7 +315,7 @@
 		exceptions carry more information. Not only do they
 		include a string member telling you why the exception
 		was thrown, there are several exception types, so you
-		can distinguish between several types of error within a
+		can distinguish between different error types within a
 		single <computeroutput>try</computeroutput> block.</para>
 	</sect2>
 </sect1>
@@ -1638,7 +1642,8 @@ main()
 
 <?hard-pagebreak?>
 <sect1>
-	<title>Template Queries</title>
+	<title id="tquery" xreflabel="template queries">Template
+			Queries</title>
 
 	<para>Another powerful feature of MySQL++ is being able
 	to set up template queries. These are kind of like C's
