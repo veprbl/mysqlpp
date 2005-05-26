@@ -114,13 +114,13 @@ New Feature Requests and ABI Changes
 	  smaller, but *really*....  Only possible saving grace is if BC++
 	  can compile them due to the macro code being shorter.
 
-	o Classes with virtual functions need virtual dtors.  GCC 4.0 warns
-	  about this.  It's easy to fix, but it breaks the ABI, so it will
-	  have to wait for 1.8 or 2.0.  It should be done with some thought
-	  as well: go through class looking for any code that allocates
-	  memory or other resources, and make sure they're released in the
-	  dtor.  This concern over releasing resources is why the warning
-	  exists in the first place.
+	o Classes with virtual functions need virtual dtors.  GCC 4.0
+	  warns about this.  It's easy to fix, but it breaks the ABI,
+	  so it will have to wait for 2.0.  It should be done with some
+	  thought as well: go through class looking for any code that
+	  allocates memory or other resources, and make sure they're
+	  released in the dtor.  This concern over releasing resources
+	  is why the warning exists in the first place.
 
 	o mysql_type_info in type_info.h has multiple public and private
 	  sections.  Collapse into one of each.  This will break the ABI.
