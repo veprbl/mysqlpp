@@ -136,7 +136,7 @@ New Feature Requests and ABI Changes
 	o Collapse store(string&) and store(string&, bool) into a single
 	  function by making bool argument default to false.  Same for
 	  use() and execute().
-	
+
 	o Collapse mysql_* date and time classes into their subclasses,
 	  Date, Time, and DateTime.
 
@@ -156,6 +156,13 @@ New Feature Requests and ABI Changes
 	  functionality up into a superclass.  This will eliminate all
 	  of the interface differences between these classes.
 
+	o Several of the value_list* and related functions can be
+	  collapsed into one by use of default parameters.  These are
+	  in vallist.h, and also in RowTemplate, defined in row.h.
+	  This will change the ABI, but a conservative refactoring need
+	  not change the API.  It may be that aggressive refactoring is
+	  indicated, however.
+
 	o Create a mixin class that provides a standard way to disable
 	  exceptions on errors.  Currently there is some variation, and
 	  some classes that throw exceptions have no way to disable
@@ -163,6 +170,19 @@ New Feature Requests and ABI Changes
 	  standardized set of methods to all these clases, so it wouldn't
 	  have to break the ABI, but this really is a "new version" type
 	  of feature.
+
+	o Isn't the field name form of field_list() kind of silly?
+
+	o Some field_list() functions use the do_nothing manipulator by
+	  default, while some use quote.  The former makes more sense to
+	  me, as field names should never have to be quoted or escaped.
+	  If someone really needs the quote manipulator, that's available
+	  explicitly through other versions of the function.
+
+	o Row::Row should take the MYSQL_ROW parameter by const reference.
+
+	o Can SQLQueryParams::set() overloads all be collapsed into a
+	  single member by suitable use of default parameters?
 
 	o Swap the definitions of Row::operator[] and lookup_by_name()?
 	  That is, have the operator take a field name, and define a
@@ -175,16 +195,26 @@ New Feature Requests and ABI Changes
 Bug Fix/Maintenance Items
 -------------------------
 
+	o It may be possible to optimize the use of ColData in the return
+	  from Row::operator[]. Currently, that operator returns
+	  a temporary ColData object, which contains a std::string
+	  buffer which is initialized by a const char* pointer to
+	  data within the Row object.  Since the ColData object is
+	  temporary, you currently must copy the data a second time to
+	  store it when using Row::operator[].	If the end user just
+	  wants a const char*, this double copy could be prevented.
+	  See http://lists.mysql.com/plusplus/4451 for the proposal.
+
 	o Connection::execute() should probably use mysql_real_query()
 	  instead of mysql_query() so it could handle binary data.
-	
+
 	o Shouldn't ColData_Tmpl default ctor set type information to some
 	  default?
-	
+
 	o There are comments in sql_query.h saying "only here temporary".
-	  They've been there for literally years.  Time to decide what to do
-	  about them!
-	
+	  They've been there for literally years.  Time to decide what
+	  to do about them!
+
 	o Have resetdb also create a table that load_file and
 	  cgi_image can use.  Remove "fax"ness from these examples,
 	  and encourage people to load up JPEGs or something else that
