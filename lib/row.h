@@ -557,10 +557,11 @@ public:
 	/// the underlying vector container should throw an exception.
 	/// Whether it actually does is probably implementation-dependent.
 	///
-	/// Note that we return the ColData object by value.  The purpose of
-	/// ColData is to make it easy to convert the string data returned
-	/// by the MySQL server to some more appropriate type, so you're
-	/// almost certain to use this operator in a construct like this:
+	/// Note that we return the mysqlpp::ColData object by value.  The
+	/// purpose of ColData is to make it easy to convert the string data
+	/// returned by the MySQL server to some more appropriate type, so
+	/// you're almost certain to use this operator in a construct like
+	/// this:
 	///
 	/// \code
 	///  string s = row[2];
@@ -568,8 +569,8 @@ public:
 	///
 	/// That accesses the third field in the row, returns a temporary
 	/// ColData object, which is then automatically converted to a
-	/// std::string and copied into s.  That works fine, but beware of
-	/// this similar but incorrect construct:
+	/// \c std::string and copied into \c s.  That works fine, but
+	/// beware of this similar but incorrect construct:
 	///
 	/// \code
 	///  const char* pc = row[2];
