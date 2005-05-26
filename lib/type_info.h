@@ -187,7 +187,7 @@ public:
 	/// \param f field from which we extract the type info
 	inline mysql_type_info(const MYSQL_FIELD& f);
 
-	/// \param Create object as a copy of another
+	/// \brief Create object as a copy of another
 	mysql_type_info(const mysql_type_info& t) :
 	num(t.num)
 	{
