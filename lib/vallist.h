@@ -59,12 +59,35 @@ namespace mysqlpp {
 template <class Seq1, class Seq2, class Manip>
 struct equal_list_ba
 {
+	/// \brief the list of objects on the left-hand side of the
+	/// equals sign
 	const Seq1* list1;
+
+	/// \brief the list of objects on the right-hand side of the
+	/// equals sign
 	const Seq2* list2;
+
+	/// \brief delimiter to use between each pair of elements
 	const char* delem;
+
+	/// \brief "equal" sign to use between each item in each equal
+	/// pair; doesn't have to actually be " = "
 	const char* equl;
+
+	/// \brief manipulator to use when inserting the equal_list into
+	/// a C++ stream
 	Manip manip;
 
+	/// \brief Create object
+	///
+	/// \param s1 list of objects on left-hand side of equal sign
+	/// \param s2 list of objects on right-hand side of equal sign
+	/// \param d what delimiter to use between each group in the list
+	///		when inserting the list into a C++ stream
+	/// \param e the "equals" sign between each pair of items in the
+	/// 	equal list; doesn't actually have to be " = "!
+	/// \param m manipulator to use when inserting the list into a
+	/// 	C++ stream
 	equal_list_ba(const Seq1& s1, const Seq2& s2, const char* d,
 			const char* e, Manip m) :
 	list1(&s1),
@@ -91,13 +114,41 @@ struct equal_list_ba
 template <class Seq1, class Seq2, class Manip>
 struct equal_list_b
 {
+	/// \brief the list of objects on the left-hand side of the
+	/// equals sign
 	const Seq1* list1;
+
+	/// \brief the list of objects on the right-hand side of the
+	/// equals sign
 	const Seq2* list2;
+
+	/// \brief for each true item in the list, the pair in that position
+	/// will be inserted into a C++ stream
 	const std::vector<bool> fields;
+
+	/// \brief delimiter to use between each pair of elements
 	const char* delem;
+
+	/// \brief "equal" sign to use between each item in each equal
+	/// pair; doesn't have to actually be " = "
 	const char* equl;
+
+	/// \brief manipulator to use when inserting the equal_list into
+	/// a C++ stream
 	Manip manip;
 
+	/// \brief Create object
+	///
+	/// \param s1 list of objects on left-hand side of equal sign
+	/// \param s2 list of objects on right-hand side of equal sign
+	/// \param f for each true item in the list, the pair of items
+	///		in that position will be inserted into a C++ stream
+	/// \param d what delimiter to use between each group in the list
+	///		when inserting the list into a C++ stream
+	/// \param e the "equals" sign between each pair of items in the
+	/// 	equal list; doesn't actually have to be " = "!
+	/// \param m manipulator to use when inserting the list into a
+	/// 	C++ stream
 	equal_list_b(const Seq1& s1, const Seq2& s2,
 			const std::vector<bool>& f, const char* d,
 			const char* e, Manip m) :
@@ -134,10 +185,24 @@ struct equal_list_b
 template <class Seq, class Manip>
 struct value_list_ba
 {
+	/// \brief set of objects in the value list
 	const Seq* list;
+
+	/// \brief delimiter to use between each value in the list when
+	/// inserting it into a C++ stream
 	const char* delem;
+
+	/// \brief manipulator to use when inserting the list into a
+	/// C++ stream
 	Manip manip;
 
+	/// \brief Create object
+	///
+	/// \param s set of objects in the value list
+	/// \param d what delimiter to use between each value in the list
+	///		when inserting the list into a C++ stream
+	/// \param m manipulator to use when inserting the list into a
+	/// 	C++ stream
 	value_list_ba(const Seq& s, const char* d, Manip m) :
 	list(&s),
 	delem(d),
@@ -160,11 +225,30 @@ struct value_list_ba
 template <class Seq, class Manip>
 struct value_list_b
 {
+	/// \brief set of objects in the value list
 	const Seq* list;
+
+	/// \brief delimiter to use between each value in the list when
+	/// inserting it into a C++ stream
 	const std::vector<bool> fields;
+
+	/// \brief delimiter to use between each value in the list when
+	/// inserting it into a C++ stream
 	const char* delem;
+
+	/// \brief manipulator to use when inserting the list into a C++
+	/// stream
 	Manip manip;
 
+	/// \brief Create object
+	///
+	/// \param s set of objects in the value list
+	/// \param f for each true item in the list, the list item
+	///		in that position will be inserted into a C++ stream
+	/// \param d what delimiter to use between each value in the list
+	///		when inserting the list into a C++ stream
+	/// \param m manipulator to use when inserting the list into a
+	/// 	C++ stream
 	value_list_b(const Seq& s, const std::vector<bool>& f,
 			const char* d, Manip m) :
 	list(&s),

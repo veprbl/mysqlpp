@@ -145,50 +145,85 @@ private:
 			bool _null = false);
 
 public:
+	/// \brief The internal constant we use for our string type.
+	///
+	/// We expose this because other parts of MySQL++ need to know
+	/// what the string constant is at the moment.
 	static const unsigned char string_type = 20;
-	unsigned int _length;
-	unsigned int _max_length;
+
+	unsigned int _length;		///< field length, from MYSQL_FIELD
+	unsigned int _max_length;	///< max data length, from MYSQL_FIELD
 
 private:
 	unsigned char num;
 	inline const sql_type_info& deref() const;
 
 public:
+	/// \brief Default constructor
 	mysql_type_info()
 	{
 	}
 	
+	/// \brief Create object
+	///
+	/// \param n index into the internal type table
+	///
+	/// Because of the \c n parameter's definition, this constructor
+	/// shouldn't be used outside the library.
 	mysql_type_info(unsigned char n) :
 	num(n)
 	{
 	}
 
+	/// \brief Create object from MySQL C API type info
+	///
+	/// \param t the MySQL C API type ID for this type
+	/// \param _unsigned if true, this is the unsigned version of the type
+	/// \param _null if true, this type can hold a SQL null
 	inline mysql_type_info(enum_field_types t, bool _unsigned, bool _null);
 
+	/// \brief Create object from a MySQL C API field
+	///
+	/// \param f field from which we extract the type info
 	inline mysql_type_info(const MYSQL_FIELD& f);
 
+	/// \param Create object as a copy of another
 	mysql_type_info(const mysql_type_info& t) :
 	num(t.num)
 	{
 	}
 
+	/// \brief Create object from a C++ type_info object
+	///
+	/// This tries to map a C++ type to the closest MySQL data type.
+	/// It is necessarily somewhat approximate.
 	mysql_type_info(const std::type_info& t)
 	{
 		num = lookups[t];
 	}
 
+	/// \brief Assign a new internal type value
+	///
+	/// \param n an index into the internal MySQL++ type table
+	///
+	/// This function shouldn't be used outside the library.
 	mysql_type_info& operator =(unsigned char n)
 	{
 		num = n;
 		return *this;
 	}
 
+	/// \brief Assign another mysql_type_info object to this object
 	mysql_type_info& operator =(const mysql_type_info& t)
 	{
 		num = t.num;
 		return *this;
 	}
 
+	/// \brief Assign a C++ type_info object to this object
+	///
+	/// This tries to map a C++ type to the closest MySQL data type.
+	/// It is necessarily somewhat approximate.
 	mysql_type_info& operator =(const std::type_info& t)
 	{
 		num = lookups[t];
@@ -211,7 +246,17 @@ public:
 	///
 	/// Returns the C++ type_info record corresponding to the SQL type.
 	inline const std::type_info& c_type() const;
+
+	/// \brief Return length of data in this field
+	///
+	/// This only works if you initialized this object from a
+	/// MYSQL_FIELD object.
 	inline const unsigned int length() const;
+
+	/// \brief Return maximum length of data in this field
+	///
+	/// This only works if you initialized this object from a
+	/// MYSQL_FIELD object.
 	inline const unsigned int max_length() const;
 
 	/// \brief Returns the type_info for the C++ type inside of the
