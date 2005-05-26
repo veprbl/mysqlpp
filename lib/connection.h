@@ -60,8 +60,9 @@ class Query;
 
 /// \brief Manages the connection to the MySQL database.
 
-class Connection {
-  private:
+class Connection
+{
+private:
 	friend class ResNSel;
 	friend class ResUse;
 	friend class Query;
@@ -72,7 +73,7 @@ class Connection {
 	bool locked;
 	bool Success;
 
-  public:
+public:
 	/// \brief Create object without connecting it to the MySQL server.
 	///
 	/// Use real_connect() method to establish the connection.

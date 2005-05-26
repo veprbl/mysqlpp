@@ -40,14 +40,14 @@ namespace mysqlpp {
 /// function and converts it to a string type.  An example of such a
 /// type within the library is mysqlpp::Date.
 
-template<class Strng, class T>
-Strng stream2string(const T &object)
+template <class Strng, class T>
+Strng stream2string(const T& object)
 {
-  std::ostringstream str;
-  object.out_stream(str);
-  str << std::ends;
-  Strng s = str.str();
-  return s;
+	std::ostringstream str;
+	object.out_stream(str);
+	str << std::ends;
+	Strng s = str.str();
+	return s;
 }
 
 } // end namespace mysqlpp
