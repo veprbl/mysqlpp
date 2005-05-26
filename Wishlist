@@ -156,6 +156,21 @@ New Feature Requests and ABI Changes
 	  functionality up into a superclass.  This will eliminate all
 	  of the interface differences between these classes.
 
+	o Create a mixin class that provides a standard way to disable
+	  exceptions on errors.  Currently there is some variation, and
+	  some classes that throw exceptions have no way to disable
+	  exceptions at all.  This could be done just by adding a
+	  standardized set of methods to all these clases, so it wouldn't
+	  have to break the ABI, but this really is a "new version" type
+	  of feature.
+
+	o Swap the definitions of Row::operator[] and lookup_by_name()?
+	  That is, have the operator take a field name, and define a
+	  function (at()?) that takes a field index.  The original problem
+	  solved in 1.7.10 still exists, in that modern compilers won't
+	  let you overload the operator on both strings and integers,
+	  but the string form probably is the most useful.
+
 
 Bug Fix/Maintenance Items
 -------------------------
@@ -177,9 +192,6 @@ Bug Fix/Maintenance Items
 	  a cgi-bin directory to try it out.  Make load_image use the
 	  standard command line parameters, so you can manually load up
 	  some images for cgi_image to retrieve.
-
-	o There's no way to disable exceptions with a method call on all
-	  classes.  There should be a standard way to do this.
 
 	o Add nmake Makefiles for the project, for those using only the
 	  free command-line tools.
