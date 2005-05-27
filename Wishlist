@@ -209,6 +209,12 @@ Bug Fix/Maintenance Items
 	  the unique code with all that EH stuff in the way.  Maybe remove
 	  EH from all the simple* examples, so they earn their name.
 
+	o Promote existing "exception handling" stuff in userman into its
+	  own section.	Maybe tie it in with the above change: split
+	  "The Basics" section into two parts, with the new EH discussion
+	  separating discussion of the examples that use EH and those
+	  that don't.
+
 	o Can one say something like find_if() on an interator from a
 	  ResUse query?  If so, make an example of it, showing how you can
 	  use the full expressiveness of C++ to augment SELECT matching.
