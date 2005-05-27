@@ -202,6 +202,13 @@ New Feature Requests and ABI Changes
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Consider removing all the exception handling stuff from simple1
+	  example.  Or at least, moving it into print_stock_table();
+	  that's not a great idea either, though, because util.cpp is
+	  shown in the userman early on as well.  It's difficult to see
+	  the unique code with all that EH stuff in the way.  Maybe remove
+	  EH from all the simple* examples, so they earn their name.
+
 	o Can one say something like find_if() on an interator from a
 	  ResUse query?  If so, make an example of it, showing how you can
 	  use the full expressiveness of C++ to augment SELECT matching.
