@@ -128,12 +128,12 @@
 
 	o Lots of small bits of documentation polishing.
 	
-	o Made some minor constness fixes.  Thanks to "Erwin" (erwin at 
-	  leastwanted dot nl) for this patch.
-	
-	o Made some warning fixes for GCC 4.0.  Not all warnings are fixed,
-	  because some of the needed changes would break the ABI.  Thanks
-	  to Chris Frey for this patch.
+	o Made some minor constness fixes.  Thanks to Erwin van Eijk
+	  for this patch.
+
+	o Made some warning fixes for GCC 4.0.	Not all warnings are
+	  fixed, because some of the needed changes would break the ABI.
+	  Thanks to Chris Frey for this patch.
 
 	o Added lib/Doxyfile to distribution.
 	
