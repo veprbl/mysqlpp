@@ -77,14 +77,6 @@ New Feature Requests and ABI Changes
 	  classes were not designed to be subclassed.  Evidence is the
 	  dynamic_cast<>s required for VC++ in insert() and friends.
 
-	o There are operator<<(SQLQuery&, ColData...) functions in addition
-	  to the normal (ostream&, ColData) ones.  (See manip.h)  It looks
-	  like a workaround for a compiler's type system weakness.  If this
-	  is no longer needed, the obvious change plays into the decision for
-	  the previous item: if Query is no longer an ostream, those
-	  separate operators still need to exist, but the casts in the
-	  implementation will break things.
-
 	o Why is class ResUse separate from class Result?  They're declared
 	  in the same file, only Result derives from it, and it isn't clear
 	  that all of the other code that uses ResUse couldn't use Result
@@ -93,10 +85,6 @@ New Feature Requests and ABI Changes
 	o Same for mysql_date/Date and mysql_time/Time.  Some justification
 	  is that DateTime derives from their base classes, but why can't
 	  it be derived from the leaf classes instead?
-
-	o Add UTF-8 handling for VC++, in simple1 program?  Umlaut in
-	  first item shows as two high-ASCII characters when run in Win32
-	  console.  (Oddly enough, VC++'s editor understands UTF-8!)
 
 	o SSQLS structures include some static elements (_table and
 	  names[]), which are defined within the macro.  If you put an SSQLS
@@ -197,10 +185,23 @@ New Feature Requests and ABI Changes
 	  a 1:1 relationship, and simply override the default library
 	  symlink scheme to handle things correctly if libraries from
 	  the old scheme are still present.
+	  
+	o MySQL++ handles automatic quoting and escaping differently for
+	  cout and cerr than for SQLQuery streams.  This should probably
+	  be simplified so that automatic quoting is only done for SQLQuery
+	  streams.  No other stream type should be treated specially.
 
 
 Bug Fix/Maintenance Items
 -------------------------
+
+	o Note difference between inserting ColData into a SQLQuery stream
+	  vs in any other ostream in the "Quoting and Escaping" section of
+	  the userman.
+
+	o Automatically define USE_WIN32_UCS2 in util.cpp when platform.h
+	  detects a Windows compiler.  Test with VC++ and Cygwin in
+	  -mno-cygwin mode.
 
 	o Consider removing all the exception handling stuff from simple1
 	  example.  Or at least, moving it into print_stock_table();
@@ -209,11 +210,11 @@ Bug Fix/Maintenance Items
 	  the unique code with all that EH stuff in the way.  Maybe remove
 	  EH from all the simple* examples, so they earn their name.
 
-	o Promote existing "exception handling" stuff in userman into its
-	  own section.	Maybe tie it in with the above change: split
-	  "The Basics" section into two parts, with the new EH discussion
-	  separating discussion of the examples that use EH and those
-	  that don't.
+	o Promote existing "notes on exceptions" section of tutorial
+	  into its own section.  This is necessary if above change is
+	  done.  A further step would be to split "The Basics" section
+	  into two parts, with the new EH discussion separating discussion
+	  of the examples that use EH and those that don't.
 
 	o Can one say something like find_if() on an interator from a
 	  ResUse query?  If so, make an example of it, showing how you can
@@ -253,8 +254,12 @@ Bug Fix/Maintenance Items
 	  standard command line parameters, so you can manually load up
 	  some images for cgi_image to retrieve.
 
-	o Add nmake Makefiles for the project, for those using only the
-	  free command-line tools.
+	o Add Makefiles suitable for VC++ free command line tools and
+	  for MinGW. Consider adding support for BC++ free compilers as
+	  well, and drop the BCB project files.  We could even drop the
+	  VC++ project files, which might be a good thing during the
+	  Visual Studio 2003 to 2005 changeover period.  This feature
+	  should also subsume examples/Makefile.simple.
 
 	o Move SQLQueryNEParms into exceptions.h.
 
@@ -271,8 +276,8 @@ Bug Fix/Maintenance Items
 
 	o Settle on new license for documentation, or make LGPL explicit.
 
-	o 64-bit integer support is not heavily tested.  It may yet have
-	  problems.
+	o 64-bit integer support has been reported to work, but more
+	  confirmation is wanted.
 
 	o Visual C++ project files should build a DLL version of the library
 	  only, for LGPL reasons.
