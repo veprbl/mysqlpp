@@ -2544,10 +2544,10 @@ query &lt;&lt; "select * from stock where " &lt;&lt;
 		<title>A Short History of Unicode</title>
 		<subtitle>...with a focus on relevance to MySQL++</subtitle>
 
-		<para>In the old days, computer operating systems
-		only dealt with 8-bit character sets. This only gives
-		you 256 possible characters, but the modern Western
-		languages have more than that by themselves. Add in
+		<para>In the old days, computer operating systems only
+		dealt with 8-bit character sets. This only gives you 256
+		possible characters, but the modern Western languages have
+		more characters combined than that by themselves. Add in
 		all the other lanauges of the world, plus the various
 		symbols people use, and you have a real mess! Since no
 		standards body held sway over things like international
@@ -2567,12 +2567,12 @@ query &lt;&lt; "select * from stock where " &lt;&lt;
 		character in the world, using up to 4 bytes per
 		character. The subset covering the most economically
 		valuable cases takes two bytes per character, so most
-		Unicode-aware programs limit themselves to this set,
+		Unicode-aware programs deal in 2-byte characters,
 		for efficiency.</para>
 
-		<para>Unfortunately, Unicode came about 20 years
-		too late for Unix and C. Converting the Unix
-		system call interface to Unicode would break all
+		<para>Unfortunately, Unicode came about 20 years too late
+		for Unix and C. Converting the Unix system call interface
+		to use multi-byte Unicode characters would break all
 		existing programs. The ISO lashed a wide character <ulink
 		url="http://www.jargon.net/jargonfile/s/sidecar.html">sidecar</ulink>
 		onto C in 1995, but in common practice C is still tied
@@ -2587,27 +2587,31 @@ query &lt;&lt; "select * from stock where " &lt;&lt;
 		of successor to Unix) Ken Thompson <ulink
 		url="http://www.cl.cam.ac.uk/~mgk25/ucs/utf-8-history.txt">invented</ulink>
 		the <ulink url="http://en.wikipedia.org/wiki/UTF-8">UTF-8
-		encoding</ulink>. Since UTF-8 is a superset of 7-bit
-		ASCII, many programs that deal in text actually get by
-		okay without any explicit support for UTF-8.</para>
+		encoding</ulink>. UTF-8 is a superset of 7-bit ASCII
+		and is compatible with C strings, since it doesn't use 0
+		bytes anywhere as multi-byte Unicode encodings do. As a
+		result, many programs that deal in text will cope with
+		UTF-8 data even though they have no explicit support
+		for UTF-8. (Follow the last link above to see how the
+		design of UTF-8 allows this.)</para>
 
 		<para>The MySQL database server comes out of the
 		Unix/C tradition, so it only supports 8-bit characters
-		natively. UTF-8 data is compatible with C strings, so all
-		versions of MySQL could store UTF-8 data, but sometimes
-		the database actually needs to understand the data.
-		When sorting, for instance. To support this, explicit
-		UTF-8 support was added to MySQL in version 4.1.</para>
+		natively. All versions of MySQL could store UTF-8 data,
+		but sometimes the server actually needs to understand
+		the data; when sorting, for instance. To support this,
+		explicit UTF-8 support was added to MySQL in version
+		4.1.</para>
 
-		<para>Because MySQL++ does not need to know
-		anything about the flowing through it, it
-		doesn't have explicit UTF-8 support.  C++'s
-		<computeroutput>std::string</computeroutput> stores
-		UTF-8 data just fine. But, your program probably
-		<emphasis>does</emphasis> care about the data coming
-		from MySQL++. The remainder of this chapter covers the
-		choices you have for dealing with UTF-8 encoded Unicode
-		data.</para>
+		<para>Because MySQL++ does not need to
+		understand the text flowing through it, it
+		neither has nor needs explicit UTF-8 support.
+		C++'s <computeroutput>std::string</computeroutput>
+		stores UTF-8 data just fine. But, your program probably
+		<emphasis>does</emphasis> care about the text it gets
+		from the database via MySQL++. The remainder of this
+		chapter covers the choices you have for dealing with
+		UTF-8 encoded Unicode data in your program.</para>
 	</sect2>
 
 
