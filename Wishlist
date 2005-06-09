@@ -195,6 +195,8 @@ New Feature Requests and ABI Changes
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Output summary of build options at end of configure script.
+
 	o Note difference between inserting ColData into a SQLQuery stream
 	  vs in any other ostream in the "Quoting and Escaping" section of
 	  the userman.
