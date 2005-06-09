@@ -32,7 +32,7 @@ LDFLAGS=-lmysqlpp -lmysqlclient
 
 # --- No user-serviceable parts below :)
 
-BINARIES=resetdb simple1 custom1 custom2 custom3 custom4 \
+BINARIES=resetdb simple1 custom1 custom2 custom3 custom4 custom5 \
 	fieldinf1 dbinfo cgi_image load_file updel
 
 RESETDB_OBJS=resetdb.o util.o
@@ -41,6 +41,7 @@ CUSTOM1_OBJS=custom1.o util.o
 CUSTOM2_OBJS=custom2.o util.o
 CUSTOM3_OBJS=custom3.o util.o
 CUSTOM4_OBJS=custom4.o util.o
+CUSTOM5_OBJS=custom5.o util.o
 FIELDINF1_OBJS=fieldinf1.o util.o
 DBINFO_OBJS=dbinfo.o util.o
 CGI_IMAGE_OBJS=cgi_image.o
@@ -76,6 +77,9 @@ custom3: $(CUSTOM3_OBJS)
 
 custom4: $(CUSTOM4_OBJS)
 	$(LD) $(CUSTOM4_OBJS) -o $@ $(LDFLAGS)
+
+custom5: $(CUSTOM5_OBJS)
+	$(LD) $(CUSTOM5_OBJS) -o $@ $(LDFLAGS)
 
 fieldinf1: $(FIELDINF1_OBJS)
 	$(LD) $(FIELDINF1_OBJS) -o $@ $(LDFLAGS)
