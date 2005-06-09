@@ -105,13 +105,8 @@ main(int argc, char *argv[])
 		query.execute("Hot Mustard", 75, .95, .97, "1998-05-25");
 		query.execute("Hotdog Buns", 65, 1.1, 1.1, "1998-04-23");
 
-		if (created) {
-			cout << "Created";
-		}
-		else {
-			cout << "Reinitialized";
-		}
-		cout << " sample database successfully." << endl;
+		cout << (created ? "Created" : "Reinitialized") <<
+				" sample database successfully." << endl;
 	}
 	catch (mysqlpp::BadQuery& er) {
 		// Handle any connection or query errors
