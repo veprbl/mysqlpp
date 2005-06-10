@@ -195,6 +195,9 @@ New Feature Requests and ABI Changes
 Bug Fix/Maintenance Items
 -------------------------
 
+	o Add a userman section severely summarizing ChangeLog, with a
+	  focus on API and ABI breakages.
+
 	o Output summary of build options at end of configure script.
 
 	o Note difference between inserting ColData into a SQLQuery stream
