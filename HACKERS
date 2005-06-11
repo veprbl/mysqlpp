@@ -2,17 +2,30 @@ If you are going to make any changes to MySQL++, this file has some
 hints and commentary you may find helpful.
 
 
-SUBMITTING PATCHES
+SUBVERSION ACCESS
 
-	If you wish to submit a patch to the library, please send
-	it to the mailing list.  We want it in unified diff format.
-	The easiest way to do this is to check out a copy of the current
-	MySQL++ tree from the Gna! Subversion repository:
+	To check out the current development version from the Gna!
+	Subversion repository, say:
 
 		$ svn co svn://svn.gna.org/svn/mysqlpp/trunk mysqlpp
 
-	Make your change, and then ask Subversion to generate the diff
-	for you:
+	If you're a MySQL++ committer, use svn over ssh instead:
+	
+		$ svn co svn+ssh://LOGIN@svn.gna.org/svn/mysqlpp/trunk mysqlpp
+
+	where LOGIN is your Gna! login name.  You will have to have your
+	ssh public key registered with Gna! for this to work.
+
+
+SUBMITTING PATCHES
+
+	If you wish to submit a patch to the library, please send it to
+	the MySQL++ mailing list.  We want it in unified diff format.
+
+	The easiest way to do this is to check out a copy of the current
+	MySQL++ tree as described in the previous section. Then make
+	your change, cd to the root directory of the project, and ask
+	Subversion to generate the diff for you:
 
 		$ svn diff > mychange.patch
 
