@@ -198,11 +198,15 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 		return false;
 	}
 
+	if (!kdb) {
+		kdb = kpcSampleDatabase;
+	}
+
 	if ((argc > 1) && (argv[1][0] == '-')) {
 		cout << "usage: " << argv[0] <<
 				" [host] [user] [password] [port]" << endl;
 		cout << endl << "\tConnects to database ";
-		if (kdb) {
+		if (strlen(kdb) > 0) {
 			cout << '"' << kdb << '"';
 		}
 		else {
@@ -211,10 +215,6 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 		cout << " on localhost using your user" << endl;
 		cout << "\tname and no password by default." << endl << endl;
 		return false;
-	}
-
-	if (!kdb) {
-		kdb = kpcSampleDatabase;
 	}
 
 	bool success = false;
