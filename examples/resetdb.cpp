@@ -40,6 +40,7 @@ main(int argc, char *argv[])
 {
 	mysqlpp::Connection con(mysqlpp::use_exceptions);
 	try {
+		cout << "Connecting to database server..." << endl;
 		if (!connect_to_db(argc, argv, con, "")) {
 			return 1;
 		}
@@ -49,39 +50,48 @@ main(int argc, char *argv[])
 		return 1;
 	}
 	
-	bool created = false;
+	bool new_db = false;
+	mysqlpp::Query query = con.query();	// create a new query object
 	try {
+		// Try to attach to existing sample database.
 		con.select_db(kpcSampleDatabase);
 	}
-	catch (mysqlpp::BadQuery &) {
-		// Couldn't switch to the sample database, so assume that it
-		// doesn't exist and create it.  If that doesn't work, exit
-		// with an error.
-		if (con.create_db(kpcSampleDatabase)) {
-			cerr << "Failed to create sample database: " <<
-					con.error() << endl;
+	catch (...) {
+		// Couldn't switch to the sample database, so set the flag that
+		// will recreate it.  We don't do that here in the catch block
+		// because some compilers don't allow nested exception handlers.
+		new_db = true;
+	}
+
+	if (new_db) {
+		// Sample database doesn't exist yet, so create it.
+		try {
+			cout << "Creating empty sample database..." << endl;
+			con.create_db(kpcSampleDatabase);
+			con.select_db(kpcSampleDatabase);
+			new_db = true;
+		}
+		catch (mysqlpp::BadQuery& err) {
+			cerr << "Error: " << err.what() << endl;
 			return 1;
 		}
-		else if (!con.select_db(kpcSampleDatabase)) {
-			cerr << "Failed to select sample database." << endl;
-			return 1;
+	}
+	else {
+		// Sample database must already exist, so drop the sample table.
+		// If this doesn't succeed, assume that the database exists but
+		// the table does not for some reason.
+		try {
+			cout << "Dropping existing stock table..." << endl;
+			query.execute("drop table stock");
 		}
-		else {
-			created = true;
+		catch (...) {
 		}
 	}
 
-	mysqlpp::Query query = con.query();	// create a new query object
-
-	try {
-		query.execute("drop table stock");
-	}
-	catch (mysqlpp::BadQuery&) {
-		// ignore any errors
-	}
-
+	cout << "Creating new stock table..." << endl;
 	try {
 		// Send the query to create the table and execute it.
+		query.reset();
 		query << "create table stock  (item char(20) not null, num bigint,"
 			<< "weight double, price double, sdate date)";
 		query.execute();
@@ -100,12 +110,13 @@ main(int argc, char *argv[])
 		// notice that the first row is a UTF-8 encoded Unicode string!
 		// All you have to do to store Unicode data in recent versions
 		// of MySQL is use UTF-8 encoding.
+		cout << "Populating stock table..." << endl;
 		query.execute("Nürnberger Brats", 92, 1.5, 8.79, "2005-03-10");
 		query.execute("Pickle Relish", 87, 1.5, 1.75, "1998-09-04");
 		query.execute("Hot Mustard", 75, .95, .97, "1998-05-25");
 		query.execute("Hotdog Buns", 65, 1.1, 1.1, "1998-04-23");
 
-		cout << (created ? "Created" : "Reinitialized") <<
+		cout << (new_db ? "Created" : "Reinitialized") <<
 				" sample database successfully." << endl;
 	}
 	catch (mysqlpp::BadQuery& er) {
