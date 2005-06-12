@@ -135,6 +135,14 @@ struct Date : public mysql_date, public DTbase<Date>
 	/// \brief Default constructor
 	Date() { };
 
+	/// \brief Initialize object as a copy of another Date
+	Date(const Date& other)
+	{
+		year = other.year;
+		month = other.month;
+		day = other.day;
+	}
+
 	/// \brief Initialize object from a MySQL date string
 	///
 	/// String must be in the YYYY-MM-DD format.  It doesn't have to be
@@ -214,6 +222,14 @@ struct Time : public mysql_time, public DTbase<Time>
 	/// \brief Default constructor
 	Time() { };
 
+	/// \brief Initialize object as a copy of another Time
+	Time(const Time& other)
+	{
+		hour = other.hour;
+		minute = other.minute;
+		second = other.second;
+	}
+
 	/// \brief Initialize object from a MySQL time string
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
@@ -264,6 +280,17 @@ struct DateTime : public mysql_date, public mysql_time,
 	/// \brief Default constructor
 	DateTime() { }
 	
+	/// \brief Initialize object as a copy of another Date
+	DateTime(const DateTime& other)
+	{
+		year = other.year;
+		month = other.month;
+		day = other.day;
+		hour = other.hour;
+		minute = other.minute;
+		second = other.second;
+	}
+
 	/// \brief Initialize object from a MySQL date-and-time string
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
