@@ -34,7 +34,7 @@ extern const char* kpcSampleDatabase;
 
 void print_stock_header(int rows);
 void print_stock_row(const char* item, mysqlpp::longlong num,
-		double weight, double price, mysqlpp::Date date);
+		double weight, double price, const mysqlpp::Date& date);
 void print_stock_rows(mysqlpp::Result& res);
 void print_stock_table(mysqlpp::Query& query);
 bool connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,

@@ -111,7 +111,7 @@ print_stock_header(int rows)
 
 void
 print_stock_row(const char* item, mysqlpp::longlong num, double weight,
-		double price, mysqlpp::Date date)
+		double price, const mysqlpp::Date& date)
 {
 	// Output first column, the item string.  The UCS2 option shows
 	// how we can convert the data to get Unicode output on Windows.
