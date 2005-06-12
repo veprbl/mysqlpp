@@ -61,3 +61,6 @@ updel_DEPENDENCIES = $(MYSQLPP_LIB)
 load_file_SOURCES = load_file.cpp
 load_file_DEPENDENCIES = $(MYSQLPP_LIB)
 
+ctags:
+	ctags *.cpp *.h
+
