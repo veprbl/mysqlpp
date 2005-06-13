@@ -179,9 +179,6 @@ v2.0 Release Plan
 	  wants a const char*, this double copy could be prevented.
 	  See http://lists.mysql.com/plusplus/4451 for the proposal.
 
-	o Relicense user manual.  Linux Documentation Project License v2.0
-	  is the current front-runner.
-
 
 Future Features and ABI Changes (after v2.0)
 --------------------------------------------

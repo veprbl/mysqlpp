@@ -2757,20 +2757,35 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 <sect1>
 	<title>Licensing</title>
 
-	<para>The primary copyright holders on MySQL++ are Kevin Atkinson
-	(1998), MySQL AB (1999 through 2001) and Educational Technology
-	Resources, Inc. (2004 through the date of this writing).</para>
-	
-	<para>MySQL++ is released under the GNU Lesser General Public
-	License (LGPL), reproduced below.</para>
+	<para>The primary copyright holders on the MySQL++ library and
+	its documentation are Kevin Atkinson (1998), MySQL AB (1999
+	through 2001) and Educational Technology Resources, Inc. (2004
+	through the date of this writing). There are other contributors,
+	who also retain copyrights on their additions; see the ChangeLog
+	file in the MySQL++ distribution tarball for details.</para>
 
-	<para>This license basically states that you are free to use,
+	<para>The MySQL++ library and its Reference Manual are released
+	under the GNU Lesser General Public License (LGPL), reproduced
+	below.</para>
+	
+	<para>The MySQL++ User Manual &mdash; excepting some example
+	code from the library reproduced within it &mdash; is offered
+	under a license closely based on the Linux Documentation Project
+	License (LDPL) v2.0, included below. (The MySQL++ documentation
+	isn't actually part of the Linux Documentation Project, so
+	the main changes are to LDP-related language. Also, generic
+	language such as "author's (or authors')" has been replaced
+	with specific language, because the license applies to only
+	this one document.)</para>
+
+	<para>These licenses basically state that you are free to use,
 	distribute and modify these works, whether for personal or
 	commercial purposes, as long as you grant the same rights to
 	those you distribute the works to, whether you changed them or
 	not. See the licenses below for full details.</para>
 
 
+<?hard-pagebreak?>
 <sect2>
 	<title>GNU Lesser General Public License</title>
 	<subtitle>Version 2.1, February 1999</subtitle>
@@ -3410,6 +3425,88 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 		</blockquote>
 
 		<para>That's all there is to it!</para>
+	</sect3>
+</sect2>
+
+
+<?hard-pagebreak?>
+<sect2>
+	<title>MySQL++ User Manual License</title>
+
+	<sect3>
+		<title>I. COPYRIGHT</title>
+
+		<para>The copyright to the MySQL++ User Manual is owned
+		by its authors.</para>
+	</sect3>
+
+	<sect3>
+		<title>II. LICENSE</title>
+
+		<para>The MySQL++ User Manual may be reproduced and
+		distributed in whole or in part, in any medium physical or
+		electronic, provided that this license notice is displayed
+		in the reproduction. Commercial redistribution is
+		permitted and encouraged. Thirty days advance notice via
+		email to the authors of redistribution is appreciated, to
+		give the authors time to provide updated documents.</para>
+
+		<sect4>
+			<title>A. REQUIREMENTS OF MODIFIED WORKS</title>
+
+			<para>All modified documents, including
+			translations, anthologies, and partial documents,
+			must meet the following requirements:</para>
+
+			<orderedlist numeration="arabic">
+				<listitem><para>The modified version
+				must be labeled as such.</para></listitem>
+
+				<listitem><para>The person
+				making the modifications must be
+				identified.</para></listitem>
+
+				<listitem><para>Acknowledgement
+				of the original author must be
+				retained.</para></listitem>
+
+				<listitem><para>The location of
+				the original unmodified document be
+				identified.</para></listitem>
+
+				<listitem><para>The original authors'
+				names may not be used to assert or
+				imply endorsement of the resulting
+				document without the original authors'
+				permission.</para></listitem>
+			</orderedlist>
+
+			<para>In addition it is requested that:</para>
+
+			<orderedlist numeration="arabic">
+				<listitem><para>The modifications
+				(including deletions) be
+				noted.</para></listitem>
+
+				<listitem><para>The authors be
+				notified by email of the modification
+				in advance of redistribution, if
+				an email address is provided in the
+				document.</para></listitem>
+			</orderedlist>
+
+			<para>Mere aggregation of the MySQL++ User Manual
+			with other documents or programs on the same
+			media shall not cause this license to apply to
+			those other works.</para>
+
+			<para>All translations, derivative documents, or
+			modified documents that incorporate the MySQL++
+			User Manual may not have more restrictive license
+			terms than these, except that you may require
+			distributors to make the resulting document
+			available in source format.</para>
+		</sect4>
 	</sect3>
 </sect2>
 </sect1>
