@@ -432,7 +432,7 @@ public:
 	/// \param db name of database to create
 	///
 	/// \return true if database was created successfully
-	bool create_db(std::string db)
+	bool create_db(const std::string& db)
 	{
 		return execute("CREATE DATABASE " + db);
 	}
@@ -442,13 +442,16 @@ public:
 	/// \param db name of database to destroy
 	///
 	/// \return true if database was created successfully
-	bool drop_db(std::string db)
+	bool drop_db(const std::string& db)
 	{
 		return execute("DROP DATABASE " + db);
 	}
 
 	/// \brief Change to a different database
-	bool select_db(std::string db) { return select_db(db.c_str()); }
+	bool select_db(const std::string& db)
+	{
+		return select_db(db.c_str());
+	}
 
 	/// \brief Change to a different database
 	bool select_db(const char* db);
