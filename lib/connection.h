@@ -431,22 +431,20 @@ public:
 	///
 	/// \param db name of database to create
 	///
-	/// \return \e false if database was created successfully. (Yes,
-	/// false! This behavior will change in the next major version.)
+	/// \return true if database was created successfully
 	bool create_db(std::string db)
 	{
-		return !execute("CREATE DATABASE " + db);
+		return execute("CREATE DATABASE " + db);
 	}
 
 	/// \brief Drop a database
 	///
 	/// \param db name of database to destroy
 	///
-	/// \return \e false if database was created successfully. (Yes,
-	/// false! This behavior will change in the next major version.)
+	/// \return true if database was created successfully
 	bool drop_db(std::string db)
 	{
-		return !execute("DROP DATABASE " + db);
+		return execute("DROP DATABASE " + db);
 	}
 
 	/// \brief Change to a different database
