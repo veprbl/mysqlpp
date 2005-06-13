@@ -51,9 +51,6 @@ v2.0 Release Plan
 	  Also derive Query from this new interface, as it also has a
 	  locking mechanism.
 
-	o Remove Connection::infoo() (Apparently an attempt to cope with
-	  typos for "info()".)
-
 	o Rename Connection::read_options() to set_option().
 
 	o Rename Connection::real_connect() to connect(), drop old

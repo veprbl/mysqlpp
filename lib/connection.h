@@ -472,13 +472,6 @@ public:
 	/// Simply wraps \c mysql_shutdown() in the C API.
 	bool shutdown();
 
-	/// \brief Alias for info()
-	///
-	/// This probably shouldn't exist.  It will be removed in the next
-	/// major version of the library unless a good justification is
-	/// found.
-	std::string infoo() { return info(); }
-
 	/// \brief Return the connection options object
 	st_mysql_options get_options() const { return mysql.options; }
 
