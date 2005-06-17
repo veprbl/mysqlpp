@@ -4,18 +4,25 @@ for instructions on sending patches.
 The items in the bug fix/maintenance section are the easiest to do
 without breaking things, so if you're looking for a project....
 
+Here's a meta-item that doesn't really fit into any of the categories
+below: any time you must hand-roll some SQL code in your program,
+consider whether it could be reduced to an API feature that would be
+widely useful.  Patches or proposals of this sort are always welcome.
+
 
 v2.0 Release Plan
 -----------------
 
 	The basic concept of MySQL++ v2.0 is to roll up all of the ABI
-	breakages that we've been putting off.	Ideally, this will be
-	the last ABI breakage for a long while.  The mad god Murphy may
-	have other plans, but even if we have to change the ABI again in
-	the next major revision to correct unpopular changes, it's still
-	in our best interest not to put off these changes any further.
-	The earlier we discover problems with these changes, the less
-	time until we settle on a stable ABI.
+	breakages that we've been putting off.
+	
+	Ideally, this will be the last ABI breakage for a long while.
+	The mad god Murphy may have other plans, but even if we have
+	to change the ABI again in the next major revision to correct
+	unpopular changes, it's still in our best interest not to
+	put off these changes any further.  The earlier we discover
+	problems with these changes, the less time until we settle
+	on a stable ABI.
 
 	We're therefore putting off major changes that shouldn't impact the
 	ABI to v2.1 or later.  See the next section.
@@ -142,8 +149,14 @@ v2.0 Release Plan
 	  See http://lists.mysql.com/plusplus/4451 for the proposal.
 
 
-Future Features and ABI Changes (after v2.0)
---------------------------------------------
+Future Features and ABI Changes
+-------------------------------
+
+	These changes are planned for versions after v2.0. Some could happen
+	as early as v2.1, but don't count on it.  If you need some of these
+	changes to happen quicker than that, the best way to ensure it is to
+	start coding and provide a patch!
+	
 
 	o Transaction support.  Create a "Transaction" class, an object of
 	  which you create on the stack, giving it a reference to the
@@ -158,6 +171,10 @@ Future Features and ABI Changes (after v2.0)
 
 	o Add a configure script option to allow the new lock mechanism to
 	  use platform mutexes via the Boost.Threads library.
+
+	o Consider other places true thread-awareness could be added.
+	  Should more classes be Lockable?  Are there additional mechanisms
+	  besides Lockable that we need to add?
 
 	o SSQLS structures include some static elements (_table and
 	  names[]), which are defined within the macro.  If you put an SSQLS
@@ -182,28 +199,31 @@ Future Features and ABI Changes (after v2.0)
 	  different C++ variable names than the SQL table uses for field
 	  names.  Is it worth breaking that compatibility?
 
-	o User-settable floating-point comparison precisions?  Something
-	  like this: http://lists.mysql.com/plusplus/3984
-	
-	o Look through my own code for uses of hand-rolled SQL queries, and
-	  try to reduce them to API features.
-
-	o Consider other places true thread-awareness could be added,
-	  besides the mutex + Connection lock item above.
-
 	o Deprecate sql_create_basic_* ? They have less functionality and
 	  they're no easier to use than sql_create and friends, so
 	  why bother with them?  I suppose the code generated is a bit
 	  smaller, but *really*....  Only possible saving grace is if BC++
-	  can compile them due to the macro code being shorter.
+	  can compile them due to the macro code being shorter.  They also
+	  don't have the static members, which annoy some compilers.
 
+	o User-settable floating-point comparison precisions?  Something
+	  like this: http://lists.mysql.com/plusplus/3984  As it currently
+	  stands, sql_cmp(double,double) is foolish.  One shouldn't do
+	  exact equality comparison on floating point values.
+	
 	o Consider using MySQL C API enum constants in mysql_type_info::types
 	  definition instead of hard-coded values.  This could potentially
 	  break a lot of infrastructure, though, so do it only with care.
 
 
-Bug Fix/Maintenance Items (could happen in any version)
--------------------------------------------------------
+Bug Fix/Maintenance Items
+-------------------------
+
+	These items could happen in any version.
+
+
+	o 64-bit integer support has been reported to work, but more
+	  confirmation is wanted.
 
 	o Can one say something like find_if() on an interator from a
 	  ResUse query?  If so, make an example of it, showing how you can
@@ -221,25 +241,11 @@ Bug Fix/Maintenance Items (could happen in any version)
 	  some images for cgi_image to retrieve.
 
 	o Add Makefiles suitable for VC++ free command line tools and
-	  for MinGW. Consider adding support for BC++ free compilers as
+	  for MinGW.  Consider adding support for BC++ free compilers as
 	  well, and drop the BCB project files.  We could even drop the
 	  VC++ project files, which might be a good thing during the
 	  Visual Studio 2003 to 2005 changeover period.  This feature
 	  should also subsume examples/Makefile.simple.
-
-	o Template ListInsert in lib/myset.h isn't being used within the
-	  library.  It could probably be used in place of SetInsert
-	  in the same file, which things like type_info.h do use now,
-	  but it isn't clear how one would go about doing that without
-	  changing the library code.  Document it or throw it away.
-
-	o sql_cmp(double,double) is foolish.  One shouldn't do ==
-	  comparison on floating point values.	Same for
-	  sql_cmp(float,float).  See also floating point precision item
-	  in previous section.
-
-	o 64-bit integer support has been reported to work, but more
-	  confirmation is wanted.
 
 	o Visual C++ project files should build a DLL version of the library
 	  only, for LGPL reasons.
@@ -248,6 +254,12 @@ Bug Fix/Maintenance Items (could happen in any version)
 	  reorganization in 1.7.20: if you move everything from row.cc to
 	  a new row2.h file and include it in a few strategic locations, it
 	  works.  But, this is a bogus fix.  Find the right one.
+
+	o Template ListInsert in lib/myset.h isn't being used within the
+	  library.  It could probably be used in place of SetInsert
+	  in the same file, which things like type_info.h do use now,
+	  but it isn't clear how one would go about doing that without
+	  changing the library code.  Document it or throw it away.
 
 	o Define CSS stylesheet for userman to try and match its appearance
 	  to that of the refman.  Perhaps we can just copy the stylesheet
