@@ -13,7 +13,7 @@
 /// the block exits.
 
 /***********************************************************************
- Copyright (c) 2004, 2005 by Educational Technology Resources, Inc.
+ Copyright (c) 2005 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
