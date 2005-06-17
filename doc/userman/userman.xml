@@ -2933,6 +2933,17 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			so it's database server neutral. Right now
 			it's dependent on MySQL, but it may not
 			always be.</para>
+
+			<para>All custom MySQL++ exceptions
+			derive from a common base class now:
+			<computeroutput>Exception</computeroutput>. The
+			practical upshot of this is that some of the
+			variability between the various exception types
+			has been tightened up. None of the example
+			programs had to be changed as a result, so if
+			your program handles MySQL++ exceptions the
+			same way they do, your program won't need to
+			change, either.</para>
 		</sect3>
 	</sect2>
 

@@ -36,6 +36,36 @@
 
 namespace mysqlpp {
 
+/// \brief Base class for all MySQL++ custom exceptions
+
+class Exception : public std::exception
+{
+public:
+	/// \brief Create exception object
+	Exception(const char* w = "") throw() :
+	what_(w)
+	{
+	}
+
+	/// \brief Create exception object
+	Exception(const std::string& w) throw() :
+	what_(w)
+	{
+	}
+
+	/// \brief Destroy exception object
+	~Exception() throw()
+	{
+	}
+
+	/// \brief Returns explanation of why exception was thrown
+	virtual const char* what() const throw() { return what_.c_str(); }
+
+protected:
+	const std::string what_;	///< explanation of why exception was thrown
+};
+
+
 /// \brief Exception thrown when MySQL encounters a problem while
 /// processing your query.
 ///
@@ -43,34 +73,21 @@ namespace mysqlpp {
 /// SQL syntax is incorrect, or a field you requested doesn't exist in
 /// the database, or....
 
-class BadQuery : public std::exception
+class BadQuery : public Exception
 {
 public:
 	/// \brief Create exception object
-	BadQuery(const std::string & er = "") :
-	error(er)
+	BadQuery(const char* w = "") :
+	Exception(w)
 	{
 	}
-
-	/// \brief Destroy exception object
-	~BadQuery() throw()
-	{
-	}
-
-	/// \brief Returns the error message
-	virtual const char* what() const throw() { return error.c_str(); }
-
-	const std::string error;	///< explanation of why query was bad
 };
 
 
 /// \brief Exception thrown when a bad type conversion is attempted.
 
-class BadConversion : public std::exception
+class BadConversion : public Exception
 {
-private:
-	const std::string _what;
-
 public:
 	const char* type_name;	///< name of type we tried to convert to
 	const std::string data;	///< string form of data we tried to convert
@@ -86,8 +103,9 @@ public:
 	/// \param a ??
 	BadConversion(const char* tn, const char* d, size_t r,
 			size_t a) :
-	_what(std::string("Tried to convert \"") + std::string(d ? d : "") +
-		   "\" to a \"" + std::string(tn ? tn : "")),
+	Exception(std::string("Tried to convert \"") +
+			std::string(d ? d : "") + "\" to a \"" +
+			std::string(tn ? tn : "")),
 	type_name(tn),
 	data(d),
 	retrieved(r),
@@ -97,14 +115,14 @@ public:
 
 	/// \brief Create exception object, given completed error string
 	///
-	/// \param wt the "what" error string
+	/// \param w the "what" error string
 	/// \param tn type name we tried to convert to
 	/// \param d string form of data we tried to convert
 	/// \param r ??
 	/// \param a ??
-	BadConversion(const std::string& wt, const char* tn,
+	BadConversion(const std::string& w, const char* tn,
 				  const char* d, size_t r, size_t a) :
-	_what(wt),
+	Exception(w),
 	type_name(tn),
 	data(d),
 	retrieved(r),
@@ -114,11 +132,11 @@ public:
 
 	/// \brief Create exception object, with error string only
 	///
-	/// \param wt the "what" error string
+	/// \param w the "what" error string
 	///
 	/// All other data members are initialize to default values
-	BadConversion(const std::string& wt = "") :
-	_what(wt),
+	BadConversion(const char* w = "") :
+	Exception(w),
 	type_name("unknown"),
 	data(""),
 	retrieved(0),
@@ -126,34 +144,22 @@ public:
 	{
 	}
 
-	/// \brief Destroy exception object
+	/// \brief Destroy exception
 	~BadConversion() throw() { }
-
-	/// \brief Returns the error message
-	virtual const char *what() const throw() { return _what.c_str(); }
 };
 
 
 /// \brief Exception thrown when you attempt to convert a SQL null
 /// to an incompatible type.
 
-class BadNullConversion : public std::exception
+class BadNullConversion : public Exception
 {
-private:
-	const std::string _what;
-
 public:
 	/// \brief Create exception object
-	BadNullConversion(const std::string& wt = "") :
-	_what(wt)
+	BadNullConversion(const char* w = "") :
+	Exception(w)
 	{
 	}
-	
-	/// \brief Destroy exception object
-	~BadNullConversion() throw() { }
-
-	/// \brief Returns the error message
-	virtual const char* what() const throw() { return _what.c_str(); }
 };
 
 
@@ -162,26 +168,17 @@ public:
 /// Thrown when not enough parameters are provided for a
 /// template query.
 
-class SQLQueryNEParms : public std::exception
+class SQLQueryNEParms : public Exception
 {
-private:
-	const std::string _what;
-
 public:
 	/// \brief Create exception object
-	SQLQueryNEParms(const char* c) :
-	_what(std::string(c ? c : "")),
-	error(c)
+	SQLQueryNEParms(const char* w = "") :
+	Exception(w)
 	{
 	}
-	
-	/// \brief Destroy exception object
+
+	/// \brief Destroy exception
 	~SQLQueryNEParms() throw() { }
-
-	/// \brief Returns the error message
-	virtual const char* what() const throw() { return _what.c_str(); }
-
-	const char* error;		///< MySQL error string
 };
 
 
@@ -190,25 +187,19 @@ public:
 /// Thrown by Row::lookup_by_name() when you pass a field name that
 /// isn't in the result set.
 
-class BadFieldName : public std::exception
+class BadFieldName : public Exception
 {
-private:
-	std::string _what;
-
 public:
 	/// \brief Create exception object
+	///
 	/// \param bad_field name of field the MySQL server didn't like
-	BadFieldName(const char* bad_field)
+	BadFieldName(const char* bad_field) :
+	Exception(std::string("Unknown field name: ") + bad_field)
 	{
-		_what = "Unknown field name: ";
-		_what += bad_field;
 	}
 
-	/// \brief Destroy exception object
+	/// \brief Destroy exception
 	~BadFieldName() throw() { }
-
-	/// \brief Returns the error message
-	virtual const char* what() const throw() { return _what.c_str(); }
 };
 
 } // end namespace mysqlpp
