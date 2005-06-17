@@ -481,14 +481,11 @@ public:
 
 	/// \brief Sets the given MySQL connection option
 	///
-	/// Not sure why this is named as it is; set_option() would be a
-	/// better name.  It may change in the next major version of the
-	/// library.
-	///
-	/// Simply wraps \c mysql_option() in the C API.
-	int read_options(enum mysql_option option, const char* arg)
+	/// Wraps \c mysql_option() in the C API, except that it returns
+	/// for success, instead of 0.
+	bool set_option(enum mysql_option option, const char* arg)
 	{
-		return mysql_options(&mysql, option, arg);
+		return !mysql_options(&mysql, option, arg);
 	}
 
 	/// \brief Return the number of rows affected by the last query

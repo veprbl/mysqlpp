@@ -57,8 +57,6 @@ v2.0 Release Plan
 	  Also derive Query from this new interface, as it also has a
 	  locking mechanism.
 
-	o Rename Connection::read_options() to set_option().
-
 	o If you call Connection()::connect() on an already-connected
 	  object, drop previous connection and re-connect.  Document this.
 

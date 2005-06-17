@@ -2882,6 +2882,13 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			from the MySQL C API; C++ doesn't have the
 			limitations that forced the creation of that
 			function in the C API.</para>
+
+			<para>Renamed
+			<computeroutput>Connection::read_option()</computeroutput>
+			to
+			<computeroutput>set_option()</computeroutput>,
+			and made it return true on success instead
+			of 0.</para>
 		</sect3>
 	</sect2>
 
