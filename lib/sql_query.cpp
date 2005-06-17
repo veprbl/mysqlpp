@@ -129,7 +129,7 @@ void SQLQuery::proc(SQLQueryParms& p)
 				c = &def;
 			else {
 				*this << " ERROR";
-				throw SQLQueryNEParms(
+				throw BadParamCount(
 						"Not enough parameters to fill the template.");
 			}
 			ss = pprepare(i->option, (*c)[num], c->bound());

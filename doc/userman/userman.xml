@@ -2944,6 +2944,12 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			your program handles MySQL++ exceptions the
 			same way they do, your program won't need to
 			change, either.</para>
+
+			<para>Renamed
+			<computeroutput>SQLQueryNEParams</computeroutput>
+			exception to
+			<computeroutput>BadParamCount</computeroutput>
+			to match style of other exception names.</para>
 		</sect3>
 	</sect2>
 

@@ -166,6 +166,25 @@ public:
 };
 
 
+/// \brief Exception thrown when not enough query parameters are
+/// provided.
+///
+/// This is used in handling template queries.
+
+class BadParamCount : public Exception
+{
+public:
+	/// \brief Create exception object
+	BadParamCount(const char* w = "") :
+	Exception(w)
+	{
+	}
+
+	/// \brief Destroy exception
+	~BadParamCount() throw() { }
+};
+
+
 /// \brief Exception thrown when MySQL encounters a problem while
 /// processing your query.
 ///
@@ -181,25 +200,6 @@ public:
 	Exception(w)
 	{
 	}
-};
-
-
-/// \brief Exception thrown when not enough parameters are provided.
-///
-/// Thrown when not enough parameters are provided for a
-/// template query.
-
-class SQLQueryNEParms : public Exception
-{
-public:
-	/// \brief Create exception object
-	SQLQueryNEParms(const char* w = "") :
-	Exception(w)
-	{
-	}
-
-	/// \brief Destroy exception
-	~SQLQueryNEParms() throw() { }
 };
 
 
