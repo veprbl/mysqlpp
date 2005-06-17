@@ -2782,7 +2782,7 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			<computeroutput>size_type</computeroutput>,
 			and added
 			<computeroutput>Row::lookup_by_name()</computeroutput>
-			to provide the "subscribt by
+			to provide the "subscript by
 			string" functionality.	In practical
 			terms, this change means that the
 			<computeroutput>row["field"]</computeroutput>
@@ -2819,11 +2819,6 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			<computeroutput>MysqlRow</computeroutput>. The
 			library now uses the shorter names
 			exclusively.</para>
-		</sect3>
-
-
-		<sect3>
-			<title>v1.7.22</title>
 
 			<para>All symbols within MySQL++ are in the
 			<computeroutput>mysqlpp</computeroutput>
@@ -2835,7 +2830,33 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			headers, these symbols are hoist up into the
 			global namespace. The older headers cause the
 			compiler to emit warnings if you use them,
-			and they will go away someday.</para>
+			and they will go away someday. We recommend
+			that you change your program to use the new
+			header, and add <computeroutput>using namespace
+			mysqlpp</computeroutput> near the top of each
+			C++ source file, if you were previously using
+			the short symbols.</para>
+		</sect3>
+
+		
+		<sect3>
+			<title>v2.0.0</title>
+
+			<para><computeroutput>Connection::create_db()</computeroutput>
+			and <computeroutput>drop_db()</computeroutput>
+			return <computeroutput>true</computeroutput>
+			on success. They returned
+			<computeroutput>false</computeroutput> in
+			v1.7.<emphasis>x</emphasis>! This change will
+			only affect your code if you have exceptions
+			disabled.</para>
+
+			<para><computeroutput>Connection::create_db()</computeroutput>,
+			<computeroutput>drop_db()</computeroutput> and
+			<computeroutput>select_db()</computeroutput>
+			now take their arguments by
+			<computeroutput>const</computeroutput>
+			reference.</para>
 		</sect3>
 	</sect2>
 
@@ -2892,10 +2913,21 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			get moved into <computeroutput>namespace
 			mysqlpp</computeroutput> when that namespace
 			was created. This release fixed that. It
-			doesn't affect the API if your program was
-			saying <computeroutput>using namespace
-			mysqlpp</computeroutput> within its C++
-			source files.</para>
+			doesn't affect the API if your program's
+			C++ source files say <computeroutput>using
+			namespace mysqlpp</computeroutput> within
+			them.</para>
+		</sect3>
+
+
+		<sect3>
+			<title>v2.0.0</title>
+
+			<para>Removed
+			<computeroutput>Connection::infoo()</computeroutput>.
+			(I'd call this an API change if I thought
+			there were any programs out there actually
+			using this...)</para>
 		</sect3>
 	</sect2>
 </sect1>
