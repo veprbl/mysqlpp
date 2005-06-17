@@ -2950,6 +2950,33 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			exception to
 			<computeroutput>BadParamCount</computeroutput>
 			to match style of other exception names.</para>
+
+			<para>All queries must now be
+			sent to the database through the
+			<computeroutput>Query</computeroutput>
+			object. In earlier versions,
+			<computeroutput>Connection</computeroutput>
+			also had
+			<computeroutput>exec()</computeroutput>,
+			<computeroutput>execute()</computeroutput>,
+			<computeroutput>store()</computeroutput>,
+			and <computeroutput>use()</computeroutput>
+			methods, but these were intended only for class
+			<computeroutput>Query</computeroutput>'s use.
+			There is a subtler change here as well:
+			because queries no longer go through the
+			<computeroutput>Connection</computeroutput>
+			object, calling its
+			<computeroutput>success()</computeroutput>
+			method or casting the object to
+			<computeroutput>bool</computeroutput>
+			to test for query success no longer
+			works. Those methods now only indicate
+			whether operations dealing with the
+			connection itself succeeded. Class
+			<computeroutput>Query</computeroutput> has
+			these same methods, so use them instead to
+			test for query success.</para>
 		</sect3>
 	</sect2>
 
@@ -3040,6 +3067,12 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			we plan to use platform mutexes to serialize
 			access to contended resources through this
 			mechanism. (It will be optional.)</para>
+
+			<para>Removed the querying
+			interface functions from class
+			<computeroutput>Connection</computeroutput>.
+			This also has API effects, detailed in the
+			previous section.</para>
 		</sect3>
 	</sect2>
 </sect1>

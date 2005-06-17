@@ -51,6 +51,7 @@ Success(false)
 	mysql_init(&mysql);
 }
 
+
 Connection::Connection(const char* db, const char* host,
 		const char* user, const char* passwd, uint port,
 		my_bool compress, unsigned int connect_timeout,
@@ -72,6 +73,13 @@ Lockable()
 		}
 	}
 }
+
+
+Connection::~Connection()
+{
+	disconnect();
+}
+
 
 bool Connection::connect(cchar* db, cchar* host, cchar* user,
 		cchar* passwd, uint port, my_bool compress,
@@ -118,10 +126,21 @@ Connection::disconnect()
 }
 
 
-Connection::~Connection()
+bool
+Connection::create_db(const std::string& db)
 {
-	disconnect();
+	Query q(this, throw_exceptions());
+	return q.execute("CREATE DATABASE " + db);
 }
+
+
+bool
+Connection::drop_db(const std::string& db)
+{
+	Query q(this, throw_exceptions());
+	return q.execute("DROP DATABASE " + db);
+}
+
 
 bool Connection::select_db(const char *db)
 {
@@ -134,6 +153,7 @@ bool Connection::select_db(const char *db)
 	}
 }
 
+
 bool Connection::reload()
 {
 	bool suc = !mysql_reload(&mysql);
@@ -144,6 +164,7 @@ bool Connection::reload()
 		return suc;
 	}
 }
+
 
 bool Connection::shutdown()
 {
@@ -156,6 +177,7 @@ bool Connection::shutdown()
 	}
 }
 
+
 string Connection::info()
 {
 	const char* i = mysql_info(&mysql);
@@ -167,103 +189,6 @@ string Connection::info()
 	}
 }
 
-ResNSel Connection::execute(const string& str)
-{
-	Success = false;
-	if (lock()) {
-		if (throw_exceptions()) {
-			throw BadQuery("lock failed");
-		}
-		else {
-			return ResNSel();
-		}
-	}
-
-	Success = !mysql_query(&mysql, str.c_str());
-	unlock();
-	if (Success) {
-		return ResNSel(this);
-	}
-	else {
-		if (throw_exceptions()) {
-			throw BadQuery(error());
-		}
-		else {
-			return ResNSel();
-		}
-	}
-}
-
-bool Connection::exec(const string& str)
-{
-	Success = !mysql_query(&mysql, str.c_str());
-	if (!Success && throw_exceptions())
-		throw BadQuery(error());
-	return Success;
-}
-
-Result Connection::store(const string& str)
-{
-	Success = false;
-
-	if (lock()) {
-		if (throw_exceptions()) {
-			throw BadQuery("lock failed");
-		}
-		else {
-			return Result();
-		}
-	}
-
-	Success = !mysql_query(&mysql, str.c_str());
-	if (Success) {
-		MYSQL_RES* res = mysql_store_result(&mysql);
-		if (res) {
-			unlock();
-			return Result(res);
-		}
-	}
-	unlock();
-
-	// One of the mysql_* calls failed, so decide how we should fail.
-	if (throw_exceptions()) {
-		throw BadQuery(error());
-	}
-	else {
-		return Result();
-	}
-}
-
-ResUse Connection::use(const string& str)
-{
-	Success = false;
-	if (lock()) {
-		if (throw_exceptions()) {
-			throw BadQuery("lock failed");
-		}
-		else {
-			return ResUse();
-		}
-	}
-
-	Success = !mysql_query(&mysql, str.c_str());
-	if (Success) {
-		MYSQL_RES* res = mysql_use_result(&mysql);
-		if (res) {
-			unlock();
-			return ResUse(res, this);
-		}
-	}
-	unlock();
-
-	// One of the mysql_* calls failed, so decide how we should fail.
-	if (throw_exceptions()) {
-		throw BadQuery(error());
-	}
-	else {
-		return ResUse();
-	}
-}
 
 Query Connection::query()
 {

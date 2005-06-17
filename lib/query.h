@@ -133,7 +133,11 @@ public:
 	/// we're bound to.
 	std::string error();
 
-	/// \brief Returns true if the query executed successfully.
+	/// \brief Returns true if the last operation succeeded
+	///
+	/// Returns true if the last query succeeded, and the associated
+	/// Connection object's success() method also returns true.  If
+	/// either object is unhappy, this method returns false.
 	bool success();
 
 	/// \brief Return the query string currently in the buffer.
@@ -278,8 +282,65 @@ public:
 	///
 	/// See exec(), execute(), store(), and use() for alternative
 	/// query execution mechanisms.
-	template<class Container> void storein(Container& con,
+	template <class Container> void storein(Container& con,
 			query_reset r = RESET_QUERY) { storein(con, def, r); }
+
+	/// \brief Specialization of storein_sequence() for \c std::vector
+	template <class T>
+	void storein(std::vector<T>& con, const char* s)
+	{
+		storein_sequence(con, s);
+	}
+
+	/// \brief Specialization of storein_sequence() for \c std::deque
+	template <class T>
+	void storein(std::deque<T>& con, const char* s)
+	{
+		storein_sequence(con, s);
+	}
+
+	/// \brief Specialization of storein_sequence() for \c std::list
+	template <class T>
+	void storein(std::list<T>& con, const char* s)
+	{
+		storein_sequence(con, s);
+	}
+
+#if defined(HAVE_EXT_SLIST)
+	/// \brief Specialization of storein_sequence() for g++ STL
+	/// extension \c slist
+	template <class T>
+	void storein(__gnu_cxx::slist<T>& con, const char* s)
+	{
+		storein_sequence(con, s);
+	}
+#elif defined(HAVE_STD_SLIST)
+	/// \brief Specialization of storein_sequence() for STL
+	/// extension \c slist
+	///
+	/// This is primarily for older versions of g++, which didn't put
+	/// \c slist in a private namespace.  This is a common language
+	/// extension, so this may also work for other compilers.
+	template <class T>
+	void storein(slist<T>& con, const char* s)
+	{
+		storein_sequence(con, s);
+	}
+#endif
+
+	/// \brief Specialization of storein_set() for \c std::set
+	template <class T>
+	void storein(std::set<T>& con, const char* s)
+	{
+		storein_set(con, s);
+	}
+
+	/// \brief Specialization of storein_set() for \c std::multiset
+	template <class T>
+	void storein(std::multiset<T>& con, const char* s)
+	{
+		storein_set(con, s);
+	}
 
 	/// \brief Replace an existing row's data with new data.
 	///
@@ -364,44 +425,63 @@ public:
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
-template<class Seq>
+template <class Seq>
 void Query::storein_sequence(Seq& seq, parms& p, query_reset r)
 {
 	r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	conn_->storein_sequence(seq, str(p, r));
+	storein_sequence(seq, str(p, r).c_str());
 }
 
-template<class Set>
+
+template <class Sequence>
+void Query::storein_sequence(Sequence& con, const char* s)
+{
+	ResUse result = use(s);
+	while (1) {
+		MYSQL_ROW d = mysql_fetch_row(result.raw_result());
+		if (!d)
+			break;
+		Row row(d, &result, mysql_fetch_lengths(result.raw_result()),
+				true);
+		if (!row)
+			break;
+		con.push_back(typename Sequence::value_type(row));
+	}
+}
+
+
+template <class Set>
 void Query::storein_set(Set& sett, parms& p, query_reset r)
 {
 	r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	conn_->storein_set(sett, str(p, r));
+	storein_set(sett, str(p, r).c_str());
 }
 
-template<class Sequence>
-void Query::storein_sequence(Sequence& seq, const char *s)
+
+template <class Set>
+void Query::storein_set(Set& con, const char* s)
 {
-	conn_->storein_sequence(seq, s);
+	ResUse result = use(s);
+	while (1) {
+		MYSQL_ROW d = mysql_fetch_row(result.raw_result());
+		if (!d)
+			return;
+		Row row(d, &result, mysql_fetch_lengths(result.raw_result()),
+				true);
+		if (!row)
+			break;
+		con.insert(typename Set::value_type(row));
+	}
 }
 
-template<class Set>
-void Query::storein_set(Set& sett, const char *s)
-{
-	conn_->storein_set(sett, s);
-}
 
-template<class T>
+template <class T>
 void Query::storein(T& con, parms& p, query_reset r)
 {
 	r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	conn_->storein(con, str(p, r));
+	storein(con, str(p, r).c_str());
 }
 
-template<class T>
-void Query::storein(T& con, const char *s)
-{
-	conn_->storein(con, s);
-}
 
 #endif // !defined(DOXYGEN_IGNORE)
 
