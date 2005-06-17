@@ -61,13 +61,13 @@ class Connection;
 class ResUse : public OptionalExceptions
 {
 protected:
-	Connection* conn_;				///< server result set comes from
-	mutable MYSQL_RES* mysql_res;	///< underlying C API result set
-	bool initialized;				///< if true, object is fully initted
-	mutable FieldNames* _names;		///< list of field names in result
-	mutable FieldTypes* _types;		///< list of field types in result
-	Fields _fields;					///< list of fields in result
-	std::string _table;				///< table result set comes from
+	Connection* conn_;			///< server result set comes from
+	mutable MYSQL_RES* result_;	///< underlying C API result set
+	bool initialized_;			///< if true, object is fully initted
+	mutable FieldNames* names_;	///< list of field names in result
+	mutable FieldTypes* types_;	///< list of field types in result
+	Fields fields_;				///< list of fields in result
+	std::string table_;			///< table result set comes from
 
 	/// \brief copy another ResUse object's contents into this one.
 	///
@@ -79,11 +79,11 @@ public:
 	ResUse() :
 	OptionalExceptions(),
 	conn_(0),
-	mysql_res(0),
-	initialized(false),
-	_names(0),
-	_types(0),
-	_fields(this)
+	result_(0),
+	initialized_(false),
+	names_(0),
+	types_(0),
+	fields_(this)
 	{
 	}
 	
@@ -92,7 +92,7 @@ public:
 	
 	/// \brief Create a copy of another ResUse object
 	ResUse(const ResUse& other) :
-	initialized(false)
+	initialized_(false)
 	{
 		copy(other);
 	}
@@ -104,9 +104,9 @@ public:
 	ResUse& operator =(const ResUse& other);
 
 	/// \brief Return raw MySQL C API result set
-	MYSQL_RES* mysql_result()
+	MYSQL_RES* raw_result()
 	{
-		return mysql_res;
+		return result_;
 	}
 
 	/// \brief Wraps mysql_fetch_row() in MySQL C API.
@@ -114,7 +114,7 @@ public:
 	/// This is not a thin wrapper. It does a lot of error checking before
 	/// returning the mysqlpp::Row object containing the row data.
 	Row fetch_row() {
-		if (!mysql_res) {
+		if (!result_) {
 			if (throw_exceptions()) {
 				throw BadQuery("Results not fetched");
 			}
@@ -122,8 +122,8 @@ public:
 				return Row();
 			}
 		}
-		MYSQL_ROW row = mysql_fetch_row(mysql_res);
-		unsigned long *length = mysql_fetch_lengths(mysql_res);
+		MYSQL_ROW row = mysql_fetch_row(result_);
+		unsigned long *length = mysql_fetch_lengths(result_);
 		if (!row || !length) {
 			if (throw_exceptions()) {
 				throw BadQuery("Bad row");
@@ -138,28 +138,28 @@ public:
 	/// \brief Wraps mysql_eof() in MySQL C API.
 	bool eof() const
 	{
-		return mysql_eof(mysql_res) != 0;
+		return mysql_eof(result_) != 0;
 	}
 
 	/// \brief Wraps mysql_fetch_lengths() in MySQL C API.
 		unsigned long *fetch_lengths() const {
-		return mysql_fetch_lengths(mysql_res);
+		return mysql_fetch_lengths(result_);
 	}
 
 	/// \brief Wraps mysql_fetch_field() in MySQL C API.
 		Field & fetch_field() const {
-		return *mysql_fetch_field(mysql_res);
+		return *mysql_fetch_field(result_);
 	}
 
 	/// \brief Wraps mysql_field_seek() in MySQL C API.
 		void field_seek(int field) {
-		mysql_field_seek(mysql_res, field);
+		mysql_field_seek(result_, field);
 	}
 
 	/// \brief Wraps mysql_num_fields() in MySQL C API.
 	int num_fields() const
 	{
-		return mysql_num_fields(mysql_res);
+		return mysql_num_fields(result_);
 	}
 	
 	/// \brief Documentation needed!
@@ -175,19 +175,19 @@ public:
 	/// to avoid having to completely re-create it.
 	void purge()
 	{
-		if (mysql_res) {
-			mysql_free_result(mysql_res);
-			mysql_res = 0;
+		if (result_) {
+			mysql_free_result(result_);
+			result_ = 0;
 		}
-		if (_names) {
-			delete _names;
-			_names = 0;
+		if (names_) {
+			delete names_;
+			names_ = 0;
 		}
-		if (_types) {
-			delete _types;
-			_types = 0;
+		if (types_) {
+			delete types_;
+			types_ = 0;
 		}
-		_table.erase();
+		table_.erase();
 	}
 
 	/// \brief Return true if we have a valid result set
@@ -205,7 +205,7 @@ public:
 	/// valid result set if the query failed.
 	operator bool() const
 	{
-		return mysql_res;
+		return result_;
 	}
 	
 	/// \brief Return the number of columns in the result set.
@@ -217,7 +217,7 @@ public:
 	/// \brief Get the name of table that the result set comes from.
 	std::string& table()
 	{
-		return _table;
+		return table_;
 	}
 
 	/// \brief Return the name of the table
@@ -225,7 +225,7 @@ public:
 	/// This is only valid 
 	const std::string& table() const
 	{
-		return _table;
+		return table_;
 	}
 
 	/// \brief Get the index of the named field.
@@ -303,13 +303,13 @@ public:
 	/// \brief Get the underlying Fields structure.
 	const Fields& fields() const
 	{
-		return _fields;
+		return fields_;
 	}
 
 	/// \brief Get the underlying Field structure given its index.
 	const Field& fields(unsigned int i) const
 	{
-		return _fields[i];
+		return fields_[i];
 	}
 	
 	/// \brief Returns true if the other ResUse object shares the same
@@ -319,14 +319,14 @@ public:
 	/// pointer, and thus can be copied and then compared.
 	bool operator ==(const ResUse& other) const
 	{
-		return mysql_res == other.mysql_res;
+		return result_ == other.result_;
 	}
 	
 	/// \brief Returns true if the other ResUse object has a different
 	/// underlying C API result set from this one.
 	bool operator !=(const ResUse& other) const
 	{
-		return mysql_res != other.mysql_res;
+		return result_ != other.result_;
 	}
 };
 
@@ -377,7 +377,7 @@ public:
 	/// actually \e be in our parent class is beyond me.
 	const Row fetch_row() const
 	{
-		if (!mysql_res) {
+		if (!result_) {
 			if (throw_exceptions()) {
 				throw BadQuery("Results not fetched");
 			}
@@ -385,8 +385,8 @@ public:
 				return Row();
 			}
 		}
-		MYSQL_ROW row = mysql_fetch_row(mysql_res);
-		unsigned long* length = mysql_fetch_lengths(mysql_res);
+		MYSQL_ROW row = mysql_fetch_row(result_);
+		unsigned long* length = mysql_fetch_lengths(result_);
 		if (!row || !length) {
 			if (throw_exceptions()) {
 				throw BadQuery("Bad row");
@@ -401,8 +401,8 @@ public:
 	/// \brief Wraps mysql_num_rows() in MySQL C API.
 	my_ulonglong num_rows() const
 	{
-		if (initialized)
-			return mysql_num_rows(mysql_res);
+		if (initialized_)
+			return mysql_num_rows(result_);
 		else
 			return 0;
 	}
@@ -410,7 +410,7 @@ public:
 	/// \brief Wraps mysql_data_seek() in MySQL C API.
 	void data_seek(uint offset) const
 	{
-		mysql_data_seek(mysql_res, offset);
+		mysql_data_seek(result_, offset);
 	}
 
 	/// \brief Alias for num_rows(), only with different return type.
@@ -473,86 +473,86 @@ public:
 
 inline int ResUse::field_num(const std::string& i) const
 {
-	if (!_names) {
-		_names = new FieldNames(this);
+	if (!names_) {
+		names_ = new FieldNames(this);
 	}
-	return (*_names)[i];
+	return (*names_)[i];
 }
 
 inline std::string& ResUse::field_name(int i)
 {
-	if (!_names) {
-		_names = new FieldNames(this);
+	if (!names_) {
+		names_ = new FieldNames(this);
 	}
-	return (*_names)[i];
+	return (*names_)[i];
 }
 
 inline const std::string& ResUse::field_name(int i) const
 {
-	if (!_names) {
-		_names = new FieldNames(this);
+	if (!names_) {
+		names_ = new FieldNames(this);
 	}
-	return (*_names)[i];
+	return (*names_)[i];
 }
 
 inline FieldNames& ResUse::field_names()
 {
-	if (!_names) {
-		_names = new FieldNames(this);
+	if (!names_) {
+		names_ = new FieldNames(this);
 	}
-	return *_names;
+	return *names_;
 }
 
 inline const FieldNames& ResUse::field_names() const
 {
-	if (!_names) {
-		_names = new FieldNames(this);
+	if (!names_) {
+		names_ = new FieldNames(this);
 	}
-	return *_names;
+	return *names_;
 }
 
 inline void ResUse::reset_field_names()
 {
-	delete _names;
-	_names = new FieldNames(this);
+	delete names_;
+	names_ = new FieldNames(this);
 }
 
 inline mysql_type_info& ResUse::field_type(int i)
 {
-	if (!_types) {
-		_types = new FieldTypes(this);
+	if (!types_) {
+		types_ = new FieldTypes(this);
 	}
-	return (*_types)[i];
+	return (*types_)[i];
 }
 
 inline const mysql_type_info& ResUse::field_type(int i) const
 {
-	if (!_types) {
-		_types = new FieldTypes(this);
+	if (!types_) {
+		types_ = new FieldTypes(this);
 	}
-	return (*_types)[i];
+	return (*types_)[i];
 }
 
 inline FieldTypes& ResUse::field_types()
 {
-	if (!_types) {
-		_types = new FieldTypes(this);
+	if (!types_) {
+		types_ = new FieldTypes(this);
 	}
-	return *_types;
+	return *types_;
 }
 
 inline const FieldTypes& ResUse::field_types() const
 {
-	if (!_types) {
-		_types = new FieldTypes(this);
+	if (!types_) {
+		types_ = new FieldTypes(this);
 	}
-	return *_types;
+	return *types_;
 }
 
 inline void ResUse::reset_field_types()
 {
-	delete _types;
-	_types = new FieldTypes(this);
+	delete types_;
+	types_ = new FieldTypes(this);
 }
 
 inline int ResUse::names(const std::string& s) const
@@ -616,7 +616,7 @@ inline ResUse& ResUse::operator =(const ResUse& other)
 		return *this;
 	}
 	copy(other);
-	other.mysql_res = 0;
+	other.result_ = 0;
 	return *this;
 }
 

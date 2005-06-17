@@ -2925,6 +2925,14 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			return to the old behavior, use one of the
 			new exception-disabling mechanisms mentioned
 			in the previous paragraph.</para>
+
+			<para>Renamed
+			<computeroutput>ResUse::mysql_result()</computeroutput>
+			to
+			<computeroutput>raw_result()</computeroutput>
+			so it's database server neutral. Right now
+			it's dependent on MySQL, but it may not
+			always be.</para>
 		</sect3>
 	</sect2>
 
