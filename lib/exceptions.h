@@ -41,6 +41,13 @@ namespace mysqlpp {
 class Exception : public std::exception
 {
 public:
+	/// \brief Destroy exception object
+	~Exception() throw() { }
+
+	/// \brief Returns explanation of why exception was thrown
+	virtual const char* what() const throw() { return what_.c_str(); }
+
+protected:
 	/// \brief Create exception object
 	Exception(const char* w = "") throw() :
 	what_(w)
@@ -53,16 +60,8 @@ public:
 	{
 	}
 
-	/// \brief Destroy exception object
-	~Exception() throw()
-	{
-	}
-
-	/// \brief Returns explanation of why exception was thrown
-	virtual const char* what() const throw() { return what_.c_str(); }
-
-protected:
-	const std::string what_;	///< explanation of why exception was thrown
+	/// \brief explanation of why exception was thrown
+	const std::string what_;
 };
 
 
@@ -188,9 +187,9 @@ public:
 /// \brief Exception thrown when MySQL encounters a problem while
 /// processing your query.
 ///
-/// This is the most generic MySQL++ exception. It is thrown when your
-/// SQL syntax is incorrect, or a field you requested doesn't exist in
-/// the database, or....
+/// This is the most generic of MySQL++'s concrete exception types. It
+/// is thrown when your SQL syntax is incorrect, or a field you
+/// requested doesn't exist in the database, or....
 
 class BadQuery : public Exception
 {
