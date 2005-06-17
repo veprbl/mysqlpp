@@ -31,19 +31,19 @@ namespace mysqlpp {
 Query::Query(const Query& q) :
 SQLQuery(q),
 OptionalExceptions(q.exceptions()),
-mysql(q.mysql)
+conn_(q.conn_)
 {
 }
 
 bool Query::exec(const std::string& str)
 {
-	return mysql->exec(str);
+	return conn_->exec(str);
 }
 
 bool Query::success()
 {
 	if (Success) {
-		return mysql->success();
+		return conn_->success();
 	}
 	else {
 		return false;
@@ -55,52 +55,52 @@ bool Query::success()
 
 ResNSel Query::execute(const char* str)
 {
-	return mysql->execute(str);
+	return conn_->execute(str);
 }
 
 ResNSel Query::execute(parms& p)
 {
 	query_reset r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	return mysql->execute(str(p, r));
+	return conn_->execute(str(p, r));
 }
 
 ResUse Query::use(const char* str)
 {
-	return mysql->use(str);
+	return conn_->use(str);
 }
 
 ResUse Query::use(parms& p)
 {
 	query_reset r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	return mysql->use(str(p, r));
+	return conn_->use(str(p, r));
 }
 
 Result Query::store(const char* str)
 {
-	return mysql->store(str);
+	return conn_->store(str);
 }
 
 Result Query::store(parms&  p)
 {
 	query_reset r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	return mysql->store(str(p, r));
+	return conn_->store(str(p, r));
 }
 
 /// \endif
 
 my_ulonglong Query::affected_rows() const
 {
-	return mysql->affected_rows();
+	return conn_->affected_rows();
 }
 
 my_ulonglong Query::insert_id()
 {
-	return mysql->insert_id();
+	return conn_->insert_id();
 }
 
 std::string Query::info()
 {
-	return mysql->info();
+	return conn_->info();
 }
 
 std::string Query::error()
@@ -109,18 +109,18 @@ std::string Query::error()
 		return std::string(errmsg);
 	}
 	else {
-		return mysql->error();
+		return conn_->error();
 	}
 }
 
 bool Query::lock()
 {
-    return mysql->lock();
+    return conn_->lock();
 }
 
 void Query::unlock()
 {
-	mysql->unlock();
+	conn_->unlock();
 }
 
 } // end namespace mysqlpp

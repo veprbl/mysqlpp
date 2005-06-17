@@ -61,7 +61,7 @@ class Connection;
 class ResUse : public OptionalExceptions
 {
 protected:
-	Connection* mysql;				///< server result set comes from
+	Connection* conn_;				///< server result set comes from
 	mutable MYSQL_RES* mysql_res;	///< underlying C API result set
 	bool initialized;				///< if true, object is fully initted
 	mutable FieldNames* _names;		///< list of field names in result
@@ -78,7 +78,7 @@ public:
 	/// \brief Default constructor
 	ResUse() :
 	OptionalExceptions(),
-	mysql(0),
+	conn_(0),
 	mysql_res(0),
 	initialized(false),
 	_names(0),
@@ -88,7 +88,7 @@ public:
 	}
 	
 	/// \brief Create the object, fully initialized
-	ResUse(MYSQL_RES* result, Connection* m = 0, bool te = true);
+	ResUse(MYSQL_RES* result, Connection* c = 0, bool te = true);
 	
 	/// \brief Create a copy of another ResUse object
 	ResUse(const ResUse& other) :
@@ -165,7 +165,7 @@ public:
 	/// \brief Documentation needed!
 	void parent_leaving()
 	{
-		mysql = 0;
+		conn_ = 0;
 	}
 
 	/// \brief Free all resources held by the object.
@@ -356,7 +356,6 @@ public:
 	Result(MYSQL_RES* result, bool te = true) :
 	ResUse(result, 0, te)
 	{
-		mysql = 0;
 	}
 
 	/// \brief Initialize object as a copy of another Result object
@@ -364,7 +363,7 @@ public:
 	ResUse(other),
 	const_subscript_container<Result, Row, const Row>() // no copying here
 	{
-		mysql = 0;
+		conn_ = 0;
 	}
 
 	virtual ~Result()

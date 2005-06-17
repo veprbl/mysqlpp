@@ -38,9 +38,9 @@ info(q->info())
 {
 }
 
-ResUse::ResUse(MYSQL_RES* result, Connection* m, bool te) :
+ResUse::ResUse(MYSQL_RES* result, Connection* c, bool te) :
 OptionalExceptions(te),
-mysql(m),
+conn_(c),
 initialized(false),
 _fields(this)
 {
@@ -61,8 +61,8 @@ _fields(this)
 
 ResUse::~ResUse()
 {
-	if (mysql) {
-		mysql->unlock();
+	if (conn_) {
+		conn_->unlock();
 	}
 	purge();
 }
@@ -100,7 +100,7 @@ void ResUse::copy(const ResUse& other)
 
 	_table = other._table;
 
-	mysql = other.mysql;
+	conn_ = other.conn_;
 	initialized = true;
 }
 

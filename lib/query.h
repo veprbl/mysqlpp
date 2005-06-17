@@ -101,7 +101,7 @@ namespace mysqlpp {
 class Query : public SQLQuery, public OptionalExceptions
 {
 private:
-	Connection* mysql;
+	Connection* conn_;
 
 	my_ulonglong affected_rows() const;
 	my_ulonglong insert_id();
@@ -119,7 +119,7 @@ public:
 	Query(Connection* c, bool te = true) :
 	SQLQuery(),
 	OptionalExceptions(te),
-	mysql(c)
+	conn_(c)
 	{
 		Success = true;
 	}
@@ -366,39 +366,39 @@ template<class Seq>
 void Query::storein_sequence(Seq& seq, parms& p, query_reset r)
 {
 	r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	mysql->storein_sequence(seq, str(p, r));
+	conn_->storein_sequence(seq, str(p, r));
 }
 
 template<class Set>
 void Query::storein_set(Set& sett, parms& p, query_reset r)
 {
 	r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	mysql->storein_set(sett, str(p, r));
+	conn_->storein_set(sett, str(p, r));
 }
 
 template<class Sequence>
 void Query::storein_sequence(Sequence& seq, const char *s)
 {
-	mysql->storein_sequence(seq, s);
+	conn_->storein_sequence(seq, s);
 }
 
 template<class Set>
 void Query::storein_set(Set& sett, const char *s)
 {
-	mysql->storein_set(sett, s);
+	conn_->storein_set(sett, s);
 }
 
 template<class T>
 void Query::storein(T& con, parms& p, query_reset r)
 {
 	r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	mysql->storein(con, str(p, r));
+	conn_->storein(con, str(p, r));
 }
 
 template<class T>
 void Query::storein(T& con, const char *s)
 {
-	mysql->storein(con, s);
+	conn_->storein(con, s);
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
