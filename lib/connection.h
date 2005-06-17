@@ -83,7 +83,10 @@ public:
 	///
 	/// This constructor allows you to most fully specify the options
 	/// used when connecting to the MySQL database.  It is the thinnest
-	/// layer in MySQL++ over the MySQL C API function \c mysql_real_connect().
+	/// layer in MySQL++ over the MySQL C API function
+	/// \c mysql_real_connect().  The correspondence isn't exact as
+	/// we have some additional parameters you'd have to set with
+	/// \c mysql_option() when using the C API.
 	///
 	/// \param db name of database to use
 	/// \param host host name or IP address of MySQL server, or 0
