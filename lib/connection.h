@@ -64,22 +64,13 @@ class Query;
 
 class Connection : public OptionalExceptions, public Lockable
 {
-private:
-	friend class ResNSel;
-	friend class ResUse;
-	friend class Query;
-
-	MYSQL mysql;
-	bool is_connected;
-	bool Success;
-
 public:
 	/// \brief Create object without connecting it to the MySQL server.
 	///
 	/// \param te if true, exceptions are thrown on errors
 	Connection(bool te = true);
 
-	/// \brief Create object and connect to database in one step.
+	/// \brief Create object and connect to database server in one step.
 	///
 	/// This constructor allows you to most fully specify the options
 	/// used when connecting to the MySQL database.  It is the thinnest
@@ -116,26 +107,12 @@ public:
 
 	/// \brief Connect to database after object is created.
 	///
-	/// It's better to use one of the connect-on-create constructors
-	/// if you can.
+	/// It's better to use the connect-on-create constructor if you can.
+	/// See its documentation for the meaning of these parameters.
 	///
-	/// \param db name of database to use
-	/// \param host host name or IP address of MySQL server, or 0
-	/// 	if server is running on the same host as your program
-	/// \param user user name to log in under, or 0 to use the user
-	///		name this program is running under
-	/// \param passwd password to use when logging in
-	/// \param port TCP port number MySQL server is listening on, or 0
-	///		to use default value
-	/// \param compress if true, compress data passing through
-	///		connection, to save bandwidth at the expense of CPU time
-	/// \param connect_timeout max seconds to wait for server to
-	///		respond to our connection attempt
-	/// \param socket_name Unix domain socket server is using, if
-	///		connecting to MySQL server on the same host as this program
-	///		running on, or 0 to use default name
-	///	\param client_flag special connection flags. See MySQL C API
-	///		documentation for \c mysql_real_connect() for details.
+	/// If you call this method on an object that is already connected
+	/// to a database server, the previous connection is dropped and a
+	/// new connection is established.
 	bool connect(cchar* db = "", cchar* host = "", cchar* user = "",
 			cchar* passwd = "", uint port = 0, my_bool compress = 0,
 			unsigned int connect_timeout = 60, cchar* socket_name = 0,
@@ -511,6 +488,23 @@ public:
 	{
 		storein_set(con, s);
 	}
+
+protected:
+	/// \brief Drop the connection to the database server
+	///
+	/// This method is protected because it should only be used within
+	/// the library.  Unless you use the default constructor, this
+	/// object should always be connected.
+	void disconnect();
+
+private:
+	friend class ResNSel;
+	friend class ResUse;
+	friend class Query;
+
+	MYSQL mysql;
+	bool is_connected;
+	bool Success;
 };
 
 

@@ -83,6 +83,10 @@ bool Connection::connect(cchar* db, cchar* host, cchar* user,
 
 	lock();
 
+	if (is_connected) {
+		disconnect();
+	}
+
 	mysql_options(&mysql, MYSQL_READ_DEFAULT_FILE, "my");
 
 	if (mysql_real_connect(&mysql, host, user, passwd, db, port,
@@ -106,9 +110,17 @@ bool Connection::connect(cchar* db, cchar* host, cchar* user,
 }
 
 
-Connection::~Connection()
+void
+Connection::disconnect()
 {
 	mysql_close(&mysql);
+	is_connected = false;
+}
+
+
+Connection::~Connection()
+{
+	disconnect();
 }
 
 bool Connection::select_db(const char *db)

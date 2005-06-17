@@ -33,8 +33,6 @@ v2.0 Release Plan
 
 	The planned v2.0 changes are:
 
-	o If you call Connection()::connect() on an already-connected
-	  object, drop previous connection and re-connect.  Document this.
 
 	o Make Connection::execute() use mysql_real_query() instead of
 	  mysql_query() so it can handle binary data.
