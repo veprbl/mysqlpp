@@ -231,7 +231,7 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 		success = con.connect(kdb, argv[1], argv[2], argv[3]);
 	}
 	else if (argc >= 5) {
-		success = con.real_connect(kdb, argv[1], argv[2], argv[3],
+		success = con.connect(kdb, argv[1], argv[2], argv[3],
 				atoi(argv[4]));
 	}
 

@@ -47,8 +47,7 @@ main()
 	try {
 		ostringstream strbuf;
 		unsigned int i = 0;
-		con.real_connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD, 3306,
-						 0, 60, NULL);
+		con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
 		Query query = con.query();
 		query << MY_QUERY;
 		ResUse res = query.use();

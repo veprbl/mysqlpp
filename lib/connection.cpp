@@ -64,7 +64,7 @@ throw_exceptions(te),
 locked(false)
 {
 	mysql_init(&mysql);
-	if (real_connect(db, host, user, passwd, 3306, 0, 60, NULL, 0)) {
+	if (connect(db, host, user, passwd)) {
 		locked = false;
 		Success = is_connected = true;
 	}
@@ -86,7 +86,7 @@ throw_exceptions(te),
 locked(false)
 {
 	mysql_init(&mysql);
-	if (real_connect(db, host, user, passwd, port, compress,
+	if (connect(db, host, user, passwd, port, compress,
 			connect_timeout, socket_name, client_flag)) {
 		locked = false;
 		Success = is_connected = true;
@@ -100,7 +100,7 @@ locked(false)
 	}
 }
 
-bool Connection::real_connect(cchar* db, cchar* host, cchar* user,
+bool Connection::connect(cchar* db, cchar* host, cchar* user,
 		cchar* passwd, uint port, my_bool compress,
 		unsigned int connect_timeout, cchar* socket_name,
 		unsigned int client_flag)
@@ -130,6 +130,7 @@ bool Connection::real_connect(cchar* db, cchar* host, cchar* user,
 
 	return Success;
 }
+
 
 Connection::~Connection()
 {
@@ -167,31 +168,6 @@ bool Connection::shutdown()
 	else {
 		return suc;
 	}
-}
-
-bool Connection::connect(cchar* db, cchar* host, cchar* user,
-		cchar* passwd)
-{
-	locked = true;
-	
-	mysql_options(&mysql, MYSQL_READ_DEFAULT_FILE, "my");
-
-	if (mysql_real_connect(&mysql, host, user, passwd, db, 3306, NULL, 0)) {
-		locked = false;
-		Success = is_connected = true;
-	}
-	else {
-		locked = false;
-		if (throw_exceptions)
-			throw BadQuery(error());
-		Success = is_connected = false;
-	}
-
-	if (Success && db && db[0]) {
-		Success = select_db(db);
-	}
-
-	return Success;
 }
 
 string Connection::info()

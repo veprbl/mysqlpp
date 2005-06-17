@@ -496,11 +496,23 @@ print_stock_header(int rows)
 
 void
 print_stock_row(const char* item, mysqlpp::longlong num, double weight,
-        double price, mysqlpp::Date date)
+        double price, const mysqlpp::Date&amp; date)
 {
-    // Output first column, the item string.
-    cout &lt;&lt; setw(20) &lt;&lt; item &lt;&lt; ' ' &lt;&lt;
-            setw(9) &lt;&lt; num &lt;&lt; ' ' &lt;&lt;
+    // Output first column, the item string.  The UCS2 option shows
+    // how we can convert the data to get Unicode output on Windows.
+    // On modern Unices, the terminal code interprets UTF-8 data
+    // directly.
+#ifdef USE_WIN32_UCS2
+    char item_ansi[100];
+    if (utf8_to_win32_ansi(item, item_ansi, sizeof(item_ansi))) {
+        cout &lt;&lt; setw(20) &lt;&lt; item_ansi &lt;&lt; ' ';
+    }
+#else
+    cout &lt;&lt; setw(20) &lt;&lt; item &lt;&lt; ' ';
+#endif
+
+    // Output remaining columns
+    cout &lt;&lt; setw(9) &lt;&lt; num &lt;&lt; ' ' &lt;&lt;
             setw(9) &lt;&lt; weight &lt;&lt; ' ' &lt;&lt;
             setw(9) &lt;&lt; price &lt;&lt; ' ' &lt;&lt;
             date &lt;&lt; endl;
@@ -571,11 +583,15 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection&amp; con,
         return false;
     }
 
+    if (!kdb) {
+        kdb = kpcSampleDatabase;
+    }
+
     if ((argc &gt; 1) &amp;&amp; (argv[1][0] == '-')) {
         cout &lt;&lt; "usage: " &lt;&lt; argv[0] &lt;&lt;
                 " [host] [user] [password] [port]" &lt;&lt; endl;
         cout &lt;&lt; endl &lt;&lt; "\tConnects to database ";
-        if (kdb) {
+        if (strlen(kdb) &gt; 0) {
             cout &lt;&lt; '"' &lt;&lt; kdb &lt;&lt; '"';
         }
         else {
@@ -584,10 +600,6 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection&amp; con,
         cout &lt;&lt; " on localhost using your user" &lt;&lt; endl;
         cout &lt;&lt; "\tname and no password by default." &lt;&lt; endl &lt;&lt; endl;
         return false;
-    }
-
-    if (!kdb) {
-        kdb = kpcSampleDatabase;
     }
 
     bool success = false;
@@ -604,7 +616,7 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection&amp; con,
         success = con.connect(kdb, argv[1], argv[2], argv[3]);
     }
     else if (argc &gt;= 5) {
-        success = con.real_connect(kdb, argv[1], argv[2], argv[3],
+        success = con.connect(kdb, argv[1], argv[2], argv[3],
                 atoi(argv[4]));
     }
 
@@ -1430,8 +1442,7 @@ main(int argc, char *argv[])
 
     Connection con(use_exceptions);
     try {
-        con.real_connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD, 3306,
-                         0, 60, NULL);
+        con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
         Query query = con.query();
         ostringstream strbuf;
         ifstream In(argv[1], ios::in | ios::binary);
@@ -1520,8 +1531,7 @@ main(int argc, char *argv[])
     cout &lt;&lt; "Content-type: image/jpeg" &lt;&lt; endl;
     Connection con(use_exceptions);
     try {
-        con.real_connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD, 3306,
-                         0, 60, NULL);
+        con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
         Query query = con.query();
         query &lt;&lt; "SELECT " &lt;&lt; MY_FIELD &lt;&lt; " FROM " &lt;&lt; MY_TABLE &lt;&lt; " WHERE "
             &lt;&lt; MY_KEY &lt;&lt; " = " &lt;&lt; argv[1];
@@ -1578,8 +1588,7 @@ main()
     try {
         ostringstream strbuf;
         unsigned int i = 0;
-        con.real_connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD, 3306,
-                         0, 60, NULL);
+        con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
         Query query = con.query();
         query &lt;&lt; MY_QUERY;
         ResUse res = query.use();
@@ -2857,6 +2866,22 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			now take their arguments by
 			<computeroutput>const</computeroutput>
 			reference.</para>
+
+			<para>Renamed
+			<computeroutput>Connection::real_connect()</computeroutput>
+			to <computeroutput>connect()</computeroutput>,
+			made several more of its parameters
+			default, and removed the old
+			<computeroutput>connect()</computeroutput>
+			method, as it's now a strict subset of the
+			new one. This change simplifies the API,
+			with the only cost being that programs uisng
+			<computeroutput>real_connect()</computeroutput>
+			will have to change the method name in their
+			code. This split was a pointless carry-over
+			from the MySQL C API; C++ doesn't have the
+			limitations that forced the creation of that
+			function in the C API.</para>
 		</sect3>
 	</sect2>
 

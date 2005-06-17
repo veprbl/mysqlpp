@@ -54,8 +54,7 @@ main(int argc, char *argv[])
 
 	Connection con(use_exceptions);
 	try {
-		con.real_connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD, 3306,
-						 0, 60, NULL);
+		con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
 		Query query = con.query();
 		ostringstream strbuf;
 		ifstream In(argv[1], ios::in | ios::binary);

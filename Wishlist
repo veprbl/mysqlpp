@@ -53,11 +53,6 @@ v2.0 Release Plan
 
 	o Rename Connection::read_options() to set_option().
 
-	o Rename Connection::real_connect() to connect(), drop old
-	  connect() function, and set defaults for all parameters
-	  beyond what connect() supported.  Thus the API only changes
-	  for real_connect() users, and it's just a function rename.
-
 	o Make Connection::execute() use mysql_real_query() instead of
 	  mysql_query() so it can handle binary data.
 
