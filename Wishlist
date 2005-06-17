@@ -164,6 +164,18 @@ Future Features and ABI Changes
 	  Connection object has to be in a higher scope, or created on the
 	  heap.
 
+	o Abstract all uses of MySQL C API functions into a database
+	  driver class with a generic interface.  This is a step
+	  towards database-independence, without the parallel class
+	  hierarchy required by the MySQL++ 1.7 design.  Also, it
+	  will make it easier to make class Connection completely
+	  friend-less.	Right now, the main reason it needs friends
+	  is because these other classes make C API calls using its
+	  private MYSQL data member.  The other reasons for it having
+	  friends aren't nearly as compelling, so it wouldn't be
+	  hard to justify redesigning Connection to eliminate these
+	  final reasons.
+
 	o Add a configure script option to allow the new lock mechanism to
 	  use platform mutexes via the Boost.Threads library.
 
