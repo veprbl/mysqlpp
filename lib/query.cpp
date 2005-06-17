@@ -30,8 +30,8 @@ namespace mysqlpp {
 
 Query::Query(const Query& q) :
 SQLQuery(q),
-mysql(q.mysql),
-throw_exceptions(q.throw_exceptions)
+OptionalExceptions(q.exceptions()),
+mysql(q.mysql)
 {
 }
 

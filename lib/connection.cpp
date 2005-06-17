@@ -42,15 +42,8 @@ using namespace std;
 
 namespace mysqlpp {
 
-Connection::Connection() :
-throw_exceptions(true),
-locked(false) 
-{
-	mysql_init(&mysql);
-}
-
 Connection::Connection(bool te) :
-throw_exceptions(te),
+OptionalExceptions(te),
 is_connected(false),
 locked(true),
 Success(false)
@@ -59,30 +52,10 @@ Success(false)
 }
 
 Connection::Connection(const char* db, const char* host,
-		const char* user, const char* passwd, bool te) :
-throw_exceptions(te),
-locked(false)
-{
-	mysql_init(&mysql);
-	if (connect(db, host, user, passwd)) {
-		locked = false;
-		Success = is_connected = true;
-	}
-	else {
-		locked = false;
-		Success = is_connected = false;
-		if (throw_exceptions) {
-			throw BadQuery(error());
-		}
-	}
-}
-
-
-Connection::Connection(const char* db, const char* host,
 		const char* user, const char* passwd, uint port,
 		my_bool compress, unsigned int connect_timeout,
-		bool te, cchar* socket_name, unsigned int client_flag) :
-throw_exceptions(te),
+		cchar* socket_name, unsigned int client_flag) :
+OptionalExceptions(),
 locked(false)
 {
 	mysql_init(&mysql);
@@ -94,7 +67,7 @@ locked(false)
 	else {
 		locked = false;
 		Success = is_connected = false;
-		if (throw_exceptions) {
+		if (throw_exceptions()) {
 			throw BadQuery(error());
 		}
 	}
@@ -119,7 +92,7 @@ bool Connection::connect(cchar* db, cchar* host, cchar* user,
 	else {
 		locked = false;
 		Success = is_connected = false;
-		if (throw_exceptions) {
+		if (throw_exceptions()) {
 			throw BadQuery(error());
 		}
 	}
@@ -140,7 +113,7 @@ Connection::~Connection()
 bool Connection::select_db(const char *db)
 {
 	bool suc = !(mysql_select_db(&mysql, db));
-	if (throw_exceptions && !suc) {
+	if (throw_exceptions() && !suc) {
 		throw BadQuery(error());
 	}
 	else {
@@ -151,7 +124,7 @@ bool Connection::select_db(const char *db)
 bool Connection::reload()
 {
 	bool suc = !mysql_reload(&mysql);
-	if (throw_exceptions && !suc) {
+	if (throw_exceptions() && !suc) {
 		throw BadQuery(error());
 	}
 	else {
@@ -162,7 +135,7 @@ bool Connection::reload()
 bool Connection::shutdown()
 {
 	bool suc = !(mysql_shutdown(&mysql SHUTDOWN_ARG));
-	if (throw_exceptions && !suc) {
+	if (throw_exceptions() && !suc) {
 		throw BadQuery(error());
 	}
 	else {
@@ -181,11 +154,11 @@ string Connection::info()
 	}
 }
 
-ResNSel Connection::execute(const string& str, bool throw_excptns)
+ResNSel Connection::execute(const string& str)
 {
 	Success = false;
 	if (lock()) {
-		if (throw_excptns) {
+		if (throw_exceptions()) {
 			throw BadQuery("lock failed");
 		}
 		else {
@@ -199,7 +172,7 @@ ResNSel Connection::execute(const string& str, bool throw_excptns)
 		return ResNSel(this);
 	}
 	else {
-		if (throw_excptns) {
+		if (throw_exceptions()) {
 			throw BadQuery(error());
 		}
 		else {
@@ -211,17 +184,17 @@ ResNSel Connection::execute(const string& str, bool throw_excptns)
 bool Connection::exec(const string& str)
 {
 	Success = !mysql_query(&mysql, str.c_str());
-	if (!Success && throw_exceptions)
+	if (!Success && throw_exceptions())
 		throw BadQuery(error());
 	return Success;
 }
 
-Result Connection::store(const string& str, bool throw_excptns)
+Result Connection::store(const string& str)
 {
 	Success = false;
 
 	if (lock()) {
-		if (throw_excptns) {
+		if (throw_exceptions()) {
 			throw BadQuery("lock failed");
 		}
 		else {
@@ -240,7 +213,7 @@ Result Connection::store(const string& str, bool throw_excptns)
 	unlock();
 
 	// One of the mysql_* calls failed, so decide how we should fail.
-	if (throw_excptns) {
+	if (throw_exceptions()) {
 		throw BadQuery(error());
 	}
 	else {
@@ -248,11 +221,11 @@ Result Connection::store(const string& str, bool throw_excptns)
 	}
 }
 
-ResUse Connection::use(const string& str, bool throw_excptns)
+ResUse Connection::use(const string& str)
 {
 	Success = false;
 	if (lock()) {
-		if (throw_excptns) {
+		if (throw_exceptions()) {
 			throw BadQuery("lock failed");
 		}
 		else {
@@ -271,7 +244,7 @@ ResUse Connection::use(const string& str, bool throw_excptns)
 	unlock();
 
 	// One of the mysql_* calls failed, so decide how we should fail.
-	if (throw_excptns) {
+	if (throw_exceptions()) {
 		throw BadQuery(error());
 	}
 	else {
@@ -281,7 +254,7 @@ ResUse Connection::use(const string& str, bool throw_excptns)
 
 Query Connection::query()
 {
-	return Query(this, throw_exceptions);
+	return Query(this, throw_exceptions());
 }
 
 } // end namespace mysqlpp

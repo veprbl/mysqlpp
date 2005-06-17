@@ -30,6 +30,7 @@
 
 #include "coldata.h"
 #include "exceptions.h"
+#include "noexceptions.h"
 #include "resiter.h"
 #include "vallist.h"
 
@@ -480,13 +481,13 @@ public:
 
 /// \brief Manages rows from a result set.
 class Row : public const_subscript_container<Row, ColData,
-		const ColData>, public RowTemplate<Row, ResUse>
+		const ColData>, public RowTemplate<Row, ResUse>,
+		public OptionalExceptions
 {
 private:
 	std::vector<std::string> data;
 	std::vector<bool> is_nulls;
 	const ResUse* res;
-	bool throw_exceptions;
 	bool initialized;
 
 public:
@@ -499,13 +500,13 @@ public:
 	/// \param r result set that the row comes from
 	/// \param jj length of each item in d
 	/// \param te if true, throw exceptions on errors
-	Row(MYSQL_ROW d, const ResUse* r, unsigned long* jj, bool te = false) :
+	Row(MYSQL_ROW d, const ResUse* r, unsigned long* jj, bool te = true) :
+	OptionalExceptions(te),
 	res(r),
-	throw_exceptions(te),
 	initialized(false)
 	{
 		if (!d || !r) {
-			if (throw_exceptions) {
+			if (throw_exceptions()) {
 				throw BadQuery("ROW or RES is NULL");
 			}
 			else {

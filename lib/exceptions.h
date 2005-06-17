@@ -1,6 +1,7 @@
 /// \file exceptions.h
 /// \brief Declares the MySQL++-specific exception classes.
 ///
+///!fixme
 /// When exceptions are enabled for a given
 /// \ref mysqlpp::Connection "Connection" object, any of these exceptions
 /// can be thrown as a result of operations done through that connection.

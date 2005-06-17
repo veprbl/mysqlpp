@@ -98,11 +98,10 @@ namespace mysqlpp {
 /// \link mysqlpp::Connection Connection \endlink object, so that
 /// the query can be sent to the MySQL server we're connected to.
 
-class Query : public SQLQuery
+class Query : public SQLQuery, public OptionalExceptions
 {
 private:
 	Connection* mysql;
-	bool throw_exceptions;
 
 	my_ulonglong affected_rows() const;
 	my_ulonglong insert_id();
@@ -117,10 +116,10 @@ public:
 	///
 	/// \param c connection the finished query should be sent out on
 	/// \param te if true, throw exceptions on errors
-	Query(Connection * c, bool te = false) :
+	Query(Connection* c, bool te = true) :
 	SQLQuery(),
-	mysql(c),
-	throw_exceptions(te)
+	OptionalExceptions(te),
+	mysql(c)
 	{
 		Success = true;
 	}

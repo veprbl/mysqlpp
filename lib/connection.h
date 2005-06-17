@@ -36,6 +36,7 @@
 #include "platform.h"
 
 #include "exceptions.h"
+#include "noexceptions.h"
 #include "result.h"
 
 #include <mysql.h>
@@ -60,14 +61,13 @@ class Query;
 
 /// \brief Manages the connection to the MySQL database.
 
-class Connection
+class Connection : public OptionalExceptions
 {
 private:
 	friend class ResNSel;
 	friend class ResUse;
 	friend class Query;
 
-	bool throw_exceptions;
 	MYSQL mysql;
 	bool is_connected;
 	bool locked;
@@ -76,36 +76,10 @@ private:
 public:
 	/// \brief Create object without connecting it to the MySQL server.
 	///
-	/// Use connect() method to establish the connection.
-	Connection();
-
-	/// Same as
-	/// \link mysqlpp::Connection::Connection() default ctor \endlink
-	/// except that it allows you to choose whether exceptions are enabled.
-	///
 	/// \param te if true, exceptions are thrown on errors
-	Connection(bool te);
+	Connection(bool te = true);
 
-	/// \brief For connecting to database without any special options.
-	///
-	/// This constructor takes the minimum parameters needed for most
-	/// programs' use of MySQL.  There is a <a href="#a3">more complicated</a>
-	/// constructor that lets you specify everything that the C API
-	/// function \c mysql_real_connect() does.
-	///
-	/// \param db name of database to use
-	/// \param host host name or IP address of MySQL server, or 0
-	/// 	if server is running on the same host as your program
-	/// \param user user name to log in under, or 0 to use the user
-	///		name this program is running under
-	/// \param passwd password to use when logging in
-	/// \param te if true, throw exceptions on errors
-	Connection(const char* db, const char* host = "",
-			const char* user = "", const char* passwd = "",
-			bool te = true);
-
-	/// \brief Connect to database, allowing you to specify all
-	/// connection parameters.
+	/// \brief Create object and connect to database in one step.
 	///
 	/// This constructor allows you to most fully specify the options
 	/// used when connecting to the MySQL database.  It is the thinnest
@@ -123,7 +97,6 @@ public:
 	///		connection, to save bandwidth at the expense of CPU time
 	/// \param connect_timeout max seconds to wait for server to
 	///		respond to our connection attempt
-	/// \param te if true, throw exceptions on errors
 	/// \param socket_name Unix domain socket server is using, if
 	///		connecting to MySQL server on the same host as this program
 	///		running on, or 0 to use default name
@@ -132,8 +105,8 @@ public:
 	Connection(const char* db, const char* host = "",
 			const char* user = "", const char* passwd = "",
 			uint port = 0, my_bool compress = 0,
-			unsigned int connect_timeout = 60, bool te = true,
-			cchar* socket_name = 0, unsigned int client_flag = 0);
+			unsigned int connect_timeout = 60, cchar* socket_name = 0,
+			unsigned int client_flag = 0);
 
 	/// \brief Destroy connection object
 	~Connection();
@@ -348,10 +321,7 @@ public:
 	/// \return Result object containing entire result set
 	///
 	/// \sa exec(), execute(), storein(), and use()
-	Result store(const std::string& str)
-	{
-		return store(str, throw_exceptions);
-	}
+	Result store(const std::string& str);
 
 	/// \brief Execute a query that can return a result set
 	/// 
@@ -374,10 +344,7 @@ public:
 	/// \return ResUse object that can walk through result set serially
 	///
 	/// \sa exec(), execute(), store() and storein()
-	ResUse use(const std::string& str)
-	{
-		return use(str, throw_exceptions);
-	}
+	ResUse use(const std::string& str);
 
 	/// \brief Execute a query
 	///
@@ -392,10 +359,7 @@ public:
 	/// \return ResNSel status information about the query
 	///
 	/// \sa exec(), store(), storein(), and use()
-	ResNSel execute(const std::string& str)
-	{
-		return execute(str, throw_exceptions);
-	}
+	ResNSel execute(const std::string& str);
 
 	/// \brief Execute a query
 	///
@@ -409,27 +373,6 @@ public:
 	///
 	/// \sa execute(), store(), storein(), and use()
 	bool exec(const std::string& str);
-
-	/// \brief Same as store(str) except that it allows you to turn off
-	/// exceptions for this query
-	///
-	/// \param str query to execute
-	/// \param te if true, no exceptions will be thrown on errors.
-	Result store(const std::string& str, bool te);
-
-	/// \brief Same as use(str) except that it allows you to turn off
-	/// exceptions for this query
-	///
-	/// \param str query to execute
-	/// \param te if true, no exceptions will be thrown on errors.
-	ResUse use(const std::string& str, bool te);
-
-	/// \brief Same as execute(str) except that it allows you to turn off
-	/// exceptions for this query
-	///
-	/// \param str query to execute
-	/// \param te if true, no exceptions will be thrown on errors.
-	ResNSel execute(const std::string& str, bool te);
 
 	/// \brief Create a database
 	///

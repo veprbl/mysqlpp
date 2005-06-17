@@ -26,23 +26,6 @@ v2.0 Release Plan
 
 	The planned v2.0 changes are:
 
-	o Create interface class for disabling exceptions, and derive all
-	  classes that currently can have exceptions disabled from this
-	  interface.  Then create an exception-disabling class that
-	  is designed to be created on the stack with a reference to
-	  one of these objects; while the disabler object is in scope,
-	  exceptions are disabled on the target object.  Side benefit:
-	  this will standardize the mechanism for temporarily disabling
-	  exceptions, which currently varies somewhat between classes.
-	  Also possible to do this with templates, using compile-time
-	  polymorphism.
-
-	o Remove 'te' parameters from Connection ctors, except as
-	  "te = true" on the default ctor.  The only thing this
-	  prevents is connecting on construction with disabled
-	  exceptions.  It's now a two-step process.  Then merge the two
-	  connect-on-construction ctors.
-
 	o Move SQLQueryNEParms into exceptions.h.
 
 	o Hoist all common exception functionality up into a superclass,

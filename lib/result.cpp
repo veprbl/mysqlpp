@@ -39,8 +39,8 @@ info(q->info())
 }
 
 ResUse::ResUse(MYSQL_RES* result, Connection* m, bool te) :
+OptionalExceptions(te),
 mysql(m),
-throw_exceptions(te),
 initialized(false),
 _fields(this)
 {
@@ -80,7 +80,7 @@ void ResUse::copy(const ResUse& other)
 		purge();
 	}
 
-	throw_exceptions = other.throw_exceptions;
+	set_exceptions(other.throw_exceptions());
 	mysql_res = other.mysql_res;
 	_fields = other._fields;
 

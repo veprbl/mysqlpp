@@ -34,6 +34,7 @@
 #include "fields.h"
 #include "field_names.h"
 #include "field_types.h"
+#include "noexceptions.h"
 #include "resiter.h"
 #include "row.h"
 
@@ -57,12 +58,11 @@ class Connection;
 /// empty row if exceptions are disabled), you can process the result
 /// set one row at a time.
 
-class ResUse
+class ResUse : public OptionalExceptions
 {
 protected:
 	Connection* mysql;				///< server result set comes from
 	mutable MYSQL_RES* mysql_res;	///< underlying C API result set
-	bool throw_exceptions;			///< if true, throw exceptions on errors
 	bool initialized;				///< if true, object is fully initted
 	mutable FieldNames* _names;		///< list of field names in result
 	mutable FieldTypes* _types;		///< list of field types in result
@@ -72,14 +72,14 @@ protected:
 	/// \brief copy another ResUse object's contents into this one.
 	///
 	/// Not to be used on the self. Self-copy is not allowed.
-	void copy(const ResUse & other);
+	void copy(const ResUse& other);
 
 public:
 	/// \brief Default constructor
 	ResUse() :
+	OptionalExceptions(),
 	mysql(0),
 	mysql_res(0),
-	throw_exceptions(false),
 	initialized(false),
 	_names(0),
 	_types(0),
@@ -88,7 +88,7 @@ public:
 	}
 	
 	/// \brief Create the object, fully initialized
-	ResUse(MYSQL_RES* result, Connection* m = 0, bool te = false);
+	ResUse(MYSQL_RES* result, Connection* m = 0, bool te = true);
 	
 	/// \brief Create a copy of another ResUse object
 	ResUse(const ResUse& other) :
@@ -115,7 +115,7 @@ public:
 	/// returning the mysqlpp::Row object containing the row data.
 	Row fetch_row() {
 		if (!mysql_res) {
-			if (throw_exceptions) {
+			if (throw_exceptions()) {
 				throw BadQuery("Results not fetched");
 			}
 			else {
@@ -125,14 +125,14 @@ public:
 		MYSQL_ROW row = mysql_fetch_row(mysql_res);
 		unsigned long *length = mysql_fetch_lengths(mysql_res);
 		if (!row || !length) {
-			if (throw_exceptions) {
+			if (throw_exceptions()) {
 				throw BadQuery("Bad row");
 			}
 			else {
 				return Row();
 			}
 		}
-		return Row(row, this, length, throw_exceptions);
+		return Row(row, this, length, throw_exceptions());
 	}
 
 	/// \brief Wraps mysql_eof() in MySQL C API.
@@ -353,7 +353,7 @@ public:
 	}
 	
 	/// \brief Fully initialize object
-	Result(MYSQL_RES* result, bool te = false) :
+	Result(MYSQL_RES* result, bool te = true) :
 	ResUse(result, 0, te)
 	{
 		mysql = 0;
@@ -379,7 +379,7 @@ public:
 	const Row fetch_row() const
 	{
 		if (!mysql_res) {
-			if (throw_exceptions) {
+			if (throw_exceptions()) {
 				throw BadQuery("Results not fetched");
 			}
 			else {
@@ -389,14 +389,14 @@ public:
 		MYSQL_ROW row = mysql_fetch_row(mysql_res);
 		unsigned long* length = mysql_fetch_lengths(mysql_res);
 		if (!row || !length) {
-			if (throw_exceptions) {
+			if (throw_exceptions()) {
 				throw BadQuery("Bad row");
 			}
 			else {
 				return Row();
 			}
 		}
-		return Row(row, this, length, throw_exceptions);
+		return Row(row, this, length, throw_exceptions());
 	}
 
 	/// \brief Wraps mysql_num_rows() in MySQL C API.

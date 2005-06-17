@@ -2889,6 +2889,42 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			<computeroutput>set_option()</computeroutput>,
 			and made it return true on success instead
 			of 0.</para>
+
+			<para>Classes
+			<computeroutput>Connection</computeroutput>,
+			<computeroutput>Query</computeroutput>,
+			<computeroutput>Result</computeroutput>,
+			<computeroutput>ResUse</computeroutput>, and
+			<computeroutput>Row</computeroutput>
+			now derive from
+			<computeroutput>OptionalExceptions</computeroutput>.
+			Therefore, they no longer have an internal
+			flag controlling whether exceptions are
+			thrown. In addition, almost all of the
+			per-method exception-disabling flags
+			were removed. The preferred method for
+			disabling exceptions on these objects
+			is to create an instance of the new
+			<computeroutput>NoExceptions</computeroutput>
+			class on the stack taking the object in
+			question, which will disable exceptions on the
+			object as long as it is in scope. You can
+			also call methods on the OptionalExceptions
+			interface to temporarily disable exceptions,
+			but if you only want them disabled temporarily,
+			this is error-prone.</para>
+
+			<para>Exceptions are now enabled by
+			default, always. This is unlikely to affect
+			user programs, because the paths by which
+			exceptions could have been disabled by default
+			in older versions are primarily used within
+			the library only. But, if you rebuild your
+			program against v2.0 and find that it's
+			throwing new exceptions, this is why. To
+			return to the old behavior, use one of the
+			new exception-disabling mechanisms mentioned
+			in the previous paragraph.</para>
 		</sect3>
 	</sect2>
 
@@ -2960,6 +2996,13 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			(I'd call this an API change if I thought
 			there were any programs out there actually
 			using this...)</para>
+
+			<para>Collapsed the
+			<computeroutput>Connection</computeroutput>
+			constructor taking a bool (for setting
+			the throw_exceptions flag) and the default
+			constructor into a single constructor using
+			a default for the parameter.</para>
 		</sect3>
 	</sect2>
 </sect1>

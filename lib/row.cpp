@@ -38,7 +38,7 @@ Row::size_type Row::size() const
 const ColData Row::operator [](size_type i) const
 {
 	if (!initialized) {
-		if (throw_exceptions)
+		if (throw_exceptions())
 			throw BadQuery("Row not initialized");
 		else
 			return ColData();
