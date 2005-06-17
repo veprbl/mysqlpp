@@ -66,24 +66,6 @@ protected:
 };
 
 
-/// \brief Exception thrown when MySQL encounters a problem while
-/// processing your query.
-///
-/// This is the most generic MySQL++ exception. It is thrown when your
-/// SQL syntax is incorrect, or a field you requested doesn't exist in
-/// the database, or....
-
-class BadQuery : public Exception
-{
-public:
-	/// \brief Create exception object
-	BadQuery(const char* w = "") :
-	Exception(w)
-	{
-	}
-};
-
-
 /// \brief Exception thrown when a bad type conversion is attempted.
 
 class BadConversion : public Exception
@@ -149,6 +131,27 @@ public:
 };
 
 
+/// \brief Exception thrown when a requested named field doesn't exist.
+///
+/// Thrown by Row::lookup_by_name() when you pass a field name that
+/// isn't in the result set.
+
+class BadFieldName : public Exception
+{
+public:
+	/// \brief Create exception object
+	///
+	/// \param bad_field name of field the MySQL server didn't like
+	BadFieldName(const char* bad_field) :
+	Exception(std::string("Unknown field name: ") + bad_field)
+	{
+	}
+
+	/// \brief Destroy exception
+	~BadFieldName() throw() { }
+};
+
+
 /// \brief Exception thrown when you attempt to convert a SQL null
 /// to an incompatible type.
 
@@ -157,6 +160,24 @@ class BadNullConversion : public Exception
 public:
 	/// \brief Create exception object
 	BadNullConversion(const char* w = "") :
+	Exception(w)
+	{
+	}
+};
+
+
+/// \brief Exception thrown when MySQL encounters a problem while
+/// processing your query.
+///
+/// This is the most generic MySQL++ exception. It is thrown when your
+/// SQL syntax is incorrect, or a field you requested doesn't exist in
+/// the database, or....
+
+class BadQuery : public Exception
+{
+public:
+	/// \brief Create exception object
+	BadQuery(const char* w = "") :
 	Exception(w)
 	{
 	}
@@ -181,26 +202,6 @@ public:
 	~SQLQueryNEParms() throw() { }
 };
 
-
-/// \brief Exception thrown when a requested named field doesn't exist.
-///
-/// Thrown by Row::lookup_by_name() when you pass a field name that
-/// isn't in the result set.
-
-class BadFieldName : public Exception
-{
-public:
-	/// \brief Create exception object
-	///
-	/// \param bad_field name of field the MySQL server didn't like
-	BadFieldName(const char* bad_field) :
-	Exception(std::string("Unknown field name: ") + bad_field)
-	{
-	}
-
-	/// \brief Destroy exception
-	~BadFieldName() throw() { }
-};
 
 } // end namespace mysqlpp
 
