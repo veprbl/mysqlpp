@@ -5,8 +5,10 @@ are currently involved in MySQL++ development. The current maintainer
 is Warren Young <mysqlpp@etr-usa.com>, starting with version 1.7.10 in
 August of 2004.
 
-For a fuller account of the library's history, see the first chapter of
-the user manual.
+For a fuller account of the library's history, see the first chapter
+of the user manual.  For the nitty-gritty details, see the ChangeLog
+in the root package directory.  ChangeLog items since 1.7.9 that
+aren't attributed to anyone else were done by Warren Young.
 
 
 Other frequent contributors since 1.7.10 are:
