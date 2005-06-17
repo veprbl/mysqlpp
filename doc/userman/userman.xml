@@ -2754,6 +2754,155 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 
 <?hard-pagebreak?>
 <sect1>
+	<title>API and ABI Changes</title>
+
+	<para>This chapter documents those library changes since
+	the epochal 1.7.9 release that break end-user programs. You
+	can dig this stuff out of the ChangeLog, but the ChangeLog
+	focuses more explaining and justifying the facets of each
+	change, while this section focuses on how to migrate your
+	code between these library versions. Since pure additions do
+	not break programs, those changes are still documented only
+	in the ChangeLog.</para>
+
+
+	<sect2>
+		<title>API Changes</title>
+
+		<para>This section documents functions, methods and
+		classes that were removed or changed in an incompatible
+		way.</para>
+
+		<sect3>
+			<title>v1.7.10</title>
+
+			<para>Removed
+			<computeroutput>Row::operator[]()</computeroutput>
+			overloads except the one for
+			<computeroutput>size_type</computeroutput>,
+			and added
+			<computeroutput>Row::lookup_by_name()</computeroutput>
+			to provide the "subscribt by
+			string" functionality.	In practical
+			terms, this change means that the
+			<computeroutput>row["field"]</computeroutput>
+			syntax no longer works; you must use the new
+			<computeroutput>lookup_by_name</computeroutput>
+			method instead.</para>
+
+			<para>Renamed the generated
+			library on POSIX systems from
+			<computeroutput>libsqlplus</computeroutput> to
+			<computeroutput>libmysqlpp</computeroutput>.</para>
+		</sect3>
+
+
+		<sect3>
+			<title>v1.7.19</title>
+
+			<para>Removed
+			<computeroutput>SQLQuery::operator=()</computeroutput>,
+			and the same for its
+			<computeroutput>Query</computeroutput>
+			subclass. Use the copy constructor instead, if you need to copy
+			one query to another query object.</para>
+		</sect3>
+
+
+		<sect3>
+			<title>v1.7.20</title>
+
+			<para>The library used to have two names for
+			many core classes: a short one, such as
+			<computeroutput>Row</computeroutput>
+			and a longer one,
+			<computeroutput>MysqlRow</computeroutput>. The
+			library now uses the shorter names
+			exclusively.</para>
+		</sect3>
+
+
+		<sect3>
+			<title>v1.7.22</title>
+
+			<para>All symbols within MySQL++ are in the
+			<computeroutput>mysqlpp</computeroutput>
+			namespace now if you use the new
+			<computeroutput>mysql++.h</computeroutput>
+			header. If you use the older
+			<computeroutput>sqlplus.hh</computeroutput>
+			or <computeroutput>mysql++.hh</computeroutput>
+			headers, these symbols are hoist up into the
+			global namespace. The older headers cause the
+			compiler to emit warnings if you use them,
+			and they will go away someday.</para>
+		</sect3>
+	</sect2>
+
+
+	<sect2>
+		<title>ABI Changes</title>
+
+		<para>This section documents those library changes that
+		require that you rebuild your program to work with the
+		new library. They should require no code changes, as
+		they only affect the library's binary interface.</para>
+
+
+		<sect3>
+			<title>v1.7.18</title>
+
+			<para>The
+			<computeroutput>Query</computeroutput>
+			classes now subclass from
+			<computeroutput>stringstream</computeroutput>
+			instead of the deprecated
+			<computeroutput>strstream</computeroutput>.</para>
+		</sect3>
+
+
+		<sect3>
+			<title>v1.7.19</title>
+
+			<para>Fixed several
+			<computeroutput>const</computeroutput>-incorrectnesses
+			in the <computeroutput>Query</computeroutput>
+			classes.</para>
+		</sect3>
+
+
+		<sect3>
+			<title>v1.7.22</title>
+
+			<para>Removed "reset query" parameters from
+			several <computeroutput>Query</computeroutput>
+			class members. This is not an API change,
+			because the parameters were given default
+			values, and the library would ignore any value
+			other than the default. So, any program that
+			tried to make them take another value wouldn't
+			have worked anyway.</para>
+		</sect3>
+
+
+		<sect3>
+			<title>v1.7.24</title>
+
+			<para>Some freestanding functions didn't
+			get moved into <computeroutput>namespace
+			mysqlpp</computeroutput> when that namespace
+			was created. This release fixed that. It
+			doesn't affect the API if your program was
+			saying <computeroutput>using namespace
+			mysqlpp</computeroutput> within its C++
+			source files.</para>
+		</sect3>
+	</sect2>
+</sect1>
+
+
+<?hard-pagebreak?>
+<sect1>
 	<title>Licensing</title>
 
 	<para>The primary copyright holders on the MySQL++ library and
