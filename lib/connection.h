@@ -536,10 +536,10 @@ void Connection::storein_sequence(Sequence& con, const std::string& s)
 {
 	ResUse result = use(s);
 	while (1) {
-		MYSQL_ROW d = mysql_fetch_row(result.mysql_result());
+		MYSQL_ROW d = mysql_fetch_row(result.raw_result());
 		if (!d)
 			break;
-		Row row(d, &result, mysql_fetch_lengths(result.mysql_result()),
+		Row row(d, &result, mysql_fetch_lengths(result.raw_result()),
 				true);
 		if (!row)
 			break;
@@ -552,10 +552,10 @@ void Connection::storein_set(Set& con, const std::string& s)
 {
 	ResUse result = use(s);
 	while (1) {
-		MYSQL_ROW d = mysql_fetch_row(result.mysql_result());
+		MYSQL_ROW d = mysql_fetch_row(result.raw_result());
 		if (!d)
 			return;
-		Row row(d, &result, mysql_fetch_lengths(result.mysql_result()),
+		Row row(d, &result, mysql_fetch_lengths(result.raw_result()),
 				true);
 		if (!row)
 			break;

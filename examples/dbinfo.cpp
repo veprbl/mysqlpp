@@ -151,7 +151,7 @@ main(int argc, char* argv[])
 		int columns = res.num_fields();
 		cout << "fields = " << res.num_fields() << ", rows = " <<
 				res.size() << endl;
-		volatile MYSQL_RES *ress = res.mysql_result();
+		volatile MYSQL_RES* ress = res.raw_result();
 		if (!ress)
 			return -1;
 		for (i = res.begin(); i != res.end(); ++i) {
