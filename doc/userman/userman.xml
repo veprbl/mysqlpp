@@ -3028,6 +3028,18 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			the throw_exceptions flag) and the default
 			constructor into a single constructor using
 			a default for the parameter.</para>
+
+			<para>Classes
+			<computeroutput>Connection</computeroutput>
+			and <computeroutput>Query</computeroutput>
+			are now derived from the
+			<computeroutput>Lockable</computeroutput>
+			interface, instead of implementing their own
+			lock/unlock functions. For now, this has no
+			practical advantage, but in a future version
+			we plan to use platform mutexes to serialize
+			access to contended resources through this
+			mechanism. (It will be optional.)</para>
 		</sect3>
 	</sect2>
 </sect1>

@@ -44,8 +44,8 @@ namespace mysqlpp {
 
 Connection::Connection(bool te) :
 OptionalExceptions(te),
+Lockable(true),
 is_connected(false),
-locked(true),
 Success(false)
 {
 	mysql_init(&mysql);
@@ -56,16 +56,16 @@ Connection::Connection(const char* db, const char* host,
 		my_bool compress, unsigned int connect_timeout,
 		cchar* socket_name, unsigned int client_flag) :
 OptionalExceptions(),
-locked(false)
+Lockable()
 {
 	mysql_init(&mysql);
 	if (connect(db, host, user, passwd, port, compress,
 			connect_timeout, socket_name, client_flag)) {
-		locked = false;
+		unlock();
 		Success = is_connected = true;
 	}
 	else {
-		locked = false;
+		unlock();
 		Success = is_connected = false;
 		if (throw_exceptions()) {
 			throw BadQuery(error());
@@ -80,17 +80,18 @@ bool Connection::connect(cchar* db, cchar* host, cchar* user,
 {
 	mysql.options.compress = compress;
 	mysql.options.connect_timeout = connect_timeout;
-	locked = true;
+
+	lock();
 
 	mysql_options(&mysql, MYSQL_READ_DEFAULT_FILE, "my");
 
 	if (mysql_real_connect(&mysql, host, user, passwd, db, port,
 			socket_name, client_flag)) {
-		locked = false;
+		unlock();
 		Success = is_connected = true;
 	}
 	else {
-		locked = false;
+		unlock();
 		Success = is_connected = false;
 		if (throw_exceptions()) {
 			throw BadQuery(error());

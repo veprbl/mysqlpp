@@ -98,7 +98,8 @@ namespace mysqlpp {
 /// \link mysqlpp::Connection Connection \endlink object, so that
 /// the query can be sent to the MySQL server we're connected to.
 
-class Query : public SQLQuery, public OptionalExceptions
+class Query : public SQLQuery, public OptionalExceptions,
+		public Lockable
 {
 private:
 	Connection* conn_;
@@ -106,6 +107,7 @@ private:
 	my_ulonglong affected_rows() const;
 	my_ulonglong insert_id();
 	std::string info();
+
 	bool lock();
 	void unlock();
 

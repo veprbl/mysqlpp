@@ -26,15 +26,6 @@ v2.0 Release Plan
 
 	The planned v2.0 changes are:
 
-	o Extract Connection class's lock mechanism into a separate class,
-	  instances of which could be created on the stack so the lock
-	  is always relesased on function exit.  Derive Connection from
-	  an interface class ("Lockable"?) that provides lock and unlock
-	  functions.  Add a configure script option to allow this lock
-	  mechanism to use platform mutexes via the Boost.Threads library.
-	  Also derive Query from this new interface, as it also has a
-	  locking mechanism.
-
 	o If you call Connection()::connect() on an already-connected
 	  object, drop previous connection and re-connect.  Document this.
 
@@ -164,6 +155,9 @@ Future Features and ABI Changes (after v2.0)
 	  open up a lot of problems.  Also, for this to work properly, the
 	  Connection object has to be in a higher scope, or created on the
 	  heap.
+
+	o Add a configure script option to allow the new lock mechanism to
+	  use platform mutexes via the Boost.Threads library.
 
 	o SSQLS structures include some static elements (_table and
 	  names[]), which are defined within the macro.  If you put an SSQLS

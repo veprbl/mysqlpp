@@ -36,6 +36,7 @@
 #include "platform.h"
 
 #include "exceptions.h"
+#include "lockable.h"
 #include "noexceptions.h"
 #include "result.h"
 
@@ -61,7 +62,7 @@ class Query;
 
 /// \brief Manages the connection to the MySQL database.
 
-class Connection : public OptionalExceptions
+class Connection : public OptionalExceptions, public Lockable
 {
 private:
 	friend class ResNSel;
@@ -70,7 +71,6 @@ private:
 
 	MYSQL mysql;
 	bool is_connected;
-	bool locked;
 	bool Success;
 
 public:
@@ -164,26 +164,6 @@ public:
 	{
 		return Success;
 	}
-
-	/// \brief Lock the object.
-	///
-	/// Apparently supposed to prevent multiple simultaneous connections
-	/// since only connection-related functions change the lock status
-	/// but it's never actually checked!  See Wishlist for plan to fix
-	/// this.
-	bool lock()
-	{
-		if (locked) {
-			return true;
-		}
-		locked = true;
-		return false;
-	}
-
-	/// \brief Unlock the object
-	///
-	/// See lock() documentation for caveats.
-	void unlock() { locked = false; }
 
 	/// \brief Alias for close()
 	void purge() { close(); }

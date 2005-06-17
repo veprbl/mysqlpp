@@ -37,10 +37,10 @@ libmysqlpp_la_SOURCES = \
 include_HEADERS = \
 	coldata.h compare.h connection.h const_string.h convert.h custom.h \
 	custom-macros.h defs.h datetime.h exceptions.h field_names.h \
-	field_types.h fields.h manip.h myset.h mysql++.h mysql++.hh \
-	noexceptions.h null.h platform.h query.h resiter.h result.h row.h \
-	sqlplus.hh sql_query.h sql_string.h stream2string.h string_util.h \
-	tiny_int.h type_info.h vallist.h 
+	field_types.h fields.h lockable.h manip.h myset.h mysql++.h \
+	mysql++.hh noexceptions.h null.h platform.h query.h resiter.h \
+	result.h row.h sqlplus.hh sql_query.h sql_string.h stream2string.h \
+	string_util.h tiny_int.h type_info.h vallist.h 
 
 all-local: custom.h
 
