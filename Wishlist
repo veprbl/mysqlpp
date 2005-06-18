@@ -34,9 +34,6 @@ v2.0 Release Plan
 	The planned v2.0 changes are:
 
 
-	o Make Connection::execute() use mysql_real_query() instead of
-	  mysql_query() so it can handle binary data.
-
 	o Fold SQLQuery class into Query.
 
 	o Use mysql_real_escape_string() instead of mysql_escape_string()
@@ -175,6 +172,17 @@ Future Features and ABI Changes
 	  friends aren't nearly as compelling, so it wouldn't be
 	  hard to justify redesigning Connection to eliminate these
 	  final reasons.
+
+	o Currently the "rubber meets the road" in the const char*
+	  version of the execute(), store() and use() methods.
+	  A version taking a C++ string would be more efficient, and
+	  it could handle embedded null characters if we switched the
+	  internals over to mysql_real_query().  Cannot add such an
+	  overload for type conflict reasons, but we can move these
+	  implementations into the first SQLString overload, which
+	  previously was intended for use with template queries.
+	  Then we can make the const char* versions wrappers for the
+	  SQLString version.
 
 	o Add a configure script option to allow the new lock mechanism to
 	  use platform mutexes via the Boost.Threads library.
