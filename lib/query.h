@@ -1,21 +1,5 @@
 /// \file query.h
-/// \brief Defines the user-facing Query class, which is used to build
-/// up SQL queries, and execute them.
-///
-/// This class is used in one of two main fashions.
-///
-/// First, it has several member functions that can build specific
-/// query types.  For instance,
-/// \link mysqlpp::Query::insert() insert() \endlink
-/// allows you to build an INSERT statement for a Specialized SQL
-/// Structure.
-///
-/// Second, one of its base classes is std::stringstream, so you may
-/// build an SQL query in the same way as you'd build up any other
-/// string with C++ streams.
-///
-/// One does not generally create Query objects directly.  Instead, call
-/// mysqlpp::Connection::query() to get one tied to that connection.
+/// \brief Defines a class for building and executing SQL queries.
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
@@ -55,7 +39,6 @@
 
 /// \brief Used to define many similar member functions in class Query.
 #define mysql_query_define1(RETURN, FUNC) \
-  RETURN FUNC (const char* str); \
   RETURN FUNC (parms &p);\
   mysql_query_define0(RETURN,FUNC) \
 
@@ -97,6 +80,48 @@ namespace mysqlpp {
 /// the query object and a MySQL++
 /// \link mysqlpp::Connection Connection \endlink object, so that
 /// the query can be sent to the MySQL server we're connected to.
+///
+/// One does not generally create Query objects directly. Instead, call
+/// mysqlpp::Connection::query() to get one tied to that connection.
+///
+/// There are several ways to build and execute SQL queries with this
+/// class.
+///
+/// The way most like other database libraries is to pass a SQL
+/// statement to one of the
+/// \link mysqlpp::Query::execute() exec*(), \endlink
+/// \link mysqlpp::Query::store() store*(), \endlink or use() methods
+/// taking a C or C++ string.  The query is executed immediately, and
+/// any results returned.
+///
+/// For more complicated queries, you can use Query's stream interface.
+/// You simply build up a query using the Query instance as you would
+/// any other C++ stream object. When the query string is complete, you
+/// call the overloaded version of \c exec*(), \c store*() or \c use()
+/// that takes no parameters, which executes the built query and returns
+/// any results.
+///
+/// If you are using the library's Specialized SQL Structures feature,
+/// Query has several special functions for generating common SQL
+/// queries from those structures. For instance, it offers the
+/// \link mysqlpp::Query::insert() insert() \endlink method, which
+/// builds an INSERT query to add the contents of the SSQLS to the
+/// database. As with the stream interface, these methods only build
+/// the query string; call one of the parameterless methods mentioned
+/// previously to actually execute the query.
+///
+/// Finally, you can build "template queries". This is something like
+/// C's \c printf() function, in that you insert a specially-formatted
+/// query string into the object which contains placeholders for data.
+/// You call the parse() method to tell the Query object that the query
+/// string contains placeholders. Once that's done, you can call any of
+/// the many overloaded methods that take a number of SQLStrings (up to
+/// 12 at the moment) or any type that can be converted to SQLString,
+/// and those parameters will be inserted into the placeholders. When
+/// you call one of the parameterless functions the execute the query,
+/// the final query string is assembled and sent to the server.
+///
+/// See the user manual for more details about these options.
 
 class Query : public SQLQuery, public OptionalExceptions,
 		public Lockable
@@ -150,7 +175,7 @@ public:
 	///
 	/// Same as execute(), except that it only returns a flag indicating
 	/// whether the query succeeded or not.  It is basically a thin
-	/// wrapper around the C API function \c mysql_query().
+	/// wrapper around the C API function \c mysql_real_query().
 	///
 	/// \param str the query to execute
 	///
@@ -159,32 +184,35 @@ public:
 	/// \sa execute(), store(), storein(), and use()
 	bool exec(const std::string& str);
 
-	/// \brief Execute a query
+	/// \brief Execute built-up query
 	///
-	/// Use this function if you don't expect the server to return a
-	/// result set.  For instance, a DELETE query.  The returned ResNSel
-	/// object contains status information from the server, such as
-	/// whether the query succeeded, and if so how many rows were
-	/// affected.
+	/// Use one of the execute() overloads if you don't expect the
+	/// server to return a result set. For instance, a DELETE query.
+	/// The returned ResNSel object contains status information from
+	/// the server, such as whether the query succeeded, and if so how
+	/// many rows were affected.
 	///
-	/// There are a number of overloaded versions of this function. The
-	/// one without parameters simply executes a query that you have
-	/// built up in the object in some way. (For instance, via the
-	/// insert() method, or by using the object's stream interface.) You
-	/// can also pass the function an std::string containing a SQL query,
-	/// a SQLQueryParms object, or as many as 12 SQLStrings. The latter
-	/// two (or is it 13?) overloads are for filling out template queries.
+	/// This overloaded version of execute() simply executes the query
+	/// that you have built up in the object in some way. (For instance,
+	/// via the insert() method, or by using the object's stream
+	/// interface.)
 	///
 	/// \return ResNSel status information about the query
 	///
 	/// \sa exec(), store(), storein(), and use()
 	ResNSel execute() { return execute(def); }
 
+	/// \brief Execute query in a C++ string
+	///
+	/// Executes the query immediately, and returns the results.
+	ResNSel execute(const char* str);
+
 	/// \brief Execute a query that can return a result set
 	/// 
-	/// Unlike store(), this function does not return the result set
-	/// directly.  Instead, it returns an object that can walk through
-	/// the result records one by one.  This is superior to store()
+	/// Use one of the use() overloads if memory efficiency is
+	/// important.  They return an object that can walk through
+	/// the result records one by one, without fetching the entire
+	/// result set from the server.  This is superior to store()
 	/// when there are a large number of results; store() would have to
 	/// allocate a large block of memory to hold all those records,
 	/// which could cause problems.
@@ -205,13 +233,20 @@ public:
 	/// \sa exec(), execute(), store() and storein()
 	ResUse use() { return use(def); }
 
+	/// \brief Execute query in a C++ string
+	///
+	/// Executes the query immediately, and returns an object that
+	/// lets you walk through the result set one row at a time, in
+	/// sequence.  This is more memory-efficient than store().
+	ResUse use(const char* str);
+
 	/// \brief Execute a query that can return a result set
 	///
-	/// This function returns the entire result set immediately.  This
-	/// is useful if you actually need all of the records at once, but
-	/// if not, consider using use() instead, which returns the results
-	/// one at a time.  As a result of this difference, use() doesn't
-	/// need to allocate as much memory as store().
+	/// Use one of the store() overloads to execute a query and retrieve
+	/// the entire result set into memory.  This is useful if you
+	/// actually need all of the records at once, but if not, consider
+	/// using one of the use() methods instead, which returns the results
+	/// one at a time, so they don't allocate as much memory as store().
 	///
 	/// You must use store(), storein() or use() for \c SELECT, \c SHOW,
 	/// \c DESCRIBE and \c EXPLAIN queries.  You can use these functions
@@ -227,6 +262,13 @@ public:
 	///
 	/// \sa exec(), execute(), storein(), and use()
 	Result store() { return store(def); }
+
+	/// \brief Execute query in a C++ string
+	///
+	/// Executes the query immediately, and returns an object that
+	/// contains the entire result set.  This is less memory-efficient
+	/// than use(), but it lets you have random access to the results.
+	Result store(const char* str);
 
 	/// \brief Execute a query, storing the result set in an STL
 	/// sequence container.
