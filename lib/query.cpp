@@ -38,7 +38,8 @@ conn_(q.conn_)
 
 bool Query::exec(const std::string& str)
 {
-	Success = !mysql_query(&conn_->mysql, str.c_str());
+	Success = !mysql_real_query(&conn_->mysql, str.c_str(),
+			str.length());
 	if (!Success && throw_exceptions()) {
 		throw BadQuery(conn_->error());
 	}
