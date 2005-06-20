@@ -1260,14 +1260,52 @@ main(int argc, char *argv[])
 		use the <computeroutput>use()</computeroutput>
 		method instead. This returns a <ulink
 		url="../../refman/html/classmysqlpp_1_1ResUse.html">ResUse</ulink>
-		object, which is similar to Result, but without all of
-		the random-access features. This is because a "use"
-		query tells the database server to send the results
-		back one row at a time, to be processed linearly. It's
-		analogous to a C++ stream's input iterator, as opposed
-		to a random-access iterator that a container like
-		vector offers. By accepting this limitation, you can process
-		arbitrarily large result sets.</para>
+		object, which is similar to Result, but without all
+		of the random-access features. This is because a
+		"use" query tells the database server to send the
+		results back one row at a time, to be processed
+		linearly. It's analogous to a C++ stream's input
+		iterator, as opposed to a random-access iterator
+		that a container like vector offers. By accepting
+		this limitation, you can process arbitrarily large
+		result sets.</para>
+		
+		<para>Here is examples/simple2.cpp:</para>
+
+		<blockquote><programlisting>
+#include "util.h"
+
+#include &lt;mysql++.h&gt;
+
+int
+main(int argc, char *argv[])
+{
+    // Connect to the sample database
+    mysqlpp::Connection con;
+    mysqlpp::NoExceptions ne(con);
+    if (!connect_to_db(argc, argv, con)) {
+        return 1;
+    }
+
+    // Retrieve the entire stock table
+    mysqlpp::Query query = con.query();
+    query &lt;&lt; "select * from stock";
+
+    // Execute the query, but don't save results in memory
+    mysqlpp::ResUse res = query.use();
+
+    // Iterate through result set, printing each row
+    mysqlpp::Row r;
+    while (r = res.fetch_row()) {
+        print_stock_row(r[0], r[1], r[2], r[3], r[4]);
+    }
+
+    return 0;
+}</programlisting></blockquote>
+
+		<para>This example does the same thing as the simple1
+		example, only with a "use" query instead of a "store"
+		query.</para>
 	</sect2>
 
 
