@@ -2683,12 +2683,11 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
             ansi_str, ansi_len, 0, 0);
 }</programlisting></blockquote>
 
-		<para>To see this in action, uncomment
-		"<computeroutput>#define USE_WIN32_UCS2</computeroutput>"
-		at the top of util.cpp, build the example programs, and
-		run simple1 in a console window (a.k.a. "DOS box"). The
-		first item should be "N&uuml;rnberger Brats". If not,
-		see the last paragraph in this section.</para>
+		<para>The examples use this function automatically on
+		Windows systems. To see it in action, run simple1 in
+		a console window (a.k.a. "DOS box"). The first item
+		should be "N&uuml;rnberger Brats". If not, see the
+		last paragraph in this section.</para>
 
 		<para><computeroutput>utf8_to_win32_ansi()</computeroutput>
 		converts <computeroutput>utf8_str</computeroutput>

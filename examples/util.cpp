@@ -33,13 +33,6 @@
 
 using namespace std;
 
-// Uncomment this macro if you want the 'item' strings to be converted
-// from UTF-8 to UCS-2LE (i.e. Win32's native Unicode encoding) using
-// the Win32 API function MultiByteToWideChar().  We use a native Win32
-// function because Unix compatibility isn't necessary: modern Unices
-// handle UTF-8 directly.
-//#define USE_WIN32_UCS2
-
 const char* kpcSampleDatabase = "mysql_cpp_data";
 
 
@@ -52,7 +45,7 @@ const char* kpcSampleDatabase = "mysql_cpp_data";
 // Unicode chapter in the user manual for the reason this function works
 // as it does.
 
-#ifdef USE_WIN32_UCS2
+#ifdef MYSQLPP_PLATFORM_WINDOWS
 static bool
 utf8_to_win32_ansi(const char* utf8_str, char* ansi_str,
 		int ansi_len)
@@ -113,11 +106,11 @@ void
 print_stock_row(const char* item, mysqlpp::longlong num, double weight,
 		double price, const mysqlpp::Date& date)
 {
-	// Output first column, the item string.  The UCS2 option shows
-	// how we can convert the data to get Unicode output on Windows.
-	// On modern Unices, the terminal code interprets UTF-8 data
-	// directly.
-#ifdef USE_WIN32_UCS2
+	// Output first column, the item string.  If this is running on
+	// Windows, convert the first column from UTF-8 to UCS-2.  This
+	// isn't needed on modern Unices, because the terminal code
+	// interprets UTF-8 data directly.
+#ifdef MYSQLPP_PLATFORM_WINDOWS
 	char item_ansi[100];
 	if (utf8_to_win32_ansi(item, item_ansi, sizeof(item_ansi))) {
 		cout << setw(20) << item_ansi << ' ';
@@ -240,4 +233,3 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 		return false;
 	}
 }
-
