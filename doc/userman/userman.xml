@@ -3093,6 +3093,10 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			<computeroutput>Connection</computeroutput>.
 			This also has API effects, detailed in the
 			previous section.</para>
+
+			<para>In several instances, functions that
+			took objects by value now take them by const
+			reference, for efficiency.</para>
 		</sect3>
 	</sect2>
 </sect1>

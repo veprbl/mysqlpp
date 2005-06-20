@@ -498,7 +498,8 @@ public:
 	/// \param r result set that the row comes from
 	/// \param jj length of each item in d
 	/// \param te if true, throw exceptions on errors
-	Row(MYSQL_ROW d, const ResUse* r, unsigned long* jj, bool te = true) :
+	Row(const MYSQL_ROW& d, const ResUse* r, unsigned long* jj,
+			bool te = true) :
 	OptionalExceptions(te),
 	res_(r),
 	initialized_(false)
