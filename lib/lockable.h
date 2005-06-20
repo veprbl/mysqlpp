@@ -53,6 +53,9 @@ protected:
 	{
 	}
 
+	/// \brief Destroy object
+	virtual ~Lockable() { }
+
 	/// \brief Lock the object
 	///
 	/// \return true if object was already locked

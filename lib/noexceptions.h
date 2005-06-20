@@ -59,6 +59,9 @@ public:
 	{
 	}
 
+	/// \brief Destroy object
+	virtual ~OptionalExceptions() { }
+
 	/// \brief Enable exceptions from the object
 	void enable_exceptions() { exceptions_ = true; }
 
