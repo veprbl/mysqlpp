@@ -31,7 +31,7 @@ v2.0 Release Plan
 	get pushed to v2.1, and other items from the following sections
 	might get rolled up into v2.0.
 
-	The planned v2.0 changes are:
+	The remaining changes planned for v2.0 are:
 
 
 	o Fold SQLQuery class into Query.
@@ -67,8 +67,6 @@ v2.0 Release Plan
 	  GCC 4.0 warning.  Also, go through each changed class looking
 	  for any code that allocates memory or other resources, and
 	  make sure they're released in the dtor.
-
-	o Rename mysql_type_info and related classes.
 
 	o Several of the value_list* and related functions in vallist.h
 	  and row.h can be collapsed into one by use of default
