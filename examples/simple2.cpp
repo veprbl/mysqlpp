@@ -28,6 +28,8 @@
 
 #include <mysql++.h>
 
+#include <iostream>
+
 int
 main(int argc, char *argv[])
 {
@@ -44,6 +46,10 @@ main(int argc, char *argv[])
 
 	// Execute the query, but don't save results in memory
 	mysqlpp::ResUse res = query.use();
+	if (!res) {
+		std::cerr << "Result set is empty!" << std::endl;
+		return 1;
+	}
 
 	// Iterate through result set, printing each row
 	mysqlpp::Row r;
