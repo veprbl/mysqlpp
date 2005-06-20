@@ -38,6 +38,8 @@
 #ifndef MYSQLPP_NOEXCEPTIONS_H
 #define MYSQLPP_NOEXCEPTIONS_H
 
+namespace mysqlpp {
+
 class NoExceptions;
 
 /// \brief Interface allowing a class to have optional exceptions.
@@ -122,6 +124,8 @@ private:
 	OptionalExceptions& assoc_;
 	bool exceptions_were_enabled_;
 };
+
+} // end namespace mysqlpp
 
 #endif // MYSQLPP_NOEXCEPTIONS_H
 

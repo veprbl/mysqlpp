@@ -37,6 +37,8 @@
 #ifndef MYSQLPP_LOCKABLE_H
 #define MYSQLPP_LOCKABLE_H
 
+namespace mysqlpp {
+
 /// \brief Interface allowing a class to declare itself as "lockable".
 ///
 /// A class derives from this one to acquire a standard interface for
@@ -72,6 +74,8 @@ protected:
 private:
 	bool locked_;
 };
+
+} // end namespace mysqlpp
 
 #endif // MYSQLPP_LOCKABLE_H
 
