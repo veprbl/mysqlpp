@@ -405,45 +405,20 @@
 
 #include &lt;mysql++.h&gt;
 
-#include &lt;iostream&gt;
-#include &lt;iomanip&gt;
-
-using namespace std;
-
 int
 main(int argc, char *argv[])
 {
-    // Wrap all MySQL++ interactions in one big try block, so any
-    // errors are handled gracefully.
-    try {
-        // Connect to the sample database
-        mysqlpp::Connection con(mysqlpp::use_exceptions);
-        if (!connect_to_db(argc, argv, con)) {
-            return 1;
-        }
+    // Connect to the sample database
+    mysqlpp::Connection con;
+    mysqlpp::NoExceptions ne(con);
+    if (!connect_to_db(argc, argv, con)) {
+        return 1;
+    }
 
-        // Create a query object that is bound to con.
-        mysqlpp::Query query = con.query();
-
-        // Print out the stock table
-        print_stock_table(query);
-    }
-    catch (mysqlpp::BadQuery&amp; er) {
-        // handle any connection or query errors that may come up
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
-        return -1;
-    }
-    catch (mysqlpp::BadConversion&amp; er) {
-        // handle bad conversions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl
-            &lt;&lt; "retrieved data size: " &lt;&lt; er.retrieved
-            &lt;&lt; " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
-        return -1;
-    }
-    catch (exception &amp; er) {
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
-        return -1;
-    }
+    // Retrieve the entire stock table from the database server
+    // we're connected to, and print its contents out.
+    mysqlpp::Query query = con.query();
+    print_stock_table(query);
 
     return 0;
 }</programlisting></blockquote>
@@ -498,21 +473,8 @@ void
 print_stock_row(const char* item, mysqlpp::longlong num, double weight,
         double price, const mysqlpp::Date&amp; date)
 {
-    // Output first column, the item string.  The UCS2 option shows
-    // how we can convert the data to get Unicode output on Windows.
-    // On modern Unices, the terminal code interprets UTF-8 data
-    // directly.
-#ifdef USE_WIN32_UCS2
-    char item_ansi[100];
-    if (utf8_to_win32_ansi(item, item_ansi, sizeof(item_ansi))) {
-        cout &lt;&lt; setw(20) &lt;&lt; item_ansi &lt;&lt; ' ';
-    }
-#else
-    cout &lt;&lt; setw(20) &lt;&lt; item &lt;&lt; ' ';
-#endif
-
-    // Output remaining columns
-    cout &lt;&lt; setw(9) &lt;&lt; num &lt;&lt; ' ' &lt;&lt;
+    cout &lt;&lt; setw(20) &lt;&lt; item &lt;&lt; ' ' &lt;&lt;
+            setw(9) &lt;&lt; num &lt;&lt; ' ' &lt;&lt;
             setw(9) &lt;&lt; weight &lt;&lt; ' ' &lt;&lt;
             setw(9) &lt;&lt; price &lt;&lt; ' ' &lt;&lt;
             date &lt;&lt; endl;
@@ -602,29 +564,29 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection&amp; con,
         return false;
     }
 
-    bool success = false;
     if (argc == 1) {
-        success = con.connect(kdb);
+        con.connect(kdb);
     }
     else if (argc == 2) {
-        success = con.connect(kdb, argv[1]);
+        con.connect(kdb, argv[1]);
     }
     else if (argc == 3) {
-        success = con.connect(kdb, argv[1], argv[2]);
+        con.connect(kdb, argv[1], argv[2]);
     }
     else if (argc == 4) {
-        success = con.connect(kdb, argv[1], argv[2], argv[3]);
+        con.connect(kdb, argv[1], argv[2], argv[3]);
     }
     else if (argc &gt;= 5) {
-        success = con.connect(kdb, argv[1], argv[2], argv[3],
-                atoi(argv[4]));
+        con.connect(kdb, argv[1], argv[2], argv[3], atoi(argv[4]));
     }
 
-    if (!success) {
-        cerr &lt;&lt; "Database connection failed." &lt;&lt; endl &lt;&lt; endl;
+    if (con) {
+        return true;
     }
-
-    return success;
+    else {
+        cerr &lt;&lt; "Database connection failed: " &lt;&lt; con.error() &lt;&lt; endl;
+        return false;
+    }
 }</programlisting></blockquote>
 
 			<para>The only simplication done to the code is to remove the
@@ -919,6 +881,8 @@ sql_create_5(stock,
 int
 main(int argc, char *argv[])
 {
+    // Wrap all MySQL++ interactions in one big try block, so any
+    // errors are handled gracefully.
     try {                       
         // Establish the connection to the database server.
         Connection con(use_exceptions);
