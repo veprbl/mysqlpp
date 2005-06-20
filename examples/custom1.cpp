@@ -58,6 +58,8 @@ sql_create_5(stock,
 int
 main(int argc, char *argv[])
 {
+	// Wrap all MySQL++ interactions in one big try block, so any
+	// errors are handled gracefully.
 	try {						
 		// Establish the connection to the database server.
 		Connection con(use_exceptions);
