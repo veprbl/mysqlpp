@@ -32,25 +32,25 @@ namespace mysqlpp {
 
 Row::size_type Row::size() const
 {
-	return res->num_fields();
+	return res_->num_fields();
 }
 
 const ColData Row::operator [](size_type i) const
 {
-	if (!initialized) {
+	if (!initialized_) {
 		if (throw_exceptions())
 			throw BadQuery("Row not initialized");
 		else
 			return ColData();
 	}
 	
-	return ColData(data.at(i).c_str(), res->types(i), is_nulls[i]);
+	return ColData(data_.at(i).c_str(), res_->types(i), is_nulls_[i]);
 }
 
 const ColData Row::lookup_by_name(const char* i) const
 {
-	int si = res->field_num(std::string(i));
-	if (si < res->num_fields()) {
+	int si = res_->field_num(std::string(i));
+	if (si < res_->num_fields()) {
 		return (*this)[si];
 	}
 	else {

@@ -484,15 +484,13 @@ class Row : public const_subscript_container<Row, ColData,
 		const ColData>, public RowTemplate<Row, ResUse>,
 		public OptionalExceptions
 {
-private:
-	std::vector<std::string> data;
-	std::vector<bool> is_nulls;
-	const ResUse* res;
-	bool initialized;
-
 public:
 	/// \brief Default constructor
-	Row() { }
+	Row() :
+	res_(0),
+	initialized_(false)
+	{
+	}
 	
 	/// \brief Create a row object
 	///
@@ -502,8 +500,8 @@ public:
 	/// \param te if true, throw exceptions on errors
 	Row(MYSQL_ROW d, const ResUse* r, unsigned long* jj, bool te = true) :
 	OptionalExceptions(te),
-	res(r),
-	initialized(false)
+	res_(r),
+	initialized_(false)
 	{
 		if (!d || !r) {
 			if (throw_exceptions()) {
@@ -513,26 +511,26 @@ public:
 				return;
 			}
 		}
-		data.clear();
-		is_nulls.clear();
-		initialized = true;
+		data_.clear();
+		is_nulls_.clear();
+		initialized_ = true;
 		for (unsigned int i = 0; i < size(); i++) {
-			data.insert(data.end(),
+			data_.insert(data_.end(),
 					(d[i] ?  std::string(d[i], jj[i]) : std::string("NULL")));
-			is_nulls.insert(is_nulls.end(), d[i] ? false : true);
+			is_nulls_.insert(is_nulls_.end(), d[i] ? false : true);
 		}
 	}
 
 	/// \brief Destroy object
 	~Row()
 	{
-		data.clear();
-		is_nulls.clear();
-		initialized = false;
+		data_.clear();
+		is_nulls_.clear();
+		initialized_ = false;
 	}
 
 	/// \brief Get a const reference to this object.
-	const Row & self() const
+	const Row& self() const
 	{
 		return *this;
 	}
@@ -546,7 +544,7 @@ public:
 	/// \brief Get a reference to our parent class.
 	const ResUse& parent() const
 	{
-		return *res;
+		return *res_;
 	}
 
 	/// \brief Get the number of fields in the row.
@@ -598,14 +596,20 @@ public:
 	/// check for out-of-bounds array indices.
 	const char* raw_data(int i) const
 	{
-		return data[i].data();
+		return data_[i].data();
 	}
 
 	/// \brief Returns true if there is data in the row.
 	operator bool() const
 	{
-		return data.size();
+		return data_.size();
 	}
+
+private:
+	std::vector<std::string> data_;
+	std::vector<bool> is_nulls_;
+	const ResUse* res_;
+	bool initialized_;
 };
 
 } // end namespace mysqlpp
