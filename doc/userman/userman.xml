@@ -2782,12 +2782,12 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 
 <?hard-pagebreak?>
 <sect1>
-	<title>API and ABI Changes</title>
+	<title>Incompatible Library Changes</title>
 
 	<para>This chapter documents those library changes since
 	the epochal 1.7.9 release that break end-user programs. You
 	can dig this stuff out of the ChangeLog, but the ChangeLog
-	focuses more explaining and justifying the facets of each
+	focuses more on explaining and justifying the facets of each
 	change, while this section focuses on how to migrate your
 	code between these library versions. Since pure additions do
 	not break programs, those changes are still documented only
@@ -2996,6 +2996,14 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			<computeroutput>Query</computeroutput> has
 			these same methods, so use them instead to
 			test for query success.</para>
+
+			<para>Removed
+			<computeroutput>ResUse::eof()</computeroutput>,
+			as it wraps a MySQL C API function that has
+			long been deprecated, and it is not in fact
+			necessary. Cast the result object to bool
+			to test whether the result set is empty
+			or not.</para>
 		</sect3>
 	</sect2>
 

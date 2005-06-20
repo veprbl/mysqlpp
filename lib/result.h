@@ -136,12 +136,6 @@ public:
 		return Row(row, this, length, throw_exceptions());
 	}
 
-	/// \brief Wraps mysql_eof() in MySQL C API.
-	bool eof() const
-	{
-		return mysql_eof(result_) != 0;
-	}
-
 	/// \brief Wraps mysql_fetch_lengths() in MySQL C API.
 		unsigned long *fetch_lengths() const {
 		return mysql_fetch_lengths(result_);
