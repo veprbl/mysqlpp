@@ -52,6 +52,9 @@ struct mysql_dt_base
 		return stream2string<std::string>(*this);
 	}
 #endif // !defined(DOXYGEN_IGNORE)
+
+	/// \brief Destroy object
+	virtual ~mysql_dt_base() { }
 };
 
 
@@ -63,6 +66,9 @@ struct mysql_dt_base
 /// supported comparison method.
 template <class T> struct DTbase
 {
+	/// \brief Destroy object
+	virtual ~DTbase() { }
+
 	/// \brief Compare this object to another of the same type
 	///
 	/// Returns < 0 if this object is "before" the other, 0 of they are
@@ -92,6 +98,7 @@ template <class T> struct DTbase
 /// \brief Base class of Date
 struct mysql_date : virtual public mysql_dt_base
 {
+public:
 	/// \brief the year
 	///
 	/// No surprises; the year 2005 is stored as the integer 2005.
@@ -113,6 +120,21 @@ struct mysql_date : virtual public mysql_dt_base
 	/// \brief Parse a MySQL date string into this object.
 	cchar* convert(cchar*);
 
+	/// \brief Default constructor
+	mysql_date() : year(0), month(0), day(0) { }
+
+	/// \brief Initialize object
+	mysql_date(short int y, tiny_int m, tiny_int d) :
+	mysql_dt_base(),
+	year(y),
+	month(m),
+	day(d)
+	{
+	}
+	
+	/// \brief Destroy object
+	virtual ~mysql_date() { }
+
 protected:
 	/// \brief Compare this date to another.
 	///
@@ -133,14 +155,17 @@ protected:
 struct Date : public mysql_date, public DTbase<Date>
 {
 	/// \brief Default constructor
-	Date() { };
+	Date() :
+	mysql_date(0, 0, 0)
+	{
+	}
 
 	/// \brief Initialize object as a copy of another Date
-	Date(const Date& other)
+	Date(const Date& other) :
+	mysql_dt_base(),
+	mysql_date(other.year, other.month, other.day),
+	DTbase<Date>()
 	{
-		year = other.year;
-		month = other.month;
-		day = other.day;
 	}
 
 	/// \brief Initialize object from a MySQL date string
@@ -182,6 +207,7 @@ inline std::ostream& operator <<(std::ostream& s, const Date& d)
 
 struct mysql_time : virtual public mysql_dt_base
 {
+public:
 	/// \brief hour, 0-23
 	tiny_int hour;
 
@@ -200,6 +226,21 @@ struct mysql_time : virtual public mysql_dt_base
 
 	/// \brief Parse a MySQL time string into this object.
 	cchar* convert(cchar*);
+
+	/// \brief Default constructor
+	mysql_time() : hour(0), minute(0), second(0) { }
+
+	/// \brief Initialize object
+	mysql_time(tiny_int h, tiny_int m, tiny_int s) :
+	mysql_dt_base(),
+	hour(h),
+	minute(m),
+	second(s)
+	{
+	}
+
+	/// \brief Destroy object
+	virtual ~mysql_time() { }
 
 protected:
 	/// \brief Compare this time to another.
@@ -220,14 +261,17 @@ protected:
 struct Time : public mysql_time, public DTbase<Time>
 {
 	/// \brief Default constructor
-	Time() { };
+	Time() :
+	mysql_time(0, 0, 0)
+	{
+	}
 
 	/// \brief Initialize object as a copy of another Time
-	Time(const Time& other)
+	Time(const Time& other) :
+	mysql_dt_base(),
+	mysql_time(other.hour, other.minute, other.second),
+	DTbase<Time>()
 	{
-		hour = other.hour;
-		minute = other.minute;
-		second = other.second;
 	}
 
 	/// \brief Initialize object from a MySQL time string
@@ -281,14 +325,12 @@ struct DateTime : public mysql_date, public mysql_time,
 	DateTime() { }
 	
 	/// \brief Initialize object as a copy of another Date
-	DateTime(const DateTime& other)
+	DateTime(const DateTime& other) :
+	mysql_dt_base(),
+	mysql_date(other.year, other.month, other.day),
+	mysql_time(other.hour, other.minute, other.second),
+	DTbase<DateTime>()
 	{
-		year = other.year;
-		month = other.month;
-		day = other.day;
-		hour = other.hour;
-		minute = other.minute;
-		second = other.second;
 	}
 
 	/// \brief Initialize object from a MySQL date-and-time string

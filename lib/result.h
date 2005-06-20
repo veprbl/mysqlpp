@@ -92,6 +92,7 @@ public:
 	
 	/// \brief Create a copy of another ResUse object
 	ResUse(const ResUse& other) :
+	OptionalExceptions(),
 	initialized_(false)
 	{
 		copy(other);

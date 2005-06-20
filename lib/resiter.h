@@ -75,6 +75,9 @@ public:
 	typedef DiffType difference_type;	///< for index differences
 	typedef SizeType size_type;			///< for returned sizes
 
+	/// \brief Destroy object
+	virtual ~const_subscript_container() { }
+
 	/// \brief Return count of elements in container
 	virtual size_type size() const = 0;	
 

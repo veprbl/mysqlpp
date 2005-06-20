@@ -31,6 +31,7 @@ namespace mysqlpp {
 Query::Query(const Query& q) :
 SQLQuery(q),
 OptionalExceptions(q.exceptions()),
+Lockable(),
 conn_(q.conn_)
 {
 }
