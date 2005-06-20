@@ -108,25 +108,6 @@ v2.0 Release Plan
 	  default library symlink scheme to handle things correctly if
 	  libraries from the old scheme are still present.
 
-	o Add a userman section severely summarizing ChangeLog, with a
-	  focus on API and ABI breakages.
-
-	o Automatically define USE_WIN32_UCS2 in util.cpp when platform.h
-	  detects a Windows compiler.  Test with VC++ and Cygwin in
-	  -mno-cygwin mode.
-
-	o Remove the exception handling stuff from all the simple*
-	  examples, so they earn their name.  Newbies get thrown into the
-	  deep end of the pool in simple1.cpp in the userman right now...
-
-	o With previous change done, promote existing "notes on
-	  exceptions" section of tutorial into a new section, or even
-	  a new chapter.
-
-	o Consider splitting "The Basics" section of tutorial into two
-	  parts, with the new EH discussion separating discussion of
-	  the examples that use EH and those that don't.
-
 	o Add thread support to examples/Makefile.simple.  Commented-out
 	  by default, but available if required.
 
