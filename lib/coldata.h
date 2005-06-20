@@ -205,6 +205,9 @@ public:
 	/// \brief Converts this object's string data to a double
 	operator double() const { return conv(static_cast<double>(0)); }
 	
+	/// \brief Converts this object's string data to a bool
+	operator bool() const { return conv(0); }
+
 	template <class T, class B> operator Null<T, B>() const;
 };
 
