@@ -159,8 +159,10 @@ public:
 
 	/// \brief Default constructor
 	///
-	/// This ctor doesn't initialize any of the object's data members!
-	Null()
+	/// "data" member is left uninitialized by this ctor, because we
+	/// don't know what to initialize it to.
+	Null() :
+	is_null(false)
 	{
 	}
 
@@ -171,7 +173,7 @@ public:
 	/// rather data which \e can \e be null.  The distinction is
 	/// necessary because 'NULL' is an optional attribute of SQL
 	/// columns.
-	Null(Type x) :
+	Null(const Type& x) :
 	data(x),
 	is_null(false)
 	{

@@ -81,8 +81,6 @@ v2.0 Release Plan
 	o Try to collapse all SQLQueryParams::set() overloads into
 	  a single member by suitable use of default parameters.
 
-	o Null's copy ctor should take its parameter by reference.
-
 	o Remove the field name form of field_list().  It's pretty silly:
 	  it takes a field name as a paramter, and returns a field name!
 	  True, there's a type conversion going on here, but...
