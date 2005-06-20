@@ -155,7 +155,7 @@ Result Query::store(const char* str)
 		MYSQL_RES* res = mysql_store_result(&conn_->mysql);
 		if (res) {
 			unlock();
-			return Result(res);
+			return Result(res, throw_exceptions());
 		}
 	}
 	unlock();
