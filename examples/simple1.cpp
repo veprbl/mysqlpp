@@ -29,45 +29,20 @@
 
 #include <mysql++.h>
 
-#include <iostream>
-#include <iomanip>
-
-using namespace std;
-
 int
 main(int argc, char *argv[])
 {
-	// Wrap all MySQL++ interactions in one big try block, so any
-	// errors are handled gracefully.
-	try {
-		// Connect to the sample database
-		mysqlpp::Connection con(mysqlpp::use_exceptions);
-		if (!connect_to_db(argc, argv, con)) {
-			return 1;
-		}
+	// Connect to the sample database
+	mysqlpp::Connection con;
+	mysqlpp::NoExceptions ne(con);
+	if (!connect_to_db(argc, argv, con)) {
+		return 1;
+	}
 
-		// Retrieve the entire stock table from the database server
-		// we're connected to, and print its contents out.
-		mysqlpp::Query query = con.query();
-		print_stock_table(query);
-	}
-	catch (mysqlpp::BadQuery& er) {
-		// Handle any connection or query errors that
-		cerr << "Error: " << er.what() << endl;
-		return -1;
-	}
-	catch (mysqlpp::BadConversion& er) {
-		// Handle bad conversions
-		cerr << "Error: " << er.what() << "\"." << endl <<
-				"retrieved data size: " << er.retrieved <<
-				" actual data size: " << er.actual_size << endl;
-		return -1;
-	}
-	catch (exception& er) {
-		// Catch-all for any other standard C++ exceptions
-		cerr << "Error: " << er.what() << endl;
-		return -1;
-	}
+	// Retrieve the entire stock table from the database server
+	// we're connected to, and print its contents out.
+	mysqlpp::Query query = con.query();
+	print_stock_table(query);
 
 	return 0;
 }
