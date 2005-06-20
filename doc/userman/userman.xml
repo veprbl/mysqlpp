@@ -3097,6 +3097,13 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			<para>In several instances, functions that
 			took objects by value now take them by const
 			reference, for efficiency.</para>
+
+			<para>Reordered member variable declarations
+			in some classes. The most common instance is
+			when the private section was declared before
+			the public section; it is now the opposite
+			way. This changes the object's layout in
+			memory.</para>
 		</sect3>
 	</sect2>
 </sect1>

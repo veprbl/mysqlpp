@@ -68,9 +68,7 @@ v2.0 Release Plan
 	  for any code that allocates memory or other resources, and
 	  make sure they're released in the dtor.
 
-	o Collapse multiple public and private sections of class
-	  mysql_type_info into one of each.  Also, consider renaming
-	  that class.
+	o Rename mysql_type_info and related classes.
 
 	o Several of the value_list* and related functions in vallist.h
 	  and row.h can be collapsed into one by use of default

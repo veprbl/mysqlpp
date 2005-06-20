@@ -48,10 +48,10 @@ class mysql_ti_sql_type_info_lookup;
 
 class mysql_ti_sql_type_info
 {
+private:
 	friend class mysql_type_info;
 	friend class mysql_ti_sql_type_info_lookup;
 
-private:
 	const char* _sql_name;
 	const std::type_info* _c_type;
 	const unsigned char _base_type;
@@ -89,9 +89,9 @@ struct type_info_cmp
 
 class mysql_ti_sql_type_info_lookup
 {
+private:
 	friend class mysql_type_info;
 
-private:
 	typedef mysql_ti_sql_type_info sql_type_info;
 
 	std::map<const std::type_info*, unsigned char, type_info_cmp> _map;
@@ -113,51 +113,6 @@ private:
 /// Class to hold basic type information for mysqlpp::ColData.
 class mysql_type_info
 {
-private:
-	typedef mysql_ti_sql_type_info sql_type_info;
-	typedef mysql_ti_sql_type_info_lookup sql_type_info_lookup;
-
-	static const sql_type_info types[62];
-
-	static const unsigned char offset = 0;
-	static const unsigned char unsigned_offset = 21;
-	static const unsigned char null_offset = 31;
-	static const unsigned char unsigned_null_offset = 52;
-
-	static const sql_type_info_lookup lookups;
-
-	/// \brief Return an index into mysql_type_info::types array given
-	/// MySQL type information.
-	///
-	/// This function is used in mapping from MySQL type information
-	/// (a type enum, and flags indicating whether it is unsigned and
-	/// whether it can be 'null') to the closest C++ types available
-	/// within MySQL++.  Notice that nulls have to be handled specially:
-	/// the SQL null concept doesn't map directly onto the C++ type
-	/// system.  See null.h for details.
-	///
-	/// \param t MySQL C API type constant, from mysql_com.h
-	/// \param _unsigned if true, indicates the unsigned variant of a
-	/// MySQL type
-	/// \param _null if true, indicates the variant of the MySQL type
-	/// that can also hold an SQL 'null' instead of regular data.
-	static unsigned char type(enum_field_types t, bool _unsigned,
-			bool _null = false);
-
-public:
-	/// \brief The internal constant we use for our string type.
-	///
-	/// We expose this because other parts of MySQL++ need to know
-	/// what the string constant is at the moment.
-	static const unsigned char string_type = 20;
-
-	unsigned int _length;		///< field length, from MYSQL_FIELD
-	unsigned int _max_length;	///< max data length, from MYSQL_FIELD
-
-private:
-	unsigned char num;
-	inline const sql_type_info& deref() const;
-
 public:
 	/// \brief Default constructor
 	mysql_type_info()
@@ -298,6 +253,49 @@ public:
 	{
 		return num < b.num;
 	}
+
+	/// \brief The internal constant we use for our string type.
+	///
+	/// We expose this because other parts of MySQL++ need to know
+	/// what the string constant is at the moment.
+	static const unsigned char string_type = 20;
+
+	unsigned int _length;		///< field length, from MYSQL_FIELD
+	unsigned int _max_length;	///< max data length, from MYSQL_FIELD
+
+private:
+	typedef mysql_ti_sql_type_info sql_type_info;
+	typedef mysql_ti_sql_type_info_lookup sql_type_info_lookup;
+
+	static const sql_type_info types[62];
+
+	static const unsigned char offset = 0;
+	static const unsigned char unsigned_offset = 21;
+	static const unsigned char null_offset = 31;
+	static const unsigned char unsigned_null_offset = 52;
+
+	static const sql_type_info_lookup lookups;
+
+	/// \brief Return an index into mysql_type_info::types array given
+	/// MySQL type information.
+	///
+	/// This function is used in mapping from MySQL type information
+	/// (a type enum, and flags indicating whether it is unsigned and
+	/// whether it can be 'null') to the closest C++ types available
+	/// within MySQL++.  Notice that nulls have to be handled specially:
+	/// the SQL null concept doesn't map directly onto the C++ type
+	/// system.  See null.h for details.
+	///
+	/// \param t MySQL C API type constant, from mysql_com.h
+	/// \param _unsigned if true, indicates the unsigned variant of a
+	/// MySQL type
+	/// \param _null if true, indicates the variant of the MySQL type
+	/// that can also hold an SQL 'null' instead of regular data.
+	static unsigned char type(enum_field_types t, bool _unsigned,
+			bool _null = false);
+
+	unsigned char num;
+	inline const sql_type_info& deref() const;
 };
 
 inline const mysql_type_info::sql_type_info& mysql_type_info::deref() const
