@@ -161,25 +161,24 @@ print_stock_rows(mysqlpp::Result& res)
 }
 
 
-//// print_stock_table /////////////////////////////////////////////////
-// Print the entire contents of the example 'stock' table.
+//// get_stock_table ///////////////////////////////////////////////////
+// Retreive the entire contents of the example 'stock' table.
 
 void
-print_stock_table(mysqlpp::Query& query)
+get_stock_table(mysqlpp::Query& query, mysqlpp::Result& res)
 {
-	// You must reset the query object when re-using it.
+	// Reset the query object, in case we're re-using it.
 	query.reset();
 
 	// You can write to the query object like you would any ostream.
 	query << "select * from stock";
 
-	// Show the query string.  If you do this, you have to do it before
-	// you execute() or store() or use() it.
+	// Show the query string.  If you call preview(), it must be before
+	// you call execute() or store() or use().
 	cout << "Query: " << query.preview() << endl;
 
-	// Execute the query and display the result set.
-	mysqlpp::Result res = query.store();
-	print_stock_rows(res);
+	// Execute the query, storing the results in memory.
+	res = query.store();
 }
 
 

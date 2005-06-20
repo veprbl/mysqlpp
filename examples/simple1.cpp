@@ -42,7 +42,9 @@ main(int argc, char *argv[])
 	// Retrieve the entire stock table from the database server
 	// we're connected to, and print its contents out.
 	mysqlpp::Query query = con.query();
-	print_stock_table(query);
+	mysqlpp::Result res;
+	get_stock_table(query, res);
+	print_stock_rows(res);
 
 	return 0;
 }

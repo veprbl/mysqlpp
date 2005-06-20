@@ -93,7 +93,8 @@ main(int argc, char *argv[])
 		query.execute();
 
 		// Print the new table contents.
-		print_stock_table(query);
+		get_stock_table(query, res);
+		print_stock_rows(res);
 	}
 	catch (BadQuery& er) {
 		// Handle any connection or query errors
