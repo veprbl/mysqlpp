@@ -113,7 +113,8 @@ public:
 	///
 	/// This is not a thin wrapper. It does a lot of error checking before
 	/// returning the mysqlpp::Row object containing the row data.
-	Row fetch_row() {
+	Row fetch_row()
+	{
 		if (!result_) {
 			if (throw_exceptions()) {
 				throw BadQuery("Results not fetched");
@@ -123,7 +124,7 @@ public:
 			}
 		}
 		MYSQL_ROW row = mysql_fetch_row(result_);
-		unsigned long *length = mysql_fetch_lengths(result_);
+		unsigned long* length = mysql_fetch_lengths(result_);
 		if (!row || !length) {
 			if (throw_exceptions()) {
 				throw BadQuery("Bad row");
