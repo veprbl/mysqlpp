@@ -414,7 +414,9 @@ main(int argc, char *argv[])
     // Retrieve the entire stock table from the database server
     // we're connected to, and print its contents out.
     mysqlpp::Query query = con.query();
-    print_stock_table(query);
+    mysqlpp::Result res;
+    get_stock_table(query, res);
+    print_stock_rows(res);
 
     return 0;
 }</programlisting></blockquote>
@@ -499,25 +501,24 @@ print_stock_rows(mysqlpp::Result&amp; res)
 }
 
 
-//// print_stock_table /////////////////////////////////////////////////
-// Print the entire contents of the example 'stock' table.
+//// get_stock_table ///////////////////////////////////////////////////
+// Retreive the entire contents of the example 'stock' table.
 
 void
-print_stock_table(mysqlpp::Query&amp; query)
+get_stock_table(mysqlpp::Query&amp; query, mysqlpp::Result&amp; res)
 {
-    // You must reset the query object when re-using it.
+    // Reset the query object, in case we're re-using it.
     query.reset();
 
     // You can write to the query object like you would any ostream.
     query &lt;&lt; "select * from stock";
 
-    // Show the query string.  If you do this, you have to do it before
-    // you execute() or store() or use() it.
+    // Show the query string.  If you call preview(), it must be before
+    // you call execute() or store() or use().
     cout &lt;&lt; "Query: " &lt;&lt; query.preview() &lt;&lt; endl;
 
-    // Execute the query and display the result set.
-    mysqlpp::Result res = query.store();
-    print_stock_rows(res);
+    // Execute the query, storing the results in memory.
+    res = query.store();
 }
 
 
@@ -898,7 +899,9 @@ main(int argc, char *argv[])
         query.execute();
 
         // Print the new table.
-        print_stock_table(query);
+        Result res;
+        get_stock_table(query, res);
+        print_stock_rows(res);
     }
     catch (BadQuery&amp; er) {
         // Handle any connection or query errors
@@ -1010,7 +1013,8 @@ main(int argc, char *argv[])
         query.execute();
 
         // Print the new table contents.
-        print_stock_table(query);
+        get_stock_table(query, res);
+        print_stock_rows(res);
     }
     catch (BadQuery&amp; er) {
         // Handle any connection or query errors
