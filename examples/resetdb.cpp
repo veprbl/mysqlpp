@@ -38,78 +38,65 @@ using namespace std;
 int
 main(int argc, char *argv[])
 {
-	mysqlpp::Connection con(mysqlpp::use_exceptions);
+	// Connect to database server
+	mysqlpp::Connection con;
 	try {
 		cout << "Connecting to database server..." << endl;
-		if (!connect_to_db(argc, argv, con, "")) {
-			return 1;
-		}
+		connect_to_db(argc, argv, con, "");
 	}
 	catch (exception& er) {
 		cerr << "Connection failed: " << er.what() << endl;
 		return 1;
 	}
 	
+	// Create new sample database, or re-create it.  We suppress
+	// exceptions, because it's not an error if DB doesn't yet exist.
 	bool new_db = false;
-	mysqlpp::Query query = con.query();	// create a new query object
-	try {
-		// Try to attach to existing sample database.
-		con.select_db(kpcSampleDatabase);
-	}
-	catch (...) {
-		// Couldn't switch to the sample database, so set the flag that
-		// will recreate it.  We don't do that here in the catch block
-		// because some compilers don't allow nested exception handlers.
-		new_db = true;
-	}
-
-	if (new_db) {
-		// Sample database doesn't exist yet, so create it.
-		try {
-			cout << "Creating empty sample database..." << endl;
-			con.create_db(kpcSampleDatabase);
-			con.select_db(kpcSampleDatabase);
-			new_db = true;
-		}
-		catch (mysqlpp::BadQuery& err) {
-			cerr << "Error: " << err.what() << endl;
-			return 1;
-		}
-	}
-	else {
-		// Sample database must already exist, so drop the sample table.
-		// If this doesn't succeed, assume that the database exists but
-		// the table does not for some reason.
-		try {
+	{
+		mysqlpp::NoExceptions ne(con);
+		mysqlpp::Query query = con.query();
+		if (con.select_db(kpcSampleDatabase)) {
+			// Toss old table, if it exists.  If it doesn't, we don't
+			// really care, as it'll get created next.
 			cout << "Dropping existing stock table..." << endl;
 			query.execute("drop table stock");
 		}
-		catch (...) {
+		else {
+			// Database doesn't exist yet, so create and select it.
+			if (con.create_db(kpcSampleDatabase) &&
+					con.select_db(kpcSampleDatabase)) {
+				new_db = true;
+			}
+			else {
+				cerr << "Error creating DB: " << con.error() << endl;
+				return 1;
+			}
 		}
 	}
 
+	// Create sample data table within sample database.
 	cout << "Creating new stock table..." << endl;
 	try {
 		// Send the query to create the table and execute it.
-		query.reset();
-		query << "create table stock  (item char(20) not null, num bigint,"
-			<< "weight double, price double, sdate date)";
+		mysqlpp::Query query = con.query();
+		query << "create table stock (item char(20) not null, "
+				"num bigint, weight double, price double, sdate date)";
 		query.execute();
 
-		// Set up the template query to insert the data.  The parse
+		// Set up the template query to insert the data.  The parse()
 		// call tells the query object that this is a template and
 		// not a literal query string.
 		query << "insert into %5:table values (%0q, %1q, %2, %3, %4q)";
 		query.parse();
 
-		// This is setting the parameter named table to stock.
+		// Set the template query parameter "table" to "stock".
 		query.def["table"] = "stock";
 
-		// The last parameter "table" is not specified here.  Thus the
-		// default value for "table" is used, which is "stock".  Also
-		// notice that the first row is a UTF-8 encoded Unicode string!
-		// All you have to do to store Unicode data in recent versions
-		// of MySQL is use UTF-8 encoding.
+		// Notice that we don't give a sixth parameter in these calls,
+		// so the default value of "stock" is used.  Also notice that
+		// the first row is a UTF-8 encoded Unicode string!  All you
+		// have to do to store Unicode data in recent versions of MySQL
+		// is use UTF-8 encoding.
 		cout << "Populating stock table..." << endl;
 		query.execute("Nürnberger Brats", 92, 1.5, 8.79, "2005-03-10");
 		query.execute("Pickle Relish", 87, 1.5, 1.75, "1998-09-04");
@@ -120,15 +107,15 @@ main(int argc, char *argv[])
 				" sample database successfully." << endl;
 	}
 	catch (mysqlpp::BadQuery& er) {
-		// Handle any connection or query errors
-		cerr << "Error: " << er.what() << endl;
+		// Handle any SQL errors
+		cerr << "Query error: " << er.what() << endl;
 		return 1;
 	}
 	catch (mysqlpp::BadConversion& er) {
 		// Handle bad conversions
-		cerr << "Error: " << er.what() << "\"." << endl
-			<< "retrieved data size: " << er.retrieved
-			<< " actual data size: " << er.actual_size << endl;
+		cerr << "Error: " << er.what() << endl <<
+				"\tretrieved data size: " << er.retrieved <<
+				", actual size: " << er.actual_size << endl;
 		return 1;
 	}
 	catch (exception& er) {
