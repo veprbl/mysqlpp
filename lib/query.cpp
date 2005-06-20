@@ -115,7 +115,7 @@ ResUse Query::use(const char* str)
 		MYSQL_RES* res = mysql_use_result(&conn_->mysql);
 		if (res) {
 			unlock();
-			return ResUse(res, conn_);
+			return ResUse(res, conn_, throw_exceptions());
 		}
 	}
 	unlock();
