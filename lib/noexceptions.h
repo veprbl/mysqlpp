@@ -68,19 +68,15 @@ public:
 	/// \brief Disable exceptions from the object
 	void disable_exceptions() { exceptions_ = false; }
 
+	/// \brief Returns true if exceptions are enabled
+	bool throw_exceptions() const { return exceptions_; }
+
 protected:
 	/// \brief Sets the exception state to a particular value
 	///
 	/// This method is protected because it is only intended for use by
 	/// subclasses' copy constructors and the like.
 	void set_exceptions(bool e) { exceptions_ = e; }
-
-	/// \brief Returns true if exceptions are enabled
-	///
-	/// This method is protected only because the library currently
-	/// only requires this level of visibility.  It may be made public
-	/// at a later date.
-	bool throw_exceptions() const { return exceptions_; }
 
 	// NoExceptions needs to be our friend to access the protected
 	// functions above.
