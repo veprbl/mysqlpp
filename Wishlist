@@ -47,9 +47,10 @@ v2.0 Release Plan
 	  as well.  (This might end up being pushed into v2.1, if it's
 	  too tough.)
 
-	o Give combined Query+SQLQuery class all the members it needs to
-	  look like a std::stringstream.   Use a private stringstream
-	  data member to hold the query-under-construction.
+	o Derive combined Query+SQLQuery class from something higher up the
+	  IOStreams hierarchy, something that's meant to be subclassed.  Do
+	  our own buffer management, possibly with a basic_stringbuf data
+	  member.
 
 	o There are comments in sql_query.h saying "only here temporary".
 	  They've been there for literally years.  Time to decide what
@@ -71,10 +72,6 @@ v2.0 Release Plan
 	  mysql_type_info into one of each.  Also, consider renaming
 	  that class.
 
-	o Collapse store(string&) and store(string&, bool) into a single
-	  function by making bool argument default to false.  Same for
-	  use() and execute().
-
 	o Several of the value_list* and related functions in vallist.h
 	  and row.h can be collapsed into one by use of default
 	  parameters.  A conservative refactoring wouldn't change the
@@ -83,9 +80,6 @@ v2.0 Release Plan
 
 	o Try to collapse all SQLQueryParams::set() overloads into
 	  a single member by suitable use of default parameters.
-
-	o Remove simp_list_b from vallist.h.  It's not used within the
-	  library, and it doesn't seem to be useful for end-user code.
 
 	o Null's copy ctor should take its parameter by reference.
 

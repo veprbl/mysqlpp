@@ -372,32 +372,6 @@ std::ostream& operator <<(std::ostream& o,
 }
 
 
-#if !defined(DOXYGEN_IGNORE)
-// Doxygen will not generate documentation for this section.
-
-template <class Iter>
-class simp_list_b
-{
-public:
-	Iter _begin;
-	Iter _end;
-
-public:
-	typedef Iter const_iterator;
-
-	simp_list_b(Iter b, Iter e) :
-	_begin(b),
-	_end(e)
-	{
-	}
-	
-	Iter begin() const { return _begin; }
-	Iter end() const { return _end; }
-};
-
-#endif // !defined(DOXYGEN_IGNORE)
-
-
 /// \brief Create a vector of bool with the given arguments as values.
 ///
 /// This function takes up to 13 bools, with the size parameter
