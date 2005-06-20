@@ -217,28 +217,28 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 		return false;
 	}
 
-	bool success = false;
 	if (argc == 1) {
-		success = con.connect(kdb);
+		con.connect(kdb);
 	}
 	else if (argc == 2) {
-		success = con.connect(kdb, argv[1]);
+		con.connect(kdb, argv[1]);
 	}
 	else if (argc == 3) {
-		success = con.connect(kdb, argv[1], argv[2]);
+		con.connect(kdb, argv[1], argv[2]);
 	}
 	else if (argc == 4) {
-		success = con.connect(kdb, argv[1], argv[2], argv[3]);
+		con.connect(kdb, argv[1], argv[2], argv[3]);
 	}
 	else if (argc >= 5) {
-		success = con.connect(kdb, argv[1], argv[2], argv[3],
-				atoi(argv[4]));
+		con.connect(kdb, argv[1], argv[2], argv[3], atoi(argv[4]));
 	}
 
-	if (!success) {
-		cerr << "Database connection failed." << endl << endl;
+	if (con) {
+		return true;
 	}
-
-	return success;
+	else {
+		cerr << "Database connection failed: " << con.error() << endl;
+		return false;
+	}
 }
 
