@@ -48,8 +48,8 @@ class Lockable
 {
 protected:
 	/// \brief Default constructor
-	Lockable(bool l = false) :
-	locked_(true)
+	Lockable(bool lck = false) :
+	locked_(lck)
 	{
 	}
 
