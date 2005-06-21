@@ -38,6 +38,7 @@ info(q->info())
 {
 }
 
+
 ResUse::ResUse(MYSQL_RES* result, Connection* c, bool te) :
 OptionalExceptions(te),
 conn_(c),
@@ -55,9 +56,13 @@ fields_(this)
 	if (names_) {
 		types_ = new FieldTypes(this);
 	}
+	else {
+		types_ = 0;
+	}
 	table_ = fields(0).table;
 	initialized_ = true;
 }
+
 
 ResUse::~ResUse()
 {
@@ -66,6 +71,7 @@ ResUse::~ResUse()
 	}
 	purge();
 }
+
 
 void ResUse::copy(const ResUse& other)
 {

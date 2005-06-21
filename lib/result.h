@@ -99,7 +99,7 @@ public:
 	}
 	
 	/// \brief Destroy object
-	~ResUse();
+	virtual ~ResUse();
 
 	/// \brief Copy another ResUse object's data into this object
 	ResUse& operator =(const ResUse& other);
@@ -175,14 +175,13 @@ public:
 			mysql_free_result(result_);
 			result_ = 0;
 		}
-		if (names_) {
-			delete names_;
-			names_ = 0;
-		}
-		if (types_) {
-			delete types_;
-			types_ = 0;
-		}
+
+		delete names_;
+		names_ = 0;
+
+		delete types_;
+		types_ = 0;
+
 		table_.erase();
 	}
 
@@ -362,9 +361,8 @@ public:
 		conn_ = 0;
 	}
 
-	virtual ~Result()
-	{
-	}
+	/// \brief Destroy result set
+	virtual ~Result() { }
 
 	/// \brief Wraps mysql_fetch_row() in MySQL C API.
 	///
