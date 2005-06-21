@@ -67,5 +67,5 @@ load_file_DEPENDENCIES = $(MYSQLPP_LIB)
 tags: ctags
 
 ctags:
-	ctags *.cpp *.h
+	( cd .. && make ctags )
 

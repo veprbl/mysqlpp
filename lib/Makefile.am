@@ -50,10 +50,10 @@ custom.h custom-macros.h: custom.pl
 distclean-local:
 	rm -f custom.h custom-macros.h
 
-ctags:
-	ctags *.cpp *.h
-
 tags: ctags
+
+ctags:
+	( cd .. && make ctags )
 
 refman:
 	rm -rf ../doc/refman/html ../doc/refman/latex

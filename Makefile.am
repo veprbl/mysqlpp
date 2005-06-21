@@ -71,3 +71,10 @@ doc/mysqlpp-refman.pdf: lib/*.h
 doc/mysqlpp-userman.pdf: doc/userman/userman.xml
 	( cd doc/userman ; make && make pdf )
 
+tags: ctags
+
+ctags:
+	find . -name TAGS -o -name tags -exec rm {} \;
+	ctags `pwd`/*/*.cpp `pwd`/*/*.h
+	find . -type d -mindepth 1 -exec ln tags {} \;
+
