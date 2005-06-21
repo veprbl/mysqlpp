@@ -60,10 +60,6 @@ v2.0 Release Plan
 
 	o Fold RowTemplate class into Row.
 
-	o Remove the field name form of field_list().  It's pretty silly:
-	  it takes a field name as a paramter, and returns a field name!
-	  True, there's a type conversion going on here, but...
-
 	o Swap the definitions of Row::operator[] and lookup_by_name().
 	  That is, have the operator take a field name, and define a
 	  function (at()?) that takes a field index.  The original problem

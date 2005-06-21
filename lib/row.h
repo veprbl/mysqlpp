@@ -355,69 +355,6 @@ public:
 				vb, ",", quote);
 	}
 	
-	/// \brief Get a list of the field names in this row
-	///
-	/// The 's' parameters name the field names that will be added to
-	/// the returned list.  When inserted into a C++ stream, the
-	/// delimiter 'd' will be placed between the items, and the
-	/// manipulator 'm' will be inserted before each item.
-	template <class Manip> value_list_b<FieldNames, Manip> field_list(
-			const char *d, Manip m, std::string s0, std::string s1 = "",
-			std::string s2 = "", std::string s3 = "",
-			std::string s4 = "", std::string s5 = "",
-			std::string s6 = "", std::string s7 = "",
-			std::string s8 = "", std::string s9 = "",
-			std::string sa = "", std::string sb = "",
-			std::string sc = "") const
-	{
-		std::vector<bool> vb;
-		create_vector(parent().names(), vb, s0, s1, s2, s3, s4, s5, s6,
-				s7, s8, s9, sa, sb, sc);
-		return value_list_b<FieldNames, Manip>(parent().names(), vb, d, m);
-	}
-	
-	/// \brief Get a list of the field names in this row
-	///
-	/// The 's' parameters name the field names that will be added to
-	/// the returned list.  When inserted into a C++ stream, the
-	/// delimiter 'd' will be placed between the items, and the items
-	/// will be quoted and escaped.
-	value_list_b<FieldNames, quote_type0> field_list(const char *d,
-			std::string s0, std::string s1 = "", std::string s2 = "",
-			std::string s3 = "", std::string s4 = "",
-			std::string s5 = "", std::string s6 = "",
-			std::string s7 = "", std::string s8 = "",
-			std::string s9 = "", std::string sa = "",
-			std::string sb = "", std::string sc = "") const
-	{
-		std::vector<bool> vb;
-		create_vector(parent().names(), vb, s0, s1, s2, s3, s4, s5, s6,
-				s7, s8, s9, sa, sb, sc);
-		return value_list_b<FieldNames, quote_type0>(parent().names(),
-				vb, d, quote);
-	}
-	
-	/// \brief Get a list of the field names in this row
-	///
-	/// The 's' parameters name the field names that will be added to
-	/// the returned list.  When inserted into a C++ stream, a comma
-	/// will be used as a delimiter between the items, and the items
-	/// will be quoted and escaped.
-	value_list_b<FieldNames, quote_type0> field_list(std::string s0,
-			std::string s1 = "", std::string s2 = "",
-			std::string s3 = "", std::string s4 = "",
-			std::string s5 = "", std::string s6 = "",
-			std::string s7 = "", std::string s8 = "",
-			std::string s9 = "", std::string sa = "",
-			std::string sb = "", std::string sc = "") const
-	{
-		std::vector<bool> vb;
-		create_vector(parent().names(), vb, s0, s1, s2, s3, s4, s5, s6,
-				s7, s8, s9, sa, sb, sc);
-		return value_list_b<FieldNames, quote_type0>(parent().names(),
-				vb, ",", quote);
-	}
-
 	/// \brief Get an "equal list" of the fields and values in this row
 	///
 	/// When inserted into a C++ stream, the delimiter 'd' will be used
