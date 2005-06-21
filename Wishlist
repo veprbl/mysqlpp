@@ -60,9 +60,6 @@ v2.0 Release Plan
 
 	o Fold RowTemplate class into Row.
 
-	o Collapse mysql_* date and time classes into their subclasses,
-	  Date, Time, and DateTime.
-
 	o Remove the field name form of field_list().  It's pretty silly:
 	  it takes a field name as a paramter, and returns a field name!
 	  True, there's a type conversion going on here, but...
@@ -182,6 +179,11 @@ Future Features and ABI Changes
 	o Consider using MySQL C API enum constants in mysql_type_info::types
 	  definition instead of hard-coded values.  This could potentially
 	  break a lot of infrastructure, though, so do it only with care.
+
+	o Add time_t conversion to date and time classes.
+	  Also consider other niceties, like arithmetic.
+	  (See "Algorithms for Programmers" by Binstock and Rex.)
+	  Then write an example showing how to use these mechanisms.
 
 
 Bug Fix/Maintenance Items

@@ -3104,6 +3104,29 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			the public section; it is now the opposite
 			way. This changes the object's layout in
 			memory.</para>
+
+			<para>Simplified the date
+			and time class hierarchy. <ulink
+			url="../../refman/html/structmysqlpp_1_1Date.html">Date</ulink>
+			used to derive from
+			<computeroutput>mysql_date</computeroutput>,
+			<ulink
+			url="../../refman/html/structmysqlpp_1_1Time.html">Time</ulink>
+			used to derive from
+			<computeroutput>mysql_time</computeroutput>,
+			and <ulink
+			url="../../refman/html/structmysqlpp_1_1DateTime.html">DateTime</ulink>
+			used to derive from both of those.  All
+			three of these classes used to derive from
+			<computeroutput>mysql_dt_base</computeroutput>.
+			All of the
+			<computeroutput>mysql_*</computeroutput>
+			classes' functionality and data has
+			been folded into the leaf classes,
+			and now the only thing shared between
+			them is their dependence on the <ulink
+			url="../../refman/html/structmysqlpp_1_1DTbase.html">DTbase</ulink>
+			template. This shouldn't affect the API.</para>
 		</sect3>
 	</sect2>
 </sect1>
