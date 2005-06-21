@@ -63,17 +63,6 @@ v2.0 Release Plan
 	o Collapse mysql_* date and time classes into their subclasses,
 	  Date, Time, and DateTime.
 
-	o Make dtors virtual in classes with virtual functions, to squish
-	  GCC 4.0 warning.  Also, go through each changed class looking
-	  for any code that allocates memory or other resources, and
-	  make sure they're released in the dtor.
-
-	o Several of the value_list* and related functions in vallist.h
-	  and row.h can be collapsed into one by use of default
-	  parameters.  A conservative refactoring wouldn't change the
-	  API, but keep an open mind about whether a more aggressive
-	  change would be better in the end.
-
 	o Try to collapse all SQLQueryParams::set() overloads into
 	  a single member by suitable use of default parameters.
 

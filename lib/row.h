@@ -72,48 +72,29 @@ public:
 	/// \brief Get a list of the values in this row
 	///
 	/// When inserted into a C++ stream, the delimiter 'd' will be used
-	/// between the items, and items will be quoted and escaped.
-	value_list_ba<ThisType, quote_type0> value_list(
-			const char* d = ",") const
-	{
-		return value_list_ba<ThisType, quote_type0>(self(), d, quote);
-	}
-	
-	/// \brief Get a list of the values in this row
+	/// between the items, and the quoting and escaping rules will be
+	/// set by the manipulator 'm' you choose.
 	///
 	/// \param d delimiter to use between values
 	/// \param m manipulator to use when inserting values into a stream
 	template <class Manip>
-	value_list_ba<ThisType, Manip> value_list(const char *d,
-			Manip m) const {
+	value_list_ba<ThisType, Manip> value_list(const char* d = ",",
+			Manip m = quote) const
+	{
 		return value_list_ba<ThisType, Manip>(self(), d, m);
 	}
 	
 	/// \brief Get a list of the values in this row
 	///
 	/// \param d delimiter to use between values
-	/// \param m manipulator to use when inserting values into a stream
 	/// \param vb for each true item in this list, add that value to the
 	/// returned list; ignore the others
+	/// \param m manipulator to use when inserting values into a stream
 	template <class Manip>
-	value_list_b<ThisType, Manip> value_list(const char *d, Manip m,
-			const std::vector<bool>& vb) const
+	value_list_b<ThisType, Manip> value_list(const char *d,
+			const std::vector<bool>& vb, Manip m = quote) const
 	{
 		return value_list_b<ThisType, Manip>(self(), vb, d, m);
-	}
-	
-	/// \brief Get a list of the values in this row
-	///
-	/// \param d delimiter to use between values
-	/// \param vb for each true item in this list, add that value to the
-	/// returned list; ignore the others
-	///
-	/// Items will be quoted and escaped when inserted into a C++
-	/// stream.
-	value_list_b<ThisType, quote_type0>
-	value_list(const char* d, const std::vector<bool>& vb) const
-	{
-		return value_list_b<ThisType, quote_type0>(self(), vb, d, quote);
 	}
 	
 	/// \brief Get a list of the values in this row
