@@ -63,9 +63,6 @@ v2.0 Release Plan
 	o Collapse mysql_* date and time classes into their subclasses,
 	  Date, Time, and DateTime.
 
-	o Try to collapse all SQLQueryParams::set() overloads into
-	  a single member by suitable use of default parameters.
-
 	o Remove the field name form of field_list().  It's pretty silly:
 	  it takes a field name as a paramter, and returns a field name!
 	  True, there's a type conversion going on here, but...
