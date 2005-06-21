@@ -2997,6 +2997,15 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			necessary. Cast the result object to bool
 			to test whether the result set is empty
 			or not.</para>
+
+			<para>Removed "field name" form of
+			<computeroutput>Row::field_list()</computeroutput>.
+			This would allow you to get a list of fields,
+			given a list of fields! I think it was
+			created by analogy with the field name form of
+			<computeroutput>value_list</computeroutput>,
+			without any thought of whether it made
+			sense.</para>
 		</sect3>
 	</sect2>
 
