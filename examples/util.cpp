@@ -40,10 +40,9 @@ const char* kpcSampleDatabase = "mysql_cpp_data";
 // Converts a Unicode string encoded in UTF-8 form (which the MySQL
 // database uses) to Win32's ANSI character encoding using the current
 // code page.  A small modification to this function will turn it into
-// a UTF-8 to UCS-2 function, since we convert to UCS-2 before
-// continuing on from there to ANSI.  See the Win32 section in the
-// Unicode chapter in the user manual for the reason this function works
-// as it does.
+// a UTF-8 to UCS-2 function, since that's an intermediate form within
+// this function.  The Unicode chapter in the user manual explains why
+// that double conversion is necessary.
 
 #ifdef MYSQLPP_PLATFORM_WINDOWS
 static bool
@@ -65,12 +64,6 @@ utf8_to_win32_ansi(const char* utf8_str, char* ansi_str,
 		return false;
 	}
 	else {
-		// This last step is only necessary when outputting to the 
-		// Win32 console, because it doesn't support UCS-2 by default.
-		// If you somehow convince the console to accept UCS-2, or are
-		// using other Win32 functions that do accept UCS-2 data, then
-		// you want to use the ucs2_buf above instead.  See the MySQL++
-		// user guide for more on this topic.
 		CPINFOEX cpi;
 		GetCPInfoEx(CP_OEMCP, 0, &cpi);
 		WideCharToMultiByte(cpi.CodePage, 0, ucs2_buf, -1,
@@ -99,23 +92,26 @@ print_stock_header(int rows)
 
 
 //// print_stock_row ///////////////////////////////////////////////////
-// Print out a row of data from the stock table, in a format
-// compatbile with the header printed out in the previous function.
+// Print out a row of data from the stock table, in a format compatible
+// with the header printed out in the previous function.
 
 void
-print_stock_row(const char* item, mysqlpp::longlong num, double weight,
-		double price, const mysqlpp::Date& date)
+print_stock_row(const std::string& item, mysqlpp::longlong num,
+		double weight, double price, const mysqlpp::Date& date)
 {
-	// Output first column, the item string.  If this is running on
-	// Windows, convert the first column from UTF-8 to UCS-2.  This
-	// isn't needed on modern Unices, because the terminal code
-	// interprets UTF-8 data directly.
+	// Output item field.  We treat it separately because there is
+	// Unicode data in this field in the sample database.
 #ifdef MYSQLPP_PLATFORM_WINDOWS
+	// We're running on Windows, so convert the first column from UTF-8
+	// to UCS-2, and then to the local ANSI code page.  The user manual
+	// explains why this double conversion is required.
 	char item_ansi[100];
-	if (utf8_to_win32_ansi(item, item_ansi, sizeof(item_ansi))) {
+	if (utf8_to_win32_ansi(item.c_str(), item_ansi, sizeof(item_ansi))) {
 		cout << setw(20) << item_ansi << ' ';
 	}
 #else
+	// Just send string to console.  On modern Unices, the terminal code
+	// interprets UTF-8 directly, so no special handling is required.
 	cout << setw(20) << item << ' ';
 #endif
 
@@ -124,6 +120,22 @@ print_stock_row(const char* item, mysqlpp::longlong num, double weight,
 			setw(9) << weight << ' ' <<
 			setw(9) << price << ' ' <<
 			date << endl;
+}
+
+
+//// print_stock_row ///////////////////////////////////////////////////
+// Take a Row from the example 'stock' table, break it up into fields,
+// and call the above version of this function.
+
+void
+print_stock_row(const mysqlpp::Row& row)
+{
+	// Notice that only the string conversion has to be handled
+	// specially.  (See Row::operator[]'s documentation for the reason.)
+	// As for the rest of the fields, Row::operator[] returns a ColData
+	// object, which can convert itself to any standard C type.
+	string item(row[0]);
+	print_stock_row(item, row[1], row[2], row[3], row[4]);
 }
 
 
@@ -139,17 +151,9 @@ print_stock_rows(mysqlpp::Result& res)
 	// through the query results.
 	mysqlpp::Result::iterator i;
 	for (i = res.begin(); i != res.end(); ++i) {
-		// Convert the Result iterator into a Row object, for easier
-		// access.
-		mysqlpp::Row row(*i);
-
-		// Notice that you can use either the column index or name to
-		// retrieve the data.  Also notice that we do no explicit
-		// conversions to match print_stock_row()'s parameter types:
-		// Row elements are ColData strings, so they auto-convert to
-		// any standard C++ type.
-		print_stock_row(row[0], row[1], row.lookup_by_name("weight"),
-				row[3], row[4]);
+		// Notice that a dereferenced result iterator can be converted
+		// to a Row object, which makes for easier element access.
+		print_stock_row(*i);
 	}
 }
 

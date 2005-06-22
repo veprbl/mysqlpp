@@ -78,8 +78,8 @@ main(int argc, char *argv[])
 		print_stock_header(res.size());
 		vector<stock>::iterator it;
 		for (it = res.begin(); it != res.end(); ++it) {
-			print_stock_row(it->item.c_str(), it->num, it->weight,
-					it->price, it->sdate);
+			print_stock_row(it->item, it->num, it->weight, it->price,
+					it->sdate);
 		}
 	}
 	catch (BadQuery& er) {

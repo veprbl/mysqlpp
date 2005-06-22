@@ -33,7 +33,8 @@
 extern const char* kpcSampleDatabase;
 
 void print_stock_header(int rows);
-void print_stock_row(const char* item, mysqlpp::longlong num,
+void print_stock_row(const mysqlpp::Row& r);
+void print_stock_row(const std::string& item, mysqlpp::longlong num,
 		double weight, double price, const mysqlpp::Date& date);
 void print_stock_rows(mysqlpp::Result& res);
 void get_stock_table(mysqlpp::Query& query, mysqlpp::Result& res);

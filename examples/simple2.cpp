@@ -51,10 +51,10 @@ main(int argc, char *argv[])
 		return 1;
 	}
 
-	// Iterate through result set, printing each row
+	// Iterate through result set, printing each row.
 	mysqlpp::Row r;
 	while (r = res.fetch_row()) {
-		print_stock_row(r[0], r[1], r[2], r[3], r[4]);
+		print_stock_row(r);
 	}
 
 	return 0;
