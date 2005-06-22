@@ -130,7 +130,7 @@ bool
 Connection::create_db(const std::string& db)
 {
 	Query q(this, throw_exceptions());
-	return q.execute("CREATE DATABASE " + db);
+	return q.exec("CREATE DATABASE " + db);
 }
 
 
@@ -138,7 +138,7 @@ bool
 Connection::drop_db(const std::string& db)
 {
 	Query q(this, throw_exceptions());
-	return q.execute("DROP DATABASE " + db);
+	return q.exec("DROP DATABASE " + db);
 }
 
 
