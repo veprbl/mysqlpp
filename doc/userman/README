@@ -57,7 +57,7 @@ for getting up to speed on DocBook:
 		http://xmlsoft.org/XSLT/
 
 		This is the XSL processor that takes the DocBook file and an XSL
-		stylesheet and produces either HTML or XSL FO. (The latter is an
+		stylesheet and produces either HTML or XSL-FO. (The latter is an
 		intermediate step towards any of several print-oriented formats,
 		such as PDF or TeX.) If your system has GNOME on it, you probably
 		have this installed already.
@@ -67,7 +67,7 @@ for getting up to speed on DocBook:
 
 		http://xml.apache.org/fop/
 
-		This is the XSL FO document processor we use to build the PDF
+		This is the XSL-FO document processor we use to build the PDF
 		files. ('make pdf')
 
 		If for some reason you have trouble getting FOP working, there's
