@@ -2791,9 +2791,12 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 	<sect2>
 		<title>API Changes</title>
 
-		<para>This section documents functions, methods and
-		classes that were removed or changed in an incompatible
-		way.</para>
+		<para>This section documents files, functions,
+		methods and classes that were removed or changed
+		in an incompatible way. If your program uses the
+		changed item, you will have to change something in
+		your program to get it to compile after upgrading to
+		each of these versions.</para>
 
 		<sect3>
 			<title>v1.7.10</title>
@@ -2852,12 +2855,7 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			headers, these symbols are hoist up into the
 			global namespace. The older headers cause the
 			compiler to emit warnings if you use them,
-			and they will go away someday. We recommend
-			that you change your program to use the new
-			header, and add <computeroutput>using namespace
-			mysqlpp</computeroutput> near the top of each
-			C++ source file, if you were previously using
-			the short symbols.</para>
+			and they will go away someday.</para>
 		</sect3>
 
 		
