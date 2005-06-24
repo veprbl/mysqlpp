@@ -60,20 +60,6 @@ class Connection;
 
 class ResUse : public OptionalExceptions
 {
-protected:
-	Connection* conn_;			///< server result set comes from
-	mutable MYSQL_RES* result_;	///< underlying C API result set
-	bool initialized_;			///< if true, object is fully initted
-	mutable FieldNames* names_;	///< list of field names in result
-	mutable FieldTypes* types_;	///< list of field types in result
-	Fields fields_;				///< list of fields in result
-	std::string table_;			///< table result set comes from
-
-	/// \brief copy another ResUse object's contents into this one.
-	///
-	/// Not to be used on the self. Self-copy is not allowed.
-	void copy(const ResUse& other);
-
 public:
 	/// \brief Default constructor
 	ResUse() :
@@ -323,6 +309,20 @@ public:
 	{
 		return result_ != other.result_;
 	}
+
+protected:
+	Connection* conn_;			///< server result set comes from
+	mutable MYSQL_RES* result_;	///< underlying C API result set
+	bool initialized_;			///< if true, object is fully initted
+	mutable FieldNames* names_;	///< list of field names in result
+	mutable FieldTypes* types_;	///< list of field types in result
+	Fields fields_;				///< list of fields in result
+	std::string table_;			///< table result set comes from
+
+	/// \brief Copy another ResUse object's contents into this one.
+	///
+	/// Self-copy is not allowed.
+	void copy(const ResUse& other);
 };
 
 
