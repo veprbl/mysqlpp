@@ -3103,6 +3103,25 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 					pointless.</para></listitem>
 				</itemizedlist>
 			</sect4>
+
+
+			<sect4>
+				<title>Miscellaneous changes</title>
+
+				<itemizedlist>
+					<listitem><para>Removed the
+					backwards-compatibility headers
+					<filename>sqlplus.hh</filename>
+					and
+					<filename>mysql++.hh</filename>.
+					If you were still using these,
+					you will have to change to
+					<filename>mysql++.h</filename>,
+					which will put all symbols
+					in <computeroutput>namespace
+					mysqlpp</computeroutput>.</para></listitem>
+				</itemizedlist>
+			</sect4>
 		</sect3>
 	</sect2>
 

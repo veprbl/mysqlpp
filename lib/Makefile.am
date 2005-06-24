@@ -26,7 +26,7 @@ lib_LTLIBRARIES=libmysqlpp.la
 # interfaces supported.  Bump the last only if explicit backwards-
 # compatibility is added -- like two different versions of a single 
 # function.  'age' must be less than the current interface version.
-libmysqlpp_la_LDFLAGS=-version-info 4:0:0
+libmysqlpp_la_LDFLAGS=-version-info 2:0:0
 
 libmysqlpp_la_SOURCES = \
 	coldata.cpp connection.cpp datetime.cpp fields.cpp field_names.cpp \
@@ -38,9 +38,9 @@ include_HEADERS = \
 	coldata.h compare.h connection.h const_string.h convert.h custom.h \
 	custom-macros.h defs.h datetime.h exceptions.h field_names.h \
 	field_types.h fields.h lockable.h manip.h myset.h mysql++.h \
-	mysql++.hh noexceptions.h null.h platform.h query.h resiter.h \
-	result.h row.h sqlplus.hh sql_query.h sql_string.h stream2string.h \
-	string_util.h tiny_int.h type_info.h vallist.h 
+	noexceptions.h null.h platform.h query.h resiter.h result.h row.h \
+	sql_query.h sql_string.h stream2string.h string_util.h tiny_int.h \
+	type_info.h vallist.h 
 
 all-local: custom.h
 
