@@ -2782,9 +2782,10 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 	can dig this stuff out of the ChangeLog, but the ChangeLog
 	focuses more on explaining and justifying the facets of each
 	change, while this section focuses on how to migrate your
-	code between these library versions. Since pure additions do
-	not break programs, those changes are still documented only
-	in the ChangeLog.</para>
+	code between these library versions.</para>
+	
+	<para>Since pure additions do not break programs, those
+	changes are still documented only in the ChangeLog.</para>
 
 
 	<sect2>
@@ -2863,173 +2864,247 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 		<sect3>
 			<title>v2.0.0</title>
 
-			<para><computeroutput>Connection::create_db()</computeroutput>
-			and <computeroutput>drop_db()</computeroutput>
-			return <computeroutput>true</computeroutput>
-			on success. They returned
-			<computeroutput>false</computeroutput> in
-			v1.7.<emphasis>x</emphasis>! This change will
-			only affect your code if you have exceptions
-			disabled.</para>
+			<sect4>
+				<title>Connection class changes</title>
 
-			<para><computeroutput>Connection::create_db()</computeroutput>,
-			<computeroutput>drop_db()</computeroutput> and
-			<computeroutput>select_db()</computeroutput>
-			now take their arguments by
-			<computeroutput>const</computeroutput>
-			reference.</para>
+				<itemizedlist>
+					<listitem><para><computeroutput>Connection::create_db()</computeroutput>
+					and
+					<computeroutput>drop_db()</computeroutput>
+					return
+					<computeroutput>true</computeroutput>
+					on success. They returned
+					<computeroutput>false</computeroutput>
+					in v1.7.<emphasis>x</emphasis>!
+					This change will only
+					affect your code if
+					you have exceptions
+					disabled.</para></listitem>
 
-			<para>Renamed
-			<computeroutput>Connection::real_connect()</computeroutput>
-			to <computeroutput>connect()</computeroutput>,
-			made several more of its parameters
-			default, and removed the old
-			<computeroutput>connect()</computeroutput>
-			method, as it's now a strict subset of the
-			new one. This change simplifies the API,
-			with the only cost being that programs uisng
-			<computeroutput>real_connect()</computeroutput>
-			will have to change the method name in their
-			code. This split was a pointless carry-over
-			from the MySQL C API; C++ doesn't have the
-			limitations that forced the creation of that
-			function in the C API.</para>
+					<listitem><para><computeroutput>Connection::create_db()</computeroutput>,
+					<computeroutput>drop_db()</computeroutput>
+					and
+					<computeroutput>select_db()</computeroutput>
+					now take their arguments by
+					<computeroutput>const</computeroutput>
+					reference.</para></listitem>
 
-			<para>Renamed
-			<computeroutput>Connection::read_option()</computeroutput>
-			to
-			<computeroutput>set_option()</computeroutput>,
-			and made it return true on success instead
-			of 0.</para>
+					<listitem><para>Renamed
+					<computeroutput>Connection::real_connect()</computeroutput>
+					to
+					<computeroutput>connect()</computeroutput>,
+					made several more
+					of its parameters
+					default, and removed the old
+					<computeroutput>connect()</computeroutput>
+					method, as it's now a strict
+					subset of the new one. The
+					only practical consequence is
+					that if your program was using
+					<computeroutput>real_connect()</computeroutput>,
+					you will have to change it to
+					<computeroutput>connect()</computeroutput>.</para></listitem>
 
-			<para>Classes
-			<computeroutput>Connection</computeroutput>,
-			<computeroutput>Query</computeroutput>,
-			<computeroutput>Result</computeroutput>,
-			<computeroutput>ResUse</computeroutput>,
-			and <computeroutput>Row</computeroutput>
-			now derive from <ulink
-			url="../../refman/html/classmysqlpp_1_1OptionalExceptions.html">OptionalExceptions</ulink>
-			which gives these classes a common interface
-			for disabling exceptions.  In addition, almost
-			all of the per-method exception-disabling
-			flags were removed. The preferred method
-			for disabling exceptions on these objects
-			is to create an instance of the new <ulink
-			url="../../refman/html/classmysqlpp_1_1NoExceptions.html">NoExceptions</ulink>
-			class on the stack, which
-			can disable exceptions on any
-			<computeroutput>OptionalExceptions</computeroutput>
-			subclass as long as the
-			<computeroutput>NoExceptions</computeroutput>
-			instance is in scope. You can also call
-			methods on the OptionalExceptions interface
-			to temporarily disable exceptions, but if
-			you only want them disabled temporarily,
-			this is error-prone.</para>
+					<listitem><para>Renamed
+					<computeroutput>Connection::read_option()</computeroutput>
+					to
+					<computeroutput>set_option()</computeroutput>,
+					and made it return true
+					on success instead of
+					0.</para></listitem>
+				</itemizedlist>
+			</sect4>
 
-			<para>In the previous version of MySQL++, those
-			classes that supported optional exceptions
-			that could create instances of other such
-			classes were supposed to pass this flag on
-			to their children. That is, if you created a
-			<computeroutput>Connection</computeroutput>
-			object with exceptions enabled,
-			and then asked it to create a
-			<computeroutput>Query</computeroutput> object,
-			the <computeroutput>Query</computeroutput>
-			object was also supposed to have exceptions
-			disabled. That much worked in v1.7, but
-			it didn't happen in other cases. This is
-			considered a bug, which we fixed in v2.0. If
-			your program begins crashing due to uncaught
-			exceptions after upgrading to v2.0, this is
-			the most likely cause. The most expeditious
-			fix in this situation is to use the new
-			<computeroutput>NoExceptions</computeroutput>
-			feature to return these code paths to the
-			v1.7 behavior. A better fix is to rework
-			your program to avoid or deal with the new
-			exceptions.</para>
 
-			<para>Renamed
-			<computeroutput>ResUse::mysql_result()</computeroutput>
-			to
-			<computeroutput>raw_result()</computeroutput>
-			so it's database server neutral. Right now
-			it's dependent on MySQL, but it may not
-			always be.</para>
+			<sect4>
+				<title>Exception-related changes</title>
 
-			<para>All custom MySQL++ exceptions
-			derive from a common base class now:
-			<computeroutput>Exception</computeroutput>. The
-			practical upshot of this is that
-			the variability between the various
-			exception types has been eliminated. For
-			instance, to get the error string, the
-			<computeroutput>BadQuery</computeroutput>
-			exception had a string member called
-			<computeroutput>error</computeroutput>
-			plus a method called
-			<computeroutput>what()</computeroutput>. Both
-			did the same thing, and the
-			<computeroutput>what()</computeroutput>
-			method is more common, so the error string
-			was dropped from the interface. None of the
-			example programs had to be changed to work with
-			the new exceptions, so if your program handles
-			MySQL++ exceptions the same way they do, your
-			program won't need to change, either.</para>
+				<itemizedlist>
+					<listitem><para>Classes
+					<computeroutput>Connection</computeroutput>,
+					<computeroutput>Query</computeroutput>,
+					<computeroutput>Result</computeroutput>,
+					<computeroutput>ResUse</computeroutput>,
+					and
+					<computeroutput>Row</computeroutput>
+					now derive from <ulink
+					url="../../refman/html/classmysqlpp_1_1OptionalExceptions.html">OptionalExceptions</ulink>
+					which gives these classes a
+					common interface for disabling
+					exceptions. In addition,
+					almost all of the per-method
+					exception-disabling flags were
+					removed. The preferred method
+					for disabling exceptions on
+					these objects is to create
+					an instance of the new <ulink
+					url="../../refman/html/classmysqlpp_1_1NoExceptions.html">NoExceptions</ulink>
+					class on the stack, which
+					disables exceptions on an
+					<computeroutput>OptionalExceptions</computeroutput>
+					subclass as long as the
+					<computeroutput>NoExceptions</computeroutput>
+					instance is in
+					scope. You can instead call
+					<computeroutput>disable_exceptions()</computeroutput>
+					on any of these objects,
+					but if you only want them
+					disabled temporarily, it's
+					easy to forget to re-enable
+					them later.</para></listitem>
 
-			<para>Renamed
-			<computeroutput>SQLQueryNEParams</computeroutput>
-			exception to
-			<computeroutput>BadParamCount</computeroutput>
-			to match style of other exception names.</para>
+					<listitem><para>In the
+					previous version of MySQL++,
+					those classes that supported
+					optional exceptions that
+					could create instances of
+					other such classes were
+					supposed to pass this flag
+					on to their children. That
+					is, if you created a
+					<computeroutput>Connection</computeroutput>
+					object with exceptions enabled,
+					and then asked it to create a
+					<computeroutput>Query</computeroutput>
+					object, the
+					<computeroutput>Query</computeroutput>
+					object also had exceptions
+					disabled. The problem is, this
+					didn't happen in all cases
+					where it should have in v1.7.
+					This bug is fixed in v2.0. If
+					your program begins crashing
+					due to uncaught exceptions
+					after upgrading to v2.0, this
+					is the most likely cause. The
+					most expeditious fix in this
+					situation is to use the new
+					<computeroutput>NoExceptions</computeroutput>
+					feature to return these
+					code paths to the v1.7
+					behavior. A better fix is
+					to rework your program to
+					avoid or deal with the new
+					exceptions.</para></listitem>
 
-			<para>All queries must now be
-			sent to the database through the
-			<computeroutput>Query</computeroutput>
-			object. In earlier versions,
-			<computeroutput>Connection</computeroutput>
-			also had
-			<computeroutput>exec()</computeroutput>,
-			<computeroutput>execute()</computeroutput>,
-			<computeroutput>store()</computeroutput>,
-			and <computeroutput>use()</computeroutput>
-			methods, but these were intended only for class
-			<computeroutput>Query</computeroutput>'s use.
-			There is a subtler change here as well:
-			because queries no longer go through the
-			<computeroutput>Connection</computeroutput>
-			object, calling its
-			<computeroutput>success()</computeroutput>
-			method or casting the object to
-			<computeroutput>bool</computeroutput>
-			to test for query success no longer
-			works. Those methods now only indicate
-			whether operations dealing with the
-			connection itself succeeded. Class
-			<computeroutput>Query</computeroutput> has
-			these same methods, so use them instead to
-			test for query success.</para>
+					<listitem><para>All
+					custom MySQL++ exceptions
+					now derive from the new <ulink
+					url="../../refman/html/classmysqlpp_1_1Exception.html">Exception</ulink>
+					interface.  The practical
+					upshot of this is that the
+					variability between the
+					various exception types has
+					been eliminated. For instance,
+					to get the error string, the
+					<computeroutput>BadQuery</computeroutput>
+					exception had a
+					string member called
+					<computeroutput>error</computeroutput>
+					plus a method called
+					<computeroutput>what()</computeroutput>.
+					Both did the
+					same thing, and the
+					<computeroutput>what()</computeroutput>
+					method is more common, so the
+					error string was dropped from
+					the interface. None of the
+					example programs had to be
+					changed to work with the new
+					exceptions, so if your program
+					handles MySQL++ exceptions
+					the same way they do, your
+					program won't need to change,
+					either.</para></listitem>
 
-			<para>Removed
-			<computeroutput>ResUse::eof()</computeroutput>,
-			as it wraps a MySQL C API function that has
-			long been deprecated, and it is not in fact
-			necessary. Cast the result object to bool
-			to test whether the result set is empty
-			or not.</para>
+					<listitem><para>Renamed
+					<computeroutput>SQLQueryNEParams</computeroutput>
+					exception to
+					<computeroutput>BadParamCount</computeroutput>
+					to match style of other
+					exception names.</para></listitem>
+				</itemizedlist>
+			</sect4>
 
-			<para>Removed "field name" form of
-			<computeroutput>Row::field_list()</computeroutput>.
-			This would allow you to get a list of fields,
-			given a list of fields! I think it was
-			created by analogy with the field name form of
-			<computeroutput>value_list</computeroutput>,
-			without any thought of whether it made
-			sense.</para>
+
+			<sect4>
+				<title>Query class changes</title>
+
+				<itemizedlist>
+					<listitem><para>In
+					previous versions,
+					<computeroutput>Connection</computeroutput>
+					had a querying
+					interface similar to class
+					<computeroutput>Query</computeroutput>'s.
+					These methods
+					were intended only for
+					<computeroutput>Query</computeroutput>'s
+					use; no example ever used
+					this interface directly,
+					so no end-user code is
+					likely to be affected by
+					this change.</para></listitem>
+
+					<listitem><para>A more likely
+					problem arising from the above
+					change is code that tests for
+					query success by calling the
+					<computeroutput>Connection</computeroutput>
+					object's
+					<computeroutput>success()</computeroutput>
+					method or by casting it to
+					<computeroutput>bool</computeroutput>.
+					This will now give misleading
+					results, because queries
+					no longer go through the
+					<computeroutput>Connection</computeroutput>
+					object. Class
+					<computeroutput>Query</computeroutput>
+					has the same success-testing
+					interface, so use it
+					instead.</para></listitem>
+				</itemizedlist>
+			</sect4>
+
+
+			<sect4>
+				<title>Result/ResUse class changes</title>
+
+				<itemizedlist>
+					<listitem><para>Renamed
+					<computeroutput>ResUse::mysql_result()</computeroutput>
+					to
+					<computeroutput>raw_result()</computeroutput>
+					so it's database server
+					neutral.</para></listitem>
+
+					<listitem><para>Removed
+					<computeroutput>ResUse::eof()</computeroutput>,
+					as it wraps a deprecated
+					and unnecessary MySQL
+					C API function. See the
+					<computeroutput>simple2</computeroutput>
+					and
+					<computeroutput>usequery</computeroutput>
+					examples to see the proper
+					way to test for the end of
+					a result set.</para></listitem>
+				</itemizedlist>
+			</sect4>
+
+
+			<sect4>
+				<title>Row class changes</title>
+
+				<itemizedlist>
+					<listitem><para>Removed
+					"field name" form of
+					<computeroutput>Row::field_list()</computeroutput>.
+					It was
+					pointless.</para></listitem>
+				</itemizedlist>
+			</sect4>
 		</sect3>
 	</sect2>
 
@@ -3037,10 +3112,16 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 	<sect2>
 		<title>ABI Changes</title>
 
-		<para>This section documents those library changes that
-		require that you rebuild your program to work with the
-		new library. They should require no code changes, as
-		they only affect the library's binary interface.</para>
+		<para>This section documents those library changes
+		that require you to rebuild your program so that it
+		will link with the new library.  Most of the items
+		in the previous section are also ABI changes, but
+		this section is only for those items that shouldn't
+		require any code changes in your program.</para>
+
+		<para>If you were going to rebuild your program after
+		installing the new library anyway, you can probably
+		ignore this section.</para>
 
 
 		<sect3>
@@ -3115,17 +3196,7 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			are now derived from the
 			<computeroutput>Lockable</computeroutput>
 			interface, instead of implementing their own
-			lock/unlock functions. For now, this has no
-			practical advantage, but in a future version
-			we plan to use platform mutexes to serialize
-			access to contended resources through this
-			mechanism. (It will be optional.)</para>
-
-			<para>Removed the querying
-			interface functions from class
-			<computeroutput>Connection</computeroutput>.
-			This also has API effects, detailed in the
-			previous section.</para>
+			lock/unlock functions.</para>
 
 			<para>In several instances, functions that
 			took objects by value now take them by const
@@ -3135,8 +3206,9 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			in some classes. The most common instance is
 			when the private section was declared before
 			the public section; it is now the opposite
-			way. This changes the object's layout in
-			memory.</para>
+			way. This can change the object's layout in
+			memory, so a program linking to the library
+			must be rebuilt.</para>
 
 			<para>Simplified the date
 			and time class hierarchy. <ulink
@@ -3159,7 +3231,10 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			and now the only thing shared between
 			them is their dependence on the <ulink
 			url="../../refman/html/structmysqlpp_1_1DTbase.html">DTbase</ulink>
-			template. This shouldn't affect the API.</para>
+			template. Since the leaf classes' interface has
+			not changed and end-user code shouldn't have
+			been using the other classes, this shouldn't
+			affect the API in any practical way.</para>
 		</sect3>
 	</sect2>
 </sect1>
