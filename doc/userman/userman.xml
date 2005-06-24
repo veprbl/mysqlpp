@@ -2906,37 +2906,51 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			<computeroutput>Connection</computeroutput>,
 			<computeroutput>Query</computeroutput>,
 			<computeroutput>Result</computeroutput>,
-			<computeroutput>ResUse</computeroutput>, and
-			<computeroutput>Row</computeroutput>
-			now derive from
-			<computeroutput>OptionalExceptions</computeroutput>.
-			Therefore, they no longer have an internal
-			flag controlling whether exceptions are
-			thrown. In addition, almost all of the
-			per-method exception-disabling flags
-			were removed. The preferred method for
-			disabling exceptions on these objects
-			is to create an instance of the new
+			<computeroutput>ResUse</computeroutput>,
+			and <computeroutput>Row</computeroutput>
+			now derive from <ulink
+			url="../../refman/html/classmysqlpp_1_1OptionalExceptions.html">OptionalExceptions</ulink>
+			which gives these classes a common interface
+			for disabling exceptions.  In addition, almost
+			all of the per-method exception-disabling
+			flags were removed. The preferred method
+			for disabling exceptions on these objects
+			is to create an instance of the new <ulink
+			url="../../refman/html/classmysqlpp_1_1NoExceptions.html">NoExceptions</ulink>
+			class on the stack, which
+			can disable exceptions on any
+			<computeroutput>OptionalExceptions</computeroutput>
+			subclass as long as the
 			<computeroutput>NoExceptions</computeroutput>
-			class on the stack taking the object in
-			question, which will disable exceptions on the
-			object as long as it is in scope. You can
-			also call methods on the OptionalExceptions
-			interface to temporarily disable exceptions,
-			but if you only want them disabled temporarily,
+			instance is in scope. You can also call
+			methods on the OptionalExceptions interface
+			to temporarily disable exceptions, but if
+			you only want them disabled temporarily,
 			this is error-prone.</para>
 
-			<para>Exceptions are now enabled by
-			default, always. This is unlikely to affect
-			user programs, because the paths by which
-			exceptions could have been disabled by default
-			in older versions are primarily used within
-			the library only. But, if you rebuild your
-			program against v2.0 and find that it's
-			throwing new exceptions, this is why. To
-			return to the old behavior, use one of the
-			new exception-disabling mechanisms mentioned
-			in the previous paragraph.</para>
+			<para>In the previous version of MySQL++, those
+			classes that supported optional exceptions
+			that could create instances of other such
+			classes were supposed to pass this flag on
+			to their children. That is, if you created a
+			<computeroutput>Connection</computeroutput>
+			object with exceptions enabled,
+			and then asked it to create a
+			<computeroutput>Query</computeroutput> object,
+			the <computeroutput>Query</computeroutput>
+			object was also supposed to have exceptions
+			disabled. That much worked in v1.7, but
+			it didn't happen in other cases. This is
+			considered a bug, which we fixed in v2.0. If
+			your program begins crashing due to uncaught
+			exceptions after upgrading to v2.0, this is
+			the most likely cause. The most expeditious
+			fix in this situation is to use the new
+			<computeroutput>NoExceptions</computeroutput>
+			feature to return these code paths to the
+			v1.7 behavior. A better fix is to rework
+			your program to avoid or deal with the new
+			exceptions.</para>
 
 			<para>Renamed
 			<computeroutput>ResUse::mysql_result()</computeroutput>
@@ -2949,13 +2963,23 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			<para>All custom MySQL++ exceptions
 			derive from a common base class now:
 			<computeroutput>Exception</computeroutput>. The
-			practical upshot of this is that some of the
-			variability between the various exception types
-			has been tightened up. None of the example
-			programs had to be changed as a result, so if
-			your program handles MySQL++ exceptions the
-			same way they do, your program won't need to
-			change, either.</para>
+			practical upshot of this is that
+			the variability between the various
+			exception types has been eliminated. For
+			instance, to get the error string, the
+			<computeroutput>BadQuery</computeroutput>
+			exception had a string member called
+			<computeroutput>error</computeroutput>
+			plus a method called
+			<computeroutput>what()</computeroutput>. Both
+			did the same thing, and the
+			<computeroutput>what()</computeroutput>
+			method is more common, so the error string
+			was dropped from the interface. None of the
+			example programs had to be changed to work with
+			the new exceptions, so if your program handles
+			MySQL++ exceptions the same way they do, your
+			program won't need to change, either.</para>
 
 			<para>Renamed
 			<computeroutput>SQLQueryNEParams</computeroutput>
