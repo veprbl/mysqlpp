@@ -69,7 +69,7 @@ Lockable()
 		unlock();
 		Success = is_connected = false;
 		if (throw_exceptions()) {
-			throw BadQuery(error());
+			throw ConnectionFailed(error());
 		}
 	}
 }
@@ -106,7 +106,7 @@ bool Connection::connect(cchar* db, cchar* host, cchar* user,
 		unlock();
 		Success = is_connected = false;
 		if (throw_exceptions()) {
-			throw BadQuery(error());
+			throw ConnectionFailed(error());
 		}
 	}
 
@@ -146,7 +146,7 @@ bool Connection::select_db(const char *db)
 {
 	bool suc = !(mysql_select_db(&mysql, db));
 	if (throw_exceptions() && !suc) {
-		throw BadQuery(error());
+		throw DBSelectionFailed(error());
 	}
 	else {
 		return suc;
@@ -158,6 +158,10 @@ bool Connection::reload()
 {
 	bool suc = !mysql_reload(&mysql);
 	if (throw_exceptions() && !suc) {
+		// Reloading grant tables through this API isn't precisely a
+		// query, but it's acceptable to signal errors with BadQuery
+		// because the new mechanism is the FLUSH PRIVILEGES statement.
+		// A program won't have to change when moving to the new way.
 		throw BadQuery(error());
 	}
 	else {
@@ -170,7 +174,7 @@ bool Connection::shutdown()
 {
 	bool suc = !(mysql_shutdown(&mysql SHUTDOWN_ARG));
 	if (throw_exceptions() && !suc) {
-		throw BadQuery(error());
+		throw ConnectionFailed(error());
 	}
 	else {
 		return suc;

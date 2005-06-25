@@ -37,14 +37,15 @@ Row::size_type Row::size() const
 
 const ColData Row::operator [](size_type i) const
 {
-	if (!initialized_) {
+	if (initialized_) {
+		return ColData(data_.at(i).c_str(), res_->types(i), is_nulls_[i]);
+	}
+	else {
 		if (throw_exceptions())
-			throw BadQuery("Row not initialized");
+			throw std::out_of_range("Row not initialized");
 		else
 			return ColData();
 	}
-	
-	return ColData(data_.at(i).c_str(), res_->types(i), is_nulls_[i]);
 }
 
 const ColData Row::lookup_by_name(const char* i) const

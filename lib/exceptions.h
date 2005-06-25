@@ -187,15 +187,44 @@ public:
 /// \brief Exception thrown when MySQL encounters a problem while
 /// processing your query.
 ///
-/// This is the most generic of MySQL++'s concrete exception types. It
-/// is thrown when your SQL syntax is incorrect, or a field you
-/// requested doesn't exist in the database, or....
+/// This exception is typically only thrown when the server rejects a
+/// SQL query.  In v1.7, it was used as a more generic exception type,
+/// for no particularly good reason.
 
 class BadQuery : public Exception
 {
 public:
 	/// \brief Create exception object
 	BadQuery(const char* w = "") :
+	Exception(w)
+	{
+	}
+};
+
+
+/// \brief Exception thrown when there is a problem establishing the
+/// database server connection.  It's also thrown if
+/// Connection::shutdown() fails.
+
+class ConnectionFailed : public Exception
+{
+public:
+	/// \brief Create exception object
+	ConnectionFailed(const char* w = "") :
+	Exception(w)
+	{
+	}
+};
+
+
+/// \brief Exception thrown when the program tries to select a new
+/// database and the server refuses for some reason.
+
+class DBSelectionFailed : public Exception
+{
+public:
+	/// \brief Create exception object
+	DBSelectionFailed(const char* w = "") :
 	Exception(w)
 	{
 	}
