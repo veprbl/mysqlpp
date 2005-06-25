@@ -48,6 +48,7 @@ cp examples/README doc/README.examples
 cp LGPL doc/LICENSE
 rm $RPM_BUILD_ROOT/usr/lib/*.la
 rm $RPM_BUILD_ROOT/usr/lib/*.so
+rm $RPM_BUILD_ROOT/usr/lib/*.so.[0-9]
 
 %clean
 rm -rf $RPM_BUILD_ROOT
