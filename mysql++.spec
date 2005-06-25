@@ -1,6 +1,6 @@
 Summary: C++ wrapper for the MySQL C API
 Name: mysql++
-Version: 1.7.40
+Version: 1.9.0
 Release: 1
 Copyright: LGPL
 Group: Development/Databases
@@ -46,12 +46,17 @@ install -m644 examples/*.cpp examples/*.h $RPM_BUILD_ROOT/usr/src/mysql++/exampl
 install -m644 examples/Makefile.simple $RPM_BUILD_ROOT/usr/src/mysql++/examples/Makefile
 cp examples/README doc/README.examples
 cp LGPL doc/LICENSE
+rm $RPM_BUILD_ROOT/usr/lib/*.la
+rm $RPM_BUILD_ROOT/usr/lib/*.so
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 rm -f doc/README.examples doc/LICENSE
 
-%post   -p /sbin/ldconfig
+%post
+	ln -s /usr/lib/libmysqlpp.so.%{version} /usr/lib/libmysqlpp.so
+	/sbin/ldconfig
+
 %postun -p /sbin/ldconfig
 
 %files
@@ -72,6 +77,9 @@ rm -f doc/README.examples doc/LICENSE
 %doc doc/*.pdf doc/refman doc/userman
 
 %changelog
+* Fri Jun 24 2005 Warren Young <mysqlpp@etr-usa.com> 1.9.0-1
+- Updated for internal-only 1.9.0 release
+
 * Thu May 26 2005 Warren Young <mysqlpp@etr-usa.com> 1.7.40-1
 - Updated for 1.7.40
 
