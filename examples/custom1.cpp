@@ -82,20 +82,20 @@ main(int argc, char *argv[])
 					it->sdate);
 		}
 	}
-	catch (BadQuery& er) {
-		// Handle any connection or query errors
-		cerr << "Error: " << er.what() << endl;
+	catch (const BadQuery& er) {
+		// Handle any query errors
+		cerr << "Query error: " << er.what() << endl;
 		return -1;
 	}
-	catch (BadConversion& er) {
-		// Handle bad conversions
-		cerr << "Error: " << er.what() << "\"." << endl <<
-				"retrieved data size: " << er.retrieved <<
-				" actual data size: " << er.actual_size << endl;
+	catch (const BadConversion& er) {
+		// Handle bad conversions; e.g. type mismatch populating 'stock'
+		cerr << "Conversion error: " << er.what() << endl <<
+				"\tretrieved data size: " << er.retrieved <<
+				", actual size: " << er.actual_size << endl;
 		return -1;
 	}
-	catch (exception& er) {
-		// Catch-all for any other standard C++ exceptions
+	catch (const Exception& er) {
+		// Catch-all for any other MySQL++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}

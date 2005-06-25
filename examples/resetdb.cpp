@@ -106,20 +106,20 @@ main(int argc, char *argv[])
 		cout << (new_db ? "Created" : "Reinitialized") <<
 				" sample database successfully." << endl;
 	}
-	catch (mysqlpp::BadQuery& er) {
-		// Handle any SQL errors
+	catch (const mysqlpp::BadQuery& er) {
+		// Handle any query errors
 		cerr << "Query error: " << er.what() << endl;
 		return 1;
 	}
-	catch (mysqlpp::BadConversion& er) {
+	catch (const mysqlpp::BadConversion& er) {
 		// Handle bad conversions
-		cerr << "Error: " << er.what() << endl <<
+		cerr << "Conversion error: " << er.what() << endl <<
 				"\tretrieved data size: " << er.retrieved <<
 				", actual size: " << er.actual_size << endl;
 		return 1;
 	}
-	catch (exception& er) {
-		// Catch-all for any other standard C++ exceptions
+	catch (const mysqlpp::Exception& er) {
+		// Catch-all for any other MySQL++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return 1;
 	}

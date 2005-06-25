@@ -62,15 +62,17 @@ main(int argc, char *argv[])
 		long unsigned int *jj = res.fetch_lengths();
 		cout << "Content-length: " << *jj << endl << endl;
 		fwrite(row.raw_data(0), 1, *jj, stdout);
-		return 0;
 	}
-	catch (BadQuery& er) {
-		cerr << "Error: " << er.what() << " " << con.errnum() << endl;
+	catch (const BadQuery& er) {
+		// Handle any query errors
+		cerr << "Query error: " << er.what() << endl;
 		return -1;
 	}
-	catch (exception& er) {
+	catch (const Exception& er) {
+		// Catch-all for any other MySQL++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}
-}
 
+	return 0;
+}

@@ -57,14 +57,19 @@ main(int argc, char *argv[])
 			print_stock_row(r);
 		}
 	}
-	catch (mysqlpp::BadQuery& e) {
+	catch (const mysqlpp::BadQuery& e) {
 		// Something went wrong with the SQL query.
 		std::cerr << "Query failed: " << e.what() << std::endl;
 		return 1;
 	}
-	catch (mysqlpp::EndOfResults& e) {
+	catch (const mysqlpp::EndOfResults& e) {
 		// Last query result received.  Exit normally.
 		return 0;
+	}
+	catch (const mysqlpp::Exception& er) {
+		// Catch-all for any other MySQL++ exceptions
+		std::cerr << "Error: " << er.what() << std::endl;
+		return 1;
 	}
 
 	// Shouldn't happen!  Program should either error out through one of
