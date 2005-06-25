@@ -20,8 +20,9 @@ LDADD = $(MYSQLPP_LIB) @PTHREAD_LIBS@
 
 EXTRA_DIST = *.vcproj *.bpf *.bpr *.bpg Makefile.simple
 
-noinst_PROGRAMS = resetdb simple1 simple2 custom1 custom2 custom3 \
-		custom4 custom5 fieldinf1 dbinfo updel load_file cgi_image
+noinst_PROGRAMS = resetdb simple1 simple2 usequery custom1 custom2 \
+		custom3 custom4 custom5 fieldinf1 dbinfo updel load_file \
+		cgi_image
 
 noinst_HEADERS = util.h
 
@@ -30,6 +31,9 @@ simple1_DEPENDENCIES = $(MYSQLPP_LIB)
 
 simple2_SOURCES = simple2.cpp util.cpp
 simple2_DEPENDENCIES = $(MYSQLPP_LIB)
+
+usequery_SOURCES = usequery.cpp util.cpp
+usequery_DEPENDENCIES = $(MYSQLPP_LIB)
 
 dbinfo_SOURCES = dbinfo.cpp util.cpp
 dbinfo_DEPENDENCIES = $(MYSQLPP_LIB)

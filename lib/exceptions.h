@@ -202,6 +202,20 @@ public:
 };
 
 
+/// \brief Exception thrown when ResUse::fetch_row() walks off the end
+/// of a use-query's result set.
+
+class EndOfResults : public Exception
+{
+public:
+	/// \brief Create exception object
+	EndOfResults(const char* w = "") :
+	Exception(w)
+	{
+	}
+};
+
+
 } // end namespace mysqlpp
 
 #endif

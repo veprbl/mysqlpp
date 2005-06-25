@@ -114,7 +114,7 @@ public:
 		unsigned long* length = mysql_fetch_lengths(result_);
 		if (!row || !length) {
 			if (throw_exceptions()) {
-				throw BadQuery("Bad row");
+				throw EndOfResults();
 			}
 			else {
 				return Row();
@@ -383,7 +383,7 @@ public:
 		unsigned long* length = mysql_fetch_lengths(result_);
 		if (!row || !length) {
 			if (throw_exceptions()) {
-				throw BadQuery("Bad row");
+				throw EndOfResults();
 			}
 			else {
 				return Row();
