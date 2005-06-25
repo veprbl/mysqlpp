@@ -469,11 +469,10 @@ public:
 	/// \brief Get the number of fields in the row.
 	size_type size() const;
 
-	/// \brief Get the value of a field given its index.
+	/// \brief Get the value of a field given its name.
 	///
-	/// If the array index is out of bounds, the C++ standard says that
-	/// the underlying vector container should throw an exception.
-	/// Whether it actually does is probably implementation-dependent.
+	/// If the field does not exist in this row, we throw a BadFieldName
+	/// exception.
 	///
 	/// Note that we return the
 	/// \link mysqlpp::ColData_Tmpl ColData \endlink object by value.
@@ -483,30 +482,33 @@ public:
 	/// like this:
 	///
 	/// \code
-	///  string s = row[2];
+	///  string s = row["myfield"];
 	/// \endcode
 	///
-	/// That accesses the third field in the row, returns a temporary
+	/// That accesses myfield within the row, returns a temporary
 	/// ColData object, which is then automatically converted to a
 	/// \c std::string and copied into \c s.  That works fine, but
 	/// beware of this similar but incorrect construct:
 	///
 	/// \code
-	///  const char* pc = row[2];
+	///  const char* pc = row["myfield"];
 	/// \endcode
 	///
 	/// This one line of code does what you expect, but \c pc is then a
 	/// dangling pointer: it points to memory owned by the temporary
 	/// ColData object, which will have been destroyed by the time you
 	/// get around to actually \e using the pointer.
-	const ColData operator [](size_type i) const;
-
-	/// \brief Get the value of a field given its field name.
 	///
-	/// This function is rather inefficient.  You should use operator[]
-	/// if you're using Rows directly, or SSQLS for efficient named
-	/// access to row elements.
-	const ColData lookup_by_name(const char*) const;
+	/// This function is rather inefficient.  If that is a concern for
+	/// you, use at() or the SSQLS mechanism instead.
+	const ColData operator [](const char* field) const;
+
+	/// \brief Get the value of a field given its index.
+	///
+	/// If the index is out-of-bounds, the underlying vector is supposed
+	/// to throw an exception according to the C++ Standard.  Whether it
+	/// actually does this is implementation-dependent.
+	const ColData at(size_type i) const;
 
 	/// \brief Return the value of a field given its index, in raw form.
 	///

@@ -290,7 +290,7 @@ public:
 	/// \brief Get the underlying Field structure given its index.
 	const Field& fields(unsigned int i) const
 	{
-		return fields_[i];
+		return fields_.at(i);
 	}
 	
 	/// \brief Returns true if the other ResUse object shares the same
@@ -412,13 +412,15 @@ public:
 	{
 		return size_type(num_rows());
 	}
+
 	/// \brief Alias for num_rows(), only with different return type.
 	size_type rows() const
 	{
 		return size_type(num_rows());
 	}
+
 	/// \brief Get the row with an offset of i.
-	const Row operator [](size_type i) const
+	const Row at(size_type i) const
 	{
 		data_seek(i);
 		return fetch_row();

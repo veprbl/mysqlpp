@@ -54,12 +54,12 @@ public:
 	}
 	
 	/// \brief Returns a field given its index.
-	const Field& operator [](size_type i) const;
+	const Field& at(size_type i) const;
 
 	/// \brief Returns a field given its index.
-	const Field& operator [](int i) const
+	const Field& at(int i) const
 	{
-		return operator [](size_type(i));
+		return at(static_cast<size_type>(i));
 	}
 
 	size_type size() const;	///< get the number of fields

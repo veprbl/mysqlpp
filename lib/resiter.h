@@ -82,7 +82,7 @@ public:
 	virtual size_type size() const = 0;	
 
 	/// \brief Return element at given index in container
-	virtual ReturnType operator [](SizeType i) const = 0;
+	virtual ReturnType at(SizeType i) const = 0;
 
 	/// \brief Return maximum number of elements that can be stored
 	/// in container without resizing.
@@ -182,11 +182,11 @@ public:
 	
 	/// \brief Access the current pointed-to element within the
 	/// container
-	ReturnType* operator ->() const { return &((*d)[i]); }
+	ReturnType* operator ->() const { return &(d->at(i)); }
 	
 	/// \brief Dereference the iterator, returning the pointed-to
 	/// element within the container.
-	ReturnType operator *() const { return (*d)[i]; }
+	ReturnType operator *() const { return d->at(i); }
 	
 	/// \brief Return the an element in the container given its index
 	ReturnType operator [](SizeType n) const { return (*d)[n]; }

@@ -3122,6 +3122,24 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 					<computeroutput>Row::field_list()</computeroutput>.
 					It was
 					pointless.</para></listitem>
+
+					<listitem><para><computeroutput>Row</computeroutput>
+					subscripting works more like
+					v1.7.9: one can subscript a
+					<computeroutput>Row</computeroutput>
+					with a string (e.g.
+					<computeroutput>row["myfield"]</computeroutput>),
+					and
+					<computeroutput>lookup_by_name()</computeroutput>
+					was removed. The underlying
+					problem that lead to that
+					change still exists, so this is
+					at the expense of indexing by
+					an integer. To get a field
+					by its index, use the new
+					<computeroutput>at()</computeroutput>
+					function, by analogy with
+					<computeroutput>std::vector::at()</computeroutput>.</para></listitem>
 				</itemizedlist>
 			</sect4>
 

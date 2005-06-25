@@ -35,7 +35,7 @@ Row::size_type Row::size() const
 	return res_->num_fields();
 }
 
-const ColData Row::operator [](size_type i) const
+const ColData Row::at(size_type i) const
 {
 	if (initialized_) {
 		return ColData(data_.at(i).c_str(), res_->types(i), is_nulls_[i]);
@@ -48,14 +48,14 @@ const ColData Row::operator [](size_type i) const
 	}
 }
 
-const ColData Row::lookup_by_name(const char* i) const
+const ColData Row::operator [](const char* field) const
 {
-	int si = res_->field_num(std::string(i));
-	if (si < res_->num_fields()) {
-		return (*this)[si];
+	int si = res_->field_num(std::string(field));
+	if (si < size()) {
+		return at(si);
 	}
 	else {
-		throw BadFieldName(i);
+		throw BadFieldName(field);
 	}
 }
 

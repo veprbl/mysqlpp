@@ -133,7 +133,7 @@ main(int argc, char* argv[])
 				for (counter = 0; counter < columns; counter++) {
 					if (widths[counter]) {
 						cout << ' ' << setw(widths[counter]) <<
-								row[counter] << ' ';
+								row.at(counter) << ' ';
 					}
 				}
 				cout << endl;
@@ -157,7 +157,7 @@ main(int argc, char* argv[])
 		for (i = res.begin(); i != res.end(); ++i) {
 			row = *i;
 			for (int counter = 0; counter < columns; counter++) {
-				cout << row[counter] << "  ";
+				cout << row.at(counter) << "  ";
 			}
 			cout << endl;
 		}

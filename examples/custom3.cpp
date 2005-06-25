@@ -71,7 +71,7 @@ main(int argc, char *argv[])
 		// there's no point in storing the result in an STL container.
 		// We can store the first row directly into a stock structure
 		// because one of an SSQLS's constructors takes a Row object.
-		stock row = res[0];
+		stock row = res.at(0);
 
 		// Create a copy so that the replace query knows what the
 		// original values are.

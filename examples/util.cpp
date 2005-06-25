@@ -134,8 +134,15 @@ print_stock_row(const mysqlpp::Row& row)
 	// specially.  (See Row::operator[]'s documentation for the reason.)
 	// As for the rest of the fields, Row::operator[] returns a ColData
 	// object, which can convert itself to any standard C type.
-	string item(row[0]);
-	print_stock_row(item, row[1], row[2], row[3], row[4]);
+	//
+	// We index the row by field name to demonstrate the feature, and
+	// also because it makes the code more robust in the face of schema
+	// changes.  Use Row::at() instead if efficiency is paramount.  To
+	// maintain efficiency while keeping robustness, use the SSQLS
+	// feature, demoed in the custom* examples.
+	string item(row["item"]);
+	print_stock_row(item, row["num"], row["weight"], row["price"],
+			row["sdate"]);
 }
 
 

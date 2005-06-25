@@ -60,19 +60,6 @@ v2.0 Release Plan
 
 	o Fold RowTemplate class into Row.
 
-	o Swap the definitions of Row::operator[] and lookup_by_name().
-	  That is, have the operator take a field name, and define a
-	  function (at()?) that takes a field index.  The original problem
-	  solved in 1.7.10 still exists, in that modern compilers won't
-	  let you overload the operator on both strings and integers,
-	  but the string form probably is the most useful.
-
-	o Decide on a new soname scheme?  It'd be nice if the soname had
-	  some obvious relationship to the library version.  We could
-	  actually go with a 1:1 relationship, and simply override the
-	  default library symlink scheme to handle things correctly if
-	  libraries from the old scheme are still present.
-
 	o Add thread support to examples/Makefile.simple.  Commented-out
 	  by default, but available if required.
 
