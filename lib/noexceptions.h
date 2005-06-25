@@ -53,7 +53,7 @@ class OptionalExceptions
 public:
 	/// \brief Default constructor
 	///
-	/// \param b if true, exceptions are enabled (this is the default)
+	/// \param e if true, exceptions are enabled (this is the default)
 	OptionalExceptions(bool e = true) :
 	exceptions_(e)
 	{
