@@ -54,7 +54,7 @@ rm -rf $RPM_BUILD_ROOT
 rm -f doc/README.examples doc/LICENSE
 
 %post
-	ln -s /usr/lib/libmysqlpp.so.%{version} /usr/lib/libmysqlpp.so
+	ln -sf /usr/lib/libmysqlpp.so.%{version} /usr/lib/libmysqlpp.so
 	/sbin/ldconfig
 
 %postun -p /sbin/ldconfig
