@@ -94,6 +94,13 @@ Future Features and ABI Changes
 	  Connection object has to be in a higher scope, or created on the
 	  heap.
 
+	  Alternate approach: explicit commit() call in the transaction class.
+	  The dtor will always perform a rollback if not committed first.
+	  This removes possibility of exception in the dtor, while allowing
+	  an exception in commit().  The database will always be left in
+	  a consistent state if an exception occurs that is not handled.
+
+
 	o Abstract all uses of MySQL C API functions into a database
 	  driver class with a generic interface.  This is a step
 	  towards database-independence, without the parallel class
