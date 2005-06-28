@@ -37,8 +37,8 @@ std::stringstream(const_cast<Query&>(q).str()),
 OptionalExceptions(q.exceptions()),
 Lockable(),
 conn_(q.conn_),
-Success(q.Success),
-errmsg(q.errmsg),
+success_(q.success_),
+errmsg_(q.errmsg_),
 def(q.def)
 {
 }
@@ -52,8 +52,8 @@ my_ulonglong Query::affected_rows() const
 
 std::string Query::error()
 {
-	if (errmsg) {
-		return std::string(errmsg);
+	if (errmsg_) {
+		return std::string(errmsg_);
 	}
 	else {
 		return conn_->error();
@@ -63,20 +63,20 @@ std::string Query::error()
 
 bool Query::exec(const std::string& str)
 {
-	Success = !mysql_real_query(&conn_->mysql, str.c_str(),
+	success_ = !mysql_real_query(&conn_->mysql, str.c_str(),
 			str.length());
-	if (!Success && throw_exceptions()) {
+	if (!success_ && throw_exceptions()) {
 		throw BadQuery(conn_->error());
 	}
 	else {
-		return Success;
+		return success_;
 	}
 }
 
 
 ResNSel Query::execute(const char* str)
 {
-	Success = false;
+	success_ = false;
 	if (lock()) {
 		if (throw_exceptions()) {
 			throw BadQuery("lock failed");
@@ -86,9 +86,9 @@ ResNSel Query::execute(const char* str)
 		}
 	}
 
-	Success = !mysql_query(&conn_->mysql, str);
+	success_ = !mysql_query(&conn_->mysql, str);
 	unlock();
-	if (Success) {
+	if (success_) {
 		return ResNSel(conn_);
 	}
 	else {
@@ -104,7 +104,7 @@ ResNSel Query::execute(const char* str)
 
 ResNSel Query::execute(parms& p)
 {
-	query_reset r = parsed.size() ? DONT_RESET : RESET_QUERY;
+	query_reset r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
 	return execute(str(p, r).c_str());
 }
 
@@ -180,17 +180,17 @@ void Query::parse()
 						s++;
 					}
 
-					if (n >= static_cast<long int>(parsed_names.size())) {
-						parsed_names.insert(parsed_names.end(),
+					if (n >= static_cast<long int>(parsed_names_.size())) {
+						parsed_names_.insert(parsed_names_.end(),
 								static_cast<std::vector<std::string>::size_type>(
-										n + 1) - parsed_names.size(),
+										n + 1) - parsed_names_.size(),
 								std::string());
 					}
-					parsed_names[n] = name;
-					parsed_nums[name] = n;
+					parsed_names_[n] = name;
+					parsed_nums_[name] = n;
 				}
 
-				parsed.push_back(SQLParseElement(str, option, char(n)));
+				parse_elems_.push_back(SQLParseElement(str, option, char(n)));
 				str = "";
 				name = "";
 			}
@@ -203,7 +203,7 @@ void Query::parse()
 		}
 	}
 
-	parsed.push_back(SQLParseElement(str, ' ', -1));
+	parse_elems_.push_back(SQLParseElement(str, ' ', -1));
 	delete[] s0;
 }
 
@@ -274,8 +274,8 @@ void Query::proc(SQLQueryParms& p)
 	SQLString *ss;
 	SQLQueryParms *c;
 
-	for (std::vector<SQLParseElement>::iterator i = parsed.begin();
-			i != parsed.end(); ++i) {
+	for (std::vector<SQLParseElement>::iterator i = parse_elems_.begin();
+			i != parse_elems_.end(); ++i) {
 		*this << i->before;
 		num = i->num;
 		if (num != -1) {
@@ -304,14 +304,14 @@ void Query::reset()
 	clear();
 	std::stringstream::str("");
 
-	parsed.clear();
+	parse_elems_.clear();
 	def.clear();
 }
 
 
 Result Query::store(const char* str)
 {
-	Success = false;
+	success_ = false;
 
 	if (lock()) {
 		if (throw_exceptions()) {
@@ -322,8 +322,8 @@ Result Query::store(const char* str)
 		}
 	}
 
-	Success = !mysql_query(&conn_->mysql, str);
-	if (Success) {
+	success_ = !mysql_query(&conn_->mysql, str);
+	if (success_) {
 		MYSQL_RES* res = mysql_store_result(&conn_->mysql);
 		if (res) {
 			unlock();
@@ -344,14 +344,14 @@ Result Query::store(const char* str)
 
 Result Query::store(parms& p)
 {
-	query_reset r = parsed.size() ? DONT_RESET : RESET_QUERY;
+	query_reset r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
 	return store(str(p, r).c_str());
 }
 
 
 std::string Query::str(SQLQueryParms& p)
 {
-	if (!parsed.empty()) {
+	if (!parse_elems_.empty()) {
 		proc(p);
 	}
 
@@ -373,7 +373,7 @@ std::string Query::str(SQLQueryParms& p, query_reset r)
 
 bool Query::success()
 {
-	if (Success) {
+	if (success_) {
 		return conn_->success();
 	}
 	else {
@@ -390,7 +390,7 @@ void Query::unlock()
 
 ResUse Query::use(const char* str)
 {
-	Success = false;
+	success_ = false;
 	if (lock()) {
 		if (throw_exceptions()) {
 			throw BadQuery("lock failed");
@@ -400,8 +400,8 @@ ResUse Query::use(const char* str)
 		}
 	}
 
-	Success = !mysql_query(&conn_->mysql, str);
-	if (Success) {
+	success_ = !mysql_query(&conn_->mysql, str);
+	if (success_) {
 		MYSQL_RES* res = mysql_use_result(&conn_->mysql);
 		if (res) {
 			unlock();
@@ -422,7 +422,7 @@ ResUse Query::use(const char* str)
 
 ResUse Query::use(parms& p)
 {
-	query_reset r = parsed.size() ? DONT_RESET : RESET_QUERY;
+	query_reset r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
 	return use(str(p, r).c_str());
 }
 

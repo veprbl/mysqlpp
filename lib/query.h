@@ -192,11 +192,11 @@ public:
 	OptionalExceptions(te),
 	Lockable(),
 	conn_(c),
-	Success(false),
-	errmsg(0),
+	success_(false),
+	errmsg_(0),
 	def(this)
 	{
-		Success = true;
+		success_ = true;
 	}
 
 	/// \brief Create a new query object as a copy of another.
@@ -610,18 +610,18 @@ private:
 	friend class SQLQueryParms;
 
 	Connection* conn_;		///< connection to send queries through
-	bool Success;			///< if true, last query succeeded
-	char* errmsg;			///< string explaining last query error
+	bool success_;			///< if true, last query succeeded
+	char* errmsg_;			///< string explaining last query error
 
 	/// \brief List of template query parameters
-	std::vector<SQLParseElement> parsed;
+	std::vector<SQLParseElement> parse_elems_;
 
 	/// \brief Maps template parameter position values to the
 	/// corresponding parameter name.
-	std::vector<std::string> parsed_names;
+	std::vector<std::string> parsed_names_;
 
 	/// \brief Maps template parameter names to their position value.
-	std::map<std::string, int> parsed_nums;
+	std::map<std::string, int> parsed_nums_;
 
 	//// Internal support functions
 	my_ulonglong affected_rows() const;
