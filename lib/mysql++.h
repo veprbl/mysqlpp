@@ -42,6 +42,7 @@
 
 // This #include order gives the fewest redundancies in the #include
 // dependency chain.
+#include "connection.h"
 #include "query.h"
 #include "compare.h"
 

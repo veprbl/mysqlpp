@@ -39,7 +39,6 @@
 namespace mysqlpp {
 
 class Query;
-class SQLQuery;
 
 
 /// \brief This class holds the parameter values for filling
@@ -50,7 +49,7 @@ private:
 	friend class Query;
 
 	typedef const SQLString& ss;
-	SQLQuery *parent;
+	Query *parent;
 
 public:
 	/// \brief Default constructor
@@ -63,7 +62,7 @@ public:
 	///
 	/// \param p pointer to the query object these parameters are tied
 	/// to
-	SQLQueryParms(SQLQuery* p) :
+	SQLQueryParms(Query* p) :
 	parent(p)
 	{
 	}
@@ -202,7 +201,7 @@ public:
 };
 
 
-/// \brief Used within SQLQuery to hold elements for parameterized
+/// \brief Used within Query to hold elements for parameterized
 /// queries.
 ///
 /// Each element has three parts:

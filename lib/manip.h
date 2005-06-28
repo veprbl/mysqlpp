@@ -3,7 +3,7 @@
 ///
 /// These manipulators let you automatically quote elements or escape
 /// characters that are special in SQL when inserting them into an
-/// \c std::ostream. Since mysqlpp::SQLQuery is an ostream, these
+/// \c std::ostream. Since mysqlpp::Query is an ostream, these
 /// manipulators make it easier to build syntactically-correct SQL
 /// queries.
 ///
@@ -47,7 +47,6 @@
 #include "datetime.h"
 #include "myset.h"
 #include "sql_string.h"
-#include "sql_query.h"
 
 #include <mysql.h>
 
@@ -57,6 +56,8 @@
 /// needed because many symbols are rather generic (e.g. Row, Query...),
 /// so there is a serious danger of conflicts.
 namespace mysqlpp {
+
+class Query;
 
 extern bool dont_quote_auto;
 
@@ -132,12 +133,10 @@ std::ostream& operator <<(std::ostream& o,
 		const ColData_Tmpl<const_string>& in);
 
 
-SQLQuery& operator <<(SQLQuery& o,
-		const ColData_Tmpl<std::string>& in);
+Query& operator <<(Query& o, const ColData_Tmpl<std::string>& in);
 
 
-SQLQuery& operator <<(SQLQuery& o,
-		const ColData_Tmpl<const_string>& in);
+Query& operator <<(Query& o, const ColData_Tmpl<const_string>& in);
 
 
 template <>
@@ -582,11 +581,7 @@ inline do_nothing_type2 operator <<(SQLQueryParms& p,
 }
 
 
-inline SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
-{
-	in.processed = true;
-	return *p.qparms << in;
-}
+SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in);
 
 #endif // !defined(DOXYGEN_IGNORE)
 
@@ -626,10 +621,7 @@ inline ignore_type2 operator <<(SQLQueryParms& p, ignore_type0 /*esc*/)
 }
 
 
-inline SQLQueryParms& operator <<(ignore_type2 p, SQLString& in)
-{
-	return *p.qparms << in;
-}
+SQLQueryParms& operator <<(ignore_type2 p, SQLString& in);
 
 #endif // !defined(DOXYGEN_IGNORE)
 

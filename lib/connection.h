@@ -37,26 +37,14 @@
 
 #include "platform.h"
 
-#include "exceptions.h"
+#include "defs.h"
+
 #include "lockable.h"
 #include "noexceptions.h"
-#include "result.h"
 
 #include <mysql.h>
 
-#include <vector>
-#include <deque>
-#include <list>
-#include <set>
-#include <map>
-
-#ifdef HAVE_EXT_SLIST
-#  include <ext/slist>
-#else
-#  ifdef HAVE_STD_SLIST
-#      include <slist>
-#  endif
-#endif
+#include <string>
 
 namespace mysqlpp {
 

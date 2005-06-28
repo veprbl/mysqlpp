@@ -27,6 +27,8 @@
 
 #include "manip.h"
 
+#include "query.h"
+
 using namespace std;
 
 // Manipulator stuff is _always_ in namespace mysqlpp.
@@ -233,7 +235,7 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
 /// compiler's implementation of the C++ type system.  See Wishlist for
 /// current plan on what to do about this.
 
-SQLQuery& operator <<(SQLQuery& o, const ColData_Tmpl<string>& in)
+Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
 {
 	if (dont_quote_auto) {
 		o << in.get_string();
@@ -264,7 +266,7 @@ SQLQuery& operator <<(SQLQuery& o, const ColData_Tmpl<string>& in)
 /// compiler's implementation of the C++ type system.  See Wishlist for
 /// current plan on what to do about this.
 
-SQLQuery& operator <<(SQLQuery& o, const ColData_Tmpl<const_string>& in)
+Query& operator <<(Query& o, const ColData_Tmpl<const_string>& in)
 {
 	if (dont_quote_auto) {
 		o << in.get_string();
@@ -503,6 +505,19 @@ template <>
 std::ostream& operator <<(escape_type1 o, const ColData_Tmpl<const_string>& in)
 {
 	return _manip(o, in);
+}
+
+
+SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
+{
+	in.processed = true;
+	return *p.qparms << in;
+}
+
+
+SQLQueryParms& operator <<(ignore_type2 p, SQLString& in)
+{
+	return *p.qparms << in;
 }
 
 } // end namespace mysqlpp

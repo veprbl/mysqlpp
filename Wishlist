@@ -34,8 +34,6 @@ v2.0 Release Plan
 	The remaining changes planned for v2.0 are:
 
 
-	o Fold SQLQuery class into Query.
-
 	o Use mysql_real_escape_string() instead of mysql_escape_string()
 	  within the Query::pprepare() function.  (In C API
 	  since 3.23.14.)  Depends on previous change, because

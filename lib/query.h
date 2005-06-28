@@ -30,12 +30,58 @@
 
 #include "defs.h"
 
-#include "coldata.h"
-#include "connection.h"
+#include "lockable.h"
+#include "noexceptions.h"
+#include "qparms.h"
 #include "result.h"
-#include "sql_query.h"
+#include "row.h"
+#include "sql_string.h"
 
 #include <mysql.h>
+
+#include <deque>
+#include <list>
+#include <map>
+#include <set>
+#include <sstream>
+#include <vector>
+
+#ifdef HAVE_EXT_SLIST
+#  include <ext/slist>
+#else
+#  ifdef HAVE_STD_SLIST
+#      include <slist>
+#  endif
+#endif
+
+
+/// \brief Used to define many similar functions in class Query.
+#define mysql_query_define0(RETURN, FUNC)\
+  RETURN FUNC (ss a)\
+    {return FUNC (parms() << a);}\
+  RETURN FUNC (ss a, ss b)\
+    {return FUNC (parms() << a << b);}\
+  RETURN FUNC (ss a, ss b, ss c)\
+    {return FUNC (parms() << a << b << c);}\
+  RETURN FUNC (ss a, ss b, ss c, ss d)\
+    {return FUNC (parms() << a << b << c << d);}\
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e)\
+    {return FUNC (parms() << a << b << c << d << e);} \
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f)\
+    {return FUNC (parms() << a << b << c << d << e << f);}\
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g)\
+    {return FUNC (parms() << a << b << c << d << e << f << g);}\
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)\
+    {return FUNC (parms() << a << b << c << d << e << f << g << h);}\
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)\
+    {return FUNC (parms() << a << b << c << d << e << f << g << h << i);}\
+  RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j)\
+    {return FUNC (parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j);}\
+  RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k)\
+    {return FUNC (parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k);}\
+  RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k,\
+		       ss l)\
+    {return FUNC (parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k <<l);}\
 
 /// \brief Used to define many similar member functions in class Query.
 #define mysql_query_define1(RETURN, FUNC) \
@@ -73,6 +119,11 @@
 	{FUNC (con, parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k <<l);}\
 
 namespace mysqlpp {
+
+class Connection;
+
+/// \brief Used for indicating whether a query object should auto-reset
+enum query_reset { DONT_RESET, RESET_QUERY };
 
 /// \brief A class for building and executing SQL queries.
 ///
@@ -123,20 +174,13 @@ namespace mysqlpp {
 ///
 /// See the user manual for more details about these options.
 
-class Query : public SQLQuery, public OptionalExceptions,
+class Query : public std::stringstream, public OptionalExceptions,
 		public Lockable
 {
-private:
-	Connection* conn_;
-
-	my_ulonglong affected_rows() const;
-	my_ulonglong insert_id();
-	std::string info();
-
-	bool lock();
-	void unlock();
-
 public:
+	typedef const SQLString& ss;	///< to keep parameter lists short
+	typedef SQLQueryParms parms;	///< shortens def'ns of above macros
+
 	/// \brief Create a new query object attached to a connection.
 	///
 	/// This is the constructor used by mysqlpp::Connection::query().
@@ -144,9 +188,13 @@ public:
 	/// \param c connection the finished query should be sent out on
 	/// \param te if true, throw exceptions on errors
 	Query(Connection* c, bool te = true) :
-	SQLQuery(),
+	std::stringstream(),
 	OptionalExceptions(te),
-	conn_(c)
+	Lockable(),
+	conn_(c),
+	Success(false),
+	errmsg(0),
+	def(this)
 	{
 		Success = true;
 	}
@@ -154,8 +202,11 @@ public:
 	/// \brief Create a new query object as a copy of another.
 	Query(const Query& q);
 
-	/// \brief Get the last error message that happened on the connection
-	/// we're bound to.
+	/// \brief Get the last error message that was set.
+	///
+	/// This class has an internal error message string, but if it
+	/// isn't set, we return the last error message that happened
+	/// on the connection we're bound to instead.
 	std::string error();
 
 	/// \brief Returns true if the last operation succeeded
@@ -165,11 +216,55 @@ public:
 	/// either object is unhappy, this method returns false.
 	bool success();
 
+	/// \brief Treat the contents of the query string as a template
+	/// query.
+	///
+	/// This method sets up the internal structures used by all of the
+	/// other members that accept template query parameters.  See the
+	/// "Template Queries" chapter in the user manual for more
+	/// information.
+	void parse();
+
+	/// \brief Reset the query object so that it can be reused.
+	///
+	/// This erases the query string and the contents of the parameterized
+	/// query element list.
+	void reset();
+
 	/// \brief Return the query string currently in the buffer.
 	std::string preview() { return str(def); }
 
 	/// \brief Return the query string currently in the buffer.
-	std::string preview(parms& p) { return str(p); }
+	std::string preview(SQLQueryParms& p) { return str(p); }
+
+	/// \brief Get built query as a null-terminated C++ string
+	std::string str()
+	{
+		return str(def);
+	}
+
+	/// \brief Get built query as a null-terminated C++ string
+	///
+	/// \param r if equal to \c RESET_QUERY, query object is cleared
+	/// after this call
+	std::string str(query_reset r)
+	{
+		return str(def, r);
+	}
+
+	/// \brief Get built query as a null-terminated C++ string
+	///
+	/// \param p template query parameters to use, overriding the ones
+	/// this object holds, if any
+	std::string str(SQLQueryParms& p);
+
+	/// \brief Get built query as a null-terminated C++ string
+	///
+	/// \param p template query parameters to use, overriding the ones
+	/// this object holds, if any
+	/// \param r if equal to \c RESET_QUERY, query object is cleared
+	/// after this call
+	std::string str(SQLQueryParms& p, query_reset r);
 
 	/// \brief Execute a query
 	///
@@ -394,9 +489,17 @@ public:
 	/// \param n new row
 	///
 	/// \sa insert(), replace()
-	template<class T> Query& update(const T& o, const T& n)
+	template <class T>
+	Query& update(const T& o, const T& n)
 	{
-		SQLQuery::update(o, n);
+		reset();
+
+		// Cast required for VC++ 2003 due to error in overloaded operator
+		// lookup logic.  For an explanation of the problem, see:
+		// http://groups-beta.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
+		dynamic_cast<std::stringstream&>(*this) << "UPDATE " <<
+				o.table() << " SET " << n.equal_list() << " WHERE " <<
+				o.equal_list(" AND ", sql_use_compare);
 		return *this;
 	}
 
@@ -408,9 +511,15 @@ public:
 	/// \param v new row
 	///
 	/// \sa replace(), update()
-	template<class T> Query& insert(const T& v)
+	template <class T>
+	Query& insert(const T& v)
 	{
-		SQLQuery::insert(v);
+		reset();
+
+		// See above comment for cast rationale
+		dynamic_cast<std::stringstream&>(*this) << "INSERT INTO " <<
+				v.table() << " (" << v.field_list() << ") VALUES (" <<
+				v.value_list() << ")";
 		return *this;
 	}
 
@@ -427,9 +536,26 @@ public:
 	///    insert
 	///
 	/// \sa replace(), update()
-	template<class Iter> Query& insert(Iter first, Iter last)
+	template <class Iter>
+	Query& insert(Iter first, Iter last)
 	{
-		SQLQuery::insert(first, last);
+		reset();
+		if (first == last) {
+			return *this;	// empty set!
+		}
+		
+		// See above comment for cast rationale
+		dynamic_cast<std::stringstream&>(*this) << "INSERT INTO " <<
+				first->table() << " (" << first->field_list() <<
+				") VALUES (" << first->value_list() << ')';
+
+		Iter it = first + 1;
+		while (it != last) {
+			dynamic_cast<std::stringstream&>(*this) << ",(" <<
+					it->value_list() << ')';
+			++it;
+		}
+
 		return *this;
 	}
 
@@ -442,11 +568,23 @@ public:
 	/// \param v new row
 	///
 	/// \sa insert(), update()
-	template<class T> Query& replace(const T& v)
+	template <class T>
+	Query& replace(const T& v)
 	{
-		SQLQuery::replace(v);
+		reset();
+
+		// See above comment for cast rationale
+		dynamic_cast<std::stringstream&>(*this) << "REPLACE INTO " <<
+				v.table() << " (" << v.field_list() << ") VALUES (" <<
+				v.value_list() << ")";
 		return *this;
 	}
+
+	/// \brief Return true if the last query was successful
+	operator bool() { return success(); }
+
+	/// \brief Return true if the last query failed
+	bool operator !() { return !success(); }
 
 #if !defined(DOXYGEN_IGNORE)
 	// Declare the remaining overloads.  These are hidden down here partly
@@ -454,13 +592,49 @@ public:
 	// from Doxygen, which gets confused by macro instantiations that look
 	// like method declarations.
 	mysql_query_define0(std::string, preview)
+	mysql_query_define0(std::string, str);
 	mysql_query_define1(ResNSel, execute)
-	mysql_query_define1(ResUse, use)
 	mysql_query_define1(Result, store)
+	mysql_query_define1(ResUse, use)
 	mysql_query_define2(storein_sequence)
 	mysql_query_define2(storein_set)
 	mysql_query_define2(storein)
 #endif // !defined(DOXYGEN_IGNORE)
+
+	/// \brief The default template parameters
+	///
+	/// Used for filling in parameterized queries.
+	SQLQueryParms def;
+
+private:
+	friend class SQLQueryParms;
+
+	Connection* conn_;		///< connection to send queries through
+	bool Success;			///< if true, last query succeeded
+	char* errmsg;			///< string explaining last query error
+
+	/// \brief List of template query parameters
+	std::vector<SQLParseElement> parsed;
+
+	/// \brief Maps template parameter position values to the
+	/// corresponding parameter name.
+	std::vector<std::string> parsed_names;
+
+	/// \brief Maps template parameter names to their position value.
+	std::map<std::string, int> parsed_nums;
+
+	//// Internal support functions
+	my_ulonglong affected_rows() const;
+	my_ulonglong insert_id();
+	std::string info();
+	char *preview_char();
+
+	/// \brief Process a parameterized query list.
+	void proc(SQLQueryParms& p);
+
+	// Locking mechanism
+	bool lock();
+	void unlock();
 };
 
 
@@ -468,7 +642,7 @@ public:
 // Doxygen will not generate documentation for this section.
 
 template <class Seq>
-void Query::storein_sequence(Seq& seq, parms& p, query_reset r)
+void Query::storein_sequence(Seq& seq, SQLQueryParms& p, query_reset r)
 {
 	r = parsed.size() ? DONT_RESET : RESET_QUERY;
 	storein_sequence(seq, str(p, r).c_str());
@@ -493,7 +667,7 @@ void Query::storein_sequence(Sequence& con, const char* s)
 
 
 template <class Set>
-void Query::storein_set(Set& sett, parms& p, query_reset r)
+void Query::storein_set(Set& sett, SQLQueryParms& p, query_reset r)
 {
 	r = parsed.size() ? DONT_RESET : RESET_QUERY;
 	storein_set(sett, str(p, r).c_str());
@@ -518,7 +692,7 @@ void Query::storein_set(Set& con, const char* s)
 
 
 template <class T>
-void Query::storein(T& con, parms& p, query_reset r)
+void Query::storein(T& con, SQLQueryParms& p, query_reset r)
 {
 	r = parsed.size() ? DONT_RESET : RESET_QUERY;
 	storein(con, str(p, r).c_str());

@@ -26,7 +26,7 @@
 
 #include "qparms.h"
 
-#include "sql_query.h"
+#include "query.h"
 
 using namespace std;
 
@@ -49,5 +49,21 @@ SQLQueryParms::operator[] (const char* str) const
 	}
 	throw; // only here temporary 
 }
+
+SQLQueryParms
+SQLQueryParms::operator +(const SQLQueryParms& other) const
+{
+	if (other.size() <= size()) {
+		return *this;
+	}
+	SQLQueryParms New = *this;
+	size_t i;
+	for (i = size(); i < other.size(); i++) {
+		New.push_back(other[i]);
+	}
+
+	return New;
+}
+
 
 } // end namespace mysqlpp
