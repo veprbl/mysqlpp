@@ -37,6 +37,23 @@ conn_(q.conn_)
 }
 
 
+my_ulonglong Query::affected_rows() const
+{
+	return conn_->affected_rows();
+}
+
+
+std::string Query::error()
+{
+	if (errmsg) {
+		return std::string(errmsg);
+	}
+	else {
+		return conn_->error();
+	}
+}
+
+
 bool Query::exec(const std::string& str)
 {
 	Success = !mysql_real_query(&conn_->mysql, str.c_str(),
@@ -49,20 +66,6 @@ bool Query::exec(const std::string& str)
 	}
 }
 
-
-bool Query::success()
-{
-	if (Success) {
-		return conn_->success();
-	}
-	else {
-		return false;
-	}
-}
-
-
-/// \if INTERNAL
-// Doxygen will not generate documentation for this section.
 
 ResNSel Query::execute(const char* str)
 {
@@ -99,42 +102,21 @@ ResNSel Query::execute(parms& p)
 }
 
 
-ResUse Query::use(const char* str)
+std::string Query::info()
 {
-	Success = false;
-	if (lock()) {
-		if (throw_exceptions()) {
-			throw BadQuery("lock failed");
-		}
-		else {
-			return ResUse();
-		}
-	}
-
-	Success = !mysql_query(&conn_->mysql, str);
-	if (Success) {
-		MYSQL_RES* res = mysql_use_result(&conn_->mysql);
-		if (res) {
-			unlock();
-			return ResUse(res, conn_, throw_exceptions());
-		}
-	}
-	unlock();
-
-	// One of the mysql_* calls failed, so decide how we should fail.
-	if (throw_exceptions()) {
-		throw BadQuery(conn_->error());
-	}
-	else {
-		return ResUse();
-	}
+	return conn_->info();
 }
 
 
-ResUse Query::use(parms& p)
+my_ulonglong Query::insert_id()
 {
-	query_reset r = parsed.size() ? DONT_RESET : RESET_QUERY;
-	return use(str(p, r).c_str());
+	return conn_->insert_id();
+}
+
+
+bool Query::lock()
+{
+    return conn_->lock();
 }
 
 
@@ -177,47 +159,61 @@ Result Query::store(parms& p)
 	return store(str(p, r).c_str());
 }
 
-/// \endif
 
 
-my_ulonglong Query::affected_rows() const
+bool Query::success()
 {
-	return conn_->affected_rows();
-}
-
-
-my_ulonglong Query::insert_id()
-{
-	return conn_->insert_id();
-}
-
-
-std::string Query::info()
-{
-	return conn_->info();
-}
-
-
-std::string Query::error()
-{
-	if (errmsg) {
-		return std::string(errmsg);
+	if (Success) {
+		return conn_->success();
 	}
 	else {
-		return conn_->error();
+		return false;
 	}
-}
-
-
-bool Query::lock()
-{
-    return conn_->lock();
 }
 
 
 void Query::unlock()
 {
 	conn_->unlock();
+}
+
+
+ResUse Query::use(const char* str)
+{
+	Success = false;
+	if (lock()) {
+		if (throw_exceptions()) {
+			throw BadQuery("lock failed");
+		}
+		else {
+			return ResUse();
+		}
+	}
+
+	Success = !mysql_query(&conn_->mysql, str);
+	if (Success) {
+		MYSQL_RES* res = mysql_use_result(&conn_->mysql);
+		if (res) {
+			unlock();
+			return ResUse(res, conn_, throw_exceptions());
+		}
+	}
+	unlock();
+
+	// One of the mysql_* calls failed, so decide how we should fail.
+	if (throw_exceptions()) {
+		throw BadQuery(conn_->error());
+	}
+	else {
+		return ResUse();
+	}
+}
+
+
+ResUse Query::use(parms& p)
+{
+	query_reset r = parsed.size() ? DONT_RESET : RESET_QUERY;
+	return use(str(p, r).c_str());
 }
 
 } // end namespace mysqlpp
