@@ -175,6 +175,15 @@ Future Features and ABI Changes
 	  (See "Algorithms for Programmers" by Binstock and Rex.)
 	  Then write an example showing how to use these mechanisms.
 
+	o When you create a Connection object but don't .connect() it,
+	  several of its functions can fail to work correctly.  ping(),
+	  for one, because the MYSQL handle isn't initialized until the
+	  connection is established.  Decide how to cope: a) init the handle
+	  in all ctors; b) throw an exception when the library knows the
+	  call will fail; or c) just return a failure code and hope the user
+	  is checking it.  Could be a different answer for each function.
+	  Keep in mind the consequences for database-independence here.
+
 
 Bug Fix/Maintenance Items
 -------------------------
