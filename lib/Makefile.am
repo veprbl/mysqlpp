@@ -30,17 +30,17 @@ libmysqlpp_la_LDFLAGS=-version-info 10:0:9
 
 libmysqlpp_la_SOURCES = \
 	coldata.cpp connection.cpp datetime.cpp fields.cpp field_names.cpp \
-	field_types.cpp manip.cpp myset.cpp query.cpp result.cpp row.cpp \
-	sql_query.cpp sql_string.cpp type_info.cpp vallist.cpp \
-	string_util.cpp
+	field_types.cpp manip.cpp myset.cpp qparms.cpp query.cpp \
+	result.cpp row.cpp sql_query.cpp sql_string.cpp string_util.cpp \
+	type_info.cpp vallist.cpp
 
 include_HEADERS = \
 	coldata.h compare.h connection.h const_string.h convert.h custom.h \
 	custom-macros.h defs.h datetime.h exceptions.h field_names.h \
 	field_types.h fields.h lockable.h manip.h myset.h mysql++.h \
-	noexceptions.h null.h platform.h query.h resiter.h result.h row.h \
-	sql_query.h sql_string.h stream2string.h string_util.h tiny_int.h \
-	type_info.h vallist.h 
+	noexceptions.h null.h platform.h qparms.h query.h resiter.h \
+	result.h row.h sql_query.h sql_string.h stream2string.h \
+	string_util.h tiny_int.h type_info.h vallist.h 
 
 all-local: custom.h
 

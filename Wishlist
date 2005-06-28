@@ -52,9 +52,9 @@ v2.0 Release Plan
 	  our own buffer management, possibly with a basic_stringbuf data
 	  member.
 
-	o There are comments in sql_query.h saying "only here temporary".
-	  They've been there for literally years.  Time to decide what
-	  to do about them!
+	o There are comments in qparms.cpp saying "only here temporary".
+	  (Used to be in sql_query.h)  They've been there for
+	  literally years.  Time to decide what to do about them!
 
 	o Set type to some default in ColData_Tmpl default ctor.
 
