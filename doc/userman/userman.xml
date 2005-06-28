@@ -3258,6 +3258,11 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			took objects by value now take them by const
 			reference, for efficiency.</para>
 
+			<para>Merged
+			<computeroutput>SQLQuery</computeroutput>
+			class's members into class
+			<computeroutput>Query</computeroutput></para>
+
 			<para>Reordered member variable declarations
 			in some classes. The most common instance is
 			when the private section was declared before
