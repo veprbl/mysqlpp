@@ -38,7 +38,7 @@ SQLQueryParms::operator [](const char* str)
 	if (parent) {
 		return operator [](parent->parsed_nums[str]);
 	}
-	throw; // only here temporary 
+	throw ObjectNotInitialized("SQLQueryParms object has no parent!");
 }
 
 const SQLString&
@@ -47,7 +47,7 @@ SQLQueryParms::operator[] (const char* str) const
 	if (parent) {
 		return operator [](parent->parsed_nums[str]);
 	}
-	throw; // only here temporary 
+	throw ObjectNotInitialized("SQLQueryParms object has no parent!");
 }
 
 SQLQueryParms

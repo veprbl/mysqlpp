@@ -245,6 +245,20 @@ public:
 };
 
 
+/// \brief Exception thrown when you try to use an object that isn't
+/// completely initialized.
+
+class ObjectNotInitialized : public Exception
+{
+public:
+	/// \brief Create exception object
+	ObjectNotInitialized(const char* w = "") :
+	Exception(w)
+	{
+	}
+};
+
+
 } // end namespace mysqlpp
 
 #endif
