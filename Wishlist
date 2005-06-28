@@ -34,13 +34,6 @@ v2.0 Release Plan
 	The remaining changes planned for v2.0 are:
 
 
-	o Use mysql_real_escape_string() instead of mysql_escape_string()
-	  within the Query::pprepare() function.  (In C API
-	  since 3.23.14.)  Depends on previous change, because
-	  mysql_real_escape_string() requires access to the current
-	  Connection object, to get the database's default character
-	  encoding.
-
 	o See if we can use mysql_real_escape_string() in manip.cpp
 	  as well.  (This might end up being pushed into v2.1, if it's
 	  too tough.)

@@ -30,52 +30,6 @@
 
 namespace mysqlpp {
 
-static SQLString*
-pprepare(char option, SQLString& S, bool replace = true)
-{
-	if (S.processed) {
-		return &S;
-	}
-
-	if (option == 'r' || (option == 'q' && S.is_string)) {
-		char *s = new char[S.size() * 2 + 1];
-		mysql_escape_string(s, S.c_str(),
-				static_cast<unsigned long>(S.size()));
-		SQLString *ss = new SQLString("'");
-		*ss += s;
-		*ss += "'";
-		delete[] s;
-
-		if (replace) {
-			S = *ss;
-			S.processed = true;
-			return &S;
-		}
-		else {
-			return ss;
-		}
-	}
-	else if (option == 'R' || (option == 'Q' && S.is_string)) {
-		SQLString *ss = new SQLString("'" + S + "'");
-
-		if (replace) {
-			S = *ss;
-			S.processed = true;
-			return &S;
-		}
-		else {
-			return ss;
-		}
-	}
-	else {
-		if (replace) {
-			S.processed = true;
-		}
-		return &S;
-	}
-}
-
-
 Query::Query(const Query& q) :
 // Yes, the following cast is evil.  It will be fixed when we move
 // buffer management to within this class.
@@ -251,6 +205,52 @@ void Query::parse()
 
 	parsed.push_back(SQLParseElement(str, ' ', -1));
 	delete[] s0;
+}
+
+
+SQLString*
+Query::pprepare(char option, SQLString& S, bool replace)
+{
+	if (S.processed) {
+		return &S;
+	}
+
+	if (option == 'r' || (option == 'q' && S.is_string)) {
+		char *s = new char[S.size() * 2 + 1];
+		mysql_real_escape_string(&conn_->mysql, s, S.c_str(),
+				static_cast<unsigned long>(S.size()));
+		SQLString *ss = new SQLString("'");
+		*ss += s;
+		*ss += "'";
+		delete[] s;
+
+		if (replace) {
+			S = *ss;
+			S.processed = true;
+			return &S;
+		}
+		else {
+			return ss;
+		}
+	}
+	else if (option == 'R' || (option == 'Q' && S.is_string)) {
+		SQLString *ss = new SQLString("'" + S + "'");
+
+		if (replace) {
+			S = *ss;
+			S.processed = true;
+			return &S;
+		}
+		else {
+			return ss;
+		}
+	}
+	else {
+		if (replace) {
+			S.processed = true;
+		}
+		return &S;
+	}
 }
 
 

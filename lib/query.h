@@ -635,6 +635,8 @@ private:
 	// Locking mechanism
 	bool lock();
 	void unlock();
+
+	SQLString* pprepare(char option, SQLString& S, bool replace = true);
 };
 
 
