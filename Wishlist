@@ -264,6 +264,9 @@ Bug Fix/Maintenance Items
 	  but it isn't clear how one would go about doing that without
 	  changing the library code.  Document it or throw it away.
 
+	o Write an example to demonstrate compare.h features, or throw
+	  the header away.  It's not being used within the library.
+
 	o Define CSS stylesheet for userman to try and match its appearance
 	  to that of the refman.  Perhaps we can just copy the stylesheet
 	  from Doxygen?
