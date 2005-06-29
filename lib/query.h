@@ -646,7 +646,7 @@ private:
 template <class Seq>
 void Query::storein_sequence(Seq& seq, SQLQueryParms& p, query_reset r)
 {
-	r = parsed.size() ? DONT_RESET : RESET_QUERY;
+	r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
 	storein_sequence(seq, str(p, r).c_str());
 }
 
@@ -671,7 +671,7 @@ void Query::storein_sequence(Sequence& con, const char* s)
 template <class Set>
 void Query::storein_set(Set& sett, SQLQueryParms& p, query_reset r)
 {
-	r = parsed.size() ? DONT_RESET : RESET_QUERY;
+	r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
 	storein_set(sett, str(p, r).c_str());
 }
 
