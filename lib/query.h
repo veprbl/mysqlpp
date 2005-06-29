@@ -696,7 +696,7 @@ void Query::storein_set(Set& con, const char* s)
 template <class T>
 void Query::storein(T& con, SQLQueryParms& p, query_reset r)
 {
-	r = parsed.size() ? DONT_RESET : RESET_QUERY;
+	r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
 	storein(con, str(p, r).c_str());
 }
 
