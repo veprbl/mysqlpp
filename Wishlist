@@ -96,30 +96,44 @@ Future Features and ABI Changes
 	  hard to justify redesigning Connection to eliminate these
 	  final reasons.
 
+	  While it would be easy to have just one global database
+	  driver object, it's probably going to be necessary to have
+	  one per Connection.  Consider what happens when you have one
+	  program connected to two very different MySQL databases,
+	  and you indirectly call C API functions that take MYSQL
+	  parameters.  It's likely that those calls are supposed
+	  to behave different, depending on the data in that MYSQL
+	  object; for instance, different character encodings in the
+	  selected databases.  So, there must somehow be a way to pass
+	  the database driver's instance pointer down to all objects
+	  that will need to use the driver.  A side benefit is that
+	  a single program could talk to multiple different database
+	  server types.  Imagine a program for importing data from
+	  PostgreSQL and loading it into a MySQL table, for instance.
+
 	o manip.cpp uses mysql_escape_string(), which doesn't take the
 	  selected database's character set into account.  To do that,
 	  you must use mysql_real_escape_string(), which differs
 	  by taking a MYSQL instance as an additional parameter.
 	  The problem is, Connection owns the relevant MYSQL instance,
 	  and the manipulator functionality is implemented in global
-	  functions (operator<<() and such) so they have no real way
-	  to look up the relevant Connection object.
+	  functions (operator<<() and such) so they have no direct
+	  access to the relevant Connection object.
 
-	  One possible way out of this dilemma is to define the
-	  notion of a "dominant connection": there could be a list
-	  of Connection pointers, and the first one on the list is
-	  used for this sort of thing.	In ~Connection(), remove this
-	  object's pointer from the list.  The main problem with this
-	  idea is that if you have multiple Connections, and there
-	  is a mixture of character sets represented, you'll have to
-	  be very careful about order of initialization to get the
-	  behavior you want.
+	  One possible solution relies on the fact that operator<<
+	  typically has an ostream parameter, from which you could
+	  look up the Query object somehow, and from that get the
+	  Connection object.  The tricky part is that MySQL++'s
+	  operator<<'s for manipulators don't always have ostream
+	  parameters.  So for this to work, manipulators would have
+	  to be objects that could carry data from one operator to
+	  another.  It breaks down if not all paths go through an
+	  operator<< with an ostream parameter.
 
-	  There may be some synergy here with the "driver class"
-	  idea for making MySQL++ database-independent.  Surely
-	  that mechanism will also find frequent need to look up
-	  database-specific data structure(s), and may not always be
-	  able to find exactly the right one.
+	  If that fails to work out, then perhaps some other method
+	  will pop out of the database driver class idea.  The driver
+	  object may be able to look up a suitable Connection object
+	  for the manipulators.
 
 	o Currently the "rubber meets the road" in the const char*
 	  version of the execute(), store() and use() methods.
