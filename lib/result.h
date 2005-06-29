@@ -472,7 +472,13 @@ inline int ResUse::field_num(const std::string& i) const
 	if (!names_) {
 		names_ = new FieldNames(this);
 	}
-	return (*names_)[i];
+
+	int index = (*names_)[i];
+	if ((index >= names_->size()) && throw_exceptions()) {
+		throw BadFieldName(i.c_str());
+	}
+	
+	return index;
 }
 
 inline std::string& ResUse::field_name(int i)
