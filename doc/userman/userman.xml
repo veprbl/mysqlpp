@@ -1075,7 +1075,7 @@ main(int argc, char *argv[])
 
 			<para>SSQLS structures can be sorted and stored in
 			STL associative containers as demonstrated in the
-			next example. This is custom4.cpp:</para>
+			next example. This is examples/custom4.cpp:</para>
 
 			<blockquote><programlisting>
 #include "util.h"
