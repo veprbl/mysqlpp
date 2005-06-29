@@ -404,9 +404,8 @@
 int
 main(int argc, char *argv[])
 {
-    // Connect to the sample database
-    mysqlpp::Connection con;
-    mysqlpp::NoExceptions ne(con);
+    // Connect to the sample database.
+    mysqlpp::Connection con(false);
     if (!connect_to_db(argc, argv, con)) {
         return 1;
     }
@@ -459,18 +458,41 @@ print_stock_header(int rows)
 
 
 //// print_stock_row ///////////////////////////////////////////////////
-// Print out a row of data from the stock table, in a format
-// compatbile with the header printed out in the previous function.
+// Print out a row of data from the stock table, in a format compatible
+// with the header printed out in the previous function.
 
 void
-print_stock_row(const char* item, mysqlpp::longlong num, double weight,
-        double price, const mysqlpp::Date&amp; date)
+print_stock_row(const std::string&amp; item, mysqlpp::longlong num,
+        double weight, double price, const mysqlpp::Date&amp; date)
 {
     cout &lt;&lt; setw(20) &lt;&lt; item &lt;&lt; ' ' &lt;&lt;
             setw(9) &lt;&lt; num &lt;&lt; ' ' &lt;&lt;
             setw(9) &lt;&lt; weight &lt;&lt; ' ' &lt;&lt;
             setw(9) &lt;&lt; price &lt;&lt; ' ' &lt;&lt;
             date &lt;&lt; endl;
+}
+
+
+//// print_stock_row ///////////////////////////////////////////////////
+// Take a Row from the example 'stock' table, break it up into fields,
+// and call the above version of this function.
+
+void
+print_stock_row(const mysqlpp::Row&amp; row)
+{
+    // Notice that only the string conversion has to be handled
+    // specially.  (See Row::operator[]'s documentation for the reason.)
+    // As for the rest of the fields, Row::operator[] returns a ColData
+    // object, which can convert itself to any standard C type.
+    //
+    // We index the row by field name to demonstrate the feature, and
+    // also because it makes the code more robust in the face of schema
+    // changes.  Use Row::at() instead if efficiency is paramount.  To
+    // maintain efficiency while keeping robustness, use the SSQLS
+    // feature, demoed in the custom* examples.
+    string item(row["item"]);
+    print_stock_row(item, row["num"], row["weight"], row["price"],
+            row["sdate"]);
 }
 
 
@@ -486,17 +508,9 @@ print_stock_rows(mysqlpp::Result&amp; res)
     // through the query results.
     mysqlpp::Result::iterator i;
     for (i = res.begin(); i != res.end(); ++i) {
-        // Convert the Result iterator into a Row object, for easier
-        // access.
-        mysqlpp::Row row(*i);
-
-        // Notice that you can use either the column index or name to
-        // retrieve the data.  Also notice that we do no explicit
-        // conversions to match print_stock_row()'s parameter types:
-        // Row elements are ColData strings, so they auto-convert to
-        // any standard C++ type.
-        print_stock_row(row[0], row[1], row.lookup_by_name("weight"),
-                row[3], row[4]);
+        // Notice that a dereferenced result iterator can be converted
+        // to a Row object, which makes for easier element access.
+        print_stock_row(*i);
     }
 }
 
@@ -787,7 +801,7 @@ using namespace mysqlpp;
 // plus methods to help populate the class from a MySQL row
 // among other things that I'll get to in a later example.
 sql_create_5(stock,
-             1, 5,              // explained in the user manual
+             1, 5,
              string, item,
              longlong, num,
              double, weight,
@@ -817,24 +831,24 @@ main(int argc, char *argv[])
         print_stock_header(res.size());
         vector&lt;stock&gt;::iterator it;
         for (it = res.begin(); it != res.end(); ++it) {
-            print_stock_row(it-&gt;item.c_str(), it-&gt;num, it-&gt;weight,
-                    it-&gt;price, it-&gt;sdate);
+            print_stock_row(it-&gt;item, it-&gt;num, it-&gt;weight, it-&gt;price,
+                    it-&gt;sdate);
         }
     }
-    catch (BadQuery&amp; er) {
-        // Handle any connection or query errors
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; "Query error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
-    catch (BadConversion&amp; er) {
-        // Handle bad conversions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl &lt;&lt;
-                "retrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
-                " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
+    catch (const BadConversion&amp; er) {
+        // Handle bad conversions; e.g. type mismatch populating 'stock'
+        cerr &lt;&lt; "Conversion error: " &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                "\tretrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
+                ", actual size: " &lt;&lt; er.actual_size &lt;&lt; endl;
         return -1;
     }
-    catch (exception&amp; er) {
-        // Catch-all for any other standard C++ exceptions
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
         cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
@@ -903,20 +917,20 @@ main(int argc, char *argv[])
         get_stock_table(query, res);
         print_stock_rows(res);
     }
-    catch (BadQuery&amp; er) {
-        // Handle any connection or query errors
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; "Query error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
-    catch (BadConversion&amp; er) { 
+    catch (const BadConversion&amp; er) {   
         // Handle bad conversions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl &lt;&lt;
-                "retrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
-                " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
+        cerr &lt;&lt; "Conversion error: " &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                "\tretrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
+                ", actual size: " &lt;&lt; er.actual_size &lt;&lt; endl;
         return -1;
     }
-    catch (exception&amp; er) {
-        // Catch-all for any other standard C++ exceptions
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
         cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
@@ -991,7 +1005,7 @@ main(int argc, char *argv[])
         // there's no point in storing the result in an STL container.
         // We can store the first row directly into a stock structure
         // because one of an SSQLS's constructors takes a Row object.
-        stock row = res[0];
+        stock row = res.at(0);
 
         // Create a copy so that the replace query knows what the
         // original values are.
@@ -1016,20 +1030,20 @@ main(int argc, char *argv[])
         get_stock_table(query, res);
         print_stock_rows(res);
     }
-    catch (BadQuery&amp; er) {
-        // Handle any connection or query errors
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; "Query error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
-    catch (BadConversion&amp; er) {
+    catch (const BadConversion&amp; er) {
         // Handle bad conversions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl &lt;&lt;
-                "retrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
-                " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
+        cerr &lt;&lt; "Conversion error: " &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                "\tretrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
+                ", actual size: " &lt;&lt; er.actual_size &lt;&lt; endl;
         return -1;
     }
-    catch (exception&amp; er) {
-        // Catch-all for any other standard C++ exceptions
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
         cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
@@ -1277,6 +1291,8 @@ main(int argc, char *argv[])
 
 #include &lt;mysql++.h&gt;
 
+#include &lt;iostream&gt;
+
 int
 main(int argc, char *argv[])
 {
@@ -1293,11 +1309,15 @@ main(int argc, char *argv[])
 
     // Execute the query, but don't save results in memory
     mysqlpp::ResUse res = query.use();
+    if (!res) {
+        std::cerr &lt;&lt; "Query failed: " &lt;&lt; query.error() &lt;&lt; std::endl;
+        return 1;
+    }
 
-    // Iterate through result set, printing each row
+    // Iterate through result set, printing each row.
     mysqlpp::Row r;
     while (r = res.fetch_row()) {
-        print_stock_row(r[0], r[1], r[2], r[3], r[4]);
+        print_stock_row(r);
     }
 
     return 0;
@@ -1385,20 +1405,20 @@ main(int argc, char *argv[])
                     "most closely\nresembles the C++ long long int type\n";
         }
     }
-    catch (BadQuery&amp; er) {
-        // Handle any connection or query errors
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; "Query error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
-    catch (BadConversion&amp; er) {
+    catch (const BadConversion&amp; er) {
         // Handle bad conversions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl &lt;&lt;
-                "retrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
-                " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
+        cerr &lt;&lt; "Conversion error: " &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                "\tretrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
+                ", actual size: " &lt;&lt; er.actual_size &lt;&lt; endl;
         return -1;
     }
-    catch (exception&amp; er) {
-        // Catch-all for any other standard C++ exceptions
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
         cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
@@ -1484,26 +1504,26 @@ main(int argc, char *argv[])
         else
             cerr &lt;&lt; "Your binary file " &lt;&lt; argv[1] &lt;&lt;
                 "could not be open, errno = " &lt;&lt; errno;
-        return 0;
-
     }
-    catch (BadQuery&amp; er) {
-        // Handle any connection or query errors
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; " " &lt;&lt; con.errnum() &lt;&lt; endl;
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; "Query error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
-    catch (BadConversion&amp; er) {
+    catch (const BadConversion&amp; er) {
         // Handle bad conversions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl &lt;&lt;
-                "retrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
-                " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
+        cerr &lt;&lt; "Conversion error: " &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                "\tretrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
+                ", actual size: " &lt;&lt; er.actual_size &lt;&lt; endl;
         return -1;
     }
-    catch (exception&amp; er) {
-        // Catch-all for any other standard C++ exceptions
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
         cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
+
+    return 0;
 } </programlisting></blockquote>
 
 			<para>Notice that we used the
@@ -1560,16 +1580,19 @@ main(int argc, char *argv[])
         long unsigned int *jj = res.fetch_lengths();
         cout &lt;&lt; "Content-length: " &lt;&lt; *jj &lt;&lt; endl &lt;&lt; endl;
         fwrite(row.raw_data(0), 1, *jj, stdout);
-        return 0;
     }
-    catch (BadQuery&amp; er) {
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; " " &lt;&lt; con.errnum() &lt;&lt; endl;
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; "Query error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
-    catch (exception&amp; er) {
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
         cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
+
+    return 0;
 } </programlisting></blockquote>
 		</sect3>
 
@@ -1626,20 +1649,20 @@ main()
         query.exec(output);
         //cout &lt;&lt; output &lt;&lt; endl;
     }
-    catch (BadQuery&amp; er) {
-        // Handle any connection or query errors
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; " " &lt;&lt; con.errnum() &lt;&lt; endl;
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; "Query error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
-    catch (BadConversion&amp; er) {
+    catch (const BadConversion&amp; er) {
         // Handle bad conversions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl
-            &lt;&lt; "retrieved data size: " &lt;&lt; er.retrieved
-            &lt;&lt; " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
+        cerr &lt;&lt; "Conversion error: " &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                "\tretrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
+                ", actual size: " &lt;&lt; er.actual_size &lt;&lt; endl;
         return -1;
     }
-    catch (exception&amp; er) {
-        // Catch-all for any other standard C++ exceptions
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
         cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
@@ -2401,26 +2424,26 @@ main(int argc, char *argv[])
             // Display the finished query.
             cout &lt;&lt; "Custom query:\n" &lt;&lt; query.preview() &lt;&lt; endl;
         }
-
-        return 0;
     }
-    catch (BadQuery&amp; er) {
-        // Handle any connection or query errors
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; "Query error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
-    catch (BadConversion&amp; er) {
+    catch (const BadConversion&amp; er) {
         // Handle bad conversions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; "\"." &lt;&lt; endl &lt;&lt;
-                "retrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
-                " actual data size: " &lt;&lt; er.actual_size &lt;&lt; endl;
+        cerr &lt;&lt; "Conversion error: " &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                "\tretrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
+                ", actual size: " &lt;&lt; er.actual_size &lt;&lt; endl;
         return -1;
     }
-    catch (exception&amp; er) {
-        // Catch-all for any other standard C++ exceptions
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
         cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
         return -1;
     }
+
+    return 0;
 }</programlisting></blockquote>
 
 		<para>This example uses the list form of
