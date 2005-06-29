@@ -622,91 +622,98 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection&amp; con,
 	<sect2>
 		<title>Exceptions</title>
 
-		<para>You may have noticed that
-		the simple1 example created a <ulink
+		<para>By default, MySQL++ uses exceptions to signal
+		errors. Most of the examples have a full set of
+		exception handlers. This is worthy of emulation.</para>
+
+		<para>Some of these exceptions are optional.
+		When disabled, the object signals errors in
+		some other way, typically by returning an
+		error code or setting an error flag. Classes
+		that support this feature derive from <ulink
+		url="../../refman/html/classmysqlpp_1_1OptionalExceptions.html">OptionalExceptions</ulink>.
+		Moreover, when such an object creates another object
+		that also derives from this interface, it passes on its
+		exception flag. Since everything flows from the <ulink
+		url="../../refman/html/classmysqlpp_1_1Connection.html">Connection</ulink>
+		object, disabling exceptions on it at the start of
+		the program disables all optional exceptions. You can
+		see this technique at work in the "simple" examples,
+		which keeps them, well, simple.</para>
+
+		<para>Real-world code typically can't afford to lose
+		out on the additional information and control offered
+		by exceptions. But at the same time, it is still
+		sometimes useful to disable exceptions temporarily. To
+		do this, put the section of code that you want to not
+		throw exceptions inside a block, and create a <ulink
 		url="../../refman/html/classmysqlpp_1_1NoExceptions.html">NoExceptions</ulink>
-		object. Its purpose is to suppress exceptions
-		on objects of certain MySQL++ classes while the
+		object at the top of that block. When
+		created, it saves the exception flag of the
+		<computeroutput>OptionalExceptions</computeroutput>
+		derivative you pass to it, and then
+		disables exceptions on it. When the
 		<computeroutput>NoExceptions</computeroutput> object
-		is in scope. We did this partly to demonstrate the
-		feature, but mostly because it keeps the simple1
-		example, well, simple.</para>
+		goes out of scope at the end of the block, it restores
+		the exceptions flag to its previous state. See the
+		<filename>resetdb.cpp</filename> example to see this
+		technique at work.</para>
 
-		<para>Real-world MySQL++ programs, however, should
-		use the library's exceptions to handle errors. All
-		subsequent examples have a full set of exception
-		handlers.</para>
+		<para>When one
+		<computeroutput>OptionalExceptions</computeroutput>
+		derivative creates another such object and passes
+		on its exception flag, it passes a copy of the
+		flag. Therefore, the two objects' flags operate
+		independently after the new one is created. There's
+		no way to globally enable or disable this flag on
+		existing objects in a single call.</para>
 
-		<para>A few notes about MySQL++'s exceptions:</para>
+		<para>There are a few classes of exceptions MySQL++
+		can throw that are not optional:</para>
 
-		<orderedlist>
-			<listitem><para>The MySQL++ classes <ulink
-			url="../../refman/html/classmysqlpp_1_1Connection.html">Connection</ulink>,
-			<ulink
-			url="../../refman/html/classmysqlpp_1_1Query.html">Query</ulink>,
-			<ulink
-			url="../../refman/html/classmysqlpp_1_1Result.html">Result</ulink>,
-			<ulink
-			url="../../refman/html/classmysqlpp_1_1ResUse.html">ResUse</ulink>,
-			and <ulink
-			url="../../refman/html/classmysqlpp_1_1Row.html">Row</ulink>
-			all derive from <ulink
-			url="../../refman/html/classmysqlpp_1_1OptionalExceptions.html">OptionalExceptions</ulink>,
-			which is the interface used by
-			<computeroutput>NoExceptions</computeroutput>
-			to suppress exceptions. You can manually
-			turn exceptions on and off instead, by using
-			<computeroutput>OptionalExceptions</computeroutput>'
-			methods.</para></listitem>
-
-			<listitem><para>The state of the object's
-			exception enabling flag is passed
-			down to child objects. For example,
-			if you create a Connection object with
-			exceptions disabled and then call its
-			<computeroutput>query()</computeroutput>
-			method to get a Query object tied to that
-			Connection, that object will also have
-			exceptions disabled.</para></listitem>
-
-			<listitem><para>The exception enabling flag is
-			copied from object to object, so if you create
-			a child object and then change the flag in the
-			parent, the child object's exception enabling
-			state is not changed.</para></listitem>
+		<itemizedlist>
+			<listitem><para>The largest set of non-optional
+			exceptions are those from the Standard C++
+			Library. For instance, if your code said
+			"<computeroutput>row[21]</computeroutput>"
+			on a row containing only 5 fields, the
+			<computeroutput>std::vector</computeroutput>
+			underlying the row object will throw an
+			exception. (It will, that is, if it conforms to
+			the standard.) You might consider wrapping your
+			program's main loop in a try block catching
+			<computeroutput>std::exception</computeroutput>s,
+			just in case you trigger one of these
+			exceptions.</para></listitem>
 
 			<listitem><para><ulink
 			url="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</ulink>
-			is not one of the types that allows
-			its exceptions to be disabled.
-			It will always throw an exception (<ulink
-			url="../../refman/html/classmysqlpp_1_1BadConversion.html">BadConversion</ulink>)
-			when it is unable to do a requested
-			conversion. A bad conversion is defined as
-			one where: a) not all the characters from
-			the string have yet been processed, and b)
-			the remaining characters are something
-			other than whitespace, zeros (0), or
-			periods (.). This means that an exception
-			is thrown when "1.25" is converted into
-			an <computeroutput>int</computeroutput>,
-			but not when "1.00" is converted into an
+			will always throw <ulink
+			url="../../refman/html/classmysqlpp_1_1BadConversion.html">BadConversion</ulink>
+			when you ask it to do an improper type
+			conversion. For example, you'll get an
+			exception if you try to convert "1.25"
+			to <computeroutput>int</computeroutput>,
+			but not when you convert "1.00" to
 			<computeroutput>int</computeroutput>. In
 			the latter case, MySQL++ knows that it
 			can safely throw away the fractional
 			part.</para></listitem>
 
-			<listitem><para>An out-of-bounds subscript
-			when accessing a MySQL++ container may throw
-			an exception. Whether it does or not depends
-			on whether the underlying STL container
-			throws exceptions in this situation, so it's
-			compiler-dependent.</para></listitem>
-		</orderedlist>
+			<listitem><para>If you use template
+			queries and don't pass enough parameters
+			when instantiating the template,
+			<computeroutput>Query</computeroutput>
+			will throw a <ulink
+			url="../../refman/html/classmysqlpp_1_1BadParamCount.html">BadParamCount</ulink>
+			exception.</para></listitem>
+		</itemizedlist>
 
-		<para>To see how the exceptions work, try creating
-		an error. For instance, misspell a table or field
-		name.</para>
+		<para>It's educational to modify the examples to
+		force exceptions. For instance, misspell a field
+		name, use an out-of-range index, or change a type
+		to force a <computeroutput>ColData</computeroutput>
+		conversion error.</para>
 	</sect2>
 
 
