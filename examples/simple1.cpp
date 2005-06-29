@@ -32,9 +32,8 @@
 int
 main(int argc, char *argv[])
 {
-	// Connect to the sample database
-	mysqlpp::Connection con;
-	mysqlpp::NoExceptions ne(con);
+	// Connect to the sample database.
+	mysqlpp::Connection con(false);
 	if (!connect_to_db(argc, argv, con)) {
 		return 1;
 	}
