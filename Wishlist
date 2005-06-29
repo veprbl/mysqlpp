@@ -34,10 +34,6 @@ v2.0 Release Plan
 	The remaining changes planned for v2.0 are:
 
 
-	o See if we can use mysql_real_escape_string() in manip.cpp
-	  as well.  (This might end up being pushed into v2.1, if it's
-	  too tough.)
-
 	o Derive combined Query+SQLQuery class from something higher up the
 	  IOStreams hierarchy, something that's meant to be subclassed.  Do
 	  our own buffer management, possibly with a basic_stringbuf data
@@ -178,6 +174,31 @@ Future Features and ABI Changes
 	  Also, update usequery example to use the iterator.  Tricky bit:
 	  how do we make it not interfere with subclass Result's random-
 	  access iterator?
+
+	o manip.cpp uses mysql_escape_string(), which doesn't take the
+	  selected database's character set into account.  To do that,
+	  you must use mysql_real_escape_string(), which differs
+	  by taking a MYSQL instance as an additional parameter.
+	  The problem is, Connection owns the relevant MYSQL instance,
+	  and the manipulator functionality is implemented in global
+	  functions (operator<<() and such) so they have no real way
+	  to look up the relevant Connection object.
+
+	  One possible way out of this dilemma is to define the
+	  notion of a "dominant connection": there could be a list
+	  of Connection pointers, and the first one on the list is
+	  used for this sort of thing.	In ~Connection(), remove this
+	  object's pointer from the list.  The main problem with this
+	  idea is that if you have multiple Connections, and there
+	  is a mixture of character sets represented, you'll have to
+	  be very careful about order of initialization to get the
+	  behavior you want.
+
+	  There may be some synergy here with the "driver class"
+	  idea for making MySQL++ database-independent.  Surely
+	  that mechanism will also find frequent need to look up
+	  database-specific data structure(s), and may not always be
+	  able to find exactly the right one.
 
 
 Bug Fix/Maintenance Items
