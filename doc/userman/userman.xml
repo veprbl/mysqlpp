@@ -1280,21 +1280,19 @@ main(int argc, char *argv[])
 		a sufficiently large result set will give your program
 		memory problems.</para>
 
-		<para>For these large result sets, you should
-		use the <computeroutput>use()</computeroutput>
-		method instead. This returns a <ulink
+		<para>For these large result sets, the superior option
+		is a <computeroutput>use()</computeroutput>
+		query. This returns a <ulink
 		url="../../refman/html/classmysqlpp_1_1ResUse.html">ResUse</ulink>
-		object, which is similar to Result, but without all
-		of the random-access features. This is because a
-		"use" query tells the database server to send the
-		results back one row at a time, to be processed
-		linearly. It's analogous to a C++ stream's input
-		iterator, as opposed to a random-access iterator
-		that a container like vector offers. By accepting
-		this limitation, you can process arbitrarily large
-		result sets.</para>
-		
-		<para>Here is examples/simple2.cpp:</para>
+		object, which is similar to Result, but without all of
+		the random-access features. This is because a "use"
+		query tells the database server to send the results
+		back one row at a time, to be processed linearly. It's
+		analogous to a C++ stream's input iterator, as opposed
+		to a random-access iterator that a container like
+		vector offers. By accepting this limitation, you can
+		process arbitrarily large result sets. This technique
+		is demonstrated in examples/simple2.cpp:</para>
 
 		<blockquote><programlisting>
 #include "util.h"
@@ -1307,8 +1305,7 @@ int
 main(int argc, char *argv[])
 {
     // Connect to the sample database
-    mysqlpp::Connection con;
-    mysqlpp::NoExceptions ne(con);
+    mysqlpp::Connection con(false);
     if (!connect_to_db(argc, argv, con)) {
         return 1;
     }
@@ -1333,9 +1330,13 @@ main(int argc, char *argv[])
     return 0;
 }</programlisting></blockquote>
 
-		<para>This example does the same thing as the simple1
-		example, only with a "use" query instead of a "store"
-		query.</para>
+		<para>This example does the same thing as
+		<filename>simple1</filename>, only with a
+		"use" query instead of a "store" query. If your
+		program uses exceptions, you should instead look at
+		<filename>examples/usequery.cpp</filename>, which does
+		the same thing as the <filename>simple2</filename>
+		example, but with exception-awareness.</para>
 	</sect2>
 
 
