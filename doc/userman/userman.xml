@@ -759,18 +759,21 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection&amp; con,
 		<programlisting>
         SELECT * FROM stock WHERE item = 'Frank''s Brand Hotdog Buns' </programlisting>
 
-		<para>As you might expect, MySQL++ provides that feature,
-		too, through its 'escape' manipulator. But here, we want
-		both quoting and escaping. That brings us to the most
-		widely useful manipulator:</para>
+		<para>As you might expect, MySQL++
+		provides that feature, too, through its
+		<computeroutput>escape</computeroutput>
+		manipulator. But here, we want both quoting and
+		escaping. That brings us to the most widely useful
+		manipulator:</para>
 
 		<programlisting>
-        string s = "Hotdogs' Buns";
+        string s = "Frank's Brand Hotdog Buns";
         Query q = conn.query();
         q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </programlisting>
 
-		<para>The regular quote manipulator both quotes strings,
-		and escapes any characters that are special in SQL.</para>
+		<para>The <computeroutput>quote</computeroutput>
+		manipulator both quotes strings, and escapes any
+		characters that are special in SQL.</para>
 	</sect2>
 
 
