@@ -172,6 +172,13 @@ Future Features and ABI Changes
 	  function.  Keep in mind the consequences for database-
 	  independence here.
 
+	o Build a forward iterator mechanism for ResUse.  Make it general
+	  enough that you can use it with STL algorithms like find_if().
+	  Then make an example to demonstrate this augmentation of SELECT.
+	  Also, update usequery example to use the iterator.  Tricky bit:
+	  how do we make it not interfere with subclass Result's random-
+	  access iterator?
+
 
 Bug Fix/Maintenance Items
 -------------------------
@@ -181,10 +188,6 @@ Bug Fix/Maintenance Items
 
 	o 64-bit integer support has been reported to work, but more
 	  confirmation is wanted.
-
-	o Can one say something like find_if() on an interator from a
-	  ResUse query?  If so, make an example of it, showing how you can
-	  use the full expressiveness of C++ to augment SELECT matching.
 
 	o Add symlinks from MySQL++ manuals to MySQL manuals online
 	  when we reference C API functions and such.
