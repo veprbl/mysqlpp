@@ -78,14 +78,14 @@ public:
 	/// \brief Get the name of a field given its index.
 	std::string& operator [](int i)
 	{
-		return std::vector<std::string>::operator [](i);
+		return at(i);
 	}
 
 	/// \brief Get the name of a field given its index, in const
 	/// context.
 	const std::string& operator [](int i) const
 	{
-		return std::vector<std::string>::operator [](i);
+		return at(i);
 	}
 
 	/// \brief Get the index number of a field given its name
