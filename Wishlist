@@ -66,23 +66,23 @@ Future Features and ABI Changes
 	start coding and provide a patch!
 	
 
-	o Transaction support.  Create a "Transaction" class, an object of
-	  which you create on the stack, giving it a reference to the
-	  Connection object.  Transaction object's ctor calls a function on
-	  the Connection object to start a transaction set, and its dtor
-	  calls another function to commit the transaction.  Potential
-	  problem: it would be natural to throw an exception on transaction
-	  rejection, but doing this from a stack-based object's dtor can
-	  open up a lot of problems.  Also, for this to work properly, the
-	  Connection object has to be in a higher scope, or created on the
-	  heap.
+	o Transaction support.	Create a "Transaction" class, an
+	  object of which you create on the stack, giving it a
+	  reference to the Connection object.  Transaction object's
+	  ctor calls a function on the Connection object to start a
+	  transaction set, and its dtor calls another function to
+	  commit the transaction.  Potential problem: it would be
+	  natural to throw an exception on transaction rejection, but
+	  doing this from a stack-based object's dtor can open up a lot
+	  of problems.	Also, for this to work properly, the Connection
+	  object has to be in a higher scope, or created on the heap.
 
-	  Alternate approach: explicit commit() call in the transaction class.
-	  The dtor will always perform a rollback if not committed first.
-	  This removes possibility of exception in the dtor, while allowing
-	  an exception in commit().  The database will always be left in
-	  a consistent state if an exception occurs that is not handled.
-
+	  Alternate approach: give Transaction a commit() member,
+	  which you must call explicitly.  If you don't, the dtor will
+	  roll back the transaction.  This way, committing doesn't
+	  have to wait to the end of a block, so there can be code
+	  following the potential exception throw point without having
+	  to create an artificial block.
 
 	o Abstract all uses of MySQL C API functions into a database
 	  driver class with a generic interface.  This is a step
@@ -95,85 +95,6 @@ Future Features and ABI Changes
 	  friends aren't nearly as compelling, so it wouldn't be
 	  hard to justify redesigning Connection to eliminate these
 	  final reasons.
-
-	o Currently the "rubber meets the road" in the const char*
-	  version of the execute(), store() and use() methods.
-	  A version taking a C++ string would be more efficient, and
-	  it could handle embedded null characters if we switched the
-	  internals over to mysql_real_query().  Cannot add such an
-	  overload for type conflict reasons, but we can move these
-	  implementations into the first SQLString overload, which
-	  previously was intended for use with template queries.
-	  Then we can make the const char* versions wrappers for the
-	  SQLString version.
-
-	o Add a configure script option to allow the new lock mechanism to
-	  use platform mutexes via the Boost.Threads library.
-
-	o Consider other places true thread-awareness could be added.
-	  Should more classes be Lockable?  Are there additional mechanisms
-	  besides Lockable that we need to add?
-
-	o SSQLS structures include some static elements (_table and
-	  names[]), which are defined within the macro.  If you put an SSQLS
-	  declaration in a header file and #include that from multiple
-	  locations, you get a multiply-defined symbol warning.  Figure out
-	  some way to separate the definition from the declaration.  One
-	  idea is to give the SSQLS macros another parameter, to suppress
-	  static definition.  Another is to put them in another macro, which
-	  the user must instantiate once in a .cpp file.  (Similar to the
-	  way MFC message maps work.)
-
-	o MySQL++ handles automatic quoting and escaping differently for
-	  cout and cerr than for Query streams.  This should probably
-	  be simplified so that automatic quoting is only done for Query
-	  streams.  No other stream type should be treated specially.
-
-	o Some field_list() functions use the do_nothing manipulator, while
-	  others use the quote manipulator.  Standardize on one.  Probably
-	  do_nothing will work in all cases, because field names that work
-	  as SSQLS member variable names don't need quoting or escaping.
-	  But, among the fancier SSQLS features is the ability to use
-	  different C++ variable names than the SQL table uses for field
-	  names.  Is it worth breaking that compatibility?
-
-	o Deprecate sql_create_basic_* ? They have less functionality and
-	  they're no easier to use than sql_create and friends, so
-	  why bother with them?  I suppose the code generated is a bit
-	  smaller, but *really*....  Only possible saving grace is if BC++
-	  can compile them due to the macro code being shorter.  They also
-	  don't have the static members, which annoy some compilers.
-
-	o User-settable floating-point comparison precisions?  Something
-	  like this: http://lists.mysql.com/plusplus/3984  As it currently
-	  stands, sql_cmp(double,double) is foolish.  One shouldn't do
-	  exact equality comparison on floating point values.
-	
-	o Consider using MySQL C API enum constants in mysql_type_info::types
-	  definition instead of hard-coded values.  This could potentially
-	  break a lot of infrastructure, though, so do it only with care.
-
-	o Add time_t conversion to date and time classes.
-	  Also consider other niceties, like arithmetic.
-	  (See "Algorithms for Programmers" by Binstock and Rex.)
-	  Then write an example showing how to use these mechanisms.
-
-	o When you create a Connection object but don't .connect() it,
-	  several of its functions can fail to work correctly.  ping(),
-	  for one, because the MYSQL handle isn't initialized until the
-	  connection is established.  Decide how to cope: a) init the handle
-	  in all ctors; b) throw ObjectNotInitialized when the library knows
-	  the call will fail; or c) just return a failure code and hope the
-	  user is checking it.  Could be a different answer for each
-	  function.  Keep in mind the consequences for database-
-	  independence here.
-
-	o Build a forward iterator mechanism for ResUse.  Make it general
-	  enough that you can use it with STL algorithms like find_if().
-	  Then make an example to demonstrate this augmentation of SELECT.
-	  Also, update usequery example to use the iterator.  Tricky bit:
-	  how do we make it not interfere with subclass Result's random-
-	  access iterator?
 
 	o manip.cpp uses mysql_escape_string(), which doesn't take the
 	  selected database's character set into account.  To do that,
@@ -199,6 +120,93 @@ Future Features and ABI Changes
 	  that mechanism will also find frequent need to look up
 	  database-specific data structure(s), and may not always be
 	  able to find exactly the right one.
+
+	o Currently the "rubber meets the road" in the const char*
+	  version of the execute(), store() and use() methods.
+	  A version taking a C++ string would be more efficient, and
+	  it could handle embedded null characters if we switched the
+	  internals over to mysql_real_query().  Cannot add such an
+	  overload for type conflict reasons, but we can move these
+	  implementations into the first SQLString overload, which
+	  previously was intended for use with template queries.
+	  Then we can make the const char* versions wrappers for the
+	  SQLString version.
+
+	o Add a configure script option to allow the new lock
+	  mechanism to use platform mutexes via the Boost.Threads
+	  library.
+
+	o Consider other places true thread-awareness could be added.
+	  Should more classes be Lockable?  Are there additional
+	  mechanisms besides Lockable that we need to add?
+
+	o SSQLS structures include some static elements (_table and
+	  names[]), which are defined within the macro.  If you put
+	  an SSQLS declaration in a header file and #include that
+	  from multiple locations, you get a multiply-defined symbol
+	  warning.  Figure out some way to separate the definition
+	  from the declaration.  One idea is to give the SSQLS
+	  macros another parameter, to suppress static definition.
+	  Another is to put them in another macro, which the user
+	  must instantiate once in a .cpp file.  (Similar to the way
+	  MFC message maps work.)
+
+	o MySQL++ handles automatic quoting and escaping differently
+	  for cout and cerr than for Query streams.  This should
+	  probably be simplified so that automatic quoting is only
+	  done for Query streams.  No other stream type should be
+	  treated specially.
+
+	o Some field_list() functions use the do_nothing manipulator,
+	  while others use the quote manipulator.  Need to pick one.
+	  In the vast majority of cases, quoting won't be necessary,
+	  so make that the default.  But, it should be possible to turn
+	  it on, if needed.  If all uses of quoting are in template
+	  code, this can be a #define, allowing different programs
+	  built on the same system to get different quoting rules.
+	  Otherwise, it will probably have to be a configure script
+	  flag, which will "burn" the choice into the built binary.
+
+	o Deprecate sql_create_basic_* ? They have less functionality
+	  and they're no easier to use than sql_create and friends,
+	  so why bother with them?  I suppose the code generated
+	  is a bit smaller, but *really*....  Only possible saving
+	  grace is if BC++ can compile them due to the macro code
+	  being shorter.  They also don't have the static members,
+	  which annoy some compilers.
+
+	o User-settable floating-point comparison precisions?
+	  Something like this: http://lists.mysql.com/plusplus/3984
+	  As it currently stands, sql_cmp(double,double) is foolish.
+	  One shouldn't do exact equality comparison on floating
+	  point values.
+
+	o Consider using MySQL C API enum constants in
+	  mysql_type_info::types definition instead of hard-coded
+	  values.  This could potentially break a lot of
+	  infrastructure, though, so do it only with care.
+
+	o Add time_t conversion to date and time classes.
+	  Also consider other niceties, like arithmetic.
+	  (See "Algorithms for Programmers" by Binstock and Rex.)
+	  Then write an example showing how to use these mechanisms.
+
+	o When you create a Connection object but don't .connect() it,
+	  several of its functions can fail to work correctly.	ping(),
+	  for one, because the MYSQL handle isn't initialized until
+	  the connection is established.  Decide how to cope: a) init
+	  the handle in all ctors; b) throw ObjectNotInitialized
+	  when the library knows the call will fail; or c) just
+	  return a failure code and hope the user is checking it.
+	  Could be a different answer for each function.  Keep in
+	  mind the consequences for database- independence here.
+
+	o Build a forward iterator mechanism for ResUse.  Make it
+	  general enough that you can use it with STL algorithms
+	  like find_if().  Then make an example to demonstrate this
+	  augmentation of SELECT.  Also, update usequery example
+	  to use the iterator.	Tricky bit: how do we make it not
+	  interfere with subclass Result's random- access iterator?
 
 
 Bug Fix/Maintenance Items
