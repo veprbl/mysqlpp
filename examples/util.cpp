@@ -68,7 +68,6 @@ utf8_to_win32_ansi(const char* utf8_str, char* ansi_str,
 		GetCPInfoEx(CP_OEMCP, 0, &cpi);
 		WideCharToMultiByte(cpi.CodePage, 0, ucs2_buf, -1,
 				ansi_str, ansi_len, 0, 0);
-		cout << ':' << ansi_str[0] << ':' << endl;
 		return true;
 	}
 }
