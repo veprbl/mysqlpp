@@ -31,9 +31,7 @@
 namespace mysqlpp {
 
 Query::Query(const Query& q) :
-// Yes, the following cast is evil.  It will be fixed when we move
-// buffer management to within this class.
-std::stringstream(const_cast<Query&>(q).str()),	
+std::ostream(&sbuffer_),	
 OptionalExceptions(q.exceptions()),
 Lockable(),
 conn_(q.conn_),
@@ -64,7 +62,7 @@ std::string Query::error()
 bool Query::exec(const std::string& str)
 {
 	success_ = !mysql_real_query(&conn_->mysql, str.c_str(),
-			str.length());
+			(unsigned long)str.length());
 	if (!success_ && throw_exceptions()) {
 		throw BadQuery(conn_->error());
 	}
@@ -257,26 +255,24 @@ Query::pprepare(char option, SQLString& S, bool replace)
 char* Query::preview_char()
 {
 	*this << std::ends;
-	size_t length = rdbuf()->str().size();
-	char *s = new char[length + 1];
-	get(s, length, '\0');
-	seekg(0, std::ios::beg);
-	seekp(-1, std::ios::cur);
+	size_t length = sbuffer_.str().size();
+	char* s = new char[length + 1];
+	strcpy(s, sbuffer_.str().c_str());
 	return s;
 }
 
 
 void Query::proc(SQLQueryParms& p)
 {
-	seekg(0, std::ios::beg);
-	seekp(0, std::ios::beg);
+	sbuffer_.str("");
+
 	char num;
-	SQLString *ss;
-	SQLQueryParms *c;
+	SQLString* ss;
+	SQLQueryParms* c;
 
 	for (std::vector<SQLParseElement>::iterator i = parse_elems_.begin();
 			i != parse_elems_.end(); ++i) {
-		*this << i->before;
+		dynamic_cast<std::ostream&>(*this) << i->before;
 		num = i->num;
 		if (num != -1) {
 			if (num < static_cast<int>(p.size()))
@@ -289,7 +285,7 @@ void Query::proc(SQLQueryParms& p)
 						"Not enough parameters to fill the template.");
 			}
 			ss = pprepare(i->option, (*c)[num], c->bound());
-			*this << *ss;
+			dynamic_cast<std::ostream&>(*this) << *ss;
 			if (ss != &(*c)[num]) {
 				delete ss;
 			}
@@ -299,10 +295,9 @@ void Query::proc(SQLQueryParms& p)
 
 void Query::reset()
 {
-	seekg(0);
 	seekp(0);
 	clear();
-	std::stringstream::str("");
+	sbuffer_.str("");
 
 	parse_elems_.clear();
 	def.clear();
@@ -357,7 +352,7 @@ std::string Query::str(SQLQueryParms& p)
 
 	*this << std::ends;
 
-	return std::stringstream::str();
+	return sbuffer_.str();
 }
 
 

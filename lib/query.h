@@ -174,8 +174,8 @@ enum query_reset { DONT_RESET, RESET_QUERY };
 ///
 /// See the user manual for more details about these options.
 
-class Query : public std::stringstream, public OptionalExceptions,
-		public Lockable
+class Query : public std::ostream,
+		public OptionalExceptions, public Lockable
 {
 public:
 	typedef const SQLString& ss;	///< to keep parameter lists short
@@ -188,7 +188,7 @@ public:
 	/// \param c connection the finished query should be sent out on
 	/// \param te if true, throw exceptions on errors
 	Query(Connection* c, bool te = true) :
-	std::stringstream(),
+	std::ostream(&sbuffer_),
 	OptionalExceptions(te),
 	Lockable(),
 	conn_(c),
@@ -497,8 +497,8 @@ public:
 		// Cast required for VC++ 2003 due to error in overloaded operator
 		// lookup logic.  For an explanation of the problem, see:
 		// http://groups-beta.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
-		dynamic_cast<std::stringstream&>(*this) << "UPDATE " <<
-				o.table() << " SET " << n.equal_list() << " WHERE " <<
+		dynamic_cast<ostream&>(*this) << "UPDATE " << o.table() <<
+				" SET " << n.equal_list() << " WHERE " <<
 				o.equal_list(" AND ", sql_use_compare);
 		return *this;
 	}
@@ -517,8 +517,8 @@ public:
 		reset();
 
 		// See above comment for cast rationale
-		dynamic_cast<std::stringstream&>(*this) << "INSERT INTO " <<
-				v.table() << " (" << v.field_list() << ") VALUES (" <<
+		dynamic_cast<ostream&>(*this) << "INSERT INTO " << v.table() << 
+				" (" << v.field_list() << ") VALUES (" <<
 				v.value_list() << ")";
 		return *this;
 	}
@@ -545,14 +545,13 @@ public:
 		}
 		
 		// See above comment for cast rationale
-		dynamic_cast<std::stringstream&>(*this) << "INSERT INTO " <<
+		dynamic_cast<ostream&>(*this) << "INSERT INTO " <<
 				first->table() << " (" << first->field_list() <<
 				") VALUES (" << first->value_list() << ')';
 
 		Iter it = first + 1;
 		while (it != last) {
-			dynamic_cast<std::stringstream&>(*this) << ",(" <<
-					it->value_list() << ')';
+			*this << ",(" << it->value_list() << ')';
 			++it;
 		}
 
@@ -574,8 +573,8 @@ public:
 		reset();
 
 		// See above comment for cast rationale
-		dynamic_cast<std::stringstream&>(*this) << "REPLACE INTO " <<
-				v.table() << " (" << v.field_list() << ") VALUES (" <<
+		dynamic_cast<ostream&>(*this) << "REPLACE INTO " << v.table() <<
+				" (" << v.field_list() << ") VALUES (" <<
 				v.value_list() << ")";
 		return *this;
 	}
@@ -609,9 +608,14 @@ public:
 private:
 	friend class SQLQueryParms;
 
-	Connection* conn_;		///< connection to send queries through
-	bool success_;			///< if true, last query succeeded
-	char* errmsg_;			///< string explaining last query error
+	/// \brief Connection to send queries through
+	Connection* conn_;
+
+	/// \brief If true, last query succeeded
+	bool success_;
+
+	/// \brief String explaining last query error
+	char* errmsg_;
 
 	/// \brief List of template query parameters
 	std::vector<SQLParseElement> parse_elems_;
@@ -623,11 +627,14 @@ private:
 	/// \brief Maps template parameter names to their position value.
 	std::map<std::string, int> parsed_nums_;
 
+	/// \brief String buffer for storing assembled query
+	std::stringbuf sbuffer_;
+
 	//// Internal support functions
 	my_ulonglong affected_rows() const;
 	my_ulonglong insert_id();
 	std::string info();
-	char *preview_char();
+	char* preview_char();
 
 	/// \brief Process a parameterized query list.
 	void proc(SQLQueryParms& p);
