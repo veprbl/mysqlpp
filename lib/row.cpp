@@ -50,7 +50,7 @@ const ColData Row::at(size_type i) const
 
 const ColData Row::operator [](const char* field) const
 {
-	int si = res_->field_num(std::string(field));
+	size_type si = res_->field_num(std::string(field));
 	if (si < size()) {
 		return at(si);
 	}
