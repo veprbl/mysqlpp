@@ -129,6 +129,9 @@
 				RelativePath=".\lib\myset.cpp">
 			</File>
 			<File
+				RelativePath=".\lib\qparms.cpp">
+			</File>
+			<File
 				RelativePath=".\lib\query.cpp">
 			</File>
 			<File
@@ -136,9 +139,6 @@
 			</File>
 			<File
 				RelativePath=".\lib\row.cpp">
-			</File>
-			<File
-				RelativePath=".\lib\sql_query.cpp">
 			</File>
 			<File
 				RelativePath=".\lib\sql_string.cpp">
@@ -196,6 +196,9 @@
 				RelativePath="lib\fields.h">
 			</File>
 			<File
+				RelativePath=".\lib\lockable.h">
+			</File>
+			<File
 				RelativePath="lib\manip.h">
 			</File>
 			<File
@@ -205,10 +208,16 @@
 				RelativePath="lib\mysql++.h">
 			</File>
 			<File
+				RelativePath=".\lib\noexceptions.h">
+			</File>
+			<File
 				RelativePath="lib\null.h">
 			</File>
 			<File
 				RelativePath="lib\platform.h">
+			</File>
+			<File
+				RelativePath=".\lib\qparms.h">
 			</File>
 			<File
 				RelativePath="lib\query.h">
@@ -221,9 +230,6 @@
 			</File>
 			<File
 				RelativePath="lib\row.h">
-			</File>
-			<File
-				RelativePath="lib\sql_query.h">
 			</File>
 			<File
 				RelativePath="lib\sql_string.h">
