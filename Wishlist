@@ -36,8 +36,6 @@ v2.0 Release Plan
 
 	o Set type to some default in ColData_Tmpl default ctor.
 
-	o Fold RowTemplate class into Row.
-
 	o Add thread support to examples/Makefile.simple.  Commented-out
 	  by default, but available if required.
 

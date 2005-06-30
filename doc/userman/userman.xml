@@ -3295,7 +3295,12 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			<para>Merged
 			<computeroutput>SQLQuery</computeroutput>
 			class's members into class
-			<computeroutput>Query</computeroutput></para>
+			<computeroutput>Query</computeroutput>.</para>
+
+			<para>Merged
+			<computeroutput>RowTemplate</computeroutput>
+			class's members into class
+			<computeroutput>Row</computeroutput>.</para>
 
 			<para>Reordered member variable declarations
 			in some classes. The most common instance is

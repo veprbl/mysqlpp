@@ -59,5 +59,90 @@ const ColData Row::operator [](const char* field) const
 	}
 }
 
+value_list_ba<FieldNames, do_nothing_type0>
+Row::field_list(const char* d) const
+{
+	return value_list_ba<FieldNames, do_nothing_type0>
+			(parent().names(), d, do_nothing);
+}
+
+template <class Manip>
+value_list_ba<FieldNames, Manip>
+Row::field_list(const char *d, Manip m) const
+{
+	return value_list_ba<FieldNames, Manip>(parent().names(), d, m);
+}
+
+template <class Manip>
+value_list_b<FieldNames, Manip>
+Row::field_list(const char *d, Manip m, const std::vector<bool>& vb) const
+{
+	return value_list_b<FieldNames, Manip>(parent().names(), vb, d, m);
+}
+
+value_list_b<FieldNames, quote_type0>
+Row::field_list(const char* d, const std::vector<bool>& vb) const
+{
+	return value_list_b<FieldNames, quote_type0>(parent().names(),
+			vb, d, quote);
+}
+
+value_list_b<FieldNames, quote_type0>
+Row::field_list(const std::vector<bool>& vb) const
+{
+	return value_list_b<FieldNames, quote_type0>(parent().names(),
+			vb, ",", quote);
+}
+
+template <class Manip> value_list_b<FieldNames, Manip>
+Row::field_list(const char* d, Manip m, bool t0, bool t1, bool t2,
+		bool t3, bool t4, bool t5, bool t6, bool t7, bool t8, bool t9,
+		bool ta, bool tb, bool tc) const
+{
+	std::vector<bool> vb;
+	create_vector(parent().names().size(), vb, t0, t1, t2, t3, t4,
+			t5, t6, t7, t8, t9, ta, tb, tc);
+	return value_list_b<FieldNames, Manip>(parent().names(), vb, d, m);
+}
+
+value_list_b<FieldNames, quote_type0>
+Row::field_list(const char *d, bool t0, bool t1, bool t2, bool t3,
+		bool t4, bool t5, bool t6, bool t7, bool t8, bool t9, bool ta,
+		bool tb, bool tc) const
+{
+	std::vector<bool> vb;
+	create_vector(parent().names().size(), vb, t0, t1, t2, t3, t4,
+			t5, t6, t7, t8, t9, ta, tb, tc);
+	return value_list_b<FieldNames, quote_type0>(parent().names(),
+			vb, d, quote);
+}
+
+value_list_b<FieldNames, quote_type0>
+Row::field_list(bool t0, bool t1, bool t2, bool t3, bool t4, bool t5,
+		bool t6, bool t7, bool t8, bool t9, bool ta, bool tb,
+		bool tc) const
+{
+	std::vector<bool> vb;
+	create_vector(parent().names().size(), vb, t0, t1, t2, t3, t4,
+			t5, t6, t7, t8, t9, ta, tb, tc);
+	return value_list_b<FieldNames, quote_type0>(parent().names(),
+			vb, ",", quote);
+}
+
+equal_list_ba<FieldNames, Row, quote_type0>
+Row::equal_list(const char* d, const char* e) const
+{
+	return equal_list_ba<FieldNames, Row, quote_type0>(
+			parent().names(), *this, d, e, quote);
+}
+
+template <class Manip>
+equal_list_ba<FieldNames, Row, Manip>
+Row::equal_list(const char* d, const char* e, Manip m) const 
+{
+	return equal_list_ba<FieldNames, Row, Manip>(
+			parent().names(), *this, d, e, m);
+}
+
 } // end namespace mysqlpp
 
