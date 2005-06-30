@@ -497,7 +497,7 @@ public:
 		// Cast required for VC++ 2003 due to error in overloaded operator
 		// lookup logic.  For an explanation of the problem, see:
 		// http://groups-beta.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
-		dynamic_cast<ostream&>(*this) << "UPDATE " << o.table() <<
+		dynamic_cast<std::ostream&>(*this) << "UPDATE " << o.table() <<
 				" SET " << n.equal_list() << " WHERE " <<
 				o.equal_list(" AND ", sql_use_compare);
 		return *this;
@@ -517,8 +517,8 @@ public:
 		reset();
 
 		// See above comment for cast rationale
-		dynamic_cast<ostream&>(*this) << "INSERT INTO " << v.table() << 
-				" (" << v.field_list() << ") VALUES (" <<
+		dynamic_cast<std::ostream&>(*this) << "INSERT INTO " <<
+				v.table() << " (" << v.field_list() << ") VALUES (" <<
 				v.value_list() << ")";
 		return *this;
 	}
@@ -545,7 +545,7 @@ public:
 		}
 		
 		// See above comment for cast rationale
-		dynamic_cast<ostream&>(*this) << "INSERT INTO " <<
+		dynamic_cast<std::ostream&>(*this) << "INSERT INTO " <<
 				first->table() << " (" << first->field_list() <<
 				") VALUES (" << first->value_list() << ')';
 
@@ -573,8 +573,8 @@ public:
 		reset();
 
 		// See above comment for cast rationale
-		dynamic_cast<ostream&>(*this) << "REPLACE INTO " << v.table() <<
-				" (" << v.field_list() << ") VALUES (" <<
+		dynamic_cast<std::ostream&>(*this) << "REPLACE INTO " <<
+				v.table() << " (" << v.field_list() << ") VALUES (" <<
 				v.value_list() << ")";
 		return *this;
 	}
