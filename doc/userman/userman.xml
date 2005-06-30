@@ -3341,6 +3341,16 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			not changed and end-user code shouldn't have
 			been using the other classes, this shouldn't
 			affect the API in any practical way.</para>
+
+			<para><computeroutput>mysql_type_info</computeroutput>
+			now always initializes its private
+			<computeroutput>num</computeroutput> member.
+			Previously, this would go uninitialized if
+			you used the default constructor. Now there
+			is no default ctor, but the ctor taking one
+			argument (which sets
+			<computeroutput>num</computeroutput>) has
+			a default.</para>
 		</sect3>
 	</sect2>
 </sect1>

@@ -114,18 +114,17 @@ private:
 class mysql_type_info
 {
 public:
-	/// \brief Default constructor
-	mysql_type_info()
-	{
-	}
-	
 	/// \brief Create object
 	///
 	/// \param n index into the internal type table
 	///
 	/// Because of the \c n parameter's definition, this constructor
 	/// shouldn't be used outside the library.
-	mysql_type_info(unsigned char n) :
+	///
+	/// The default is intended to try and crash a program using a
+	/// default mysql_type_info object.  This is a very wrong thing
+	/// to do.
+	mysql_type_info(unsigned char n = (unsigned char)-1) :
 	num(n)
 	{
 	}

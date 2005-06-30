@@ -34,8 +34,6 @@ v2.0 Release Plan
 	The remaining changes planned for v2.0 are:
 
 
-	o Set type to some default in ColData_Tmpl default ctor.
-
 	o It may be possible to optimize the use of ColData in the return
 	  from Row::operator[]. Currently, that operator returns
 	  a temporary ColData object, which contains a std::string
