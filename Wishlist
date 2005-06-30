@@ -34,11 +34,6 @@ v2.0 Release Plan
 	The remaining changes planned for v2.0 are:
 
 
-	o Derive combined Query+SQLQuery class from something higher up the
-	  IOStreams hierarchy, something that's meant to be subclassed.  Do
-	  our own buffer management, possibly with a basic_stringbuf data
-	  member.
-
 	o Set type to some default in ColData_Tmpl default ctor.
 
 	o Fold RowTemplate class into Row.
