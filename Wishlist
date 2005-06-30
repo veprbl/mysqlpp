@@ -36,9 +36,6 @@ v2.0 Release Plan
 
 	o Set type to some default in ColData_Tmpl default ctor.
 
-	o Add thread support to examples/Makefile.simple.  Commented-out
-	  by default, but available if required.
-
 	o It may be possible to optimize the use of ColData in the return
 	  from Row::operator[]. Currently, that operator returns
 	  a temporary ColData object, which contains a std::string
@@ -236,15 +233,15 @@ Bug Fix/Maintenance Items
 	  standard command line parameters, so you can manually load up
 	  some images for cgi_image to retrieve.
 
-	o Add Makefiles suitable for VC++ free command line tools and
-	  for MinGW.  Consider adding support for BC++ free compilers as
-	  well, and drop the BCB project files.  We could even drop the
-	  VC++ project files, which might be a good thing during the
-	  Visual Studio 2003 to 2005 changeover period.  This feature
-	  should also subsume examples/Makefile.simple.
-
-	o Visual C++ project files should build a DLL version of the library
-	  only, for LGPL reasons.
+	o Make something like examples/Makefile.simple for the library as
+	  well.  These Makefiles should be configurable to support free
+	  Microsoft and Borland compilers, plus GCC on all standard
+	  platforms plus MinGW.  Make them support threading, optionally,
+	  on all platforms.  Drop VC++ project files, as they will be
+	  unnecessary and a stumbling point during VS 2003 to 2005
+	  changeover.
+	
+	o Windows compilers should build only a DLL, for LGPL reasons.
 
 	o MinGW can't build a DLL for MySQL++.  It has to do with the file
 	  reorganization in 1.7.20: if you move everything from row.cc to
