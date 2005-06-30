@@ -3117,6 +3117,12 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 					has the same success-testing
 					interface, so use it
 					instead.</para></listitem>
+
+					<listitem><para><computeroutput>Query</computeroutput>
+					now derives from
+					<computeroutput>std::ostream</computeroutput>
+					instead of
+					<computeroutput>std::stringstream</computeroutput>.</para></listitem>
 				</itemizedlist>
 			</sect4>
 
