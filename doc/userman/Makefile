@@ -49,7 +49,7 @@ clean:
 ## ------------------------
 
 $(PDFFILE): $(DOCFILE) $(FO_SS)
-	xsltproc $(FO_SS) $(DOCFILE) > $(FOFILE)
+	xsltproc --xinclude $(FO_SS) $(DOCFILE) > $(FOFILE)
 	$(FOPDIR)/fop.sh -q -fo $(FOFILE) $(PDFFILE)
 	cp $(PDFFILE) ../mysqlpp-$(PDFFILE)
 
