@@ -146,8 +146,7 @@
 	<sect2>
 		<title>The Connection Object</title>
 
-		<para>A <ulink
-		url="../../refman/html/classmysqlpp_1_1Connection.html">Connection</ulink>
+		<para>A <ulink type="classref" url="Connection"/>
 		object manages the connection to the MySQL server. You
 		need at least one of these objects to do anything. A
 		Connection object can either create Query objects for
@@ -160,8 +159,7 @@
 	<sect2>
 		<title>The Query Object</title>
 
-		<para>A <ulink
-		url="../../refman/html/classmysqlpp_1_1Query.html">Query</ulink>
+		<para>A <ulink type="classref" url="Query"/>
 		object is the recommended way of building
 		and executing queries. It is subclassed from
 		<computeroutput>std::stringstream</computeroutput>
@@ -194,13 +192,13 @@
 
 		<para>The field data in a result set are stored in a
 		special <computeroutput>std::string</computeroutput>-like
-		class called <ulink
-		url="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</ulink>.
+		class called
+		<ulink type="classref" url="ColData__Tmpl">ColData</ulink>.
 		This class has conversion operators
 		that let you automatically convert these
 		objects to any of the basic C data types.
-		Additionally, MySQL++ defines classes like <ulink
-		url="../../refman/html/structmysqlpp_1_1DateTime.html">DateTime</ulink>,
+		Additionally, MySQL++ defines classes like
+		<ulink type="structref" url="DateTime"/>,
 		which you can initialize from a MySQL
 		<computeroutput>DATETIME</computeroutput> string. These
 		automatic conversions are protected against bad
@@ -216,9 +214,9 @@
 			<para>Not all SQL queries return data. An
 			example is <computeroutput>CREATE
 			TABLE</computeroutput>. For these
-			types of queries, there is a <ulink
-			url="../../refman/html/classmysqlpp_1_1ResNSel.html">special
-			result type</ulink> that simply reports the
+			types of queries, there is a special result type
+			(<ulink type="classref" url="ResNSel"/>)
+			that simply reports the
 			state resulting from the query: whether the
 			query was successful, how many rows it impacted
 			(if any), etc.</para>
@@ -228,10 +226,10 @@
 			<title>Queries That Return Data: Dynamic Method</title>
 
 			<para>The easiest way to
-			retrieve data from MySQL uses a <ulink
-			url="../../refman/html/classmysqlpp_1_1Result.html">Result</ulink>
-			object, which includes one or more <ulink
-			url="../../refman/html/classmysqlpp_1_1Row.html">Row</ulink>
+			retrieve data from MySQL uses a
+			<ulink type="classref" url="Result"/>
+			object, which includes one or more
+			<ulink type="classref" url="Row"/>
 			objects. Because these classes are
 			<computeroutput>std::vector</computeroutput>-like
 			containers, you can treat the result set as a
@@ -243,8 +241,8 @@
 			<computeroutput>result[2].lookup_by_name("price")</computeroutput>.</para>
 
 			<para>An alternate way of accessing
-			your query results is through a <ulink
-			url="../../refman/html/classmysqlpp_1_1ResUse.html">ResUse</ulink>
+			your query results is through a
+			<ulink type="classref" url="ResUse"/>
 			object. This class acts more like an STL input
 			iterator than a container: you walk through
 			your result set one item at a time, always going
@@ -444,12 +442,12 @@
 		When disabled, the object signals errors in
 		some other way, typically by returning an
 		error code or setting an error flag. Classes
-		that support this feature derive from <ulink
-		url="../../refman/html/classmysqlpp_1_1OptionalExceptions.html">OptionalExceptions</ulink>.
+		that support this feature derive from
+		<ulink type="classref" url="OptionalExceptions"/>.
 		Moreover, when such an object creates another object
 		that also derives from this interface, it passes on its
-		exception flag. Since everything flows from the <ulink
-		url="../../refman/html/classmysqlpp_1_1Connection.html">Connection</ulink>
+		exception flag. Since everything flows from the
+		<ulink type="classref" url="Connection"/>
 		object, disabling exceptions on it at the start of
 		the program disables all optional exceptions. You can
 		see this technique at work in the "simple" examples,
@@ -460,8 +458,8 @@
 		by exceptions. But at the same time, it is still
 		sometimes useful to disable exceptions temporarily. To
 		do this, put the section of code that you want to not
-		throw exceptions inside a block, and create a <ulink
-		url="../../refman/html/classmysqlpp_1_1NoExceptions.html">NoExceptions</ulink>
+		throw exceptions inside a block, and create a
+		<ulink type="classref" url="NoExceptions"/>
 		object at the top of that block. When
 		created, it saves the exception flag of the
 		<computeroutput>OptionalExceptions</computeroutput>
@@ -500,10 +498,9 @@
 			just in case you trigger one of these
 			exceptions.</para></listitem>
 
-			<listitem><para><ulink
-			url="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</ulink>
-			will always throw <ulink
-			url="../../refman/html/classmysqlpp_1_1BadConversion.html">BadConversion</ulink>
+			<listitem><para><ulink type="classref"
+			url="ColData__Tmpl">ColData</ulink>
+			will always throw <ulink type="classref" url="BadConversion"/>
 			when you ask it to do an improper type
 			conversion. For example, you'll get an
 			exception if you try to convert "1.25"
@@ -518,8 +515,7 @@
 			queries and don't pass enough parameters
 			when instantiating the template,
 			<computeroutput>Query</computeroutput>
-			will throw a <ulink
-			url="../../refman/html/classmysqlpp_1_1BadParamCount.html">BadParamCount</ulink>
+			will throw a <ulink type="classref" url="BadParamCount"/>
 			exception.</para></listitem>
 		</itemizedlist>
 
@@ -555,8 +551,8 @@
 		manipulator, which causes single quotes to be
 		added around the next item inserted into the
 		stream. This works for various string types, for any
-		type of data that can be converted to MySQL++'s <ulink
-		url="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</ulink>
+		type of data that can be converted to MySQL++'s
+		<ulink type="classref" url="ColData__Tmpl">ColData</ulink>
 		type, and for <xref linkend="ssqls"/>. (The next section
 		introduces the SSQLS feature.)</para>
 
@@ -676,8 +672,8 @@
 		null is a column attribute, which affects whether
 		that column can hold a SQL null. This effectively
 		doubles the number of types in SQL. MySQL++ handles
-		this the same way SQL does: it provides the <ulink
-		url="../../refman/html/classmysqlpp_1_1null.html">Null</ulink>
+		this the same way SQL does: it provides the
+		<ulink type="classref" url="null">Null</ulink>
 		template to allow the creation of distinct "nullable"
 		versions of existing C++ types. For each column type
 		MySQL understands, the library instantiates this
@@ -701,20 +697,19 @@
 		get a SQL null.</para>
 
 		<para>By default, if you try to convert a SQL
-		null to a plain C++ data type, MySQL++ will throw a <ulink
-		url="../../refman/html/classmysqlpp_1_1BadNullConversion.html">BadNullConversion</ulink>
+		null to a plain C++ data type, MySQL++ will throw a
+		<ulink type="classref" url="BadNullConversion"/>
 		exception to enforce this distinction. If you insert
-		a SQL null into a C++ stream, you get "(NULL)". The <ulink
-		url="../../refman/html/structmysqlpp_1_1NullisNull.html">NullisNull</ulink>
+		a SQL null into a C++ stream, you get "(NULL)". The
+		<ulink type="structref" url="NullisNull"/>
 		"behavior" type encapsulates these two
 		rules; it is the default for one of template
 		<computeroutput>Null</computeroutput>'s
 		parameters. To relax this distinction, you can
 		instantiate the <computeroutput>Null</computeroutput>
-		template with a different behavior type: <ulink
-		url="../../refman/html/structmysqlpp_1_1NullisZero.html">NullisZero</ulink>
-		or <ulink
-		url="../../refman/html/structmysqlpp_1_1NullisBlank.html">NullisBlank</ulink>.
+		template with a different behavior type:
+		<ulink type="structref" url="NullisZero"/>
+		or <ulink type="structref" url="NullisBlank"/>.
 		As you might guess from their names, SQL nulls using
 		these behaviors get converted to 0 or a blank C string,
 		respectively.</para>
@@ -736,8 +731,8 @@
 		INDEX</computeroutput>. You do get back some
 		information from the MySQL server, which
 		<computeroutput>execute()</computeroutput>
-		returns to its caller in a <ulink
-		url="../../refman/html/classmysqlpp_1_1ResNSel.html">ResNSel</ulink>
+		returns to its caller in a
+		<ulink type="classref" url="ResNSel"/>
 		object. In addition to the obvious &mdash; a flag stating
 		whether the query succeeded or not &mdash; this object also
 		contains things like the number of rows that the query
@@ -748,8 +743,7 @@
 		<para>If your query does pull data from
 		the database, the simplest option is
 		<computeroutput>store()</computeroutput>.
-		This returns a <ulink
-		url="../../refman/html/classmysqlpp_1_1Result.html">Result</ulink>
+		This returns a <ulink type="classref" url="Result"/>
 		object, which contains an in-memory copy of
 		the result set. The nice thing about this is
 		that <computeroutput>Result</computeroutput>
@@ -765,8 +759,7 @@
 
 		<para>For these large result sets, the superior option
 		is a <computeroutput>use()</computeroutput>
-		query. This returns a <ulink
-		url="../../refman/html/classmysqlpp_1_1ResUse.html">ResUse</ulink>
+		query. This returns a <ulink type="classref" url="ResUse"/>
 		object, which is similar to Result, but without all of
 		the random-access features. This is because a "use"
 		query tells the database server to send the results
@@ -876,8 +869,8 @@
 
 			<para>Notice that the row values
 			used in the IN clause aren't escaped or
-			quoted. This is because row elements are <ulink
-			url="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</ulink>
+			quoted. This is because row elements are
+			<ulink type="classref" url="ColData__Tmpl">ColData</ulink>
 			types, so they have automatic escaping and
 			quoting, as appropriate to the type being
 			inserted. If you want to disable this feature,
@@ -993,8 +986,8 @@
 		</blockquote>
 
 		<para>## represents a number up to two digits. It is the
-		order of parameters given to a <ulink
-		url="../../refman/html/classmysqlpp_1_1SQLQueryParms.html">SQLQueryParms</ulink>
+		order of parameters given to a 
+		<ulink type="classref" url="SQLQueryParms"/>
 		object, starting from 0.</para>
 
 		<para>":name" is for an optional name which aids
@@ -1135,8 +1128,8 @@
 		<para>If for some reason you did not specify all
 		the parameters when executing the query and the
 		remaining parameters do not have their values
-		set via def, the query object will throw a <ulink
-		url="../../refman/html/classmysqlpp_1_1SQLQueryNEParms.html">SQLQueryNEParms</ulink>
+		set via def, the query object will throw a
+		<ulink type="classref" url="BadParamCount"/>
 		object. If this happens, you
 		can get an explanation of what
 		happened by checking the value of
@@ -2048,8 +2041,8 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 					<computeroutput>ResUse</computeroutput>,
 					and
 					<computeroutput>Row</computeroutput>
-					now derive from <ulink
-					url="../../refman/html/classmysqlpp_1_1OptionalExceptions.html">OptionalExceptions</ulink>
+					now derive from
+					<ulink type="classref" url="OptionalExceptions"/>
 					which gives these classes a
 					common interface for disabling
 					exceptions. In addition,
@@ -2058,8 +2051,8 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 					removed. The preferred method
 					for disabling exceptions on
 					these objects is to create
-					an instance of the new <ulink
-					url="../../refman/html/classmysqlpp_1_1NoExceptions.html">NoExceptions</ulink>
+					an instance of the new
+					<ulink type="classref" url="NoExceptions"/>
 					class on the stack, which
 					disables exceptions on an
 					<computeroutput>OptionalExceptions</computeroutput>
@@ -2110,8 +2103,8 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 
 					<listitem><para>All
 					custom MySQL++ exceptions
-					now derive from the new <ulink
-					url="../../refman/html/classmysqlpp_1_1Exception.html">Exception</ulink>
+					now derive from the new
+					<ulink type="classref" url="Exception"/>
 					interface.  The practical
 					upshot of this is that the
 					variability between the
@@ -2145,10 +2138,9 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 					to match style of other
 					exception names.</para></listitem>
 
-					<listitem><para>Added <ulink
-					url="../../refman/html/classmysqlpp_1_1ConnectionFailed.html">ConnectionFailed</ulink>
-					and <ulink
-					url="../../refman/html/classmysqlpp_1_1DBSelectionFailed.html">DBSelectionFailed</ulink>
+					<listitem><para>Added
+					<ulink type="classref" url="ConnectionFailed"/>
+					and <ulink type="classref" url="DBSelectionFailed"/>
 					exception types,
 					to fix overuse of
 					<computeroutput>BadQuery</computeroutput>.
@@ -2406,16 +2398,14 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			must be rebuilt.</para>
 
 			<para>Simplified the date
-			and time class hierarchy. <ulink
-			url="../../refman/html/structmysqlpp_1_1Date.html">Date</ulink>
+			and time class hierarchy.
+			<ulink type="structref" url="Date"/>
 			used to derive from
 			<computeroutput>mysql_date</computeroutput>,
-			<ulink
-			url="../../refman/html/structmysqlpp_1_1Time.html">Time</ulink>
+			<ulink type="structref" url="Time"/>
 			used to derive from
 			<computeroutput>mysql_time</computeroutput>,
-			and <ulink
-			url="../../refman/html/structmysqlpp_1_1DateTime.html">DateTime</ulink>
+			and <ulink type="structref" url="DateTime"/>
 			used to derive from both of those.  All
 			three of these classes used to derive from
 			<computeroutput>mysql_dt_base</computeroutput>.
@@ -2424,8 +2414,8 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 			classes' functionality and data has
 			been folded into the leaf classes,
 			and now the only thing shared between
-			them is their dependence on the <ulink
-			url="../../refman/html/structmysqlpp_1_1DTbase.html">DTbase</ulink>
+			them is their dependence on the
+			<ulink type="structref" url="DTbase"/>
 			template. Since the leaf classes' interface has
 			not changed and end-user code shouldn't have
 			been using the other classes, this shouldn't

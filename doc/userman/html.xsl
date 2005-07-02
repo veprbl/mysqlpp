@@ -21,11 +21,12 @@
 	<xsl:param name="section.autolabel" select="1"/>
 	<xsl:param name="section.autolabel.max.depth" select="2"/>
 
-	<!-- Handle ulinks with type=mysqlapi specially: generate hyperlinks
-	     to MySQL reference manual, in the proper form, given only the
-			 function name with dashes instead of underscores in the URL. -->
-	<xsl:template match="ulink" name="mysqlapiulink">
+	<!-- Special ulink types, to reduce boilerplate link code -->
+	<xsl:template match="ulink" name="refman_ulink">
 		<xsl:choose>
+			<!-- type=mysqlapi: makes hyperlinks to MySQL C API reference manual,
+			     given only the function name with dashes instead of underscores
+					 as the URL. -->
 			<xsl:when test="@type = 'mysqlapi'">
 				<tt>
 					<a>
@@ -42,10 +43,54 @@
 					</a>
 				</tt>
 			</xsl:when>
+
+			<!-- type=classref: makes hyperlinks to a class in the MySQL++
+			     reference manual, given its name. -->
+			<xsl:when test="@type = 'classref'">
+				<tt>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:text>../../refman/html/classmysqlpp_1_1</xsl:text>
+							<xsl:value-of select="@url"/>
+							<xsl:text>.html</xsl:text>
+						</xsl:attribute>
+						<xsl:choose>
+							<xsl:when test="count(child::node())=0">
+								<xsl:value-of select="@url"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</a>
+				</tt>
+			</xsl:when>
+
+			<!-- type=structref: makes hyperlinks to a struct in the MySQL++
+			     reference manual, given its name. -->
+			<xsl:when test="@type = 'structref'">
+				<tt>
+					<a>
+						<xsl:attribute name="href">
+							<xsl:text>../../refman/html/structmysqlpp_1_1</xsl:text>
+							<xsl:value-of select="@url"/>
+							<xsl:text>.html</xsl:text>
+						</xsl:attribute>
+						<xsl:choose>
+							<xsl:when test="count(child::node())=0">
+								<xsl:value-of select="@url"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</a>
+				</tt>
+			</xsl:when>
+
 			<xsl:otherwise>
 				<xsl:call-template name="ulink"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
 </xsl:stylesheet>
