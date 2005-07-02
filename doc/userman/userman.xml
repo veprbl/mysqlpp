@@ -39,7 +39,6 @@
 </articleinfo>
 
 
-<?hard-pagebreak?>
 <sect1 id="intro">
 	<title>Introduction</title>
 
@@ -120,7 +119,6 @@
 </sect1>
 
 
-<?hard-pagebreak?>
 <sect1 id="overview">
 	<title>Overview</title>
 
@@ -320,7 +318,6 @@
 </sect1>
 
 
-<?hard-pagebreak?>
 <sect1 id="tutorial">
 	<title>Tutorial</title>
 
@@ -898,7 +895,6 @@
 </sect1>
 
 
-<?hard-pagebreak?>
 <sect1 id="tquery" xreflabel="Template Queries">
 	<title>Template Queries</title>
 
@@ -1163,7 +1159,6 @@
 </sect1>
 
 
-<?hard-pagebreak?>
 <sect1 id="ssqls" xreflabel="Specialized SQL Structures">
 	<title>Specialized SQL Structures</title>
 
@@ -1687,7 +1682,6 @@ query &lt;&lt; "select * from stock where " &lt;&lt;
 </sect1>
 
 
-<?hard-pagebreak?>
 <sect1 id="unicode" xreflabel="Using Unicode with MySQL++">
 	<title>Using Unicode with MySQL++</title>
 
@@ -1903,7 +1897,6 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 </sect1>
 
 
-<?hard-pagebreak?>
 <sect1 id="breakages">
 	<title>Incompatible Library Changes</title>
 
@@ -2452,7 +2445,6 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 </sect1>
 
 
-<?hard-pagebreak?>
 <sect1 id="licenses">
 	<title>Licensing</title>
 

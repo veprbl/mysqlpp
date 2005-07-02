@@ -17,8 +17,12 @@
 	<!-- Bring in local changes common to both HTML and FO output -->
 	<xsl:include href="common.xsl"/>
 
-	<!-- Allow insertion of hard page breaks.  Used between
-	  chapters. From "DocBook XSL: The Complete Guide - 3rd Edition" -->
+	<!-- Add page breaks before each sect1, and define a processing
+	     instruction that will let us add additional hard breaks when
+			 needed.  From "DocBook XSL: The Complete Guide" 3/e -->
+	<xsl:attribute-set name="section.level1.properties">
+		<xsl:attribute name="break-before">page</xsl:attribute>
+	</xsl:attribute-set>
 	<xsl:template match="processing-instruction('hard-pagebreak')">
 		<fo:block break-before='page'/>
 	</xsl:template>
