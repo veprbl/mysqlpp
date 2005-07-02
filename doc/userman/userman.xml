@@ -963,8 +963,8 @@
 				<entry><emphasis role="bold">q</emphasis></entry>
 				<entry>This will quote and escape
 				the item using the MySQL C API
-				function mysql_escape_string()
-				if it is a string or char *,
+				function <ulink url="mysql-escape-string"
+				type="mysqlapi"/> if it is a string or char *,
 				or another MySQL-specific type
 				that needs to be quoted.</entry>
 			</row>

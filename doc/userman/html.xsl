@@ -20,4 +20,32 @@
 	<xsl:param name="chunk.fast" select="1"/>
 	<xsl:param name="section.autolabel" select="1"/>
 	<xsl:param name="section.autolabel.max.depth" select="2"/>
+
+	<!-- Handle ulinks with type=mysqlapi specially: generate hyperlinks
+	     to MySQL reference manual, in the proper form, given only the
+			 function name with dashes instead of underscores in the URL. -->
+	<xsl:template match="ulink" name="mysqlapiulink">
+		<xsl:choose>
+			<xsl:when test="@type = 'mysqlapi'">
+				<tt>
+					<a>
+						<xsl:variable name="fn_dash" select="@url"/>
+						<xsl:variable name="fn_name"
+							select="translate($fn_dash, '-', '_')"/>
+						<xsl:attribute name="href">
+							<xsl:text>http://dev.mysql.com/doc/mysql/en/</xsl:text>
+							<xsl:value-of select="$fn_dash"/>
+							<xsl:text>.html</xsl:text>
+						</xsl:attribute>
+						<xsl:value-of select="$fn_name"/>
+						<xsl:text>()</xsl:text>
+					</a>
+				</tt>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="ulink"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 </xsl:stylesheet>
