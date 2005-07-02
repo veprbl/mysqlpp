@@ -11,6 +11,7 @@ FOPDIR=/usr/local/fop
 
 BASENAME=userman
 DOCFILE=$(BASENAME).xml
+PDFFILE=$(BASENAME).pdf
 FOFILE=$(BASENAME).fo
 HTML_SS=html.xsl
 FO_SS=fo.xsl
@@ -20,28 +21,42 @@ EX_TXT=cgi_image.txt custom1.txt custom2.txt custom3.txt custom4.txt \
 
 
 ## ------------------------
+## Major output rules
+## ------------------------
+
+html: html/index.html
+
+pdf: $(PDFFILE)
+
+
+## ------------------------
 ## Standard Makefile targets
 ## ------------------------
 
-all: $(EX_TXT) html/index.html
+# Notice that this is not the first target in the file, as is standard.
+# PDF generation takes longer than HTML generation, so to keep the code-
+# test-debug-rebuild cycle short, we generate only the HTML manual by
+# default.  You can explicitly say "make pdf" or "make all" when you're
+# sure the DocBook file's contents are correct.
+all: html pdf
 
 clean:
 	rm -rf html tags *.aux *.cpp *.fo *.log *.out *.pdf *.txt
 
 
 ## ------------------------
-## Major output rules
+## How to make output files
 ## ------------------------
 
-pdf:
+$(PDFFILE): $(DOCFILE) $(FO_SS)
 	xsltproc $(FO_SS) $(DOCFILE) > $(FOFILE)
-	$(FOPDIR)/fop.sh -q -fo $(FOFILE) $(BASENAME).pdf
-	mv $(BASENAME).pdf ../mysqlpp-$(BASENAME).pdf
+	$(FOPDIR)/fop.sh -q -fo $(FOFILE) $(PDFFILE)
+	cp $(PDFFILE) ../mysqlpp-$(PDFFILE)
 
-html/index.html: $(DOCFILE)
-	@xmllint --valid --noout $(DOCFILE)
+html/index.html: $(DOCFILE) $(EX_TXT) $(HTML_SS)
 	@mkdir -p html
-	xsltproc -o html/ $(HTML_SS) $(DOCFILE)
+	@xmllint --xinclude --postvalid --noent --noout $(DOCFILE)
+	xsltproc --xinclude -o html/ $(HTML_SS) $(DOCFILE)
 
 
 ## ------------------------
@@ -49,5 +64,4 @@ html/index.html: $(DOCFILE)
 ## ------------------------
 
 $(EX_TXT):
-	expand -t4 < `echo ../../examples/$@ | sed -e s/txt/cpp/` | sed -e 's/&/\&amp;/g' | sed -e 's/</\&lt;/g' | sed -e 's/>/\&gt;/g' > $@
-
+	@./mktxt $@
