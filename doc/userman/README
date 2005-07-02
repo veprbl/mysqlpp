@@ -1,42 +1,91 @@
-The user manual is written in XML DocBook format, version 4.2.  We
-restrict ourselves to Simplified DocBook 1.1 as much as possible.
-(Why these versions?  They're what is installed on the oldest system
-I still use, Red Hat Linux 9.)
+The user manual is written in XML DocBook format, version 4.2.
+(Why this version?  It's what comes with Red Hat Linux 9, the oldest
+system I still use.)  We restrict ourselves to Simplified DocBook
+1.1 as much as possible.
+
+To make the HTML version of the user manual, just type 'make' in this
+directory.  (Or 'make html' if you want to be precise.)  To make the
+PDF version of the manual, say 'make pdf'.  To make both versions,
+say 'make all'.
+
+
 
 The most likely cause of build failures is not having the right
-processing programs installed.  The Makefile uses two tools that
-aren't yet ubiquitous:
+processing programs installed.  Here's a simplified version of the
+DocBook processing model:
 
-	To get from DocBook XML to HTML, we use xsltproc, an XSLT
-	processor from the Gnome project (http://xmlsoft.org/XSLT/).
-	Alternatives that can also work are Saxon and Xalan.  These
-	processors all have strengths and weaknesses relative to
-	each other.  Since we've built this manual assuming you're
-	using xsltproc, the manual plays to its strengths, so another
-	processor is likely to look weak by comparison.
+    DocBook --[XSLT proc.]-+-> HTML
+                   ^       |
+                   |       +-> XSL-FO --[XSL-FO proc.]--> PDF
+                   |
+           {XSL stylesheets}
 
-	We also use the XSLT processor to convert the DocBook file
-	into XSL-FO, a typesetting language designed to be an
-	intermediary between XML and a print output format.  We
-	then use FOP from the Apache Project (http://xml.apache.org/fop/)
-	to convert that to PDF.  There are no free-as-in-freedom
-	XSL-FO processors that are better than FOP, in my judgement.
-	RenderX's XEP (renderx.com) is avalable in a free-as-in-beer
-	version that adds watermarks to your pages.  Another popular
-	option is Antenna House's XSL Formatter (antennahouse.com),
-	but there is no free offering.  The low-end commercial
-	version of each of these is around $300.
+"DocBook" above is a file in DocBook XML format.  In this case,
+it's in userman.xml.
 
-The second most likely cause of build failure is that there is some
-oddity on your system preventing the XSLT processor from finding
-your local stylesheet and DTD files.  There should be a file called
-/etc/xml/catalog (or /sw/etc/xml/catalog when using Fink on OS X)
-which maps the URLs used in our XML files into references to local
-file names on your system.  If that process is broken, and the
-document processor cannot pull down the DTDs and/or XSL files from
-the Web, the manual will fail to build.  Please post details about
-this to the MySQL++ mailing list, so we can try to debug it.  You
-might also find the FOP and/or DocBook mailing lists helpful.
+There are many alternatives for the tools in the square brackets:
+
+	The first is an XSLT processor, which is designed to
+	translate XML into other text formats, including other
+	varieties of XML.  We use xsltproc from the Gnome project.
+	(http://xmlsoft.org/XSLT/)
+	
+	There are numerous other XSLT processors out there, but
+	changing to another will require some work, as no XSLT
+	processor supports the standard to the same degree as all
+	others, and each has extensions that the others do not.
+	The two that will likely give you the least pain are Saxon
+	(http://saxon.sourceforge.net) and the Apache Project's Xalan
+	(http://xml.apache.org/xalan-j).
+
+	An XSLT processor can translate from DocBook to HTML directly,
+	because it's a pretty straightforward conversion.  (The DocBook
+	format looks a lot like HTML.)
+
+	To get to PDF requires a bit more work.  XSLT isn't really
+	designed to produce binary file formats like PDF.  So, the
+	W3C defined XSL-FO, an XML-based page description language.
+	We use FOP from the Apache Project (http://xml.apache.org/fop/)
+	to translate XML-FO into PDF, because it's the best of the
+	free-as-in-freedom XSL-FO processors.
+
+	FOP isn't without its faults.  If you'd like to try some of
+	the commercial XSL-FO processors, RenderX's XEP (renderx.com)
+	is avalable in a free-as-in-beer version that adds watermarks
+	to your pages.	Another popular option is Antenna House's XSL
+	Formatter (antennahouse.com), but there is no free offering.
+	The low-end commercial version of each of these is around $300.
+	Another relatively inexpensive option is Lunasil's Xinc
+	(lunasil.com), which is available in a personal-use edition
+	for under $100.
+
+The third replaceable piece above is the DocBook XSL stylesheet set.
+If you don't have them on your system, the XSLT processor will try
+to download them using your Internet connection during processing.
+This slows processing quite a bit even if you have a fast Internet
+connection, and it obviously doesn't work when your net connection
+is down.
+
+A better option is to have a copy of the stylesheets on your system.
+It's likely that there is a pre-built package for your system:
+
+	Red Hat Linux: docbook-style-xsl RPM (same for Fedora Core)
+	Mac OS X:      docbook-xsl Fink package (http://fink.sf.net)
+	Cygwin:        docbook-xml?? package (?? = DocBook version)
+
+(Please send the name of the package for your system to the mailing
+list if it isn't listed above, and I'll add it to the list.)
+
+If you can't find a package for your system, you can get the DocBook
+stylesheets from the source: http://docbook.sourceforge.net/  They're
+a bit tricky to set up correctly, so it's better to use a pre-built
+package if you can.
+
+If you are still having problems, post the details about it to the
+MySQL++ mailing list, and I'll try to help you debug the problem.
+You might also find the FOP and/or DocBook mailing lists helpful.
+
+
 
 
 If you're looking to hack on the manual, here are some helpful resources
