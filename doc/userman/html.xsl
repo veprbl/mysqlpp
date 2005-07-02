@@ -8,6 +8,9 @@
 			 resolve this to the local copy of the stylesheet, if it exists. -->
 	<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"/>
 
+	<!-- HTML-specific XSL parameters -->
+	<xsl:param name="use.id.as.filename" select="1"/>
+
 	<!-- Local overrides -->
 	<!-- Number sections, but only the first two levels; from DocBook FAQ -->
 	<xsl:param name="section.autolabel" select="1"/>
