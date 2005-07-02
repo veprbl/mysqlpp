@@ -11,6 +11,7 @@ FOPDIR=/usr/local/fop
 
 BASENAME=userman
 DOCFILE=$(BASENAME).xml
+FOFILE=$(BASENAME).fo
 HTML_SS=html.xsl
 FO_SS=fo.xsl
 EX_TXT=cgi_image.txt custom1.txt custom2.txt custom3.txt custom4.txt \
@@ -22,10 +23,10 @@ EX_TXT=cgi_image.txt custom1.txt custom2.txt custom3.txt custom4.txt \
 ## Standard Makefile targets
 ## ------------------------
 
-all: $(EX_TXT) $(HTML_SS) $(FO_SS) html/index.html
+all: $(EX_TXT) html/index.html
 
 clean:
-	rm -rf html *.aux *.cpp *.fo *.log *.out *.pdf *.txt
+	rm -rf html tags *.aux *.cpp *.fo *.log *.out *.pdf *.txt
 
 
 ## ------------------------
@@ -33,18 +34,14 @@ clean:
 ## ------------------------
 
 pdf:
-	$(FOPDIR)/fop.sh -q -xml $(DOCFILE) -xsl $(FO_SS) $(BASENAME).pdf
-	mv $(BASENAME).pdf ../mysqlpp-$(BASENAME).pdf
-
-oldpdf:
-	xsltproc $(FO_SS) $(DOCFILE) > $(BASENAME).fo
-	pdfxmltex $(BASENAME).fo 2>&1 > /dev/null
+	xsltproc $(FO_SS) $(DOCFILE) > $(FOFILE)
+	$(FOPDIR)/fop.sh -q -fo $(FOFILE) $(BASENAME).pdf
 	mv $(BASENAME).pdf ../mysqlpp-$(BASENAME).pdf
 
 html/index.html: $(DOCFILE)
 	@xmllint --valid --noout $(DOCFILE)
 	@mkdir -p html
-	xsltproc -o html/ $(HTML_SS) $(DOCFILE)
+	XML_DEBUG_CATALOG=0 xsltproc -o html/ $(HTML_SS) $(DOCFILE)
 
 
 ## ------------------------
@@ -53,10 +50,4 @@ html/index.html: $(DOCFILE)
 
 $(EX_TXT):
 	expand -t4 < `echo ../../examples/$@ | sed -e s/txt/cpp/` | sed -e 's/&/\&amp;/g' | sed -e 's/</\&lt;/g' | sed -e 's/>/\&gt;/g' > $@
-
-$(HTML_SS): $(HTML_SS).in
-	./findxsl
-
-$(FO_SS): $(FO_SS).in
-	./findxsl
 

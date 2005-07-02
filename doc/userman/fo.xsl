@@ -1,10 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <xsl:stylesheet
 		xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 		xmlns:fo="http://www.w3.org/1999/XSL/Format"
 		version="1.0">
 	
-	<!-- Basic stylesheet: standard DocBook FO output -->
-	<xsl:import href="XSLDIR/fo/docbook.xsl"/>
+	<!-- Import the standard DocBook XSL-FO stylesheet that this one
+	     is based on.  We use a web URL, but the local XML catalog should
+			 resolve this to the local copy of the stylesheet, if it exists. -->
+	<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/fo/docbook.xsl"/>
 
 	<!-- Local overrides -->
 	<!-- Number sections, but only the first two levels; from DocBook FAQ -->
