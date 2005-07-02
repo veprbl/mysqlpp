@@ -41,7 +41,7 @@ pdf:
 html/index.html: $(DOCFILE)
 	@xmllint --valid --noout $(DOCFILE)
 	@mkdir -p html
-	XML_DEBUG_CATALOG=0 xsltproc -o html/ $(HTML_SS) $(DOCFILE)
+	xsltproc -o html/ $(HTML_SS) $(DOCFILE)
 
 
 ## ------------------------
