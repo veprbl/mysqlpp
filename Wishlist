@@ -106,12 +106,13 @@ Future Features
 	  avoid these problems if the end of the chain were a
 	  std::string overload, but we can't do that easily because
 	  each of these functions has a version taking a SQLString
-	  (a subclass of std:string) for template queries.  Consider
-	  adding a parallel set of functions (e.g. do_execute(),
-	  or execute_(), or some such) that take a single std::string,
-	  and move the implementation of query execution to them.
-	  With that done, we can use C API functions like
-	  mysql_real_query(), which can take binary data.
+	  (a subclass of std:string) for template queries.  Either
+	  add a parallel set of functions (e.g. do_execute(), or
+	  execute_(), or some such) that take a single std::string
+	  to replace the const char* version, or rename the template
+	  query versions (e.g. to execute_tq()) to avoid the overload
+	  conflict.  With that done, we can use C API functions
+	  like mysql_real_query(), which can take binary data.
 
 	o Add a configure script option to allow the new lock
 	  mechanism to use platform mutexes via the Boost.Threads
