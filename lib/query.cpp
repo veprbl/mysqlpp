@@ -100,11 +100,16 @@ ResNSel Query::execute(const char* str)
 }
 
 
-ResNSel Query::execute(parms& p)
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
+
+ResNSel Query::execute(SQLQueryParms& p)
 {
 	query_reset r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
 	return execute(str(p, r).c_str());
 }
+
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 std::string Query::info()
@@ -337,11 +342,16 @@ Result Query::store(const char* str)
 }
 
 
-Result Query::store(parms& p)
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
+
+Result Query::store(SQLQueryParms& p)
 {
 	query_reset r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
 	return store(str(p, r).c_str());
 }
+
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 std::string Query::str(SQLQueryParms& p)
@@ -415,12 +425,16 @@ ResUse Query::use(const char* str)
 }
 
 
-ResUse Query::use(parms& p)
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
+
+ResUse Query::use(SQLQueryParms& p)
 {
 	query_reset r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
 	return use(str(p, r).c_str());
 }
 
+#endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp
 

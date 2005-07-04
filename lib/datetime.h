@@ -247,8 +247,6 @@ struct Date : public DTbase<Date>
 	/// equal, and > 0 if this date is after the other.
 	short int compare(const Date& other) const;
 
-	std::ostream& out_stream(std::ostream& os) const;
-
 	/// \brief Parse a MySQL date string into this object.
 	cchar* convert(cchar*);
 };

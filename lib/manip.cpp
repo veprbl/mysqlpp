@@ -509,12 +509,18 @@ std::ostream& operator <<(escape_type1 o, const ColData_Tmpl<const_string>& in)
 }
 
 
+/// \brief Inserts a SQLString into a stream, with no escaping or
+/// quoting.
+
 SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
 {
 	in.processed = true;
 	return *p.qparms << in;
 }
 
+
+/// \brief Inserts a SQLString into a stream, with no escaping or
+/// quoting, and without marking the string as having been "processed".
 
 SQLQueryParms& operator <<(ignore_type2 p, SQLString& in)
 {
