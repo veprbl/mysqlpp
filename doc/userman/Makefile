@@ -41,7 +41,7 @@ pdf: $(PDFFILE)
 all: html pdf
 
 clean:
-	rm -rf html tags *.aux *.cpp *.fo *.log *.out *.pdf *.txt
+	rm -f tags *.fo html/*.html *.log *.out *.pdf *.txt
 
 
 ## ------------------------

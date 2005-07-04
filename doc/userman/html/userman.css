@@ -1,0 +1,76 @@
+BODY {
+  background-color: #FFFFEE;
+}
+
+a:link { 
+  color: #491E00;
+}
+
+a:visited { 
+  color: #7D2E01;
+}
+
+a:hover { 
+  color: #CC5500;
+  text-decoration: none;
+}
+
+a:active { 
+  color: #DA7417;
+}
+
+H1 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 20pt;
+  color: #501000;
+}
+
+H2 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 16pt;
+  font-weight: bold;
+  color: #501000;
+}
+
+H3 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 14pt;
+  font-weight: bold;
+  color: #501000;
+}
+
+H4 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 10pt;
+  font-weight: bold;
+  color: #501000;
+}
+H4.subtitle {
+  margin-left: 20pt;
+}
+
+H5 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 10pt;
+  font-weight: bold;
+  color: #501000;
+  margin-left: 20pt;
+}
+
+P {
+  line-height: 140%;
+  margin-left: 20pt;
+}
+
+div.sect3 {
+	margin-left: 20pt;
+}
+
+li {
+	margin-left: 30pt;
+}
+
+li p {
+	margin-left: 0pt;
+}
+
