@@ -391,9 +391,9 @@
 		a connection, execute a simple query, and display
 		the results. This is examples/simple1.cpp:</para>
 
-		<blockquote><programlisting><xi:include href="simple1.txt"
+		<programlisting><xi:include href="simple1.txt"
 			parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-		</programlisting></blockquote>
+		</programlisting>
 
 		<para>If anything, the code above is "too" simple,
 		because all it really does is drive some functions in
@@ -403,9 +403,9 @@
 
 		<para>Here's the examples' utility module:</para>
 
-		<blockquote><programlisting><xi:include href="util.txt"
+		<programlisting><xi:include href="util.txt"
 			parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-		</programlisting></blockquote>
+		</programlisting>
 
 		<para>(The above is actually an abridged version of util.cpp,
 		with the Unicode stuff removed. That topic is covered
@@ -598,9 +598,9 @@
 			<xref linkend="ssqls"/> (SSQLS). This is
 			examples/custom1.cpp:</para>
 
-			<blockquote><programlisting><xi:include href="custom1.txt"
+			<programlisting><xi:include href="custom1.txt"
 				parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-			</programlisting></blockquote>
+			</programlisting>
 			
 			<para>As you can see, SSQLS is very powerful.</para>
 		</sect3>
@@ -611,9 +611,9 @@
 			<para>SSQLS can also be used to add data to a table. This
 			is examples/custom2.cpp:</para>
 
-			<blockquote><programlisting><xi:include href="custom2.txt"
+			<programlisting><xi:include href="custom2.txt"
 				parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-			</programlisting></blockquote>
+			</programlisting>
 
 			<para>That's all there is to it!</para>
 			
@@ -635,9 +635,9 @@
 			<para>It almost as easy to modify data with
 			SSQLS. This is examples/custom3.cpp:</para>
 
-			<blockquote><programlisting><xi:include href="custom3.txt"
+			<programlisting><xi:include href="custom3.txt"
 				parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-			</programlisting></blockquote>
+			</programlisting>
 
 			<para>When you run the example you will notice
 			that in the WHERE clause only the 'item' field
@@ -655,9 +655,9 @@
 			STL associative containers as demonstrated in the
 			next example. This is examples/custom4.cpp:</para>
 
-			<blockquote><programlisting><xi:include href="custom4.txt"
+			<programlisting><xi:include href="custom4.txt"
 				parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-			</programlisting></blockquote>
+			</programlisting>
 		</sect3>
 	</sect2>
 
@@ -770,9 +770,9 @@
 		process arbitrarily large result sets. This technique
 		is demonstrated in examples/simple2.cpp:</para>
 
-		<blockquote><programlisting><xi:include href="simple2.txt"
+		<programlisting><xi:include href="simple2.txt"
 			parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-		</programlisting></blockquote>
+		</programlisting>
 
 		<para>This example does the same thing as
 		<filename>simple1</filename>, only with a
@@ -792,9 +792,9 @@
 		as the name of the field and the SQL type. This is
 		examples/fieldinf1.cpp:</para>
 
-		<blockquote><programlisting><xi:include href="fieldinf1.txt"
+		<programlisting><xi:include href="fieldinf1.txt"
 			parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-		</programlisting></blockquote>
+		</programlisting>
 	</sect2>
 
 
@@ -822,9 +822,9 @@
 			one command line parameter, which is a full path
 			to the binary file. This is examples/load_file.cpp:</para>
 
-			<blockquote><programlisting><xi:include href="load_file.txt"
+			<programlisting><xi:include href="load_file.txt"
 				parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-			</programlisting></blockquote>
+			</programlisting>
 
 			<para>Notice that we used the
 			<computeroutput>escape</computeroutput>
@@ -846,9 +846,9 @@
 			requiring an temporary file on disk. This is
 			examples/cgi_image.cpp:</para>
 
-			<blockquote><programlisting><xi:include href="cgi_image.txt"
+			<programlisting><xi:include href="cgi_image.txt"
 				parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-			</programlisting></blockquote>
+			</programlisting>
 		</sect3>
 
 		<sect3>
@@ -863,9 +863,9 @@
 			example implements that feature in just a few
 			lines of code. It is examples/updel.cpp:</para>
 
-			<blockquote><programlisting><xi:include href="updel.txt"
+			<programlisting><xi:include href="updel.txt"
 				parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-			</programlisting></blockquote>
+			</programlisting>
 
 			<para>Notice that the row values
 			used in the IN clause aren't escaped or
@@ -903,9 +903,9 @@
 	times now if you've worked through all the examples,
 	resetdb.cpp:</para>
 
-	<blockquote><programlisting><xi:include href="resetdb.txt"
+	<programlisting><xi:include href="resetdb.txt"
 		parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-	</programlisting></blockquote>
+	</programlisting>
 
 	<para>The line just before the call to
 	<computeroutput>query.parse()</computeroutput> sets the
@@ -1398,7 +1398,7 @@
 		in all the <computeroutput>custom*.cpp</computeroutput>
 		examples:</para>
 
-		<blockquote><programlisting>
+		<programlisting>
 // Basic form
 template &lt;class Manip&gt;   
 stock_value_list&lt;Manip&gt; value_list(cchar *d = &#34;,&#34;,
@@ -1429,24 +1429,24 @@ template &lt;class Manip&gt;
 stock_cus_value_list&lt;Manip&gt; value_list([cchar *d, [Manip m,] ]  
     vector&lt;bool&gt; *i) const;  
 
-...Plus the obvious equivalents for field_list() and equal_list()</programlisting></blockquote>
+...Plus the obvious equivalents for field_list() and equal_list()</programlisting>
 
 		<para>Rather than try to learn what all of these methods
 		do at once, let's ease into the subject. Consider this
 		code:</para>
 
-		<blockquote><programlisting>
+		<programlisting>
 stock s("Dinner Rolls", 75, 0.95, 0.97, "1998-05-25");   
 cout &lt;&lt; "Value list: " &lt;&lt; s.comma_list() &lt;&lt; endl;  
 cout &lt;&lt; "Field list: " &lt;&lt; s.field_list() &lt;&lt; endl;  
-cout &lt;&lt; "Equal list: " &lt;&lt; s.equal_list() &lt;&lt; endl;</programlisting></blockquote>
+cout &lt;&lt; "Equal list: " &lt;&lt; s.equal_list() &lt;&lt; endl;</programlisting>
 
 		<para>That would produce something like:</para>
 
-		<blockquote><programlisting>
+		<programlisting>
 Value list: 'Dinner Rolls',75,0.95,0.97,'1998-05-25'   
 Field list: item,num,weight,price,date  
-Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,date = '1998-05-25'</programlisting></blockquote>
+Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,date = '1998-05-25'</programlisting>
 
 		<para>That is, a "value list" is a list of data member
 		values within a particular SSQLS instance, a "field list"
@@ -1459,9 +1459,9 @@ Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,date = '1
 		<computeroutput>Query::insert()</computeroutput> is
 		implemented more or less like this:</para>
 
-		<blockquote><programlisting>
+		<programlisting>
 *this &lt;&lt; "INSERT INTO " &lt;&lt; v.table() &lt;&lt; " (" &lt;&lt; v.field_list() &lt;&lt;
-        ") VALUES (" &lt;&lt; v.value_list() &lt;&lt; ")";</programlisting></blockquote>
+        ") VALUES (" &lt;&lt; v.value_list() &lt;&lt; ")";</programlisting>
 
 		<para>where 'v' is the SSQLS you're asking the
 		Query object to insert into the database.</para>
@@ -1474,7 +1474,7 @@ Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,date = '1
 		makes it more robust in the face of change. Here is
 		examples/custom5.cpp:</para>
 
-		<blockquote><programlisting>
+		<programlisting>
 #include "util.h"
 
 #include &lt;mysql++.h&gt;
@@ -1540,7 +1540,7 @@ main(int argc, char *argv[])
     }
 
     return 0;
-}</programlisting></blockquote>
+}</programlisting>
 
 		<para>This example uses the list form of
 		<computeroutput>equal_list()</computeroutput>. The
@@ -1555,20 +1555,20 @@ main(int argc, char *argv[])
 		<computeroutput>equal_list()</computeroutput> call would
 		look like this:</para>
 
-		<blockquote><programlisting>
+		<programlisting>
 query &lt;&lt; "select * from stock where " &lt;&lt;
-        res[0].equal_list(" and ", false, false, true, true, false);</programlisting></blockquote>
+        res[0].equal_list(" and ", false, false, true, true, false);</programlisting>
 
 		<para>It's a little more verbose, as you can
 		see. And if you want to get really complicated,
 		use the vector form:</para>
 
-		<blockquote><programlisting>
+		<programlisting>
 vector&lt;bool&gt; v(5, false);
 v[stock_weight] = true;
 v[stock_price] = true;
 query &lt;&lt; "select * from stock where " &lt;&lt;
-        res[0].equal_list(" and ", v);</programlisting></blockquote>
+        res[0].equal_list(" and ", v);</programlisting>
 
 		<para>This form makes the most sense if you are
 		building many other queries, and so can re-use that
@@ -1818,7 +1818,7 @@ query &lt;&lt; "select * from stock where " &lt;&lt;
 		is distilled from <computeroutput>utf8_to_win32_ansi()</computeroutput>
 		in <computeroutput>examples/util.cpp</computeroutput>:</para>
 
-		<blockquote><programlisting>
+		<programlisting>
 void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 {
     wchar_t ucs2_buf[100];
@@ -1829,7 +1829,7 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
     GetCPInfoEx(CP_OEMCP, 0, &amp;cpi);
     WideCharToMultiByte(cpi.CodePage, 0, ucs2_buf, -1,
             ansi_str, ansi_len, 0, 0);
-}</programlisting></blockquote>
+}</programlisting>
 
 		<para>The examples use this function automatically on
 		Windows systems. To see it in action, run simple1 in

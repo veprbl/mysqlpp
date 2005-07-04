@@ -74,3 +74,11 @@ li p {
 	margin-left: 0pt;
 }
 
+pre.programlisting {
+	border: 1px solid #882200;
+	margin: 10pt;
+	margin-left: 40pt;
+	padding: 10pt;
+	background-color: #FFFFCC;
+}
+
