@@ -10,49 +10,14 @@ consider whether it could be reduced to an API feature that would be
 widely useful.  Patches or proposals of this sort are always welcome.
 
 
-v2.0 Release Plan
------------------
+Future Features
+---------------
 
-	The basic concept of MySQL++ v2.0 is to roll up all of the ABI
-	breakages that we've been putting off.
-	
-	Ideally, this will be the last ABI breakage for a long while.
-	The mad god Murphy may have other plans, but even if we have
-	to change the ABI again in the next major revision to correct
-	unpopular changes, it's still in our best interest not to
-	put off these changes any further.  The earlier we discover
-	problems with these changes, the less time until we settle
-	on a stable ABI.
+	These changes are planned for versions after v2.0.  If you
+	need one of these changes to happen on some particular
+	schedule, the best way to ensure it is to start coding and
+	provide a patch!
 
-	We're therefore putting off major changes that shouldn't impact the
-	ABI to v2.1 or later.  See the next section.
-
-	This plan is not engraved in stone.  Some of these changes may
-	get pushed to v2.1, and other items from the following sections
-	might get rolled up into v2.0.
-
-	The remaining changes planned for v2.0 are:
-
-
-	o It may be possible to optimize the use of ColData in the return
-	  from Row::operator[]. Currently, that operator returns
-	  a temporary ColData object, which contains a std::string
-	  buffer which is initialized by a const char* pointer to
-	  data within the Row object.  Since the ColData object is
-	  temporary, you currently must copy the data a second time to
-	  store it when using Row::operator[].	If the end user just
-	  wants a const char*, this double copy could be prevented.
-	  See http://lists.mysql.com/plusplus/4451 for the proposal.
-
-
-Future Features and ABI Changes
--------------------------------
-
-	These changes are planned for versions after v2.0. Some could happen
-	as early as v2.1, but don't count on it.  If you need some of these
-	changes to happen quicker than that, the best way to ensure it is to
-	start coding and provide a patch!
-	
 
 	o Transaction support.	Create a "Transaction" class, an
 	  object of which you create on the stack, giving it a
@@ -71,6 +36,16 @@ Future Features and ABI Changes
 	  have to wait to the end of a block, so there can be code
 	  following the potential exception throw point without having
 	  to create an artificial block.
+
+	o It may be possible to optimize the use of ColData in the return
+	  from Row::operator[]. Currently, that operator returns
+	  a temporary ColData object, which contains a std::string
+	  buffer which is initialized by a const char* pointer to
+	  data within the Row object.  Since the ColData object is
+	  temporary, you currently must copy the data a second time to
+	  store it when using Row::operator[].	If the end user just
+	  wants a const char*, this double copy could be prevented.
+	  See http://lists.mysql.com/plusplus/4451 for the proposal.
 
 	o Abstract all uses of MySQL C API functions into a database
 	  driver class with a generic interface.  This is a step
@@ -123,16 +98,20 @@ Future Features and ABI Changes
 	  object may be able to look up a suitable Connection object
 	  for the manipulators.
 
-	o Currently the "rubber meets the road" in the const char*
-	  version of the execute(), store() and use() methods.
-	  A version taking a C++ string would be more efficient, and
-	  it could handle embedded null characters if we switched the
-	  internals over to mysql_real_query().  Cannot add such an
-	  overload for type conflict reasons, but we can move these
-	  implementations into the first SQLString overload, which
-	  previously was intended for use with template queries.
-	  Then we can make the const char* versions wrappers for the
-	  SQLString version.
+	o Currently, all overloads for Query's execute(), store()
+	  and use() methods eventually calls the const char* version,
+	  which does the actual work of executing the query.  This
+	  is limited to text query strings, and the implementation
+	  must scan the string for length in a few places.  We'd
+	  avoid these problems if the end of the chain were a
+	  std::string overload, but we can't do that easily because
+	  each of these functions has a version taking a SQLString
+	  (a subclass of std:string) for template queries.  Consider
+	  adding a parallel set of functions (e.g. do_execute(),
+	  or execute_(), or some such) that take a single std::string,
+	  and move the implementation of query execution to them.
+	  With that done, we can use C API functions like
+	  mysql_real_query(), which can take binary data.
 
 	o Add a configure script option to allow the new lock
 	  mechanism to use platform mutexes via the Boost.Threads
@@ -152,6 +131,16 @@ Future Features and ABI Changes
 	  Another is to put them in another macro, which the user
 	  must instantiate once in a .cpp file.  (Similar to the way
 	  MFC message maps work.)
+
+	  Another way to attack it would be to redesign the SSQLS
+	  mechanism entirely.  Instead of defining SSQLSes by
+	  instantiating macros, you could declare the structure in,
+	  say, an XML format, which could be tranformed (XSLT?  Perl
+	  + SAX?) into code very much like in the current SSQLS
+	  macros, except that it would generate separate .cpp and
+	  .h files for each structure.  In addition to solving the
+	  static member problem, it would have other advantages,
+	  like side-stepping the Borland C++ macro size limit.
 
 	o MySQL++ handles automatic quoting and escaping differently
 	  for cout and cerr than for Query streams.  This should
