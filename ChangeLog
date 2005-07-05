@@ -181,8 +181,8 @@
 	  dtors to all base classes, calling base class ctors from
 	  leaf classes, etc.
 
-	o Signedness and integer conversion warning fixes for VC++.
-	  It builds almost completely cleanly at /W3 now.
+	o All warnings fixed under VC++ at warning level 3.  (Mostly
+	  harmless signedness and integer conversion stuff.)
 
 	o Updated LGPL license/copyright comments at the top of
 	  several files to use FSF's new physical address.
