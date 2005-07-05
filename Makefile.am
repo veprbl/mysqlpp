@@ -31,7 +31,6 @@ EXTRA_DIST = \
 	doc/userman/*.xsl \
 	doc/userman/mktxt \
 	doc/userman/html \
-	doc/userman/findxsl \
 	doc/userman/Makefile \
 	doc/userman/README \
 	*.ebuild \
