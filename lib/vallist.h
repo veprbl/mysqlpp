@@ -382,7 +382,7 @@ std::ostream& operator <<(std::ostream& o,
 /// and Row::field_list().  See the "Harnessing SSQLS Internals" section
 /// of the user manual to see that feature at work.
 
-void create_vector(int size, std::vector<bool>& v, bool t0,
+void create_vector(size_t size, std::vector<bool>& v, bool t0,
 		bool t1 = false, bool t2 = false, bool t3 = false,
 		bool t4 = false, bool t5 = false, bool t6 = false,
 		bool t7 = false, bool t8 = false, bool t9 = false,
