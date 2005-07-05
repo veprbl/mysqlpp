@@ -191,10 +191,10 @@ public:
 	std::ostream(&sbuffer_),
 	OptionalExceptions(te),
 	Lockable(),
+	def(this),
 	conn_(c),
 	success_(false),
-	errmsg_(0),
-	def(this)
+	errmsg_(0)
 	{
 		success_ = true;
 	}

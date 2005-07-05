@@ -34,10 +34,10 @@ Query::Query(const Query& q) :
 std::ostream(&sbuffer_),	
 OptionalExceptions(q.exceptions()),
 Lockable(),
+def(q.def),
 conn_(q.conn_),
 success_(q.success_),
-errmsg_(q.errmsg_),
-def(q.def)
+errmsg_(q.errmsg_)
 {
 }
 
