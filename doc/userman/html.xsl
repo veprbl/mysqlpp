@@ -16,7 +16,7 @@
 	<xsl:include href="common.xsl"/>
 
 	<!-- HTML-specific XSL parameters -->
-	<xsl:param name="chunk.fast" select="1"/>
+	<xsl:param name="chunk.fast" select="0"/>
 	<xsl:param name="html.stylesheet" select="'userman.css'"/>
 	<xsl:param name="section.autolabel" select="1"/>
 	<xsl:param name="section.autolabel.max.depth" select="2"/>
