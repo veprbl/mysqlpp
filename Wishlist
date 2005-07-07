@@ -136,12 +136,18 @@ Future Features
 	  Another way to attack it would be to redesign the SSQLS
 	  mechanism entirely.  Instead of defining SSQLSes by
 	  instantiating macros, you could declare the structure in,
-	  say, an XML format, which could be tranformed (XSLT?  Perl
-	  + SAX?) into code very much like in the current SSQLS
-	  macros, except that it would generate separate .cpp and
-	  .h files for each structure.  In addition to solving the
-	  static member problem, it would have other advantages,
+	  say, an XML format, which could be tranformed (XSLT?	Perl +
+	  a DOM parser?) into code very much like in the current
+	  SSQLS macros, except that it would generate separate .cpp
+	  and .h files for each structure.  In addition to solving
+	  the static member problem, it would have other advantages,
 	  like side-stepping the Borland C++ macro size limit.
+
+	o Consider whether some of the current boilerplate can be
+	  made into a base class that all SSQLSes derive from.
+	  This may have implications for some templates, like
+	  Query::insert<T>...they might become regular member
+	  functions, taking a reference to the base class.
 
 	o MySQL++ handles automatic quoting and escaping differently
 	  for cout and cerr than for Query streams.  This should
