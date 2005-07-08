@@ -148,11 +148,19 @@ main(int argc, char *argv[])
 		}
 	}
 
+#if MYSQL_VERSION_ID >= 41000
 	// Enable multi-queries.  Only available on MySQL 4.1 and higher.
 	if (!con.set_option(MYSQL_OPTION_MULTI_STATEMENTS_ON)) {
 		cerr << "Your server doesn't support multi-queries." << endl;
 		return 1;
 	}
+#else
+	cerr << "ERROR: This example only works on MySQL v4.1 and "
+			"higher," << endl;
+	cerr << "and for full functionality you need to use v5.0 or "
+			"higher." << endl << endl;
+	return 2;
+#endif
 
 	// Set up query with multiple queries.
 	mysqlpp::Query query = con.query();
