@@ -75,20 +75,21 @@ ResUse::~ResUse()
 
 void ResUse::copy(const ResUse& other)
 {
-	if (!other.result_) {
-		result_ = 0;
-		types_ = 0;
-		names_ = 0;
-		return;
-	}
-
 	if (initialized_) {
 		purge();
 	}
 
+	if (!other.result_) {
+		result_ = 0;
+		types_ = 0;
+		names_ = 0;
+		initialized_ = other.initialized_;
+		return;
+	}
+
 	set_exceptions(other.throw_exceptions());
 	result_ = other.result_;
-	fields_ = other.fields_;
+	fields_ = Fields(this);
 
 	if (other.names_) {
 		names_ = new FieldNames(*other.names_);

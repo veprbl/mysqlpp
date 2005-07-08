@@ -33,7 +33,8 @@ LDFLAGS=-lmysqlpp -lmysqlclient
 # --- No user-serviceable parts below :)
 
 BINARIES=resetdb simple1 simple2 usequery custom1 custom2 custom3 \
-		custom4 custom5 fieldinf1 dbinfo cgi_image load_file updel
+		custom4 custom5 fieldinf1 dbinfo cgi_image load_file updel \
+		multiquery
 
 RESETDB_OBJS=resetdb.o util.o
 SIMPLE1_OBJS=simple1.o util.o
@@ -49,6 +50,7 @@ DBINFO_OBJS=dbinfo.o util.o
 CGI_IMAGE_OBJS=cgi_image.o
 LOAD_FILE_OBJS=load_file.o
 UPDEL_OBJS=updel.o
+MULTIQUERY_OBJS=multiquery.o util.o
 
 .SUFFIXES: .cpp
 
@@ -104,6 +106,9 @@ load_file: $(LOAD_FILE_OBJS)
 updel: $(UPDEL_OBJS)
 	$(LD) $(UPDEL_OBJS) -o $@ $(LDFLAGS)
 
+multiquery: $(MULTIQUERY_OBJS)
+	$(LD) $(MULTIQUERY_OBJS) -o $@ $(LDFLAGS)
+
 
 resetdb.o: resetdb.cpp util.h
 simple1.o: simple1.cpp util.h
@@ -117,4 +122,5 @@ cgi_image.o: cgi_image.cpp
 load_file.o: load_file.cpp
 updel.o: updel.cpp
 util.o: util.cpp util.h
+multiquery.o: multiquery.cpp util.h
 

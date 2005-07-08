@@ -365,6 +365,41 @@ public:
 	/// than use(), but it lets you have random access to the results.
 	Result store(const char* str);
 
+	/// \brief Return next result set, when processing a multi-query
+	///
+	/// There are two cases where you'd use this function instead of
+	/// the regular store() functions.
+	/// 
+	/// First, when handling the result of executing multiple queries
+	/// at once.  (See <a
+	/// href="http://dev.mysql.com/doc/mysql/en/c-api-multiple-queries.html">this
+	/// page</a> in the MySQL documentation for details.) 
+	///
+	/// Second, when calling a stored procedure, MySQL can return the
+	/// result as a set of results.
+	///
+	/// In either case, you must consume all results before making
+	/// another MySQL query, even if you don't care about the remaining
+	/// results or result sets.
+	///
+	/// As the MySQL documentation points out, you must set the
+	/// MYSQL_OPTION_MULTI_STATEMENTS_ON flag on the connection in order
+	/// to use this feature.  See Connection::set_option().
+	///
+	/// \return Result object containing the next result set.
+	Result store_next();
+
+	/// \brief Return whether more results are waiting for a multi-query
+	/// or stored procedure response.
+	///
+	/// If this function returns true, you must call store_next() to
+	/// fetch the next result set before you can execute more queries.
+	///
+	/// Wraps mysql_more_results() in the MySQL C API.
+	///
+	/// \return true if another result set exists
+	bool more_results();
+
 	/// \brief Execute a query, storing the result set in an STL
 	/// sequence container.
 	///

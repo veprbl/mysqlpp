@@ -20,7 +20,7 @@ LDADD = $(MYSQLPP_LIB) @PTHREAD_LIBS@
 
 EXTRA_DIST = *.vcproj *.bpf *.bpr *.bpg Makefile.simple
 
-noinst_PROGRAMS = resetdb simple1 simple2 usequery custom1 custom2 \
+noinst_PROGRAMS = resetdb simple1 simple2 usequery multiquery custom1 custom2 \
 		custom3 custom4 custom5 fieldinf1 dbinfo updel load_file \
 		cgi_image
 
@@ -67,6 +67,9 @@ updel_DEPENDENCIES = $(MYSQLPP_LIB)
 
 load_file_SOURCES = load_file.cpp
 load_file_DEPENDENCIES = $(MYSQLPP_LIB)
+
+multiquery_SOURCES = multiquery.cpp util.cpp
+multiquery_DEPENDENCIES = $(MYSQLPP_LIB)
 
 tags: ctags
 

@@ -29,6 +29,10 @@ Other contributors of note since 1.7.10:
 	Evan Wies <evan@athenacr.com>: Contributed several C++ code
 	style cleanups.
 
+	Arnon Jalon <Arnon.Jalon@247RealMedia.com>: Added the multi-query
+	result set handling features, and multiquery example to demonstrate
+	it.
+
 
 Here are the personal credits from the old 1.7.9 documentation,
 apparently written by Kevin Atkinson:

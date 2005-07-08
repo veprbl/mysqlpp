@@ -238,7 +238,21 @@ class EndOfResults : public Exception
 {
 public:
 	/// \brief Create exception object
-	EndOfResults(const char* w = "") :
+	EndOfResults(const char* w = "end of results") :
+	Exception(w)
+	{
+	}
+};
+
+
+/// \brief Exception thrown when Query::store_next() walks off the end
+/// of a use-query's multi result sets.
+
+class EndOfResultSets : public Exception
+{
+public:
+	/// \brief Create exception object
+	EndOfResultSets(const char* w = "end of result sets") :
 	Exception(w)
 	{
 	}

@@ -130,6 +130,12 @@ bool Query::lock()
 }
 
 
+bool Query::more_results()
+{
+	return mysql_more_results(&conn_->mysql);
+}
+
+
 void Query::parse()
 {
 	std::string str = "";
@@ -333,7 +339,12 @@ Result Query::store(const char* str)
 	unlock();
 
 	// One of the mysql_* calls failed, so decide how we should fail.
-	if (throw_exceptions()) {
+	// Notice that we do not throw an exception if we just get a null
+	// result set, but no error.  This happens when using store() on a
+	// query that may not return results.  Obviously it's better to use
+	// exec*() in this situation, but it's not outright illegal, and
+	// sometimes you have to do it.
+	if (conn_->errnum() && throw_exceptions()) {
 		throw BadQuery(conn_->error());
 	}
 	else {
@@ -352,6 +363,56 @@ Result Query::store(SQLQueryParms& p)
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
+
+
+Result Query::store_next()
+{
+	if (lock()) {
+		if (throw_exceptions()) {
+			throw BadQuery("lock failed");
+		}
+		else {
+			return Result();
+		}
+	}
+
+	int ret;
+	if ((ret = mysql_next_result(&conn_->mysql)) == 0) {
+		// There are more results, so return next result set.
+		MYSQL_RES* res = mysql_store_result(&conn_->mysql);
+		unlock();
+		if (res) {
+			return Result(res, throw_exceptions());
+		} 
+		else {
+			// Result set is null, but throw an exception only i it is
+			// null because of some error.  If not, it's just an empty
+			// result set, which is harmless.  We return an empty result
+			// set if exceptions are disabled, as well.
+			if (conn_->errnum() && throw_exceptions()) {
+				throw BadQuery(conn_->error());
+			} 
+			else {
+				return Result();
+			}
+		}
+	}
+	else {
+		// No more results, or some other error occurred.
+		unlock();
+		if (throw_exceptions()) {
+			if (ret > 0) {
+				throw BadQuery(conn_->error());
+			}
+			else {
+				throw EndOfResultSets();
+			}
+		}
+		else {
+			return Result();
+		}
+	}
+}
 
 
 std::string Query::str(SQLQueryParms& p)
