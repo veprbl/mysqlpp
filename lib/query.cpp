@@ -126,7 +126,11 @@ bool Query::lock()
 
 bool Query::more_results()
 {
+#if MYSQL_VERSION_ID > 41000		// only in MySQL v4.1 +
 	return mysql_more_results(&conn_->mysql_);
+#else
+	return false;
+#endif
 }
 
 
@@ -361,6 +365,7 @@ Result Query::store(SQLQueryParms& p)
 
 Result Query::store_next()
 {
+#if MYSQL_VERSION_ID > 41000		// only in MySQL v4.1 +
 	if (lock()) {
 		if (throw_exceptions()) {
 			throw LockFailed();
@@ -406,6 +411,9 @@ Result Query::store_next()
 			return Result();
 		}
 	}
+#else
+	return store();
+#endif // MySQL v4.1+
 }
 
 

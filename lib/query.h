@@ -385,6 +385,10 @@ public:
 	/// MYSQL_OPTION_MULTI_STATEMENTS_ON flag on the connection in order
 	/// to use this feature.  See Connection::set_option().
 	///
+	/// Multi-queries only exist in MySQL v4.1 and higher.  Therefore,
+	/// this function just wraps store() when built against older API
+	/// libraries.
+	///
 	/// \return Result object containing the next result set.
 	Result store_next();
 
@@ -394,7 +398,9 @@ public:
 	/// If this function returns true, you must call store_next() to
 	/// fetch the next result set before you can execute more queries.
 	///
-	/// Wraps mysql_more_results() in the MySQL C API.
+	/// Wraps mysql_more_results() in the MySQL C API.  That function
+	/// only exists in MySQL v4.1 and higher.  Therefore, this function
+	/// always returns false when built against older API libraries.
 	///
 	/// \return true if another result set exists
 	bool more_results();

@@ -297,19 +297,25 @@ public:
 	/// \brief Sets the given MySQL server option
 	///
 	/// Wraps \c mysql_set_server_option() in the C API, except that
-	/// it returns true for success, instead of 0.
-	bool set_option(enum_mysql_set_option option)
+	/// it returns true for success, instead of 0.  Because that
+	/// function only exists in MySQL v4.1 and higher, this function
+	/// always returns false when built against older APIs.
+	bool set_option(int option)
 	{
-		return !mysql_set_server_option(&mysql_, option);
+#		if MYSQL_VERSION_ID > 41000
+			return !mysql_set_server_option(&mysql_, option);
+#		else
+			return false;
+#		endif
 	}
 
 	/// \brief Sets the given MySQL connection option
 	///
 	/// Wraps \c mysql_option() in the C API, except that it returns
 	/// true for success, instead of 0.
-	bool set_option(enum mysql_option option, const char* arg)
+	bool set_option(int option, const char* arg)
 	{
-		return !mysql_options(&mysql_, option, arg);
+		return !mysql_options(&mysql_, mysql_option(option), arg);
 	}
 
 	/// \brief Return the number of rows affected by the last query
