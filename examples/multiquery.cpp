@@ -46,7 +46,7 @@ static void
 print_header(IntVectorType& widths, mysqlpp::Result& res)
 {
 	cout << "  |" << setfill(' ');
-	for (int i = 0; i < res.names().size(); i++) {
+	for (size_t i = 0; i < res.names().size(); i++) {
 		cout << " " << setw(widths.at(i)) << res.names(i) << " |";
 	}
 	cout << endl;
@@ -57,7 +57,7 @@ static void
 print_row(IntVectorType& widths, mysqlpp::Row& row)
 {
 	cout << "  |" << setfill(' ');
-	for (int i = 0; i < row.size(); i++) {
+	for (size_t i = 0; i < row.size(); i++) {
 		cout << " " << setw(widths.at(i)) << row.raw_data(i) << " |";
 	}
 	cout << endl;
@@ -68,7 +68,7 @@ static void
 print_row_separator(IntVectorType& widths)
 {
 	cout << "  +" << setfill('-');
-	for (int i = 0; i < widths.size(); i++) {
+	for (size_t i = 0; i < widths.size(); i++) {
 		cout << "-" << setw(widths.at(i)) << '-' << "-+";
 	}
 	cout << endl;

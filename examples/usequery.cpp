@@ -62,7 +62,7 @@ main(int argc, char *argv[])
 		std::cerr << "Query failed: " << e.what() << std::endl;
 		return 1;
 	}
-	catch (const mysqlpp::EndOfResults& e) {
+	catch (const mysqlpp::EndOfResults&) {
 		// Last query result received.  Exit normally.
 		return 0;
 	}
