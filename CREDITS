@@ -11,7 +11,7 @@ in the root package directory.  ChangeLog items since 1.7.9 that
 aren't attributed to anyone else were done by Warren Young.
 
 
-Other frequent contributors since 1.7.10 are:
+Other contributors of note since 1.7.10:
 
 	Chris Frey <cdfrey@netdirect.ca>: Lots of GCC warning fixes for
 	the bleeding-edge compiler versions, and Gentoo ebuild support.
