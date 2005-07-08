@@ -89,13 +89,13 @@
 	  new exceptions thrown that they're not expecting.
 
 	o Added a bunch of new exception types: ConnectionFailed,
-	  DBSelectionFailed, EndOfResults, and ObjectNotInitialized.
-	  Some of these replace the use of BadQuery, which in v1.7.x
-	  was a kind of generic exception, thrown when something
-	  more specific wasn't available.  Beware, this means that
-	  programs may start crashing after recompiling them under
-	  v2.0 due to uncaught exceptions, if they were only trying
-	  to catch BadQuery.
+	  DBSelectionFailed, EndOfResults, EndOfResultSets, LockFailed,
+	  and ObjectNotInitialized.  Some of these replace the use of
+	  BadQuery, which in v1.7.x was a kind of generic exception,
+	  thrown when something more specific wasn't available.
+	  Beware, this means that programs may start crashing after
+	  recompiling them under v2.0 due to uncaught exceptions,
+	  if they were only trying to catch BadQuery.
 
 	  There are additional instances where the library will
 	  throw new exceptions.  One is when calling a method that
@@ -138,6 +138,13 @@
 
 	o Moved Extracted SQLParseElement and SQLQueryParms into
 	  their own module, qparms.
+
+	o Added multiple result set handling to Query.	MySQL 4.1
+	  and higher allow you to give multiple SQL statements in a
+	  single "store" call, which requires extensions to MySQL++
+	  so you can iterate through the multiple result sets.	Also,
+	  stored procedures in MySQL 5.0 reportedly return multiple
+	  result sets.
 
 	o Collapsed mysql_* date and time base classes' methods and
 	  data into the subclasses.  Also, DateTime no longer derives

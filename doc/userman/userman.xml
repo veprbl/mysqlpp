@@ -2151,8 +2151,12 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 					exception names.</para></listitem>
 
 					<listitem><para>Added
-					<ulink type="classref" url="ConnectionFailed"/>
-					and <ulink type="classref" url="DBSelectionFailed"/>
+					<ulink type="classref" url="ConnectionFailed"/>,
+					<ulink type="classref" url="DBSelectionFailed"/>,
+					<ulink type="classref" url="EndOfResults"/>,
+					<ulink type="classref" url="EndOfResultSets"/>,
+					<ulink type="classref" url="LockFailed"/>, and
+					<ulink type="classref" url="ObjectNotInitialized"/>
 					exception types,
 					to fix overuse of
 					<computeroutput>BadQuery</computeroutput>.

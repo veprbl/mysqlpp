@@ -71,7 +71,7 @@ ResNSel Query::execute(const char* str)
 	success_ = false;
 	if (lock()) {
 		if (throw_exceptions()) {
-			throw BadQuery("lock failed");
+			throw LockFailed();
 		}
 		else {
 			return ResNSel();
@@ -315,7 +315,7 @@ Result Query::store(const char* str)
 
 	if (lock()) {
 		if (throw_exceptions()) {
-			throw BadQuery("lock failed");
+			throw LockFailed();
 		}
 		else {
 			return Result();
@@ -363,7 +363,7 @@ Result Query::store_next()
 {
 	if (lock()) {
 		if (throw_exceptions()) {
-			throw BadQuery("lock failed");
+			throw LockFailed();
 		}
 		else {
 			return Result();
@@ -453,7 +453,7 @@ ResUse Query::use(const char* str)
 	success_ = false;
 	if (lock()) {
 		if (throw_exceptions()) {
-			throw BadQuery("lock failed");
+			throw LockFailed();
 		}
 		else {
 			return ResUse();

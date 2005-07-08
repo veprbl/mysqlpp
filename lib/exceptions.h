@@ -265,6 +265,25 @@ public:
 };
 
 
+/// \brief Exception thrown when a Lockable object fails.
+///
+/// Currently, "failure" means that the object is already locked when
+/// you make a call that tries to lock it again.  In the future, that
+/// case will probably result in the second thread blocking, but the
+/// thread library could assert other errors that would keep this
+/// exception relevant.
+
+class LockFailed : public Exception
+{
+public:
+	/// \brief Create exception object
+	explicit LockFailed(const char* w = "lock failed") :
+	Exception(w)
+	{
+	}
+};
+
+
 /// \brief Exception thrown when you try to use an object that isn't
 /// completely initialized.
 
