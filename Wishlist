@@ -232,8 +232,6 @@ Bug Fix/Maintenance Items
 	  unnecessary and a stumbling point during VS 2003 to 2005
 	  changeover.
 	
-	o Windows compilers should build only a DLL, for LGPL reasons.
-
 	o MinGW can't build a DLL for MySQL++.  It has to do with the file
 	  reorganization in 1.7.20: if you move everything from row.cc to
 	  a new row2.h file and include it in a few strategic locations, it
