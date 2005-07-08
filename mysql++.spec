@@ -31,7 +31,7 @@ it's so large, and it doesn't change with every release.
 
 %prep
 %setup -q
-./configure --prefix=/usr --includedir=/usr/include/mysql++ --disable-examples
+./configure --prefix=/usr --includedir=/usr/include/mysql++ --disable-examples --disable-dependency-tracking
 
 %build
 make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
