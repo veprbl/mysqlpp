@@ -36,8 +36,7 @@ OptionalExceptions(q.exceptions()),
 Lockable(),
 def(q.def),
 conn_(q.conn_),
-success_(q.success_),
-errmsg_(q.errmsg_)
+success_(q.success_)
 {
 }
 
@@ -50,12 +49,7 @@ my_ulonglong Query::affected_rows() const
 
 std::string Query::error()
 {
-	if (errmsg_) {
-		return std::string(errmsg_);
-	}
-	else {
-		return conn_->error();
-	}
+	return conn_->error();
 }
 
 
@@ -64,7 +58,7 @@ bool Query::exec(const std::string& str)
 	success_ = !mysql_real_query(&conn_->mysql, str.c_str(),
 			(unsigned long)str.length());
 	if (!success_ && throw_exceptions()) {
-		throw BadQuery(conn_->error());
+		throw BadQuery(error());
 	}
 	else {
 		return success_;
@@ -91,7 +85,7 @@ ResNSel Query::execute(const char* str)
 	}
 	else {
 		if (throw_exceptions()) {
-			throw BadQuery(conn_->error());
+			throw BadQuery(error());
 		}
 		else {
 			return ResNSel();
@@ -345,7 +339,7 @@ Result Query::store(const char* str)
 	// exec*() in this situation, but it's not outright illegal, and
 	// sometimes you have to do it.
 	if (conn_->errnum() && throw_exceptions()) {
-		throw BadQuery(conn_->error());
+		throw BadQuery(error());
 	}
 	else {
 		return Result();
@@ -390,7 +384,7 @@ Result Query::store_next()
 			// result set, which is harmless.  We return an empty result
 			// set if exceptions are disabled, as well.
 			if (conn_->errnum() && throw_exceptions()) {
-				throw BadQuery(conn_->error());
+				throw BadQuery(error());
 			} 
 			else {
 				return Result();
@@ -402,7 +396,7 @@ Result Query::store_next()
 		unlock();
 		if (throw_exceptions()) {
 			if (ret > 0) {
-				throw BadQuery(conn_->error());
+				throw BadQuery(error());
 			}
 			else {
 				throw EndOfResultSets();
@@ -478,7 +472,7 @@ ResUse Query::use(const char* str)
 
 	// One of the mysql_* calls failed, so decide how we should fail.
 	if (throw_exceptions()) {
-		throw BadQuery(conn_->error());
+		throw BadQuery(error());
 	}
 	else {
 		return ResUse();

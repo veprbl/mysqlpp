@@ -194,8 +194,14 @@ public:
 class BadQuery : public Exception
 {
 public:
-	/// \brief Create exception object
+	/// \brief Create exception object, taking C string
 	BadQuery(const char* w = "") :
+	Exception(w)
+	{
+	}
+
+	/// \brief Create exception object, taking C++ string
+	BadQuery(const std::string& w) :
 	Exception(w)
 	{
 	}

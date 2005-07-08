@@ -193,8 +193,7 @@ public:
 	Lockable(),
 	def(this),
 	conn_(c),
-	success_(false),
-	errmsg_(0)
+	success_(false)
 	{
 		success_ = true;
 	}
@@ -648,9 +647,6 @@ private:
 
 	/// \brief If true, last query succeeded
 	bool success_;
-
-	/// \brief String explaining last query error
-	char* errmsg_;
 
 	/// \brief List of template query parameters
 	std::vector<SQLParseElement> parse_elems_;
