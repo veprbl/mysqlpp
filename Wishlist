@@ -216,9 +216,6 @@ Bug Fix/Maintenance Items
 	o 64-bit integer support has been reported to work, but more
 	  confirmation is wanted.
 
-	o Add symlinks from MySQL++ manuals to MySQL manuals online
-	  when we reference C API functions and such.
-
 	o Have resetdb also create a table that load_file and
 	  cgi_image can use.  Remove "fax"ness from these examples,
 	  and encourage people to load up JPEGs or something else that
@@ -251,7 +248,8 @@ Bug Fix/Maintenance Items
 	o Write an example to demonstrate compare.h features, or throw
 	  the header away.  It's not being used within the library.
 
-	o Define CSS stylesheet for userman to try and match its appearance
-	  to that of the refman.  Perhaps we can just copy the stylesheet
-	  from Doxygen?
+	o Add a layered stylesheet for Doxygen to match new userman CSS.
+	  There's a way to inject a custom HTML header in each file, so
+	  we can mention our CSS after the Dogygen-generated one, and just
+	  override colors and other cosmetic stuff.
 
