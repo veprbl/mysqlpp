@@ -41,9 +41,6 @@ class ResUse;
 /// \brief Holds a list of SQL field names
 class FieldNames : public std::vector<std::string>
 {
-private:
-	void init(const ResUse * res);
-
 public:
 	/// \brief Default constructor
 	FieldNames() { }
@@ -95,6 +92,9 @@ public:
 		str_to_lwr(temp);
 		return uint(std::find(begin(), end(), temp) - begin());
 	}
+
+private:
+	void init(const ResUse* res);
 };
 
 } // end namespace mysqlpp

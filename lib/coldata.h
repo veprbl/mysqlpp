@@ -84,11 +84,6 @@ namespace mysqlpp {
 
 template <class Str> class ColData_Tmpl : public Str
 {
-private:
-	mysql_type_info _type;
-	std::string buf;
-	bool _null;
-
 public:
 	/// \brief Default constructor
 	///
@@ -98,7 +93,7 @@ public:
 	/// It's probably a bad idea to use this ctor, becuase there's no
 	/// way to set the type data once the object's constructed.
 	ColData_Tmpl() :
-	_null(false)
+	null_(false)
 	{
 	}
 
@@ -109,8 +104,8 @@ public:
 	/// \param t MySQL type information for data being stored
 	explicit ColData_Tmpl(bool n,
 			mysql_type_info t = mysql_type_info::string_type) :
-	_type(t),
-	_null(n)
+	type_(t),
+	null_(n)
 	{
 	}
 
@@ -123,47 +118,47 @@ public:
 			mysql_type_info t = mysql_type_info::string_type,
 			bool n = false) :
 	Str(str),
-	_type(t),
-	_null(n)
+	type_(t),
+	buf_(str),
+	null_(n)
 	{
-		buf = str;
 	}
 
 	/// \brief Get this object's current MySQL type.
 	mysql_type_info type() const
 	{
-		return _type;
+		return type_;
 	}
 
 	/// \brief Returns true if data of this type should be quoted, false
 	/// otherwise.
 	bool quote_q() const
 	{
-		return _type.quote_q();
+		return type_.quote_q();
 	}
 
 	/// \brief Returns true if data of this type should be escaped, false
 	/// otherwise.
 	bool escape_q() const
 	{
-		return _type.escape_q();
+		return type_.escape_q();
 	}
 	
 	/// \brief Template for converting data from one type to another.
 	template <class Type> Type conv(Type dummy) const;
 
 	/// \brief Set a flag indicating that this object is a SQL null.
-	void it_is_null() { _null = true; }
+	void it_is_null() { null_ = true; }
 
 	/// \brief Returns true if this object is a SQL null.
-	inline const bool is_null() const { return _null; }
+	inline const bool is_null() const { return null_; }
 	
 	/// \brief Returns the string form of this object's data.
-	inline const std::string& get_string() const { return buf; }
+	inline const std::string& get_string() const { return buf_; }
 	
 	/// \brief Returns a const char pointer to the string form of
 	/// this object's data.
-	operator cchar*() const { return buf.c_str(); }
+	operator cchar*() const { return buf_.c_str(); }
 	
 	/// \brief Converts this object's string data to a signed char
 	operator signed char() const { return conv(static_cast<signed char>(0)); }
@@ -209,6 +204,11 @@ public:
 	operator bool() const { return conv(0); }
 
 	template <class T, class B> operator Null<T, B>() const;
+
+private:
+	mysql_type_info type_;
+	std::string buf_;
+	bool null_;
 };
 
 /// \typedef ColData_Tmpl<const_string> ColData
@@ -288,19 +288,23 @@ ColData_Tmpl<Str>::operator Null<T, B>() const
 template <class Str> template <class Type>
 Type ColData_Tmpl<Str>::conv(Type /* dummy */) const
 {
-	std::string strbuf = buf;
+	std::string strbuf = buf_;
 	strip_all_blanks(strbuf);
 	size_t len = strbuf.size();
-	const char *str = strbuf.c_str();
-	const char *end = str;
-	Type num = mysql_convert < Type > (str, end);
+	const char* str = strbuf.c_str();
+	const char* end = str;
+	Type num = mysql_convert<Type>(str, end);
+
 	if (*end == '.') {
-		end++;
-		for (; *end == '0'; end++) ;
-	} if (*end != '\0' && end != NULL) {
-		throw BadConversion(typeid(Type).name(), Str::c_str(),
-							end - str, len);
+		++end;
+		for (; *end == '0'; ++end) ;
 	}
+	
+	if (*end != '\0' && end != 0) {
+		throw BadConversion(typeid(Type).name(), Str::c_str(),
+				end - str, len);
+	}
+
 	return num;
 }
 

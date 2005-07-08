@@ -45,10 +45,10 @@ namespace mysqlpp {
 Connection::Connection(bool te) :
 OptionalExceptions(te),
 Lockable(true),
-is_connected(false),
-Success(false)
+is_connected_(false),
+success_(false)
 {
-	mysql_init(&mysql);
+	mysql_init(&mysql_);
 }
 
 
@@ -59,15 +59,15 @@ Connection::Connection(const char* db, const char* host,
 OptionalExceptions(),
 Lockable()
 {
-	mysql_init(&mysql);
+	mysql_init(&mysql_);
 	if (connect(db, host, user, passwd, port, compress,
 			connect_timeout, socket_name, client_flag)) {
 		unlock();
-		Success = is_connected = true;
+		success_ = is_connected_ = true;
 	}
 	else {
 		unlock();
-		Success = is_connected = false;
+		success_ = is_connected_ = false;
 		if (throw_exceptions()) {
 			throw ConnectionFailed(error());
 		}
@@ -86,43 +86,43 @@ bool Connection::connect(cchar* db, cchar* host, cchar* user,
 		unsigned int connect_timeout, cchar* socket_name,
 		unsigned int client_flag)
 {
-	mysql.options.compress = compress;
-	mysql.options.connect_timeout = connect_timeout;
+	mysql_.options.compress = compress;
+	mysql_.options.connect_timeout = connect_timeout;
 
 	lock();
 
-	if (is_connected) {
+	if (is_connected_) {
 		disconnect();
 	}
 
-	mysql_options(&mysql, MYSQL_READ_DEFAULT_FILE, "my");
+	mysql_options(&mysql_, MYSQL_READ_DEFAULT_FILE, "my");
 
-	if (mysql_real_connect(&mysql, host, user, passwd, db, port,
+	if (mysql_real_connect(&mysql_, host, user, passwd, db, port,
 			socket_name, client_flag)) {
 		unlock();
-		Success = is_connected = true;
+		success_ = is_connected_ = true;
 	}
 	else {
 		unlock();
-		Success = is_connected = false;
+		success_ = is_connected_ = false;
 		if (throw_exceptions()) {
 			throw ConnectionFailed(error());
 		}
 	}
 
-	if (Success && db && db[0]) {
-		Success = select_db(db);
+	if (success_ && db && db[0]) {
+		success_ = select_db(db);
 	}
 
-	return Success;
+	return success_;
 }
 
 
 void
 Connection::disconnect()
 {
-	mysql_close(&mysql);
-	is_connected = false;
+	mysql_close(&mysql_);
+	is_connected_ = false;
 }
 
 
@@ -144,7 +144,7 @@ Connection::drop_db(const std::string& db)
 
 bool Connection::select_db(const char *db)
 {
-	bool suc = !(mysql_select_db(&mysql, db));
+	bool suc = !(mysql_select_db(&mysql_, db));
 	if (throw_exceptions() && !suc) {
 		throw DBSelectionFailed(error());
 	}
@@ -156,7 +156,7 @@ bool Connection::select_db(const char *db)
 
 bool Connection::reload()
 {
-	bool suc = !mysql_reload(&mysql);
+	bool suc = !mysql_reload(&mysql_);
 	if (throw_exceptions() && !suc) {
 		// Reloading grant tables through this API isn't precisely a
 		// query, but it's acceptable to signal errors with BadQuery
@@ -172,7 +172,7 @@ bool Connection::reload()
 
 bool Connection::shutdown()
 {
-	bool suc = !(mysql_shutdown(&mysql SHUTDOWN_ARG));
+	bool suc = !(mysql_shutdown(&mysql_ SHUTDOWN_ARG));
 	if (throw_exceptions() && !suc) {
 		throw ConnectionFailed(error());
 	}
@@ -184,7 +184,7 @@ bool Connection::shutdown()
 
 string Connection::info()
 {
-	const char* i = mysql_info(&mysql);
+	const char* i = mysql_info(&mysql_);
 	if (!i) {
 		return string();
 	}

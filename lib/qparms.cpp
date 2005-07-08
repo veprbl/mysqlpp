@@ -35,8 +35,8 @@ namespace mysqlpp {
 SQLString&
 SQLQueryParms::operator [](const char* str)
 {
-	if (parent) {
-		return operator [](parent->parsed_nums_[str]);
+	if (parent_) {
+		return operator [](parent_->parsed_nums_[str]);
 	}
 	throw ObjectNotInitialized("SQLQueryParms object has no parent!");
 }
@@ -44,8 +44,8 @@ SQLQueryParms::operator [](const char* str)
 const SQLString&
 SQLQueryParms::operator[] (const char* str) const
 {
-	if (parent) {
-		return operator [](parent->parsed_nums_[str]);
+	if (parent_) {
+		return operator [](parent_->parsed_nums_[str]);
 	}
 	throw ObjectNotInitialized("SQLQueryParms object has no parent!");
 }

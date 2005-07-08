@@ -55,7 +55,7 @@ std::string Query::error()
 
 bool Query::exec(const std::string& str)
 {
-	success_ = !mysql_real_query(&conn_->mysql, str.c_str(),
+	success_ = !mysql_real_query(&conn_->mysql_, str.c_str(),
 			(unsigned long)str.length());
 	if (!success_ && throw_exceptions()) {
 		throw BadQuery(error());
@@ -78,7 +78,7 @@ ResNSel Query::execute(const char* str)
 		}
 	}
 
-	success_ = !mysql_query(&conn_->mysql, str);
+	success_ = !mysql_query(&conn_->mysql_, str);
 	unlock();
 	if (success_) {
 		return ResNSel(conn_);
@@ -126,7 +126,7 @@ bool Query::lock()
 
 bool Query::more_results()
 {
-	return mysql_more_results(&conn_->mysql);
+	return mysql_more_results(&conn_->mysql_);
 }
 
 
@@ -220,7 +220,7 @@ Query::pprepare(char option, SQLString& S, bool replace)
 
 	if (option == 'r' || (option == 'q' && S.is_string)) {
 		char *s = new char[S.size() * 2 + 1];
-		mysql_real_escape_string(&conn_->mysql, s, S.c_str(),
+		mysql_real_escape_string(&conn_->mysql_, s, S.c_str(),
 				static_cast<unsigned long>(S.size()));
 		SQLString *ss = new SQLString("'");
 		*ss += s;
@@ -322,9 +322,9 @@ Result Query::store(const char* str)
 		}
 	}
 
-	success_ = !mysql_query(&conn_->mysql, str);
+	success_ = !mysql_query(&conn_->mysql_, str);
 	if (success_) {
-		MYSQL_RES* res = mysql_store_result(&conn_->mysql);
+		MYSQL_RES* res = mysql_store_result(&conn_->mysql_);
 		if (res) {
 			unlock();
 			return Result(res, throw_exceptions());
@@ -371,9 +371,9 @@ Result Query::store_next()
 	}
 
 	int ret;
-	if ((ret = mysql_next_result(&conn_->mysql)) == 0) {
+	if ((ret = mysql_next_result(&conn_->mysql_)) == 0) {
 		// There are more results, so return next result set.
-		MYSQL_RES* res = mysql_store_result(&conn_->mysql);
+		MYSQL_RES* res = mysql_store_result(&conn_->mysql_);
 		unlock();
 		if (res) {
 			return Result(res, throw_exceptions());
@@ -460,9 +460,9 @@ ResUse Query::use(const char* str)
 		}
 	}
 
-	success_ = !mysql_query(&conn_->mysql, str);
+	success_ = !mysql_query(&conn_->mysql_, str);
 	if (success_) {
-		MYSQL_RES* res = mysql_use_result(&conn_->mysql);
+		MYSQL_RES* res = mysql_use_result(&conn_->mysql_);
 		if (res) {
 			unlock();
 			return ResUse(res, conn_, throw_exceptions());

@@ -40,16 +40,13 @@ class ResUse;
 
 class Fields : public const_subscript_container<Fields, Field>
 {
-private:
-	mutable ResUse* res;
-
 public:
 	/// \brief Default constructor
 	Fields() { }
 	
 	/// \brief Create a field list from a result set
 	Fields(ResUse* r) :
-	res(r)
+	res_(r)
 	{
 	}
 	
@@ -63,6 +60,9 @@ public:
 	}
 
 	size_type size() const;	///< get the number of fields
+
+private:
+	mutable ResUse* res_;
 };
 
 } // end namespace mysqlpp

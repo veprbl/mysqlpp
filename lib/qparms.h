@@ -45,16 +45,12 @@ class Query;
 /// template queries. 
 class SQLQueryParms : public std::vector<SQLString>
 {
-private:
-	friend class Query;
-
-	typedef const SQLString& ss;
-	Query *parent;
-
 public:
+	typedef const SQLString& ss;
+
 	/// \brief Default constructor
 	SQLQueryParms() :
-	parent(0)
+	parent_(0)
 	{
 	}
 	
@@ -63,7 +59,7 @@ public:
 	/// \param p pointer to the query object these parameters are tied
 	/// to
 	SQLQueryParms(Query* p) :
-	parent(p)
+	parent_(p)
 	{
 	}
 	
@@ -72,7 +68,7 @@ public:
 	/// Basically, this tells you which of the two ctors were called.
 	bool bound()
 	{
-		return parent != 0;
+		return parent_ != 0;
 	}
 
 	/// \brief Clears the list
@@ -198,6 +194,11 @@ public:
 		clear();
 		*this << a << b << c << d << e << f << g << h << i << j << k << l;
 	}
+
+private:
+	friend class Query;
+
+	Query* parent_;
 };
 
 
