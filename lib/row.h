@@ -51,7 +51,7 @@ class Row :
 {
 public:
 	/// \brief Default constructor
-	Row() :
+	MYSQLPP_EXPORT Row() :
 	res_(0),
 	initialized_(false)
 	{
@@ -63,8 +63,8 @@ public:
 	/// \param r result set that the row comes from
 	/// \param jj length of each item in d
 	/// \param te if true, throw exceptions on errors
-	Row(const MYSQL_ROW& d, const ResUse* r, unsigned long* jj,
-			bool te = true) :
+	MYSQLPP_EXPORT Row(const MYSQL_ROW& d, const ResUse* r,
+			unsigned long* jj, bool te = true) :
 	OptionalExceptions(te),
 	res_(r),
 	initialized_(false)
@@ -88,7 +88,7 @@ public:
 	}
 
 	/// \brief Destroy object
-	~Row()
+	MYSQLPP_EXPORT ~Row()
 	{
 		data_.clear();
 		is_nulls_.clear();
@@ -96,13 +96,13 @@ public:
 	}
 
 	/// \brief Get a reference to our parent class.
-	const ResUse& parent() const
+	MYSQLPP_EXPORT const ResUse& parent() const
 	{
 		return *res_;
 	}
 
 	/// \brief Get the number of fields in the row.
-	size_type size() const;
+	MYSQLPP_EXPORT size_type size() const;
 
 	/// \brief Get the value of a field given its name.
 	///
@@ -136,27 +136,27 @@ public:
 	///
 	/// This function is rather inefficient.  If that is a concern for
 	/// you, use at() or the SSQLS mechanism instead.
-	const ColData operator [](const char* field) const;
+	MYSQLPP_EXPORT const ColData operator [](const char* field) const;
 
 	/// \brief Get the value of a field given its index.
 	///
 	/// If the index is out-of-bounds, the underlying vector is supposed
 	/// to throw an exception according to the C++ Standard.  Whether it
 	/// actually does this is implementation-dependent.
-	const ColData at(size_type i) const;
+	MYSQLPP_EXPORT const ColData at(size_type i) const;
 
 	/// \brief Return the value of a field given its index, in raw form.
 	///
 	/// This is the same thing as operator[], except that the data isn't
 	/// converted to a ColData object first.  Also, this method does not
 	/// check for out-of-bounds array indices.
-	const char* raw_data(int i) const
+	MYSQLPP_EXPORT const char* raw_data(int i) const
 	{
 		return data_[i].data();
 	}
 
 	/// \brief Returns true if there is data in the row.
-	operator bool() const
+	MYSQLPP_EXPORT operator bool() const
 	{
 		return data_.size();
 	}
@@ -196,7 +196,7 @@ public:
 	///
 	/// Items will be quoted and escaped when inserted into a C++ stream,
 	/// and a comma will be used as a delimiter between the items.
-	value_list_b<Row, quote_type0> value_list(
+	MYSQLPP_EXPORT value_list_b<Row, quote_type0> value_list(
 			const std::vector<bool> &vb) const
 	{
 		return value_list_b<Row, quote_type0>(*this, vb, ",", quote);
@@ -227,7 +227,7 @@ public:
 	/// row is added to the returned list.  When the list is inserted
 	/// into a C++ stream, the delimiter 'd' will be placed between the
 	/// items, and items will be quoted and escaped.
-	value_list_b <Row, quote_type0>
+	MYSQLPP_EXPORT value_list_b <Row, quote_type0>
 	value_list(const char *d, bool t0, bool t1 = false, bool t2 = false,
 			bool t3 = false, bool t4 = false, bool t5 = false,
 			bool t6 = false, bool t7 = false, bool t8 = false,
@@ -246,7 +246,7 @@ public:
 	/// row is added to the returned list.  When the list is inserted
 	/// into a C++ stream, the a comma will be placed between the items,
 	/// as a delimiter, and items will be quoted and escaped.
-	value_list_b<Row, quote_type0> value_list(bool t0,
+	MYSQLPP_EXPORT value_list_b<Row, quote_type0> value_list(bool t0,
 			bool t1 = false, bool t2 = false, bool t3 = false,
 			bool t4 = false, bool t5 = false, bool t6 = false,
 			bool t7 = false, bool t8 = false, bool t9 = false,
@@ -285,7 +285,8 @@ public:
 	/// returned list.  When inserted into a C++ stream, the delimiter
 	/// 'd' will be placed between the items, and items will be quoted
 	/// and escaped.
-	value_list_b<Row, quote_type0> value_list(const char *d,
+	MYSQLPP_EXPORT value_list_b<Row, quote_type0> value_list(
+			const char *d,
 			std::string s0, std::string s1 = "", std::string s2 = "",
 			std::string s3 = "", std::string s4 = "",
 			std::string s5 = "", std::string s6 = "",
@@ -305,7 +306,8 @@ public:
 	/// returned list.  When inserted into a C++ stream, a comma will be
 	/// placed between the items as a delimiter, and items will be
 	/// quoted and escaped.
-	value_list_b<Row, quote_type0> value_list(std::string s0,
+	MYSQLPP_EXPORT value_list_b<Row, quote_type0> value_list(
+			std::string s0,
 			std::string s1 = "", std::string s2 = "",
 			std::string s3 = "", std::string s4 = "",
 			std::string s5 = "", std::string s6 = "",
@@ -323,8 +325,8 @@ public:
 	///
 	/// When inserted into a C++ stream, the delimiter 'd' will be used
 	/// between the items, and no manipulator will be used on the items.
-	value_list_ba<FieldNames, do_nothing_type0> field_list(
-			const char* d = ",") const;
+	MYSQLPP_EXPORT value_list_ba<FieldNames, do_nothing_type0>
+			field_list(const char* d = ",") const;
 
 	/// \brief Get a list of the field names in this row
 	///
@@ -357,8 +359,8 @@ public:
 	///
 	/// Field names will be quoted and escaped when inserted into a C++
 	/// stream.
-	value_list_b<FieldNames, quote_type0> field_list(const char* d,
-			const std::vector<bool>& vb) const;
+	MYSQLPP_EXPORT value_list_b<FieldNames, quote_type0> field_list(
+			const char* d, const std::vector<bool>& vb) const;
 
 	/// \brief Get a list of the field names in this row
 	///
@@ -367,7 +369,7 @@ public:
 	///
 	/// Field names will be quoted and escaped when inserted into a C++
 	/// stream, and a comma will be placed between them as a delimiter.
-	value_list_b<FieldNames, quote_type0> field_list(
+	MYSQLPP_EXPORT value_list_b<FieldNames, quote_type0> field_list(
 			const std::vector<bool>& vb) const;
 
 	/// \brief Get a list of the field names in this row
@@ -391,8 +393,9 @@ public:
 	/// inserted into a C++ stream, the delimiter 'd' will be placed
 	/// between the items as a delimiter, and the items will be quoted
 	/// and escaped.
-	value_list_b<FieldNames, quote_type0> field_list(const char *d,
-			bool t0, bool t1 = false, bool t2 = false, bool t3 = false,
+	MYSQLPP_EXPORT value_list_b<FieldNames, quote_type0> field_list(
+			const char *d, bool t0,
+			bool t1 = false, bool t2 = false, bool t3 = false,
 			bool t4 = false, bool t5 = false, bool t6 = false,
 			bool t7 = false, bool t8 = false, bool t9 = false,
 			bool ta = false, bool tb = false, bool tc = false) const;
@@ -403,7 +406,8 @@ public:
 	/// the row is added to the returned list.  When the list is
 	/// inserted into a C++ stream, a comma will be placed between the
 	/// items as a delimiter, and the items will be quoted and escaped.
-	value_list_b<FieldNames, quote_type0> field_list(bool t0,
+	MYSQLPP_EXPORT value_list_b<FieldNames, quote_type0> field_list(
+			bool t0,
 			bool t1 = false, bool t2 = false, bool t3 = false,
 			bool t4 = false, bool t5 = false, bool t6 = false,
 			bool t7 = false, bool t8 = false, bool t9 = false,
@@ -414,8 +418,8 @@ public:
 	/// When inserted into a C++ stream, the delimiter 'd' will be used
 	/// between the items, " = " is the relationship operator, and items
 	/// will be quoted and escaped.
-	equal_list_ba<FieldNames, Row, quote_type0> equal_list(
-			const char* d = ",", const char* e = " = ") const;
+	MYSQLPP_EXPORT equal_list_ba<FieldNames, Row, quote_type0>
+			equal_list(cchar* d = ",", cchar* e = " = ") const;
 
 	/// \brief Get an "equal list" of the fields and values in this row
 	///

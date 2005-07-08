@@ -66,61 +66,61 @@ public:
 	bool processed;
 
 	/// \brief Default constructor; empty string
-	SQLString();
+	MYSQLPP_EXPORT SQLString();
 
 	/// \brief Create object as a copy of a C++ string
-	SQLString(const std::string& str);
+	MYSQLPP_EXPORT SQLString(const std::string& str);
 
 	/// \brief Create object as a copy of a C string
-	SQLString(const char* str);
+	MYSQLPP_EXPORT SQLString(const char* str);
 
 	/// \brief Create object as the string form of a \c char value
-	SQLString(char i);
+	MYSQLPP_EXPORT SQLString(char i);
 
 	/// \brief Create object as the string form of an \c unsigned
 	/// \c char value
-	SQLString(unsigned char i);
+	MYSQLPP_EXPORT SQLString(unsigned char i);
 
 	/// \brief Create object as the string form of a \c short \c int
 	/// value
-	SQLString(short int i);
+	MYSQLPP_EXPORT SQLString(short int i);
 
 	/// \brief Create object as the string form of an \c unsigned
 	/// \c short \c int value
-	SQLString(unsigned short int i);
+	MYSQLPP_EXPORT SQLString(unsigned short int i);
 
 	/// \brief Create object as the string form of an \c int value
-	SQLString(int i);
+	MYSQLPP_EXPORT SQLString(int i);
 
 	/// \brief Create object as the string form of an \c unsigned
 	/// \c int value
-	SQLString(unsigned int i);
+	MYSQLPP_EXPORT SQLString(unsigned int i);
 
 	/// \brief Create object as the string form of a \c longlong
 	/// value
-	SQLString(longlong i);
+	MYSQLPP_EXPORT SQLString(longlong i);
 
 	/// \brief Create object as the string form of an \c unsigned
 	/// \c longlong value
-	SQLString(ulonglong i);
+	MYSQLPP_EXPORT SQLString(ulonglong i);
 
 	/// \brief Create object as the string form of a \c float
 	/// value
-	SQLString(float i);
+	MYSQLPP_EXPORT SQLString(float i);
 
 	/// \brief Create object as the string form of a \c double
 	/// value
-	SQLString(double i);
+	MYSQLPP_EXPORT SQLString(double i);
 
 	/// \brief Copy a C string into this object
-	SQLString& operator =(const char* str)
+	MYSQLPP_EXPORT SQLString& operator =(const char* str)
 	{
 		std::string::operator =(str);
 		return *this;
 	}
 
 	/// \brief Copy a C++ \c string into this object
-	SQLString& operator =(const std::string& str)
+	MYSQLPP_EXPORT SQLString& operator =(const std::string& str)
 	{
 		std::string::operator =(str);
 		return *this;

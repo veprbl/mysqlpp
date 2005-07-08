@@ -49,7 +49,7 @@ public:
 	typedef const SQLString& ss;
 
 	/// \brief Default constructor
-	SQLQueryParms() :
+	MYSQLPP_EXPORT SQLQueryParms() :
 	parent_(0)
 	{
 	}
@@ -58,7 +58,7 @@ public:
 	///
 	/// \param p pointer to the query object these parameters are tied
 	/// to
-	SQLQueryParms(Query* p) :
+	MYSQLPP_EXPORT SQLQueryParms(Query* p) :
 	parent_(p)
 	{
 	}
@@ -66,19 +66,19 @@ public:
 	/// \brief Returns true if we are bound to a query object.
 	///
 	/// Basically, this tells you which of the two ctors were called.
-	bool bound()
+	MYSQLPP_EXPORT bool bound()
 	{
 		return parent_ != 0;
 	}
 
 	/// \brief Clears the list
-	void clear()
+	MYSQLPP_EXPORT void clear()
 	{
 		erase(begin(), end());
 	}
 
 	/// \brief Access element number n
-	SQLString& operator [](size_type n)
+	MYSQLPP_EXPORT SQLString& operator [](size_type n)
 	{
 		if (n >= size())
 			insert(end(), (n + 1) - size(), "");
@@ -86,26 +86,26 @@ public:
 	}
 
 	/// \brief Access element number n
-	const SQLString& operator [](size_type n) const
+	MYSQLPP_EXPORT const SQLString& operator [](size_type n) const
 	{
 		return std::vector<SQLString>::operator [](n);
 	}
 	
 	/// \brief Access the value of the element with a key of str.
-	SQLString& operator [](const char *str);
+	MYSQLPP_EXPORT SQLString& operator [](const char *str);
 
 	/// \brief Access the value of the element with a key of str.
-	const SQLString& operator [](const char *str) const;
+	MYSQLPP_EXPORT const SQLString& operator [](cchar *str) const;
 
 	/// \brief Adds an element to the list
-	SQLQueryParms& operator <<(const SQLString& str)
+	MYSQLPP_EXPORT SQLQueryParms& operator <<(const SQLString& str)
 	{
 		push_back(str);
 		return *this;
 	}
 
 	/// \brief Adds an element to the list
-	SQLQueryParms& operator +=(const SQLString& str)
+	MYSQLPP_EXPORT SQLQueryParms& operator +=(const SQLString& str)
 	{
 		push_back(str);
 		return *this;
@@ -120,63 +120,62 @@ public:
 	///
 	/// If the two lists are the same length or this list is longer than
 	/// the \c other list, a copy of this list is returned.
-	SQLQueryParms operator +(const SQLQueryParms& other) const;
+	MYSQLPP_EXPORT SQLQueryParms operator +(
+			const SQLQueryParms& other) const;
 
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	void set(ss a)
+	MYSQLPP_EXPORT void set(ss a)
 	{
 		clear();
 		*this << a;
 	}
-	void set(ss a, ss b)
+	MYSQLPP_EXPORT void set(ss a, ss b)
 	{
 		clear();
 		*this << a << b;
 	}
-	void set(ss a, ss b, ss c)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c)
 	{
 		clear();
 		*this << a << b << c;
 	}
-	void set(ss a, ss b, ss c, ss d)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d)
 	{
 		clear();
 		*this << a << b << c << d;
 	}
-	void set(ss a, ss b, ss c, ss d, ss e)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e)
 	{
 		clear();
 		*this << a << b << c << d << e;
 	}
-	void set(ss a, ss b, ss c, ss d, ss e, ss f)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f)
 	{
 		clear();
 		*this << a << b << c << d << e << f;
 	}
-	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g;
 	}
-	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g << h;
 	}
-	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g << h << i;
 	}
-	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i,
-			 ss j)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i, ss j)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g << h << i << j;
 	}
-	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i,
-			 ss j, ss k)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i, ss j, ss k)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g << h << i << j << k;
@@ -188,8 +187,8 @@ public:
 	/// Sets parameter 0 to a, parameter 1 to b, etc. There are
 	/// overloaded versions of this function that take anywhere from
 	/// one to a dozen parameters.
-	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i,
-			 ss j, ss k, ss l)
+	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g,
+			ss h, ss i, ss j, ss k, ss l)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g << h << i << j << k << l;
@@ -231,7 +230,7 @@ struct SQLParseElement
 	/// \param b the 'before' value
 	/// \param o the 'option' value
 	/// \param n the 'num' value
-	SQLParseElement(std::string b, char o, char n) :
+	MYSQLPP_EXPORT SQLParseElement(std::string b, char o, char n) :
 	before(b),
 	option(o),
 	num(n)

@@ -58,7 +58,7 @@ public:
 	/// \brief Create object without connecting it to the MySQL server.
 	///
 	/// \param te if true, exceptions are thrown on errors
-	Connection(bool te = true);
+	MYSQLPP_EXPORT Connection(bool te = true);
 
 	/// \brief Create object and connect to database server in one step.
 	///
@@ -86,14 +86,14 @@ public:
 	///		running on, or 0 to use default name
 	///	\param client_flag special connection flags. See MySQL C API
 	///		documentation for \c mysql_real_connect() for details.
-	Connection(const char* db, const char* host = "",
+	MYSQLPP_EXPORT Connection(const char* db, const char* host = "",
 			const char* user = "", const char* passwd = "",
 			uint port = 0, my_bool compress = 0,
 			unsigned int connect_timeout = 60, cchar* socket_name = 0,
 			unsigned int client_flag = 0);
 
 	/// \brief Destroy connection object
-	~Connection();
+	MYSQLPP_EXPORT ~Connection();
 
 	/// \brief Connect to database after object is created.
 	///
@@ -103,15 +103,15 @@ public:
 	/// If you call this method on an object that is already connected
 	/// to a database server, the previous connection is dropped and a
 	/// new connection is established.
-	bool connect(cchar* db = "", cchar* host = "", cchar* user = "",
-			cchar* passwd = "", uint port = 0, my_bool compress = 0,
-			unsigned int connect_timeout = 60, cchar* socket_name = 0,
-			unsigned int client_flag = 0);
+	MYSQLPP_EXPORT bool connect(cchar* db = "", cchar* host = "",
+			cchar* user = "", cchar* passwd = "", uint port = 0,
+			my_bool compress = 0, unsigned int connect_timeout = 60,
+			cchar* socket_name = 0, unsigned int client_flag = 0);
 
 	/// \brief Close connection to MySQL server.
 	///
 	/// Closes the connection to the MySQL server.
-	void close()
+	MYSQLPP_EXPORT void close()
 	{
 		mysql_close(&mysql_);
 		is_connected_ = false;
@@ -119,24 +119,24 @@ public:
 	
 	/// \brief Calls MySQL C API function \c mysql_info() and returns
 	/// result as a C++ string.
-	std::string info();
+	MYSQLPP_EXPORT std::string info();
 
 	/// \brief return true if connection was established successfully
 	///
 	/// \return true if connection was established successfully
-	bool connected() const
+	MYSQLPP_EXPORT bool connected() const
 	{
 		return is_connected_;
 	}
 
 	/// \brief Return true if the last query was successful
-	bool success() const
+	MYSQLPP_EXPORT bool success() const
 	{
 		return success_;
 	}
 
 	/// \brief Alias for close()
-	void purge() { close(); }
+	MYSQLPP_EXPORT void purge() { close(); }
 
 	/// \brief Return a new query object.
 	///
@@ -145,7 +145,7 @@ public:
 	/// \link mysqlpp::Query::execute() execute() \endlink
 	/// on that object, the query is sent to the server this object
 	/// is connected to.
-	Query query();
+	MYSQLPP_EXPORT Query query();
 
 	/// \brief Alias for success()
 	///
@@ -162,19 +162,22 @@ public:
 	///	        ... error occurred in SQL query
 	///	    }
 	/// \endcode
-	operator bool() { return success(); }
+	MYSQLPP_EXPORT operator bool() { return success(); }
 
 	/// \brief Return error message for last MySQL error associated with
 	/// this connection.
 	///
 	/// Simply wraps \c mysql_error() in the C API.
-	const char* error() { return mysql_error(&mysql_); }
+	MYSQLPP_EXPORT const char* error()
+	{
+		return mysql_error(&mysql_);
+	}
 
 	/// \brief Return last MySQL error number associated with this
 	/// connection
 	///
 	/// Simply wraps \c mysql_errno() in the C API.
-	int errnum() { return mysql_errno(&mysql_); }
+	MYSQLPP_EXPORT int errnum() { return mysql_errno(&mysql_); }
 
 	/// \brief Wraps MySQL C API function \c mysql_refresh()
 	///
@@ -184,7 +187,7 @@ public:
 	/// If that entry changes to say that the function is now documented,
 	/// reevaluate whether we need to wrap it.  It may be that it's not
 	/// supposed to be used by regular end-user programs.
-	int refresh(unsigned int refresh_options)
+	MYSQLPP_EXPORT int refresh(unsigned int refresh_options)
 	{
 		return mysql_refresh(&mysql_, refresh_options);
 	}
@@ -199,19 +202,22 @@ public:
 	/// not re-establish the connection
 	///
 	/// Simply wraps \c mysql_ping() in the C API.
-	int ping() { return mysql_ping(&mysql_); }
+	MYSQLPP_EXPORT int ping() { return mysql_ping(&mysql_); }
 
 	/// \brief Kill a MySQL server thread
 	///
 	/// \param pid ID of thread to kill
 	///
 	/// Simply wraps \c mysql_kill() in the C API.
-	int kill(unsigned long pid) { return mysql_kill(&mysql_, pid); }
+	MYSQLPP_EXPORT int kill(unsigned long pid)
+	{
+		return mysql_kill(&mysql_, pid);
+	}
 
 	/// \brief Get MySQL client library version
 	///
 	/// Simply wraps \c mysql_get_client_info() in the C API.
-	std::string client_info()
+	MYSQLPP_EXPORT std::string client_info()
 	{
 		return std::string(mysql_get_client_info());
 	}
@@ -222,7 +228,7 @@ public:
 	/// hostname.
 	///
 	/// Simply wraps \c mysql_get_host_info() in the C API.
-	std::string host_info()
+	MYSQLPP_EXPORT std::string host_info()
 	{
 		return std::string(mysql_get_host_info(&mysql_));
 	}
@@ -231,7 +237,7 @@ public:
 	/// is using
 	///
 	/// Simply wraps \c mysql_get_proto_info() in the C API.
-	int proto_info() 
+	MYSQLPP_EXPORT int proto_info() 
 	{
 		return mysql_get_proto_info(&mysql_);
 	}
@@ -239,7 +245,7 @@ public:
 	/// \brief Get the MySQL server's version number
 	///
 	/// Simply wraps \c mysql_get_server_info() in the C API.
-	std::string server_info()
+	MYSQLPP_EXPORT std::string server_info()
 	{
 		return std::string(mysql_get_server_info(&mysql_));
 	}
@@ -250,30 +256,33 @@ public:
 	/// \c status command.  Among other things, it contains uptime 
 	/// in seconds, and the number of running threads, questions
 	/// and open tables.
-	std::string stat() { return std::string(mysql_stat(&mysql_)); }
+	MYSQLPP_EXPORT std::string stat()
+	{
+		return std::string(mysql_stat(&mysql_));
+	}
 
 	/// \brief Create a database
 	///
 	/// \param db name of database to create
 	///
 	/// \return true if database was created successfully
-	bool create_db(const std::string& db);
+	MYSQLPP_EXPORT bool create_db(const std::string& db);
 
 	/// \brief Drop a database
 	///
 	/// \param db name of database to destroy
 	///
 	/// \return true if database was created successfully
-	bool drop_db(const std::string& db);
+	MYSQLPP_EXPORT bool drop_db(const std::string& db);
 
 	/// \brief Change to a different database
-	bool select_db(const std::string& db)
+	MYSQLPP_EXPORT bool select_db(const std::string& db)
 	{
 		return select_db(db.c_str());
 	}
 
 	/// \brief Change to a different database
-	bool select_db(const char* db);
+	MYSQLPP_EXPORT bool select_db(const char* db);
 
 	/// \brief Ask MySQL server to reload the grant tables
 	/// 
@@ -282,17 +291,20 @@ public:
 	/// Simply wraps \c mysql_reload() in the C API.  Since that
 	/// function is deprecated, this one is, too.  The MySQL++
 	/// replacement is execute("FLUSH PRIVILEGES").
-	bool reload();
+	MYSQLPP_EXPORT bool reload();
 	
 	/// \brief Ask MySQL server to shut down.
 	///
 	/// User must have the "shutdown" privilege.
 	///
 	/// Simply wraps \c mysql_shutdown() in the C API.
-	bool shutdown();
+	MYSQLPP_EXPORT bool shutdown();
 
 	/// \brief Return the connection options object
-	st_mysql_options get_options() const { return mysql_.options; }
+	MYSQLPP_EXPORT st_mysql_options get_options() const
+	{
+		return mysql_.options;
+	}
 
 	/// \brief Sets the given MySQL server option
 	///
@@ -300,7 +312,7 @@ public:
 	/// it returns true for success, instead of 0.  Because that
 	/// function only exists in MySQL v4.1 and higher, this function
 	/// always returns false when built against older APIs.
-	bool set_option(int option)
+	MYSQLPP_EXPORT bool set_option(int option)
 	{
 #		if MYSQL_VERSION_ID > 41000
 			return !mysql_set_server_option(&mysql_, option);
@@ -313,7 +325,7 @@ public:
 	///
 	/// Wraps \c mysql_option() in the C API, except that it returns
 	/// true for success, instead of 0.
-	bool set_option(int option, const char* arg)
+	MYSQLPP_EXPORT bool set_option(int option, const char* arg)
 	{
 		return !mysql_options(&mysql_, mysql_option(option), arg);
 	}
@@ -321,7 +333,7 @@ public:
 	/// \brief Return the number of rows affected by the last query
 	///
 	/// Simply wraps \c mysql_affected_rows() in the C API.
-	my_ulonglong affected_rows()
+	MYSQLPP_EXPORT my_ulonglong affected_rows()
 	{
 		return mysql_affected_rows(&mysql_);
 	}
@@ -332,7 +344,10 @@ public:
 	/// \retval 0 if the previous query did not generate an ID.  Use
 	/// the SQL function LAST_INSERT_ID() if you need the last ID
 	/// generated by any query, not just the previous one.
-	my_ulonglong insert_id() { return mysql_insert_id(&mysql_); }
+	MYSQLPP_EXPORT my_ulonglong insert_id()
+	{
+		return mysql_insert_id(&mysql_);
+	}
 
 protected:
 	/// \brief Drop the connection to the database server
@@ -340,7 +355,7 @@ protected:
 	/// This method is protected because it should only be used within
 	/// the library.  Unless you use the default constructor, this
 	/// object should always be connected.
-	void disconnect();
+	MYSQLPP_EXPORT void disconnect();
 
 private:
 	friend class ResNSel;

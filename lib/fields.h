@@ -42,24 +42,24 @@ class Fields : public const_subscript_container<Fields, Field>
 {
 public:
 	/// \brief Default constructor
-	Fields() { }
+	MYSQLPP_EXPORT Fields() { }
 	
 	/// \brief Create a field list from a result set
-	Fields(ResUse* r) :
+	MYSQLPP_EXPORT Fields(ResUse* r) :
 	res_(r)
 	{
 	}
 	
 	/// \brief Returns a field given its index.
-	const Field& at(size_type i) const;
+	MYSQLPP_EXPORT const Field& at(size_type i) const;
 
 	/// \brief Returns a field given its index.
-	const Field& at(int i) const
+	MYSQLPP_EXPORT const Field& at(int i) const
 	{
 		return at(static_cast<size_type>(i));
 	}
 
-	size_type size() const;	///< get the number of fields
+	MYSQLPP_EXPORT size_type size() const;	///< get the number of fields
 
 private:
 	mutable ResUse* res_;

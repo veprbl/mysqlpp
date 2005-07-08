@@ -62,7 +62,7 @@ class ResUse : public OptionalExceptions
 {
 public:
 	/// \brief Default constructor
-	ResUse() :
+	MYSQLPP_EXPORT ResUse() :
 	OptionalExceptions(),
 	conn_(0),
 	result_(0),
@@ -74,10 +74,10 @@ public:
 	}
 	
 	/// \brief Create the object, fully initialized
-	ResUse(MYSQL_RES* result, Connection* c = 0, bool te = true);
+	MYSQLPP_EXPORT ResUse(MYSQL_RES* result, Connection* c = 0, bool te = true);
 	
 	/// \brief Create a copy of another ResUse object
-	ResUse(const ResUse& other) :
+	MYSQLPP_EXPORT ResUse(const ResUse& other) :
 	OptionalExceptions(),
 	initialized_(false)
 	{
@@ -85,13 +85,13 @@ public:
 	}
 	
 	/// \brief Destroy object
-	virtual ~ResUse();
+	MYSQLPP_EXPORT virtual ~ResUse();
 
 	/// \brief Copy another ResUse object's data into this object
 	ResUse& operator =(const ResUse& other);
 
 	/// \brief Return raw MySQL C API result set
-	MYSQL_RES* raw_result()
+	MYSQLPP_EXPORT MYSQL_RES* raw_result()
 	{
 		return result_;
 	}
@@ -100,7 +100,7 @@ public:
 	///
 	/// This is not a thin wrapper. It does a lot of error checking before
 	/// returning the mysqlpp::Row object containing the row data.
-	Row fetch_row()
+	MYSQLPP_EXPORT Row fetch_row()
 	{
 		if (!result_) {
 			if (throw_exceptions()) {
@@ -124,28 +124,31 @@ public:
 	}
 
 	/// \brief Wraps mysql_fetch_lengths() in MySQL C API.
-		unsigned long *fetch_lengths() const {
+	MYSQLPP_EXPORT unsigned long *fetch_lengths() const
+	{
 		return mysql_fetch_lengths(result_);
 	}
 
 	/// \brief Wraps mysql_fetch_field() in MySQL C API.
-		Field & fetch_field() const {
+	MYSQLPP_EXPORT Field& fetch_field() const
+	{
 		return *mysql_fetch_field(result_);
 	}
 
 	/// \brief Wraps mysql_field_seek() in MySQL C API.
-		void field_seek(int field) {
+	MYSQLPP_EXPORT void field_seek(int field)
+	{
 		mysql_field_seek(result_, field);
 	}
 
 	/// \brief Wraps mysql_num_fields() in MySQL C API.
-	int num_fields() const
+	MYSQLPP_EXPORT int num_fields() const
 	{
 		return mysql_num_fields(result_);
 	}
 	
 	/// \brief Documentation needed!
-	void parent_leaving()
+	MYSQLPP_EXPORT void parent_leaving()
 	{
 		conn_ = 0;
 	}
@@ -155,7 +158,7 @@ public:
 	/// This class's destructor is little more than a call to purge(),
 	/// so you can think of this as a way to re-use a ResUse object,
 	/// to avoid having to completely re-create it.
-	void purge()
+	MYSQLPP_EXPORT void purge()
 	{
 		if (result_) {
 			mysql_free_result(result_);
@@ -184,19 +187,19 @@ public:
 	///
 	/// Query::use() returns a ResUse object, and it won't contain a
 	/// valid result set if the query failed.
-	operator bool() const
+	MYSQLPP_EXPORT operator bool() const
 	{
 		return result_;
 	}
 	
 	/// \brief Return the number of columns in the result set.
-	unsigned int columns() const
+	MYSQLPP_EXPORT unsigned int columns() const
 	{
 		return num_fields();
 	}
 
 	/// \brief Get the name of table that the result set comes from.
-	std::string& table()
+	MYSQLPP_EXPORT std::string& table()
 	{
 		return table_;
 	}
@@ -204,7 +207,7 @@ public:
 	/// \brief Return the name of the table
 	///
 	/// This is only valid 
-	const std::string& table() const
+	MYSQLPP_EXPORT const std::string& table() const
 	{
 		return table_;
 	}
@@ -212,83 +215,85 @@ public:
 	/// \brief Get the index of the named field.
 	///
 	/// This is the inverse of field_name().
-	inline int field_num(const std::string&) const;
+	MYSQLPP_EXPORT inline int field_num(const std::string&) const;
 
 	/// \brief Get the name of the field at the given index.
 	///
 	/// This is the inverse of field_num().
-	inline std::string& field_name(int);
+	MYSQLPP_EXPORT inline std::string& field_name(int);
 
 	/// \brief Get the name of the field at the given index.
-	inline const std::string& field_name(int) const;
+	MYSQLPP_EXPORT inline const std::string& field_name(int) const;
 
 	/// \brief Get the names of the fields within this result set.
-	inline FieldNames& field_names();
+	MYSQLPP_EXPORT inline FieldNames& field_names();
 
 	/// \brief Get the names of the fields within this result set.
-	inline const FieldNames& field_names() const;
+	MYSQLPP_EXPORT inline const FieldNames& field_names() const;
 
-	/// \brief Reset the names in the field list to their original values.
-	inline void reset_field_names();
-
-	/// \brief Get the MySQL type for a field given its index.
-	inline mysql_type_info& field_type(int i);
+	/// \brief Reset the names in the field list to their original
+	/// values.
+	MYSQLPP_EXPORT inline void reset_field_names();
 
 	/// \brief Get the MySQL type for a field given its index.
-	inline const mysql_type_info& field_type(int) const;
+	MYSQLPP_EXPORT inline mysql_type_info& field_type(int i);
+
+	/// \brief Get the MySQL type for a field given its index.
+	MYSQLPP_EXPORT inline const mysql_type_info& field_type(int)
+			const;
 
 	/// \brief Get a list of the types of the fields within this
 	/// result set.
-	inline FieldTypes& field_types();
+	MYSQLPP_EXPORT inline FieldTypes& field_types();
 
 	/// \brief Get a list of the types of the fields within this
 	/// result set.
-	inline const FieldTypes& field_types() const;
+	MYSQLPP_EXPORT inline const FieldTypes& field_types() const;
 
 	/// \brief Reset the field types to their original values.
-	inline void reset_field_types();
+	MYSQLPP_EXPORT inline void reset_field_types();
 
 	/// \brief Alias for field_num()
-	inline int names(const std::string & s) const;
+	MYSQLPP_EXPORT inline int names(const std::string & s) const;
 
 	/// \brief Alias for field_name()
-	inline std::string& names(int i);
+	MYSQLPP_EXPORT inline std::string& names(int i);
 
 	/// \brief Alias for field_name()
-	inline const std::string& names(int i) const;
+	MYSQLPP_EXPORT inline const std::string& names(int i) const;
 
 	/// \brief Alias for field_names()
-	inline FieldNames& names();
+	MYSQLPP_EXPORT inline FieldNames& names();
 
 	/// \brief Alias for field_names()
-	inline const FieldNames& names() const;
+	MYSQLPP_EXPORT inline const FieldNames& names() const;
 
 	/// \brief Alias for reset_field_names()
-	inline void reset_names();
+	MYSQLPP_EXPORT inline void reset_names();
 
 	/// \brief Alias for field_type()
-	inline mysql_type_info& types(int i);
+	MYSQLPP_EXPORT inline mysql_type_info& types(int i);
 
 	/// \brief Alias for field_type()
-	inline const mysql_type_info& types(int i) const;
+	MYSQLPP_EXPORT inline const mysql_type_info& types(int i) const;
 
 	/// \brief Alias for field_types()
-	inline FieldTypes& types();
+	MYSQLPP_EXPORT inline FieldTypes& types();
 
 	/// \brief Alias for field_types()
-	inline const FieldTypes& types() const;
+	MYSQLPP_EXPORT inline const FieldTypes& types() const;
 
 	/// \brief Alias for reset_field_types()
-	inline void reset_types();
+	MYSQLPP_EXPORT inline void reset_types();
 
 	/// \brief Get the underlying Fields structure.
-	const Fields& fields() const
+	MYSQLPP_EXPORT const Fields& fields() const
 	{
 		return fields_;
 	}
 
 	/// \brief Get the underlying Field structure given its index.
-	const Field& fields(unsigned int i) const
+	MYSQLPP_EXPORT const Field& fields(unsigned int i) const
 	{
 		return fields_.at(i);
 	}
@@ -298,14 +303,14 @@ public:
 	///
 	/// This works because the underlying result set is stored as a
 	/// pointer, and thus can be copied and then compared.
-	bool operator ==(const ResUse& other) const
+	MYSQLPP_EXPORT bool operator ==(const ResUse& other) const
 	{
 		return result_ == other.result_;
 	}
 	
 	/// \brief Returns true if the other ResUse object has a different
 	/// underlying C API result set from this one.
-	bool operator !=(const ResUse& other) const
+	MYSQLPP_EXPORT bool operator !=(const ResUse& other) const
 	{
 		return result_ != other.result_;
 	}
@@ -322,7 +327,7 @@ protected:
 	/// \brief Copy another ResUse object's contents into this one.
 	///
 	/// Self-copy is not allowed.
-	void copy(const ResUse& other);
+	MYSQLPP_EXPORT void copy(const ResUse& other);
 };
 
 
@@ -343,18 +348,18 @@ class Result : public ResUse,
 {
 public:
 	/// \brief Default constructor
-	Result()
+	MYSQLPP_EXPORT Result()
 	{
 	}
 	
 	/// \brief Fully initialize object
-	Result(MYSQL_RES* result, bool te = true) :
+	MYSQLPP_EXPORT Result(MYSQL_RES* result, bool te = true) :
 	ResUse(result, 0, te)
 	{
 	}
 
 	/// \brief Initialize object as a copy of another Result object
-	Result(const Result& other) :
+	MYSQLPP_EXPORT Result(const Result& other) :
 	ResUse(other),
 	const_subscript_container<Result, Row, const Row>() // no copying here
 	{
@@ -362,14 +367,14 @@ public:
 	}
 
 	/// \brief Destroy result set
-	virtual ~Result() { }
+	MYSQLPP_EXPORT virtual ~Result() { }
 
 	/// \brief Wraps mysql_fetch_row() in MySQL C API.
 	///
 	/// This is simply the const version of the same function in our
 	/// \link mysqlpp::ResUse parent class \endlink . Why this cannot
 	/// actually \e be in our parent class is beyond me.
-	const Row fetch_row() const
+	MYSQLPP_EXPORT const Row fetch_row() const
 	{
 		if (!result_) {
 			if (throw_exceptions()) {
@@ -393,7 +398,7 @@ public:
 	}
 
 	/// \brief Wraps mysql_num_rows() in MySQL C API.
-	my_ulonglong num_rows() const
+	MYSQLPP_EXPORT my_ulonglong num_rows() const
 	{
 		if (initialized_)
 			return mysql_num_rows(result_);
@@ -402,25 +407,25 @@ public:
 	}
 
 	/// \brief Wraps mysql_data_seek() in MySQL C API.
-	void data_seek(uint offset) const
+	MYSQLPP_EXPORT void data_seek(uint offset) const
 	{
 		mysql_data_seek(result_, offset);
 	}
 
 	/// \brief Alias for num_rows(), only with different return type.
-	size_type size() const
+	MYSQLPP_EXPORT size_type size() const
 	{
 		return size_type(num_rows());
 	}
 
 	/// \brief Alias for num_rows(), only with different return type.
-	size_type rows() const
+	MYSQLPP_EXPORT size_type rows() const
 	{
 		return size_type(num_rows());
 	}
 
 	/// \brief Get the row with an offset of i.
-	const Row at(size_type i) const
+	MYSQLPP_EXPORT const Row at(size_type i) const
 	{
 		data_seek(i);
 		return fetch_row();
@@ -454,16 +459,16 @@ public:
 	my_ulonglong rows;		///< number of rows affected
 	std::string info;		///< additional info about query result
 
-	ResNSel() :
+	MYSQLPP_EXPORT ResNSel() :
 	success(false)
 	{
 	}
 
 	/// \brief Initialize object
-	ResNSel(Connection* q);
+	MYSQLPP_EXPORT ResNSel(Connection* q);
 
 	/// \brief Returns true if the query was successful
-	operator bool() { return success; }
+	MYSQLPP_EXPORT operator bool() { return success; }
 };
 
 

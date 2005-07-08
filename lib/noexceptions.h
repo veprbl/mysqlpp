@@ -54,29 +54,29 @@ public:
 	/// \brief Default constructor
 	///
 	/// \param e if true, exceptions are enabled (this is the default)
-	OptionalExceptions(bool e = true) :
+	MYSQLPP_EXPORT OptionalExceptions(bool e = true) :
 	exceptions_(e)
 	{
 	}
 
 	/// \brief Destroy object
-	virtual ~OptionalExceptions() { }
+	MYSQLPP_EXPORT virtual ~OptionalExceptions() { }
 
 	/// \brief Enable exceptions from the object
-	void enable_exceptions() { exceptions_ = true; }
+	MYSQLPP_EXPORT void enable_exceptions() { exceptions_ = true; }
 
 	/// \brief Disable exceptions from the object
-	void disable_exceptions() { exceptions_ = false; }
+	MYSQLPP_EXPORT void disable_exceptions() { exceptions_ = false; }
 
 	/// \brief Returns true if exceptions are enabled
-	bool throw_exceptions() const { return exceptions_; }
+	MYSQLPP_EXPORT bool throw_exceptions() const { return exceptions_; }
 
 protected:
 	/// \brief Sets the exception state to a particular value
 	///
 	/// This method is protected because it is only intended for use by
 	/// subclasses' copy constructors and the like.
-	void set_exceptions(bool e) { exceptions_ = e; }
+	MYSQLPP_EXPORT void set_exceptions(bool e) { exceptions_ = e; }
 
 	// NoExceptions needs to be our friend to access the protected
 	// functions above.
@@ -104,7 +104,7 @@ public:
 	/// Takes a reference to an OptionalExceptions derivative,
 	/// saves that object's current exception state, and disables
 	/// exceptions.
-	NoExceptions(OptionalExceptions& a) :
+	MYSQLPP_EXPORT NoExceptions(OptionalExceptions& a) :
 	assoc_(a),
 	exceptions_were_enabled_(a.throw_exceptions())
 	{
@@ -114,7 +114,7 @@ public:
 	/// \brief Destructor
 	///
 	/// Restores our associate object's previous exception state.
-	~NoExceptions()
+	MYSQLPP_EXPORT ~NoExceptions()
 	{
 		assoc_.set_exceptions(exceptions_were_enabled_);
 	}

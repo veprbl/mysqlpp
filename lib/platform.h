@@ -65,12 +65,12 @@
 	#ifdef MYSQLPP_MAKING_DLL
 		// When making the DLL, export tagged symbols, so they appear
 		// in the import library.
-		#define MYSQLPP_DLLEXPORT __declspec(dllexport)
-		#define MYSQLPP_DLLEXPORT_DATA(type) __declspec(dllexport) type
+		#define MYSQLPP_EXPORT __declspec(dllexport)
+		#define MYSQLPP_EXPORT_DATA(type) __declspec(dllexport) type
 	#else
-		// We must be using the DLL, so import symbols instead.
-		#define MYSQLPP_DLLEXPORT __declspec(dllimport)
-		#define MYSQLPP_DLLEXPORT_DATA(type) __declspec(dllimport) type
+		// We must be _using_ the DLL, so import symbols instead.
+		#define MYSQLPP_EXPORT __declspec(dllimport)
+		#define MYSQLPP_EXPORT_DATA(type) __declspec(dllimport) type
 	#endif
 #else
 	// If not Windows, we assume some sort of Unixy build environment,
@@ -82,8 +82,8 @@
 #	endif
 
 	// Make DLL stuff a no-op on this platform.
-	#define MYSQLPP_DLLEXPORT
-	#define MYSQLPP_DLLEXPORT_DATA(type) type
+	#define MYSQLPP_EXPORT
+	#define MYSQLPP_EXPORT_DATA(type) type
 #endif
 
 #endif // !defined(DOXYGEN_IGNORE)

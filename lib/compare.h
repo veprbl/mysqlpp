@@ -65,7 +65,8 @@ public:
 	/// \param c what to compare row element against
 	///
 	/// operator() for this object compares Row[i] to c using f.
-	MysqlCmp(uint i, const BinaryPred& f, const CmpType& c) :
+	MYSQLPP_EXPORT MysqlCmp(uint i, const BinaryPred& f,
+			const CmpType& c) :
 	index(i),
 	func(f),
 	cmp2(c)
@@ -76,7 +77,7 @@ public:
 	/// data, and return its value.
 	///
 	/// See the constructor's parameters for what we compare against.
-	bool operator ()(const Row& cmp1) const
+	MYSQLPP_EXPORT bool operator ()(const Row& cmp1) const
 	{
 		return func(cmp2, cmp1[this->index]);
 	}
@@ -98,7 +99,8 @@ public:
 	/// \param c what to compare row element against
 	///
 	/// operator() for this object compares Row[i] to c using f.
-	MysqlCmpCStr(uint i, const BinaryPred& f, const char *c) :
+	MYSQLPP_EXPORT MysqlCmpCStr(uint i, const BinaryPred& f,
+			const char *c) :
 	MysqlCmp<BinaryPred, const char*>(i, f, c)
 	{
 	}
@@ -107,7 +109,7 @@ public:
 	/// data, and return its value.
 	///
 	/// See the constructor's parameters for what we compare against.
-	bool operator ()(const Row& cmp1) const
+	MYSQLPP_EXPORT bool operator ()(const Row& cmp1) const
 	{
 		return MysqlCmp<BinaryPred, const char*>::func(
 				MysqlCmp<BinaryPred, const char*>::cmp2,
@@ -161,7 +163,7 @@ struct cstr_equal_to : bin_char_pred
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	bool operator ()(const char* x, const char* y) const
+	MYSQLPP_EXPORT bool operator ()(const char* x, const char* y) const
 	{
 		return !std::strcmp(x, y);
 	}
@@ -175,7 +177,7 @@ struct cstr_not_equal_to : bin_char_pred
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	bool operator ()(const char* x, const char* y) const
+	MYSQLPP_EXPORT bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) != 0;
 	}
@@ -189,7 +191,7 @@ struct cstr_less : bin_char_pred
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	bool operator ()(const char* x, const char* y) const
+	MYSQLPP_EXPORT bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) > 0;
 	}
@@ -203,7 +205,7 @@ struct cstr_less_equal : bin_char_pred
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	bool operator ()(const char* x, const char* y) const
+	MYSQLPP_EXPORT bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) >= 0;
 	}
@@ -217,7 +219,7 @@ struct cstr_greater : bin_char_pred
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	bool operator ()(const char* x, const char* y) const
+	MYSQLPP_EXPORT bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) < 0;
 	}
@@ -231,7 +233,7 @@ struct cstr_greater_equal : bin_char_pred
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	bool operator ()(const char* x, const char* y) const
+	MYSQLPP_EXPORT bool operator ()(const char* x, const char* y) const
 	{
 		return std::strcmp(x, y) <= 0;
 	}

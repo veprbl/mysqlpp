@@ -57,35 +57,34 @@
 
 /// \brief Used to define many similar functions in class Query.
 #define mysql_query_define0(RETURN, FUNC)\
-  RETURN FUNC (ss a)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a)\
     {return FUNC (parms() << a);}\
-  RETURN FUNC (ss a, ss b)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b)\
     {return FUNC (parms() << a << b);}\
-  RETURN FUNC (ss a, ss b, ss c)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c)\
     {return FUNC (parms() << a << b << c);}\
-  RETURN FUNC (ss a, ss b, ss c, ss d)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d)\
     {return FUNC (parms() << a << b << c << d);}\
-  RETURN FUNC (ss a, ss b, ss c, ss d, ss e)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e)\
     {return FUNC (parms() << a << b << c << d << e);} \
-  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f)\
     {return FUNC (parms() << a << b << c << d << e << f);}\
-  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g)\
     {return FUNC (parms() << a << b << c << d << e << f << g);}\
-  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)\
     {return FUNC (parms() << a << b << c << d << e << f << g << h);}\
-  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)\
     {return FUNC (parms() << a << b << c << d << e << f << g << h << i);}\
-  RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j)\
     {return FUNC (parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j);}\
-  RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k)\
     {return FUNC (parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k);}\
-  RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k,\
-		       ss l)\
+  MYSQLPP_EXPORT RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k,ss l)\
     {return FUNC (parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k <<l);}\
 
 /// \brief Used to define many similar member functions in class Query.
 #define mysql_query_define1(RETURN, FUNC) \
-  RETURN FUNC (parms &p);\
+  MYSQLPP_EXPORT RETURN FUNC (parms &p);\
   mysql_query_define0(RETURN,FUNC) \
 
 /// \brief Used to define many similar member functions in class Query.
@@ -114,8 +113,7 @@
 	{FUNC (con, parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j);}\
   template <class T1> void FUNC (T1 &con, ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k)\
 	{FUNC (con, parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k);}\
-  template <class T1> void FUNC (T1 &con, ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k,\
-			   ss l)\
+  template <class T1> void FUNC (T1 &con, ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k,ss l)\
 	{FUNC (con, parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k <<l);}\
 
 namespace mysqlpp {
@@ -187,7 +185,7 @@ public:
 	///
 	/// \param c connection the finished query should be sent out on
 	/// \param te if true, throw exceptions on errors
-	Query(Connection* c, bool te = true) :
+	MYSQLPP_EXPORT Query(Connection* c, bool te = true) :
 	std::ostream(&sbuffer_),
 	OptionalExceptions(te),
 	Lockable(),
@@ -199,21 +197,21 @@ public:
 	}
 
 	/// \brief Create a new query object as a copy of another.
-	Query(const Query& q);
+	MYSQLPP_EXPORT Query(const Query& q);
 
 	/// \brief Get the last error message that was set.
 	///
 	/// This class has an internal error message string, but if it
 	/// isn't set, we return the last error message that happened
 	/// on the connection we're bound to instead.
-	std::string error();
+	MYSQLPP_EXPORT std::string error();
 
 	/// \brief Returns true if the last operation succeeded
 	///
 	/// Returns true if the last query succeeded, and the associated
 	/// Connection object's success() method also returns true.  If
 	/// either object is unhappy, this method returns false.
-	bool success();
+	MYSQLPP_EXPORT bool success();
 
 	/// \brief Treat the contents of the query string as a template
 	/// query.
@@ -222,22 +220,25 @@ public:
 	/// other members that accept template query parameters.  See the
 	/// "Template Queries" chapter in the user manual for more
 	/// information.
-	void parse();
+	MYSQLPP_EXPORT void parse();
 
 	/// \brief Reset the query object so that it can be reused.
 	///
 	/// This erases the query string and the contents of the parameterized
 	/// query element list.
-	void reset();
+	MYSQLPP_EXPORT void reset();
 
 	/// \brief Return the query string currently in the buffer.
-	std::string preview() { return str(def); }
+	MYSQLPP_EXPORT std::string preview() { return str(def); }
 
 	/// \brief Return the query string currently in the buffer.
-	std::string preview(SQLQueryParms& p) { return str(p); }
+	MYSQLPP_EXPORT std::string preview(SQLQueryParms& p)
+	{
+		return str(p);
+	}
 
 	/// \brief Get built query as a null-terminated C++ string
-	std::string str()
+	MYSQLPP_EXPORT std::string str()
 	{
 		return str(def);
 	}
@@ -246,7 +247,7 @@ public:
 	///
 	/// \param r if equal to \c RESET_QUERY, query object is cleared
 	/// after this call
-	std::string str(query_reset r)
+	MYSQLPP_EXPORT std::string str(query_reset r)
 	{
 		return str(def, r);
 	}
@@ -255,7 +256,7 @@ public:
 	///
 	/// \param p template query parameters to use, overriding the ones
 	/// this object holds, if any
-	std::string str(SQLQueryParms& p);
+	MYSQLPP_EXPORT std::string str(SQLQueryParms& p);
 
 	/// \brief Get built query as a null-terminated C++ string
 	///
@@ -263,7 +264,7 @@ public:
 	/// this object holds, if any
 	/// \param r if equal to \c RESET_QUERY, query object is cleared
 	/// after this call
-	std::string str(SQLQueryParms& p, query_reset r);
+	MYSQLPP_EXPORT std::string str(SQLQueryParms& p, query_reset r);
 
 	/// \brief Execute a query
 	///
@@ -276,7 +277,7 @@ public:
 	/// \return true if query was executed successfully
 	///
 	/// \sa execute(), store(), storein(), and use()
-	bool exec(const std::string& str);
+	MYSQLPP_EXPORT bool exec(const std::string& str);
 
 	/// \brief Execute built-up query
 	///
@@ -294,12 +295,12 @@ public:
 	/// \return ResNSel status information about the query
 	///
 	/// \sa exec(), store(), storein(), and use()
-	ResNSel execute() { return execute(def); }
+	MYSQLPP_EXPORT ResNSel execute() { return execute(def); }
 
 	/// \brief Execute query in a C++ string
 	///
 	/// Executes the query immediately, and returns the results.
-	ResNSel execute(const char* str);
+	MYSQLPP_EXPORT ResNSel execute(const char* str);
 
 	/// \brief Execute a query that can return a result set
 	/// 
@@ -325,14 +326,14 @@ public:
 	/// \return ResUse object that can walk through result set serially
 	///
 	/// \sa exec(), execute(), store() and storein()
-	ResUse use() { return use(def); }
+	MYSQLPP_EXPORT ResUse use() { return use(def); }
 
 	/// \brief Execute query in a C++ string
 	///
 	/// Executes the query immediately, and returns an object that
 	/// lets you walk through the result set one row at a time, in
 	/// sequence.  This is more memory-efficient than store().
-	ResUse use(const char* str);
+	MYSQLPP_EXPORT ResUse use(const char* str);
 
 	/// \brief Execute a query that can return a result set
 	///
@@ -355,14 +356,14 @@ public:
 	/// \return Result object containing entire result set
 	///
 	/// \sa exec(), execute(), storein(), and use()
-	Result store() { return store(def); }
+	MYSQLPP_EXPORT Result store() { return store(def); }
 
 	/// \brief Execute query in a C++ string
 	///
 	/// Executes the query immediately, and returns an object that
 	/// contains the entire result set.  This is less memory-efficient
 	/// than use(), but it lets you have random access to the results.
-	Result store(const char* str);
+	MYSQLPP_EXPORT Result store(const char* str);
 
 	/// \brief Return next result set, when processing a multi-query
 	///
@@ -390,7 +391,7 @@ public:
 	/// libraries.
 	///
 	/// \return Result object containing the next result set.
-	Result store_next();
+	MYSQLPP_EXPORT Result store_next();
 
 	/// \brief Return whether more results are waiting for a multi-query
 	/// or stored procedure response.
@@ -403,7 +404,7 @@ public:
 	/// always returns false when built against older API libraries.
 	///
 	/// \return true if another result set exists
-	bool more_results();
+	MYSQLPP_EXPORT bool more_results();
 
 	/// \brief Execute a query, storing the result set in an STL
 	/// sequence container.
@@ -422,8 +423,8 @@ public:
 	/// \param r whether the query automatically resets after being used
 	///
 	/// \sa exec(), execute(), store(), and use()
-	template <class Sequence> void storein_sequence(Sequence& con,
-			query_reset r = RESET_QUERY)
+	template <class Sequence>
+	void storein_sequence(Sequence& con, query_reset r = RESET_QUERY)
 	{
 		storein_sequence_(con, def, r);
 	}
@@ -435,8 +436,8 @@ public:
 	/// associative STL containers, such as \c std::set.  Other than
 	/// that detail, that method's comments apply equally well to this
 	/// one.
-	template <class Set> void storein_set(Set& con,
-			query_reset r = RESET_QUERY)
+	template <class Set>
+	void storein_set(Set& con, query_reset r = RESET_QUERY)
 	{
 		storein_set(con, def, r);
 	}
@@ -459,8 +460,11 @@ public:
 	///
 	/// See exec(), execute(), store(), and use() for alternative
 	/// query execution mechanisms.
-	template <class Container> void storein(Container& con,
-			query_reset r = RESET_QUERY) { storein(con, def, r); }
+	template <class Container>
+	void storein(Container& con, query_reset r = RESET_QUERY)
+	{
+		storein(con, def, r);
+	}
 
 	/// \brief Specialization of storein_sequence() for \c std::vector
 	template <class T>
@@ -620,10 +624,10 @@ public:
 	}
 
 	/// \brief Return true if the last query was successful
-	operator bool() { return success(); }
+	MYSQLPP_EXPORT operator bool() { return success(); }
 
 	/// \brief Return true if the last query failed
-	bool operator !() { return !success(); }
+	MYSQLPP_EXPORT bool operator !() { return !success(); }
 
 #if !defined(DOXYGEN_IGNORE)
 	// Declare the remaining overloads.  These are hidden down here partly

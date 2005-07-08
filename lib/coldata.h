@@ -82,7 +82,8 @@ namespace mysqlpp {
 /// stored in it, to allow it to do the conversions more intelligently
 /// than a trivial implementation would allow.
 
-template <class Str> class ColData_Tmpl : public Str
+template <class Str>
+class ColData_Tmpl : public Str
 {
 public:
 	/// \brief Default constructor
@@ -92,7 +93,7 @@ public:
 	///
 	/// It's probably a bad idea to use this ctor, becuase there's no
 	/// way to set the type data once the object's constructed.
-	ColData_Tmpl() :
+	MYSQLPP_EXPORT ColData_Tmpl() :
 	null_(false)
 	{
 	}
@@ -102,7 +103,7 @@ public:
 	///
 	/// \param n if true, data is a SQL null
 	/// \param t MySQL type information for data being stored
-	explicit ColData_Tmpl(bool n,
+	MYSQLPP_EXPORT explicit ColData_Tmpl(bool n,
 			mysql_type_info t = mysql_type_info::string_type) :
 	type_(t),
 	null_(n)
@@ -114,7 +115,7 @@ public:
 	/// \param str the string this object represents
 	/// \param t MySQL type information for data within str
 	/// \param n if true, str is a SQL null
-	explicit ColData_Tmpl(const char* str,
+	MYSQLPP_EXPORT explicit ColData_Tmpl(const char* str,
 			mysql_type_info t = mysql_type_info::string_type,
 			bool n = false) :
 	Str(str),
@@ -125,21 +126,21 @@ public:
 	}
 
 	/// \brief Get this object's current MySQL type.
-	mysql_type_info type() const
+	MYSQLPP_EXPORT mysql_type_info type() const
 	{
 		return type_;
 	}
 
 	/// \brief Returns true if data of this type should be quoted, false
 	/// otherwise.
-	bool quote_q() const
+	MYSQLPP_EXPORT bool quote_q() const
 	{
 		return type_.quote_q();
 	}
 
 	/// \brief Returns true if data of this type should be escaped, false
 	/// otherwise.
-	bool escape_q() const
+	MYSQLPP_EXPORT bool escape_q() const
 	{
 		return type_.escape_q();
 	}
@@ -148,60 +149,75 @@ public:
 	template <class Type> Type conv(Type dummy) const;
 
 	/// \brief Set a flag indicating that this object is a SQL null.
-	void it_is_null() { null_ = true; }
+	MYSQLPP_EXPORT void it_is_null() { null_ = true; }
 
 	/// \brief Returns true if this object is a SQL null.
-	inline const bool is_null() const { return null_; }
+	MYSQLPP_EXPORT inline const bool is_null() const { return null_; }
 	
 	/// \brief Returns the string form of this object's data.
-	inline const std::string& get_string() const { return buf_; }
+	MYSQLPP_EXPORT inline const std::string& get_string() const
+	{
+		return buf_;
+	}
 	
 	/// \brief Returns a const char pointer to the string form of
 	/// this object's data.
-	operator cchar*() const { return buf_.c_str(); }
+	MYSQLPP_EXPORT operator cchar*() const { return buf_.c_str(); }
 	
 	/// \brief Converts this object's string data to a signed char
-	operator signed char() const { return conv(static_cast<signed char>(0)); }
+	MYSQLPP_EXPORT operator signed char() const
+			{ return conv(static_cast<signed char>(0)); }
 	
 	/// \brief Converts this object's string data to an unsigned char
-	operator unsigned char() const { return conv(static_cast<unsigned char>(0)); }
+	MYSQLPP_EXPORT operator unsigned char() const
+			{ return conv(static_cast<unsigned char>(0)); }
 	
 	/// \brief Converts this object's string data to an int
-	operator int() const { return conv(static_cast<int>(0)); }
+	MYSQLPP_EXPORT operator int() const
+			{ return conv(static_cast<int>(0)); }
 	
 	/// \brief Converts this object's string data to an unsigned int
-	operator unsigned int() const { return conv(static_cast<unsigned int>(0)); }
+	MYSQLPP_EXPORT operator unsigned int() const
+			{ return conv(static_cast<unsigned int>(0)); }
 	
 	/// \brief Converts this object's string data to a short int
-	operator short int() const { return conv(static_cast<short int>(0)); }
+	MYSQLPP_EXPORT operator short int() const
+			{ return conv(static_cast<short int>(0)); }
 	
 	/// \brief Converts this object's string data to an unsigned short
 	/// int
-	operator unsigned short int() const { return conv(static_cast<unsigned short int>(0)); }
+	MYSQLPP_EXPORT operator unsigned short int() const
+			{ return conv(static_cast<unsigned short int>(0)); }
 	
 	/// \brief Converts this object's string data to a long int
-	operator long int() const { return conv(static_cast<long int>(0)); }
+	MYSQLPP_EXPORT operator long int() const
+			{ return conv(static_cast<long int>(0)); }
 	
 	/// \brief Converts this object's string data to an unsigned long
 	/// int
-	operator unsigned long int() const { return conv(static_cast<unsigned long int>(0)); }
+	MYSQLPP_EXPORT operator unsigned long int() const
+			{ return conv(static_cast<unsigned long int>(0)); }
 	
 	/// \brief Converts this object's string data to the platform-
 	/// specific 'longlong' type, usually a 64-bit integer.
-	operator longlong() const { return conv(static_cast<longlong>(0)); }
+	MYSQLPP_EXPORT operator longlong() const
+			{ return conv(static_cast<longlong>(0)); }
 	
 	/// \brief Converts this object's string data to the platform-
 	/// specific 'ulonglong' type, usually a 64-bit unsigned integer.
-	operator ulonglong() const { return conv(static_cast<ulonglong>(0)); }
+	MYSQLPP_EXPORT operator ulonglong() const
+			{ return conv(static_cast<ulonglong>(0)); }
 	
 	/// \brief Converts this object's string data to a float
-	operator float() const { return conv(static_cast<float>(0)); }
+	MYSQLPP_EXPORT operator float() const
+			{ return conv(static_cast<float>(0)); }
 	
 	/// \brief Converts this object's string data to a double
-	operator double() const { return conv(static_cast<double>(0)); }
+	MYSQLPP_EXPORT operator double() const
+			{ return conv(static_cast<double>(0)); }
 	
 	/// \brief Converts this object's string data to a bool
-	operator bool() const { return conv(0); }
+	MYSQLPP_EXPORT operator bool() const { return conv(0); }
 
 	template <class T, class B> operator Null<T, B>() const;
 
@@ -213,11 +229,11 @@ private:
 
 /// \typedef ColData_Tmpl<const_string> ColData
 /// \brief The type that is returned by constant rows
-typedef ColData_Tmpl < const_string > ColData;
+typedef ColData_Tmpl<const_string> ColData;
 
 /// \typedef ColData_Tmpl<std::string> MutableColData
 /// \brief The type that is returned by mutable rows
-typedef ColData_Tmpl < std::string > MutableColData;
+typedef ColData_Tmpl<std::string> MutableColData;
 
 
 #if !defined(NO_BINARY_OPERS) && !defined(DOXYGEN_IGNORE)
