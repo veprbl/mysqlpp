@@ -116,7 +116,7 @@ public:
 	/// \param w the "what" error string
 	///
 	/// All other data members are initialize to default values
-	BadConversion(const char* w = "") :
+	explicit BadConversion(const char* w = "") :
 	Exception(w),
 	type_name("unknown"),
 	data(""),
@@ -141,7 +141,7 @@ public:
 	/// \brief Create exception object
 	///
 	/// \param bad_field name of field the MySQL server didn't like
-	BadFieldName(const char* bad_field) :
+	explicit BadFieldName(const char* bad_field) :
 	Exception(std::string("Unknown field name: ") + bad_field)
 	{
 	}
@@ -158,7 +158,7 @@ class BadNullConversion : public Exception
 {
 public:
 	/// \brief Create exception object
-	BadNullConversion(const char* w = "") :
+	explicit BadNullConversion(const char* w = "") :
 	Exception(w)
 	{
 	}
@@ -174,7 +174,7 @@ class BadParamCount : public Exception
 {
 public:
 	/// \brief Create exception object
-	BadParamCount(const char* w = "") :
+	explicit BadParamCount(const char* w = "") :
 	Exception(w)
 	{
 	}
@@ -195,13 +195,13 @@ class BadQuery : public Exception
 {
 public:
 	/// \brief Create exception object, taking C string
-	BadQuery(const char* w = "") :
+	explicit BadQuery(const char* w = "") :
 	Exception(w)
 	{
 	}
 
 	/// \brief Create exception object, taking C++ string
-	BadQuery(const std::string& w) :
+	explicit BadQuery(const std::string& w) :
 	Exception(w)
 	{
 	}
@@ -216,7 +216,7 @@ class ConnectionFailed : public Exception
 {
 public:
 	/// \brief Create exception object
-	ConnectionFailed(const char* w = "") :
+	explicit ConnectionFailed(const char* w = "") :
 	Exception(w)
 	{
 	}
@@ -230,7 +230,7 @@ class DBSelectionFailed : public Exception
 {
 public:
 	/// \brief Create exception object
-	DBSelectionFailed(const char* w = "") :
+	explicit DBSelectionFailed(const char* w = "") :
 	Exception(w)
 	{
 	}
@@ -244,7 +244,7 @@ class EndOfResults : public Exception
 {
 public:
 	/// \brief Create exception object
-	EndOfResults(const char* w = "end of results") :
+	explicit EndOfResults(const char* w = "end of results") :
 	Exception(w)
 	{
 	}
@@ -258,7 +258,7 @@ class EndOfResultSets : public Exception
 {
 public:
 	/// \brief Create exception object
-	EndOfResultSets(const char* w = "end of result sets") :
+	explicit EndOfResultSets(const char* w = "end of result sets") :
 	Exception(w)
 	{
 	}
@@ -272,7 +272,7 @@ class ObjectNotInitialized : public Exception
 {
 public:
 	/// \brief Create exception object
-	ObjectNotInitialized(const char* w = "") :
+	explicit ObjectNotInitialized(const char* w = "") :
 	Exception(w)
 	{
 	}
