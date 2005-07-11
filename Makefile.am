@@ -80,5 +80,5 @@ ctags:
 
 clean-local:
 	( cd lib ; make clean-docs )
-	( cd userman ; make clean )
+	( cd doc/userman ; make clean )
 	find . -name tags -exec rm {} \;
