@@ -79,6 +79,6 @@ ctags:
 	find . -type d -mindepth 1 -exec ln tags {} \;
 
 clean-local:
-	( cd refman ; make clean-docs )
+	( cd lib ; make clean-docs )
 	( cd userman ; make clean )
 	find . -name tags -exec rm {} \;
