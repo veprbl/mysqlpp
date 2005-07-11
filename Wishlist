@@ -245,9 +245,3 @@ Bug Fix/Maintenance Items
 
 	o Write an example to demonstrate compare.h features, or throw
 	  the header away.  It's not being used within the library.
-
-	o Add a layered stylesheet for Doxygen to match new userman CSS.
-	  There's a way to inject a custom HTML header in each file, so
-	  we can mention our CSS after the Dogygen-generated one, and just
-	  override colors and other cosmetic stuff.
-
