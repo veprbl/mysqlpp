@@ -301,17 +301,16 @@
 	<sect2>
 		<title>Exceptions</title>
 
-		<para>By default, the library throws <ulink
-		url="../../refman/html/exceptions_8h.html">exceptions</ulink>
-		derived from
-		<computeroutput>std::exception</computeroutput>
-		whenever it encounters an error. You can ask the library
-		to set an error flag instead, if you like, but the
-		exceptions carry more information. Not only do they
-		include a string member telling you why the exception
-		was thrown, there are several exception types, so you
-		can distinguish between different error types within a
-		single <computeroutput>try</computeroutput> block.</para>
+		<para>By default, the library throws  <xref
+		linkend="exceptions"/> whenever it encounters an
+		error. You can ask the library to set an error flag
+		instead, if you like, but the exceptions carry more
+		information. Not only do they include a string
+		member telling you why the exception was thrown,
+		there are several exception types, so you can
+		distinguish between different error types within a
+		single <computeroutput>try</computeroutput>
+		block.</para>
 	</sect2>
 </sect1>
 
@@ -433,12 +432,28 @@
 	</sect2>
 
 
-	<sect2>
+	<sect2 id="exceptions" xreflabel="exceptions">
 		<title>Exceptions</title>
 
 		<para>By default, MySQL++ uses exceptions to signal
 		errors. Most of the examples have a full set of
 		exception handlers. This is worthy of emulation.</para>
+
+		<para>All of MySQL++'s custom exceptions derive
+		from a common base class, <ulink type="classref"
+		url="Exception"/>. That in turn derives from the
+		Standard C++ exception base class,
+		<computeroutput>std::exception</computeroutput>.
+		Since the library can indirectly cause exceptions
+		to come from the Standard C++ Library, it's possible
+		to catch all exceptions from MySQL++ by just catching
+		<computeroutput>std::exception</computeroutput> by
+		reference. However, it's usually better to catch
+		the all of the concret eexception types that you
+		expect, and add a handler for
+		<computeroutput>Exception</computeroutput> or
+		<computeroutput>std::exception</computeroutput> to
+		act as a "catch-all" for unexpected exceptions.</para>
 
 		<para>Some of these exceptions are optional.
 		When disabled, the object signals errors in
