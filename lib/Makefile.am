@@ -55,8 +55,11 @@ tags: ctags
 ctags:
 	( cd .. && make ctags )
 
+clean-docs:
+	( cd ../doc/refman/html ; rm -f *.dot [a-z]*.html *.png doxygen.css )
+	rm -rf ../doc/refman/latex
+
 refman:
-	rm -rf ../doc/refman/html ../doc/refman/latex
 	doxygen
 	( cd ../doc/refman/latex && make pdf && mv refman.pdf ../../mysqlpp-refman.pdf ) 
 

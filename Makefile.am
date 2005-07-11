@@ -79,6 +79,6 @@ ctags:
 	find . -type d -mindepth 1 -exec ln tags {} \;
 
 clean-local:
-	( cd doc/refman/html ; rm -f *.dot [a-z]*.html *.png doxygen.css )
-	( cd doc/userman/html ; rm -f *.html )
+	( cd refman ; make clean-docs )
+	( cd userman ; make clean )
 	find . -name tags -exec rm {} \;
