@@ -78,3 +78,7 @@ ctags:
 	ctags `pwd`/*/*.cpp `pwd`/*/*.h
 	find . -type d -mindepth 1 -exec ln tags {} \;
 
+clean-local:
+	( cd doc/refman/html ; rm -f *.dot [a-z]*.html *.png doxygen.css )
+	( cd doc/userman/html ; rm -f *.html )
+	find . -name tags -exec rm {} \;
