@@ -1,0 +1,66 @@
+/* Markup specific to Doxygen, mostly just overriding subsets of the
+   styles in doxygen.css */
+a.anchor:hover { color: #501000; }
+
+div.qindex { background-color: #FFFFCC; border: 4px solid #FFEEBB }
+a.qindex:hover { background-color: #EEDDBB }
+a.qindex:visited { color: #7D2E01 }
+a.qindexHL { background-color: #501000; color: #FFEEBB }
+a.qindexHL:hover { background-color: #501000; color: #FFEEBB }
+a.qindexHL:visited { background-color: #501000; color: #FFEEBB }
+
+div.fragment { border: 1px solid #CCBBAA; background-color: #FFFFCC; }
+
+TD.indexkey { background-color: #FFFFCC; }
+TD.indexvalue { background-color: #FFFFCC; }
+
+td.md { background-color: #FFFFCC; font-weight: bold; }
+td.mdname { background-color: #FFFFCC; font-weight: bold; color: #602020; width: 600px; }
+td.mdname1 { background-color: #FFFFCC; font-weight: bold; color: #602020; }
+.mdTable { background-color: #FFFFCC; border: 1px solid #CCBBAA; }
+.mdescLeft { background-color: #FFFFCC; border: 1px none #CCBBAA; }
+.mdescRight { background-color: #FFFFCC; border: 1px none #CCBBAA; }
+.memItemLeft { background-color: #FFFFCC; border: 1px solid #CCBBAA; }
+.memItemRight { background-color: #FFFFCC; border: 1px solid #CCBBAA; }
+
+
+/* Standard markup styles, borrowed from tangentsoft.net */
+body { background-color: #FFFFEE; }
+
+a:link { color: #491E00; }
+a:visited { color: #7D2E01; }
+a:hover { color: #CC5500; background-color: transparent; text-decoration: none; }
+a:active { color: #DA7417; } 
+
+p { line-height: 140%; margin-left: 20pt; }
+
+h1 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 20pt;
+  color: #501000;
+}
+h2 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 16pt;
+  font-weight: bold;
+  color: #501000;
+}
+h3 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 14pt;
+  font-weight: bold;
+  color: #501000;
+}
+h4 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 10pt;
+  font-weight: bold;
+  color: #501000;
+}
+h5 {
+  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
+  font-size: 10pt;
+  font-weight: bold;
+  color: #501000;
+  margin-left: 20pt;
+}
