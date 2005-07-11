@@ -315,7 +315,8 @@ public:
 	MYSQLPP_EXPORT bool set_option(int option)
 	{
 #		if MYSQL_VERSION_ID > 41000
-			return !mysql_set_server_option(&mysql_, option);
+			return !mysql_set_server_option(&mysql_,
+					static_cast<enum enum_mysql_set_option>(option));
 #		else
 			return false;
 #		endif
@@ -327,7 +328,8 @@ public:
 	/// true for success, instead of 0.
 	MYSQLPP_EXPORT bool set_option(int option, const char* arg)
 	{
-		return !mysql_options(&mysql_, mysql_option(option), arg);
+		return !mysql_options(&mysql_,
+				static_cast<enum mysql_option>(option), arg);
 	}
 
 	/// \brief Return the number of rows affected by the last query
