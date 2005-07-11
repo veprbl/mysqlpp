@@ -285,13 +285,13 @@
 			this:</para>
 
 			<programlisting>
-    vector&lt;mystruct&gt; v;
-    Query q = connection.query();
-    q &lt;&lt; "SELECT * FROM mytable";
-    q.storein(v);
-    for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++v) {
-        cout &lt;&lt; "Price: " &lt;&lt; it-&gt;price &lt;&lt; endl;
-    }</programlisting>
+vector&lt;mystruct&gt; v;
+Query q = connection.query();
+q &lt;&lt; "SELECT * FROM mytable";
+q.storein(v);
+for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++v) {
+    cout &lt;&lt; "Price: " &lt;&lt; it-&gt;price &lt;&lt; endl;
+}</programlisting>
 
 			<para>Isn't that slick?</para>
 		</sect3>
@@ -551,16 +551,16 @@
 		quoted. Consider this query:</para>
 
 		<programlisting>
-        SELECT * FROM stock WHERE item = 'Hotdog Buns' </programlisting>
+SELECT * FROM stock WHERE item = 'Hotdog Buns' </programlisting>
 
 		<para>Because the string "Hotdog Buns" contains a space,
 		it must be quoted. With MySQL++, you don't have to add
 		these quote marks manually:</para>
 
 		<programlisting>
-        string s = "Hotdog Buns";
-        Query q = conn.query();
-        q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; s; </programlisting>
+string s = "Hotdog Buns";
+Query q = conn.query();
+q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; s; </programlisting>
 
 		<para>That code produces the same query string
 		as in the previous example. We used the MySQL++
@@ -579,12 +579,12 @@
 		Buns" instead. The resulting query would be:</para>
 
 		<programlisting>
-        SELECT * FROM stock WHERE item = 'Frank's Brand Hotdog Buns' </programlisting>
+SELECT * FROM stock WHERE item = 'Frank's Brand Hotdog Buns' </programlisting>
 
 		<para>That's not valid SQL syntax. The correct syntax is:</para>
 
 		<programlisting>
-        SELECT * FROM stock WHERE item = 'Frank''s Brand Hotdog Buns' </programlisting>
+SELECT * FROM stock WHERE item = 'Frank''s Brand Hotdog Buns' </programlisting>
 
 		<para>As you might expect, MySQL++
 		provides that feature, too, through its
@@ -594,9 +594,9 @@
 		manipulator:</para>
 
 		<programlisting>
-        string s = "Frank's Brand Hotdog Buns";
-        Query q = conn.query();
-        q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </programlisting>
+string s = "Frank's Brand Hotdog Buns";
+Query q = conn.query();
+q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </programlisting>
 
 		<para>The <computeroutput>quote</computeroutput>
 		manipulator both quotes strings, and escapes any
@@ -952,14 +952,13 @@
 		string is a template query, and it needs to parse it:</para>
 
 		<programlisting>
-    query &lt;&lt; "select (%2:field1, %3:field2) from stock where
-            %1:wheref = %q0:what";
-    query.parse();</programlisting>
+query &lt;&lt; "select (%2:field1, %3:field2) from stock where %1:wheref = %q0:what";
+query.parse();</programlisting>
 
 		<para>The format of the placeholder is:</para>
 
 		<programlisting>
-    %(modifier)##(:name)(:)</programlisting>
+%(modifier)##(:name)(:)</programlisting>
 
 		<para>Where Modifier can be any one of the following:</para>
 
@@ -1042,19 +1041,19 @@
 		example:</para>
 
 		<programlisting>
-    Result res = query.store("Dinner Rolls", "item", "item", "price")</programlisting>
+Result res = query.store("Dinner Rolls", "item", "item", "price")</programlisting>
 
 		<para>with the template query provided above
 		would produce:</para>
 
 		<programlisting>
-    select (item, price) from stock where item = "Dinner Rolls"</programlisting>
+select (item, price) from stock where item = "Dinner Rolls"</programlisting>
 
 		<para>The reason we didn't put the template parameters in
 		numeric order...</para>
 
 		<programlisting>
-    select (%0:field1, %1:field2) from stock where %2:wheref = %q3:what</programlisting>
+select (%0:field1, %1:field2) from stock where %2:wheref = %q3:what</programlisting>
 
 		<para>...will become apparent shortly.</para>
 	</sect2>
@@ -1071,25 +1070,25 @@
 		name. The following two examples have the same effect:</para>
 
 		<programlisting>
-    query.def[0] = "Dinner Rolls"; 
-    query.def[1] = "item"; 
-    query.def[2] = "item"; 
-    query.def[3] = "price";</programlisting>
+query.def[0] = "Dinner Rolls"; 
+query.def[1] = "item"; 
+query.def[2] = "item"; 
+query.def[3] = "price";</programlisting>
 
 		<para>and</para>
 
 		<programlisting>
-    query.def["what"] = "Dinner Rolls"; 
-    query.def["wheref"] = "item"; 
-    query.def["field1"] = "item"; 
-    query.def["field2"] = "price";</programlisting>
+query.def["what"] = "Dinner Rolls"; 
+query.def["wheref"] = "item"; 
+query.def["field1"] = "item"; 
+query.def["field2"] = "price";</programlisting>
 
 		<para>Once all the parameters are set simply
 		execute as you would have executed the query
 		before you knew about template queries:</para>
 
 		<programlisting>
-    Result res = query.store()</programlisting>
+Result res = query.store()</programlisting>
 	</sect2>
 
 
@@ -1106,20 +1105,20 @@
 		that the template supports:</para>
 
 		<programlisting>
-    query.def["field1"] = "item"; 
-    query.def["field2"] = "price"; 
-    Result res1 = query.store("Hamburger Buns", "item"); 
-    Result res2 = query.store(1.25, "price"); </programlisting>
+query.def["field1"] = "item"; 
+query.def["field2"] = "price"; 
+Result res1 = query.store("Hamburger Buns", "item"); 
+Result res2 = query.store(1.25, "price"); </programlisting>
 
 		<para>Would store the query:</para>
 
 		<programlisting>
-    select (item, price) from stock where item = "Hamburger Buns" </programlisting>
+select (item, price) from stock where item = "Hamburger Buns" </programlisting>
 
 		<para>for res1 and</para>
 
 		<programlisting>
-    select (item, price) from stock where price = 1.25 </programlisting>
+select (item, price) from stock where price = 1.25 </programlisting>
 
 		<para>for res2.</para>
 
@@ -1141,8 +1140,7 @@
 		a SQLString to get the right overload:</para>
 
 		<programlisting>
-    Result res = query.store(SQLString("Hamburger Buns")); </programlisting>
-		<para></para>
+Result res = query.store(SQLString("Hamburger Buns")); </programlisting>
 	</sect2>
 
 
@@ -1161,9 +1159,9 @@
 		like so:</para>
 
 		<programlisting>
-    query.def["field1"] = "item"; 
-    query.def["field2"] = "price"; 
-    Result res = query.store(1.25); </programlisting>
+query.def["field1"] = "item"; 
+query.def["field2"] = "price"; 
+Result res = query.store(1.25); </programlisting>
 
 		<para>This would throw
 		<computeroutput>SQLQueryNEParms</computeroutput>
@@ -1204,12 +1202,12 @@
 		<para>This is the most basic sort of SSQLS declaration:</para>
 
 		<programlisting>
-    sql_create_5(stock, 0, 0,     
-            string, item,
-            int, num,                  
-            double, weight,  
-            double, price,  
-            mysqlpp::Date, date)</programlisting>
+sql_create_5(stock, 0, 0,     
+    string, item,
+    int, num,                  
+    double, weight,  
+    double, price,  
+    mysqlpp::Date, date)</programlisting>
 
 		<para>This creates a C++ structure called 'stock'
 		containing five member variables, along with some
@@ -1221,8 +1219,8 @@
 		a vector of stocks like so:</para>
 
 		<programlisting>
-    vector&lt;stock&gt; result; 
-    query.storein(result);</programlisting>
+vector&lt;stock&gt; result; 
+query.storein(result);</programlisting>
 
 		<para>That's all there is to it. The only requirements
 		are that the table structure be compatible with the
@@ -1232,7 +1230,7 @@
 		<para>The general format of this set of macros is:</para>
 
 		<programlisting>
-    sql_create_#(NAME, KEYS, INITPARMS, TYPE1, ITEM1, ... TYPE#, ITEM#)</programlisting>
+sql_create_#(NAME, KEYS, INITPARMS, TYPE1, ITEM1, ... TYPE#, ITEM#)</programlisting>
 
 		<para>Where # is the number of member variables,
 		NAME is the name of the structure you wish to create,
@@ -1259,12 +1257,12 @@
 		<para>For example:</para>
 
 		<programlisting>
-    sql_create_5(stock, 1, 0,     
-            string, item,
-            int, num,                  
-            double, weight,  
-            double, price,  
-            mysqlpp::Date, date)</programlisting>
+sql_create_5(stock, 1, 0,     
+    string, item,
+    int, num,                  
+    double, weight,  
+    double, price,  
+    mysqlpp::Date, date)</programlisting>
 
 		<para>Here we are saying that the 'item' field is a kind
 		of key field: it is always unique between any two 'stock'
@@ -1275,21 +1273,21 @@
 		SSQLS:</para>
 
 		<programlisting>
-    struct stock {
-      ...  
-      stock (const std::string &amp;p1); 
-      set (const std::string &amp;p1); 
-      bool operator == (const stock &amp;other) const;  
-      bool operator != (const stock &amp;other) const;   
-      bool operator &gt; (const stock &amp;other) const;   
-      bool operator &lt; (const stock &amp;other) const;   
-      bool operator &gt;= (const stock &amp;other) const;   
-      bool operator &lt;= (const stock &amp;other) const;   
-      int cmp (const stock &amp;other) const;  
-      int compare (const stock &amp;other) const;  
-    }  
+struct stock {
+    ...  
+    stock(const std::string &amp;p1); 
+    set(const std::string &amp;p1); 
+    bool operator ==(const stock &amp;other) const;  
+    bool operator !=(const stock &amp;other) const;   
+    bool operator &gt;(const stock &amp;other) const;   
+    bool operator &lt;(const stock &amp;other) const;   
+    bool operator &gt;=(const stock &amp;other) const;   
+    bool operator &lt;=(const stock &amp;other) const;   
+    int cmp(const stock &amp;other) const;  
+    int compare(const stock &amp;other) const;  
+}  
       
-    int compare (const stock &amp;x, const stock &amp;y);</programlisting>
+int compare(const stock &amp;x, const stock &amp;y);</programlisting>
 
 		<para>The global
 		<computeroutput>compare()</computeroutput>
@@ -1311,13 +1309,13 @@
 		container:</para>
 
 		<programlisting>
-    std::set&lt;stock&gt; result;   
-    query.storein(result);</programlisting>
+std::set&lt;stock&gt; result;   
+query.storein(result);</programlisting>
 
 		<para>And you can now use it like any other set:</para>
 
 		<programlisting>
-    cout &lt;&lt; result.lower_bound(stock("Hamburger"))-&gt;item &lt;&lt; endl;</programlisting>
+cout &lt;&lt; result.lower_bound(stock("Hamburger"))-&gt;item &lt;&lt; endl;</programlisting>
 
 		<para>This will return the first item that begins with
 		"Hamburger".</para>
@@ -1336,24 +1334,24 @@
 		structure's data members. For example:</para>
 
 		<programlisting>
-    sql_create_5(stock, 1, 5,   
-            string, item,
-            int, num,                  
-            double, weight,  
-            double, price,  
-            mysqlpp::Date, date)</programlisting>
+sql_create_5(stock, 1, 5,   
+    string, item,
+    int, num,                  
+    double, weight,  
+    double, price,  
+    mysqlpp::Date, date)</programlisting>
 
 		<para>will add these functions to the structure relative to
 		that in the previous example:</para>
 
 		<programlisting>
-    struct stock {   
-      ...  
-      stock(const string&amp;, const int&amp;, const double&amp;,  
+struct stock {   
+    ...  
+    stock(const string&amp;, const int&amp;, const double&amp;,  
+            const double&amp;, const mysqlpp::Date&amp;);
+    void set(const string&amp;, const int&amp;, const double&amp;,  
             const double&amp;, const mysqlpp::Date&amp;);  
-      set(const string&amp;, const int&amp;, const double&amp;,  
-          const double&amp;, const mysqlpp::Date&amp;);  
-    }</programlisting>
+}</programlisting>
 
 		<para>There is one trick with this: because each SSQLS
 		has at least one other constructor besides the one
@@ -1382,7 +1380,7 @@
 		these macros, then? Consider this:</para>
 
 		<programlisting>
-    query.insert(s);</programlisting>
+query.insert(s);</programlisting>
 
 		<para>This does exactly what you think it does:
 		it inserts 's' into the database. This is possible
@@ -1402,7 +1400,7 @@
 		name used in queries like this:</para>
 
 		<programlisting>
-    stock::table() = "MyStockData";</programlisting>
+stock::table() = "MyStockData";</programlisting>
 	</sect2>
 
 
@@ -1461,7 +1459,7 @@ stock_cus_value_list&lt;Manip&gt; value_list([cchar *d, [Manip m,] ]
 
 		<programlisting>
 stock s("Dinner Rolls", 75, 0.95, 0.97, "1998-05-25");   
-cout &lt;&lt; "Value list: " &lt;&lt; s.comma_list() &lt;&lt; endl;  
+cout &lt;&lt; "Value list: " &lt;&lt; s.value_list() &lt;&lt; endl;  
 cout &lt;&lt; "Field list: " &lt;&lt; s.field_list() &lt;&lt; endl;  
 cout &lt;&lt; "Equal list: " &lt;&lt; s.equal_list() &lt;&lt; endl;</programlisting>
 
@@ -1498,73 +1496,9 @@ Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,date = '1
 		makes it more robust in the face of change. Here is
 		<filename>examples/custom5.cpp</filename>:</para>
 
-		<programlisting>
-#include "util.h"
-
-#include &lt;mysql++.h&gt;
-#include &lt;custom.h&gt;
-
-#include &lt;iostream&gt;
-#include &lt;iomanip&gt;
-#include &lt;vector&gt;
-
-using namespace std;
-using namespace mysqlpp;
-
-sql_create_5(stock,
-             1, 5,
-             string, item,
-             longlong, num,
-             double, weight,
-             double, price,
-             Date, sdate)
-
-int
-main(int argc, char *argv[])
-{
-    try {
-        Connection con(use_exceptions);
-        if (!connect_to_db(argc, argv, con)) {
-            return 1;
-        }
-
-        // Get all the rows in the stock table.
-        Query query = con.query();
-        query &lt;&lt; "select * from stock";
-        vector&lt;stock&gt; res;
-        query.storein(res);
-
-        if (res.size() &gt; 0) {
-            // Build a select query using the data from the first row
-            // returned by our previous query.
-            query.reset();
-            query &lt;&lt; "select * from stock where " &lt;&lt;
-                res[0].equal_list(" and ", stock_weight, stock_price);
-
-            // Display the finished query.
-            cout &lt;&lt; "Custom query:\n" &lt;&lt; query.preview() &lt;&lt; endl;
-        }
-    }
-    catch (const BadQuery&amp; er) {
-        // Handle any query errors
-        cerr &lt;&lt; "Query error: " &lt;&lt; er.what() &lt;&lt; endl;
-        return -1;
-    }
-    catch (const BadConversion&amp; er) {
-        // Handle bad conversions
-        cerr &lt;&lt; "Conversion error: " &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
-                "\tretrieved data size: " &lt;&lt; er.retrieved &lt;&lt;
-                ", actual size: " &lt;&lt; er.actual_size &lt;&lt; endl;
-        return -1;
-    }
-    catch (const Exception&amp; er) {
-        // Catch-all for any other MySQL++ exceptions
-        cerr &lt;&lt; "Error: " &lt;&lt; er.what() &lt;&lt; endl;
-        return -1;
-    }
-
-    return 0;
-}</programlisting>
+		<programlisting><xi:include href="custom5.txt"
+			parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+		</programlisting>
 
 		<para>This example uses the list form of
 		<computeroutput>equal_list()</computeroutput>. The
@@ -1620,35 +1554,35 @@ query &lt;&lt; "select * from stock where " &lt;&lt;
 		so like this:</para>
 
 		<programlisting>
-    sql_create_c_names_5(stock, 1, 5,        
-            string, item, "item",
-            int, num, "quantity",  
-            double, weight, "weight",  
-            double, price, "price"  
-            mysqlpp::Date, date, "shipment")</programlisting>
+sql_create_c_names_5(stock, 1, 5,        
+    string, item, "item",
+    int, num, "quantity",  
+    double, weight, "weight",  
+    double, price, "price"  
+    mysqlpp::Date, date, "shipment")</programlisting>
 
 		<para>If you want your SSQLS to have its data members
 		in a different order from those in the MySQL table,
 		you can do it like this:</para>
 
 		<programlisting>
-    sql_create_c_order_5(stock, 2, 5,   
-            mysqlpp::Date, date, 5,
-            double, price, 4,   
-            string, item, 1,    
-            int, num, 2,   
-            double, weight, 3)</programlisting>
+sql_create_c_order_5(stock, 2, 5,   
+    mysqlpp::Date, date, 5,
+    double, price, 4,   
+    string, item, 1,    
+    int, num, 2,   
+    double, weight, 3)</programlisting>
 
 		<para>You can combine the custom names and custom ordering like
 		this:</para>
 
 		<programlisting>
-    sql_create_complete_5(stock, 2, 5,   
-            mysqlpp::date, date, "shipment", 5,
-            double, price, "price", 4,
-            string, item, "item", 1,
-            int, num, "quantity", 2,
-            double, weight, "weight", 3)</programlisting>
+sql_create_complete_5(stock, 2, 5,   
+    mysqlpp::date, date, "shipment", 5,
+    double, price, "price", 4,
+    string, item, "item", 1,
+    int, num, "quantity", 2,
+    double, weight, "weight", 3)</programlisting>
 
 		<para>All three of these macro types have "basic"
 		variants that work the same way. Again, basic SSQLSes
@@ -1665,7 +1599,7 @@ query &lt;&lt; "select * from stock where " &lt;&lt;
 		<computeroutput>doc/ssqls-pretty</computeroutput>, like so:</para>
 
 		<programlisting>
-    ssqls-pretty &lt; myprog.cpp |less</programlisting>
+ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
 		<para>This locates the first SSQLS declaration in that
 		file and uses the C++ preprocessor to expand that
@@ -1889,7 +1823,7 @@ void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
 		call:</para>
 
 		<programlisting>
-	MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
+MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 
 		<para>All of this assumes you're using Windows NT or one
 		of its direct descendants: Windows 2000, Windows XP,
