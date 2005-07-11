@@ -54,8 +54,9 @@
 
 	\section getting_started Getting Started
 
-	The best place to get started is the new user manual. It provides
-	a guide to the example programs and more.
+	The best place to get started is the
+	<a href="../../userman/html/index.html">user manual</a>. It
+	provides a guide to the example programs and more.
 
 
 	\section classes Major Classes
