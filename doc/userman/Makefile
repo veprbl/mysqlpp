@@ -13,8 +13,9 @@ BASENAME=userman
 DOCFILE=$(BASENAME).xml
 PDFFILE=$(BASENAME).pdf
 FOFILE=$(BASENAME).fo
-HTML_SS=html.xsl
+COMMON_SS=common.xsl
 FO_SS=fo.xsl
+HTML_SS=html.xsl
 EX_TXT=cgi_image.txt custom1.txt custom2.txt custom3.txt custom4.txt \
 		custom5.txt fieldinf1.txt load_file.txt resetdb.txt \
 		simple1.txt simple2.txt updel.txt util.txt
@@ -48,12 +49,12 @@ clean:
 ## How to make output files
 ## ------------------------
 
-$(PDFFILE): $(DOCFILE) $(FO_SS)
+$(PDFFILE): $(DOCFILE) $(FO_SS) $(COMMON_SS)
 	xsltproc --xinclude $(FO_SS) $(DOCFILE) > $(FOFILE)
 	$(FOPDIR)/fop.sh -q -fo $(FOFILE) $(PDFFILE)
 	cp $(PDFFILE) ../mysqlpp-$(PDFFILE)
 
-html/index.html: $(DOCFILE) $(EX_TXT) $(HTML_SS)
+html/index.html: $(DOCFILE) $(EX_TXT) $(HTML_SS) $(COMMON_SS)
 	@mkdir -p html
 	@xmllint --xinclude --postvalid --noent --noout $(DOCFILE)
 	xsltproc --xinclude -o html/ $(HTML_SS) $(DOCFILE)
