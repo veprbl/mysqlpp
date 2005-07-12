@@ -10,6 +10,22 @@ consider whether it could be reduced to an API feature that would be
 widely useful.  Patches or proposals of this sort are always welcome.
 
 
+Final v2.0 Stuff
+----------------
+
+	o Instead of using int parameters for Connection::set_option()
+	  methods, define a new set of enums parallel to the MySQL C API
+	  ones.  These can then be extended with other API settings later.
+
+	  Alternately, turn set_option() into a bunch of member functions,
+	  one for each option.
+
+	o Look into stored procedure failure when you don't set
+	  "multi-query" option on connection creation.
+
+	o Decide what to do about subscript_iterator bugs.
+
+
 Future Features
 ---------------
 
