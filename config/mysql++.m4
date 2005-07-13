@@ -1,5 +1,6 @@
 #-######################################################################
-# Custom autoconf macro: Find MySQL++ development stuff.
+# mysql++.m4 - Example autoconf macro showing how to find MySQL++
+#	library and header files.
 #
 # Copyright (c) 2004-2005 by Educational Technology Resources, Inc.
 #
@@ -31,6 +32,10 @@ dnl			/include onto given dir name, and other common schemes.)
 dnl		--with-mysqlpp-lib: Similar to --with-mysqlpp, but for library only.
 dnl		--with-mysqlpp-include: Similar to --with-mysqlpp, but for headers
 dnl			only.
+dnl
+dnl This macro depends on having the default compiler and linker flags
+dnl set up for building programs against the MySQL C API.  The mysql.m4
+dnl macro in this directory fits this bill; run it first.
 dnl
 dnl @version 1.0, 2005/07/13
 dnl @author Warren Young <mysqlpp@etr-usa.com>
