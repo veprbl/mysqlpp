@@ -19,6 +19,9 @@ Final v2.0 Stuff
 
 	  Alternately, turn set_option() into a bunch of member functions,
 	  one for each option.
+	 
+	o Add SSL-enabling support.  Make it one of the new options, instead
+	  of wrapping C API directly?
 
 	o Look into stored procedure failure when you don't set
 	  "multi-query" option on connection creation.
