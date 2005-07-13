@@ -45,9 +45,6 @@
 	o Connection::create_db() and drop_db() now return true on
 	  success, not false.
 
-	o Connection::create_db(), drop_db() and select_db() now
-	  take their arguments by const reference.
-
 	o Connection::create_db() and drop_db() use Query::exec()
 	  now, for efficiency, rather than Query::execute().
 
@@ -136,8 +133,8 @@
 	  std::stringstream, and we manage our own internal string
 	  buffer.
 
-	o Moved Extracted SQLParseElement and SQLQueryParms into
-	  their own module, qparms.
+	o Moved SQLParseElement and SQLQueryParms into their own
+	  module, qparms.
 
 	o Added multiple result set handling to Query.	MySQL 4.1
 	  and higher allow you to give multiple SQL statements in a
@@ -200,9 +197,9 @@
 	  this received from Kevin Atkinson and MySQL AB.
 
 	o Added ABI and API breakages chapter to user manual.  It
-	  is basically a subset of this ChangeLog, focusing only
-	  on the information an end-user needs to know when migrating
-	  between versions.
+	  is basically a subset of this ChangeLog, with only the
+	  information an end-user must know when migrating between
+	  versions.
 
 	o Reworked user manual's DocBook code quite a bit after
 	  reading Bob Stayton's book "DocBook XSL" 3/e.  Better
@@ -210,9 +207,9 @@
 	  DocBook features, prettier output (especially the HTML
 	  version), etc.
 
-	o Basically rewrote doc/userman/README to make it clearer
-	  how to get started contributing to the user manual.  It's
-	  basically a "getting started with DocBook" guide now!
+	o Rewrote doc/userman/README to make it clearer how to get
+	  started contributing to the user manual.  It's essentially a
+	  "getting started with DocBook" guide now!
 
 	o Lots of small text improvements to user and reference
 	  manuals.  Aside from the obvious tracking of library

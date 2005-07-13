@@ -1,18 +1,20 @@
 The user manual is written in XML DocBook format, version 4.2.
-(Why this version?  It's what comes with Red Hat Linux 9, the oldest
-system I still use.)  We restrict ourselves to Simplified DocBook
-1.1 as much as possible.
+It uses the official DocBook XSL stylesheets, and will build with
+versions as old as 1.58.1.  (Why these versions?  They're what comes
+with Red Hat Linux 9, the oldest system I still use.)  We restrict
+ourselves to Simplified DocBook 1.1 as much as practical, to make it
+easier for new people to get started hacking on the manual.
 
 To make the HTML version of the user manual, just type 'make' in this
-directory.  (Or 'make html' if you want to be precise.)  To make the
+directory.  (Or 'make html' if you want to be pedantic.)  To make the
 PDF version of the manual, say 'make pdf'.  To make both versions,
 say 'make all'.
 
 
 
 The most likely cause of build failures is not having the right
-processing programs installed.  Here's a simplified version of the
-DocBook processing model:
+processing programs installed.  The DocBook processing model looks
+like this:
 
     DocBook --[XSLT proc.]-+-> HTML
                    ^       |
@@ -25,29 +27,24 @@ it's in userman.xml.
 
 There are many alternatives for the tools in the square brackets:
 
-	The first is an XSLT processor, which is designed to
-	translate XML into other text formats, including other
+	The first replaceable piece is an XSLT processor, which
+	translates XML into other text formats, such as HTML or other
 	varieties of XML.  We use xsltproc from the Gnome project.
-	(http://xmlsoft.org/XSLT/)
-	
-	There are numerous other XSLT processors out there, but
-	changing to another will require some work, as no XSLT
-	processor supports the standard to the same degree as all
-	others, and each has extensions that the others do not.
-	The two that will likely give you the least pain are Saxon
-	(http://saxon.sourceforge.net) and the Apache Project's Xalan
-	(http://xml.apache.org/xalan-j).
+	(http://xmlsoft.org/XSLT/)  There are numerous alternatives,
+	but each supports different extensions to the standard,
+	so it's simplest if everyone uses the same processor for a
+	given document.
 
-	An XSLT processor can translate from DocBook to HTML directly,
-	because it's a pretty straightforward conversion.  (The DocBook
-	format looks a lot like HTML.)
+	We use the XSLT processor to do two transforms.  One is
+	directly to HTML.  The other is to XSL-FO, an XML-based page
+	layout language.  We do this intermediary transform because
+	XSLT is not good at creating binary formats like PDF.
 
-	To get to PDF requires a bit more work.  XSLT isn't really
-	designed to produce binary file formats like PDF.  So, the
-	W3C defined XSL-FO, an XML-based page description language.
-	We use FOP from the Apache Project (http://xml.apache.org/fop/)
-	to translate XML-FO into PDF, because it's the best of the
-	free-as-in-freedom XSL-FO processors.
+	The second replaceable piece in the diagram above is an
+	XSL-FO processor, which converts XSL-FO to a more directly
+	useful page layout format, like PDF.  We've chosen FOP from
+	the Apache Project (http://xml.apache.org/fop/), because it's
+	the best of the free-as-in-freedom XSL-FO processors.
 
 	FOP isn't without its faults.  If you'd like to try some of
 	the commercial XSL-FO processors, RenderX's XEP (renderx.com)
@@ -60,11 +57,14 @@ There are many alternatives for the tools in the square brackets:
 	for under $100.
 
 The third replaceable piece above is the DocBook XSL stylesheet set.
-If you don't have them on your system, the XSLT processor will try
-to download them using your Internet connection during processing.
-This slows processing quite a bit even if you have a fast Internet
-connection, and it obviously doesn't work when your net connection
-is down.
+The stylesheets are the XSLT processor's rules, controlling how
+the input XML gets transformed to the output format.  The standard
+DocBook stylesheet set (link below) includes stylesheets for HTML
+and XSL-FO output.  If you don't have them on your system, the XSLT
+processor will try to download them using your Internet connection
+during processing.  This slows processing quite a bit even if you
+have a fast Internet connection, and it obviously doesn't work when
+your net connection is down.
 
 A better option is to have a copy of the stylesheets on your system.
 It's likely that there is a pre-built package for your system:

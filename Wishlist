@@ -28,6 +28,15 @@ Final v2.0 Stuff
 
 	o Decide what to do about subscript_iterator bugs.
 
+	o Reinvestigate Row::operator[](size_t) problems.  It may be
+	  possible to have that overload, and simply make one of its
+	  limitations that you cannot say r[0]; you'd have to use
+	  r.at(0) in that situation instead.  Also, what is the type
+	  used by SSQLS when defining field name constants?  Perhaps
+	  that's the golden road out: r[stock_item], for instance.
+
+	o Try moving VC++ project files to /W4.
+
 
 Future Features
 ---------------
