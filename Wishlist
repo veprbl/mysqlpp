@@ -35,7 +35,16 @@ Final v2.0 Stuff
 	  used by SSQLS when defining field name constants?  Perhaps
 	  that's the golden road out: r[stock_item], for instance.
 
-	o Try moving VC++ project files to /W4.
+	o Make something like examples/Makefile.simple for the library as
+	  well.  These Makefiles should be configurable to support free
+	  Microsoft and Borland compilers, plus GCC on all standard
+	  platforms plus MinGW.  Make them support threading, optionally,
+	  on all platforms.  Drop VC++ project files, as they will be
+	  unnecessary and a stumbling point during VS 2003 to 2005
+	  changeover.
+	
+	o Build under VC++ with /W4.  If we can squish all warnings that
+	  result, make this change permanent.
 
 
 Future Features
@@ -252,14 +261,6 @@ Bug Fix/Maintenance Items
 	  standard command line parameters, so you can manually load up
 	  some images for cgi_image to retrieve.
 
-	o Make something like examples/Makefile.simple for the library as
-	  well.  These Makefiles should be configurable to support free
-	  Microsoft and Borland compilers, plus GCC on all standard
-	  platforms plus MinGW.  Make them support threading, optionally,
-	  on all platforms.  Drop VC++ project files, as they will be
-	  unnecessary and a stumbling point during VS 2003 to 2005
-	  changeover.
-	
 	o MinGW can't build a DLL for MySQL++.  It has to do with the file
 	  reorganization in 1.7.20: if you move everything from row.cc to
 	  a new row2.h file and include it in a few strategic locations, it
