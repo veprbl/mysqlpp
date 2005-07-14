@@ -1940,6 +1940,20 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 			<title>v2.0.0</title>
 
 			<sect4>
+				<title>Library-wide changes</title>
+				
+				<para>All distributed Makefiles and
+				project files only build dynamic
+				libraries. (Shared objects on most
+				Unices, DLLs on Windows, etc.) Unless
+				your program is licensed under the GPL
+				or LGPL, you shouldn't have been using
+				the static libraries from previous
+				versions anyway.</para>
+			</sect4>
+
+
+			<sect4>
 				<title>Connection class changes</title>
 
 				<itemizedlist>
