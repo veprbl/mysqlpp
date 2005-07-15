@@ -51,6 +51,7 @@ public:
 	template <class Type> operator Type()
 	{
 		throw BadNullConversion();
+		return Type();
 	}
 #endif // !defined(DOXYGEN_IGNORE)
 };
