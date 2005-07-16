@@ -466,12 +466,14 @@ protected:
 	/// above.
 	bool set_option_impl(mysql_option moption, const void* arg = 0);
 
+#if MYSQL_VERSION_ID >= 40101
 	/// \brief Set MySQL C API connection option
 	///
 	/// Wraps \c mysql_set_server_option() in C API.  This is an
 	/// internal implementation detail, to be used only by the public
 	/// overloads above.
 	bool set_option_impl(enum_mysql_set_option msoption);
+#endif
 
 private:
 	friend class ResNSel;

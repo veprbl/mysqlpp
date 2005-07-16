@@ -159,9 +159,11 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 	if (compress) {
 		set_option(opt_compress);
 	}
+#if MYSQL_VERSION_ID >= 40101
 	if (option_pending(opt_multi_statements, true)) {
 		client_flag |= CLIENT_MULTI_STATEMENTS;
 	}
+#endif
 
 	// Establish connection
 	if (mysql_real_connect(&mysql_, host, user, passwd, db, port,
@@ -365,12 +367,13 @@ Connection::set_option(Option option, unsigned int arg)
 			case opt_connect_timeout:
 				return set_option_impl(MYSQL_OPT_CONNECT_TIMEOUT, &arg);
 
-			case opt_protocol:
-				return set_option_impl(MYSQL_OPT_PROTOCOL, &arg);
-
 			case opt_local_infile:
 				return set_option_impl(MYSQL_OPT_LOCAL_INFILE, &arg);
 
+#if MYSQL_VERSION_ID >= 40100
+			case opt_protocol:
+				return set_option_impl(MYSQL_OPT_PROTOCOL, &arg);
+#endif
 #if MYSQL_VERSION_ID >= 40101
 			case opt_read_timeout:
 				return set_option_impl(MYSQL_OPT_READ_TIMEOUT, &arg);
@@ -432,11 +435,13 @@ Connection::set_option_impl(mysql_option moption, const void* arg)
 }
 
 
+#if MYSQL_VERSION_ID >= 40101
 bool
 Connection::set_option_impl(enum_mysql_set_option msoption)
 {
 	return !mysql_set_server_option(&mysql_, msoption);
 }
+#endif
 
 
 bool
