@@ -1,4 +1,4 @@
-2.0.0 beta 1, 2005.07.05 (r882) The "Post-Fireworks" release
+2.0.0 beta 2, 2005.07.15 (r931)
 
 	THIS IS NOT A DROP-IN REPLACEMENT FOR MySQL++ v1.7!
 
@@ -95,14 +95,14 @@
 	  manual, with the cost being that some programs will see
 	  new exceptions thrown that they're not expecting.
 
-	o Added a bunch of new exception types: ConnectionFailed,
-	  DBSelectionFailed, EndOfResults, EndOfResultSets, LockFailed,
-	  and ObjectNotInitialized.  Some of these replace the use of
-	  BadQuery, which in v1.7.x was a kind of generic exception,
-	  thrown when something more specific wasn't available.
-	  Beware, this means that programs may start crashing after
-	  recompiling them under v2.0 due to uncaught exceptions,
-	  if they were only trying to catch BadQuery.
+	o Added a bunch of new exception types: BadOption,
+	  ConnectionFailed, DBSelectionFailed, EndOfResults,
+	  EndOfResultSets, LockFailed, and ObjectNotInitialized.
+	  Some of these replace the use of BadQuery, which in v1.7.x
+	  was a kind of generic exception, thrown when something more
+	  specific wasn't available.  Beware, this means that programs
+	  may start crashing after recompiling them under v2.0 due to
+	  uncaught exceptions, if they were only trying to catch BadQuery.
 
 	  There are additional instances where the library will
 	  throw new exceptions.  One is when calling a method that
@@ -151,7 +151,8 @@
 	  single "store" call, which requires extensions to MySQL++
 	  so you can iterate through the multiple result sets.	Also,
 	  stored procedures in MySQL 5.0 reportedly return multiple
-	  result sets.
+	  result sets.	Thanks for the initial patch go to Arnon Jalon;
+	  I reworked it quite a bit.
 
 	o Collapsed mysql_* date and time base classes' methods and
 	  data into the subclasses.  Also, DateTime no longer derives
@@ -192,19 +193,23 @@
 	  couldn't make the conversion from raw MySQL row data.
 
 	o Fixed a bunch of GCC 4.0 pedantic warnings: added virtual
-	  dtors to all base classes, calling base class ctors from
-	  leaf classes, etc.
+	  dtors to all base classes, calling base class ctors from leaf
+	  classes, etc.
 
 	o All warnings fixed under VC++ at warning level 3.  (Mostly
 	  harmless signedness and integer conversion stuff.)
+
+	o VC++ projects creates a DLL version of the library only now, so
+	  there's no excuse for LGPL violations now.  This same mechanism
+	  should make DLL builds under other Windows compilers easy.
 
 	o Updated LGPL license/copyright comments at the top of
 	  several files to use FSF's new physical address.
 
 	o Relicensed user manual under a close variant of the Linux
 	  Documentation Project License, as it's designed for
-	  documentation, which the LGPL is not.  Permission for
-	  this received from Kevin Atkinson and MySQL AB.
+	  documentation, which the LGPL is not.  Permission for this
+	  received from Kevin Atkinson and MySQL AB.
 
 	o Added ABI and API breakages chapter to user manual.  It
 	  is basically a subset of this ChangeLog, with only the
@@ -212,18 +217,22 @@
 	  versions.
 
 	o Reworked user manual's DocBook code quite a bit after
-	  reading Bob Stayton's book "DocBook XSL" 3/e.  Better
-	  handling of stylesheets, taking advantage of some superior
-	  DocBook features, prettier output (especially the HTML
-	  version), etc.
+	  reading Bob Stayton's book "DocBook XSL" 3/e.  Better handling
+	  of stylesheets, taking advantage of some superior DocBook
+	  features, prettier output (especially the HTML version), etc.
 
 	o Rewrote doc/userman/README to make it clearer how to get
 	  started contributing to the user manual.  It's essentially a
 	  "getting started with DocBook" guide now!
 
 	o Lots of small text improvements to user and reference
-	  manuals.  Aside from the obvious tracking of library
-	  changes, made a bunch of minor style and clarity improvements.
+	  manuals.  Aside from the obvious tracking of library changes,
+	  made a bunch of minor style and clarity improvements.
+
+	o Added CSS stylesheets for userman and refman to
+	  make the HTML versions of each a) not ugly; and b) match
+	  tangentsoft.net.  (Yes, some may say that these are incompatible
+	  goals....)
 
 	o Standardized exception handling code in the examples that
 	  use it.
@@ -233,8 +242,8 @@
 
 	o Added new simple2 and usequery examples, to demonstrate
 	  the proper way to handle a "use" query, with exceptions
-	  disabled, and not, respectively.  Added them to the user
-	  manual, in the appropriate place.
+	  disabled, and not, respectively.  Added them to the user manual,
+	  in the appropriate place.
 
 	o Refactored the "print stock table" example functions
 	  again, to make code using them clearer.
@@ -250,6 +259,12 @@
 	  face of database errors.
 
 	o Simplified connect_to_db() in examples' util module.
+
+	o Lots and lots of minor cleanups not worth mentioning
+	  individually...
+
+	o Added sample autoconf macro for finding MySQL++ libraries, for
+	  people to use in their own autotools-based projects.
 
 
 1.7.40, 2005.05.26 (r719)
