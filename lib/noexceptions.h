@@ -78,8 +78,8 @@ protected:
 	/// subclasses' copy constructors and the like.
 	MYSQLPP_EXPORT void set_exceptions(bool e) { exceptions_ = e; }
 
-	// NoExceptions needs to be our friend to access the protected
-	// functions above.
+	/// \brief Declare NoExceptions to be our friend so it can access
+	/// our protected functions.
 	friend class NoExceptions;
 
 private:

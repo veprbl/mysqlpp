@@ -46,6 +46,8 @@ class Query;
 class SQLQueryParms : public std::vector<SQLString>
 {
 public:
+	/// \brief Abbreviation so some of the declarations below don't
+	/// span many lines.
 	typedef const SQLString& ss;
 
 	/// \brief Default constructor
@@ -95,7 +97,7 @@ public:
 	MYSQLPP_EXPORT SQLString& operator [](const char *str);
 
 	/// \brief Access the value of the element with a key of str.
-	MYSQLPP_EXPORT const SQLString& operator [](cchar *str) const;
+	MYSQLPP_EXPORT const SQLString& operator [](const char *str) const;
 
 	/// \brief Adds an element to the list
 	MYSQLPP_EXPORT SQLQueryParms& operator <<(const SQLString& str)

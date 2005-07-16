@@ -51,6 +51,7 @@ template <class T>
 class scoped_var_set
 {
 public:
+	/// \brief Create object, saving old value, setting new value
 	scoped_var_set(T& var, T new_value) :
 	var_(var)
 	{
@@ -58,6 +59,7 @@ public:
 		var_ = new_value;
 	}
 
+	/// \brief Destroy object, restoring old value
 	~scoped_var_set()
 	{
 		var_ = old_value_;

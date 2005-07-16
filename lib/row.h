@@ -419,7 +419,7 @@ public:
 	/// between the items, " = " is the relationship operator, and items
 	/// will be quoted and escaped.
 	MYSQLPP_EXPORT equal_list_ba<FieldNames, Row, quote_type0>
-			equal_list(cchar* d = ",", cchar* e = " = ") const;
+			equal_list(const char* d = ",", const char* e = " = ") const;
 
 	/// \brief Get an "equal list" of the fields and values in this row
 	///
