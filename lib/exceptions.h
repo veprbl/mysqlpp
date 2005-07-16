@@ -168,6 +168,26 @@ public:
 };
 
 
+/// \brief Exception thrown when you pass an unrecognized option to
+/// Connection::set_option().
+
+class BadOption : public Exception
+{
+public:
+	/// \brief Create exception object, taking C string
+	MYSQLPP_EXPORT explicit BadOption(const char* w) :
+	Exception(w)
+	{
+	}
+
+	/// \brief Create exception object, taking C++ string
+	MYSQLPP_EXPORT explicit BadOption(const std::string& w) :
+	Exception(w)
+	{
+	}
+};
+
+
 /// \brief Exception thrown when not enough query parameters are
 /// provided.
 ///

@@ -38,12 +38,14 @@
 #include <vector>
 
 using namespace std;
+using namespace mysqlpp;
+
 
 typedef vector<int> IntVectorType;
 
 
 static void
-print_header(IntVectorType& widths, mysqlpp::Result& res)
+print_header(IntVectorType& widths, Result& res)
 {
 	cout << "  |" << setfill(' ');
 	for (size_t i = 0; i < res.names().size(); i++) {
@@ -54,7 +56,7 @@ print_header(IntVectorType& widths, mysqlpp::Result& res)
 
 
 static void
-print_row(IntVectorType& widths, mysqlpp::Row& row)
+print_row(IntVectorType& widths, Row& row)
 {
 	cout << "  |" << setfill(' ');
 	for (size_t i = 0; i < row.size(); i++) {
@@ -76,7 +78,7 @@ print_row_separator(IntVectorType& widths)
 
 
 static void
-print_result(mysqlpp::Result& res, int index)
+print_result(Result& res, int index)
 {
 	// Show how many rows are in result, if any
 	int num_results = res.size();
@@ -93,7 +95,7 @@ print_result(mysqlpp::Result& res, int index)
 	IntVectorType widths;
 	int size = res.columns();
 	for (int i = 0; i < size; i++) {
-		mysqlpp::mysql_type_info mti(res.fields(i));
+		mysql_type_info mti(res.fields(i));
 		widths.push_back((res.names(i).size() > mti.max_length()) ?
 				res.names(i).size() : mti.max_length());
 	}
@@ -105,7 +107,7 @@ print_result(mysqlpp::Result& res, int index)
 
 	// Display the result set contents
 	for (int i = 0; i < num_results; ++i) {
-		mysqlpp::Row row = res.fetch_row();
+		Row row = res.fetch_row();
 		print_row(widths, row);
 	}
 
@@ -115,18 +117,18 @@ print_result(mysqlpp::Result& res, int index)
 
 
 static void
-print_multiple_results(mysqlpp::Query& query)
+print_multiple_results(Query& query)
 {
 	try {
 		// Execute query and print all result sets
-		mysqlpp::Result res = query.store();
+		Result res = query.store();
 		print_result(res, 0);
 		for (int i = 1; query.more_results(); ++i) {
 			res = query.store_next();
 			print_result(res, i);
 		}
 	}
-	catch (mysqlpp::Exception& err) {
+	catch (Exception& err) {
 		// Something bad happened....
 		cerr << "Multi-query failure: " << err.what() << endl;
 		exit(1);
@@ -137,33 +139,28 @@ print_multiple_results(mysqlpp::Query& query)
 int
 main(int argc, char *argv[])
 {
-	// Connect to the sample database.  We disable exceptions until conn
-	// is up, because we have no good reason to use them yet.  Don't
-	// disable them outright, because we do want exceptions later on.
-	mysqlpp::Connection con;
+	Connection con;
 	{
-		mysqlpp::NoExceptions ne(con);
+		// Disable exceptions until conn is up, because we don't want to
+		// bother with them for these first steps.
+		NoExceptions ne(con);
+
+		// Connect to database
 		if (!connect_to_db(argc, argv, con)) {
+			return 1;
+		}
+
+		// Enable multi-queries.
+		if (!con.set_option(Connection::opt_multi_statements_on)) {
+			cerr << "Multi-queries not supported.  Please rebuild "
+					"the program" << endl;
+			cerr << "against MySQL C API v4.1 or higher." << endl;
 			return 1;
 		}
 	}
 
-#if MYSQL_VERSION_ID >= 41000
-	// Enable multi-queries.  Only available on MySQL 4.1 and higher.
-	if (!con.set_option(MYSQL_OPTION_MULTI_STATEMENTS_ON)) {
-		cerr << "Your server doesn't support multi-queries." << endl;
-		return 1;
-	}
-#else
-	cerr << "ERROR: This example only works on MySQL v4.1 and "
-			"higher," << endl;
-	cerr << "and for full functionality you need to use v5.0 or "
-			"higher." << endl << endl;
-	return 2;
-#endif
-
 	// Set up query with multiple queries.
-	mysqlpp::Query query = con.query();
+	Query query = con.query();
 	query << "DROP TABLE IF EXISTS test_table;" << endl <<
 			"CREATE TABLE test_table(id INT);" << endl <<
 			"INSERT INTO test_table VALUES(10);" << endl <<
@@ -176,7 +173,8 @@ main(int argc, char *argv[])
 	print_multiple_results(query);
 
 #if MYSQL_VERSION_ID >= 50000
-	// If it's MySQL v5.0 or higher, also test stored procedures.
+	// If it's MySQL v5.0 or higher, also test stored procedures, which
+	// return their results the same way multi-queries do.
 	query.reset();
 	query << "DROP PROCEDURE IF EXISTS get_stock;" << endl <<
 			"CREATE PROCEDURE get_stock" << endl <<

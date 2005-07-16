@@ -81,7 +81,8 @@ Connection::~Connection()
 }
 
 
-bool Connection::connect(cchar* db, cchar* host, cchar* user,
+bool
+Connection::connect(cchar* db, cchar* host, cchar* user,
 		cchar* passwd, uint port, my_bool compress,
 		unsigned int connect_timeout, cchar* socket_name,
 		unsigned int client_flag)
@@ -142,7 +143,8 @@ Connection::drop_db(const std::string& db)
 }
 
 
-bool Connection::select_db(const char *db)
+bool
+Connection::select_db(const char *db)
 {
 	bool suc = !(mysql_select_db(&mysql_, db));
 	if (throw_exceptions() && !suc) {
@@ -154,7 +156,8 @@ bool Connection::select_db(const char *db)
 }
 
 
-bool Connection::reload()
+bool
+Connection::reload()
 {
 	bool suc = !mysql_reload(&mysql_);
 	if (throw_exceptions() && !suc) {
@@ -170,7 +173,8 @@ bool Connection::reload()
 }
 
 
-bool Connection::shutdown()
+bool
+Connection::shutdown()
 {
 	bool suc = !(mysql_shutdown(&mysql_ SHUTDOWN_ARG));
 	if (throw_exceptions() && !suc) {
@@ -182,7 +186,8 @@ bool Connection::shutdown()
 }
 
 
-string Connection::info()
+string
+Connection::info()
 {
 	const char* i = mysql_info(&mysql_);
 	if (!i) {
@@ -194,10 +199,133 @@ string Connection::info()
 }
 
 
-Query Connection::query()
+Query
+Connection::query()
 {
 	return Query(this, throw_exceptions());
 }
+
+
+bool
+Connection::set_option(Option option, const char* arg)
+{
+	switch (option) {
+		case opt_connect_timeout:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_CONNECT_TIMEOUT, arg);
+
+		case opt_compress:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_COMPRESS, arg);
+
+		case opt_named_pipe:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_NAMED_PIPE, arg);
+
+		case opt_init_command:
+			return !mysql_options(&mysql_,
+					MYSQL_INIT_COMMAND, arg);
+
+		case opt_read_default_file:
+			return !mysql_options(&mysql_,
+					MYSQL_READ_DEFAULT_FILE, arg);
+
+		case opt_read_default_group:
+			return !mysql_options(&mysql_,
+					MYSQL_READ_DEFAULT_GROUP, arg);
+
+		case opt_set_charset_dir:
+			return !mysql_options(&mysql_,
+					MYSQL_SET_CHARSET_DIR, arg);
+
+		case opt_set_charset_name:
+			return !mysql_options(&mysql_,
+					MYSQL_SET_CHARSET_NAME, arg);
+
+		case opt_local_infile:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_LOCAL_INFILE, arg);
+
+		case opt_protocol:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_PROTOCOL, arg);
+
+		case opt_shared_memory_base_name:
+			return !mysql_options(&mysql_,
+					MYSQL_SHARED_MEMORY_BASE_NAME, arg);
+
+		case opt_read_timeout:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_READ_TIMEOUT, arg);
+
+		case opt_write_timeout:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_WRITE_TIMEOUT, arg);
+
+		case opt_use_result:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_USE_RESULT, arg);
+
+		case opt_use_remote_connection:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_USE_REMOTE_CONNECTION, arg);
+
+		case opt_use_embedded_connection:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_USE_EMBEDDED_CONNECTION, arg);
+
+		case opt_guess_connection:
+			return !mysql_options(&mysql_,
+					MYSQL_OPT_GUESS_CONNECTION, arg);
+
+		case opt_set_client_ip:
+			return !mysql_options(&mysql_,
+					MYSQL_SET_CLIENT_IP, arg);
+
+		case opt_secure_auth:
+			return !mysql_options(&mysql_,
+					MYSQL_SECURE_AUTH, arg);
+
+#if MYSQL_VERSION_ID >= 40100
+		case opt_multi_statements_on:
+			return !mysql_set_server_option(&mysql_,
+					MYSQL_OPTION_MULTI_STATEMENTS_ON);
+
+		case opt_multi_statements_off:
+			return !mysql_set_server_option(&mysql_,
+					MYSQL_OPTION_MULTI_STATEMENTS_OFF);
+#endif
+
+		default:
+			// Unrecognized option value.
+			if (throw_exceptions()) {
+				if ((option >= opt_connect_timeout) &&
+						(option <= opt_multi_statements_off)) {
+					// Value is in range, but it must have been ifdef'd
+					// out above.
+					const int major = MYSQL_VERSION_ID / 10000;
+					const int minor = (MYSQL_VERSION_ID -
+							(major * 10000)) / 100;
+					const int bug = MYSQL_VERSION_ID -
+							(major * 10000) - (minor * 100);
+					ostringstream os;
+					os << "option not supported in MySQL C API v" <<
+							major << '.' << minor << '.' << bug;
+					throw BadOption(os.str());
+				}
+				else {
+					// Caller cast a bogus value to Option type, or it's
+					// a program built against a newer API but linking
+					// to an older library.
+					throw BadOption("unknown option value");
+				}
+			}
+			else {
+				return false;
+			}
+	}
+}
+
 
 } // end namespace mysqlpp
 

@@ -55,6 +55,36 @@ class Query;
 class Connection : public OptionalExceptions, public Lockable
 {
 public:
+	/// \brief Per-connection options you can set with set_option()
+	enum Option 
+	{
+		opt_connect_timeout,
+		opt_compress,
+		opt_named_pipe,
+		opt_init_command,
+		opt_read_default_file,
+		opt_read_default_group,
+		opt_set_charset_dir,
+		opt_set_charset_name,
+		opt_local_infile,
+		opt_protocol,
+		opt_shared_memory_base_name,
+		opt_read_timeout,
+		opt_write_timeout,
+		opt_use_result,
+		opt_use_remote_connection,
+		opt_use_embedded_connection,
+		opt_guess_connection,
+		opt_set_client_ip,
+		opt_secure_auth,
+
+		// Turn on multi-query statement support; no argument
+		opt_multi_statements_on,
+
+		// Turn off multi-query statement support; no argument
+		opt_multi_statements_off,
+	};
+
 	/// \brief Create object without connecting it to the MySQL server.
 	///
 	/// \param te if true, exceptions are thrown on errors
@@ -306,31 +336,21 @@ public:
 		return mysql_.options;
 	}
 
-	/// \brief Sets the given MySQL server option
+	/// \brief Sets a per-connection option
 	///
-	/// Wraps \c mysql_set_server_option() in the C API, except that
-	/// it returns true for success, instead of 0.  Because that
-	/// function only exists in MySQL v4.1 and higher, this function
-	/// always returns false when built against older APIs.
-	MYSQLPP_EXPORT bool set_option(int option)
-	{
-#		if MYSQL_VERSION_ID > 41000
-			return !mysql_set_server_option(&mysql_,
-					static_cast<enum enum_mysql_set_option>(option));
-#		else
-			return false;
-#		endif
-	}
-
-	/// \brief Sets the given MySQL connection option
+	/// \param option any of the Option enum constants
+	/// \param arg optional argument; see enum definition to see which
+	/// ones take an argument
 	///
-	/// Wraps \c mysql_option() in the C API, except that it returns
-	/// true for success, instead of 0.
-	MYSQLPP_EXPORT bool set_option(int option, const char* arg)
-	{
-		return !mysql_options(&mysql_,
-				static_cast<enum mysql_option>(option), arg);
-	}
+	/// The Option enum is currently a combination of the MySQL C API
+	/// \c mysql_option and \c enum_mysql_set_option enums.  Based on
+	/// the option you give, this function calls either
+	/// \c mysql_options() or \c mysql_set_server_option() in the C API.
+	/// This mechanism may be extended in ways not so clearly parallel
+	/// to the MySQL C API in the future.  Indeed, its very purpose is
+	/// to 'paper over' the differences between these two enums and
+	/// functions; further abstraction is certainly possible.
+	MYSQLPP_EXPORT bool set_option(Option option, const char* arg = 0);
 
 	/// \brief Return the number of rows affected by the last query
 	///

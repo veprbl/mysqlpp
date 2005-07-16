@@ -13,13 +13,6 @@ widely useful.  Patches or proposals of this sort are always welcome.
 Final v2.0 Stuff
 ----------------
 
-	o Instead of using int parameters for Connection::set_option()
-	  methods, define a new set of enums parallel to the MySQL C API
-	  ones.  These can then be extended with other API settings later.
-
-	  Alternately, turn set_option() into a bunch of member functions,
-	  one for each option.
-	 
 	o Add SSL-enabling support.  Make it one of the new options, instead
 	  of wrapping C API directly?
 

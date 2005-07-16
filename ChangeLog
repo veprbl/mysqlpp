@@ -57,8 +57,11 @@
 	  connect() function.  Then changed user manual and examples
 	  to use new APIs.
 
-	o Renamed Connection::read_option() to set_option() and
-	  made it return true/false on success instead of zero/nonzero.
+	o Replaced Connection::read_option() with new set_option()
+	  mechanism.  The name change matches the method's purpose
+	  better.  The new method returns true on success instead of
+	  0, and it supports a new, and it supports a broader set of
+	  options than read_option() did.
 
 	o Removed query-building functions (exec*(), store*(),
 	  use()) from class Connection, and moved all the implementation

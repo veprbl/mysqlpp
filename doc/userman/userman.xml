@@ -1994,13 +1994,19 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 					you will have to change it to
 					<computeroutput>connect()</computeroutput>.</para></listitem>
 
-					<listitem><para>Renamed
+					<listitem><para>Replaced
 					<computeroutput>Connection::read_option()</computeroutput>
-					to
-					<computeroutput>set_option()</computeroutput>,
-					and made it return true
-					on success instead of
-					0.</para></listitem>
+					with new
+					<computeroutput>set_option()</computeroutput>
+					mechanism. In addition
+					to changing the name,
+					programs using this function
+					will have to use the new
+					<computeroutput>Connection::Option</computeroutput>
+					enumerated values, and accept a
+					<computeroutput>true</computeroutput>
+					return value as meaning success
+					instead of 0.</para></listitem>
 				</itemizedlist>
 			</sect4>
 
