@@ -31,6 +31,8 @@
 #ifndef MYSQLPP_EXCEPTIONS_H
 #define MYSQLPP_EXCEPTIONS_H
 
+#include "connection.h"
+
 #include <exception>
 #include <string>
 
@@ -175,16 +177,26 @@ class BadOption : public Exception
 {
 public:
 	/// \brief Create exception object, taking C string
-	MYSQLPP_EXPORT explicit BadOption(const char* w) :
-	Exception(w)
+	MYSQLPP_EXPORT explicit BadOption(const char* w,
+			Connection::Option o) :
+	Exception(w),
+	option_(o)
 	{
 	}
 
 	/// \brief Create exception object, taking C++ string
-	MYSQLPP_EXPORT explicit BadOption(const std::string& w) :
-	Exception(w)
+	MYSQLPP_EXPORT explicit BadOption(const std::string& w,
+			Connection::Option o) :
+	Exception(w),
+	option_(o)
 	{
 	}
+
+	/// \brief Return the option that failed
+	Connection::Option what_option() const { return option_; }
+
+private:
+	Connection::Option option_;
 };
 
 

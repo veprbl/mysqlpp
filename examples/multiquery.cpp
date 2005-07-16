@@ -156,8 +156,14 @@ main(int argc, char *argv[])
 		}
 	}
 	catch (const BadOption& err) {
-		cerr << "Failed to set multi-query option: " << err.what() <<
-				endl;
+		if (err.what_option() == Connection::opt_multi_statements) {
+			cerr << "This example only works when MySQL++ is built "
+					"against MySQL C API" << endl;
+			cerr << "version 4.1.01 or later." << endl;
+		}
+		else {
+			cerr << "Unexpected option failure: " << err.what() << endl;
+		}
 		return 1;
 	}
 	catch (const ConnectionFailed& err) {

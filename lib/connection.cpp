@@ -471,7 +471,7 @@ Connection::bad_option_type(Option option)
 		else {
 			os << " requires an argument of type " << type;
 		}
-		throw BadOption(os.str());
+		throw BadOption(os.str(), option);
 	}
 
 	return false;
@@ -489,7 +489,7 @@ Connection::bad_option_value(Option option)
 		ostringstream os;
 		os << "option " << option << " not supported in MySQL C API v";
 		api_version(os);
-		throw BadOption(os.str());
+		throw BadOption(os.str(), option);
 	}
 
 	return false;
@@ -505,7 +505,7 @@ Connection::option_arg_type(Option option)
 	else {
 		// Non-optional exception.  Something is wrong with the library
 		// internals if this one is thrown.
-		BadOption("bad value given to option_arg_type()");
+		BadOption("bad value given to option_arg_type()", option);
 	}
 }
 
@@ -552,7 +552,7 @@ Connection::apply_pending_options()
 					case opt_type_boolean:	os << it->bool_arg; break;
 				}
 			}
-			throw BadOption(os.str());
+			throw BadOption(os.str(), it->option);
 		}
 	}
 
