@@ -16,9 +16,6 @@ Final v2.0 Stuff
 	o Add SSL-enabling support.  Make it one of the new options, instead
 	  of wrapping C API directly?
 
-	o Look into stored procedure failure when you don't set
-	  "multi-query" option on connection creation.
-
 	o Decide what to do about subscript_iterator bugs.
 
 	o Reinvestigate Row::operator[](size_t) problems.  It may be
@@ -38,6 +35,10 @@ Final v2.0 Stuff
 	
 	o Build under VC++ with /W4.  If we can squish all warnings that
 	  result, make this change permanent.
+
+	o GCC slist extension stuff doesn't work right under GCC 3.0: the
+	  template is actually in namespace std!  Extend autoconf test so
+	  that it detects this case.
 
 
 Future Features
