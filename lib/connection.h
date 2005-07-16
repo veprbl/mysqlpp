@@ -44,6 +44,7 @@
 
 #include <mysql.h>
 
+#include <deque>
 #include <string>
 
 namespace mysqlpp {
@@ -56,9 +57,17 @@ class Connection : public OptionalExceptions, public Lockable
 {
 public:
 	/// \brief Per-connection options you can set with set_option()
+	///
+	/// This is currently a combination of the MySQL C API
+	/// \c mysql_option and \c enum_mysql_set_option enums.  It may
+	/// be extended in the future.
 	enum Option 
 	{
-		opt_connect_timeout,
+		// Symbolic "first" option, before real options.  Never send
+		// this to set_option()!
+		opt_FIRST = -1,
+		
+		opt_connect_timeout = 0,
 		opt_compress,
 		opt_named_pipe,
 		opt_init_command,
@@ -78,11 +87,15 @@ public:
 		opt_set_client_ip,
 		opt_secure_auth,
 
-		// Turn on multi-query statement support; no argument
-		opt_multi_statements_on,
+		// Set multi-query statement support; no argument
+		opt_multi_statements,
 
-		// Turn off multi-query statement support; no argument
-		opt_multi_statements_off,
+		// Set reporting of data truncation errors
+		opt_report_data_truncation,
+
+		// Number of options supported.  Never send this to
+		// set_option()!
+		opt_COUNT
 	};
 
 	/// \brief Create object without connecting it to the MySQL server.
@@ -336,21 +349,48 @@ public:
 		return mysql_.options;
 	}
 
-	/// \brief Sets a per-connection option
+	/// \brief Sets a connection option, with no argument
 	///
 	/// \param option any of the Option enum constants
-	/// \param arg optional argument; see enum definition to see which
-	/// ones take an argument
 	///
-	/// The Option enum is currently a combination of the MySQL C API
-	/// \c mysql_option and \c enum_mysql_set_option enums.  Based on
-	/// the option you give, this function calls either
+	/// Based on the option you give, this function calls either
 	/// \c mysql_options() or \c mysql_set_server_option() in the C API.
-	/// This mechanism may be extended in ways not so clearly parallel
-	/// to the MySQL C API in the future.  Indeed, its very purpose is
-	/// to 'paper over' the differences between these two enums and
-	/// functions; further abstraction is certainly possible.
-	MYSQLPP_EXPORT bool set_option(Option option, const char* arg = 0);
+	///
+	/// There are several overloaded versions of this function.  The
+	/// others take an additional argument for the option and differ
+	/// only by the type of the option.  Unlike with the underlying C
+	/// API, it does matter which of these overloads you call: if you
+	/// use the wrong argument type or pass an argument where one is
+	/// not expected (or vice versa), the call will either throw an
+	/// exception or return false, depending on the object's "throw
+	/// exceptions" flag.
+	///
+	/// This mechanism parallels the underlying C API structure fairly
+	/// closely, but do not expect this to continue in the future.
+	/// Its very purpose is to 'paper over' the differences among the
+	/// C API's option setting mechanisms, so it may become further
+	/// abstracted from these mechanisms.
+	///
+	/// \retval true if option was successfully set
+	///
+	/// If exceptions are enabled, a false return means the C API
+	/// rejected the option, or the connection is not established and
+	/// so the option was queued for later processing.  If exceptions
+	/// are disabled, false can also mean that the argument was of the
+	/// wrong type (wrong overload was called), the option value was out
+	/// of range, or the option is not supported by the C API, most
+	/// because it isn't a high enough version. These latter cases will
+	/// cause BadOption exceptions otherwise.
+	MYSQLPP_EXPORT bool set_option(Option option);
+
+	/// \brief Sets a connection option, with string argument
+	MYSQLPP_EXPORT bool set_option(Option option, const char* arg);
+
+	/// \brief Sets a connection option, with integer argument
+	MYSQLPP_EXPORT bool set_option(Option option, unsigned int arg);
+
+	/// \brief Sets a connection option, with Boolean argument
+	MYSQLPP_EXPORT bool set_option(Option option, bool arg);
 
 	/// \brief Return the number of rows affected by the last query
 	///
@@ -371,7 +411,21 @@ public:
 		return mysql_insert_id(&mysql_);
 	}
 
+	/// \brief Insert C API version we're linked against into C++ stream
+	///
+	/// Version will be of the form X.Y.Z, where X is the major version
+	/// number, Y the minor version, and Z the bug fix number.
+	std::ostream& api_version(std::ostream& os);
+
 protected:
+	/// \brief Legal types of option arguments
+	enum OptionArgType {
+		opt_type_none,
+		opt_type_string,
+		opt_type_integer,
+		opt_type_boolean,
+	};
+
 	/// \brief Drop the connection to the database server
 	///
 	/// This method is protected because it should only be used within
@@ -379,14 +433,98 @@ protected:
 	/// object should always be connected.
 	MYSQLPP_EXPORT void disconnect();
 
+	/// \brief Returns true if the given option is to be set once
+	/// connection comes up.
+	///
+	/// \param option option to check for in queue
+	/// \param arg argument to match against
+	bool option_pending(Option option, bool arg) const;
+
+	/// \brief For each option in pending option queue, call
+	/// set_option()
+	///
+	/// Called within connect() method after connection is established.
+	/// Despools options in the order given to set_option().
+	void apply_pending_options();
+
+	/// \brief Generic wrapper for bad_option_*()
+	bool bad_option(Option option, OptionArgType type);
+
+	/// \brief Handles call of incorrect set_option() overload
+	bool bad_option_type(Option option);
+
+	/// \brief Handles bad option values sent to set_option()
+	bool bad_option_value(Option option);
+
+	/// \brief Given option value, return its proper argument type
+	OptionArgType option_arg_type(Option option);
+
+	/// \brief Set MySQL C API connection option
+	///
+	/// Wraps \c mysql_options() in C API.  This is an internal
+	/// implementation detail, to be used only by the public overloads
+	/// above.
+	bool set_option_impl(mysql_option moption, const void* arg = 0);
+
+	/// \brief Set MySQL C API connection option
+	///
+	/// Wraps \c mysql_set_server_option() in C API.  This is an
+	/// internal implementation detail, to be used only by the public
+	/// overloads above.
+	bool set_option_impl(enum_mysql_set_option msoption);
+
 private:
 	friend class ResNSel;
 	friend class ResUse;
 	friend class Query;
 
+	struct OptionInfo {
+		Option option;
+		OptionArgType arg_type;
+		std::string str_arg;
+		unsigned int int_arg;
+		bool bool_arg;
+
+		OptionInfo(Option o) :
+		option(o),
+		arg_type(opt_type_none),
+		int_arg(0),
+		bool_arg(false)
+		{
+		}
+
+		OptionInfo(Option o, const char* a) :
+		option(o),
+		arg_type(opt_type_string),
+		str_arg(a),
+		int_arg(0),
+		bool_arg(false)
+		{
+		}
+
+		OptionInfo(Option o, unsigned int a) :
+		option(o),
+		arg_type(opt_type_integer),
+		int_arg(a),
+		bool_arg(false)
+		{
+		}
+
+		OptionInfo(Option o, bool a) :
+		option(o),
+		arg_type(opt_type_boolean),
+		int_arg(0),
+		bool_arg(a)
+		{
+		}
+	};
+
 	MYSQL mysql_;
 	bool is_connected_;
+	bool connecting_;
 	bool success_;
+	std::deque<OptionInfo> pending_options_;
+	static OptionArgType legal_opt_arg_types_[];
 };
 
 

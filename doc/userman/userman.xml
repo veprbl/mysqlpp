@@ -2003,10 +2003,24 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 					programs using this function
 					will have to use the new
 					<computeroutput>Connection::Option</computeroutput>
-					enumerated values, and accept a
+					enumerated values, accept a
 					<computeroutput>true</computeroutput>
-					return value as meaning success
-					instead of 0.</para></listitem>
+					return value as meaning
+					success instead of 0, and
+					use the proper argument
+					type. Regarding the latter,
+					<computeroutput>read_option()</computeroutput>
+					took a <computeroutput>const
+					char*</computeroutput>
+					argument, but because it was
+					just a thin wrapper over
+					the MySQL C API function
+					<ulink url="mysql-options"
+					type="mysqlapi"/>, the actual
+					value being pointed to could
+					be any of several types. This
+					new mechanism is properly
+					type-safe.</para></listitem>
 				</itemizedlist>
 			</sect4>
 
@@ -2120,6 +2134,7 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 					exception names.</para></listitem>
 
 					<listitem><para>Added
+					<ulink type="classref" url="BadOption"/>,
 					<ulink type="classref" url="ConnectionFailed"/>,
 					<ulink type="classref" url="DBSelectionFailed"/>,
 					<ulink type="classref" url="EndOfResults"/>,
@@ -2206,9 +2221,10 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 
 					<listitem><para>Removed
 					<computeroutput>ResUse::eof()</computeroutput>,
-					as it wraps a deprecated
-					and unnecessary MySQL
-					C API function. See the
+					as it wrapped the deprecated
+					and unnecessary MySQL C API
+					function <ulink url="mysql-eof"
+					type="mysqlapi"/>. See the
 					<computeroutput>simple2</computeroutput>
 					and
 					<computeroutput>usequery</computeroutput>

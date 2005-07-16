@@ -140,23 +140,35 @@ int
 main(int argc, char *argv[])
 {
 	Connection con;
-	{
-		// Disable exceptions until conn is up, because we don't want to
-		// bother with them for these first steps.
-		NoExceptions ne(con);
+	try {
+		// Enable multi-queries.  Notice that we can set connection
+		// options before the connection is established, which the
+		// underlying MySQL C API does not allow.  In this particular
+		// case, this is not a mere nicety: the multi-query option has
+		// a side effect of setting one of the flags used when 
+		// establishing the database server connection.  We could set it
+		// directly, but then we couldn't use connect_to_db().
+		con.set_option(Connection::opt_multi_statements, true);
 
 		// Connect to database
 		if (!connect_to_db(argc, argv, con)) {
 			return 1;
 		}
-
-		// Enable multi-queries.
-		if (!con.set_option(Connection::opt_multi_statements_on)) {
-			cerr << "Multi-queries not supported.  Please rebuild "
-					"the program" << endl;
-			cerr << "against MySQL C API v4.1 or higher." << endl;
-			return 1;
-		}
+	}
+	catch (const BadOption& err) {
+		cerr << "Failed to set multi-query option: " << err.what() <<
+				endl;
+		return 1;
+	}
+	catch (const ConnectionFailed& err) {
+		cerr << "Failed to connect to database server: " <<
+				err.what() << endl;
+		return 1;
+	}
+	catch (const Exception& er) {
+		// Catch-all for any other MySQL++ exceptions
+		cerr << "Error: " << er.what() << endl;
+		return 1;
 	}
 
 	// Set up query with multiple queries.

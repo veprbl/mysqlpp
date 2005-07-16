@@ -42,10 +42,65 @@ using namespace std;
 
 namespace mysqlpp {
 
+/// \brief Sets a variable to a given value temporarily.
+///
+/// Saves existing value, sets new value, and restores old value when
+/// the object is destroyed.  Used to set a flag in an exception-safe
+/// manner.
+template <class T>
+class scoped_var_set
+{
+public:
+	scoped_var_set(T& var, T new_value) :
+	var_(var)
+	{
+		old_value_ = var_;
+		var_ = new_value;
+	}
+
+	~scoped_var_set()
+	{
+		var_ = old_value_;
+	}
+
+private:
+	T& var_;
+	T old_value_;
+};
+
+
+// Initialize table of legal option argument types.
+Connection::OptionArgType
+Connection::legal_opt_arg_types_[Connection::opt_COUNT] = {
+	Connection::opt_type_integer,	// opt_connect_timeout
+	Connection::opt_type_none,		// opt_compress
+	Connection::opt_type_none,		// opt_named_pipe
+	Connection::opt_type_string,	// opt_init_command
+	Connection::opt_type_string,	// opt_read_default_file
+	Connection::opt_type_string,	// opt_read_default_group
+	Connection::opt_type_string,	// opt_set_charset_dir
+	Connection::opt_type_string,	// opt_set_charset_name
+	Connection::opt_type_integer,	// opt_local_infile
+	Connection::opt_type_integer,	// opt_protocol
+	Connection::opt_type_string,	// opt_shared_memory_base_name
+	Connection::opt_type_integer,	// opt_read_timeout
+	Connection::opt_type_integer,	// opt_write_timeout
+	Connection::opt_type_none,		// opt_use_result
+	Connection::opt_type_none,		// opt_use_remote_connection
+	Connection::opt_type_none,		// opt_use_embedded_connection
+	Connection::opt_type_none,		// opt_guess_connection
+	Connection::opt_type_string,	// opt_set_client_ip
+	Connection::opt_type_boolean,	// opt_secure_auth
+	Connection::opt_type_boolean,	// opt_multi_statements
+	Connection::opt_type_boolean,	// opt_report_data_truncation
+};
+
+
 Connection::Connection(bool te) :
 OptionalExceptions(te),
 Lockable(true),
 is_connected_(false),
+connecting_(false),
 success_(false)
 {
 	mysql_init(&mysql_);
@@ -57,7 +112,8 @@ Connection::Connection(const char* db, const char* host,
 		my_bool compress, unsigned int connect_timeout,
 		cchar* socket_name, unsigned int client_flag) :
 OptionalExceptions(),
-Lockable()
+Lockable(),
+connecting_(false)
 {
 	mysql_init(&mysql_);
 	if (connect(db, host, user, passwd, port, compress,
@@ -87,21 +143,35 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 		unsigned int connect_timeout, cchar* socket_name,
 		unsigned int client_flag)
 {
-	mysql_.options.compress = compress;
-	mysql_.options.connect_timeout = connect_timeout;
-
 	lock();
 
-	if (is_connected_) {
+	// Drop previous connection, if any
+	if (connected()) {
 		disconnect();
 	}
 
-	mysql_options(&mysql_, MYSQL_READ_DEFAULT_FILE, "my");
+	// Set pre-connection options
+	scoped_var_set<bool> sb(connecting_, true);
+	set_option(opt_read_default_file, "my");
+	set_option(opt_connect_timeout, connect_timeout);
+	if (compress) {
+		set_option(opt_compress);
+	}
+	if (option_pending(opt_multi_statements, true)) {
+		client_flag |= CLIENT_MULTI_STATEMENTS;
+	}
 
+	// Establish connection
 	if (mysql_real_connect(&mysql_, host, user, passwd, db, port,
 			socket_name, client_flag)) {
 		unlock();
 		success_ = is_connected_ = true;
+		apply_pending_options();
+
+		if (db && db[0]) {
+			// Also attach to given database
+			success_ = select_db(db);
+		}
 	}
 	else {
 		unlock();
@@ -109,10 +179,6 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 		if (throw_exceptions()) {
 			throw ConnectionFailed(error());
 		}
-	}
-
-	if (success_ && db && db[0]) {
-		success_ = select_db(db);
 	}
 
 	return success_;
@@ -207,123 +273,314 @@ Connection::query()
 
 
 bool
+Connection::set_option(Option option)
+{
+cerr << "CRUMB 1" << endl;
+	if (connected() || connecting_) {
+		// Try to set the option immediately
+		switch (option) {
+			case opt_compress:
+				return set_option_impl(MYSQL_OPT_COMPRESS);
+
+			case opt_named_pipe:
+				return set_option_impl(MYSQL_OPT_NAMED_PIPE);
+
+#if MYSQL_VERSION_ID >= 40101
+			case opt_use_result:
+				return set_option_impl(MYSQL_OPT_USE_RESULT);
+
+			case opt_use_remote_connection:
+				return set_option_impl(MYSQL_OPT_USE_REMOTE_CONNECTION);
+
+			case opt_use_embedded_connection:
+				return set_option_impl(MYSQL_OPT_USE_EMBEDDED_CONNECTION);
+
+			case opt_guess_connection:
+				return set_option_impl(MYSQL_OPT_GUESS_CONNECTION);
+#endif
+			default:
+				return bad_option(option, opt_type_none);
+		}
+	}
+	else {
+		// Connection isn't established yet, so save option in queue.
+		// See apply_pending_options() for despooling logic.
+		pending_options_.push_back(OptionInfo(option));
+		return false;
+	}
+}
+
+
+bool
 Connection::set_option(Option option, const char* arg)
 {
-	switch (option) {
-		case opt_connect_timeout:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_CONNECT_TIMEOUT, arg);
+	if (connected() || connecting_) {
+		// Try to set the option immediately
+		switch (option) {
+			case opt_init_command:
+				return set_option_impl(MYSQL_INIT_COMMAND, arg);
 
-		case opt_compress:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_COMPRESS, arg);
+			case opt_read_default_file:
+				return set_option_impl(MYSQL_READ_DEFAULT_FILE, arg);
 
-		case opt_named_pipe:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_NAMED_PIPE, arg);
+			case opt_read_default_group:
+				return set_option_impl(MYSQL_READ_DEFAULT_GROUP, arg);
 
-		case opt_init_command:
-			return !mysql_options(&mysql_,
-					MYSQL_INIT_COMMAND, arg);
+			case opt_set_charset_dir:
+				return set_option_impl(MYSQL_SET_CHARSET_DIR, arg);
 
-		case opt_read_default_file:
-			return !mysql_options(&mysql_,
-					MYSQL_READ_DEFAULT_FILE, arg);
-
-		case opt_read_default_group:
-			return !mysql_options(&mysql_,
-					MYSQL_READ_DEFAULT_GROUP, arg);
-
-		case opt_set_charset_dir:
-			return !mysql_options(&mysql_,
-					MYSQL_SET_CHARSET_DIR, arg);
-
-		case opt_set_charset_name:
-			return !mysql_options(&mysql_,
-					MYSQL_SET_CHARSET_NAME, arg);
-
-		case opt_local_infile:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_LOCAL_INFILE, arg);
-
-		case opt_protocol:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_PROTOCOL, arg);
-
-		case opt_shared_memory_base_name:
-			return !mysql_options(&mysql_,
-					MYSQL_SHARED_MEMORY_BASE_NAME, arg);
-
-		case opt_read_timeout:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_READ_TIMEOUT, arg);
-
-		case opt_write_timeout:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_WRITE_TIMEOUT, arg);
-
-		case opt_use_result:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_USE_RESULT, arg);
-
-		case opt_use_remote_connection:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_USE_REMOTE_CONNECTION, arg);
-
-		case opt_use_embedded_connection:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_USE_EMBEDDED_CONNECTION, arg);
-
-		case opt_guess_connection:
-			return !mysql_options(&mysql_,
-					MYSQL_OPT_GUESS_CONNECTION, arg);
-
-		case opt_set_client_ip:
-			return !mysql_options(&mysql_,
-					MYSQL_SET_CLIENT_IP, arg);
-
-		case opt_secure_auth:
-			return !mysql_options(&mysql_,
-					MYSQL_SECURE_AUTH, arg);
+			case opt_set_charset_name:
+				return set_option_impl(MYSQL_SET_CHARSET_NAME, arg);
 
 #if MYSQL_VERSION_ID >= 40100
-		case opt_multi_statements_on:
-			return !mysql_set_server_option(&mysql_,
-					MYSQL_OPTION_MULTI_STATEMENTS_ON);
-
-		case opt_multi_statements_off:
-			return !mysql_set_server_option(&mysql_,
-					MYSQL_OPTION_MULTI_STATEMENTS_OFF);
+			case opt_shared_memory_base_name:
+				return set_option_impl(MYSQL_SHARED_MEMORY_BASE_NAME, arg);
 #endif
 
-		default:
-			// Unrecognized option value.
-			if (throw_exceptions()) {
-				if ((option >= opt_connect_timeout) &&
-						(option <= opt_multi_statements_off)) {
-					// Value is in range, but it must have been ifdef'd
-					// out above.
-					const int major = MYSQL_VERSION_ID / 10000;
-					const int minor = (MYSQL_VERSION_ID -
-							(major * 10000)) / 100;
-					const int bug = MYSQL_VERSION_ID -
-							(major * 10000) - (minor * 100);
-					ostringstream os;
-					os << "option not supported in MySQL C API v" <<
-							major << '.' << minor << '.' << bug;
-					throw BadOption(os.str());
-				}
-				else {
-					// Caller cast a bogus value to Option type, or it's
-					// a program built against a newer API but linking
-					// to an older library.
-					throw BadOption("unknown option value");
-				}
-			}
-			else {
-				return false;
-			}
+#if MYSQL_VERSION_ID >= 40101
+			case opt_set_client_ip:
+				return set_option_impl(MYSQL_SET_CLIENT_IP, arg);
+#endif
+			default:
+				return bad_option(option, opt_type_string);
+		}
 	}
+	else {
+		// Connection isn't established yet, so save option in queue.
+		// See apply_pending_options() for despooling logic.
+		pending_options_.push_back(OptionInfo(option, arg));
+		return false;
+	}
+}
+
+
+bool
+Connection::set_option(Option option, unsigned int arg)
+{
+	if (connected() || connecting_) {
+		// Try to set the option immediately
+		switch (option) {
+			case opt_connect_timeout:
+				return set_option_impl(MYSQL_OPT_CONNECT_TIMEOUT, &arg);
+
+			case opt_protocol:
+				return set_option_impl(MYSQL_OPT_PROTOCOL, &arg);
+
+			case opt_local_infile:
+				return set_option_impl(MYSQL_OPT_LOCAL_INFILE, &arg);
+
+#if MYSQL_VERSION_ID >= 40101
+			case opt_read_timeout:
+				return set_option_impl(MYSQL_OPT_READ_TIMEOUT, &arg);
+
+			case opt_write_timeout:
+				return set_option_impl(MYSQL_OPT_WRITE_TIMEOUT, &arg);
+#endif
+			default:
+				return bad_option(option, opt_type_integer);
+		}
+	}
+	else {
+		// Connection isn't established yet, so save option in queue.
+		// See apply_pending_options() for despooling logic.
+		pending_options_.push_back(OptionInfo(option, arg));
+		return false;
+	}
+}
+
+
+bool
+Connection::set_option(Option option, bool arg)
+{
+	if (connected() || connecting_) {
+		// Try to set the option immediately
+		my_bool my_arg = arg;
+		switch (option) {
+#if MYSQL_VERSION_ID >= 40101
+			case opt_secure_auth:
+				return set_option_impl(MYSQL_SECURE_AUTH, &my_arg);
+
+			case opt_multi_statements:
+				return set_option_impl(arg ?
+						MYSQL_OPTION_MULTI_STATEMENTS_ON :
+						MYSQL_OPTION_MULTI_STATEMENTS_OFF);
+#endif
+#if MYSQL_VERSION_ID >= 50003
+			case opt_report_data_truncation:
+				return set_option_impl(MYSQL_REPORT_DATA_TRUNCATION, &my_arg);
+#endif
+			default:
+				return bad_option(option, opt_type_boolean);
+		}
+	}
+	else {
+		// Connection isn't established yet, so save option in queue.
+		// See apply_pending_options() for despooling logic.
+		pending_options_.push_back(OptionInfo(option, arg));
+		return false;
+	}
+}
+
+
+bool
+Connection::set_option_impl(mysql_option moption, const void* arg)
+{
+	return !mysql_options(&mysql_, moption,
+			static_cast<const char*>(arg));
+}
+
+
+bool
+Connection::set_option_impl(enum_mysql_set_option msoption)
+{
+	return !mysql_set_server_option(&mysql_, msoption);
+}
+
+
+bool
+Connection::bad_option(Option option, OptionArgType type)
+{
+	if (option_arg_type(option) == type) {
+		return bad_option_value(option);
+	}
+	else {
+		return bad_option_type(option);
+	}
+}
+
+
+bool
+Connection::bad_option_type(Option option)
+{
+	if (throw_exceptions()) {
+		// Option value is legal, but it was given the wrong argument
+		// type.
+		OptionArgType type = option_arg_type(option);
+		ostringstream os;
+		os << "option " << option;
+		if (type == opt_type_none) {
+			os << " does not take an argument";
+		}
+		else {
+			os << " requires an argument of type " << type;
+		}
+		throw BadOption(os.str());
+	}
+
+	return false;
+}
+
+
+bool
+Connection::bad_option_value(Option option)
+{
+	if (throw_exceptions()) {
+		// If we get here, option value is in range and it was given the
+		// right argument type, so the reason the option was unhandled
+		// must be that it's not supported in the C API we're built
+		// against.
+		ostringstream os;
+		os << "option " << option << " not supported in MySQL C API v";
+		api_version(os);
+		throw BadOption(os.str());
+	}
+
+	return false;
+}
+
+
+Connection::OptionArgType
+Connection::option_arg_type(Option option)
+{
+	if ((option > opt_FIRST) && (option < opt_COUNT)) {
+		return legal_opt_arg_types_[option];
+	}
+	else {
+		// Non-optional exception.  Something is wrong with the library
+		// internals if this one is thrown.
+		BadOption("bad value given to option_arg_type()");
+	}
+}
+
+
+void
+Connection::apply_pending_options()
+{
+	if (pending_options_.size() == 0) {
+		return;
+	}
+
+	for (deque<OptionInfo>::const_iterator it(pending_options_.begin());
+			it != pending_options_.end(); ++it) {
+		// Try to set the option
+		bool success;
+		switch (it->arg_type) {
+			case opt_type_none:
+				success = set_option(it->option);
+				break;
+
+			case opt_type_string:
+				success = set_option(it->option, it->str_arg.c_str());
+				break;
+
+			case opt_type_integer:
+				success = set_option(it->option, it->int_arg);
+				break;
+
+			case opt_type_boolean:
+				success = set_option(it->option, it->bool_arg);
+				break;
+		}
+
+		// If option failed and exceptions are enabled, throw an
+		// exception, because otherwise the failure will be lost.
+		if (!success && throw_exceptions()) {
+			ostringstream os;
+			os << "Failed to set pending option " << it->option;
+			if (it->arg_type != opt_type_none) {
+				os << " = ";
+				switch (it->arg_type) {
+					case opt_type_string:	os << it->str_arg; break;
+					case opt_type_integer:	os << it->int_arg; break;
+					case opt_type_boolean:	os << it->bool_arg; break;
+				}
+			}
+			throw BadOption(os.str());
+		}
+	}
+
+	pending_options_.clear();
+}
+
+
+bool
+Connection::option_pending(Option option, bool arg) const
+{
+	for (deque<OptionInfo>::const_iterator it(pending_options_.begin());
+			it != pending_options_.end(); ++it) {
+		if (it->option == option) {
+			// Found the option, but return true only if the pending
+			// option was given a bool argument equal to the value
+			// passed to this function.
+			return it->arg_type == opt_type_boolean &&
+					it->bool_arg == arg;
+		}
+	}
+
+	return false;
+}
+
+
+ostream&
+Connection::api_version(ostream& os)
+{
+	const int major = MYSQL_VERSION_ID / 10000;
+	const int minor = (MYSQL_VERSION_ID - (major * 10000)) / 100;
+	const int bug = MYSQL_VERSION_ID - (major * 10000) - (minor * 100);
+
+	os << major << '.' << minor << '.' << bug;
+
+	return os;
 }
 
 

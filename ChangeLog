@@ -59,9 +59,16 @@
 
 	o Replaced Connection::read_option() with new set_option()
 	  mechanism.  The name change matches the method's purpose
-	  better.  The new method returns true on success instead of
-	  0, and it supports a new, and it supports a broader set of
-	  options than read_option() did.
+	  better.  Functional changes are that it returns true on
+	  success instead of 0, it supports a broader set of options
+	  than read_option() did, and it enforces the correct option
+	  argument type.
+
+	o You can now call Connection::set_option() before the
+	  connection is established, which will simply queue the option
+	  request up until the connection comes up.  If you use this
+	  feature, you should use exceptions, because that's the only
+	  way an option setting failure can be signalled in this case.
 
 	o Removed query-building functions (exec*(), store*(),
 	  use()) from class Connection, and moved all the implementation
