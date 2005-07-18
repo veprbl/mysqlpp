@@ -1,0 +1,73 @@
+## This is the Makefile for building the MySQL++ library without using
+## the autotools.  Primarily it's intended for Windows systems, but you
+## could make it work on Unix systems, if you had some kind of aversion
+## to autotools...
+
+
+# This file is free software; you can redistribute it and/or modify it
+# under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation; either version 2.1 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with MySQL++; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+# USA
+
+
+# --- Things you might need to change:
+
+MYSQLCLIENT_INC_DIR=c:\mysql\include
+CXX=cl
+CXXFLAGS=/I$(MYSQLCLIENT_INC_DIR) /Od /DMYSQLPP_MAKING_DLL \
+		/D_WINDLL /G5 /EHsc /nologo /MDd
+
+LIBFILE=mysql++.dll
+LD=link
+LDFLAGS=/OUT:$(LIBFILE) /DLL /NOLOGO \
+		/LIBPATH:c:\mysql\lib\debug libmysql.lib
+
+
+# --- No user-serviceable parts below :)
+
+OBJS=coldata.obj connection.obj datetime.obj field_names.obj \
+		field_types.obj fields.obj manip.obj myset.obj qparms.obj \
+		query.obj result.obj row.obj sql_string.obj string_util.obj \
+		type_info.obj vallist.obj
+
+.SUFFIXES: .cpp .obj
+
+.cpp.obj:
+	$(CXX) $(CXXFLAGS) /c $<
+
+
+all: $(OBJS) $(LIBFILE)
+
+clean:
+	rm -f $(OBJS) $(LIBFILE) *.ext *.lib
+
+
+coldata.obj: coldata.cpp coldata.h
+connection.obj: connection.cpp connection.h
+datetime.obj: datetime.cpp datetime.h
+field_names.obj: field_names.cpp field_names.h
+field_types.obj: field_types.cpp field_types.h
+fields.obj: fields.cpp fields.h
+manip.obj: manip.cpp manip.h
+myset.obj: myset.cpp myset.h
+qparms.obj: qparms.cpp qparms.h
+query.obj: query.cpp query.h
+result.obj: result.cpp result.h
+row.obj: row.cpp row.h
+sql_string.obj: sql_string.cpp sql_string.h
+string_util.obj: string_util.cpp string_util.h
+type_info.obj: type_info.cpp type_info.h
+vallist.obj: vallist.cpp vallist.h
+
+$(LIBFILE):
+	$(LD) $(LDFLAGS) $(OBJS)
