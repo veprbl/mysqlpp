@@ -197,7 +197,19 @@ public:
 	}
 
 	/// \brief Create a new query object as a copy of another.
+	///
+	/// This is \b not a traditional copy ctor!  Its only purpose is to
+	/// make it possible to assign the return of Connection::query()
+	/// to an empty Query object.  In particular, the stream buffer and
+	/// template query stuff will be empty in the copy, regardless of
+	/// what values they have in the original.
 	MYSQLPP_EXPORT Query(const Query& q);
+
+	/// \brief Assign another query's state to this object
+	///
+	/// The same caveats apply to this operator as apply to the copy
+	/// ctor.
+	MYSQLPP_EXPORT Query& operator=(const Query& rhs);
 
 	/// \brief Get the last error message that was set.
 	///
