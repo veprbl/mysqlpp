@@ -414,6 +414,7 @@ Connection::set_option(Option option, bool arg)
 			case opt_report_data_truncation:
 				return set_option_impl(MYSQL_REPORT_DATA_TRUNCATION, &my_arg);
 #endif
+			case opt_FIRST:	// warning eater when using old C APIs
 			default:
 				return bad_option(option, opt_type_boolean);
 		}
@@ -506,6 +507,7 @@ Connection::option_arg_type(Option option)
 		// Non-optional exception.  Something is wrong with the library
 		// internals if this one is thrown.
 		BadOption("bad value given to option_arg_type()", option);
+		return opt_type_none;		// warning eater
 	}
 }
 
