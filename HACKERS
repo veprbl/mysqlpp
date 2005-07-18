@@ -23,11 +23,17 @@ SUBMITTING PATCHES
 	the MySQL++ mailing list.  We want it in unified diff format.
 
 	The easiest way to do this is to check out a copy of the current
-	MySQL++ tree as described in the previous section. Then make
+	MySQL++ tree as described in the previous section.  Then make
 	your change, cd to the root directory of the project, and ask
 	Subversion to generate the diff for you:
 
 		$ svn diff > mychange.patch
+
+	If your patch adds new files to the distribution, you can say
+	"svn add newfile" before you do the diff, which will include
+	the contents of that file in the patch.  (You can do this even
+	when you've checked out the tree anonymously.)	Then say "svn
+	revert newfile" to make Subversion forget about the new file.
 
 	If you're making a patch against a MySQL++ distribution tarball,
 	then you can generate the diff this way:
