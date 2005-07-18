@@ -56,7 +56,7 @@ main()
 			" in (";
 		//  for UPDATE just replace the above DELETE FROM with UPDATE statement
 		for (; row = res.fetch_row(); i++)
-			strbuf << row[0] << ",";
+			strbuf << row.at(0) << ",";
 		if (!i)
 			return 0;
 		string output(strbuf.str());

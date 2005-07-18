@@ -69,7 +69,7 @@ main(int argc, char* argv[])
 		Result::iterator i;
 		for (i = res.begin(); i != res.end(); ++i) {
 			row = *i;
-			cout << endl << '\t' << setw(17) << row[0];
+			cout << endl << '\t' << setw(17) << row.at(0);
 		}
 		cout << separator;
 		
@@ -86,8 +86,8 @@ main(int argc, char* argv[])
 		cout.setf(ios::left);
 		for (i = res.begin(); i != res.end(); ++i) {
 			row = *i;
-			string xx(row[0]);
-			cout << endl << '\t' << setw(17) << row[0];
+			string xx(row.at(0));
+			cout << endl << '\t' << setw(17) << row.at(0);
 			yy.push_back(xx);
 		}
 		cout << separator;
