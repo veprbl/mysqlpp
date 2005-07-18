@@ -122,6 +122,11 @@ public:
 private:
 	OptionalExceptions& assoc_;
 	bool exceptions_were_enabled_;
+
+	// Hidden assignment operator and copy ctor, because we should not
+	// be copied.
+	NoExceptions(const NoExceptions&);
+	NoExceptions& operator=(const NoExceptions&) { }
 };
 
 } // end namespace mysqlpp
