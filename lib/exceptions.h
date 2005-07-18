@@ -43,6 +43,19 @@ namespace mysqlpp {
 class Exception : public std::exception
 {
 public:
+	/// \brief Create exception object as copy of another
+	MYSQLPP_EXPORT Exception(const Exception& e) throw() :
+	what_(e.what_)
+	{
+	}
+
+	/// \brief Assign another exception object's contents to this one
+	MYSQLPP_EXPORT Exception& operator=(const Exception& rhs) throw()
+	{
+		what_ = rhs.what_;
+		return *this;
+	}
+
 	/// \brief Destroy exception object
 	MYSQLPP_EXPORT ~Exception() throw() { }
 
@@ -66,7 +79,7 @@ protected:
 	}
 
 	/// \brief explanation of why exception was thrown
-	const std::string what_;
+	std::string what_;
 };
 
 
@@ -76,7 +89,7 @@ class BadConversion : public Exception
 {
 public:
 	const char* type_name;	///< name of type we tried to convert to
-	const std::string data;	///< string form of data we tried to convert
+	std::string data;		///< string form of data we tried to convert
 	size_t retrieved;		///< documentation needed!
 	size_t actual_size;		///< documentation needed!
 
