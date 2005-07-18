@@ -18,13 +18,6 @@ Final v2.0 Stuff
 
 	o Decide what to do about subscript_iterator bugs.
 
-	o Reinvestigate Row::operator[](size_t) problems.  It may be
-	  possible to have that overload, and simply make one of its
-	  limitations that you cannot say r[0]; you'd have to use
-	  r.at(0) in that situation instead.  Also, what is the type
-	  used by SSQLS when defining field name constants?  Perhaps
-	  that's the golden road out: r[stock_item], for instance.
-
 	o Make something like examples/Makefile.simple for the library as
 	  well.  These Makefiles should be configurable to support free
 	  Microsoft and Borland compilers, plus GCC on all standard
@@ -33,9 +26,6 @@ Final v2.0 Stuff
 	  unnecessary and a stumbling point during VS 2003 to 2005
 	  changeover.
 	
-	o Build under VC++ with /W4.  If we can squish all warnings that
-	  result, make this change permanent.
-
 	o GCC slist extension stuff doesn't work right under GCC 3.0: the
 	  template is actually in namespace std!  Extend autoconf test so
 	  that it detects this case.

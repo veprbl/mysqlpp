@@ -135,8 +135,24 @@ public:
 	/// get around to actually \e using the pointer.
 	///
 	/// This function is rather inefficient.  If that is a concern for
-	/// you, use at() or the SSQLS mechanism instead.
+	/// you, use at(), operator[](size_type) or the SSQLS mechanism
+	/// instead.
 	MYSQLPP_EXPORT const ColData operator [](const char* field) const;
+
+	/// \brief Get the value of a field given its index.
+	///
+	/// If the index value is bad, the underlying std::vector is
+	/// supposed to throw an exception, according to the Standard.
+	///
+	/// This function is just syntactic sugar, wrapping the at() method.
+	/// The at() method is the only way to get at the first field by
+	/// index, as row[0] is ambiguous: it could call either overload.
+	///
+	/// See operator[](const char*) for more caveats.
+	MYSQLPP_EXPORT const ColData operator [](size_type i) const
+	{
+		return at(i);
+	}
 
 	/// \brief Get the value of a field given its index.
 	///

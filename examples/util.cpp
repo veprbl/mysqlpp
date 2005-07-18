@@ -129,19 +129,34 @@ print_stock_row(const std::string& item, mysqlpp::longlong num,
 void
 print_stock_row(const mysqlpp::Row& row)
 {
-	// Notice that only the string conversion has to be handled
-	// specially.  (See Row::operator[]'s documentation for the reason.)
-	// As for the rest of the fields, Row::operator[] returns a ColData
-	// object, which can convert itself to any standard C type.
+	// The brief code below illustrates several aspects of the library
+	// worth noting:
 	//
-	// We index the row by field name to demonstrate the feature, and
-	// also because it makes the code more robust in the face of schema
-	// changes.  Use Row::at() instead if efficiency is paramount.  To
-	// maintain efficiency while keeping robustness, use the SSQLS
-	// feature, demoed in the custom* examples.
-	string item(row["item"]);
-	print_stock_row(item, row["num"], row["weight"], row["price"],
-			row["sdate"]);
+	// 1. You can subscript a row by integer (position of the field in
+	// the row) or by string (name of field in the row).  The former is
+	// more efficient, while the latter trades some efficiency for
+	// robustness in the face of schema changes.  (Consider using SSQLS
+	// if you need a tradeoff in between these two positions.)
+	// 
+	// 2. You can also get at a row's field's with Row::at(), which is
+	// much like Row::operator[](int).  Besides the syntax difference,
+	// the only practical difference is that only at() can access field
+	// 0: this is because '0' can be converted to both int and to const
+	// char*, so the compiler rightly complains that it can't decide
+	// which overload to call.
+	//
+	// 3. Notice that we make an explicit temporary copy of the first
+	// field, which is the only string field.  We must tolerate the
+	// inefficiency of this copy, because Row::operator[] returns a
+	// ColData object, which goes away after it is converted to some
+	// other form.  So, while we could have made print_stock_row()
+	// take a const char* argument (as past versions mistakenly did!)
+	// this would result in a dangling pointer, since it points into the
+	// ColData object, which is dead by the time the pointer is
+	// evaluated in print_stock_row().  It will probably even work this
+	// way, but like any memory bug, it can wreak subtle havoc.
+	std::string item(row.at(0));
+	print_stock_row(item, row["num"], row[2], row[3], row[4]);
 }
 
 

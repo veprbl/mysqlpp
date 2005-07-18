@@ -122,12 +122,11 @@
 	  C API feature, and it isn't needed anyway.
 
 	o Returned Row subscripting to something more like the
-	  v1.7.9 scheme: operator[] takes a string for looking up
-	  a field by name, and lookup_by_name() has been removed.
-	  The problem that lead to needing this change now means
-	  that we cannot have indexing by integer through operator[],
-	  so Row now has an at() member, by analogy with the STL
-	  sequence containers.
+	  v1.7.9 scheme: there are two operator[] overloads, one for an
+	  integer (field by index) and another for const char* (field
+	  by name).  lookup_by_name() has been removed.  Because row[0]
+	  is ambiguous again, added Row::at() (by analogy with STL
+	  sequence containers), which always works.
 
 	o Collapsed two of the Row::value_list*() overloads into
 	  two other similar functions using default parameters.
