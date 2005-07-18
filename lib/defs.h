@@ -39,7 +39,7 @@ namespace mysqlpp {
 /// readable.
 const bool use_exceptions = true;
 
-/// \brief Appears to be unused!  Remove?
+/// \brief Used to disambiguate overloads of equal_list() in SSQLSes.
 enum sql_cmp_type {sql_use_compare};
 
 #if defined(NO_LONG_LONGS)
