@@ -74,6 +74,11 @@ protected:
 	/// \brief Returns true if object is locked
 	bool locked() const { return locked_; }
 
+protected:
+	/// \brief Set the lock state.  Protected, because this method is
+	/// only for use by subclass assignment operators and the like.
+	void set_lock(bool b) { locked_ = b; }
+
 private:
 	bool locked_;
 };
