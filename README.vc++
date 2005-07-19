@@ -1,28 +1,71 @@
 Building the Library and Example Programs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	The included project files (mysql++.sln and all the *.vcproj
-	files) work with Visual C++ 7.1, part of Visual Studio 2003.
+	As of MySQL++ v2.0, we have changed the VC++ build system over to
+	a command-line based system, instead of Visual Studio project files.
+	We've done this for many reasons:
 
-	I did try to get the library to work with VC++ 7.0, but there
-	were too many cases where the compiler wasn't adequately close
-	to Standard C++ conformance to work.  You might be able to make
-	a subset of the library work.
-	
-	VC++ 6.0 and older are all but hopeless from the conformance
-	point of view.	MySQL++ pushes the C++ language hard, and VC++
-	6 just can't put up with this.
+		1. Not everyone has the IDE: Microsoft offers their
+		   command-line compilers for free, and these offers
+		   often do not include the Visual Studio IDE.
 
-	If you didn't install MySQL in the default location (c:\mysql),
-	you will have to change the project settings for the MySQL client
-	library include and library paths.
+		2. Project files tend to be tied to one version of
+		   Visual Studio.  Newer versions can migrate old project
+		   files, but then old versions cannot read the new files.
+		   So, each time there's a new version of Visual Studio,
+		   there's a transition period where at least two versions
+		   of the IDE are still in common use.	Makefiles,
+		   by contrast, work with all versions, without changes.
 
-	You should look through the Windows-specific section of
-	lib\platform.h to see if there are any #defines that you need
-	to uncomment on your system.
+		3. Standardization: we would frequently forget to
+		   update the VC++ project files whenever a new file
+		   was added to the library, or a new example created.
+		   This is primarily because each non-autotools using
+		   system had its own project files, so it was daunting to
+		   consider adding this file to so many different project
+		   files.  With this new system, we hope there will be
+		   more incentive to keep the Makefiles synchronized
+		   with library features, since it affects more than
+		   just one development system.
+
+	Before you build the library, make sure the environment variables
+	that Visual C++ needs are set up.  Recent versions of the Visual
+	Studio installer put a special CMD.EXE shortcut in the Start menu
+	in the same folder as the IDE shortcuts; run this shortcut to
+	get a command prompt with the variables all set up.  The older
+	way (which still works) is to run the vcvars32 batch file that
+	comes with the tools.  (It may not be in your PATH by default,
+	so you might have to search your hard drive for it.)
+
+	To create the Makefiles, say "makemake" in the project's root
+	directory.  You only have to do this once, unless you change
+	Makefile.base or Makefile.vc.  This also starts building the
+	library and the examples.
+
+	If you change the library or example source code after creating
+	the Makefiles, you can simply say "make".  This works in the
+	project root, as well as in the examples and lib subdirectories.
+
+	The build process creates a DLL and an import library for that
+	DLL.  It's possible to create a static library, but we don't
+	do this in the distributed Makefiles because linking to such a
+	library is a license violation for programs not licensed under the
+	GPL or LGPL.  Using the library in DLL form avoids this problem.
+
+	MySQL++ currently builds only under Visual C++ 7.1 (a.k.a. Visual
+	Studio 2003, a.k.a. cl version 13.10) or later.  Earlier versions
+	did not support a sufficiently broad set of the Standard C++
+	language.
+
+	If you didn't install MySQL in c:\mysql, you will have to change
+	Makefile.vc in the lib and examples subdirectories and re-run
+	"makemake".  You may also look at changing these files for
+	various other reasons, such as if you don't like the way we name
+	the DLL file, or want the 'install' target to put the MySQL++
+	development files somewhere other than c:\mysql++.
 
 
-Making a New MySQL++-Using Solution
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using MySQL++ in Your Own Projects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 (This material is based on a post by Steve Hulet <krigare@gmail.com>)
 
 	Fire up VS .NET, create a Blank Solution.  Add a new project.
@@ -36,18 +79,17 @@ Making a New MySQL++-Using Solution
 		  Managed Extensions" to "No"
 
 		o Under C/C++::General add to "Additional Include
-		  Directories": c:\mysql++\lib, c:\mysql\include
+		  Directories": c:\mysql++\include, c:\mysql\include
 
 		o Under C/C++::Code Generation change "Runtime Library" to
-		  "Multi-threaded Debug DLL (/MDd)" [change the /MTd
-		  to /MDd] for the Debug configuration. For the Release
-		  configuration, make it "Multi-threaded DLL (/MD)".
+		  "Multi-threaded Debug DLL (/MDd)" for the Debug
+		  configuration. For the Release configuration, make it
+		  "Multi-threaded DLL (/MD)".
 
 		o Under Linker::General add to "Additional Library
-		  Directories": "c:\mysql\lib\debug, c:\mysql++\Debug" for
-		  the Debug configuration.  Set the Release configuration
-		  up similarly, using the release MySQL and MySQL++
-		  subdirectories.
+		  Directories": "c:\mysql\lib\debug, c:\mysql++\lib" for
+		  the Debug configuration.  For the Release configuration,
+		  make it "c:\mysql\lib\opt, c:\mysql++\lib"
 
 		o Under Linker::Input add to "Additional Dependencies":
 		  "libmysql.lib wsock32.lib mysql++.lib"
@@ -59,5 +101,5 @@ If You Run into Problems...
 	settings match the above.  Visual C++ is very picky about things
 	like run time library settings.  If you still can't get things
 	going, try running one of the example programs.  If it works,
-	compare your project's settings to that of the examples.
+	the problem is likely in your project settings, not in MySQL++.
 
