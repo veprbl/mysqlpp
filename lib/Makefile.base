@@ -1,0 +1,55 @@
+## This file contains the 'make' rules common to all compilers.
+## The ../make.bat file appends this to one of the other Makefile.*
+## files to create a functional Makefile for the MySQL++ library.
+
+# This file is free software; you can redistribute it and/or modify it
+# under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation; either version 2.1 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with MySQL++; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+# USA
+
+
+# --- No user-serviceable parts below :)
+
+OBJS=coldata.$O connection.$O datetime.$O field_names.$O \
+		field_types.$O fields.$O manip.$O myset.$O qparms.$O \
+		query.$O result.$O row.$O sql_string.$O string_util.$O \
+		type_info.$O vallist.$O
+
+
+all: $(OBJS) $(LIB_FILE)
+
+install: install_platform
+
+clean:
+	$(DEL) $(OBJS) $(LIB_FILE) $(EXTRA_CLEAN)
+
+
+$(LIB_FILE):
+	$(LD) $(LDFLAGS) $(OBJS)
+
+coldata.$O: coldata.cpp coldata.h
+connection.$O: connection.cpp connection.h
+datetime.$O: datetime.cpp datetime.h
+field_names.$O: field_names.cpp field_names.h
+field_types.$O: field_types.cpp field_types.h
+fields.$O: fields.cpp fields.h
+manip.$O: manip.cpp manip.h
+myset.$O: myset.cpp myset.h
+qparms.$O: qparms.cpp qparms.h
+query.$O: query.cpp query.h
+result.$O: result.cpp result.h
+row.$O: row.cpp row.h
+sql_string.$O: sql_string.cpp sql_string.h
+string_util.$O: string_util.cpp string_util.h
+type_info.$O: type_info.cpp type_info.h
+vallist.$O: vallist.cpp vallist.h
