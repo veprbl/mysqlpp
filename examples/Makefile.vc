@@ -18,7 +18,7 @@
 # USA
 
 CXX=cl
-CXXFLAGS=/Ic:\mysql\include /I..\lib /Od /G5 /EHsc /nologo /MDd /c
+CXXFLAGS=/Ic:\mysql\include /I..\lib /Od /G5 /EHsc /nologo /MDd /Zi /c
 
 LD=$(CXX)
 LDFLAGS=/nologo /link \

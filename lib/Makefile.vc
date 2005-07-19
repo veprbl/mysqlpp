@@ -19,7 +19,7 @@
 
 CXX=cl
 CXXFLAGS=/Ic:\mysql\include /Od /DMYSQLPP_MAKING_DLL /D_WINDLL /G5 \
-		/EHsc /nologo /MDd /c
+		/EHsc /nologo /MD /c
 
 LIB_BASE=mysql++
 LIB_FILE=$(LIB_BASE).dll
