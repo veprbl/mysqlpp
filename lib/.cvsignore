@@ -1,5 +1,0 @@
-*.la *.lo
-.deps .libs
-Makefile Makefile.in
-custom-macros.h custom.h exceptions.h
-stamp-h2
