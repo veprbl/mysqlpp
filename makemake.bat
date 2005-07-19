@@ -42,6 +42,7 @@ type examples\Makefile.%1 >> examples\Makefile
 type examples\Makefile.base >> examples\Makefile
 shift
 call make.bat
+goto end
 
 
 rem Display usage message
