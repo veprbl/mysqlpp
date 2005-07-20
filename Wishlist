@@ -18,17 +18,12 @@ Final v2.0 Stuff
 
 	o Decide what to do about subscript_iterator bugs.
 
-	o Make something like examples/Makefile.simple for the library as
-	  well.  These Makefiles should be configurable to support free
-	  Microsoft and Borland compilers, plus GCC on all standard
-	  platforms plus MinGW.  Make them support threading, optionally,
-	  on all platforms.  Drop VC++ project files, as they will be
-	  unnecessary and a stumbling point during VS 2003 to 2005
-	  changeover.
-	
 	o GCC slist extension stuff doesn't work right under GCC 3.0: the
 	  template is actually in namespace std!  Extend autoconf test so
 	  that it detects this case.
+
+	o Generate examples/Makefile.simple from new makemake files.  Do
+	  it in configure.in?  Make a mksimple script?
 
 
 Future Features

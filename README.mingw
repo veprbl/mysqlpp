@@ -1,0 +1,45 @@
+Compatibility
+~~~~~~~~~~~~~
+	This target currently does not work.
+
+	The library files compile, but I can't get it to link against the
+	MySQL client DLL.  If you figure out what I've done wrong, please
+	post to the mailing list.
+	
+	If you just want to use a free compiler, I recommend using the
+	free version of Visual C++ mentioned on the MySQL++ home page.
+
+
+Building the Library and Example Programs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Before you get started, you will need to create a MinGW-compatible
+	import library.  Assuming you installed MySQL in c:\mysql, the
+	commands to do this are:
+
+		mkdir c:\mysql\lib\mingw
+		cd c:\mysql\lib\mingw
+		reimp -d ..\opt\libmysql.lib
+	    dlltool -k -d libmysql.def -l libmysql.a
+	
+	To create the Makefiles, say "makemake mingw" in the project's root
+	directory.  You only have to do this once, unless you change
+	Makefile.base or Makefile.mingw.  This also starts building the
+	library and the examples.
+
+	If you change the library or example source code after creating
+	the Makefiles, you can simply say "make".  This works in the
+	project root, as well as in the examples and lib subdirectories.
+
+	The build process creates a DLL and an import library for that
+	DLL.  It's possible to create a static library, but we don't
+	do this in the distributed Makefiles because linking to such a
+	library is a license violation for programs not licensed under the
+	GPL or LGPL.  Using the library in DLL form avoids this problem.
+
+	If you didn't install MySQL in c:\mysql, you will have to change
+	Makefile.mingw in the lib and examples subdirectories and re-run
+	"makemake mingw".  You may also look at changing these files for
+	various other reasons, such as if you don't like the way we name
+	the DLL file, or want the 'install' target to put the MySQL++
+	development files somewhere other than c:\mysql++\mingw.
+
