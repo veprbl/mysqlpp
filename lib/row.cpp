@@ -30,6 +30,39 @@
 
 namespace mysqlpp {
 
+Row::Row(const MYSQL_ROW& d, const ResUse* r,
+		unsigned long* jj, bool te) :
+OptionalExceptions(te),
+res_(r),
+initialized_(false)
+{
+	if (!d || !r) {
+		if (throw_exceptions()) {
+			throw BadQuery("ROW or RES is NULL");
+		}
+		else {
+			return;
+		}
+	}
+	data_.clear();
+	is_nulls_.clear();
+	initialized_ = true;
+	for (unsigned int i = 0; i < size(); i++) {
+		data_.insert(data_.end(),
+				(d[i] ?  std::string(d[i], jj[i]) : std::string("NULL")));
+		is_nulls_.insert(is_nulls_.end(), d[i] ? false : true);
+	}
+}
+
+
+Row::~Row()
+{
+	data_.clear();
+	is_nulls_.clear();
+	initialized_ = false;
+}
+
+
 Row::size_type Row::size() const
 {
 	return res_->num_fields();
@@ -59,6 +92,8 @@ const ColData Row::operator [](const char* field) const
 	}
 }
 
+
+#if !defined(__BORLANDC__)		// BC++ 5.5 barfs on these templates...
 value_list_ba<FieldNames, do_nothing_type0>
 Row::field_list(const char* d) const
 {
@@ -143,6 +178,7 @@ Row::equal_list(const char* d, const char* e, Manip m) const
 	return equal_list_ba<FieldNames, Row, Manip>(
 			parent().names(), *this, d, e, m);
 }
+#endif
 
 } // end namespace mysqlpp
 

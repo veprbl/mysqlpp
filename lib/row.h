@@ -64,36 +64,10 @@ public:
 	/// \param jj length of each item in d
 	/// \param te if true, throw exceptions on errors
 	MYSQLPP_EXPORT Row(const MYSQL_ROW& d, const ResUse* r,
-			unsigned long* jj, bool te = true) :
-	OptionalExceptions(te),
-	res_(r),
-	initialized_(false)
-	{
-		if (!d || !r) {
-			if (throw_exceptions()) {
-				throw BadQuery("ROW or RES is NULL");
-			}
-			else {
-				return;
-			}
-		}
-		data_.clear();
-		is_nulls_.clear();
-		initialized_ = true;
-		for (unsigned int i = 0; i < size(); i++) {
-			data_.insert(data_.end(),
-					(d[i] ?  std::string(d[i], jj[i]) : std::string("NULL")));
-			is_nulls_.insert(is_nulls_.end(), d[i] ? false : true);
-		}
-	}
+			unsigned long* jj, bool te = true);
 
 	/// \brief Destroy object
-	MYSQLPP_EXPORT ~Row()
-	{
-		data_.clear();
-		is_nulls_.clear();
-		initialized_ = false;
-	}
+	MYSQLPP_EXPORT ~Row();
 
 	/// \brief Get a reference to our parent class.
 	MYSQLPP_EXPORT const ResUse& parent() const
