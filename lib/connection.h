@@ -56,6 +56,14 @@ class Query;
 class Connection : public OptionalExceptions, public Lockable
 {
 public:
+	/// \brief Legal types of option arguments
+	enum OptionArgType {
+		opt_type_none,
+		opt_type_string,
+		opt_type_integer,
+		opt_type_boolean,
+	};
+
 	/// \brief Per-connection options you can set with set_option()
 	///
 	/// This is currently a combination of the MySQL C API
@@ -418,14 +426,6 @@ public:
 	std::ostream& api_version(std::ostream& os);
 
 protected:
-	/// \brief Legal types of option arguments
-	enum OptionArgType {
-		opt_type_none,
-		opt_type_string,
-		opt_type_integer,
-		opt_type_boolean,
-	};
-
 	/// \brief Drop the connection to the database server
 	///
 	/// This method is protected because it should only be used within
