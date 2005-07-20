@@ -29,7 +29,7 @@ LDFLAGS=/OUT:$(LIB_FILE) /DLL /NOLOGO /LIBPATH:c:\mysql\lib\opt libmysql.lib
 
 EXTRA_CLEAN=$(IMP_FILE) *.ext
 
-INST_DIR=c:\mysql++
+INST_DIR=c:\mysql++\vc
 INST_INC_DIR=$(INST_DIR)\include
 INST_LIB_DIR=$(INST_DIR)\lib
 
