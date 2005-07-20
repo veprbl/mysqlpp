@@ -43,6 +43,8 @@ ResUse::ResUse(MYSQL_RES* result, Connection* c, bool te) :
 OptionalExceptions(te),
 conn_(c),
 initialized_(false),
+names_(0),
+types_(0),
 fields_(this)
 {
 	if (!result) {
@@ -55,9 +57,6 @@ fields_(this)
 	names_ = new FieldNames(this);
 	if (names_) {
 		types_ = new FieldTypes(this);
-	}
-	else {
-		types_ = 0;
 	}
 	table_ = fields(0).table;
 	initialized_ = true;

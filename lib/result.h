@@ -521,6 +521,7 @@ inline const FieldNames& ResUse::field_names() const
 inline void ResUse::reset_field_names()
 {
 	delete names_;
+	names_ = 0;
 	names_ = new FieldNames(this);
 }
 
@@ -559,6 +560,7 @@ inline const FieldTypes& ResUse::field_types() const
 inline void ResUse::reset_field_types()
 {
 	delete types_;
+	types_ = 0;
 	types_ = new FieldTypes(this);
 }
 
