@@ -198,6 +198,7 @@ public:
 	MYSQLPP_EXPORT operator unsigned long int() const
 			{ return conv(static_cast<unsigned long int>(0)); }
 	
+#if !defined(NO_LONG_LONGS)
 	/// \brief Converts this object's string data to the platform-
 	/// specific 'longlong' type, usually a 64-bit integer.
 	MYSQLPP_EXPORT operator longlong() const
@@ -207,6 +208,7 @@ public:
 	/// specific 'ulonglong' type, usually a 64-bit unsigned integer.
 	MYSQLPP_EXPORT operator ulonglong() const
 			{ return conv(static_cast<ulonglong>(0)); }
+#endif
 	
 	/// \brief Converts this object's string data to a float
 	MYSQLPP_EXPORT operator float() const
@@ -278,8 +280,10 @@ operator_binary_int(unsigned int, unsigned long int)
 operator_binary_int(unsigned short int, unsigned long int)
 operator_binary_int(unsigned long int, unsigned long int)
 
+#if !defined(NO_LONG_LONGS)
 operator_binary_int(longlong, longlong)
 operator_binary_int(ulonglong, ulonglong)
+#endif
 #endif // NO_BINARY_OPERS
 
 /// \endif
