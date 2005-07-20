@@ -1,4 +1,4 @@
-## This file contains the 'make' rules specific to Visual C++.  The
+## This file contains the 'make' rules specific to Borland C++.  The
 ## ../make.bat script prepends this to Makefile.base to create a
 ## complete Makefile.
 
@@ -17,16 +17,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
 # USA
 
-CXX=cl
-INCLUDES=/Ic:\mysql\include -I..\lib
-CXXFLAGS=$(INCLUDES) /Od /G5 /EHsc /nologo /MDd /Zi /c
+CXX=bcc32
+INCLUDES=-Ic:\bcc55\include -Ic:\mysql\include -I..\lib
+CXXFLAGS=$(INCLUDES) -Od -5 -xp -tWC -DNO_LONG_LONGS -w-8027 -w-8026 -c
 
-LD=$(CXX)
-LDFLAGS=/nologo
-LDEXEFLAG=/link /LIBPATH:c:\mysql\lib\opt libmysql.lib \
-		/LIBPATH:..\lib mysql++.lib /OUT:
+LD=ilink32
+LDFLAGS=-Tpe -Lc:\mysql\lib\bc -Lc:\bcc55\lib -L..\lib
+LDSTARTUP=c0x32.obj
+LIBS=,,libmysql.lib mysqlpp.lib import32.lib cw32mti.lib
+LDEXEFLAG=,
 
-EXTRA_CLEAN=*.dll *.pdb
+EXTRA_CLEAN=*.ilc *.ild *.ilf *.ils *.map *.tds *.dll
 
 OBJ=obj
 EXE=.exe
@@ -38,4 +39,4 @@ DEL=del /q
 	$(CXX) $(CXXFLAGS) $<
 
 
-vc: all
+bc: all

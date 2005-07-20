@@ -2,8 +2,8 @@
 
 rem Command line parsing
 :reparse
-if "%1" == "clean" goto do_clean
 if not exist lib\Makefile goto error
+if "%1" == "clean" goto do_clean
 
 
 rem Build the library file

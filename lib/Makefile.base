@@ -20,13 +20,13 @@
 
 # --- No user-serviceable parts below :)
 
-OBJS=coldata.$O connection.$O datetime.$O field_names.$O \
-		field_types.$O fields.$O manip.$O myset.$O qparms.$O \
-		query.$O result.$O row.$O sql_string.$O string_util.$O \
-		type_info.$O vallist.$O
+OBJS=coldata.$(OBJ) connection.$(OBJ) datetime.$(OBJ) field_names.$(OBJ) \
+		field_types.$(OBJ) fields.$(OBJ) manip.$(OBJ) myset.$(OBJ) qparms.$(OBJ) \
+		query.$(OBJ) result.$(OBJ) row.$(OBJ) sql_string.$(OBJ) string_util.$(OBJ) \
+		type_info.$(OBJ) vallist.$(OBJ)
 
 
-all: $(OBJS) $(LIB_FILE)
+all: $(OBJS) $(LIB_FILE) $(IMP_FILE)
 
 install: install_platform
 
@@ -35,21 +35,21 @@ clean:
 
 
 $(LIB_FILE):
-	$(LD) $(LDFLAGS) $(OBJS)
+	$(LD) $(LDFLAGS) $(LDSTARTUP) $(OBJS) $(LDEXE) $(LIBS)
 
-coldata.$O: coldata.cpp coldata.h
-connection.$O: connection.cpp connection.h
-datetime.$O: datetime.cpp datetime.h
-field_names.$O: field_names.cpp field_names.h
-field_types.$O: field_types.cpp field_types.h
-fields.$O: fields.cpp fields.h
-manip.$O: manip.cpp manip.h
-myset.$O: myset.cpp myset.h
-qparms.$O: qparms.cpp qparms.h
-query.$O: query.cpp query.h
-result.$O: result.cpp result.h
-row.$O: row.cpp row.h
-sql_string.$O: sql_string.cpp sql_string.h
-string_util.$O: string_util.cpp string_util.h
-type_info.$O: type_info.cpp type_info.h
-vallist.$O: vallist.cpp vallist.h
+coldata.$(OBJ): coldata.cpp coldata.h
+connection.$(OBJ): connection.cpp connection.h
+datetime.$(OBJ): datetime.cpp datetime.h
+field_names.$(OBJ): field_names.cpp field_names.h
+field_types.$(OBJ): field_types.cpp field_types.h
+fields.$(OBJ): fields.cpp fields.h
+manip.$(OBJ): manip.cpp manip.h
+myset.$(OBJ): myset.cpp myset.h
+qparms.$(OBJ): qparms.cpp qparms.h
+query.$(OBJ): query.cpp query.h
+result.$(OBJ): result.cpp result.h
+row.$(OBJ): row.cpp row.h
+sql_string.$(OBJ): sql_string.cpp sql_string.h
+string_util.$(OBJ): string_util.cpp string_util.h
+type_info.$(OBJ): type_info.cpp type_info.h
+vallist.$(OBJ): vallist.cpp vallist.h

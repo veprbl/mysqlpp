@@ -2,6 +2,7 @@
 
 rem Figure out which compiler the user wants to create Makefiles for
 if "%1" == "vc" goto build_makefiles
+if "%1" == "bc" goto build_makefiles
 goto usage
 
 
@@ -47,11 +48,12 @@ goto end
 
 rem Display usage message
 :usage
-echo usage: makemake {vc} [args]
+echo usage: makemake {vc, bc} [args]
 echo.
 echo     You must give one of the compiler parameters:
 echo.
-echo         vc: build with Visual C++ command-line compiler and nmake
+echo         vc: Visual C++ command-line compiler (cl) and nmake
+echo         bc: Borland C++ command-line compiler (bcc32) and Borland make
 echo.
 goto end
 
