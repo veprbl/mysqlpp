@@ -1,3 +1,10 @@
+Compatibility
+~~~~~~~~~~~~~
+	MySQL++ only builds under Visual C++ 7.1 (a.k.a. Visual Studio
+	2003, a.k.a. cl version 13.10) or later.  Earlier versions did
+	not support a sufficiently broad set of the Standard C++ language.
+
+
 Building the Library and Example Programs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	As of MySQL++ v2.0, we have changed the VC++ build system over to
@@ -36,7 +43,7 @@ Building the Library and Example Programs
 	comes with the tools.  (It may not be in your PATH by default,
 	so you might have to search your hard drive for it.)
 
-	To create the Makefiles, say "makemake" in the project's root
+	To create the Makefiles, say "makemake vc" in the project's root
 	directory.  You only have to do this once, unless you change
 	Makefile.base or Makefile.vc.  This also starts building the
 	library and the examples.
@@ -51,17 +58,12 @@ Building the Library and Example Programs
 	library is a license violation for programs not licensed under the
 	GPL or LGPL.  Using the library in DLL form avoids this problem.
 
-	MySQL++ currently builds only under Visual C++ 7.1 (a.k.a. Visual
-	Studio 2003, a.k.a. cl version 13.10) or later.  Earlier versions
-	did not support a sufficiently broad set of the Standard C++
-	language.
-
 	If you didn't install MySQL in c:\mysql, you will have to change
 	Makefile.vc in the lib and examples subdirectories and re-run
-	"makemake".  You may also look at changing these files for
+	"makemake vc".  You may also look at changing these files for
 	various other reasons, such as if you don't like the way we name
 	the DLL file, or want the 'install' target to put the MySQL++
-	development files somewhere other than c:\mysql++.
+	development files somewhere other than c:\mysql++\vc.
 
 
 Using MySQL++ in Your Own Projects
@@ -79,7 +81,7 @@ Using MySQL++ in Your Own Projects
 		  Managed Extensions" to "No"
 
 		o Under C/C++::General add to "Additional Include
-		  Directories": c:\mysql++\include, c:\mysql\include
+		  Directories": c:\mysql++\vc\include, c:\mysql\include
 
 		o Under C/C++::Code Generation change "Runtime Library" to
 		  "Multi-threaded Debug DLL (/MDd)" for the Debug
@@ -87,7 +89,7 @@ Using MySQL++ in Your Own Projects
 		  "Multi-threaded DLL (/MD)".
 
 		o Under Linker::General add to "Additional Library
-		  Directories": "c:\mysql\lib\debug, c:\mysql++\lib" for
+		  Directories": "c:\mysql\lib\debug, c:\mysql++\vc\lib" for
 		  the Debug configuration.  For the Release configuration,
 		  make it "c:\mysql\lib\opt, c:\mysql++\lib"
 
