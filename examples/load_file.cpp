@@ -31,7 +31,6 @@
 
 #include <fstream>
 
-#include <errno.h>
 #include <stdlib.h>
 
 using namespace std;
@@ -74,8 +73,8 @@ main(int argc, char *argv[])
 			delete[]read_buffer;
 		}
 		else
-			cerr << "Your binary file " << argv[1] <<
-				"could not be open, errno = " << errno;
+			cerr << "Failed to open " << argv[1] <<
+					'.' << endl;
 	}
 	catch (const BadQuery& er) {
 		// Handle any query errors
