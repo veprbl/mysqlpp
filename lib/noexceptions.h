@@ -126,7 +126,7 @@ private:
 	// Hidden assignment operator and copy ctor, because we should not
 	// be copied.
 	NoExceptions(const NoExceptions&);
-	NoExceptions& operator=(const NoExceptions&) { }
+	NoExceptions& operator=(const NoExceptions&) { return *this; }
 };
 
 } // end namespace mysqlpp
