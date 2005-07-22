@@ -18,6 +18,16 @@ Final v2.0 Stuff
 	o Generate examples/Makefile.simple from new makemake files.  Do
 	  it in configure.in?  Make a mksimple script?
 
+	o Lockable interface is not sufficient to avoid ABI problems
+	  when it is extended later.  Adding or replacing members is
+	  going to shift the layout of derived classes.  To fix this,
+	  change "private bool locked_" to a pointer to a Lock class,
+	  which we can redefine at will.  By using a pointer, we don't
+	  make the layout of the object depend on the lock mechanism
+	  data details.
+
+	o Should more classes be Lockable besides Connection and Query?
+
 
 Future Features
 ---------------
@@ -128,29 +138,38 @@ Future Features
 	  library.
 
 	o Consider other places true thread-awareness could be added.
-	  Should more classes be Lockable?  Are there additional
-	  mechanisms besides Lockable that we need to add?
+	  Are there additional mechanisms besides Lockable that we
+	  need to add?
 
 	o SSQLS structures include some static elements (_table and
-	  names[]), which are defined within the macro.  If you put
-	  an SSQLS declaration in a header file and #include that
-	  from multiple locations, you get a multiply-defined symbol
-	  warning.  Figure out some way to separate the definition
-	  from the declaration.  One idea is to give the SSQLS
-	  macros another parameter, to suppress static definition.
-	  Another is to put them in another macro, which the user
-	  must instantiate once in a .cpp file.  (Similar to the way
-	  MFC message maps work.)
+	  names[]), which are defined within the macro.  If you
+	  put an SSQLS declaration in a header file and #include
+	  that from multiple locations, you get a multiply-defined
+	  symbol warning.  Some ways to separate the definition from
+	  the declaration:
 
-	  Another way to attack it would be to redesign the SSQLS
-	  mechanism entirely.  Instead of defining SSQLSes by
-	  instantiating macros, you could declare the structure in,
-	  say, an XML format, which could be tranformed (XSLT?	Perl +
-	  a DOM parser?) into code very much like in the current
-	  SSQLS macros, except that it would generate separate .cpp
-	  and .h files for each structure.  In addition to solving
-	  the static member problem, it would have other advantages,
-	  like side-stepping the Borland C++ macro size limit.
+		  o Give the SSQLS macros another parameter, to
+		    suppress static definition.
+
+		  o Put statics in a separate macro, which the
+		    user must instantiate once in a .cpp file.
+		    (Similar to the way MFC message maps work.)
+
+		  o Put statics in a sub-macro, conditionally defined,
+		    which SSQLS is implemented in terms of.  Define the
+			condition macro in one module within your
+			program.
+
+		  o Redesign the SSQLS mechanism entirely.  Instead of
+		    defining SSQLSes by instantiating macros, you could
+		    declare the structure in, say, an XML format,
+		    which could be tranformed (XSLT?  Perl + a DOM
+		    parser?) into code very much like in the current
+		    SSQLS macros, except that it would generate
+		    separate .cpp and .h files for each structure.
+		    In addition to solving the static member problem,
+		    it would have other advantages, like side-stepping
+		    the Borland C++ macro size limit.
 
 	o Consider whether some of the current boilerplate can be
 	  made into a base class that all SSQLSes derive from.
@@ -197,6 +216,10 @@ Future Features
 	  Also consider other niceties, like arithmetic.
 	  (See "Algorithms for Programmers" by Binstock and Rex.)
 	  Then write an example showing how to use these mechanisms.
+
+	  Alternately, find another set of date and time classes
+	  (Boost?)  and extend them and the library so they can
+	  replace our hand-rolled classes.
 
 	o When you create a Connection object but don't .connect() it,
 	  several of its functions can fail to work correctly.	ping(),
