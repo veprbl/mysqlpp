@@ -400,6 +400,22 @@ public:
 	/// \brief Sets a connection option, with Boolean argument
 	MYSQLPP_EXPORT bool set_option(Option option, bool arg);
 
+	/// \brief Enable SSL-encrypted connection.
+	///
+	/// \param key the pathname to the key file
+	/// \param cert the pathname to the certificate file
+	/// \param ca the pathname to the certificate authority file
+	/// \param capath directory that contains trusted SSL CA
+	///        certificates in pem format.
+    /// \param cipher list of allowable ciphers to use
+	///
+	/// Must be called before connection is established.
+	///
+	/// Wraps \c mysql_ssl_set() in MySQL C API.
+	MYSQLPP_EXPORT void enable_ssl(const char* key = 0,
+			const char* cert = 0, const char* ca = 0,
+			const char* capath = 0, const char* cipher = 0);
+
 	/// \brief Return the number of rows affected by the last query
 	///
 	/// Simply wraps \c mysql_affected_rows() in the C API.

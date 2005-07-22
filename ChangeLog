@@ -42,6 +42,9 @@
 	  RPMs at once, because they both have /usr/lib/libmysqlpp.so.X,
 	  for instance.
 
+	o Added Connection::enable_ssl(), which enables encrypted
+	  connections to the database server using SSL.
+
 	o Connection::create_db() and drop_db() now return true on
 	  success, not false.
 

@@ -580,6 +580,14 @@ Connection::option_pending(Option option, bool arg) const
 }
 
 
+void
+Connection::enable_ssl(const char* key, const char* cert,
+		const char* ca, const char* capath, const char* cipher)
+{
+	mysql_ssl_set(&mysql_, key, cert, ca, capath, cipher);
+}
+
+
 ostream&
 Connection::api_version(ostream& os)
 {

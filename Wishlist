@@ -13,9 +13,6 @@ widely useful.  Patches or proposals of this sort are always welcome.
 Final v2.0 Stuff
 ----------------
 
-	o Add SSL-enabling support.  Make it one of the new options, instead
-	  of wrapping C API directly?
-
 	o Decide what to do about subscript_iterator bugs.
 
 	o GCC slist extension stuff doesn't work right under GCC 3.0: the
