@@ -49,7 +49,7 @@
 #ifdef HAVE_EXT_SLIST
 #  include <ext/slist>
 #else
-#  ifdef HAVE_STD_SLIST
+#  if defined(HAVE_STD_SLIST) || defined(HAVE_GLOBAL_SLIST)
 #      include <slist>
 #  endif
 #endif
@@ -507,13 +507,24 @@ public:
 	{
 		storein_sequence(con, s);
 	}
+#elif defined(HAVE_GLOBAL_SLIST)
+	/// \brief Specialization of storein_sequence() for STL
+	/// extension \c slist
+	///
+	/// This is primarily for older versions of g++, which put \c slist
+	/// in the global namespace.  This is a common language extension,
+	/// so this may also work for other compilers.
+	template <class T>
+	void storein(slist<T>& con, const char* s)
+	{
+		storein_sequence(con, s);
+	}
 #elif defined(HAVE_STD_SLIST)
 	/// \brief Specialization of storein_sequence() for STL
 	/// extension \c slist
 	///
-	/// This is primarily for older versions of g++, which didn't put
-	/// \c slist in a private namespace.  This is a common language
-	/// extension, so this may also work for other compilers.
+	/// This is primarily for really old versions of g++, which put
+	/// \c slist in the \c std namespace!
 	template <class T>
 	void storein(slist<T>& con, const char* s)
 	{
