@@ -15,10 +15,6 @@ Final v2.0 Stuff
 
 	o Decide what to do about subscript_iterator bugs.
 
-	o GCC slist extension stuff doesn't work right under GCC 3.0: the
-	  template is actually in namespace std!  Extend autoconf test so
-	  that it detects this case.
-
 	o Generate examples/Makefile.simple from new makemake files.  Do
 	  it in configure.in?  Make a mksimple script?
 
