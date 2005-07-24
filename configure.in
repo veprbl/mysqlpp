@@ -86,3 +86,5 @@ AC_SUBST([OPTIONAL_EXAMPLES])
 # Done with checks!
 #
 AC_OUTPUT(Makefile lib/Makefile examples/Makefile)
+
+./makemake.sh simple gcc
