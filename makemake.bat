@@ -10,7 +10,7 @@ goto usage
 rem Set up common headers for new Makefiles
 :build_makefiles
 set head1=## DO NOT EDIT.  Created from Makefile.%1 and Makefile.base.
-set head2=## Edit those files instead, then type 'make' to rebuild
+set head2=## Edit those files instead, then type 'makemake %1' to rebuild
 set head3=## this Makefile.
 
 rem Decide how to build subordinate make.bat files
