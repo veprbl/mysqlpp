@@ -22,8 +22,9 @@ INCLUDES=-I/usr/include/mysql -I../lib
 CXXFLAGS=$(INCLUDES) -O0 -c
 
 LD=$(CXX)
-LDFLAGS=
-LDEXEFLAG=-lmysqlclient -L../lib -lmysqlpp -o
+LDFLAGS=-L../lib
+LDEXEFLAG=-o
+LIBS=-lmysqlclient -lmysqlpp
 
 EXTRA_CLEAN=
 

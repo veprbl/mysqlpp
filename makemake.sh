@@ -14,10 +14,15 @@ function usage() {
 	exit 1
 }
 
-# Strip comments from a Makefile
-function strip_comments() {
+# Simplify a Makefile
+function simplify() {
+	# Strip comments, remove pointless macros, remove $(EXE), substitute
+	# .o for .$(OBJ), remove $(LDSTARTUP), and squash multiple blank
+	# lines.
 	TMP=tmp`basename $1`
-	sed -e '/^#/d' $1 |uniq > $TMP
+	sed -e'/^#/d' -e'/^EXE/d' -e'/^OBJ/d' -e'/^EXTRA/d' -e'/^gcc/d' \
+			-e's/\$(EXE)//g' -e's/\.\$(OBJ)/.o/g' \
+			-e's/\$(LDSTARTUP) //' $1 |uniq > $TMP
 	mv $TMP $1
 }
 
@@ -65,9 +70,9 @@ cat examples/Makefile.$1 examples/Makefile.base >> examples/Makefile$SIMPLE
 
 if [ -n "$SIMPLE" ]
 then
-	# Strip comments out of Makefiles, to simplify them
-	strip_comments lib/Makefile$SIMPLE
-	strip_comments examples/Makefile$SIMPLE
+	# Simplify generated Makefiles
+	simplify lib/Makefile$SIMPLE
+	simplify examples/Makefile$SIMPLE
 else
 	# We're not in "simple" mode, so start build process
 	shift
