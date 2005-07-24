@@ -1,6 +1,8 @@
-## This file contains the 'make' rules common to all compilers.
-## The ../make.bat file appends this to one of the other Makefile.*
-## files to create a functional Makefile for the MySQL++ library.
+## This is the base Makefile for compiling the MySQL++ library on
+## systems that do not use automake.  The ../makemake.* script prepends
+## this to one of the other Makefile.* files in this directory to create
+## a complete Makefile.
+
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU Lesser General Public License as published

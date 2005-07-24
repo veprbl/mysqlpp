@@ -1,5 +1,7 @@
-## This Makefile is for compiling the MySQL++ examples on systems that
-## do not use automake.
+## This is the base Makefile for compiling the MySQL++ examples on
+## systems that do not use automake.  The ../makemake.* script prepends
+## this to one of the other Makefile.* files in this directory to create
+## a complete Makefile.
 
 
 # This file is free software; you can redistribute it and/or modify it

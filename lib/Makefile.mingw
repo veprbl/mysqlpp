@@ -1,5 +1,5 @@
 ## This file contains the 'make' rules specific to MinGW GCC.  The
-## ../make.bat script prepends this to Makefile.base to create a
+## ../makemake.bat script prepends this to Makefile.base to create a
 ## complete Makefile.
 
 # This file is free software; you can redistribute it and/or modify it
