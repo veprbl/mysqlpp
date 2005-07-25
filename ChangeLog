@@ -124,6 +124,14 @@
 	o Removed ResUse::eof().  It's based on a deprecated MySQL
 	  C API feature, and it isn't needed anyway.
 
+	o Removed arrow operator (->) for iterator returned by Fields,
+	  Result and Row containers.  It was inherently buggy, because
+	  a correct arrow operator must return the address of an
+	  object, but the underlying element access functions in these
+	  classes (e.g. at()) return objects by value, of necessity.
+	  Therefore, this operator could only return the address of
+	  a temporary, which cannot be safely dereferenced.
+
 	o Returned Row subscripting to something more like the
 	  v1.7.9 scheme: there are two operator[] overloads, one for an
 	  integer (field by index) and another for const char* (field

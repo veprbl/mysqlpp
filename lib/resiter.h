@@ -176,16 +176,13 @@ public:
 		return (d_ == j.d_ && i_ >= j.i_);
 	}
 	
-	/// \brief Access the current pointed-to element within the
-	/// container
-	ReturnType* operator ->() const { return &(d_->at(i_)); }
-	
-	/// \brief Dereference the iterator, returning the pointed-to
-	/// element within the container.
+	/// \brief Dereference the iterator, returning a copy of the
+	/// pointed-to element within the container.
 	ReturnType operator *() const { return d_->at(i_); }
 	
-	/// \brief Return the an element in the container given its index
-	ReturnType operator [](SizeType n) const { return (*d_)[n]; }
+	/// \brief Return a copy of the element at the given position
+	/// within the container.
+	ReturnType operator [](SizeType n) const { return d->at(n); }
 	
 	/// \brief Move the iterator to the next element, returning an
 	/// iterator to that element

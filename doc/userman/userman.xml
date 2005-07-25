@@ -1942,13 +1942,13 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 			<sect4>
 				<title>Library-wide changes</title>
 				
-				<para>All distributed Makefiles and
-				project files only build dynamic
-				libraries. (Shared objects on most
-				Unices, DLLs on Windows, etc.) Unless
-				your program is licensed under the GPL
-				or LGPL, you shouldn't have been using
-				the static libraries from previous
+				<para>All distributed Makefiles files
+				only build dynamic libraries. (Shared
+				objects on most Unices, DLLs on
+				Windows, etc.) Unless your program
+				is licensed under the GPL or LGPL,
+				you shouldn't have been using the
+				static libraries from previous
 				versions anyway.</para>
 			</sect4>
 
@@ -1969,14 +1969,6 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 					affect your code if
 					you have exceptions
 					disabled.</para></listitem>
-
-					<listitem><para><computeroutput>Connection::create_db()</computeroutput>,
-					<computeroutput>drop_db()</computeroutput>
-					and
-					<computeroutput>select_db()</computeroutput>
-					now take their arguments by
-					<computeroutput>const</computeroutput>
-					reference.</para></listitem>
 
 					<listitem><para>Renamed
 					<computeroutput>Connection::real_connect()</computeroutput>
@@ -2283,6 +2275,16 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 					which will put all symbols
 					in <computeroutput>namespace
 					mysqlpp</computeroutput>.</para></listitem>
+
+					<listitem><para>Can no
+					longer use arrow operator
+					(<computeroutput>-></computeroutput>)
+					on the iterators into the
+					<computeroutput>Fields</computeroutput>,
+					<computeroutput>Result</computeroutput>
+					and
+					<computeroutput>Row</computeroutput>
+					containers.</para></listitem>
 				</itemizedlist>
 			</sect4>
 		</sect3>
