@@ -15,8 +15,6 @@ Final v2.0 Stuff
 
 	o Decide what to do about subscript_iterator bugs.
 
-	o Should more classes be Lockable besides Connection and Query?
-
 
 Future Features
 ---------------
@@ -126,9 +124,22 @@ Future Features
 	  mechanism to use platform mutexes via the Boost.Threads
 	  library.
 
-	o Consider other places true thread-awareness could be added.
-	  Are there additional mechanisms besides Lockable that we
-	  need to add?
+	  Thread safety requirements:
+
+	  - Only one query executing at once per connection
+
+	  - For "use" queries, Connection (and therefore Query) object must
+	    remain locked until last row is consumed
+
+	  - Need some way to call mysql_thread_init()/mysql_thread_end()
+	    per thread.
+
+	  - Throw exception if mysql_thread_safe() returns false and library
+		is compiled to be thread-aware?  Or maybe do it only once the
+		function wrapping mysql_thread_init() is called.
+
+	  - Safest to have one Connection per thread.  Rules for sharing:
+	    http://dev.mysql.com/doc/mysql/en/threaded-clients.html
 
 	o SSQLS structures include some static elements (_table and
 	  names[]), which are defined within the macro.  If you
