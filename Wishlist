@@ -15,14 +15,6 @@ Final v2.0 Stuff
 
 	o Decide what to do about subscript_iterator bugs.
 
-	o Lockable interface is not sufficient to avoid ABI problems
-	  when it is extended later.  Adding or replacing members is
-	  going to shift the layout of derived classes.  To fix this,
-	  change "private bool locked_" to a pointer to a Lock class,
-	  which we can redefine at will.  By using a pointer, we don't
-	  make the layout of the object depend on the lock mechanism
-	  data details.
-
 	o Should more classes be Lockable besides Connection and Query?
 
 

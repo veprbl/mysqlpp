@@ -6,10 +6,14 @@
 /// specific in this version of MySQL++.  In a future version, it will
 /// imply that operations that aren't normally thread-safe will use
 /// platform mutexes if MySQL++ is configured to support them.  This is
-/// planned for v2.1. (See the ChangeLog for the details.)  If a patch
-/// appears before then, it will certainly be applied sooner!  In the
-/// meantime, do not depend on this mechanism for thread safety; you
-/// will have to serialize access to some resources yourself.
+/// planned for a version beyond v2.0. (See the Wishlist for the plan.)
+/// In the meantime, do not depend on this mechanism for thread safety;
+/// you will have to serialize access to some resources yourself.
+///
+/// To effect this variability in what it means for an object to be
+/// "locked", Lockable is only an interface.  It delegates the actual
+/// implementation to a subclass of the Lock interface, using the
+/// Bridge pattern.  (See Gamma et al.)
 
 /***********************************************************************
  Copyright (c) 2005 by Educational Technology Resources, Inc.
@@ -39,27 +43,54 @@
 
 namespace mysqlpp {
 
-/// \brief Interface allowing a class to declare itself as "lockable".
-///
-/// A class derives from this one to acquire a standard interface for
-/// serializing operations that may not be thread-safe.
+/// \brief Abstract base class for lock implementation, used by
+/// Lockable.
 
-class Lockable
+class Lock
 {
-protected:
-	/// \brief Default constructor
-	Lockable(bool lck = false) :
-	locked_(lck)
-	{
-	}
-
+public:
 	/// \brief Destroy object
-	virtual ~Lockable() { }
+	virtual ~Lock() { }
 
 	/// \brief Lock the object
 	///
 	/// \return true if object was already locked
-	virtual bool lock()
+	virtual bool lock() = 0;
+
+	/// \brief Unlock the object
+	virtual void unlock() = 0;
+
+	/// \brief Returns true if object is locked
+	virtual bool locked() const = 0;
+
+	/// \brief Set the lock state.
+	virtual void set(bool b) = 0;
+};
+
+
+/// \brief Trivial Lock subclass, using a boolean variable as the
+/// lock flag.
+///
+/// This is the only Lock implementation available in this version of
+/// MySQL++.  It will be supplemented with a better implementation for
+/// use with threads at a later date.
+
+class BasicLock : public Lock
+{
+public:
+	/// \brief Create object
+	BasicLock(bool locked = false) :
+	locked_(false)
+	{
+	}
+	
+	/// \brief Destroy object
+	~BasicLock() { }
+
+	/// \brief Lock the object
+	///
+	/// \return true if object was already locked
+	bool lock()
 	{
 		if (locked_) {
 			return true;
@@ -69,18 +100,54 @@ protected:
 	}
 
 	/// \brief Unlock the object
-	virtual void unlock() { locked_ = false; }
+	void unlock() { locked_ = false; }
 
 	/// \brief Returns true if object is locked
 	bool locked() const { return locked_; }
 
-protected:
-	/// \brief Set the lock state.  Protected, because this method is
-	/// only for use by subclass assignment operators and the like.
-	void set_lock(bool b) { locked_ = b; }
+	/// \brief Set the lock state.
+	void set(bool b) { locked_ = b; }
 
 private:
 	bool locked_;
+};
+
+
+/// \brief Interface allowing a class to declare itself as "lockable".
+///
+/// A class derives from this one to acquire a standard interface for
+/// serializing operations that may not be thread-safe.
+
+class Lockable
+{
+protected:
+	/// \brief Default constructor
+	Lockable(bool locked = false) :
+	pimpl_(new BasicLock(locked))
+	{
+	}
+
+	/// \brief Destroy object
+	virtual ~Lockable() { }
+
+	/// \brief Lock the object
+	///
+	/// \return true if object was already locked
+	virtual bool lock() { return pimpl_->lock(); }
+
+	/// \brief Unlock the object
+	virtual void unlock() { pimpl_->unlock(); }
+
+	/// \brief Returns true if object is locked
+	bool locked() const { return pimpl_->locked(); }
+
+protected:
+	/// \brief Set the lock state.  Protected, because this method is
+	/// only for use by subclass assignment operators and the like.
+	void set_lock(bool b) { pimpl_->set(b); }
+
+private:
+	Lock* pimpl_;
 };
 
 } // end namespace mysqlpp
