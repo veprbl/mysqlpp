@@ -454,12 +454,7 @@ std::string Query::str(SQLQueryParms& p, query_reset r)
 
 bool Query::success()
 {
-	if (success_) {
-		return conn_->success();
-	}
-	else {
-		return false;
-	}
+	return success_ && conn_->success();
 }
 
 
