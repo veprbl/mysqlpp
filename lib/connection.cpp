@@ -553,8 +553,8 @@ Connection::apply_pending_options()
 					case opt_type_string:	os << it->str_arg; break;
 					case opt_type_integer:	os << it->int_arg; break;
 					case opt_type_boolean:	os << it->bool_arg; break;
-					case opt_type_none:	os << "none"; break;
-					default:		os << "unknown"; break;
+					case opt_type_none:		// warning eater
+					default:				os << "unknown"; break;
 				}
 			}
 			throw BadOption(os.str(), it->option);
