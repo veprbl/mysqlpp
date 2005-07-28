@@ -19,7 +19,7 @@ Final v2.0 Stuff
 
 	o Library versioning simplification stuff.
 
-	o Get MinGW build working.  It _can_ be done...
+	o Find out why MinGW can't link examples to the DLL it built.
 
 	o Run examples under watchful eye of Valgrind.
 
@@ -263,11 +263,6 @@ Bug Fix/Maintenance Items
 	  a cgi-bin directory to try it out.  Make load_image use the
 	  standard command line parameters, so you can manually load up
 	  some images for cgi_image to retrieve.
-
-	o MinGW can't build a DLL for MySQL++.  It has to do with the file
-	  reorganization in 1.7.20: if you move everything from row.cc to
-	  a new row2.h file and include it in a few strategic locations, it
-	  works.  But, this is a bogus fix.  Find the right one.
 
 	o Template ListInsert in lib/myset.h isn't being used within the
 	  library.  It could probably be used in place of SetInsert
