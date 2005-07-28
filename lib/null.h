@@ -72,9 +72,9 @@ struct NullisNull
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	MYSQLPP_EXPORT static null_type null_is() { return null_type(); }
+	static null_type null_is() { return null_type(); }
 
-	MYSQLPP_EXPORT static std::ostream& null_ostr(std::ostream& o)
+	static std::ostream& null_ostr(std::ostream& o)
 	{
 		o << "(NULL)";
 		return o;
@@ -93,9 +93,9 @@ struct NullisZero
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	MYSQLPP_EXPORT static int null_is() { return 0; }
+	static int null_is() { return 0; }
 	
-	MYSQLPP_EXPORT static std::ostream& null_ostr(std::ostream& o)
+	static std::ostream& null_ostr(std::ostream& o)
 	{
 		o << 0;
 		return o;
@@ -113,9 +113,9 @@ struct NullisBlank
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	MYSQLPP_EXPORT static const char *null_is() { return ""; }
+	static const char *null_is() { return ""; }
 	
-	MYSQLPP_EXPORT static std::ostream& null_ostr(std::ostream& o)
+	static std::ostream& null_ostr(std::ostream& o)
 	{
 		o << "";
 		return o;
@@ -240,17 +240,17 @@ public:
 	bool is_null;
 	typedef void value_type;
 
-	MYSQLPP_EXPORT Null() :
+	Null() :
 	is_null(false)
 	{
 	}
 	
-	MYSQLPP_EXPORT Null(const null_type&) :
+	Null(const null_type&) :
 	is_null(true)
 	{
 	}
 
-	MYSQLPP_EXPORT Null& operator =(const null_type&)
+	Null& operator =(const null_type&)
 	{
 		is_null = true;
 		return *this;

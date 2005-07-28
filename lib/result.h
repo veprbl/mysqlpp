@@ -62,7 +62,7 @@ class ResUse : public OptionalExceptions
 {
 public:
 	/// \brief Default constructor
-	MYSQLPP_EXPORT ResUse() :
+	ResUse() :
 	OptionalExceptions(),
 	conn_(0),
 	result_(0),
@@ -77,7 +77,7 @@ public:
 	MYSQLPP_EXPORT ResUse(MYSQL_RES* result, Connection* c = 0, bool te = true);
 	
 	/// \brief Create a copy of another ResUse object
-	MYSQLPP_EXPORT ResUse(const ResUse& other) :
+	ResUse(const ResUse& other) :
 	OptionalExceptions(),
 	initialized_(false)
 	{
@@ -91,7 +91,7 @@ public:
 	ResUse& operator =(const ResUse& other);
 
 	/// \brief Return raw MySQL C API result set
-	MYSQLPP_EXPORT MYSQL_RES* raw_result()
+	MYSQL_RES* raw_result()
 	{
 		return result_;
 	}
@@ -100,7 +100,7 @@ public:
 	///
 	/// This is not a thin wrapper. It does a lot of error checking before
 	/// returning the mysqlpp::Row object containing the row data.
-	MYSQLPP_EXPORT Row fetch_row()
+	Row fetch_row()
 	{
 		if (!result_) {
 			if (throw_exceptions()) {
@@ -124,31 +124,31 @@ public:
 	}
 
 	/// \brief Wraps mysql_fetch_lengths() in MySQL C API.
-	MYSQLPP_EXPORT unsigned long *fetch_lengths() const
+	unsigned long *fetch_lengths() const
 	{
 		return mysql_fetch_lengths(result_);
 	}
 
 	/// \brief Wraps mysql_fetch_field() in MySQL C API.
-	MYSQLPP_EXPORT Field& fetch_field() const
+	Field& fetch_field() const
 	{
 		return *mysql_fetch_field(result_);
 	}
 
 	/// \brief Wraps mysql_field_seek() in MySQL C API.
-	MYSQLPP_EXPORT void field_seek(int field)
+	void field_seek(int field)
 	{
 		mysql_field_seek(result_, field);
 	}
 
 	/// \brief Wraps mysql_num_fields() in MySQL C API.
-	MYSQLPP_EXPORT int num_fields() const
+	int num_fields() const
 	{
 		return mysql_num_fields(result_);
 	}
 	
 	/// \brief Documentation needed!
-	MYSQLPP_EXPORT void parent_leaving()
+	void parent_leaving()
 	{
 		conn_ = 0;
 	}
@@ -158,7 +158,7 @@ public:
 	/// This class's destructor is little more than a call to purge(),
 	/// so you can think of this as a way to re-use a ResUse object,
 	/// to avoid having to completely re-create it.
-	MYSQLPP_EXPORT void purge()
+	void purge()
 	{
 		if (result_) {
 			mysql_free_result(result_);
@@ -187,19 +187,19 @@ public:
 	///
 	/// Query::use() returns a ResUse object, and it won't contain a
 	/// valid result set if the query failed.
-	MYSQLPP_EXPORT operator bool() const
+	operator bool() const
 	{
 		return result_;
 	}
 	
 	/// \brief Return the number of columns in the result set.
-	MYSQLPP_EXPORT unsigned int columns() const
+	unsigned int columns() const
 	{
 		return num_fields();
 	}
 
 	/// \brief Get the name of table that the result set comes from.
-	MYSQLPP_EXPORT std::string& table()
+	std::string& table()
 	{
 		return table_;
 	}
@@ -207,7 +207,7 @@ public:
 	/// \brief Return the name of the table
 	///
 	/// This is only valid 
-	MYSQLPP_EXPORT const std::string& table() const
+	const std::string& table() const
 	{
 		return table_;
 	}
@@ -239,8 +239,7 @@ public:
 	MYSQLPP_EXPORT inline mysql_type_info& field_type(int i);
 
 	/// \brief Get the MySQL type for a field given its index.
-	MYSQLPP_EXPORT inline const mysql_type_info& field_type(int)
-			const;
+	MYSQLPP_EXPORT inline const mysql_type_info& field_type(int) const;
 
 	/// \brief Get a list of the types of the fields within this
 	/// result set.
@@ -287,13 +286,13 @@ public:
 	MYSQLPP_EXPORT inline void reset_types();
 
 	/// \brief Get the underlying Fields structure.
-	MYSQLPP_EXPORT const Fields& fields() const
+	const Fields& fields() const
 	{
 		return fields_;
 	}
 
 	/// \brief Get the underlying Field structure given its index.
-	MYSQLPP_EXPORT const Field& fields(unsigned int i) const
+	const Field& fields(unsigned int i) const
 	{
 		return fields_.at(i);
 	}
@@ -303,14 +302,14 @@ public:
 	///
 	/// This works because the underlying result set is stored as a
 	/// pointer, and thus can be copied and then compared.
-	MYSQLPP_EXPORT bool operator ==(const ResUse& other) const
+	bool operator ==(const ResUse& other) const
 	{
 		return result_ == other.result_;
 	}
 	
 	/// \brief Returns true if the other ResUse object has a different
 	/// underlying C API result set from this one.
-	MYSQLPP_EXPORT bool operator !=(const ResUse& other) const
+	bool operator !=(const ResUse& other) const
 	{
 		return result_ != other.result_;
 	}
@@ -348,18 +347,18 @@ class Result : public ResUse,
 {
 public:
 	/// \brief Default constructor
-	MYSQLPP_EXPORT Result()
+	Result()
 	{
 	}
 	
 	/// \brief Fully initialize object
-	MYSQLPP_EXPORT Result(MYSQL_RES* result, bool te = true) :
+	Result(MYSQL_RES* result, bool te = true) :
 	ResUse(result, 0, te)
 	{
 	}
 
 	/// \brief Initialize object as a copy of another Result object
-	MYSQLPP_EXPORT Result(const Result& other) :
+	Result(const Result& other) :
 	ResUse(other),
 	const_subscript_container<Result, Row, const Row>() // no copying here
 	{
@@ -367,14 +366,14 @@ public:
 	}
 
 	/// \brief Destroy result set
-	MYSQLPP_EXPORT virtual ~Result() { }
+	virtual ~Result() { }
 
 	/// \brief Wraps mysql_fetch_row() in MySQL C API.
 	///
 	/// This is simply the const version of the same function in our
 	/// \link mysqlpp::ResUse parent class \endlink . Why this cannot
 	/// actually \e be in our parent class is beyond me.
-	MYSQLPP_EXPORT const Row fetch_row() const
+	const Row fetch_row() const
 	{
 		if (!result_) {
 			if (throw_exceptions()) {
@@ -398,7 +397,7 @@ public:
 	}
 
 	/// \brief Wraps mysql_num_rows() in MySQL C API.
-	MYSQLPP_EXPORT my_ulonglong num_rows() const
+	my_ulonglong num_rows() const
 	{
 		if (initialized_)
 			return mysql_num_rows(result_);
@@ -407,25 +406,25 @@ public:
 	}
 
 	/// \brief Wraps mysql_data_seek() in MySQL C API.
-	MYSQLPP_EXPORT void data_seek(uint offset) const
+	void data_seek(uint offset) const
 	{
 		mysql_data_seek(result_, offset);
 	}
 
 	/// \brief Alias for num_rows(), only with different return type.
-	MYSQLPP_EXPORT size_type size() const
+	size_type size() const
 	{
 		return size_type(num_rows());
 	}
 
 	/// \brief Alias for num_rows(), only with different return type.
-	MYSQLPP_EXPORT size_type rows() const
+	size_type rows() const
 	{
 		return size_type(num_rows());
 	}
 
 	/// \brief Get the row with an offset of i.
-	MYSQLPP_EXPORT const Row at(size_type i) const
+	const Row at(size_type i) const
 	{
 		data_seek(i);
 		return fetch_row();
@@ -459,7 +458,7 @@ public:
 	my_ulonglong rows;		///< number of rows affected
 	std::string info;		///< additional info about query result
 
-	MYSQLPP_EXPORT ResNSel() :
+	ResNSel() :
 	success(false)
 	{
 	}
@@ -468,7 +467,7 @@ public:
 	MYSQLPP_EXPORT ResNSel(Connection* q);
 
 	/// \brief Returns true if the query was successful
-	MYSQLPP_EXPORT operator bool() { return success; }
+	operator bool() { return success; }
 };
 
 

@@ -53,10 +53,10 @@ namespace mysqlpp {
 template <class T> struct DTbase
 {
 	/// \brief Destroy object
-	MYSQLPP_EXPORT virtual ~DTbase() { }
+	virtual ~DTbase() { }
 
 	/// \brief Return a copy of the item in C++ string form
-	MYSQLPP_EXPORT operator std::string() const
+	operator std::string() const
 	{
 		return stream2string<std::string>(*this);
 	}
@@ -68,37 +68,37 @@ template <class T> struct DTbase
 	MYSQLPP_EXPORT virtual short compare(const T& other) const = 0;
 
 	/// \brief Returns true if "other" is equal to this object
-	MYSQLPP_EXPORT bool operator ==(const T& other) const
+	bool operator ==(const T& other) const
 	{
 		return !compare(other);
 	}
 
 	/// \brief Returns true if "other" is not equal to this object
-	MYSQLPP_EXPORT bool operator !=(const T& other) const
+	bool operator !=(const T& other) const
 	{
 		return compare(other);
 	}
 
 	/// \brief Returns true if "other" is less than this object
-	MYSQLPP_EXPORT bool operator <(const T& other) const
+	bool operator <(const T& other) const
 	{
 		return compare(other) < 0;
 	}
 
 	/// \brief Returns true if "other" is less than or equal to this object
-	MYSQLPP_EXPORT bool operator <=(const T& other) const
+	bool operator <=(const T& other) const
 	{
 		return compare(other) <= 0;
 	}
 
 	/// \brief Returns true if "other" is greater than this object
-	MYSQLPP_EXPORT bool operator >(const T& other) const
+	bool operator >(const T& other) const
 	{
 		return compare(other) > 0;
 	}
 
 	/// \brief Returns true if "other" is greater than or equal to this object
-	MYSQLPP_EXPORT bool operator >=(const T& other) const
+	bool operator >=(const T& other) const
 	{
 		return compare(other) >= 0;
 	}
@@ -132,7 +132,7 @@ struct DateTime : public DTbase<DateTime>
 	tiny_int second;
 
 	/// \brief Default constructor
-	MYSQLPP_EXPORT DateTime() :
+	DateTime() :
 	DTbase<DateTime>(),
 	year(0),
 	month(0),
@@ -144,7 +144,7 @@ struct DateTime : public DTbase<DateTime>
 	}
 	
 	/// \brief Initialize object as a copy of another Date
-	MYSQLPP_EXPORT DateTime(const DateTime& other) :
+	DateTime(const DateTime& other) :
 	DTbase<DateTime>(),
 	year(other.year),
 	month(other.month),
@@ -159,12 +159,12 @@ struct DateTime : public DTbase<DateTime>
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
 	/// zero-padded.
-	MYSQLPP_EXPORT DateTime(cchar* str) { convert(str); }
+	DateTime(cchar* str) { convert(str); }
 	
 	/// \brief Initialize object from a MySQL date-and-time string
 	///
 	/// \sa DateTime(cchar*)
-	MYSQLPP_EXPORT DateTime(const ColData& str)
+	DateTime(const ColData& str)
 	{
 		convert(str.c_str());
 	}
@@ -172,7 +172,7 @@ struct DateTime : public DTbase<DateTime>
 	/// \brief Initialize object from a MySQL date-and-time string
 	///
 	/// \sa DateTime(cchar*)
-	MYSQLPP_EXPORT DateTime(const std::string& str)
+	DateTime(const std::string& str)
 	{
 		convert(str.c_str());
 	}
@@ -221,10 +221,10 @@ struct Date : public DTbase<Date>
 	tiny_int day;
 
 	/// \brief Default constructor
-	MYSQLPP_EXPORT Date() : year(0), month(0), day(0) { }
+	Date() : year(0), month(0), day(0) { }
 
 	/// \brief Initialize object
-	MYSQLPP_EXPORT Date(short int y, tiny_int m, tiny_int d) :
+	Date(short int y, tiny_int m, tiny_int d) :
 	DTbase<Date>(),
 	year(y),
 	month(m),
@@ -233,7 +233,7 @@ struct Date : public DTbase<Date>
 	}
 	
 	/// \brief Initialize object as a copy of another Date
-	MYSQLPP_EXPORT Date(const Date& other) :
+	Date(const Date& other) :
 	DTbase<Date>(),
 	year(other.year),
 	month(other.month),
@@ -242,7 +242,7 @@ struct Date : public DTbase<Date>
 	}
 
 	/// \brief Initialize object from date part of date/time object
-	MYSQLPP_EXPORT Date(const DateTime& other) :
+	Date(const DateTime& other) :
 	DTbase<Date>(),
 	year(other.year),
 	month(other.month),
@@ -254,17 +254,17 @@ struct Date : public DTbase<Date>
 	///
 	/// String must be in the YYYY-MM-DD format.  It doesn't have to be
 	/// zero-padded.
-	MYSQLPP_EXPORT Date(cchar* str) { convert(str); }
+	Date(cchar* str) { convert(str); }
 	
 	/// \brief Initialize object from a MySQL date string
 	///
 	/// \sa Date(cchar*)
-	MYSQLPP_EXPORT Date(const ColData& str) { convert(str.c_str()); }
+	Date(const ColData& str) { convert(str.c_str()); }
 
 	/// \brief Initialize object from a MySQL date string
 	///
 	/// \sa Date(cchar*)
-	MYSQLPP_EXPORT Date(const std::string& str)
+	Date(const std::string& str)
 	{
 		convert(str.c_str());
 	}
@@ -305,10 +305,10 @@ struct Time : public DTbase<Time>
 	tiny_int second;
 
 	/// \brief Default constructor
-	MYSQLPP_EXPORT Time() : hour(0), minute(0), second(0) { }
+	Time() : hour(0), minute(0), second(0) { }
 
 	/// \brief Initialize object
-	MYSQLPP_EXPORT Time(tiny_int h, tiny_int m, tiny_int s) :
+	Time(tiny_int h, tiny_int m, tiny_int s) :
 	hour(h),
 	minute(m),
 	second(s)
@@ -316,7 +316,7 @@ struct Time : public DTbase<Time>
 	}
 
 	/// \brief Initialize object as a copy of another Time
-	MYSQLPP_EXPORT Time(const Time& other) :
+	Time(const Time& other) :
 	DTbase<Time>(),
 	hour(other.hour),
 	minute(other.minute),
@@ -325,7 +325,7 @@ struct Time : public DTbase<Time>
 	}
 
 	/// \brief Initialize object from time part of date/time object
-	MYSQLPP_EXPORT Time(const DateTime& other) :
+	Time(const DateTime& other) :
 	DTbase<Time>(),
 	hour(other.hour),
 	minute(other.minute),
@@ -337,17 +337,17 @@ struct Time : public DTbase<Time>
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
 	/// zero-padded.
-	MYSQLPP_EXPORT Time(cchar* str) { convert(str); }
+	Time(cchar* str) { convert(str); }
 
 	/// \brief Initialize object from a MySQL time string
 	///
 	/// \sa Time(cchar*)
-	MYSQLPP_EXPORT Time(const ColData& str) { convert(str.c_str()); }
+	Time(const ColData& str) { convert(str.c_str()); }
 
 	/// \brief Initialize object from a MySQL time string
 	///
 	/// \sa Time(cchar*)
-	MYSQLPP_EXPORT Time(const std::string& str)
+	Time(const std::string& str)
 	{
 		convert(str.c_str());
 	}

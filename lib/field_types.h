@@ -41,22 +41,22 @@ class FieldTypes : public std::vector<mysql_type_info>
 {
 public:
 	/// \brief Default constructor
-	MYSQLPP_EXPORT FieldTypes() { }
+	FieldTypes() { }
 	
 	/// \brief Create list of field types from a result set
-	MYSQLPP_EXPORT FieldTypes(const ResUse* res)
+	FieldTypes(const ResUse* res)
 	{
 		init(res);
 	}
 
 	/// \brief Create fixed-size list of uninitialized field types
-	MYSQLPP_EXPORT FieldTypes(int i) :
+	FieldTypes(int i) :
 	std::vector<mysql_type_info>(i)
 	{
 	}
 
 	/// \brief Initialize field list based on a result set
-	MYSQLPP_EXPORT FieldTypes& operator =(const ResUse* res)
+	FieldTypes& operator =(const ResUse* res)
 	{
 		init(res);
 		return *this;
@@ -66,21 +66,21 @@ public:
 	/// objects at the beginning of the list
 	///
 	/// \param i number of field type objects to insert
-	MYSQLPP_EXPORT FieldTypes& operator =(int i)
+	FieldTypes& operator =(int i)
 	{
 		insert(begin(), i, mysql_type_info());
 		return *this;
 	}
 
 	/// \brief Returns a field type within the list given its index.
-	MYSQLPP_EXPORT mysql_type_info& operator [](int i)
+	mysql_type_info& operator [](int i)
 	{
 		return std::vector<mysql_type_info>::operator [](i);
 	}
 
 	/// \brief Returns a field type within the list given its index,
 	/// in const context.
-	MYSQLPP_EXPORT const mysql_type_info& operator [](int i) const
+	const mysql_type_info& operator [](int i) const
 	{
 		return std::vector<mysql_type_info>::operator [](i);
 	}

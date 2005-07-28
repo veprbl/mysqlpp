@@ -43,50 +43,50 @@ class FieldNames : public std::vector<std::string>
 {
 public:
 	/// \brief Default constructor
-	MYSQLPP_EXPORT FieldNames() { }
+	FieldNames() { }
 	
 	/// \brief Create field name list from a result set
-	MYSQLPP_EXPORT FieldNames(const ResUse* res)
+	FieldNames(const ResUse* res)
 	{
 		init(res);
 	}
 
 	/// \brief Create empty field name list, reserving space for
 	/// a fixed number of field names.
-	MYSQLPP_EXPORT FieldNames(int i) :
+	FieldNames(int i) :
 	std::vector<std::string>(i)
 	{
 	}
 
 	/// \brief Initializes the field list from a result set
-	MYSQLPP_EXPORT FieldNames& operator =(const ResUse* res)
+	FieldNames& operator =(const ResUse* res)
 	{
 		init(res);
 		return *this;
 	}
 
 	/// \brief Insert \c i empty field names at beginning of list
-	MYSQLPP_EXPORT FieldNames& operator =(int i)
+	FieldNames& operator =(int i)
 	{
 		insert(begin(), i, "");
 		return *this;
 	}
 
 	/// \brief Get the name of a field given its index.
-	MYSQLPP_EXPORT std::string& operator [](int i)
+	std::string& operator [](int i)
 	{
 		return at(i);
 	}
 
 	/// \brief Get the name of a field given its index, in const
 	/// context.
-	MYSQLPP_EXPORT const std::string& operator [](int i) const
+	const std::string& operator [](int i) const
 	{
 		return at(i);
 	}
 
 	/// \brief Get the index number of a field given its name
-	MYSQLPP_EXPORT uint operator [](std::string i) const
+	uint operator [](std::string i) const
 	{
 		std::string temp(i);
 		str_to_lwr(temp);

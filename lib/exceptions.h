@@ -44,37 +44,37 @@ class Exception : public std::exception
 {
 public:
 	/// \brief Create exception object as copy of another
-	MYSQLPP_EXPORT Exception(const Exception& e) throw() :
+	Exception(const Exception& e) throw() :
 	std::exception(e),
 	what_(e.what_)
 	{
 	}
 
 	/// \brief Assign another exception object's contents to this one
-	MYSQLPP_EXPORT Exception& operator=(const Exception& rhs) throw()
+	Exception& operator=(const Exception& rhs) throw()
 	{
 		what_ = rhs.what_;
 		return *this;
 	}
 
 	/// \brief Destroy exception object
-	MYSQLPP_EXPORT ~Exception() throw() { }
+	~Exception() throw() { }
 
 	/// \brief Returns explanation of why exception was thrown
-	MYSQLPP_EXPORT virtual const char* what() const throw()
+	virtual const char* what() const throw()
 	{
 		return what_.c_str();
 	}
 
 protected:
 	/// \brief Create exception object
-	MYSQLPP_EXPORT Exception(const char* w = "") throw() :
+	Exception(const char* w = "") throw() :
 	what_(w)
 	{
 	}
 
 	/// \brief Create exception object
-	MYSQLPP_EXPORT Exception(const std::string& w) throw() :
+	Exception(const std::string& w) throw() :
 	what_(w)
 	{
 	}
@@ -101,7 +101,7 @@ public:
 	/// \param d string form of data we tried to convert
 	/// \param r ??
 	/// \param a ??
-	MYSQLPP_EXPORT BadConversion(const char* tn, const char* d,
+	BadConversion(const char* tn, const char* d,
 			size_t r, size_t a) :
 	Exception(std::string("Tried to convert \"") +
 			std::string(d ? d : "") + "\" to a \"" +
@@ -120,7 +120,7 @@ public:
 	/// \param d string form of data we tried to convert
 	/// \param r ??
 	/// \param a ??
-	MYSQLPP_EXPORT BadConversion(const std::string& w, const char* tn,
+	BadConversion(const std::string& w, const char* tn,
 				  const char* d, size_t r, size_t a) :
 	Exception(w),
 	type_name(tn),
@@ -135,7 +135,7 @@ public:
 	/// \param w the "what" error string
 	///
 	/// All other data members are initialize to default values
-	MYSQLPP_EXPORT explicit BadConversion(const char* w = "") :
+	explicit BadConversion(const char* w = "") :
 	Exception(w),
 	type_name("unknown"),
 	data(""),
@@ -145,7 +145,7 @@ public:
 	}
 
 	/// \brief Destroy exception
-	MYSQLPP_EXPORT ~BadConversion() throw() { }
+	~BadConversion() throw() { }
 };
 
 
@@ -160,13 +160,13 @@ public:
 	/// \brief Create exception object
 	///
 	/// \param bad_field name of field the MySQL server didn't like
-	MYSQLPP_EXPORT explicit BadFieldName(const char* bad_field) :
+	explicit BadFieldName(const char* bad_field) :
 	Exception(std::string("Unknown field name: ") + bad_field)
 	{
 	}
 
 	/// \brief Destroy exception
-	MYSQLPP_EXPORT ~BadFieldName() throw() { }
+	~BadFieldName() throw() { }
 };
 
 
@@ -177,7 +177,7 @@ class BadNullConversion : public Exception
 {
 public:
 	/// \brief Create exception object
-	MYSQLPP_EXPORT explicit BadNullConversion(const char* w = "") :
+	explicit BadNullConversion(const char* w = "") :
 	Exception(w)
 	{
 	}
@@ -191,7 +191,7 @@ class BadOption : public Exception
 {
 public:
 	/// \brief Create exception object, taking C string
-	MYSQLPP_EXPORT explicit BadOption(const char* w,
+	explicit BadOption(const char* w,
 			Connection::Option o) :
 	Exception(w),
 	option_(o)
@@ -199,7 +199,7 @@ public:
 	}
 
 	/// \brief Create exception object, taking C++ string
-	MYSQLPP_EXPORT explicit BadOption(const std::string& w,
+	explicit BadOption(const std::string& w,
 			Connection::Option o) :
 	Exception(w),
 	option_(o)
@@ -223,13 +223,13 @@ class BadParamCount : public Exception
 {
 public:
 	/// \brief Create exception object
-	MYSQLPP_EXPORT explicit BadParamCount(const char* w = "") :
+	explicit BadParamCount(const char* w = "") :
 	Exception(w)
 	{
 	}
 
 	/// \brief Destroy exception
-	MYSQLPP_EXPORT ~BadParamCount() throw() { }
+	~BadParamCount() throw() { }
 };
 
 
@@ -244,13 +244,13 @@ class BadQuery : public Exception
 {
 public:
 	/// \brief Create exception object, taking C string
-	MYSQLPP_EXPORT explicit BadQuery(const char* w = "") :
+	explicit BadQuery(const char* w = "") :
 	Exception(w)
 	{
 	}
 
 	/// \brief Create exception object, taking C++ string
-	MYSQLPP_EXPORT explicit BadQuery(const std::string& w) :
+	explicit BadQuery(const std::string& w) :
 	Exception(w)
 	{
 	}
@@ -265,7 +265,7 @@ class ConnectionFailed : public Exception
 {
 public:
 	/// \brief Create exception object
-	MYSQLPP_EXPORT explicit ConnectionFailed(const char* w = "") :
+	explicit ConnectionFailed(const char* w = "") :
 	Exception(w)
 	{
 	}
@@ -279,7 +279,7 @@ class DBSelectionFailed : public Exception
 {
 public:
 	/// \brief Create exception object
-	MYSQLPP_EXPORT explicit DBSelectionFailed(const char* w = "") :
+	explicit DBSelectionFailed(const char* w = "") :
 	Exception(w)
 	{
 	}
@@ -293,8 +293,7 @@ class EndOfResults : public Exception
 {
 public:
 	/// \brief Create exception object
-	MYSQLPP_EXPORT explicit EndOfResults(
-			const char* w = "end of results") :
+	explicit EndOfResults(const char* w = "end of results") :
 	Exception(w)
 	{
 	}
@@ -308,8 +307,7 @@ class EndOfResultSets : public Exception
 {
 public:
 	/// \brief Create exception object
-	MYSQLPP_EXPORT explicit EndOfResultSets(
-			const char* w = "end of result sets") :
+	explicit EndOfResultSets(const char* w = "end of result sets") :
 	Exception(w)
 	{
 	}
@@ -328,7 +326,7 @@ class LockFailed : public Exception
 {
 public:
 	/// \brief Create exception object
-	MYSQLPP_EXPORT explicit LockFailed(const char* w = "lock failed") :
+	explicit LockFailed(const char* w = "lock failed") :
 	Exception(w)
 	{
 	}
@@ -342,7 +340,7 @@ class ObjectNotInitialized : public Exception
 {
 public:
 	/// \brief Create exception object
-	MYSQLPP_EXPORT explicit ObjectNotInitialized(const char* w = "") :
+	explicit ObjectNotInitialized(const char* w = "") :
 	Exception(w)
 	{
 	}

@@ -46,51 +46,51 @@ public:
 	/// \brief Default constructor
 	///
 	/// Value is uninitialized
-	MYSQLPP_EXPORT tiny_int() { }
+	tiny_int() { }
 	
 	/// \brief Create object from any integral type that can be
 	/// converted to a \c short \c int.
-	MYSQLPP_EXPORT tiny_int(short int v) :
+	tiny_int(short int v) :
 	value_(char(v))
 	{
 	}
 	
 	/// \brief Return value as a \c short \c int.
-	MYSQLPP_EXPORT operator short int() const
+	operator short int() const
 	{
 		return static_cast<short int>(value_);
 	}
 
 	/// \brief Assign a \c short \c int to the object.
-	MYSQLPP_EXPORT tiny_int& operator =(short int v)
+	tiny_int& operator =(short int v)
 	{
 		value_ = char(v);
 		return *this;
 	}
 
 	/// \brief Add another value to this object
-	MYSQLPP_EXPORT tiny_int& operator +=(short int v)
+	tiny_int& operator +=(short int v)
 	{
 		value_ += char(v);
 		return *this;
 	}
 
 	/// \brief Subtract another value to this object
-	MYSQLPP_EXPORT tiny_int& operator -=(short int v)
+	tiny_int& operator -=(short int v)
 	{
 		value_ -= char(v);
 		return *this;
 	}
 
 	/// \brief Multiply this value by another object
-	MYSQLPP_EXPORT tiny_int& operator *=(short int v)
+	tiny_int& operator *=(short int v)
 	{
 		value_ *= char(v);
 		return *this;
 	}
 
 	/// \brief Divide this value by another object
-	MYSQLPP_EXPORT tiny_int& operator /=(short int v)
+	tiny_int& operator /=(short int v)
 	{
 		value_ /= char(v);
 		return *this;
@@ -98,63 +98,63 @@ public:
 
 	/// \brief Divide this value by another object and store the
 	/// remainder
-	MYSQLPP_EXPORT tiny_int& operator %=(short int v)
+	tiny_int& operator %=(short int v)
 	{
 		value_ %= char(v);
 		return *this;
 	}
 
 	/// \brief Bitwise AND this value by another value
-	MYSQLPP_EXPORT tiny_int& operator &=(short int v)
+	tiny_int& operator &=(short int v)
 	{
 		value_ &= char(v);
 		return *this;
 	}
 
 	/// \brief Bitwise OR this value by another value
-	MYSQLPP_EXPORT tiny_int& operator |=(short int v)
+	tiny_int& operator |=(short int v)
 	{
 		value_ |= char(v);
 		return *this;
 	}
 
 	/// \brief Bitwise XOR this value by another value
-	MYSQLPP_EXPORT tiny_int& operator ^=(short int v)
+	tiny_int& operator ^=(short int v)
 	{
 		value_ ^= char(v);
 		return *this;
 	}
 
 	/// \brief Shift this value left by \c v positions
-	MYSQLPP_EXPORT tiny_int& operator <<=(short int v)
+	tiny_int& operator <<=(short int v)
 	{
 		value_ <<= char(v);
 		return *this;
 	}
 
 	/// \brief Shift this value right by \c v positions
-	MYSQLPP_EXPORT tiny_int& operator >>=(short int v)
+	tiny_int& operator >>=(short int v)
 	{
 		value_ >>= char(v);
 		return *this;
 	}
 
 	/// \brief Add one to this value and return that value
-	MYSQLPP_EXPORT tiny_int& operator ++()
+	tiny_int& operator ++()
 	{
 		value_++;
 		return *this;
 	}
 
 	/// \brief Subtract one from this value and return that value
-	MYSQLPP_EXPORT tiny_int& operator --()
+	tiny_int& operator --()
 	{
 		value_--;
 		return *this;
 	}
 
 	/// \brief Add one to this value and return the previous value
-	MYSQLPP_EXPORT tiny_int operator ++(int)
+	tiny_int operator ++(int)
 	{
 		tiny_int tmp = value_;
 		value_++;
@@ -163,7 +163,7 @@ public:
 
 	/// \brief Subtract one from this value and return the previous
 	/// value
-	MYSQLPP_EXPORT tiny_int operator --(int)
+	tiny_int operator --(int)
 	{
 		tiny_int tmp = value_;
 		value_--;
@@ -171,61 +171,61 @@ public:
 	}
 
 	/// \brief Return this value minus \c i
-	MYSQLPP_EXPORT tiny_int operator -(const tiny_int& i) const
+	tiny_int operator -(const tiny_int& i) const
 	{
 		return value_ - i;
 	}
 	
 	/// \brief Return this value plus \c i
-	MYSQLPP_EXPORT tiny_int operator +(const tiny_int& i) const
+	tiny_int operator +(const tiny_int& i) const
 	{
 		return value_ + i;
 	}
 	
 	/// \brief Return this value multiplied by \c i
-	MYSQLPP_EXPORT tiny_int operator *(const tiny_int& i) const
+	tiny_int operator *(const tiny_int& i) const
 	{
 		return value_ * i;
 	}
 	
 	/// \brief Return this value divided by \c i
-	MYSQLPP_EXPORT tiny_int operator /(const tiny_int& i) const
+	tiny_int operator /(const tiny_int& i) const
 	{
 		return value_ / i;
 	}
 	
 	/// \brief Return the modulus of this value divided by \c i
-	MYSQLPP_EXPORT tiny_int operator %(const tiny_int& i) const
+	tiny_int operator %(const tiny_int& i) const
 	{
 		return value_ % i;
 	}
 	
 	/// \brief Return this value bitwise OR'd by \c i
-	MYSQLPP_EXPORT tiny_int operator |(const tiny_int& i) const
+	tiny_int operator |(const tiny_int& i) const
 	{
 		return value_ | i;
 	}
 	
 	/// \brief Return this value bitwise AND'd by \c i
-	MYSQLPP_EXPORT tiny_int operator &(const tiny_int& i) const
+	tiny_int operator &(const tiny_int& i) const
 	{
 		return value_ & i;
 	}
 	
 	/// \brief Return this value bitwise XOR'd by \c i
-	MYSQLPP_EXPORT tiny_int operator ^(const tiny_int& i) const
+	tiny_int operator ^(const tiny_int& i) const
 	{
 		return value_ ^ i;
 	}
 	
 	/// \brief Return this value bitwise shifted left by \c i
-	MYSQLPP_EXPORT tiny_int operator <<(const tiny_int& i) const
+	tiny_int operator <<(const tiny_int& i) const
 	{
 		return value_ << i;
 	}
 	
 	/// \brief Return this value bitwise shifted right by \c i
-	MYSQLPP_EXPORT tiny_int operator >>(const tiny_int& i) const
+	tiny_int operator >>(const tiny_int& i) const
 	{
 		return value_ >> i;
 	}

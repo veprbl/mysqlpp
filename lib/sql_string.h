@@ -113,14 +113,14 @@ public:
 	MYSQLPP_EXPORT SQLString(double i);
 
 	/// \brief Copy a C string into this object
-	MYSQLPP_EXPORT SQLString& operator =(const char* str)
+	SQLString& operator =(const char* str)
 	{
 		std::string::operator =(str);
 		return *this;
 	}
 
 	/// \brief Copy a C++ \c string into this object
-	MYSQLPP_EXPORT SQLString& operator =(const std::string& str)
+	SQLString& operator =(const std::string& str)
 	{
 		std::string::operator =(str);
 		return *this;

@@ -51,7 +51,7 @@ class Row :
 {
 public:
 	/// \brief Default constructor
-	MYSQLPP_EXPORT Row() :
+	Row() :
 	res_(0),
 	initialized_(false)
 	{
@@ -70,7 +70,7 @@ public:
 	MYSQLPP_EXPORT ~Row();
 
 	/// \brief Get a reference to our parent class.
-	MYSQLPP_EXPORT const ResUse& parent() const
+	const ResUse& parent() const
 	{
 		return *res_;
 	}
@@ -123,7 +123,7 @@ public:
 	/// index, as row[0] is ambiguous: it could call either overload.
 	///
 	/// See operator[](const char*) for more caveats.
-	MYSQLPP_EXPORT const ColData operator [](size_type i) const
+	const ColData operator [](size_type i) const
 	{
 		return at(i);
 	}
@@ -140,13 +140,13 @@ public:
 	/// This is the same thing as operator[], except that the data isn't
 	/// converted to a ColData object first.  Also, this method does not
 	/// check for out-of-bounds array indices.
-	MYSQLPP_EXPORT const char* raw_data(int i) const
+	const char* raw_data(int i) const
 	{
 		return data_[i].data();
 	}
 
 	/// \brief Returns true if there is data in the row.
-	MYSQLPP_EXPORT operator bool() const
+	operator bool() const
 	{
 		return data_.size();
 	}
@@ -186,7 +186,7 @@ public:
 	///
 	/// Items will be quoted and escaped when inserted into a C++ stream,
 	/// and a comma will be used as a delimiter between the items.
-	MYSQLPP_EXPORT value_list_b<Row, quote_type0> value_list(
+	value_list_b<Row, quote_type0> value_list(
 			const std::vector<bool> &vb) const
 	{
 		return value_list_b<Row, quote_type0>(*this, vb, ",", quote);
@@ -217,7 +217,7 @@ public:
 	/// row is added to the returned list.  When the list is inserted
 	/// into a C++ stream, the delimiter 'd' will be placed between the
 	/// items, and items will be quoted and escaped.
-	MYSQLPP_EXPORT value_list_b <Row, quote_type0>
+	value_list_b <Row, quote_type0>
 	value_list(const char *d, bool t0, bool t1 = false, bool t2 = false,
 			bool t3 = false, bool t4 = false, bool t5 = false,
 			bool t6 = false, bool t7 = false, bool t8 = false,
@@ -236,7 +236,7 @@ public:
 	/// row is added to the returned list.  When the list is inserted
 	/// into a C++ stream, the a comma will be placed between the items,
 	/// as a delimiter, and items will be quoted and escaped.
-	MYSQLPP_EXPORT value_list_b<Row, quote_type0> value_list(bool t0,
+	value_list_b<Row, quote_type0> value_list(bool t0,
 			bool t1 = false, bool t2 = false, bool t3 = false,
 			bool t4 = false, bool t5 = false, bool t6 = false,
 			bool t7 = false, bool t8 = false, bool t9 = false,
@@ -275,7 +275,7 @@ public:
 	/// returned list.  When inserted into a C++ stream, the delimiter
 	/// 'd' will be placed between the items, and items will be quoted
 	/// and escaped.
-	MYSQLPP_EXPORT value_list_b<Row, quote_type0> value_list(
+	value_list_b<Row, quote_type0> value_list(
 			const char *d,
 			std::string s0, std::string s1 = "", std::string s2 = "",
 			std::string s3 = "", std::string s4 = "",
@@ -296,7 +296,7 @@ public:
 	/// returned list.  When inserted into a C++ stream, a comma will be
 	/// placed between the items as a delimiter, and items will be
 	/// quoted and escaped.
-	MYSQLPP_EXPORT value_list_b<Row, quote_type0> value_list(
+	value_list_b<Row, quote_type0> value_list(
 			std::string s0,
 			std::string s1 = "", std::string s2 = "",
 			std::string s3 = "", std::string s4 = "",
@@ -369,12 +369,13 @@ public:
 	/// inserted into a C++ stream, the delimiter 'd' will be placed
 	/// between the items as a delimiter, and the manipulator 'm' used
 	/// before each item.
-	template <class Manip> value_list_b<FieldNames, Manip> field_list(
-			const char *d, Manip m, bool t0, bool t1 = false,
-			bool t2 = false, bool t3 = false, bool t4 = false,
-			bool t5 = false, bool t6 = false, bool t7 = false,
-			bool t8 = false, bool t9 = false, bool ta = false,
-			bool tb = false, bool tc = false) const;
+	template <class Manip>
+	value_list_b<FieldNames, Manip> field_list(const char *d, Manip m,
+			bool t0,
+			bool t1 = false, bool t2 = false, bool t3 = false,
+			bool t4 = false, bool t5 = false, bool t6 = false,
+			bool t7 = false, bool t8 = false, bool t9 = false,
+			bool ta = false, bool tb = false, bool tc = false) const;
 
 	/// \brief Get a list of the field names in this row
 	///

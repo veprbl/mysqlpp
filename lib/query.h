@@ -57,29 +57,29 @@
 
 /// \brief Used to define many similar functions in class Query.
 #define mysql_query_define0(RETURN, FUNC)\
-  MYSQLPP_EXPORT RETURN FUNC (ss a)\
+  RETURN FUNC (ss a)\
     {return FUNC (parms() << a);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b)\
+  RETURN FUNC (ss a, ss b)\
     {return FUNC (parms() << a << b);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c)\
+  RETURN FUNC (ss a, ss b, ss c)\
     {return FUNC (parms() << a << b << c);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d)\
+  RETURN FUNC (ss a, ss b, ss c, ss d)\
     {return FUNC (parms() << a << b << c << d);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e)\
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e)\
     {return FUNC (parms() << a << b << c << d << e);} \
-  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f)\
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f)\
     {return FUNC (parms() << a << b << c << d << e << f);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g)\
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g)\
     {return FUNC (parms() << a << b << c << d << e << f << g);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)\
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)\
     {return FUNC (parms() << a << b << c << d << e << f << g << h);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)\
+  RETURN FUNC (ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)\
     {return FUNC (parms() << a << b << c << d << e << f << g << h << i);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j)\
+  RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j)\
     {return FUNC (parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k)\
+  RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k)\
     {return FUNC (parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k);}\
-  MYSQLPP_EXPORT RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k,ss l)\
+  RETURN FUNC (ss a,ss b,ss c,ss d,ss e,ss f,ss g,ss h,ss i,ss j,ss k,ss l)\
     {return FUNC (parms() <<a <<b <<c <<d <<e <<f <<g <<h <<i <<j <<k <<l);}\
 
 /// \brief Used to define many similar member functions in class Query.
@@ -185,7 +185,7 @@ public:
 	///
 	/// \param c connection the finished query should be sent out on
 	/// \param te if true, throw exceptions on errors
-	MYSQLPP_EXPORT Query(Connection* c, bool te = true) :
+	Query(Connection* c, bool te = true) :
 	std::ostream(&sbuffer_),
 	OptionalExceptions(te),
 	Lockable(),
@@ -241,16 +241,16 @@ public:
 	MYSQLPP_EXPORT void reset();
 
 	/// \brief Return the query string currently in the buffer.
-	MYSQLPP_EXPORT std::string preview() { return str(def); }
+	std::string preview() { return str(def); }
 
 	/// \brief Return the query string currently in the buffer.
-	MYSQLPP_EXPORT std::string preview(SQLQueryParms& p)
+	std::string preview(SQLQueryParms& p)
 	{
 		return str(p);
 	}
 
 	/// \brief Get built query as a null-terminated C++ string
-	MYSQLPP_EXPORT std::string str()
+	std::string str()
 	{
 		return str(def);
 	}
@@ -259,7 +259,7 @@ public:
 	///
 	/// \param r if equal to \c RESET_QUERY, query object is cleared
 	/// after this call
-	MYSQLPP_EXPORT std::string str(query_reset r)
+	std::string str(query_reset r)
 	{
 		return str(def, r);
 	}
@@ -307,7 +307,7 @@ public:
 	/// \return ResNSel status information about the query
 	///
 	/// \sa exec(), store(), storein(), and use()
-	MYSQLPP_EXPORT ResNSel execute() { return execute(def); }
+	ResNSel execute() { return execute(def); }
 
 	/// \brief Execute query in a C++ string
 	///
@@ -338,7 +338,7 @@ public:
 	/// \return ResUse object that can walk through result set serially
 	///
 	/// \sa exec(), execute(), store() and storein()
-	MYSQLPP_EXPORT ResUse use() { return use(def); }
+	ResUse use() { return use(def); }
 
 	/// \brief Execute query in a C++ string
 	///
@@ -368,7 +368,7 @@ public:
 	/// \return Result object containing entire result set
 	///
 	/// \sa exec(), execute(), storein(), and use()
-	MYSQLPP_EXPORT Result store() { return store(def); }
+	Result store() { return store(def); }
 
 	/// \brief Execute query in a C++ string
 	///
@@ -647,10 +647,10 @@ public:
 	}
 
 	/// \brief Return true if the last query was successful
-	MYSQLPP_EXPORT operator bool() { return success(); }
+	operator bool() { return success(); }
 
 	/// \brief Return true if the last query failed
-	MYSQLPP_EXPORT bool operator !() { return !success(); }
+	bool operator !() { return !success(); }
 
 #if !defined(DOXYGEN_IGNORE)
 	// Declare the remaining overloads.  These are hidden down here partly

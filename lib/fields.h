@@ -42,19 +42,19 @@ class Fields : public const_subscript_container<Fields, Field>
 {
 public:
 	/// \brief Default constructor
-	MYSQLPP_EXPORT Fields() { }
+	Fields() { }
 	
 	/// \brief Create a field list from a result set
-	MYSQLPP_EXPORT Fields(ResUse* r) :
+	Fields(ResUse* r) :
 	res_(r)
 	{
 	}
-	
+
 	/// \brief Returns a field given its index.
 	MYSQLPP_EXPORT const Field& at(size_type i) const;
 
 	/// \brief Returns a field given its index.
-	MYSQLPP_EXPORT const Field& at(int i) const
+	const Field& at(int i) const
 	{
 		return at(static_cast<size_type>(i));
 	}

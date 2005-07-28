@@ -57,7 +57,7 @@ private:
 	
 	// Not initting _base_type and _default because only mysql_type_info
 	// can create them.  There *must* be only one copy of each.
-	MYSQLPP_EXPORT mysql_ti_sql_type_info() :
+	mysql_ti_sql_type_info() :
 	sql_name_(0),
 	c_type_(0),
 	base_type_(0),
@@ -65,7 +65,7 @@ private:
 	{
 	}
 	
-	MYSQLPP_EXPORT mysql_ti_sql_type_info(const char* s,
+	mysql_ti_sql_type_info(const char* s,
 			const std::type_info& t, const unsigned char bt = 0,
 			const bool d = false) :
 	sql_name_(s),
@@ -84,7 +84,7 @@ private:
 
 struct type_info_cmp
 {
-	MYSQLPP_EXPORT bool operator() (const std::type_info* lhs,
+	bool operator() (const std::type_info* lhs,
 			const std::type_info* rhs) const
 	{
 		return lhs->before(*rhs) != 0;
@@ -101,7 +101,7 @@ private:
 	MYSQLPP_EXPORT mysql_ti_sql_type_info_lookup(
 			const sql_type_info types[], const int size);
 
-	MYSQLPP_EXPORT const unsigned char& operator [](
+	const unsigned char& operator [](
 			const std::type_info& ti) const
 	{
 		return map_.find(&ti)->second;
@@ -129,7 +129,7 @@ public:
 	/// The default is intended to try and crash a program using a
 	/// default mysql_type_info object.  This is a very wrong thing
 	/// to do.
-	MYSQLPP_EXPORT mysql_type_info(unsigned char n = (unsigned char)-1) :
+	mysql_type_info(unsigned char n = (unsigned char)-1) :
 	num_(n)
 	{
 	}
@@ -157,7 +157,7 @@ public:
 	///
 	/// This tries to map a C++ type to the closest MySQL data type.
 	/// It is necessarily somewhat approximate.
-	MYSQLPP_EXPORT mysql_type_info(const std::type_info& t)
+	mysql_type_info(const std::type_info& t)
 	{
 		num_ = lookups[t];
 	}
@@ -167,14 +167,14 @@ public:
 	/// \param n an index into the internal MySQL++ type table
 	///
 	/// This function shouldn't be used outside the library.
-	MYSQLPP_EXPORT mysql_type_info& operator =(unsigned char n)
+	mysql_type_info& operator =(unsigned char n)
 	{
 		num_ = n;
 		return *this;
 	}
 
 	/// \brief Assign another mysql_type_info object to this object
-	MYSQLPP_EXPORT mysql_type_info& operator =(const mysql_type_info& t)
+	mysql_type_info& operator =(const mysql_type_info& t)
 	{
 		num_ = t.num_;
 		return *this;
@@ -184,7 +184,7 @@ public:
 	///
 	/// This tries to map a C++ type to the closest MySQL data type.
 	/// It is necessarily somewhat approximate.
-	MYSQLPP_EXPORT mysql_type_info& operator =(const std::type_info& t)
+	mysql_type_info& operator =(const std::type_info& t)
 	{
 		num_ = lookups[t];
 		return *this;
@@ -231,7 +231,7 @@ public:
 	/// Returns the ID number MySQL uses for this type.  Note: Do not
 	/// depend on the value of this ID as it may change between MySQL
 	/// versions.
-	MYSQLPP_EXPORT int id() const
+	int id() const
 	{
 		return num_;
 	}
@@ -254,7 +254,7 @@ public:
 	///
 	/// Returns true if the SQL ID of this type is lower than that of
 	/// another.  Used by mysqlpp::type_info_cmp when comparing types.
-	MYSQLPP_EXPORT bool before(mysql_type_info& b)
+	bool before(mysql_type_info& b)
 	{
 		return num_ < b.num_;
 	}
@@ -299,7 +299,7 @@ private:
 	MYSQLPP_EXPORT static unsigned char type(enum_field_types t,
 			bool _unsigned, bool _null = false);
 
-	MYSQLPP_EXPORT const sql_type_info& deref() const
+	const sql_type_info& deref() const
 	{
 		return types[num_];
 	}

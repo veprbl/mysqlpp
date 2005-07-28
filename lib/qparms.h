@@ -51,7 +51,7 @@ public:
 	typedef const SQLString& ss;
 
 	/// \brief Default constructor
-	MYSQLPP_EXPORT SQLQueryParms() :
+	SQLQueryParms() :
 	parent_(0)
 	{
 	}
@@ -60,7 +60,7 @@ public:
 	///
 	/// \param p pointer to the query object these parameters are tied
 	/// to
-	MYSQLPP_EXPORT SQLQueryParms(Query* p) :
+	SQLQueryParms(Query* p) :
 	parent_(p)
 	{
 	}
@@ -68,19 +68,19 @@ public:
 	/// \brief Returns true if we are bound to a query object.
 	///
 	/// Basically, this tells you which of the two ctors were called.
-	MYSQLPP_EXPORT bool bound()
+	bool bound()
 	{
 		return parent_ != 0;
 	}
 
 	/// \brief Clears the list
-	MYSQLPP_EXPORT void clear()
+	void clear()
 	{
 		erase(begin(), end());
 	}
 
 	/// \brief Access element number n
-	MYSQLPP_EXPORT SQLString& operator [](size_type n)
+	SQLString& operator [](size_type n)
 	{
 		if (n >= size())
 			insert(end(), (n + 1) - size(), "");
@@ -88,7 +88,7 @@ public:
 	}
 
 	/// \brief Access element number n
-	MYSQLPP_EXPORT const SQLString& operator [](size_type n) const
+	const SQLString& operator [](size_type n) const
 	{
 		return std::vector<SQLString>::operator [](n);
 	}
@@ -100,14 +100,14 @@ public:
 	MYSQLPP_EXPORT const SQLString& operator [](const char *str) const;
 
 	/// \brief Adds an element to the list
-	MYSQLPP_EXPORT SQLQueryParms& operator <<(const SQLString& str)
+	SQLQueryParms& operator <<(const SQLString& str)
 	{
 		push_back(str);
 		return *this;
 	}
 
 	/// \brief Adds an element to the list
-	MYSQLPP_EXPORT SQLQueryParms& operator +=(const SQLString& str)
+	SQLQueryParms& operator +=(const SQLString& str)
 	{
 		push_back(str);
 		return *this;
@@ -127,57 +127,57 @@ public:
 
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	MYSQLPP_EXPORT void set(ss a)
+	void set(ss a)
 	{
 		clear();
 		*this << a;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b)
+	void set(ss a, ss b)
 	{
 		clear();
 		*this << a << b;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c)
+	void set(ss a, ss b, ss c)
 	{
 		clear();
 		*this << a << b << c;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d)
+	void set(ss a, ss b, ss c, ss d)
 	{
 		clear();
 		*this << a << b << c << d;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e)
+	void set(ss a, ss b, ss c, ss d, ss e)
 	{
 		clear();
 		*this << a << b << c << d << e;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f)
+	void set(ss a, ss b, ss c, ss d, ss e, ss f)
 	{
 		clear();
 		*this << a << b << c << d << e << f;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g)
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g << h;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g << h << i;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i, ss j)
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i, ss j)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g << h << i << j;
 	}
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i, ss j, ss k)
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g, ss h, ss i, ss j, ss k)
 	{
 		clear();
 		*this << a << b << c << d << e << f << g << h << i << j << k;
@@ -189,7 +189,7 @@ public:
 	/// Sets parameter 0 to a, parameter 1 to b, etc. There are
 	/// overloaded versions of this function that take anywhere from
 	/// one to a dozen parameters.
-	MYSQLPP_EXPORT void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g,
+	void set(ss a, ss b, ss c, ss d, ss e, ss f, ss g,
 			ss h, ss i, ss j, ss k, ss l)
 	{
 		clear();
@@ -232,7 +232,7 @@ struct SQLParseElement
 	/// \param b the 'before' value
 	/// \param o the 'option' value
 	/// \param n the 'num' value
-	MYSQLPP_EXPORT SQLParseElement(std::string b, char o, char n) :
+	SQLParseElement(std::string b, char o, char n) :
 	before(b),
 	option(o),
 	num(n)
