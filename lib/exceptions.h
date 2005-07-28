@@ -45,6 +45,7 @@ class Exception : public std::exception
 public:
 	/// \brief Create exception object as copy of another
 	MYSQLPP_EXPORT Exception(const Exception& e) throw() :
+	std::exception(e),
 	what_(e.what_)
 	{
 	}

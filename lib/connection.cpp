@@ -525,6 +525,7 @@ Connection::apply_pending_options()
 		bool success;
 		switch (it->arg_type) {
 			case opt_type_none:
+			default:
 				success = set_option(it->option);
 				break;
 
@@ -552,6 +553,8 @@ Connection::apply_pending_options()
 					case opt_type_string:	os << it->str_arg; break;
 					case opt_type_integer:	os << it->int_arg; break;
 					case opt_type_boolean:	os << it->bool_arg; break;
+					case opt_type_none:	os << "none"; break;
+					default:		os << "unknown"; break;
 				}
 			}
 			throw BadOption(os.str(), it->option);

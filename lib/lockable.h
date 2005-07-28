@@ -80,7 +80,7 @@ class BasicLock : public Lock
 public:
 	/// \brief Create object
 	BasicLock(bool locked = false) :
-	locked_(false)
+	locked_(locked)
 	{
 	}
 	

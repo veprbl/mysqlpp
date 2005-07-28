@@ -182,7 +182,7 @@ public:
 	
 	/// \brief Return a copy of the element at the given position
 	/// within the container.
-	ReturnType operator [](SizeType n) const { return d->at(n); }
+	ReturnType operator [](SizeType n) const { return d_->at(n); }
 	
 	/// \brief Move the iterator to the next element, returning an
 	/// iterator to that element

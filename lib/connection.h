@@ -61,7 +61,7 @@ public:
 		opt_type_none,
 		opt_type_string,
 		opt_type_integer,
-		opt_type_boolean,
+		opt_type_boolean
 	};
 
 	/// \brief Per-connection options you can set with set_option()
