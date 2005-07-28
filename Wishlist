@@ -21,6 +21,8 @@ Final v2.0 Stuff
 
 	o Get MinGW build working.  It _can_ be done...
 
+	o Run examples under watchful eye of Valgrind.
+
 
 Future Features
 ---------------
