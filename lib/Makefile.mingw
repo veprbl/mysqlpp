@@ -20,11 +20,12 @@
 CXX=g++
 CXXFLAGS=-Ic:\mysql\include -O0 -DMYSQLPP_MAKING_DLL -c
 
-LIB_BASE=mysql++
+LIB_BASE=mysqlpp
 LIB_FILE=$(LIB_BASE).dll
 IMP_FILE=$(LIB_BASE).a
 LD=$(CXX)
-LDFLAGS=-shared -o $(LIB_FILE) -Lc:\mysql\lib\mingw -lmysql
+LDFLAGS=-shared -o $(LIB_FILE)
+LIBS=-Lc:\mysql\lib\mingw -lmysql
 
 EXTRA_CLEAN=$(IMP_FILE)
 
@@ -50,4 +51,8 @@ install_platform:
 	@if not exist $(INST_LIB_DIR) mkdir $(INST_LIB_DIR)
 	copy *.h $(INST_INC_DIR) >& NUL
 	copy *.dll *.a $(INST_LIB_DIR) >& NUL
+
+$(IMP_FILE): $(LIB_FILE)
+	pexports $(LIB_FILE) |sed 's/^_//' > $(LIB_BASE).def
+	dlltool -d $(LIB_BASE).def -l $(IMP_FILE)
 

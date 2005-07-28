@@ -22,8 +22,9 @@ INCLUDES=-Ic:\mysql\include -I..\lib
 CXXFLAGS=$(INCLUDES) -O0 -c
 
 LD=$(CXX)
-LDFLAGS=-Lc:\mysql\lib\mingw -lmysql -L..\lib -lmysql++
-LDEXEFLAG=
+LDFLAGS=
+LDEXEFLAG=-o
+LIBS=-Lc:\mysql\lib\mingw -lmysql -L..\lib -lmysqlpp
 
 EXTRA_CLEAN=*.dll
 
