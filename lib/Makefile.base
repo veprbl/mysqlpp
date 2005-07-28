@@ -44,13 +44,13 @@ connection.$(OBJ): connection.cpp connection.h
 datetime.$(OBJ): datetime.cpp datetime.h
 field_names.$(OBJ): field_names.cpp field_names.h
 field_types.$(OBJ): field_types.cpp field_types.h
-fields.$(OBJ): fields.cpp fields.h
+fields.$(OBJ): fields.cpp fields.h resiter.h
 manip.$(OBJ): manip.cpp manip.h
 myset.$(OBJ): myset.cpp myset.h
 qparms.$(OBJ): qparms.cpp qparms.h
-query.$(OBJ): query.cpp query.h
-result.$(OBJ): result.cpp result.h
-row.$(OBJ): row.cpp row.h
+query.$(OBJ): query.cpp query.h resiter.h
+result.$(OBJ): result.cpp result.h resiter.h
+row.$(OBJ): row.cpp row.h resiter.h
 sql_string.$(OBJ): sql_string.cpp sql_string.h
 string_util.$(OBJ): string_util.cpp string_util.h
 type_info.$(OBJ): type_info.cpp type_info.h
