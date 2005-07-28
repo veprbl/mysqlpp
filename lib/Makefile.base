@@ -36,7 +36,7 @@ clean:
 	$(DEL) $(OBJS) $(LIB_FILE) $(EXTRA_CLEAN)
 
 
-$(LIB_FILE):
+$(LIB_FILE): $(OBJS)
 	$(LD) $(LDFLAGS) $(LDSTARTUP) $(OBJS) $(LDEXE) $(LIBS)
 
 coldata.$(OBJ): coldata.cpp coldata.h
