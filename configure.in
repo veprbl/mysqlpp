@@ -15,8 +15,15 @@
 
 
 dnl Standard autotools stuff
-AC_INIT(lib/mysql++.h)
-AM_INIT_AUTOMAKE(mysql++, 2.0.0) # Bump in mysql++.spec & lib/Makefile.am, too!
+dnl Version bumping: don't forget:
+dnl       Changelog
+dnl       History in mysql++.spec
+dnl 
+AC_INIT(mysql++, 2.0.0, plusplus@lists.mysql.com)
+AC_SUBST(PACKAGE_LIB_VERSION, [2:0:0])
+AC_SUBST(PACKAGE_HEADER_VERSION, [0x020000])
+
+AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
 AC_PROG_MAKE_SET
 AC_DISABLE_STATIC
@@ -85,6 +92,6 @@ AC_SUBST([OPTIONAL_EXAMPLES])
 #
 # Done with checks!
 #
-AC_OUTPUT(Makefile lib/Makefile examples/Makefile)
+AC_OUTPUT([Makefile mysql++.spec lib/mysql++.h lib/Makefile lib/Doxyfile examples/Makefile])
 
 ./makemake.sh simple gcc

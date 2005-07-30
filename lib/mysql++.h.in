@@ -40,6 +40,8 @@
 #if !defined(MYSQLPP_MYSQLPP_H)
 #define MYSQLPP_MYSQLPP_H
 
+#define MYSQLPP_LIB_VERSION @PACKAGE_HEADER_VERSION@
+
 // This #include order gives the fewest redundancies in the #include
 // dependency chain.
 #include "connection.h"

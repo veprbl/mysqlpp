@@ -1,6 +1,6 @@
 Summary: C++ wrapper for the MySQL C API
-Name: mysql++
-Version: 2.0.0
+Name: @PACKAGE_NAME@
+Version: @PACKAGE_VERSION@
 Release: beta2
 Copyright: LGPL
 Group: Development/Databases
