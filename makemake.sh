@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Display usage message
 function usage() {
