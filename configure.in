@@ -14,15 +14,18 @@
 # USA
 
 
-dnl Standard autotools stuff
-dnl Version bumping: don't forget:
-dnl       Changelog
-dnl       History in mysql++.spec
-dnl 
+dnl Version numbers also must be changed in ChangeLog and mysql++.spec.
 AC_INIT(mysql++, 2.0.0, plusplus@lists.mysql.com)
-AC_SUBST(PACKAGE_LIB_VERSION, [2:0:0])
 AC_SUBST(PACKAGE_HEADER_VERSION, [0x020000])
 
+# Libtool version scheme is: interface:change:age.  Interface number
+# goes up any time the library interface changes.  Change number goes up
+# any time library changes without affecting interface.  Age goes up any
+# time interface changes without breaking backwards compatibility, such
+# as by adding new functions; must always be less than interface number.
+AC_SUBST(MYSQLPP_LIBTOOL_VERSION, [2:0:0])
+
+dnl Standard autotools stuff
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
 AC_PROG_MAKE_SET
