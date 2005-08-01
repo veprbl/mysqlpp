@@ -40,7 +40,14 @@
 #if !defined(MYSQLPP_MYSQLPP_H)
 #define MYSQLPP_MYSQLPP_H
 
-#define MYSQLPP_LIB_VERSION @PACKAGE_HEADER_VERSION@
+// Encode MySQL++ library version number.  MYSQLPP_VERSION macro takes
+// major, minor and bugfix numbers (e.g. 1, 2, and 3) and encodes them
+// like 0x010203.  MYSQLPP_LIB_VERSION is the current library version
+// in the same scheme, so between these two macros you can create
+// conditional code based on the MySQL++ library version.
+#define MYSQLPP_VERSION(major, minor, bugfix) \
+		(((major) << 16) | ((minor) << 8) | (bugfix))
+#define MYSQLPP_LIB_VERSION MYSQLPP_VERSION(@MYSQLPP_VERSION_MAJOR@, @MYSQLPP_VERSION_MINOR@, @MYSQLPP_VERSION_BUGFIX@)
 
 // This #include order gives the fewest redundancies in the #include
 // dependency chain.
