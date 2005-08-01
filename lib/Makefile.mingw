@@ -25,7 +25,7 @@ LIB_FILE=$(LIB_BASE).dll
 IMP_FILE=$(LIB_BASE).a
 LD=$(CXX)
 LDFLAGS=-shared -o $(LIB_FILE)
-LIBS=-Lc:\mysql\lib\mingw -lmysql
+LIBS=-Lc:\mysql\lib\gcc -lmysqlclient
 
 EXTRA_CLEAN=$(IMP_FILE)
 

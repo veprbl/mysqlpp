@@ -24,7 +24,7 @@ CXXFLAGS=$(INCLUDES) -O0 -c
 LD=$(CXX)
 LDFLAGS=
 LDEXEFLAG=-o
-LIBS=-Lc:\mysql\lib\mingw -lmysql -L..\lib -lmysqlpp
+LIBS=-Lc:\mysql\lib\gcc -lmysqlclient -L..\lib -lmysqlpp
 
 EXTRA_CLEAN=*.dll
 
