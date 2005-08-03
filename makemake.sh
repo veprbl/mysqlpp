@@ -2,11 +2,12 @@
 
 # Display usage message
 function usage() {
-	echo 'usage: makemake [simple] {gcc} [args]'
+	echo 'usage: makemake [simple] {gcc|mingw} [args]'
 	echo
 	echo '    You must give one of the compiler parameters:'
 	echo
-	echo '        gcc: GCC C++ compiler'
+	echo '        gcc: GCC C++ compiler, Unix tuning'
+	echo '        mingw: MinGW port of GCC C++ compiler'
 	echo
 	echo 'If you give the "simple" argument, no top-level Makefile is created,'
 	echo 'no config.h is created, and we don'"'"'t call "make" for you.'
@@ -34,17 +35,21 @@ then
 	shift
 else
 	cat > Makefile <<MAKEFILE
-	all:
-		( cd lib && make && cd ../examples && make )
+all:
+	( cd lib && make && cd ../examples && make )
+
+clean:
+	( cd lib && make clean )
+	( cd examples && make clean )
 MAKEFILE
 
 	cat > config.h <<CONFIG_H
-	#define HAVE_MYSQL_SHUTDOWN_LEVEL_ARG
+#define HAVE_MYSQL_SHUTDOWN_LEVEL_ARG
 CONFIG_H
 fi
 
 # Figure out which compiler the user wants to create Makefiles for
-if [ "$1" != "gcc" ]
+if [ "$1" != "gcc" -a "$1" != "mingw" ]
 then
 	usage
 fi
