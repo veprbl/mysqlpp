@@ -19,13 +19,12 @@
 
 CXX=g++
 INCLUDES=-Ic:\mysql\include -I..\lib
-CXXFLAGS=$(INCLUDES) -O0 -c
+CXXFLAGS=$(INCLUDES) -O0 -c -DMYSQLPP_NO_DLL
 
 LD=$(CXX)
-LDFLAGS=
+LDFLAGS=-L..\lib -Lc:\mysql\lib\gcc
 LDEXEFLAG=-o
-LIBS=-Lc:\mysql\lib\gcc -lmysqlclient -L..\lib -lmysqlpp
-
+LIBS= -lmysqlpp -lmysqlclient
 EXTRA_CLEAN=*.dll
 
 OBJ=o
