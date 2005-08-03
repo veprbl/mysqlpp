@@ -59,18 +59,20 @@
 
 	// Define DLL import/export tags for Windows compilers, where we build
 	// the library into a DLL, for LGPL license compatibility reasons.
-	// (This is based on a similar mechanism in wxWindows, which inspired
-	// this code, but which does things quite differently.)
+	// (This is based on a similar mechanism in wxWindows.)
 
 	#ifdef MYSQLPP_MAKING_DLL
 		// When making the DLL, export tagged symbols, so they appear
 		// in the import library.
+		#error foo
 		#define MYSQLPP_EXPORT __declspec(dllexport)
-		#define MYSQLPP_EXPORT_DATA(type) __declspec(dllexport) type
-	#else
+	#elif !defined(MYSQLPP_NO_DLL)
 		// We must be _using_ the DLL, so import symbols instead.
+		#error bar
 		#define MYSQLPP_EXPORT __declspec(dllimport)
-		#define MYSQLPP_EXPORT_DATA(type) __declspec(dllimport) type
+	#else
+		// Not making a DLL at all, so no-op these declspecs
+		#define MYSQLPP_EXPORT
 	#endif
 #else
 	// If not Windows, we assume some sort of Unixy build environment,
@@ -83,7 +85,6 @@
 
 	// Make DLL stuff a no-op on this platform.
 	#define MYSQLPP_EXPORT
-	#define MYSQLPP_EXPORT_DATA(type) type
 #endif
 
 #endif // !defined(DOXYGEN_IGNORE)
