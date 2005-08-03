@@ -17,11 +17,12 @@ Final v2.0 Stuff
 	  of util code up into it.  Maybe change SELECT statement to get
 	  just one row, and print just that one.
 
-	o Library versioning simplification stuff.
-
-	o Find out why MinGW can't link examples to the DLL it built.
-
 	o Run examples under watchful eye of Valgrind.
+
+	o See if it's easy to get Cygwin and MinGW to link against a
+	  dynamic version of the library.  Right now, there's a "missing
+	  symbols" problem.  This is the old problem from post 1.7.20 due to
+	  the file reorg.
 
 
 Future Features
