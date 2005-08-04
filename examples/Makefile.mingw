@@ -24,8 +24,8 @@ CXXFLAGS=$(INCLUDES) -O0 -c -DMYSQLPP_NO_DLL
 LD=$(CXX)
 LDFLAGS=-L..\lib -Lc:\mysql\lib\gcc
 LDEXEFLAG=-o
-LIBS= -lmysqlpp -lmysqlclient
-EXTRA_CLEAN=*.dll
+LIBS=-lmysqlpp -lmysqlclient
+EXTRA_CLEAN=
 
 OBJ=o
 EXE=.exe
