@@ -64,11 +64,9 @@
 	#ifdef MYSQLPP_MAKING_DLL
 		// When making the DLL, export tagged symbols, so they appear
 		// in the import library.
-		#error foo
 		#define MYSQLPP_EXPORT __declspec(dllexport)
 	#elif !defined(MYSQLPP_NO_DLL)
 		// We must be _using_ the DLL, so import symbols instead.
-		#error bar
 		#define MYSQLPP_EXPORT __declspec(dllimport)
 	#else
 		// Not making a DLL at all, so no-op these declspecs
