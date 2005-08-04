@@ -24,6 +24,8 @@ Final v2.0 Stuff
 	  symbols" problem.  This is the old problem from post 1.7.20 due to
 	  the file reorg.
 
+	o Install headers in a mysql++ subdir by default?
+
 
 Future Features
 ---------------
