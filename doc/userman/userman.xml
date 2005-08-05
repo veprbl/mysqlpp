@@ -395,40 +395,40 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++v) {
 			parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 		</programlisting>
 
-		<para>If anything, the code above is "too" simple,
-		because all it really does is drive some functions
-		in <filename>examples/util.cpp</filename>. Most of
-		the examples link to this module, because it contains
-		code that would otherwise have to be repeated in
-		these examples.</para>
+		<para>The only tricky bit is that we
+		delegate connection establishment to
+		<computeroutput>connect_to_db()</computeroutput>
+		in the <computeroutput>util</computeroutput> module.
+		We do this only because that function also handles
+		the command line parsing for the examples, so they
+		have a consistent interface.</para>
 
-		<para>Here's the examples' utility module:</para>
+		<para>Once <computeroutput>simple1</computeroutput>
+		is connected to the database server, it then executes
+		a query for one of the rows in the sample table,
+		and prints it out.</para>
+	</sect2>
+
+
+	<sect2>
+		<title>Examples' Utility Module</title>
+
+		<para>I referred to the
+		<computeroutput>util</computeroutput> module
+		above. Following is the source for that module,
+		which also contains other functions used by other
+		examples. It isn't important to understand this module
+		in detail, but understanding its outlines will make
+		the following examples more clear.</para>
 
 		<programlisting><xi:include href="util.txt"
 			parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 		</programlisting>
 
-		<para>(The above is actually an abridged version of util.cpp,
-		with the Unicode stuff removed. That topic is covered
-		in a later chapter, <xref linkend="unicode"/>.)</para>
-
-		<para>There's a fair bit of code in the utility module, but it's
-		pretty straightforward.</para>
-
-		<para>The simple1 example first calls
-		<computeroutput>connect_to_db()</computeroutput>. As
-		the function's name suggests, its primary job is to
-		establish the database server connection. The example
-		program passes it the command line parameters, which
-		is parses to figure out what user name and such to
-		use when logging into the server.</para>
-
-		<para>simple1 then calls
-		<computeroutput>print_stock_table()</computeroutput>.
-		The sample database created by
-		<computeroutput>resetdb</computeroutput> contains a
-		table called <computeroutput>stock</computeroutput>,
-		which this function retrieves and prints out.</para>
+		<para>This is actually an abridged version of util.cpp,
+		with the Unicode stuff removed. The interaction
+		between MySQL, MySQL++ and Unicode is covered in a
+		later chapter, <xref linkend="unicode"/>.</para>
 	</sect2>
 
 
@@ -1669,13 +1669,14 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
 		Unicode-aware programs deal in 2-byte characters,
 		for efficiency.</para>
 
-		<para>Unfortunately, Unicode came about 20 years too late
-		for Unix and C. Converting the Unix system call interface
-		to use multi-byte Unicode characters would break all
-		existing programs. The ISO lashed a wide character <ulink
+		<para>Unfortunately, Unicode came about two
+		decades too late for Unix and C. Converting the
+		Unix system call interface to use multi-byte
+		Unicode characters would break all existing
+		programs. The ISO lashed a wide character <ulink
 		url="http://www.jargon.net/jargonfile/s/sidecar.html">sidecar</ulink>
-		onto C in 1995, but in common practice C is still tied
-		to 8-bit characters.</para>
+		onto C in 1995, but in common practice C is still
+		tied to 8-bit characters.</para>
 
 		<para>As Unicode began to take off in the early 1990s,
 		it became clear that some sort of accommodation
@@ -1719,7 +1720,7 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
 		<para>Modern Unices support UTF-8 natively. Red Hat Linux,
 		for instance, has had system-wide UTF-8 support since
-		version 8. This continues in the commercial and Fedora
+		version 8. This continues in the Enterprise and Fedora
 		forks of Red Hat Linux, of course.</para>
 
 		<para>On such a Unix, the terminal I/O code understands
