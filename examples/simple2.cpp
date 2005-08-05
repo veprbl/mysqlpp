@@ -29,32 +29,39 @@
 #include <mysql++.h>
 
 #include <iostream>
+#include <iomanip>
+
+using namespace std;
 
 int
 main(int argc, char *argv[])
 {
-	// Connect to the sample database
+	// Connect to the sample database.
 	mysqlpp::Connection con(false);
 	if (!connect_to_db(argc, argv, con)) {
 		return 1;
 	}
+	cout << "Connected to database successfully!" << endl;
 
-	// Retrieve the entire stock table
+	// Ask for all rows from the sample stock table set up by resetdb.
+	// Unlike simple1 example, we don't store result set in memory.
 	mysqlpp::Query query = con.query();
 	query << "select * from stock";
-
-	// Execute the query, but don't save results in memory
 	mysqlpp::ResUse res = query.use();
-	if (!res) {
-		std::cerr << "Query failed: " << query.error() << std::endl;
+
+	// Retreive result rows one by one, and display them.
+	if (res) {
+		mysqlpp::Row row;
+		while (row = res.fetch_row()) {
+			string item(row["item"]);
+			cout << item << ", " << row["num"] << " units, weight " <<
+					row["weight"] << ", $" << row["price"] <<
+					", entered on " << row["sdate"] << endl;
+		}
+		return 0;
+	}
+	else {
+		cerr << "Failed to get stock item: " << query.error() << endl;
 		return 1;
 	}
-
-	// Iterate through result set, printing each row.
-	mysqlpp::Row r;
-	while (r = res.fetch_row()) {
-		print_stock_row(r);
-	}
-
-	return 0;
 }

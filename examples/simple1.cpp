@@ -1,6 +1,6 @@
 /***********************************************************************
- simple1.cpp - Example showing the simplest way to get the contents of
- 	a table with MySQL++.
+ simple1.cpp - Example showing the simplest way to get data from a MySQL
+    database with MySQL++.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
  MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
@@ -29,6 +29,11 @@
 
 #include <mysql++.h>
 
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
 int
 main(int argc, char *argv[])
 {
@@ -37,13 +42,30 @@ main(int argc, char *argv[])
 	if (!connect_to_db(argc, argv, con)) {
 		return 1;
 	}
+	cout << "Connected to database successfully!" << endl;
 
-	// Retrieve the entire stock table from the database server
-	// we're connected to, and print its contents out.
+	// Retrieve one row from the sample stock table set up by resetdb
 	mysqlpp::Query query = con.query();
-	mysqlpp::Result res;
-	get_stock_table(query, res);
-	print_stock_rows(res);
+	query << "select * from stock where item='hot mustard'";
+	mysqlpp::Result res = query.store();
 
-	return 0;
+	// Display results
+	if (res) {
+		// Get first row in result set, and print its contents
+		mysqlpp::Row row(res.at(0));
+		if (row) {
+			string item(row["item"]);
+			cout << item << ", " << row["num"] << " units, weight " <<
+					row["weight"] << ", $" << row["price"] <<
+					", entered on " << row["sdate"] << endl;
+			return 0;
+		}
+		else {
+			cerr << "No such stock row!" << endl;
+		}
+	}
+	else {
+		cerr << "Failed to get stock item: " << query.error() << endl;
+		return 1;
+	}
 }

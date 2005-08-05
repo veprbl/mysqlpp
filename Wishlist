@@ -13,10 +13,6 @@ widely useful.  Patches or proposals of this sort are always welcome.
 Final v2.0 Stuff
 ----------------
 
-	o Decide whether to make simple1 example simpler by hoisting copy
-	  of util code up into it.  Maybe change SELECT statement to get
-	  just one row, and print just that one.
-
 	o Run examples under watchful eye of Valgrind.
 
 	o Install headers in a mysql++ subdir by default?
