@@ -42,30 +42,38 @@ main(int argc, char *argv[])
 	if (!connect_to_db(argc, argv, con)) {
 		return 1;
 	}
-	cout << "Connected to database successfully!" << endl;
 
 	// Retrieve one row from the sample stock table set up by resetdb
 	mysqlpp::Query query = con.query();
-	query << "select * from stock where item='hot mustard'";
+	query << "select * from stock";
 	mysqlpp::Result res = query.store();
 
 	// Display results
 	if (res) {
-		// Get first row in result set, and print its contents
-		mysqlpp::Row row(res.at(0));
-		if (row) {
-			string item(row["item"]);
-			cout << item << ", " << row["num"] << " units, weight " <<
-					row["weight"] << ", $" << row["price"] <<
-					", entered on " << row["sdate"] << endl;
-			return 0;
-		}
-		else {
-			cerr << "No such stock row!" << endl;
+		// Display header
+		cout.setf(ios::left);
+		cout << setw(21) << "Item" <<
+				setw(10) << "Num" <<
+				setw(10) << "Weight" <<
+				setw(10) << "Price" <<
+				"Date" << endl << endl;
+
+		// Get each row in result set, and print its contents
+		mysqlpp::Row row;
+		mysqlpp::Row::size_type i;
+		for (i = 0; row = res.at(i); ++i) {
+			cout << setw(20) << row["item"] << ' ' <<
+					setw(9) << row["num"] << ' ' <<
+					setw(9) << row["weight"] << ' ' <<
+					setw(9) << row["price"] << ' ' <<
+					setw(9) << row["sdate"] <<
+					endl;
 		}
 	}
 	else {
 		cerr << "Failed to get stock item: " << query.error() << endl;
 		return 1;
 	}
+
+	return 0;
 }

@@ -41,7 +41,6 @@ main(int argc, char *argv[])
 	if (!connect_to_db(argc, argv, con)) {
 		return 1;
 	}
-	cout << "Connected to database successfully!" << endl;
 
 	// Ask for all rows from the sample stock table set up by resetdb.
 	// Unlike simple1 example, we don't store result set in memory.
@@ -51,13 +50,25 @@ main(int argc, char *argv[])
 
 	// Retreive result rows one by one, and display them.
 	if (res) {
+		// Display header
+		cout.setf(ios::left);
+		cout << setw(21) << "Item" <<
+				setw(10) << "Num" <<
+				setw(10) << "Weight" <<
+				setw(10) << "Price" <<
+				"Date" << endl << endl;
+
+		// Get each row in result set, and print its contents
 		mysqlpp::Row row;
 		while (row = res.fetch_row()) {
-			string item(row["item"]);
-			cout << item << ", " << row["num"] << " units, weight " <<
-					row["weight"] << ", $" << row["price"] <<
-					", entered on " << row["sdate"] << endl;
+			cout << setw(20) << row["item"] << ' ' <<
+					setw(9) << row["num"] << ' ' <<
+					setw(9) << row["weight"] << ' ' <<
+					setw(9) << row["price"] << ' ' <<
+					setw(9) << row["sdate"] <<
+					endl;
 		}
+
 		return 0;
 	}
 	else {
