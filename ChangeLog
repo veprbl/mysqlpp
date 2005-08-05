@@ -1,4 +1,4 @@
-2.0.0 beta 2, 2005.07.18 (r945)
+2.0.0 release candidate 1, 2005.08.05 (r1019)
 
 	THIS IS NOT A DROP-IN REPLACEMENT FOR MySQL++ v1.7!
 
@@ -35,12 +35,25 @@
 	  Hopefully we can put these ABI changes off long enough
 	  to avoid any real problems.
 
+	o autoconf now installs headers into $prefix/include/mysql++,
+	  instead of $prefix/include.  If you were using the
+	  --includedir configure script option to get this behavior
+	  before, you no longer need it.
+
 	o Linux binary RPMs will henceforth include only the
 	  libmysqlpp.so.X.Y.Z file, and create any short names
 	  required, to allow multiple versions to be installed at
 	  once.  Currently, you cannot install two MySQL++ library
 	  RPMs at once, because they both have /usr/lib/libmysqlpp.so.X,
 	  for instance.
+
+	o Replaced the Visual C++ and Borland C++ project files with
+	  a new "makemake" system, which creates Makefiles specific
+	  to a particular toolchain.  This new mechanism also supports
+	  MinGW and generic GCC-on-*ix.  This was done partly to reduce
+	  the number of places we have to change when changing the
+	  file names in MySQL++ or adding new ones, and partly so we're
+	  not tied to one particular version of each of these tools.
 
 	o Added Connection::enable_ssl(), which enables encrypted
 	  connections to the database server using SSL.
@@ -78,6 +91,9 @@
 	  code to class Query.  Query no longer delegates the final
 	  step of sending the query to the database server to
 	  Connection().
+
+	o Added Connection::enable_ssl(), for turning on SSL support on
+	  a connection.
 
 	o Extracted exception disabling mechanism out of the many
 	  classes that had the feature into a new OptionalExceptions
@@ -119,7 +135,9 @@
 	  style of other concrete exception types.
 
 	o Extracted lock()/unlock() functions from Connection and
-	  Query classes into a new Lockable interface class.
+	  Query classes into a new Lockable interface class.  Locking
+	  is implemented in terms of a different class hierarchy, Lock,
+	  which allows multiple locking strategies with a single ABI.
 
 	o Removed ResUse::eof().  It's based on a deprecated MySQL
 	  C API feature, and it isn't needed anyway.
@@ -163,6 +181,10 @@
 	  stored procedures in MySQL 5.0 reportedly return multiple
 	  result sets.	Thanks for the initial patch go to Arnon Jalon;
 	  I reworked it quite a bit.
+
+	o Query::storein*() now supports more varieties of the
+	  nonstandard slist comtainer.	(Singly-linked version of
+	  STL std::list.)
 
 	o Collapsed mysql_* date and time base classes' methods and
 	  data into the subclasses.  Also, DateTime no longer derives
@@ -247,13 +269,20 @@
 	o Standardized exception handling code in the examples that
 	  use it.
 
+	o Fixed a potential memory leak due to exceptions thrown from
+	  ResUse.  Thanks for this patch go to Chris Frey.
+
 	o Using new "no exceptions" feature of library in simple1
 	  example, so it is now truly simple.
 
+	o simple1 example no longer depends as much on util module, so
+	  that all of the important code is in one place.  Makes
+	  learning MySQL++ a little less intimidating.
+
 	o Added new simple2 and usequery examples, to demonstrate
 	  the proper way to handle a "use" query, with exceptions
-	  disabled, and not, respectively.  Added them to the user manual,
-	  in the appropriate place.
+	  disabled, and not, respectively.  Added them to the user
+	  manual, in the appropriate place.
 
 	o Refactored the "print stock table" example functions
 	  again, to make code using them clearer.

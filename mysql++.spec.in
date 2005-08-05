@@ -1,7 +1,7 @@
 Summary: C++ wrapper for the MySQL C API
 Name: @PACKAGE_NAME@
 Version: @PACKAGE_VERSION@
-Release: beta3
+Release: rc1
 Copyright: LGPL
 Group: Development/Databases
 Requires: MySQL-shared
@@ -78,8 +78,8 @@ rm -f doc/README.examples doc/LICENSE
 %doc doc/*.pdf doc/refman doc/userman
 
 %changelog
-* Mon Jul 18 2005 Warren Young <mysqlpp@etr-usa.com> 2.0.0-beta2-1
-- Updated for 2.0.0 beta2 release
+* Fri Aug 5 2005 Warren Young <mysqlpp@etr-usa.com> 2.0.0-rc1
+- Updated for 2.0.0 rc1 release
 
 * Thu May 26 2005 Warren Young <mysqlpp@etr-usa.com> 1.7.40-1
 - Updated for 1.7.40
