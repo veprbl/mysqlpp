@@ -6,15 +6,6 @@ CONFIGURE OPTIONS
 
 	to get a list.  Some of the more interesting flags are:
 
-	--includedir:
-
-		Because MySQL++ comes with a great many header
-		files -- some of which have some fairly generic
-		names -- I highly recommend you add something like
-		'--includedir=/usr/local/include/mysql++' to the configure
-		command. This puts the MySQL++ header files in their
-		own directory.
-
 	--prefix:
 
 		If you wish to install mysql++ in a root directory

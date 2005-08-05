@@ -93,17 +93,6 @@
 	the SSQLS mechanism.) All of the other files are used within
 	the library only.
 
-	By the way, if, when installing this package, you didn't put
-	the headers into their own subdirectory, you might consider
-	reinstalling the package to remedy that. MySQL++ has a number
-	of generically-named files (\link convert.h convert.h, \endlink
-	\link fields.h fields.h, \endlink \link row.h row.h \endlink...),
-	so it's best to put them into a separate directory where they
-	can't interfere with other code on your system. If you're on a
-	Unixy platform, you do this by passing the \c --includedir option
-	to the \c configure script. See the package's main README file
-	for details.
-
 
 	\section user_questions If You Have Questions...
 

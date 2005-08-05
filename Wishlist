@@ -10,14 +10,6 @@ consider whether it could be reduced to an API feature that would be
 widely useful.  Patches or proposals of this sort are always welcome.
 
 
-Final v2.0 Stuff
-----------------
-
-	o Run examples under watchful eye of Valgrind.
-
-	o Install headers in a mysql++ subdir by default?
-
-
 Future Features
 ---------------
 

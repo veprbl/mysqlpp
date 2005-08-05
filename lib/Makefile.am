@@ -18,6 +18,8 @@ include $(top_srcdir)/common.am
 AM_CXXFLAGS = @PTHREAD_CFLAGS@
 LDADD = $(MYSQLPP_LIB) @PTHREAD_LIBS@
 
+fooincludedir = $(pkgincludedir)/foo
+
 EXTRA_DIST = custom.pl Doxyfile
 
 lib_LTLIBRARIES=libmysqlpp.la
@@ -30,7 +32,7 @@ libmysqlpp_la_SOURCES = \
 	result.cpp row.cpp sql_string.cpp string_util.cpp type_info.cpp \
 	vallist.cpp
 
-include_HEADERS = \
+pkginclude_HEADERS = \
 	coldata.h compare.h connection.h const_string.h convert.h custom.h \
 	custom-macros.h defs.h datetime.h exceptions.h field_names.h \
 	field_types.h fields.h lockable.h manip.h myset.h mysql++.h \

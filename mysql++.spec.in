@@ -1,7 +1,7 @@
 Summary: C++ wrapper for the MySQL C API
 Name: @PACKAGE_NAME@
 Version: @PACKAGE_VERSION@
-Release: beta2
+Release: beta3
 Copyright: LGPL
 Group: Development/Databases
 Requires: MySQL-shared
@@ -31,7 +31,7 @@ it's so large, and it doesn't change with every release.
 
 %prep
 %setup -q
-./configure --prefix=/usr --includedir=/usr/include/mysql++ --disable-examples --disable-dependency-tracking
+./configure --prefix=/usr --disable-examples --disable-dependency-tracking
 
 %build
 make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
