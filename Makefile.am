@@ -34,9 +34,7 @@ EXTRA_DIST = \
 	doc/userman/Makefile \
 	doc/userman/README \
 	*.ebuild \
-	*.spec \
-	*.sln \
-	*.vcproj
+	*.spec
 
 #SUBDIRS = lib examples doc
 SUBDIRS = lib @OPTIONAL_EXAMPLES@

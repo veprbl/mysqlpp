@@ -18,7 +18,7 @@ include $(top_srcdir)/common.am
 AM_CXXFLAGS = @PTHREAD_CFLAGS@
 LDADD = $(MYSQLPP_LIB) @PTHREAD_LIBS@
 
-EXTRA_DIST = custom.pl Doxyfile *.bpf *.bpr *.bpg
+EXTRA_DIST = custom.pl Doxyfile
 
 lib_LTLIBRARIES=libmysqlpp.la
 
