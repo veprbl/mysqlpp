@@ -93,7 +93,6 @@ const ColData Row::operator [](const char* field) const
 }
 
 
-#if !defined(__BORLANDC__)		// BC++ 5.5 barfs on these templates...
 value_list_ba<FieldNames, do_nothing_type0>
 Row::field_list(const char* d) const
 {
@@ -178,7 +177,6 @@ Row::equal_list(const char* d, const char* e, Manip m) const
 	return equal_list_ba<FieldNames, Row, Manip>(
 			parent().names(), *this, d, e, m);
 }
-#endif
 
 } // end namespace mysqlpp
 
