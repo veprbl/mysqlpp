@@ -188,7 +188,7 @@ public:
 	Query(Connection* c, bool te = true) :
 	std::ostream(&sbuffer_),
 	OptionalExceptions(te),
-	Lockable(),
+	Lockable(false),
 	def(this),
 	conn_(c),
 	success_(false)

@@ -122,13 +122,16 @@ class Lockable
 {
 protected:
 	/// \brief Default constructor
-	Lockable(bool locked = false) :
+	Lockable(bool locked) :
 	pimpl_(new BasicLock(locked))
 	{
 	}
 
 	/// \brief Destroy object
-	virtual ~Lockable() { }
+	virtual ~Lockable()
+	{
+		delete pimpl_;
+	}
 
 	/// \brief Lock the object
 	///
@@ -147,6 +150,10 @@ protected:
 	void set_lock(bool b) { pimpl_->set(b); }
 
 private:
+	// Don't allow default construction
+	Lockable();
+
+	// Pointer to implementation object
 	Lock* pimpl_;
 };
 

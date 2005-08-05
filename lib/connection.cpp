@@ -100,7 +100,7 @@ Connection::legal_opt_arg_types_[Connection::opt_COUNT] = {
 
 Connection::Connection(bool te) :
 OptionalExceptions(te),
-Lockable(true),
+Lockable(false),
 is_connected_(false),
 connecting_(false),
 success_(false)
@@ -114,7 +114,7 @@ Connection::Connection(const char* db, const char* host,
 		my_bool compress, unsigned int connect_timeout,
 		cchar* socket_name, unsigned int client_flag) :
 OptionalExceptions(),
-Lockable(),
+Lockable(false),
 connecting_(false)
 {
 	mysql_init(&mysql_);
@@ -279,7 +279,6 @@ Connection::query()
 bool
 Connection::set_option(Option option)
 {
-cerr << "CRUMB 1" << endl;
 	if (connected() || connecting_) {
 		// Try to set the option immediately
 		switch (option) {
