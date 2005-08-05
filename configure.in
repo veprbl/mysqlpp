@@ -16,7 +16,7 @@
 
 dnl Don't forget to change libtool version below, plus the version
 dnl numbers in ChangeLog and mysql++.spec.
-AC_INIT(mysql++, 2.0.0, plusplus@lists.mysql.com)
+AC_INIT(mysql++, 2.0.0, plusplus@lists.mysql.com, mysql++)
 
 # Libtool version scheme is: interface:change:age.  Interface number
 # goes up any time the library interface changes.  Change number goes up
