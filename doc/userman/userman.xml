@@ -1943,13 +1943,13 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 			<sect4>
 				<title>Library-wide changes</title>
 				
-				<para>All distributed Makefiles files
-				only build dynamic libraries. (Shared
-				objects on most Unices, DLLs on
-				Windows, etc.) Unless your program
-				is licensed under the GPL or LGPL,
-				you shouldn't have been using the
-				static libraries from previous
+				<para>Where possible, all distributed
+				Makefiles only build dynamic
+				libraries. (Shared objects on most
+				Unices, DLLs on Windows, etc.) Unless
+				your program is licensed under the GPL
+				or LGPL, you shouldn't have been using
+				the static libraries from previous
 				versions anyway.</para>
 			</sect4>
 
