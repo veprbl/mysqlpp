@@ -289,7 +289,7 @@ vector&lt;mystruct&gt; v;
 Query q = connection.query();
 q &lt;&lt; "SELECT * FROM mytable";
 q.storein(v);
-for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++v) {
+for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     cout &lt;&lt; "Price: " &lt;&lt; it-&gt;price &lt;&lt; endl;
 }</programlisting>
 
