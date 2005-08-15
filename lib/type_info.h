@@ -129,7 +129,7 @@ public:
 	/// The default is intended to try and crash a program using a
 	/// default mysql_type_info object.  This is a very wrong thing
 	/// to do.
-	mysql_type_info(unsigned char n = (unsigned char)-1) :
+	mysql_type_info(unsigned char n = static_cast<unsigned char>(-1)) :
 	num_(n)
 	{
 	}

@@ -64,7 +64,7 @@ SQLQueryParms& operator <<(quote_type2 p, SQLString& in)
 		else {
 			char* s = new char[in.size() * 2 + 1];
 			mysql_escape_string(s, in.c_str(),
-					(unsigned long)in.size());
+					static_cast<unsigned long>(in.size()));
 			SQLString in2 = SQLString('\'') + s + '\'';
 			in2.processed = true;
 			*p.qparms << in2;
@@ -106,7 +106,7 @@ ostream& operator <<(quote_type1 o, const char* const& in)
 {
 	size_t size = strlen(in);
 	char* s = new char[size * 2 + 1];
-	mysql_escape_string(s, in, (unsigned long)size);
+	mysql_escape_string(s, in, static_cast<unsigned long>(size));
 	*o.ostr << '\'' << s << '\'';
 	delete[] s;
 	return *o.ostr;
@@ -120,7 +120,8 @@ inline ostream& _manip(quote_type1 o, const ColData_Tmpl<Str>& in)
 {
 	if (in.escape_q()) {
 		char* s = new char[in.size() * 2 + 1];
-		mysql_escape_string(s, in.c_str(), (unsigned long)in.size());
+		mysql_escape_string(s, in.c_str(),
+				static_cast<unsigned long>(in.size()));
 		if (in.quote_q())
 			*o.ostr << '\'' << s << '\'';
 		else
@@ -180,7 +181,8 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<string>& in)
 
 	if (in.escape_q()) {
 		char* s = new char[in.size() * 2 + 1];
-		mysql_escape_string(s, in.c_str(), (unsigned long)in.size());
+		mysql_escape_string(s, in.c_str(),
+				static_cast<unsigned long>(in.size()));
 		if (in.quote_q())
 			o << '\'' << s << '\'';
 		else
@@ -244,7 +246,8 @@ Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
 	}
 	if (in.escape_q()) {
 		char* s = new char[in.size() * 2 + 1];
-		mysql_escape_string(s, in.c_str(), (unsigned long)in.size());
+		mysql_escape_string(s, in.c_str(),
+				static_cast<unsigned long>(in.size()));
 		if (in.quote_q())
 			static_cast<ostream&>(o) << '\'' << s << '\'';
 		else
@@ -414,7 +417,8 @@ SQLQueryParms& operator <<(escape_type2 p, SQLString& in)
 {
 	if (in.is_string && ! in.dont_escape) {
 		char* s = new char[in.size() * 2 + 1];
-		mysql_escape_string(s, in.c_str(), (unsigned long)in.size());
+		mysql_escape_string(s, in.c_str(), 
+				static_cast<unsigned long>(in.size()));
 		SQLString in2 = s;
 		in2.processed = true;
 		*p.qparms << in2;
@@ -458,7 +462,7 @@ ostream& operator <<(escape_type1 o, const char* const& in)
 {
 	size_t size = strlen(in);
 	char* s = new char[size * 2 + 1];
-	mysql_escape_string(s, in, (unsigned long)size);
+	mysql_escape_string(s, in, static_cast<unsigned long>(size));
 	*o.ostr << s;
 	delete[] s;
 	return *o.ostr;
@@ -472,7 +476,8 @@ inline ostream& _manip(escape_type1 o, const ColData_Tmpl<Str>& in)
 {
 	if (in.escape_q()) {
 		char* s = new char[in.size() * 2 + 1];
-		mysql_escape_string(s, in.c_str(), (unsigned long)in.size());
+		mysql_escape_string(s, in.c_str(),
+				static_cast<unsigned long>(in.size()));
 		delete[] s;
 	}
 	else {
