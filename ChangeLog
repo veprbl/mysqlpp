@@ -186,6 +186,12 @@
 	  nonstandard slist comtainer.	(Singly-linked version of
 	  STL std::list.)
 
+	o Template query mechanism and user manual had several
+	  mismatches.  Made manual match actual behavior, or
+	  made library match documented behavior, as apropriate.
+	  Initial patch by Jürgen MF Gleiss, with corrections and
+	  enhancements by Warren Young.
+
 	o Collapsed mysql_* date and time base classes' methods and
 	  data into the subclasses.  Also, DateTime no longer derives
 	  from Date and Time; you could get away with that in the
