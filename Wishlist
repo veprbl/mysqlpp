@@ -167,6 +167,11 @@ Future Features
 	provide a patch!
 
 
+	o Define operator<< for Fields, Row, ResUse, etc.  In other
+	  words, there should be a way to get a user-readable version
+	  of received data without a lot of code.  Perhaps use a CSV
+	  output format, or a mysql(1) one (ASCII grid).
+
 	o Abstract all uses of MySQL C API functions into a database
 	  driver class with a generic interface.  This is a step
 	  towards database-independence, without the parallel class
