@@ -151,7 +151,7 @@ void Query::parse()
 {
 	std::string str = "";
 	char num[4];
-	long int n;
+	int n;
 	char option;
 	std::string name;
 	char *s, *s0;
