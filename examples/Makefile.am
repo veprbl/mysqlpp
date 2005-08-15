@@ -18,7 +18,13 @@ include $(top_srcdir)/common.am
 AM_CXXFLAGS = @PTHREAD_CFLAGS@
 LDADD = $(MYSQLPP_LIB) @PTHREAD_LIBS@
 
-EXTRA_DIST = Makefile.simple
+EXTRA_DIST = \
+		Makefile.base \
+		Makefile.bc \
+		Makefile.gcc \
+		Makefile.mingw \
+		Makefile.simple \
+		Makefile.vc
 
 noinst_PROGRAMS = resetdb simple1 simple2 usequery multiquery custom1 custom2 \
 		custom3 custom4 custom5 fieldinf1 dbinfo updel load_file \

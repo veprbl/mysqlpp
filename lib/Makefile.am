@@ -20,7 +20,15 @@ LDADD = $(MYSQLPP_LIB) @PTHREAD_LIBS@
 
 fooincludedir = $(pkgincludedir)/foo
 
-EXTRA_DIST = custom.pl Doxyfile
+EXTRA_DIST = \
+		custom.pl \
+		Doxyfile \
+		Makefile.base \
+		Makefile.bc \
+		Makefile.gcc \
+		Makefile.mingw \
+		Makefile.simple \
+		Makefile.vc
 
 lib_LTLIBRARIES=libmysqlpp.la
 
