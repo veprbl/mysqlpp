@@ -689,7 +689,7 @@ private:
 	std::vector<std::string> parsed_names_;
 
 	/// \brief Maps template parameter names to their position value.
-	std::map<std::string, int> parsed_nums_;
+	std::map<std::string, short int> parsed_nums_;
 
 	/// \brief String buffer for storing assembled query
 	std::stringbuf sbuffer_;

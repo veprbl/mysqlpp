@@ -69,7 +69,7 @@ std::string Query::error()
 bool Query::exec(const std::string& str)
 {
 	success_ = !mysql_real_query(&conn_->mysql_, str.c_str(),
-			(unsigned long)str.length());
+			static_cast<unsigned long>(str.length()));
 	if (!success_ && throw_exceptions()) {
 		throw BadQuery(error());
 	}
@@ -151,25 +151,28 @@ void Query::parse()
 {
 	std::string str = "";
 	char num[4];
-	int n;
-	char option;
 	std::string name;
 	char *s, *s0;
 	s0 = s = preview_char();
 	while (*s) {
 		if (*s == '%') {
+			// Following might be a template parameter declaration...
 			s++;
 			if (*s == '%') {
+				// Doubled percent sign, so insert literal percent sign.
 				str += *s++;
 			}
-			else if (*s >= '0' && *s <= '9') {
+			else if (isdigit(*s)) {
+				// Number following percent sign, so it signifies a
+				// positional parameter.  First step: find position
+				// value, up to 3 digits long.
 				num[0] = *s;
 				s++;
-				if (*s >= '0' && *s <= '9') {
+				if (isdigit(*s)) {
 					num[1] = *s;
 					num[2] = 0;
 					s++;
-					if (*s >= '0' && *s <= '9') {
+					if (isdigit(*s)) {
 						num[2] = *s;
 						num[3] = 0;
 						s++;
@@ -181,26 +184,31 @@ void Query::parse()
 				else {
 					num[1] = 0;
 				}
+				short int n = atoi(num);
 
-				n = strtol(num, 0, 10);
-				option = ' ';
-
+				// Look for option character following position value.
+				char option = ' ';
 				if (*s == 'q' || *s == 'Q' || *s == 'r' || *s == 'R') {
 					option = *s++;
 				}
 
+				// Is it a named parameter?
 				if (*s == ':') {
+					// Save all alphanumeric and underscore characters
+					// following colon as parameter name.
 					s++;
-					for ( /* */ ; (*s >= 'A' && *s <= 'Z') ||
-						 *s == '_' || (*s >= 'a' && *s <= 'z'); s++) {
+					for (/* */; isalnum(*s) || *s == '_'; ++s) {
 						name += *s;
 					}
 
+					// Eat trailing colon, if it's present.
 					if (*s == ':') {
 						s++;
 					}
 
-					if (n >= static_cast<long int>(parsed_names_.size())) {
+					// Update maps that translate parameter name to
+					// number and vice versa.
+					if (n >= static_cast<short>(parsed_names_.size())) {
 						parsed_names_.insert(parsed_names_.end(),
 								static_cast<std::vector<std::string>::size_type>(
 										n + 1) - parsed_names_.size(),
@@ -210,15 +218,21 @@ void Query::parse()
 					parsed_nums_[name] = n;
 				}
 
+				// Finished parsing parameter; save it.
 				parse_elems_.push_back(SQLParseElement(str, option, char(n)));
 				str = "";
 				name = "";
 			}
 			else {
+				// Insert literal percent sign, because sign didn't
+				// precede a valid parameter string; this allows users
+				// to play a little fast and loose with the rules,
+				// avoiding a double percent sign here.
 				str += '%';
 			}
 		}
 		else {
+			// Regular character, so just copy it.
 			str += *s++;
 		}
 	}

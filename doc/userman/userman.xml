@@ -952,15 +952,20 @@ q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </prog
 		string is a template query, and it needs to parse it:</para>
 
 		<programlisting>
-query &lt;&lt; "select (%2:field1, %3:field2) from stock where %1:wheref = %q0:what";
+query &lt;&lt; "select (%2:field1, %3:field2) from stock where %1:wheref = %0q:what";
 query.parse();</programlisting>
 
 		<para>The format of the placeholder is:</para>
 
 		<programlisting>
-%(modifier)##(:name)(:)</programlisting>
+%###(modifier)(:name)(:)</programlisting>
 
-		<para>Where Modifier can be any one of the following:</para>
+		<para>Where '###' is a number up to three
+		digits. It is the order of parameters given to a
+		<ulink type="classref" url="SQLQueryParms"/> object,
+		starting from 0.</para>
+
+		<para>'modifier' can be any one of the following:</para>
 
 		<blockquote>
 		<informaltable frame="none">
@@ -1008,20 +1013,13 @@ query.parse();</programlisting>
 		</informaltable>
 		</blockquote>
 
-		<para>## represents a number up to two digits. It is the
-		order of parameters given to a 
-		<ulink type="classref" url="SQLQueryParms"/>
-		object, starting from 0.</para>
-
 		<para>":name" is for an optional name which aids
 		in filling SQLQueryParms. Name can contain any
-		alpha-numeric characters or the underscore. If
-		you add this, it must start with a letter. If this
-		is not the case, add a colon after the name. If
-		you need to represent an actual colon after the
-		name, follow the name with two colons. The first
-		one will end the name and the second one won't
-		be processed.</para>
+		alpha-numeric characters or the underscore. You can
+		have a trailing colon, which will be ignored. If
+		you need to represent an actual colon after the name,
+		follow the name with two colons. The first one will end
+		the name and the second one won't be processed.</para>
 	</sect2>
 
 
@@ -1053,7 +1051,7 @@ select (item, price) from stock where item = "Dinner Rolls"</programlisting>
 		numeric order...</para>
 
 		<programlisting>
-select (%0:field1, %1:field2) from stock where %2:wheref = %q3:what</programlisting>
+select (%0:field1, %1:field2) from stock where %2:wheref = %3q:what</programlisting>
 
 		<para>...will become apparent shortly.</para>
 	</sect2>

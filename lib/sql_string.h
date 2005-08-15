@@ -62,7 +62,8 @@ public:
 	///
 	/// This flag is used by the template query mechanism, to prevent a
 	/// string from being re-escaped or re-quoted each time that query
-	/// is reused.
+	/// is reused.  The flag is reset by operator=, to force the new
+	/// parameter value to be re-processed.
 	bool processed;
 
 	/// \brief Default constructor; empty string
@@ -116,6 +117,7 @@ public:
 	SQLString& operator =(const char* str)
 	{
 		std::string::operator =(str);
+		processed = false;
 		return *this;
 	}
 
@@ -123,6 +125,7 @@ public:
 	SQLString& operator =(const std::string& str)
 	{
 		std::string::operator =(str);
+		processed = false;
 		return *this;
 	}
 };
@@ -130,4 +133,3 @@ public:
 } // end namespace mysqlpp
 
 #endif
-
