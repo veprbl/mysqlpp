@@ -1,17 +1,16 @@
 #!/bin/sh
-ISSUE=`head -1 /etc/issue`
-echo $ISSUE | grep -q 'Red Hat'
-RH=$?
-echo $ISSUE | grep -q 'Fedora Core'
-FC=$?
-if [ $RH == 0 ]
+if grep Red /etc/issue > /dev/null 2>&1
 then
 	echo -n rh
-	echo $ISSUE | awk '{ print $5 }'
-elif [ $FC == 0 ]
+	grep Red /etc/issue |cut -f5 -d' '
+elif grep Fedora /etc/issue > /dev/null 2>&1
 then
 	echo -n fc
-	echo $ISSUE | awk '{ print $4 }'
+	grep Fedora /etc/issue |cut -f4 -d' '
+elif grep CentOS /etc/issue > /dev/null 2>&1
+then
+	echo -n el
+	grep CentOS /etc/issue |cut -f3 -d' ' |cut -f1 -d.
 else
-	echo unknown
+	echo UNKNOWN
 fi
