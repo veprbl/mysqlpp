@@ -1,4 +1,4 @@
-2.0.0 release candidate 2, 2005.08.15 (r1029)
+2.0.0, 2005.08.16 (r1031) The "Excess Hair Removal" release
 
 	THIS IS NOT A DROP-IN REPLACEMENT FOR MySQL++ v1.7!
 
@@ -54,6 +54,11 @@
 	  the number of places we have to change when changing the
 	  file names in MySQL++ or adding new ones, and partly so we're
 	  not tied to one particular version of each of these tools.
+
+	o VC++ Makefiles create a DLL version of the library only
+	  now, so there's no excuse for LGPL violations now.
+	  This same mechanism should make DLL builds under other
+	  Windows compilers easy.
 
 	o Added Connection::enable_ssl(), which enables encrypted
 	  connections to the database server using SSL.
@@ -237,10 +242,6 @@
 	o All warnings fixed under VC++ at warning level 3.  (Mostly
 	  harmless signedness and integer conversion stuff.)
 
-	o VC++ projects creates a DLL version of the library only now, so
-	  there's no excuse for LGPL violations now.  This same mechanism
-	  should make DLL builds under other Windows compilers easy.
-
 	o Updated LGPL license/copyright comments at the top of
 	  several files to use FSF's new physical address.
 
@@ -296,20 +297,19 @@
 	o UTF-8 to UCS-2 handling in examples is now automatic on
 	  Windows.
 
-	o Removed unneeded debug code from in Windows Unicode output
-	  code in examples.  (Shouldn't have made it into a release
-	  at all.)
+	o Removed debug code from Windows Unicode output examples
+	  that slipped into previous release.
 
 	o resetdb example is now clearer, and more robust in the
 	  face of database errors.
 
 	o Simplified connect_to_db() in examples' util module.
 
-	o Lots and lots of minor cleanups not worth mentioning
-	  individually...
-
 	o Added sample autoconf macro for finding MySQL++ libraries, for
 	  people to use in their own autotools-based projects.
+
+	o Lots and lots of minor cleanups not worth mentioning
+	  individually...
 
 
 1.7.40, 2005.05.26 (r719)

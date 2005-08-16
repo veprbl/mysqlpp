@@ -1,7 +1,7 @@
 Summary: C++ wrapper for the MySQL C API
 Name: @PACKAGE_NAME@
 Version: @PACKAGE_VERSION@
-Release: rc2
+Release: 1
 Copyright: LGPL
 Group: Development/Databases
 Requires: MySQL-shared
