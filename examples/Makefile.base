@@ -83,6 +83,9 @@ custom4$(EXE): $(CUSTOM4_OBJS)
 custom5$(EXE): $(CUSTOM5_OBJS)
 	$(LD) $(LDFLAGS) $(LDSTARTUP) $(CUSTOM5_OBJS) $(LDEXEFLAG)$@ $(LIBS)
 
+custom6$(EXE): $(CUSTOM6_OBJS)
+	$(LD) $(LDFLAGS) $(LDSTARTUP) $(CUSTOM6_OBJS) $(LDEXEFLAG)$@ $(LIBS)
+
 fieldinf1$(EXE): $(FIELDINF1_OBJS)
 	$(LD) $(LDFLAGS) $(LDSTARTUP) $(FIELDINF1_OBJS) $(LDEXEFLAG)$@ $(LIBS)
 
@@ -112,6 +115,7 @@ custom2.$(OBJ): custom2.cpp util.h
 custom3.$(OBJ): custom3.cpp util.h
 custom4.$(OBJ): custom4.cpp util.h
 custom5.$(OBJ): custom5.cpp util.h
+custom6.$(OBJ): custom6.cpp util.h
 fieldinf1.$(OBJ): fieldinf1.cpp util.h
 dbinfo.$(OBJ): dbinfo.cpp util.h
 cgi_image.$(OBJ): cgi_image.cpp
