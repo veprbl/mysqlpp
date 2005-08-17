@@ -26,9 +26,9 @@ EXTRA_DIST = \
 		Makefile.simple \
 		Makefile.vc
 
-noinst_PROGRAMS = resetdb simple1 simple2 usequery multiquery custom1 custom2 \
-		custom3 custom4 custom5 fieldinf1 dbinfo updel load_file \
-		cgi_image
+noinst_PROGRAMS = resetdb simple1 simple2 usequery multiquery \
+		custom1 custom2 custom3 custom4 custom5 custom6 fieldinf1 \
+		dbinfo updel load_file cgi_image
 
 noinst_HEADERS = util.h
 
@@ -64,6 +64,9 @@ custom4_DEPENDENCIES = $(MYSQLPP_LIB)
 
 custom5_SOURCES = custom5.cpp util.cpp
 custom5_DEPENDENCIES = $(MYSQLPP_LIB)
+
+custom6_SOURCES = custom6.cpp util.cpp
+custom6_DEPENDENCIES = $(MYSQLPP_LIB)
 
 fieldinf1_SOURCES = fieldinf1.cpp util.cpp
 fieldinf1_DEPENDENCIES = $(MYSQLPP_LIB)
