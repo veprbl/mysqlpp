@@ -1,6 +1,6 @@
 /***********************************************************************
  custom6.cpp - Same as custom1, except that it requests only a subset of
- 	the stock table.  See also simple3, for another way to accomplish
+ 	the stock table.  See also simple1, for another way to accomplish
 	the same thing, without using SSQLS.
  
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by

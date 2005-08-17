@@ -44,7 +44,7 @@ main(int argc, char *argv[])
 	}
 
 	// Ask for all rows from the sample stock table set up by resetdb.
-	// Unlike simple1 example, we don't store result set in memory.
+	// Unlike simple2 example, we don't store result set in memory.
 	mysqlpp::Query query = con.query();
 	query << "select * from stock";
 	mysqlpp::ResUse res = query.use();
