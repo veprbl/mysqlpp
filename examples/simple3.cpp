@@ -1,6 +1,7 @@
 /***********************************************************************
- simple2.cpp - Example showing how to use the 'use' method of retrieving
-	a table, as opposed to the more common 'store' method.
+ simple3.cpp - Example showing how to use the 'use' method of retrieving
+	a table, as opposed to the more common 'store' method illustrated
+	by the simple2 example.
 
  Copyright (c) 2005 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
