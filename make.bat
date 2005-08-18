@@ -4,30 +4,45 @@ rem Command line parsing
 :reparse
 if not exist lib\Makefile goto error
 if "%1" == "clean" goto do_clean
+if "%1" == "install" goto do_install
 
 
 rem Build the library file
-cmd /c cd lib ^& make.bat %*
+cmd /c cd lib ^& make.bat
 if errorlevel 1 goto end
 echo.
 echo MySQL++ library built successfully.
-echo.
 copy lib\*.dll examples > NUL
 
 cmd /c cd examples ^& make.bat %*
 if errorlevel 1 goto end
 echo.
 echo MySQL++ examples built successfully.
-echo.
 goto end
 
 
 rem Remove generated files
 :do_clean
-if exist lib\Makefile cmd /c cd lib ^& make clean
-del lib\Makefile lib\make.bat
-if exist examples\Makefile cmd /c cd examples ^& make clean
-del examples\Makefile examples\make.bat
+if not exist lib\Makefile goto error
+if not exist examples\Makefile goto error
+cd lib
+call make.bat clean
+del Makefile make.bat
+cd ..
+cd examples
+call make.bat clean
+del Makefile make.bat
+cd ..
+shift
+if "%1" NEQ "" goto reparse
+goto end
+
+
+rem Install library file
+:do_install
+cd lib
+call make.bat install
+cd ..
 shift
 if "%1" NEQ "" goto reparse
 goto end
