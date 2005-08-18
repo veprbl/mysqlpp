@@ -36,6 +36,7 @@ EXTRA_DIST = \
 	doc/userman/html/*.html \
 	doc/userman/Makefile \
 	doc/userman/README \
+	make.bat \
 	makemake.* \
 	*.ebuild \
 	*.spec
