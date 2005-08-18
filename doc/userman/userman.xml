@@ -1449,7 +1449,7 @@ struct stock {
 		<computeroutput>sql_create_N</computeroutput> to get
 		the code to compile.</para>
 		
-		<para>(See the simple3 example in the <xref
+		<para>(See the simple1 example in the <xref
 		linkend="tutorial"/> for another way to accomplish
 		the same thing.)</para>
 	</sect2>
