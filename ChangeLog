@@ -1,4 +1,4 @@
-2.0.3, 2005.08.25 (r1058)
+2.0.3, 2005.08.25 (r1059)
 
 	o Visual C++ makemake system updated to build both debug and
 	  release versions.
