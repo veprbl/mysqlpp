@@ -2308,7 +2308,7 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 					and unnecessary MySQL C API
 					function <ulink url="mysql-eof"
 					type="mysqlapi"/>. See the
-					<computeroutput>simple2</computeroutput>
+					<computeroutput>simple3</computeroutput>
 					and
 					<computeroutput>usequery</computeroutput>
 					examples to see the proper
