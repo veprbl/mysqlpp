@@ -16,7 +16,7 @@
 EXTRA_DIST = \
 	CREDITS \
 	HACKERS \
-	LGPL \
+	LICENSE \
 	README.* \
 	Wishlist \
 	bootstrap \
