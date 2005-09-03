@@ -1,5 +1,5 @@
 ## This is the base Makefile for compiling the MySQL++ library on
-## systems that do not use automake.  The ../makemake.* script prepends
+## systems that do not use automake.  The ../makemake.* script appends
 ## this to one of the other Makefile.* files in this directory to create
 ## a complete Makefile.
 
