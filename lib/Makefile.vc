@@ -40,7 +40,7 @@ INST_LIB_DIR=$(INST_DIR)\lib
 
 OBJ=obj
 EXE=exe
-DEL=del /q
+DEL=rm -f
 
 
 .SUFFIXES: .cpp .obj

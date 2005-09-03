@@ -31,7 +31,7 @@ EXTRA_CLEAN=*.dll *.idb *.pdb
 
 OBJ=obj
 EXE=.exe
-DEL=del /q
+DEL=rm -f
 
 
 .SUFFIXES: .cpp .obj
