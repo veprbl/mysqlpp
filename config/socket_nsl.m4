@@ -9,8 +9,11 @@ dnl we need it, though, since on some OSes where it isn't necessary it
 dnl will totally break networking.  Unisys also includes gethostbyname()
 dnl in libsocket but needs libnsl for socket().
 dnl
-dnl @version 1.4, 2005/09/06
-dnl @author Russ Allbery <rra@stanford.edu>, Stepan Kasal <kasal@ucw.cz>, and Warren Young <warren@etr-usa.com>
+dnl @category Misc
+dnl @author Russ Allbery <rra@stanford.edu>
+dnl @author Stepan Kasal <kasal@ucw.cz>
+dnl @author Warren Young <warren@etr-usa.com>
+dnl @version 1.4, 2005-09-06
 
 AC_DEFUN([LIB_SOCKET_NSL],
 [
