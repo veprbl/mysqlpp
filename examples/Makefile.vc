@@ -40,11 +40,12 @@ LIBS=/LIBPATH:c:\mysql\lib\opt libmysql.lib /LIBPATH:..\lib\$(BIN_DIR) \
 vpath %.exe $(BIN_DIR)
 vpath %.obj $(BIN_DIR)
 
-LOCAL_CLEAN=debug/* release/* *.dll
+RM=$(if $(wildcard /bin/cygwin1.dll),rm -rf,del /q)
+
+LOCAL_CLEAN=debug release
 
 OBJ=obj
 EXE=.exe
-DEL=rm -f
 
 
 .SUFFIXES: .cpp .obj

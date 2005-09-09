@@ -63,7 +63,7 @@ release:
 	$(MAKE) BIN_DIR=release
 
 clean:
-	$(DEL) $(LOCAL_CLEAN)
+	$(RM) $(LOCAL_CLEAN)
 
 
 resetdb$(EXE): $(RESETDB_OBJS)

@@ -49,12 +49,12 @@ release:
 	$(MAKE) BIN_DIR=release
 
 clean:
-	$(DEL) $(LOCAL_CLEAN)
+	$(RM) $(LOCAL_CLEAN)
 
 
 $(LIB_FILE): $(OBJS)
 	$(LD) $(LDFLAGS) $(LDSTARTUP) $(BIN_DIR_OBJS) $(LDEXE) $(LIBS)
-	$(DEL) ../examples/$(BIN_DIR)/*$(EXE)
+	$(RM) $(EX_BIN_DIR)*$(EXE)
 
 coldata.$(OBJ): coldata.cpp coldata.h
 connection.$(OBJ): connection.cpp connection.h

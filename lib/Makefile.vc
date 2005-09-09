@@ -17,17 +17,29 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
 # USA
 
+MYSQL_DIR=c:\mysql
+
+CYGWIN_MAKE=$(wildcard /bin/cygwin1.dll)
+
+BIN_DIR=debug
+EX_BIN_DIR=$(if $(CYGWIN_MAKE),../examples/$(BIN_DIR)/,..\examples\$(BIN_DIR)\)
+
 CXX=cl
-CXXFLAGS=/Ic:\mysql\include /DMYSQLPP_MAKING_DLL /D_WINDLL /D_UNICODE \
+CXXFLAGS=/I$(MYSQL_DIR)\include /DMYSQLPP_MAKING_DLL /D_WINDLL /D_UNICODE \
 		/G6 /EHsc /nologo /c
 
 LIB_BASE=mysqlpp
 LIB_FILE=$(LIB_BASE).dll
 IMP_FILE=$(LIB_BASE).lib
-LD=link
-LDFLAGS=/OUT:$(BIN_DIR)\$(LIB_FILE) /DLL /NOLOGO /LIBPATH:c:\mysql\lib\opt libmysql.lib
+VC_LIB_PATH=$(BIN_DIR)\$(LIB_FILE)
+PLAT_LIB_PATH=$(if $(CYGWIN_MAKE),\
+		$(shell cygpath -u $(VC_LIB_PATH)),\
+		$(VC_LIB_PATH))
 
-BIN_DIR=debug
+LD=link
+LDFLAGS=/OUT:$(VC_LIB_PATH) /DLL /NOLOGO \
+		/LIBPATH:$(MYSQL_DIR)\lib\opt libmysql.lib
+
 ifeq "$(BIN_DIR)" "debug"
 	CXXFLAGS += /MDd /Od /D_DEBUG /ZI /Zi
 	LDFLAGS += /DEBUG
@@ -42,9 +54,10 @@ vpath %.lib $(BIN_DIR)
 EXE=.exe
 OBJ=obj
 
-LOCAL_CLEAN=debug/* release/*
+RM=$(if $(CYGWIN_MAKE),rm -rf,del /q)
+CP=$(if $(CYGWIN_MAKE),cp,copy)
 
-DEL=rm -f
+LOCAL_CLEAN=debug release
 
 
 .SUFFIXES: .cpp .obj
@@ -53,8 +66,10 @@ DEL=rm -f
 
 
 vc: all
-	@cp $(BIN_DIR)/*.dll ../examples
+
+example_setup:
+	$(CP) $(PLAT_LIB_PATH) $(EX_BIN_DIR)
 
 $(IMP_FILE):
-	$(if $(wildcard $(BIN_DIR)/$(IMP_FILE)),,$(shell $(DEL) $(BIN_DIR)/$(LIB_FILE)))
+	$(if $(wildcard $(BIN_DIR)/$(IMP_FILE)),,$(shell $(RM) $(BIN_DIR)/$(LIB_FILE)))
 	$(MAKE) $(LIB_FILE)
