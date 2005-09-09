@@ -12,7 +12,15 @@ rem Create Makefiles in subdirectories
 for %d in ( lib examples ) do call buildmf.bat %1 %d
 
 rem Create top-level Makefile
-echo all clean install: > Makefile
+echo all: > Makefile
+echo 	cd lib ^&^& $(MAKE) BIN_DIR=debug >> Makefile
+echo 	cd lib ^&^& $(MAKE) BIN_DIR=release >> Makefile
+echo 	cd examples ^&^& $(MAKE) >> Makefile
+echo. >> Makefile
+echo install: >> Makefile
+echo 	@cmd /c install.bat %1 >> Makefile
+echo. >> Makefile
+echo clean debug release: >> Makefile
 echo 	cd lib ^&^& $(MAKE) $@ >> Makefile
 echo 	cd examples ^&^& $(MAKE) $@ >> Makefile
 
@@ -20,11 +28,11 @@ echo 	cd examples ^&^& $(MAKE) $@ >> Makefile
 rem Create release and debug subdirs, if they don't exist already
 if not exist lib\debug mkdir lib\debug
 if not exist lib\release mkdir lib\release
+if not exist examples\debug mkdir examples\debug
+if not exist examples\release mkdir examples\release
 
 
-rem Start build process
-shift
-make %*
+echo Created Makefiles successfully.
 goto end
 
 
@@ -37,10 +45,6 @@ echo.
 echo         vc: Visual C++ command-line compiler (cl)
 echo         bc: Borland C++ command-line compiler (bcc32)
 echo         mingw: MinGW GCC (g++)
-echo.
-echo     Any additional arguments you give will be passed on to the
-echo     make program.
-echo.
 goto end
 
 
