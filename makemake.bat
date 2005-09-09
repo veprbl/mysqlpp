@@ -1,15 +1,10 @@
 @echo off
 
-rem Figure out which compiler the user wants to create Makefiles for
-if "%1" == "vc" goto build_makefiles
-if "%1" == "bc" goto build_makefiles
-if "%1" == "mingw" goto build_makefiles
-goto usage
-
+BUILDSYS=vc
 
 :build_makefiles
 rem Create Makefiles in subdirectories
-for %d in ( lib examples ) do call buildmf.bat %1 %d
+for %d in ( lib examples ) do call buildmf.bat %BUILDSYS% %d
 
 rem Create top-level Makefile
 echo all: > Makefile
@@ -18,7 +13,7 @@ echo 	cd lib ^&^& $(MAKE) BIN_DIR=release >> Makefile
 echo 	cd examples ^&^& $(MAKE) >> Makefile
 echo. >> Makefile
 echo install: >> Makefile
-echo 	@cmd /c install.bat %1 >> Makefile
+echo 	@cmd /c install.bat %BUILDSYS% >> Makefile
 echo. >> Makefile
 echo clean debug release: >> Makefile
 echo 	cd lib ^&^& $(MAKE) $@ >> Makefile
@@ -38,12 +33,11 @@ goto end
 
 rem Display usage message
 :usage
-echo usage: makemake {vc, bc, mingw} [args]
+echo usage: makemake {vc, mingw} [args]
 echo.
 echo     You must give one of the compiler parameters:
 echo.
 echo         vc: Visual C++ command-line compiler (cl)
-echo         bc: Borland C++ command-line compiler (bcc32)
 echo         mingw: MinGW GCC (g++)
 goto end
 
