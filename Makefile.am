@@ -39,6 +39,7 @@ EXTRA_DIST = \
 	doc/userman/README \
 	libmysqlclient.def \
 	makemake.* \
+	mkbindirs.bat \
 	reconf \
 	*.ebuild \
 	*.spec
