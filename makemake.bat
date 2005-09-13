@@ -18,7 +18,7 @@ echo 	cd lib ^&^& $(MAKE) BIN_DIR=debug all example_setup >> Makefile
 echo 	cd lib ^&^& $(MAKE) BIN_DIR=release >> Makefile
 echo 	cd examples ^&^& $(MAKE) >> Makefile
 echo. >> Makefile
-echo install: >> Makefile
+echo install: all >> Makefile
 echo 	@cmd /c install.bat %BUILDSYS% >> Makefile
 echo. >> Makefile
 echo clean debug release: >> Makefile
