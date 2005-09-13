@@ -36,28 +36,6 @@ About the New Build System (makemake)
     return.  They cause more problems than they solve.
 
 
-Prerequisite: GNU Make
-~~~~~~~~~~~~~~~~~~~~~~
-	The makemake system currently requires GNU make.  It no longer
-	works with Microsoft's NMAKE.
-
-	The best-supported option is to use the Cygwin version of
-	GNU make.  You can download it along with the rest of Cygwin
-	from cygwin.com.  GNU make is an optional part of Cygwin,
-	so you will have to select it within the setup program;
-	it's in the "Devel" category.
-
-	If you don't want to install Cygwin, you can instead use the
-	MinGW version of GNU make, from mingw.org.  I don't believe
-	you need the rest of MinGW to make this work.  Their version
-	of GNU make should run standalone.
-
-	Regardless of the option you choose, you should add the
-	directory containing GNU make to your PATH.  If you don't know
-	how to do this, search for "environment variable" in Windows'
-	Help system.
-
-
 Building the Library and Example Programs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Before you build the library, make sure the environment variables
@@ -69,14 +47,14 @@ Building the Library and Example Programs
     with the tools.  (It may not be in your PATH by default, so you
     might have to search your hard drive for it.)
 
-	To configure the MySQL++ library to build with the Visual C++
-	command line tools, say "makemake vc" in the project's root
-	directory.  If you change the Makefile.base or Makefile.vc
-	files, you will have to run makemake again.
+    To create the Makefiles, say "makemake vc" in the project's root
+    directory.  You only have to do this once, unless you change
+    Makefile.base or Makefile.vc.  This also starts building the
+    library and the examples.
 
-	Now you can build the library.	If you're using the Cygwin
-	version of GNU make, just say "make".  If you chose the MinGW
-	version instead, the command is "mingw32-make".
+    If you change the library or example source code after creating the
+    Makefiles, you can simply say "make".  This works in the project
+    root, as well as in the examples and lib subdirectories.
 
     The build process creates debug and release versions of the MySQL++
     DLL, as well as import libraries for those DLLs.  It's possible to
@@ -86,20 +64,20 @@ Building the Library and Example Programs
     library in DLL form avoids this problem.
 
     The build process also builds the example programs.  They are built
-    in debug mode only.  You should run the major examples to make
-    sure the library is built correctly; see examples/README details.
+    in debug mode.  You should run the major examples to make sure
+    the library is built correctly; see examples/README details.
 
     Once the library is built and you're satisfied that it's working
-    correctly, say "make install" in the project root directory.
-    It installs the library files and headers in folders under
-    c:\mysql++ by default.  If you want to change that, edit the
-    install.bat file.
+    correctly, say "make install", either at the project root or in
+    the lib subdirectory.  By default, it installs the library files
+    and headers in the c:\mysql++\vc directory.
 
     If you didn't install MySQL in c:\mysql, you will have to change
     Makefile.vc in the lib and examples subdirectories and re-run
     "makemake vc".  You may also look at changing these files for
     various other reasons, such as if you don't like the way we name
-    the DLL file.
+    the DLL file, or want the 'install' target to put the MySQL++
+    development files somewhere other than c:\mysql++\vc.
 
 
 Using MySQL++ in Your Own Projects
