@@ -37,6 +37,7 @@ EXTRA_DIST = \
 	doc/userman/html/*.html \
 	doc/userman/Makefile \
 	doc/userman/README \
+	install.bat \
 	libmysqlclient.def \
 	makemake.* \
 	mkbindirs.bat \
