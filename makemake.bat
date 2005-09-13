@@ -1,6 +1,11 @@
 @echo off
 
-set BUILDSYS=vc
+set BUILDSYS=%1
+if "%BUILDSYS%" == "vc" goto build_makefiles
+if "%BUILDSYS%" == "mingw" goto build_makefiles
+echo Unrecognized build system %BUILDSYS%.
+echo.
+goto usage
 
 :build_makefiles
 rem Create Makefiles in subdirectories
@@ -27,7 +32,7 @@ goto end
 
 rem Display usage message
 :usage
-echo usage: makemake {vc, mingw} [args]
+echo usage: makemake {vc, mingw}
 echo.
 echo     You must give one of the compiler parameters:
 echo.
