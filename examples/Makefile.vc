@@ -21,10 +21,6 @@ CXX=cl
 INCLUDES=/Ic:\mysql\include -I..\lib
 CXXFLAGS=$(INCLUDES) /D_UNICODE /G6 /EHsc /nologo /c
 
-LD=$(CXX)
-LDFLAGS=/nologo
-LDEXEFLAG=/link /OPT:NOREF /OUT:$(BIN_DIR)/
-
 BIN_DIR=debug
 ifeq "$(BIN_DIR)" "debug"
 	CXXFLAGS += /MDd /Od /D_DEBUG /ZI /Zi
@@ -32,6 +28,10 @@ ifeq "$(BIN_DIR)" "debug"
 else
 	CXXFLAGS += /MD /O2
 endif
+
+LD=$(CXX)
+LDFLAGS=/nologo
+LDEXEFLAG=/link /OPT:NOREF /OUT:$(BIN_DIR)/
 
 MYSQLPP_LIB=../lib/$(BIN_DIR)/mysqlpp.lib
 LIBS=/LIBPATH:c:\mysql\lib\opt libmysql.lib /LIBPATH:..\lib\$(BIN_DIR) \
