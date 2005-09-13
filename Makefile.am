@@ -20,6 +20,7 @@ EXTRA_DIST = \
 	README.* \
 	Wishlist \
 	bootstrap \
+	buildmf.bat \
 	common.am \
 	config/*.m4 \
 	doc/mysqlpp-refman.pdf \
