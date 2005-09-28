@@ -21,7 +21,7 @@ TMPDIR=`mktemp -d /tmp/mysqlpp-up.XXXXXXXXXX`
 
 if [ "$1" = "src" ]
 then
-	if [ ! -e mysql++-$(VERSION).tar.gz ]
+	if [ ! -e mysql++-$VERSION.tar.gz ]
 	then
 		make dist
 	fi
@@ -33,7 +33,7 @@ then
 	fi
 	cp /usr/src/redhat/RPMS/i386/mysql++-manuals-$VERSION-1.i386.rpm $TMPDIR
 
-	if [ ! -e /usr/src/redhat/SRPMS/mysql++-$(VERSION)-1.src.rpm ]
+	if [ ! -e /usr/src/redhat/SRPMS/mysql++-$VERSION-1.src.rpm ]
 	then
 		make srpm
 	fi
