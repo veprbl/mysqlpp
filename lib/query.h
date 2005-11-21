@@ -186,13 +186,14 @@ public:
 	/// \param c connection the finished query should be sent out on
 	/// \param te if true, throw exceptions on errors
 	Query(Connection* c, bool te = true) :
-	std::ostream(&sbuffer_),
+	std::ostream(NULL),
 	OptionalExceptions(te),
 	Lockable(false),
 	def(this),
 	conn_(c),
 	success_(false)
 	{
+		init(&sbuffer_);
 		success_ = true;
 	}
 
