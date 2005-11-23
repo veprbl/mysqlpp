@@ -31,7 +31,7 @@
 namespace mysqlpp {
 
 Query::Query(const Query& q) :
-std::ostream(NULL),	
+std::ostream(0),	
 OptionalExceptions(q.exceptions()),
 Lockable(q.locked()),
 def(q.def),

@@ -186,7 +186,7 @@ public:
 	/// \param c connection the finished query should be sent out on
 	/// \param te if true, throw exceptions on errors
 	Query(Connection* c, bool te = true) :
-	std::ostream(NULL),
+	std::ostream(0),
 	OptionalExceptions(te),
 	Lockable(false),
 	def(this),
