@@ -619,7 +619,8 @@ public:
 
 		Iter it = first + 1;
 		while (it != last) {
-			*this << ",(" << it->value_list() << ')';
+			dynamic_cast<std::ostream&>(*this) << ",(" <<
+					it->value_list() << ')';
 			++it;
 		}
 
