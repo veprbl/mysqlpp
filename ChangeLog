@@ -1,4 +1,4 @@
-2.0.7, 2005.11.23 (r1145)
+2.0.7, 2005.11.23 (r1147)
 
 	o Added explicit mysqlpp namespace qualifiers to generated code in
 	  custom*.h so you can use SSQLS in places where it doesn't make
@@ -25,6 +25,10 @@
 	o Added another dynamic cast needed for proper Query ostream
 	  subclass overloading under VC++.  (7.1 at least...)  Bug noticed
 	  by Mark Merendino.
+
+	o Detecting whether MySQL is built with SSL support on platforms
+	  using autotools.  Needed on some old Sun systems, for instance.
+	  Thanks for this patch to Ovidiu Bivolaru.
 
 	o Fixed a potential memory bug in ColData's conversion to SQL null.
 
