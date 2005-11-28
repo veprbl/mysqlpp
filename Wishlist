@@ -322,6 +322,10 @@ Bug Fix/Maintenance Items
 	These items could happen in any version.
 
 
+	o Viktor Stark reports that a BLOB of binary data containing 0's
+	  appears to be truncated when stored in an SSQLS with a std::string
+	  for the BLOB field.  Investigate, and fix if confirmed.
+
 	o Document restrictions on order of destruction.  See this thread:
 	  http://lists.mysql.com/plusplus/5084
 
