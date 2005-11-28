@@ -174,6 +174,13 @@ Future Features
 	provide a patch!
 
 
+	o Define some class that takes an std::string (or perhaps
+	  a ColData object?) in its ctor and is able to bust out
+	  an array of data in various formats.	Kind of like a
+	  binary-initializable vector.	Useful in SSQLSes where the
+	  database is storing an array of binary data in a BLOB column,
+	  and the user wants to access it in array format.
+
 	o Define operator<< for Fields, Row, ResUse, etc.  In other
 	  words, there should be a way to get a user-readable version
 	  of received data without a lot of code.  Perhaps use a CSV
