@@ -174,6 +174,16 @@ Future Features
 	provide a patch!
 
 
+	o Row object currently depends on the associated ResUse object
+	  to stick around through all calls to .at(), because it needs
+	  the list of field types in the result set to construct
+	  ColData objects.  This means it's not possible to store
+	  the result of several queries before accessing the data.
+	  Currently, this is just a documented limitation, but it
+	  would be nice if there were a clean way to avoid this.
+	  Obviously you could just copy the type list when constructing
+	  the Row object, but that seems pointlessly inefficient.
+
 	o Define some class that takes an std::string (or perhaps
 	  a ColData object?) in its ctor and is able to bust out
 	  an array of data in various formats.	Kind of like a
