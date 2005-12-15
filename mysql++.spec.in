@@ -2,7 +2,7 @@ Summary: C++ wrapper for the MySQL C API
 Name: @PACKAGE_NAME@
 Version: @PACKAGE_VERSION@
 Release: 1
-Copyright: LGPL
+License: LGPL
 Group: Development/Databases
 Requires: MySQL-shared
 Source: http://tangentsoft.net/mysql++/releases/mysql++-%{version}.tar.gz
