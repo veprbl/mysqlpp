@@ -339,6 +339,13 @@ Bug Fix/Maintenance Items
 	These items could happen in any version.
 
 
+	o The manual recommends using "0, 0" as the second and third
+	  parameters for creating SSQLSes, but this doesn't actually
+	  compile.  Try to enumerate all the possible function overloading
+	  problems in the manual, and come up with a solid recommendation
+	  that will always work.  "1, 0" seems to work on a lot of code, but
+	  we should know _why_ it works.
+
 	o Viktor Stark reports that a BLOB of binary data containing 0's
 	  appears to be truncated when stored in an SSQLS with a std::string
 	  for the BLOB field.  Investigate, and fix if confirmed.
