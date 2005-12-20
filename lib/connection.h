@@ -101,6 +101,10 @@ public:
 		// Set reporting of data truncation errors
 		opt_report_data_truncation,
 
+		// Enable or disable automatic reconnection to the server if
+		// the connection is found to have been lost.
+		opt_reconnect,
+
 		// Number of options supported.  Never send this to
 		// set_option()!
 		opt_COUNT

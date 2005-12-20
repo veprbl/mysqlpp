@@ -95,6 +95,7 @@ Connection::legal_opt_arg_types_[Connection::opt_COUNT] = {
 	Connection::opt_type_boolean,	// opt_secure_auth
 	Connection::opt_type_boolean,	// opt_multi_statements
 	Connection::opt_type_boolean,	// opt_report_data_truncation
+	Connection::opt_type_boolean,   // opt_reconnect
 };
 
 
@@ -412,6 +413,10 @@ Connection::set_option(Option option, bool arg)
 #if MYSQL_VERSION_ID >= 50003
 			case opt_report_data_truncation:
 				return set_option_impl(MYSQL_REPORT_DATA_TRUNCATION, &my_arg);
+#endif
+#if MYSQL_VERSION_ID >= 50013
+			case opt_reconnect:
+				return set_option_impl(MYSQL_OPT_RECONNECT, &my_arg);
 #endif
 			case opt_FIRST:	// warning eater when using old C APIs
 			default:
