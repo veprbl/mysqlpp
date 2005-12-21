@@ -164,6 +164,8 @@ v2.1 Plan
 	  the most appropriate C++ type to SQL's TINY UNSIGNED INT
 	  with the NULL attribute.  Use these types in the examples?
 
+	o Apply Viktor Stark's SSQLS static definition patch.
+
 
 Future Features
 ---------------
@@ -249,36 +251,6 @@ Future Features
 	  will pop out of the database driver class idea.  The driver
 	  object may be able to look up a suitable Connection object
 	  for the manipulators.
-
-	o SSQLS structures include some static elements (_table and
-	  names[]), which are defined within the macro.  If you
-	  put an SSQLS declaration in a header file and #include
-	  that from multiple locations, you get a multiply-defined
-	  symbol warning.  Some ways to separate the definition from
-	  the declaration:
-
-		  o Give the SSQLS macros another parameter, to
-		    suppress static definition.
-
-		  o Put statics in a separate macro, which the
-		    user must instantiate once in a .cpp file.
-		    (Similar to the way MFC message maps work.)
-
-		  o Put statics in a sub-macro, conditionally defined,
-		    which SSQLS is implemented in terms of.  Define the
-			condition macro in one module within your
-			program.
-
-		  o Redesign the SSQLS mechanism entirely.  Instead of
-		    defining SSQLSes by instantiating macros, you could
-		    declare the structure in, say, an XML format,
-		    which could be tranformed (XSLT?  Perl + a DOM
-		    parser?) into code very much like in the current
-		    SSQLS macros, except that it would generate
-		    separate .cpp and .h files for each structure.
-		    In addition to solving the static member problem,
-		    it would have other advantages, like side-stepping
-		    the Borland C++ macro size limit.
 
 	o Deprecate sql_create_basic_* ? They have less functionality
 	  and they're no easier to use than sql_create and friends,
