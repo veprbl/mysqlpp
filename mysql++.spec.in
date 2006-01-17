@@ -31,7 +31,13 @@ it's so large, and it doesn't change with every release.
 
 %prep
 %setup -q
+%ifarch i386
 ./configure --prefix=/usr --disable-examples --disable-dependency-tracking
+%endif
+%ifarch x86_64
+./configure --prefix=/usr --with-mysql-lib=/usr/lib64 --disable-examples \
+		--disable-dependency-tracking
+%endif
 
 %build
 make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
