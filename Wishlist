@@ -176,6 +176,9 @@ Future Features
 	provide a patch!
 
 
+	o Apply Waba's patch allowing Null<T> fields in SSQLSes:
+	  http://lists.mysql.com/plusplus/5433
+
 	o Row object currently depends on the associated ResUse object
 	  to stick around through all calls to .at(), because it needs
 	  the list of field types in the result set to construct
