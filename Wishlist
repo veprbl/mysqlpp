@@ -314,6 +314,10 @@ Bug Fix/Maintenance Items
 	These items could happen in any version.
 
 
+	o Someone reported needing more than 12 parameters in a templatized
+	  query.  We can just add some more overloads, but we should take
+	  the opportunity to see if there's a cleaner way to handle this.
+	
 	o The manual recommends using "0, 0" as the second and third
 	  parameters for creating SSQLSes, but this doesn't actually
 	  compile.  Try to enumerate all the possible function overloading
