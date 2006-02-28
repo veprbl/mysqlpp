@@ -164,7 +164,8 @@ v2.1 Plan
 	  the most appropriate C++ type to SQL's TINY UNSIGNED INT
 	  with the NULL attribute.  Use these types in the examples?
 
-	o Apply Viktor Stark's SSQLS static definition patch.
+	o Apply Viktor Stark's SSQLS static definition patch:
+	  http://lists.mysql.com/plusplus/5314
 
 
 Future Features
