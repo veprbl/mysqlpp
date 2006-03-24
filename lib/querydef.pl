@@ -92,7 +92,7 @@ for (my $i = 0; $i < $max_parameters; ++$i) {
 		print OUT ', const SQLString& arg', $j;
 	}
 	print OUT ") \\\n";
-	print OUT "\t\t{ FUNC(con, SQLQueryParms()";
+	print OUT "\t\t{ FUNC(container, SQLQueryParms()";
 	for (my $j = 0; $j < $i + 1; ++$j) {
 		print OUT ' << arg', $j;
 	}
