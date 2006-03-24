@@ -16,7 +16,7 @@ then
 	exit 1
 fi
 
-VERSION=`grep " VERSION" config.h |cut -c 18- |tr -d \"`
+VERSION=`cat mysql++.spec | grep ^Version: | cut -f2 -d' '`
 TMPDIR=`mktemp -d /tmp/mysqlpp-up.XXXXXXXXXX`
 
 if [ "$1" = "src" ]
@@ -45,6 +45,6 @@ cp /usr/src/redhat/RPMS/i386/mysql++-$VERSION-1.i386.rpm \
 cp /usr/src/redhat/RPMS/i386/mysql++-devel-$VERSION-1.i386.rpm \
 		$TMPDIR/mysql++-devel-$VERSION-1.`./osver`.i386.rpm
 
-scp $TMPDIR/* $SSH_TARGET
+scp $SSH_OPTIONS $TMPDIR/* $SSH_TARGET
 
 rm -rf $TMPDIR
