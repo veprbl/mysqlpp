@@ -24,6 +24,7 @@
 			<sys-lib>libmysql</sys-lib>
 		</if>
 		<if cond="FORMAT=='mingw'">
+			<ldflags>-Wl,--enable-auto-import</ldflags>
 			<define>MYSQLPP_NO_DLL</define>
 			<lib-path>..\lib</lib-path>
 			<sys-lib>mysqlclient</sys-lib>
