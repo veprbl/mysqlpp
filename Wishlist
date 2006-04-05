@@ -144,6 +144,8 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o Apply Richard Forrest's iterator patch.
+
 	o The quote manipulator (and presumably the others as well) don't
 	  work properly with char*.  See this for details:
 
