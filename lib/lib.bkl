@@ -43,6 +43,10 @@
 			<ldflags>@PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
 			<sys-lib>@MYSQL_C_LIB@</sys-lib>
 
+			<if cond="ZLIB=='yes'">
+				<sys-lib>z</sys-lib>
+			</if>
+
 			<modify-target target="uninstall">
 				<command>
 					rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)mysqlpp.$(SO_SUFFIX)
