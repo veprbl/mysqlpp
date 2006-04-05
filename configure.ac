@@ -73,6 +73,20 @@ then
 fi
 
 
+# Check whether this is Cygwin.  It names dlls with a 'cyg' prefix
+# instead of 'lib' used by the rest of the world for shared libraries.
+case "${host}" in
+	*cygwin*)
+		MYSQLPP_LIB_PREFIX=cyg
+		;;
+
+	*)
+		MYSQLPP_LIB_PREFIX=lib
+esac
+AC_SUBST(MYSQLPP_LIB_PREFIX)
+AC_MSG_RESULT(library prefix is $MYSQLPP_LIB_PREFIX)
+
+
 #
 # Configure process complete; write out files generated from *.in.
 #
