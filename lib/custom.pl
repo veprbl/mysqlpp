@@ -67,7 +67,7 @@ my ($suppress_statics_start, $suppress_statics_end) = ('', '');
 unless ($opt_v) {
 	print OUT0 << "---";
 
-#if _MSC_VER < 1400
+#if defined(_MSC_VER) && (_MSC_VER < 1400)
 #	error Please run the MySQL++ script lib/custom.pl with the -v compatibility flag.
 #endif
 
