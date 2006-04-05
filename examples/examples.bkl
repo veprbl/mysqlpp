@@ -35,7 +35,8 @@
 			<sys-lib>@MYSQL_C_LIB@</sys-lib>
 
 			<warnings>max</warnings>
-			<ldlibs>../lib/@MYSQLPP_LIB_PREFIX@mysqlpp.$(SO_SUFFIX)</ldlibs>
+			<ldflags>-L../lib</ldflags>
+			<sys-lib>mysqlpp</sys-lib>
 			<if cond="ZLIB=='yes'">
 				<sys-lib>z</sys-lib>
 			</if>

@@ -73,18 +73,12 @@ then
 fi
 
 
-# Check whether this is Cygwin.  It names dlls with a 'cyg' prefix
-# instead of 'lib' used by the rest of the world for shared libraries.
+# If this is Cygwin, add a linker flag to suppress a silly link message.
 case "${host}" in
 	*cygwin*)
-		MYSQLPP_LIB_PREFIX=cyg
+		LDFLAGS="$LDFLAGS -Wl,--enable-auto-import"
 		;;
-
-	*)
-		MYSQLPP_LIB_PREFIX=lib
 esac
-AC_SUBST(MYSQLPP_LIB_PREFIX)
-AC_MSG_RESULT(library prefix is $MYSQLPP_LIB_PREFIX)
 
 
 #
