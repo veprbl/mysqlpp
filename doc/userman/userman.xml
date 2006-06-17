@@ -1920,7 +1920,7 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
 		<title>Unicode and Win32</title>
 
 		<para>Each Win32 API function that takes
-		a string actually has two two versions. One
+		a string actually has two versions. One
 		version supports only 1-byte "ANSI" characters (a
 		superset of ASCII), so they end in 'A'. Win32 also
 		supports the 2-byte subset of Unicode called <ulink
