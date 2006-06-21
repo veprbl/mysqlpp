@@ -29,7 +29,7 @@ v2.2 Plan
 	base class.
 
 
-	o Conditionally allow the Lockable mechanism to the
+	o Conditionally allow the Lockable mechanism to use the
 	  Boost.Threads library.  If MYSQLPP_BOOST_THREADS is defined,
 	  #include the proper header and use Boost's mutexes.  Add a
 	  configure script option that defines this macro and adds
