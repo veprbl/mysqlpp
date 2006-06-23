@@ -135,6 +135,9 @@ v2.2 Plan
 
 	o Add Chris Frey's packarray class?
 
+	o Result assignment operator doesn't copy exception flag
+	  according to http://lists.mysql.com/plusplus/5758  Fix if so.
+
 
 v3.0 Plan
 ---------
