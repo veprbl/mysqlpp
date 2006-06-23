@@ -35,6 +35,8 @@
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for the following stuff.
 
+#include <mysql_version.h>
+
 #if defined(__WIN32__) || defined(_WIN32)
 #	define MYSQLPP_PLATFORM_WINDOWS
 
@@ -43,7 +45,7 @@
 #	include <winsock.h>
 
 	// The shutdown_level argument was added in MySQL 4.1.3 and in 5.0.1.
-#	if ((MYSQL_VERSION_ID > 40103) && (MYSQL_VERSION_ID < 49999)) || (MYSQL_VERSION_ID > 50001)
+#	if ((MYSQL_VERSION_ID >= 40103) && (MYSQL_VERSION_ID <= 49999)) || (MYSQL_VERSION_ID >= 50001)
 #		define HAVE_MYSQL_SHUTDOWN_LEVEL_ARG
 #	endif
 
