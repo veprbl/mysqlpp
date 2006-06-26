@@ -147,6 +147,18 @@ public:
 			unsigned int connect_timeout = 60, cchar* socket_name = 0,
 			unsigned int client_flag = 0);
 
+	/// \brief Establish a new connection using the same parameters as
+	/// an existing C API connection.
+	///
+	/// \param other existing Connection object
+	MYSQLPP_EXPORT Connection(const Connection& other);
+
+	/// \brief Establish a new connection using the same parameters as
+	/// an existing C API connection.
+	///
+	/// \param mysql existing MySQL C API connection object
+	MYSQLPP_EXPORT bool connect(const MYSQL& mysql);
+
 	/// \brief Destroy connection object
 	MYSQLPP_EXPORT ~Connection();
 
@@ -218,6 +230,10 @@ public:
 	///	    }
 	/// \endcode
 	operator bool() { return success(); }
+
+	/// \brief Copy an existing Connection object's state into this
+	/// object.
+	Connection& operator=(const Connection& rhs);
 
 	/// \brief Return error message for last MySQL error associated with
 	/// this connection.
@@ -495,6 +511,11 @@ protected:
 	/// overloads above.
 	bool set_option_impl(enum_mysql_set_option msoption);
 #endif
+
+	/// \brief Establish a new connection as a copy of an existing one
+	///
+	/// \param other the connection to copy
+	void copy(const Connection& other);
 
 private:
 	friend class ResNSel;
