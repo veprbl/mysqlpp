@@ -258,7 +258,7 @@ public:
 	/// \retval nonzero if either we already know the connection is down
 	/// and cannot re-establish it, or if the server did not respond to
 	/// the ping and we could not re-establish the connection.
-	int ping();
+	MYSQLPP_EXPORT int ping();
 
 	/// \brief Kill a MySQL server thread
 	///
@@ -444,7 +444,7 @@ public:
 	///
 	/// Version will be of the form X.Y.Z, where X is the major version
 	/// number, Y the minor version, and Z the bug fix number.
-	std::ostream& api_version(std::ostream& os);
+	MYSQLPP_EXPORT std::ostream& api_version(std::ostream& os);
 
 protected:
 	/// \brief Drop the connection to the database server
