@@ -262,6 +262,7 @@ Query::pprepare(char option, SQLString& S, bool replace)
 		if (replace) {
 			S = *ss;
 			S.processed = true;
+			delete ss;
 			return &S;
 		}
 		else {
@@ -274,6 +275,7 @@ Query::pprepare(char option, SQLString& S, bool replace)
 		if (replace) {
 			S = *ss;
 			S.processed = true;
+			delete ss;
 			return &S;
 		}
 		else {
@@ -324,7 +326,11 @@ void Query::proc(SQLQueryParms& p)
 			}
 			ss = pprepare(i->option, (*c)[num], c->bound());
 			dynamic_cast<std::ostream&>(*this) << *ss;
-			if (ss != &(*c)[num]) {
+			if (!c->bound()) {
+				// Returned pointer is to dynamically allocated object,
+				// so it's our responsibility to release it.  (The other
+				// possibility is that pprepare() simply overwrote
+				// (*c)[num], instead of allocating new memory.)
 				delete ss;
 			}
 		}
