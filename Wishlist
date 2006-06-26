@@ -29,30 +29,6 @@ v2.2 Plan
 	base class.
 
 
-	o Conditionally allow the Lockable mechanism to use the
-	  Boost.Threads library.  If MYSQLPP_BOOST_THREADS is defined,
-	  #include the proper header and use Boost's mutexes.  Add a
-	  configure script option that defines this macro and adds
-	  any needed libraries to the <sys-lib> tags.
-
-	  Mechanism must reflect these MySQL C API restrictions:
-
-	  - Only one query executing at once per connection
-
-	  - For "use" queries, Connection (and therefore Query) object must
-	    remain locked until last row is consumed
-
-	  - Safest to have one Connection per thread.  Rules for sharing:
-	    http://dev.mysql.com/doc/mysql/en/threaded-clients.html
-
-	  Need some way to call mysql_thread_init() and
-	  mysql_thread_end() per thread.  Also, work in some way to
-	  call mysql_thread_safe() automatically, perhaps the first
-	  time through the function that calls mysql_thread_init().
-	  If the C API library reports that it is not thread-safe,
-	  report this to the caller, perhaps through an exception,
-	  or simply by refusing to init more than one thread.
-
 	o Currently, all overloads for Query's execute(), store()
 	  and use() methods eventually call the const char*
 	  version, which does the actual work of executing the query.
@@ -84,32 +60,6 @@ v2.2 Plan
 	  a std::string for the BLOB field.  Investigate, and fix
 	  if confirmed.
 
-	o Date and time classes are pretty minimalistic; they could
-	  be so much more powerful.  Some ideas:
-
-	  - Add time_t conversion.
-
-	  - Arithmetic features.  (See "Practical Algorithms for
-	    Programmers" by Binstock and Rex.)
-
-	  - It may be possible to get some nice syntactic sugar,
-	    such as a way to call SQL functions like NOW() when
-	    inserting certain Date/Time objects into a Query stream.
-
-	  Don't forget to write an example showing how to use these
-	  new mechanisms.
-
-	  It may be possible to find existing date and time classes
-	  that can be extended, instead of reinventing the wheel.
-	  Boost, perhaps?
-
-	o Build a forward iterator mechanism for ResUse.  Make it
-	  general enough that you can use it with STL algorithms
-	  like find_if().  Then make an example to demonstrate this
-	  augmentation of SELECT.  Also, update usequery example
-	  to use the iterator.	Tricky bit: how do we make it not
-	  interfere with subclass Result's random-access iterator?
-
 	o Have resetdb create a second table containing a BLOB column
 	  that load_file and cgi_image can use.  
 	  
@@ -121,6 +71,61 @@ v2.2 Plan
 	  Rework cgi_image so that you can drop it into a cgi-image
 	  directory and immediately use it to query the database and
 	  return the image data in CGI format.
+
+	o Add a few features to date and time classes:
+
+	  - time_t conversion.
+
+	  - It may be possible to get some nice syntactic sugar,
+	    such as a way to call SQL functions like NOW() when
+	    inserting certain Date/Time objects into a Query stream.
+
+	  - Arithmetic features?  (See "Practical Algorithms for
+	    Programmers" by Binstock and Rex.)
+
+	  Don't forget to write an example showing how to use these
+	  new mechanisms.
+
+
+v2.3 Plan
+---------
+
+	This plan is even more nebulous than the v2.2 plan.  The only
+	thing that puts a feature on this list and not on the v3.0
+	list is that they can be done without breaking the ABI,
+	which forces a feature to v3.0.  Items on this list could
+	still easily slip to v3.0.  There might not even _be_ a v2.3...
+
+	o Conditionally allow the Lockable mechanism to use the
+	  Boost.Threads library.  If MYSQLPP_BOOST_THREADS is defined,
+	  #include the proper header and use Boost's mutexes.  Add a
+	  configure script option that defines this macro and adds
+	  any needed libraries to the <sys-lib> tags.
+
+	  Mechanism must reflect these MySQL C API restrictions:
+
+	  - Only one query executing at once per connection
+
+	  - For "use" queries, Connection (and therefore Query) object must
+	    remain locked until last row is consumed
+
+	  - Safest to have one Connection per thread.  Rules for sharing:
+	    http://dev.mysql.com/doc/mysql/en/threaded-clients.html
+
+	  Need some way to call mysql_thread_init() and
+	  mysql_thread_end() per thread.  Also, work in some way to
+	  call mysql_thread_safe() automatically, perhaps the first
+	  time through the function that calls mysql_thread_init().
+	  If the C API library reports that it is not thread-safe,
+	  report this to the caller, perhaps through an exception,
+	  or simply by refusing to init more than one thread.
+
+	o Build a forward iterator mechanism for ResUse.  Make it
+	  general enough that you can use it with STL algorithms
+	  like find_if().  Then make an example to demonstrate this
+	  augmentation of SELECT.  Also, update usequery example
+	  to use the iterator.	Tricky bit: how do we make it not
+	  interfere with subclass Result's random-access iterator?
 
 	o It may be possible to optimize the use of ColData in
 	  the return from Row::operator[].  Currently, that operator
@@ -134,9 +139,6 @@ v2.2 Plan
 	  for the proposal.
 
 	o Add Chris Frey's packarray class?
-
-	o Result assignment operator doesn't copy exception flag
-	  according to http://lists.mysql.com/plusplus/5758  Fix if so.
 
 
 v3.0 Plan
