@@ -75,6 +75,8 @@ void ResUse::copy(const ResUse& other)
 		purge();
 	}
 
+	set_exceptions(other.throw_exceptions());
+
 	if (!other.result_) {
 		result_ = 0;
 		types_ = 0;
@@ -83,7 +85,6 @@ void ResUse::copy(const ResUse& other)
 		return;
 	}
 
-	set_exceptions(other.throw_exceptions());
 	result_ = other.result_;
 	fields_ = Fields(this);
 
