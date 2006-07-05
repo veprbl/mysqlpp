@@ -32,6 +32,10 @@ v2.2 Plan
 	o Hoist all inline function definitions up into the class
 	  definition, to avoid linkage warning problems with MinGW.
 	  See http://lists.mysql.com/plusplus/5806 for details.
+	  While doing that, consider whether the function should be
+	  inline at all.  This can cause versioning problems with DLLs
+	  and shared libraries, with the program using inlines from one
+	  version of the library and imported functions from another.
 
 	o Add DLL declspecs to class level, too, to allow it to link
 	  properly under MinGW with certain versions of the tools.
