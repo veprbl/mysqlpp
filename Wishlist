@@ -33,6 +33,10 @@ v2.2 Plan
 	  definition, to avoid linkage warning problems with MinGW.
 	  See http://lists.mysql.com/plusplus/5806 for details.
 
+	o Add DLL declspecs to class level, too, to allow it to link
+	  properly under MinGW with certain versions of the tools.
+	  Same thread as above.
+
 	o Currently, all overloads for Query's execute(), store()
 	  and use() methods eventually call the const char*
 	  version, which does the actual work of executing the query.
