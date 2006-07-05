@@ -29,6 +29,10 @@ v2.2 Plan
 	base class.
 
 
+	o Name debug DLL and library under VC++ differently (trailing
+	  'd'?) to prevent some problems due to mixing debug and
+	  release programs and MySQL++ DLLs.
+
 	o Hoist all inline function definitions up into the class
 	  definition, to avoid linkage warning problems with MinGW.
 	  See http://lists.mysql.com/plusplus/5806 for details.
