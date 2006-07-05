@@ -29,6 +29,10 @@ v2.2 Plan
 	base class.
 
 
+	o Hoist all inline function definitions up into the class
+	  definition, to avoid linkage warning problems with MinGW.
+	  See http://lists.mysql.com/plusplus/5806 for details.
+
 	o Currently, all overloads for Query's execute(), store()
 	  and use() methods eventually call the const char*
 	  version, which does the actual work of executing the query.
@@ -36,24 +40,16 @@ v2.2 Plan
 	  likely to get with BLOB columns.  Also, it means MySQL++
 	  must scan the string for length in a few places.  The C API
 	  isn't limited in this way if you use mysql_real_query(),
-	  but you need an accurate length value to call it.  We could
-	  get that length with binary data if the end of the call
-	  chain were a std::string overload, but we can't do that
-	  easily because each of these functions has a version taking
-	  a SQLString (a subclass of std:string) for template queries.
+	  but you need an accurate length value to call it.
 
-	  One way around this is to add a parallel set of functions
-	  (e.g. do_execute(), or execute_(), or some such) that take
-	  a single std::string, which are the new terminus of the call
-	  chain.  Reimplement const char* versions in terms of these.
-
-	  Another way is to add more overloads taking both a const
-	  char* and a length parameter. Make these new functions the
-	  terminus to each call chain.
-
-	  Yet another way is that we may be able to co-opt the first
-	  template query version of each of these functions, as it
-	  takes a single SQLString.
+	  Fix by co-opting the first template query version of each
+	  of these functions, as it takes a single SQLString, which
+	  contains a length and doesn't care about nulls.  Also add
+	  an overload taking a const char* and a length parameter,
+	  for cases where the user doesn't want to convert their
+	  data to a std::string variant.  Make the latter the actual
+	  terminus of the call chain, as it's cheaper to convert from
+	  SQLString to const char* than the reverse.
 
 	o Viktor Stark reports that a BLOB of binary data containing
 	  0's appears to be truncated when stored in an SSQLS with
