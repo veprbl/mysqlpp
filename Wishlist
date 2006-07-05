@@ -225,6 +225,11 @@ Future Features
 	They could happen at any time.	If you want one to appear at
 	some definite date, get coding and provide a patch!
 
+	o Drop recursive make.	This will make parallel building work
+	  correctly, and it makes for a single VC++ project file.
+	  It'll make the "don't build examples" case a little trickier,
+	  but that's not a deal-breaker.
+
 	o Create adaptors for std::bitset, for storing binary data in a
 	  MySQL table.	Make two options available, one for storing
 	  the return from bitset::to_ulong() in an UNSIGNED INTEGER
