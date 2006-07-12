@@ -46,7 +46,7 @@ mkdir -p $LIBDIR
 mkdir -p $INCDIR
 mkdir -p $EXDIR
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-install -m644 examples/*.cpp examples/*.h $EXDIR
+install -m644 examples/*.cpp examples/*.h exrun $EXDIR
 install -m644 examples/Makefile.simple $EXDIR/Makefile
 cp examples/README doc/README.examples
 cp LICENSE doc

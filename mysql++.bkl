@@ -80,7 +80,7 @@
 			<command>mkdir -p $(PKGNAME)/examples</command>
 			<command>
 				( cd examples &amp;&amp; \
-				  cp *.{bkl,cpp,ds?,h} Makefile.* README \
+				  cp *.{bkl,cpp,ds?,h} exrun Makefile.* README \
 				  ../$(PKGNAME)/examples )
 			</command>
 		</action>
