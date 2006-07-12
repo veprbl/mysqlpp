@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ ! -e ../lib/libmysqlpp.so.2 ]
+then
+	( cd ../lib ; ln -sf libmysqlpp.so libmysqlpp.so.2 )
+fi
+
+LD_LIBRARY_PATH=../lib $*
