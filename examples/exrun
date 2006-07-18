@@ -4,4 +4,6 @@ then
 	( cd ../lib ; ln -sf libmysqlpp.so libmysqlpp.so.2 )
 fi
 
-LD_LIBRARY_PATH=../lib $*
+PROG=$1
+shift
+LD_LIBRARY_PATH=../lib ./$PROG $*
