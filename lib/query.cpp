@@ -306,31 +306,30 @@ void Query::proc(SQLQueryParms& p)
 {
 	sbuffer_.str("");
 
-	char num;
-	SQLString* ss;
-	SQLQueryParms* c;
-
 	for (std::vector<SQLParseElement>::iterator i = parse_elems_.begin();
 			i != parse_elems_.end(); ++i) {
 		dynamic_cast<std::ostream&>(*this) << i->before;
-		num = i->num;
+		int num = i->num;
 		if (num != -1) {
-			if (num < static_cast<int>(p.size()))
+			SQLQueryParms* c;
+			if (num < p.size()) {
 				c = &p;
-			else if (num < static_cast<int>(def.size()))
+			}
+			else if (num < def.size()) {
 				c = &def;
+			}
 			else {
 				*this << " ERROR";
 				throw BadParamCount(
 						"Not enough parameters to fill the template.");
 			}
-			ss = pprepare(i->option, (*c)[num], c->bound());
+
+			SQLString& param = (*c)[num];
+			SQLString* ss = pprepare(i->option, param, c->bound());
 			dynamic_cast<std::ostream&>(*this) << *ss;
-			if (!c->bound()) {
-				// Returned pointer is to dynamically allocated object,
-				// so it's our responsibility to release it.  (The other
-				// possibility is that pprepare() simply overwrote
-				// (*c)[num], instead of allocating new memory.)
+			if (ss != &param) {
+				// pprepare() returned a new string object instead of
+				// updating param in place, so we need to delete it.
 				delete ss;
 			}
 		}
