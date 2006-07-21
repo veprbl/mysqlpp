@@ -63,10 +63,16 @@ v2.2 Plan
 	  terminus of the call chain, as it's cheaper to convert from
 	  SQLString to const char* than the reverse.
 
-	o Viktor Stark reports that a BLOB of binary data containing
-	  0's appears to be truncated when stored in an SSQLS with
-	  a std::string for the BLOB field.  Investigate, and fix
-	  if confirmed.
+	o ColData doesn't cope with nulls very well, such as storing
+	  BLOB column data.  This manifests in things like Row::at()
+	  returning truncated data, because somewhere along the line
+	  a ColData object was created using only a char*; we need to
+	  be able to use a length as well.  Update examples/cgi_image
+	  to use this new mechanism.
+
+	o A BLOB field containing a null will be truncated when using
+	  SSQLS with a std::string member.  This is probably related
+	  to the previous item.
 
 	o Have resetdb create a second table containing a BLOB column
 	  that load_file and cgi_image can use.  
