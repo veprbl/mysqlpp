@@ -29,10 +29,6 @@ v2.2 Plan
 	base class.
 
 
-	o Name debug DLL and library under VC++ differently (trailing
-	  'd'?) to prevent some problems due to mixing debug and
-	  release programs and MySQL++ DLLs.
-
 	o Hoist all inline function definitions up into the class
 	  definition, to avoid linkage warning problems with MinGW.
 	  See http://lists.mysql.com/plusplus/5806 for details.
@@ -226,6 +222,12 @@ Future Features
 	These changes are not assigned to any particular version.
 	They could happen at any time.	If you want one to appear at
 	some definite date, get coding and provide a patch!
+
+	o Figure out some way to name debug DLL and library under VC++
+	  differently (trailing 'd'?) to prevent some problems due
+	  to mixing debug and release programs and MySQL++ DLLs.
+	  This appears to require changes to Bakefile, or some sort of
+	  post-build hackery.
 
 	o Drop recursive make.	This will make parallel building work
 	  correctly, and it makes for a single VC++ project file.
