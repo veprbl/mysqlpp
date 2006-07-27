@@ -29,14 +29,6 @@ v2.2 Plan
 	base class.
 
 
-	o Hoist all inline function definitions up into the class
-	  definition, to avoid linkage warning problems with MinGW.
-	  See http://lists.mysql.com/plusplus/5806 for details.
-	  While doing that, consider whether the function should be
-	  inline at all.  This can cause versioning problems with DLLs
-	  and shared libraries, with the program using inlines from one
-	  version of the library and imported functions from another.
-
 	o Currently, all overloads for Query's execute(), store()
 	  and use() methods eventually call the const char*
 	  version, which does the actual work of executing the query.
