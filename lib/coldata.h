@@ -156,10 +156,7 @@ public:
 	inline const bool is_null() const { return null_; }
 	
 	/// \brief Returns the string form of this object's data.
-	inline const std::string& get_string() const
-	{
-		return buf_;
-	}
+	inline const std::string& get_string() const { return buf_; }
 	
 	/// \brief Returns a const char pointer to the string form of
 	/// this object's data.

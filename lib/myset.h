@@ -127,7 +127,7 @@ public:
 
 	/// \brief Convert this set's data to a string containing
 	/// comma-separated items.
-	operator std::string();
+	operator std::string() { return stream2string<std::string>(*this); }
 };
 
 
@@ -137,13 +137,6 @@ inline std::ostream& operator <<(std::ostream& s,
 		const Set<Container>& d)
 {
 	return d.out_stream(s);
-}
-
-
-template <class Container>
-inline Set<Container>::operator std::string()
-{
-	return stream2string<std::string>(*this);
 }
 
 
