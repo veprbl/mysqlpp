@@ -46,7 +46,7 @@ namespace mysqlpp {
 /// by copying the pointer only.  Therefore, the object pointed to by
 /// that pointer needs to exist for at least as long as the const_string
 /// object that wraps it.
-class const_string
+class MYSQLPP_EXPORT const_string
 {
 public:
 	/// \brief Type of the data stored in this object, when it is not

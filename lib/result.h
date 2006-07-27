@@ -46,7 +46,7 @@
 
 namespace mysqlpp {
 
-class Connection;
+class MYSQLPP_EXPORT Connection;
 
 /// \brief A basic result set class, for use with "use" queries.
 ///
@@ -58,7 +58,7 @@ class Connection;
 /// empty row if exceptions are disabled), you can process the result
 /// set one row at a time.
 
-class ResUse : public OptionalExceptions
+class MYSQLPP_EXPORT ResUse : public OptionalExceptions
 {
 public:
 	/// \brief Default constructor
@@ -74,7 +74,7 @@ public:
 	}
 	
 	/// \brief Create the object, fully initialized
-	MYSQLPP_EXPORT ResUse(MYSQL_RES* result, Connection* c = 0, bool te = true);
+	ResUse(MYSQL_RES* result, Connection* c = 0, bool te = true);
 	
 	/// \brief Create a copy of another ResUse object
 	ResUse(const ResUse& other) :
@@ -86,7 +86,7 @@ public:
 	}
 	
 	/// \brief Destroy object
-	MYSQLPP_EXPORT virtual ~ResUse();
+	virtual ~ResUse();
 
 	/// \brief Copy another ResUse object's data into this object
 	ResUse& operator =(const ResUse& other);
@@ -327,7 +327,7 @@ protected:
 	/// \brief Copy another ResUse object's contents into this one.
 	///
 	/// Self-copy is not allowed.
-	MYSQLPP_EXPORT void copy(const ResUse& other);
+	void copy(const ResUse& other);
 };
 
 
@@ -343,7 +343,7 @@ protected:
 /// provides a reverse random-access iterator in addition to the normal
 /// forward one.
 
-class Result : public ResUse,
+class MYSQLPP_EXPORT Result : public ResUse,
 		public const_subscript_container<Result, Row, const Row>
 {
 public:
@@ -451,7 +451,7 @@ inline void swap(Result& x, Result& y)
 
 /// \brief Holds the information on the success of queries that
 /// don't return any results.
-class ResNSel
+class MYSQLPP_EXPORT ResNSel
 {
 public:
 	bool success;			///< if true, query was successful
@@ -465,7 +465,7 @@ public:
 	}
 
 	/// \brief Initialize object
-	MYSQLPP_EXPORT ResNSel(Connection* q);
+	ResNSel(Connection* q);
 
 	/// \brief Returns true if the query was successful
 	operator bool() { return success; }

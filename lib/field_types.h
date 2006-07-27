@@ -34,10 +34,10 @@
 
 namespace mysqlpp {
 
-class ResUse;
+class MYSQLPP_EXPORT ResUse;
 
 /// \brief A vector of SQL field types.
-class FieldTypes : public std::vector<mysql_type_info>
+class MYSQLPP_EXPORT FieldTypes : public std::vector<mysql_type_info>
 {
 public:
 	/// \brief Default constructor
@@ -86,7 +86,7 @@ public:
 	}
 
 private:
-	MYSQLPP_EXPORT void init(const ResUse* res);
+	void init(const ResUse* res);
 };
 
 } // end namespace mysqlpp

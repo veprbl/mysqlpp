@@ -84,7 +84,7 @@ namespace mysqlpp {
 /// than a trivial implementation would allow.
 
 template <class Str>
-class ColData_Tmpl : public Str
+class MYSQLPP_EXPORT ColData_Tmpl : public Str
 {
 public:
 	/// \brief Default constructor

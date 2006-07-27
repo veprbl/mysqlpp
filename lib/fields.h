@@ -33,12 +33,12 @@
 
 namespace mysqlpp {
 
-class ResUse;
+class MYSQLPP_EXPORT ResUse;
 
 /// \brief A container similar to \c std::vector for holding
 /// mysqlpp::Field records.
 
-class Fields : public const_subscript_container<Fields, Field>
+class MYSQLPP_EXPORT Fields : public const_subscript_container<Fields, Field>
 {
 public:
 	/// \brief Default constructor
@@ -51,7 +51,7 @@ public:
 	}
 
 	/// \brief Returns a field given its index.
-	MYSQLPP_EXPORT const Field& at(size_type i) const;
+	const Field& at(size_type i) const;
 
 	/// \brief Returns a field given its index.
 	const Field& at(int i) const
@@ -59,7 +59,7 @@ public:
 		return at(static_cast<size_type>(i));
 	}
 
-	MYSQLPP_EXPORT size_type size() const;	///< get the number of fields
+	size_type size() const;	///< get the number of fields
 
 private:
 	mutable ResUse* res_;

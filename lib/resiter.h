@@ -53,7 +53,7 @@ template <class OnType,
 		class ReturnType = const ValueType&,
 		class SizeType = unsigned int,
 		class DiffType = int>
-class const_subscript_container
+class MYSQLPP_EXPORT const_subscript_container
 {
 public:
 	typedef const_subscript_container<OnType, ValueType, ReturnType,
@@ -116,7 +116,7 @@ public:
 
 template <class OnType, class ReturnType, class SizeType,
 		class DiffType>
-class subscript_iterator : public std::iterator<ReturnType, SizeType>
+class MYSQLPP_EXPORT subscript_iterator : public std::iterator<ReturnType, SizeType>
 {
 public:
 	/// \brief Default constructor

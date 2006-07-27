@@ -58,7 +58,7 @@
 
 namespace mysqlpp {
 
-class Connection;
+class MYSQLPP_EXPORT Connection;
 
 /// \brief Used for indicating whether a query object should auto-reset
 enum query_reset { DONT_RESET, RESET_QUERY };
@@ -112,7 +112,7 @@ enum query_reset { DONT_RESET, RESET_QUERY };
 ///
 /// See the user manual for more details about these options.
 
-class Query : public std::ostream,
+class MYSQLPP_EXPORT Query : public std::ostream,
 		public OptionalExceptions, public Lockable
 {
 public:
@@ -141,27 +141,27 @@ public:
 	/// to an empty Query object.  In particular, the stream buffer and
 	/// template query stuff will be empty in the copy, regardless of
 	/// what values they have in the original.
-	MYSQLPP_EXPORT Query(const Query& q);
+	Query(const Query& q);
 
 	/// \brief Assign another query's state to this object
 	///
 	/// The same caveats apply to this operator as apply to the copy
 	/// ctor.
-	MYSQLPP_EXPORT Query& operator=(const Query& rhs);
+	Query& operator=(const Query& rhs);
 
 	/// \brief Get the last error message that was set.
 	///
 	/// This class has an internal error message string, but if it
 	/// isn't set, we return the last error message that happened
 	/// on the connection we're bound to instead.
-	MYSQLPP_EXPORT std::string error();
+	std::string error();
 
 	/// \brief Returns true if the last operation succeeded
 	///
 	/// Returns true if the last query succeeded, and the associated
 	/// Connection object's success() method also returns true.  If
 	/// either object is unhappy, this method returns false.
-	MYSQLPP_EXPORT bool success();
+	bool success();
 
 	/// \brief Treat the contents of the query string as a template
 	/// query.
@@ -170,13 +170,13 @@ public:
 	/// other members that accept template query parameters.  See the
 	/// "Template Queries" chapter in the user manual for more
 	/// information.
-	MYSQLPP_EXPORT void parse();
+	void parse();
 
 	/// \brief Reset the query object so that it can be reused.
 	///
 	/// This erases the query string and the contents of the parameterized
 	/// query element list.
-	MYSQLPP_EXPORT void reset();
+	void reset();
 
 	/// \brief Return the query string currently in the buffer.
 	std::string preview() { return str(def); }
@@ -206,7 +206,7 @@ public:
 	///
 	/// \param p template query parameters to use, overriding the ones
 	/// this object holds, if any
-	MYSQLPP_EXPORT std::string str(SQLQueryParms& p);
+	std::string str(SQLQueryParms& p);
 
 	/// \brief Get built query as a null-terminated C++ string
 	///
@@ -214,7 +214,7 @@ public:
 	/// this object holds, if any
 	/// \param r if equal to \c RESET_QUERY, query object is cleared
 	/// after this call
-	MYSQLPP_EXPORT std::string str(SQLQueryParms& p, query_reset r);
+	std::string str(SQLQueryParms& p, query_reset r);
 
 	/// \brief Execute a query
 	///
@@ -227,7 +227,7 @@ public:
 	/// \return true if query was executed successfully
 	///
 	/// \sa execute(), store(), storein(), and use()
-	MYSQLPP_EXPORT bool exec(const std::string& str);
+	bool exec(const std::string& str);
 
 	/// \brief Execute built-up query
 	///
@@ -250,7 +250,7 @@ public:
 	/// \brief Execute query in a C++ string
 	///
 	/// Executes the query immediately, and returns the results.
-	MYSQLPP_EXPORT ResNSel execute(const char* str);
+	ResNSel execute(const char* str);
 
 	/// \brief Execute a query that can return a result set
 	/// 
@@ -283,7 +283,7 @@ public:
 	/// Executes the query immediately, and returns an object that
 	/// lets you walk through the result set one row at a time, in
 	/// sequence.  This is more memory-efficient than store().
-	MYSQLPP_EXPORT ResUse use(const char* str);
+	ResUse use(const char* str);
 
 	/// \brief Execute a query that can return a result set
 	///
@@ -313,7 +313,7 @@ public:
 	/// Executes the query immediately, and returns an object that
 	/// contains the entire result set.  This is less memory-efficient
 	/// than use(), but it lets you have random access to the results.
-	MYSQLPP_EXPORT Result store(const char* str);
+	Result store(const char* str);
 
 	/// \brief Return next result set, when processing a multi-query
 	///
@@ -341,7 +341,7 @@ public:
 	/// libraries.
 	///
 	/// \return Result object containing the next result set.
-	MYSQLPP_EXPORT Result store_next();
+	Result store_next();
 
 	/// \brief Return whether more results are waiting for a multi-query
 	/// or stored procedure response.
@@ -354,7 +354,7 @@ public:
 	/// always returns false when built against older API libraries.
 	///
 	/// \return true if another result set exists
-	MYSQLPP_EXPORT bool more_results();
+	bool more_results();
 
 	/// \brief Execute a query, storing the result set in an STL
 	/// sequence container.

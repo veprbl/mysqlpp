@@ -44,7 +44,7 @@ namespace mysqlpp {
 // Doxygen will not generate documentation for this section.
 
 template <class T, class value_type = typename T::value_type>
-class ListInsert
+class MYSQLPP_EXPORT ListInsert
 {
 public:
 	ListInsert(T* o) : object_(o) { }
@@ -55,7 +55,7 @@ private:
 };
 
 template <class T, class key_type = typename T::key_type>
-class SetInsert
+class MYSQLPP_EXPORT SetInsert
 {
 public:
 	SetInsert(T* o) : object_(o) { }
@@ -86,7 +86,7 @@ void set2container(const char* str, Insert insert);
 /// \brief A special std::set derivative for holding MySQL data sets.
 
 template <class Container = std::set<std::string> >
-class Set : public Container
+class MYSQLPP_EXPORT Set : public Container
 {
 public:
 	/// \brief Create object from a comma-separated list of values

@@ -38,12 +38,12 @@
 
 namespace mysqlpp {
 
-class Query;
+class MYSQLPP_EXPORT Query;
 
 
 /// \brief This class holds the parameter values for filling
 /// template queries. 
-class SQLQueryParms : public std::vector<SQLString>
+class MYSQLPP_EXPORT SQLQueryParms : public std::vector<SQLString>
 {
 public:
 	/// \brief Abbreviation so some of the declarations below don't
@@ -94,10 +94,10 @@ public:
 	}
 	
 	/// \brief Access the value of the element with a key of str.
-	MYSQLPP_EXPORT SQLString& operator [](const char *str);
+	SQLString& operator [](const char *str);
 
 	/// \brief Access the value of the element with a key of str.
-	MYSQLPP_EXPORT const SQLString& operator [](const char *str) const;
+	const SQLString& operator [](const char *str) const;
 
 	/// \brief Adds an element to the list
 	SQLQueryParms& operator <<(const SQLString& str)
@@ -122,7 +122,7 @@ public:
 	///
 	/// If the two lists are the same length or this list is longer than
 	/// the \c other list, a copy of this list is returned.
-	MYSQLPP_EXPORT SQLQueryParms operator +(
+	SQLQueryParms operator +(
 			const SQLQueryParms& other) const;
 
 #if !defined(DOXYGEN_IGNORE)

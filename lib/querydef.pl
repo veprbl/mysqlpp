@@ -74,7 +74,7 @@ for (my $i = 0; $i < $max_parameters; ++$i) {
 print OUT << "---";
 
 #define mysql_query_define1(RETURN, FUNC) \\
-	MYSQLPP_EXPORT RETURN FUNC(SQLQueryParms& p); \\
+	RETURN FUNC(SQLQueryParms& p); \\
 	mysql_query_define0(RETURN, FUNC)
 ---
 
