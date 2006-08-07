@@ -6,4 +6,13 @@ fi
 
 PROG=$1
 shift
-LD_LIBRARY_PATH=../lib ./$PROG $*
+
+if [ -e /usr/bin/ldd ]
+then
+	LD_LIBRARY_PATH=../lib ./$PROG $*
+elif [ -e /usr/bin/otool ]
+then
+	DYLD_LIBRARY_PATH=../lib ./$PROG $*
+else
+	echo ERROR: I don\'t grok this system\'s dynamic linkage system.
+fi
