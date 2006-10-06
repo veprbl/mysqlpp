@@ -30,8 +30,28 @@
 
 namespace mysqlpp {
 
+Query::Query(Connection* c, bool te) :
+#if defined(_MSC_VER)
+std::ostream(std::_Noinit), // prevents a double-init memory leak in RTL
+#else
+std::ostream(0),
+#endif
+OptionalExceptions(te),
+Lockable(false),
+def(this),
+conn_(c),
+success_(false)
+{
+	init(&sbuffer_);
+	success_ = true;
+}
+
 Query::Query(const Query& q) :
-std::ostream(0),	
+#if defined(_MSC_VER)
+std::ostream(std::_Noinit), // prevents a double-init memory leak in RTL
+#else
+std::ostream(0),
+#endif
 OptionalExceptions(q.throw_exceptions()),
 Lockable(q.locked()),
 def(q.def),
