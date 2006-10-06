@@ -589,7 +589,7 @@ public:
 	// from Doxygen, which gets confused by macro instantiations that look
 	// like method declarations.
 	mysql_query_define0(std::string, preview)
-	mysql_query_define0(std::string, str);
+	mysql_query_define0(std::string, str)
 	mysql_query_define1(ResNSel, execute)
 	mysql_query_define1(Result, store)
 	mysql_query_define1(ResUse, use)
