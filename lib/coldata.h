@@ -111,7 +111,7 @@ public:
 	{
 	}
 
-	/// \brief Full constructor.
+	/// \brief Null-terminated C string version of full ctor
 	///
 	/// \param str the string this object represents
 	/// \param t MySQL type information for data within str
@@ -126,25 +126,32 @@ public:
 	{
 	}
 
-	/// \brief Get this object's current MySQL type.
-	mysql_type_info type() const
+	/// \brief Full constructor.
+	///
+	/// \param str the string this object represents
+	/// \param len the length of the string; embedded nulls are legal
+	/// \param t MySQL type information for data within str
+	/// \param n if true, str is a SQL null
+	explicit ColData_Tmpl(const char* str, typename Str::size_type len,
+			mysql_type_info t = mysql_type_info::string_type,
+			bool n = false) :
+	Str(str, len),
+	type_(t),
+	buf_(str),
+	null_(n)
 	{
-		return type_;
 	}
+
+	/// \brief Get this object's current MySQL type.
+	mysql_type_info type() const { return type_; }
 
 	/// \brief Returns true if data of this type should be quoted, false
 	/// otherwise.
-	bool quote_q() const
-	{
-		return type_.quote_q();
-	}
+	bool quote_q() const { return type_.quote_q(); }
 
 	/// \brief Returns true if data of this type should be escaped, false
 	/// otherwise.
-	bool escape_q() const
-	{
-		return type_.escape_q();
-	}
+	bool escape_q() const { return type_.escape_q(); }
 	
 	/// \brief Template for converting data from one type to another.
 	template <class Type> Type conv(Type dummy) const;
@@ -311,7 +318,7 @@ Type ColData_Tmpl<Str>::conv(Type /* dummy */) const
 {
 	std::string strbuf = buf_;
 	strip_all_blanks(strbuf);
-	size_t len = strbuf.size();
+	std::string::size_type len = strbuf.size();
 	const char* str = strbuf.c_str();
 	const char* end = str;
 	Type num = mysql_convert<Type>(str, end);
