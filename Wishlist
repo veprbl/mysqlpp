@@ -208,6 +208,8 @@ v3.0 Plan
 	  server types.  Imagine a program for importing data from
 	  PostgreSQL and loading it into a MySQL table, for instance.
 
+	o Query::preview() is just an alias for Query::str().  Pick one.
+
 
 
 Future Features
