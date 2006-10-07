@@ -75,6 +75,10 @@ public:
 	/// \brief Create object as a copy of a C string
 	SQLString(const char* str);
 
+	/// \brief Create object as a copy of a known-length string of
+	/// characters.
+	SQLString(const char* str, size_t len);
+
 	/// \brief Create object as the string form of a \c char value
 	SQLString(char i);
 
