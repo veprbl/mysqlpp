@@ -31,30 +31,12 @@ v2.2 Plan
 
 	o Fix handling of /usr/local/mysql as base install dir.
 
-	o Currently, all overloads for Query's execute(), store()
-	  and use() methods eventually call the const char*
-	  version, which does the actual work of executing the query.
-	  This rules out query strings with embedded nulls, as you're
-	  likely to get with BLOB columns.  Also, it means MySQL++
-	  must scan the string for length in a few places.  The C API
-	  isn't limited in this way if you use mysql_real_query(),
-	  but you need an accurate length value to call it.
-
-	  Fix by co-opting the first template query version of each
-	  of these functions, as it takes a single SQLString, which
-	  contains a length and doesn't care about nulls.  Also add
-	  an overload taking a const char* and a length parameter,
-	  for cases where the user doesn't want to convert their
-	  data to a std::string variant.  Make the latter the actual
-	  terminus of the call chain, as it's cheaper to convert from
-	  SQLString to const char* than the reverse.
-
 	o ColData doesn't cope with nulls very well, such as storing
 	  BLOB column data.  This manifests in things like Row::at()
 	  returning truncated data, because somewhere along the line
 	  a ColData object was created using only a char*; we need to
 	  be able to use a length as well.  Update examples/cgi_image
-	  to use this new mechanism.
+	  and examples/load_file to use this new mechanism.
 
 	o A BLOB field containing a null will be truncated when using
 	  SSQLS with a std::string member.  This is probably related

@@ -55,7 +55,7 @@ print OUT << "---";
 
 ## Build mysql_query_define0 macro
 print OUT "#define mysql_query_define0(RETURN, FUNC) \\\n";
-for (my $i = 0; $i < $max_parameters; ++$i) {
+for (my $i = 1; $i < $max_parameters; ++$i) {
 	print OUT "\tRETURN FUNC(";
 	for (my $j = 0; $j < $i + 1; ++$j) {
 		print OUT 'const SQLString& arg', $j;

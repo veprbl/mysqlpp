@@ -171,26 +171,33 @@ public:
 	/// \brief Return the query string currently in the buffer.
 	std::string preview() { return str(def); }
 
+	/// \brief Return the query string currently in the buffer with
+	/// template query parameter substitution.
+	///
+	/// \param arg0 the value to substitute for the first template query
+	/// parameter
+	std::string preview(const SQLString& arg0)
+			{ return preview(SQLQueryParms() << arg0); }
+
 	/// \brief Return the query string currently in the buffer.
-	std::string preview(SQLQueryParms& p)
-	{
-		return str(p);
-	}
+	std::string preview(SQLQueryParms& p) { return str(p); }
 
 	/// \brief Get built query as a null-terminated C++ string
-	std::string str()
-	{
-		return str(def);
-	}
+	std::string str() { return str(def); }
+
+	/// \brief Get built query as a null-terminated C++ string with
+	/// template query parameter substitution.
+	///
+	/// \param arg0 the value to substitute for the first template query
+	/// parameter
+	std::string str(const SQLString& arg0)
+			{ return preview(SQLQueryParms() << arg0); }
 
 	/// \brief Get built query as a null-terminated C++ string
 	///
 	/// \param r if equal to \c RESET_QUERY, query object is cleared
 	/// after this call
-	std::string str(query_reset r)
-	{
-		return str(def, r);
-	}
+	std::string str(query_reset r) { return str(def, r); }
 
 	/// \brief Get built query as a null-terminated C++ string
 	///
@@ -237,10 +244,24 @@ public:
 	/// \sa exec(), store(), storein(), and use()
 	ResNSel execute() { return execute(def); }
 
-	/// \brief Execute query in a C++ string
+	/// \brief Execute query in a C++ string, or substitute string into
+	/// a template query and execute it.
+	///
+	/// \param str If the object represents a compiled template query,
+	/// substitutes this string in for the first parameter.  Otherwise,
+	/// takes the string as a complete SQL query and executes it.
+	ResNSel execute(const SQLString& str);
+
+	/// \brief Execute query in a C string
 	///
 	/// Executes the query immediately, and returns the results.
 	ResNSel execute(const char* str);
+
+	/// \brief Execute query in a known-length string of characters.
+	/// This can include null characters.
+	///
+	/// Executes the query immediately, and returns the results.
+	ResNSel execute(const char* str, size_t len);
 
 	/// \brief Execute a query that can return a result set
 	/// 
@@ -273,7 +294,21 @@ public:
 	/// Executes the query immediately, and returns an object that
 	/// lets you walk through the result set one row at a time, in
 	/// sequence.  This is more memory-efficient than store().
+	ResUse use(const SQLString& str);
+
+	/// \brief Execute query in a C string
+	///
+	/// Executes the query immediately, and returns an object that
+	/// lets you walk through the result set one row at a time, in
+	/// sequence.  This is more memory-efficient than store().
 	ResUse use(const char* str);
+
+	/// \brief Execute query in a known-length C string
+	///
+	/// Executes the query immediately, and returns an object that
+	/// lets you walk through the result set one row at a time, in
+	/// sequence.  This is more memory-efficient than store().
+	ResUse use(const char* str, size_t len);
 
 	/// \brief Execute a query that can return a result set
 	///
@@ -303,7 +338,21 @@ public:
 	/// Executes the query immediately, and returns an object that
 	/// contains the entire result set.  This is less memory-efficient
 	/// than use(), but it lets you have random access to the results.
+	Result store(const SQLString& str);
+
+	/// \brief Execute query in a C string
+	///
+	/// Executes the query immediately, and returns an object that
+	/// contains the entire result set.  This is less memory-efficient
+	/// than use(), but it lets you have random access to the results.
 	Result store(const char* str);
+
+	/// \brief Execute query in a known-length C string
+	///
+	/// Executes the query immediately, and returns an object that
+	/// contains the entire result set.  This is less memory-efficient
+	/// than use(), but it lets you have random access to the results.
+	Result store(const char* str, size_t len);
 
 	/// \brief Return next result set, when processing a multi-query
 	///

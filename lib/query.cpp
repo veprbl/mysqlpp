@@ -75,19 +75,22 @@ Query::operator=(const Query& rhs)
 }
 
 
-my_ulonglong Query::affected_rows() const
+my_ulonglong
+Query::affected_rows() const
 {
 	return conn_->affected_rows();
 }
 
 
-std::string Query::error()
+std::string
+Query::error()
 {
 	return conn_->error();
 }
 
 
-bool Query::exec(const std::string& str)
+bool
+Query::exec(const std::string& str)
 {
 	success_ = !mysql_real_query(&conn_->mysql_, str.c_str(),
 			static_cast<unsigned long>(str.length()));
@@ -100,10 +103,32 @@ bool Query::exec(const std::string& str)
 }
 
 
-ResNSel Query::execute(const char* str)
+ResNSel
+Query::execute(const SQLString& str)
 {
-	success_ = false;
+	if (def.size()) {
+		// Take str to be a template query parameter
+		return execute(SQLQueryParms() << str);
+	}
+	else {
+		// Take str to be the entire query string
+		return execute(str.c_str(), str.length());
+	}
+}
+
+
+ResNSel
+Query::execute(const char* str)
+{
+	return execute(SQLString(str));
+}
+
+
+ResNSel
+Query::execute(const char* str, size_t len)
+{
 	if (lock()) {
+		success_ = false;
 		if (throw_exceptions()) {
 			throw LockFailed();
 		}
@@ -112,18 +137,17 @@ ResNSel Query::execute(const char* str)
 		}
 	}
 
-	success_ = !mysql_query(&conn_->mysql_, str);
+	success_ = !mysql_real_query(&conn_->mysql_, str, len);
+
 	unlock();
 	if (success_) {
 		return ResNSel(conn_);
 	}
+	else if (throw_exceptions()) {
+		throw BadQuery(error());
+	}
 	else {
-		if (throw_exceptions()) {
-			throw BadQuery(error());
-		}
-		else {
-			return ResNSel();
-		}
+		return ResNSel();
 	}
 }
 
@@ -131,34 +155,38 @@ ResNSel Query::execute(const char* str)
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
-ResNSel Query::execute(SQLQueryParms& p)
+ResNSel
+Query::execute(SQLQueryParms& p)
 {
-	query_reset r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
-	return execute(str(p, r).c_str());
+	return execute(str(p, parse_elems_.size() ? DONT_RESET : RESET_QUERY));
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
 
 
-std::string Query::info()
+std::string
+Query::info()
 {
 	return conn_->info();
 }
 
 
-my_ulonglong Query::insert_id()
+my_ulonglong
+Query::insert_id()
 {
 	return conn_->insert_id();
 }
 
 
-bool Query::lock()
+bool
+Query::lock()
 {
     return conn_->lock();
 }
 
 
-bool Query::more_results()
+bool 
+Query::more_results()
 {
 #if MYSQL_VERSION_ID > 41000		// only in MySQL v4.1 +
 	return mysql_more_results(&conn_->mysql_);
@@ -168,7 +196,8 @@ bool Query::more_results()
 }
 
 
-void Query::parse()
+void
+Query::parse()
 {
 	std::string str = "";
 	char num[4];
@@ -311,7 +340,8 @@ Query::pprepare(char option, SQLString& S, bool replace)
 }
 
 
-char* Query::preview_char()
+char*
+Query::preview_char()
 {
 	*this << std::ends;
 	size_t length = sbuffer_.str().size();
@@ -322,7 +352,8 @@ char* Query::preview_char()
 }
 
 
-void Query::proc(SQLQueryParms& p)
+void
+Query::proc(SQLQueryParms& p)
 {
 	sbuffer_.str("");
 
@@ -330,12 +361,12 @@ void Query::proc(SQLQueryParms& p)
 			i != parse_elems_.end(); ++i) {
 		dynamic_cast<std::ostream&>(*this) << i->before;
 		int num = i->num;
-		if (num != -1) {
+		if (num >= 0) {
 			SQLQueryParms* c;
-			if (num < p.size()) {
+			if (size_t(num) < p.size()) {
 				c = &p;
 			}
-			else if (num < def.size()) {
+			else if (size_t(num) < def.size()) {
 				c = &def;
 			}
 			else {
@@ -356,7 +387,8 @@ void Query::proc(SQLQueryParms& p)
 	}
 }
 
-void Query::reset()
+void
+Query::reset()
 {
 	seekp(0);
 	clear();
@@ -367,11 +399,32 @@ void Query::reset()
 }
 
 
-Result Query::store(const char* str)
+Result 
+Query::store(const SQLString& str)
 {
-	success_ = false;
+	if (def.size()) {
+		// Take str to be a template query parameter
+		return store(SQLQueryParms() << str);
+	}
+	else {
+		// Take str to be the entire query string
+		return store(str.c_str(), str.length());
+	}
+}
 
+
+Result
+Query::store(const char* str)
+{
+	return store(SQLString(str));
+}
+
+
+Result
+Query::store(const char* str, size_t len)
+{
 	if (lock()) {
+		success_ = false;
 		if (throw_exceptions()) {
 			throw LockFailed();
 		}
@@ -380,22 +433,26 @@ Result Query::store(const char* str)
 		}
 	}
 
-	success_ = !mysql_query(&conn_->mysql_, str);
-	if (success_) {
+
+	if (success_ = !mysql_real_query(&conn_->mysql_, str, len)) {
 		MYSQL_RES* res = mysql_store_result(&conn_->mysql_);
 		if (res) {
 			unlock();
 			return Result(res, throw_exceptions());
 		}
+		else {
+			success_ = false;
+		}
 	}
 	unlock();
 
-	// One of the mysql_* calls failed, so decide how we should fail.
-	// Notice that we do not throw an exception if we just get a null
-	// result set, but no error.  This happens when using store() on a
-	// query that may not return results.  Obviously it's better to use
-	// exec*() in this situation, but it's not outright illegal, and
-	// sometimes you have to do it.
+	// One of the MySQL API calls failed, but it's not an error if we
+	// just get an empty result set.  It happens when store()ing a query
+	// that doesn't always return results.  While it's better to use 
+	// exec*() in that situation, it's legal to call store() instead,
+	// and sometimes you have no choice.  For example, if the SQL comes
+	// from outside the program so you can't predict whether there will
+	// be results.
 	if (conn_->errnum() && throw_exceptions()) {
 		throw BadQuery(error());
 	}
@@ -408,16 +465,17 @@ Result Query::store(const char* str)
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
-Result Query::store(SQLQueryParms& p)
+Result
+Query::store(SQLQueryParms& p)
 {
-	query_reset r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
-	return store(str(p, r).c_str());
+	return store(str(p, parse_elems_.size() ? DONT_RESET : RESET_QUERY));
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
 
 
-Result Query::store_next()
+Result
+Query::store_next()
 {
 #if MYSQL_VERSION_ID > 41000		// only in MySQL v4.1 +
 	if (lock()) {
@@ -471,7 +529,8 @@ Result Query::store_next()
 }
 
 
-std::string Query::str(SQLQueryParms& p)
+std::string
+Query::str(SQLQueryParms& p)
 {
 	if (!parse_elems_.empty()) {
 		proc(p);
@@ -483,7 +542,8 @@ std::string Query::str(SQLQueryParms& p)
 }
 
 
-std::string Query::str(SQLQueryParms& p, query_reset r)
+std::string
+Query::str(SQLQueryParms& p, query_reset r)
 {
 	std::string tmp = str(p);
 	if (r == RESET_QUERY) {
@@ -493,22 +553,46 @@ std::string Query::str(SQLQueryParms& p, query_reset r)
 }
 
 
-bool Query::success()
+bool
+Query::success()
 {
 	return success_ && conn_->success();
 }
 
 
-void Query::unlock()
+void
+Query::unlock()
 {
 	conn_->unlock();
 }
 
 
-ResUse Query::use(const char* str)
+ResUse
+Query::use(const SQLString& str)
 {
-	success_ = false;
+	if (def.size()) {
+		// Take str to be a template query parameter
+		return use(SQLQueryParms() << str);
+	}
+	else {
+		// Take str to be the entire query string
+		return use(str.c_str(), str.length());
+	}
+}
+
+
+ResUse
+Query::use(const char* str)
+{
+	return use(SQLString(str));
+}
+
+
+ResUse
+Query::use(const char* str, size_t len)
+{
 	if (lock()) {
+		success_ = false;
 		if (throw_exceptions()) {
 			throw LockFailed();
 		}
@@ -517,8 +601,7 @@ ResUse Query::use(const char* str)
 		}
 	}
 
-	success_ = !mysql_query(&conn_->mysql_, str);
-	if (success_) {
+	if (success_ = !mysql_real_query(&conn_->mysql_, str, len)) {
 		MYSQL_RES* res = mysql_use_result(&conn_->mysql_);
 		if (res) {
 			unlock();
@@ -527,8 +610,14 @@ ResUse Query::use(const char* str)
 	}
 	unlock();
 
-	// One of the mysql_* calls failed, so decide how we should fail.
-	if (throw_exceptions()) {
+	// One of the MySQL API calls failed, but it's not an error if we
+	// just get an empty result set.  It happens when use()ing a query
+	// that doesn't always return results.  While it's better to use 
+	// exec*() in that situation, it's legal to call use() instead, and
+	// sometimes you have no choice.  For example, if the SQL comes
+	// from outside the program so you can't predict whether there will
+	// be results.
+	if (conn_->errnum() && throw_exceptions()) {
 		throw BadQuery(error());
 	}
 	else {
@@ -540,10 +629,10 @@ ResUse Query::use(const char* str)
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
-ResUse Query::use(SQLQueryParms& p)
+ResUse
+Query::use(SQLQueryParms& p)
 {
-	query_reset r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
-	return use(str(p, r).c_str());
+	return use(str(p, parse_elems_.size() ? DONT_RESET : RESET_QUERY));
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
