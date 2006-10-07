@@ -208,7 +208,24 @@ v3.0 Plan
 	  server types.  Imagine a program for importing data from
 	  PostgreSQL and loading it into a MySQL table, for instance.
 
-	o Query::preview() is just an alias for Query::str().  Pick one.
+	o Query::preview() is just an alias for Query::str().
+	  Pick one.
+
+	o Remove Query::execute(), store() and use() overloads taking
+	  a SQLQueryParms object reference.  With the changes in
+	  v2.2 making the single SQLString overload the end-point
+	  of the call chain, this just adds one more layer to the
+	  call chain.  Oh, sure, maybe there is someone out there who
+	  uses this...but probably not.  Much more likely it's just
+	  an outdated step that adds nothing to the user experience.
+
+	o The sense of Lockable::lock()'s return value is backwards.
+	  It should return true if it succeeds in locking the object.
+
+	o Remove simple const char* version of Query::execute(),
+	  store(), and use()?  SQLString already has a conversion
+	  ctor taking a const char* string, so there should be no
+	  need for this explicit overload.
 
 
 
