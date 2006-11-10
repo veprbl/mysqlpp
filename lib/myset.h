@@ -89,6 +89,9 @@ template <class Container = std::set<std::string> >
 class MYSQLPP_EXPORT Set : public Container
 {
 public:
+	/// \brief Default constructor
+	Set() {};
+
 	/// \brief Create object from a comma-separated list of values
 	Set(const char* str)
 	{

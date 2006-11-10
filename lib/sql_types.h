@@ -62,7 +62,7 @@ typedef DateTime		sql_datetime;
 
 typedef std::string		sql_enum;
 
-typedef Set<std::string> sql_set;
+typedef Set<>			sql_set;
 
 typedef std::string		sql_blob;
 typedef std::string		sql_tinyblob;
