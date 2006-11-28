@@ -52,7 +52,7 @@ clean:
 
 $(PDFFILE): $(DOCFILE) $(FO_SS) $(COMMON_SS)
 	xsltproc --xinclude $(FO_SS) $(DOCFILE) > $(FOFILE)
-	$(FOPDIR)/fop.sh -q -fo $(FOFILE) $(PDFFILE)
+	$(FOPDIR)/fop -q -fo $(FOFILE) $(PDFFILE)
 	cp $(PDFFILE) ../mysqlpp-$(PDFFILE)
 
 html/index.html: $(DOCFILE) $(EX_TXT) $(HTML_SS) $(COMMON_SS)
