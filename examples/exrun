@@ -1,11 +1,22 @@
 #!/bin/sh
-if [ ! -e ../lib/libmysqlpp.so.2 ]
+if [ -z "$1" ]
 then
-	( cd ../lib ; ln -sf libmysqlpp.so libmysqlpp.so.2 )
+	echo "usage: $0 <example> [args...]"
+	echo
+	echo "   Runs the given example, using the library built in ../lib instead"
+	echo "   of using the system library search mechanism.  Accepts an "
+	echo "   arbitrary number of arguments."
+	echo
+	exit 1
 fi
 
 PROG=$1
 shift
+
+if [ ! -e ../lib/libmysqlpp.so.2 ]
+then
+	( cd ../lib ; ln -sf libmysqlpp.so libmysqlpp.so.2 )
+fi
 
 if [ -e /usr/bin/ldd ]
 then
