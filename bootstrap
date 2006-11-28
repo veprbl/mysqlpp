@@ -10,6 +10,11 @@ do
 			shift
 			;;
 
+		nooptimization)
+			export CXXFLAGS="-g -O0"
+			shift
+			;;
+
 		pedantic)
 			export CXXFLAGS="-g -O2 -ansi -pedantic -Wall -W -Wold-style-cast -Wfloat-equal -Wwrite-strings -Woverloaded-virtual -Wno-long-long"
 			shift
