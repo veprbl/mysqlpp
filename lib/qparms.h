@@ -232,7 +232,7 @@ struct SQLParseElement
 	/// \param b the 'before' value
 	/// \param o the 'option' value
 	/// \param n the 'num' value
-	SQLParseElement(std::string b, char o, char n) :
+	SQLParseElement(std::string b, char o, signed char n) :
 	before(b),
 	option(o),
 	num(n)
@@ -241,7 +241,7 @@ struct SQLParseElement
 	
 	std::string before;		///< string inserted before the parameter
 	char option;			///< the parameter option, or blank if none
-	char num;				///< the parameter position to use
+	signed char num;		///< the parameter position to use
 };
 
 } // end namespace mysqlpp

@@ -234,7 +234,7 @@ Query::parse()
 				else {
 					num[1] = 0;
 				}
-				short int n = atoi(num);
+				signed char n = atoi(num);
 
 				// Look for option character following position value.
 				char option = ' ';
@@ -269,7 +269,7 @@ Query::parse()
 				}
 
 				// Finished parsing parameter; save it.
-				parse_elems_.push_back(SQLParseElement(str, option, char(n)));
+				parse_elems_.push_back(SQLParseElement(str, option, n));
 				str = "";
 				name = "";
 			}
