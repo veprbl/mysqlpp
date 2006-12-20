@@ -26,7 +26,7 @@
 ***********************************************************************/
 
 #define MYSQLPP_NOT_HEADER
-#include "platform.h"
+#include "common.h"
 
 #include "datetime.h"
 
@@ -187,7 +187,11 @@ DateTime::operator time_t() const
 DateTime::DateTime(time_t t)
 {
 	struct tm tm;
+#if defined(_MSC_VER)
+	localtime_s(&tm, &t);
+#else
 	localtime_r(&t, &tm);
+#endif
 
 	year = tm.tm_year + 1900;
 	month = tm.tm_mon + 1;
