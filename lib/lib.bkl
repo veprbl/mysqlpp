@@ -19,7 +19,7 @@
 		<if cond="FORMAT in ['msvc6prj', 'mingw']">
 			<define>_UNICODE</define>
 			<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
-			<lib-path>"C:\Program Files\MySQL\MySQL Server 5.0\lib\opt"</lib-path>
+			<lib-path>C:\Program Files\MySQL\MySQL Server 5.0\lib\opt</lib-path>
 		</if>
 		<if cond="FORMAT=='msvc6prj'">
 			<define>MYSQLPP_MAKING_DLL</define>
