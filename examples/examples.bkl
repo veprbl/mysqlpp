@@ -15,8 +15,8 @@
 
 		<if cond="FORMAT in ['msvc6prj', 'mingw']">
 			<define>_UNICODE</define>
-			<include>c:\mysql\include</include>
-			<lib-path>c:\mysql\lib\opt</lib-path>
+			<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
+			<lib-path>"C:\Program Files\MySQL\MySQL Server 5.0\lib\opt"</lib-path>
 			<sys-lib>mysqlpp</sys-lib>
 		</if>
 		<if cond="FORMAT=='msvc6prj'">
