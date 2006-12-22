@@ -26,7 +26,7 @@
 ***********************************************************************/
 
 #define MYSQLPP_NOT_HEADER
-#include "common.h"
+#include "platform.h"
 
 #include "datetime.h"
 
