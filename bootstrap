@@ -33,6 +33,6 @@ set -x
 	aclocal -I config -I /usr/local/share/aclocal &&
 	autoheader &&
 	autoconf &&
-	./reconf $* &&
-	( cd lib ; make custom.h querydef.h )
+	./reconf --enable-maintainer-mode $* &&
+	make lib/custom.h lib/querydef.h
 
