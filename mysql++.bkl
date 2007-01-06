@@ -249,7 +249,7 @@
 
 		<action id="tags">
 			<is-phony/>
-			<command>make tags</command>
+			<command>ctags {examples,lib}/*.cpp {examples,lib}/*.h</command>
 		</action>
 		<action id="ctags"><depends>tags</depends></action>
 
