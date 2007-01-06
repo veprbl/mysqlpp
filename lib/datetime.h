@@ -65,7 +65,7 @@ template <class T> struct DTbase
 	///
 	/// Returns < 0 if this object is "before" the other, 0 of they are
 	/// equal, and > 0 if this object is "after" the other.
-	virtual short compare(const T& other) const = 0;
+	MYSQLPP_EXPORT virtual short compare(const T& other) const = 0;
 
 	/// \brief Returns true if "other" is equal to this object
 	bool operator ==(const T& other) const
@@ -187,13 +187,13 @@ struct DateTime : public DTbase<DateTime>
 	///
 	/// This method is protected because it is merely the engine used
 	/// by the various operators in DTbase.
-	short compare(const DateTime& other) const;
+	MYSQLPP_EXPORT short compare(const DateTime& other) const;
 
 	/// \brief Parse a MySQL date and time string into this object.
-	cchar* convert(cchar*);
- 
- 	/// Convert to time_t
- 	operator time_t() const;
+	MYSQLPP_EXPORT cchar* convert(cchar*);
+
+	/// Convert to time_t
+	operator time_t() const;
 };
 
 
@@ -279,10 +279,10 @@ struct Date : public DTbase<Date>
 	///
 	/// Returns < 0 if this date is before the other, 0 of they are
 	/// equal, and > 0 if this date is after the other.
-	short int compare(const Date& other) const;
+	MYSQLPP_EXPORT short int compare(const Date& other) const;
 
 	/// \brief Parse a MySQL date string into this object.
-	cchar* convert(cchar*);
+	MYSQLPP_EXPORT cchar* convert(cchar*);
 };
 
 /// \brief Inserts a Date object into a C++ stream
@@ -359,13 +359,13 @@ struct Time : public DTbase<Time>
 	}
 
 	/// \brief Parse a MySQL time string into this object.
-	cchar* convert(cchar*);
+	MYSQLPP_EXPORT cchar* convert(cchar*);
 
 	/// \brief Compare this time to another.
 	///
 	/// Returns < 0 if this time is before the other, 0 of they are
 	/// equal, and > 0 if this time is after the other.
-	short int compare(const Time& other) const;
+	MYSQLPP_EXPORT short int compare(const Time& other) const;
 };
 
 /// \brief Inserts a Time object into a C++ stream in a MySQL-compatible
