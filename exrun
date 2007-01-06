@@ -1,0 +1,29 @@
+#!/bin/sh
+if [ -z "$1" ]
+then
+	echo "usage: $0 <example> [args...]"
+	echo
+	echo "   Runs the given example, using the library in the current directory"
+	echo "   instead of using the system library search mechanism.  Accepts an "
+	echo "   arbitrary number of arguments."
+	echo
+	exit 1
+fi
+
+PROG=$1
+shift
+
+if [ ! -e libmysqlpp.so.2 ]
+then
+	( ln -sf libmysqlpp.so libmysqlpp.so.2 )
+fi
+
+if [ -e /usr/bin/ldd ]
+then
+	LD_LIBRARY_PATH=. ./$PROG $*
+elif [ -e /usr/bin/otool ]
+then
+	DYLD_LIBRARY_PATH=. ./$PROG $*
+else
+	echo ERROR: I don\'t grok this system\'s dynamic linkage system.
+fi
