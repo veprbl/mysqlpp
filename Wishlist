@@ -49,17 +49,6 @@ v2.2 Plan
 	  directory and immediately use it to query the database and
 	  return the image data in CGI format.
 
-	o Add a few features to date and time classes:
-
-	  - time_t conversion.
-
-	  - It may be possible to get some nice syntactic sugar,
-	    such as a way to call SQL functions like NOW() when
-	    inserting certain Date/Time objects into a Query stream.
-
-	  - Arithmetic features?  (See "Practical Algorithms for
-	    Programmers" by Binstock and Rex.)
-
 	  Don't forget to write an example showing how to use these
 	  new mechanisms.
 
@@ -72,6 +61,15 @@ v2.3 Plan
 	list is that they can be done without breaking the ABI,
 	which forces a feature to v3.0.  Items on this list could
 	still easily slip to v3.0.  There might not even _be_ a v2.3...
+
+	o Add a few features to date and time classes:
+
+	  - It may be possible to get some nice syntactic sugar,
+	    such as a way to call SQL functions like NOW() when
+	    inserting certain Date/Time objects into a Query stream.
+
+	  - Arithmetic features?  (See "Practical Algorithms for
+	    Programmers" by Binstock and Rex.)
 
 	o Conditionally allow the Lockable mechanism to use the
 	  Boost.Threads library.  If MYSQLPP_BOOST_THREADS is defined,
