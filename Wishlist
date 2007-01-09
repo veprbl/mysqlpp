@@ -12,24 +12,44 @@ widely useful.  Patches or proposals of this sort are always welcome.
 
 v2.2 Plan
 ---------
+	This plan is fairly solid.  All that remains here are cleanup
+	items that we need to tackle before making this release.
 
-	This plan is not set in stone.	These are simply the features
-	we want to try and tackle for the v2.2 release.
+	o We probably don't need both platform.h and defs.h.  Fold them
+	  together and rework the rest of the library to cope.
 
+	o Test that it still works under MinGW after the recent
+	  DLL linkage fixes for VC++.
+
+	o RPM build shouldn't require Bakefile.  This may mean building
+	  examples even though they're not needed.  One way around
+	  this may be if we can say something like "make libmysqlpp.so"
+	  in the build process instead of "make all".
+
+	o Move to a single Bakefile probably breaks tarball build
+	  and more.  Also requires changes to README type files.
+
+	o Can simplify Windows Bakefile coverage in HACKERS file
+	  by just giving the "bakefile -f msvc6prj mysql++.bkl"
+	  command.  Then you don't need Cygwin or bakefilize.
+
+	o Add function to library to return its version number in a
+	  structured form.  Then, make resetdb query it to ensure that
+	  it's linked to the same version.  Prevents errors caused
+	  by not using exrun script when running examples with a
+	  different library version installed.
+
+	o resetdb is hanging in Query::execute() on RHEL 3 test system.
+	  Find out why.
+
+
+v2.3 Plan
+---------
 	Items in this plan may slip to a future release.  This
 	typically happens when the proper solution is unclear,
 	so the best way to prevent this is to get on the mailing
 	list and help discuss it.  Or even better, provide a patch;
 	we rarely reject working code outright.
-
-	Items from the following sections may make it in, but if
-	you don't help make that happen, this will just be on the
-	whim of one of MySQL++'s developers.  Don't forget that it's
-	possible to subclass yourself from the "MySQL++'s developers"
-	base class.
-
-
-	o Fix handling of /usr/local/mysql as base install dir.
 
 	o Update examples/cgi_image and examples/load_file to use new
 	  binary-aware ColData, const_string and Query classes.
@@ -53,14 +73,13 @@ v2.2 Plan
 	  new mechanisms.
 
 
-v2.3 Plan
+v2.4 Plan
 ---------
-
-	This plan is even more nebulous than the v2.2 plan.  The only
+	This plan is even more nebulous than the v2.3 plan.  The only
 	thing that puts a feature on this list and not on the v3.0
 	list is that they can be done without breaking the ABI,
 	which forces a feature to v3.0.  Items on this list could
-	still easily slip to v3.0.  There might not even _be_ a v2.3...
+	still easily slip to v3.0.  There might not even _be_ a v2.4...
 
 	o Add a few features to date and time classes:
 
