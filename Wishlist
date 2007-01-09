@@ -126,6 +126,15 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o Query::str() appends a null byte to the end of the string it
+	  returns each time it is called.  It is arguable whether it
+	  should append a null byte at all, since std::string doesn't
+	  need it.  But even if it does, it at least should recognize
+	  when the string already has a null, and not keep adding them
+	  when it is called repeatedly.  See this thread for details:
+
+	  	http://lists.mysql.com/plusplus/6252
+
 	o Should sql_timestamp typedef not be for DateTime class, not Time
 	  class?
 
