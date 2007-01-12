@@ -21,11 +21,6 @@ v2.2 Plan
 	o Test that it still works under MinGW after the recent
 	  DLL linkage fixes for VC++.
 
-	o RPM build shouldn't require Bakefile.  This may mean building
-	  examples even though they're not needed.  One way around
-	  this may be if we can say something like "make libmysqlpp.so"
-	  in the build process instead of "make all".
-
 	o Move to a single Bakefile probably breaks tarball build
 	  and more.  Also requires changes to README type files.
 
