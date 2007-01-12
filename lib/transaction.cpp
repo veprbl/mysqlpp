@@ -59,7 +59,12 @@ finished_(true)		// don't bother rolling it back if ctor fails
 Transaction::~Transaction()
 {
 	if (!finished_) {
-		rollback();
+		try {
+			rollback();
+		}
+		catch (...) {
+			// eat all exceptions
+		}
 	}
 }
 
