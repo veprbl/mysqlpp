@@ -47,8 +47,8 @@ mkdir -p $INCDIR
 mkdir -p $EXDIR
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 install -m644 examples/*.cpp examples/*.h exrun $EXDIR
-install -m644 examples/Makefile.simple $EXDIR/Makefile
-cp examples/README doc/README.examples
+install -m644 Makefile.simple $EXDIR/Makefile
+cp README.examples doc
 cp LICENSE doc
 mv doc/README.mysql++ doc/README
 mv $LIBDIR/*.so $LIBDIR/libmysqlpp.so.%{version}
