@@ -52,7 +52,8 @@ public:
 
 	/// \brief Default constructor
 	SQLQueryParms() :
-	parent_(0)
+	parent_(0),
+	processing_(false)
 	{
 	}
 	
@@ -61,7 +62,8 @@ public:
 	/// \param p pointer to the query object these parameters are tied
 	/// to
 	SQLQueryParms(Query* p) :
-	parent_(p)
+	parent_(p),
+	processing_(false)
 	{
 	}
 	
@@ -200,6 +202,7 @@ private:
 	friend class Query;
 
 	Query* parent_;
+	bool processing_;	///< true if we're building a query string
 };
 
 

@@ -26,6 +26,7 @@
 
 #include "query.h"
 
+#include "autoflag.h"
 #include "connection.h"
 
 namespace mysqlpp {
@@ -106,8 +107,12 @@ Query::exec(const std::string& str)
 ResNSel
 Query::execute(const SQLString& str)
 {
-	if (def.size()) {
-		// Take str to be a template query parameter
+	if ((def.size() == 1) && !def.processing_) {
+		// Take str to be a lone parameter for a template query.  The
+		// auto-reset flag is required because we'll end up back in this
+		// function once the query string is built, but we need to take
+		// the 'else' path to avoid an infinite loop.
+		AutoFlag<> af(def.processing_);
 		return execute(SQLQueryParms() << str);
 	}
 	else {
@@ -402,8 +407,12 @@ Query::reset()
 Result 
 Query::store(const SQLString& str)
 {
-	if (def.size()) {
-		// Take str to be a template query parameter
+	if ((def.size() == 1) && !def.processing_) {
+		// Take str to be a lone parameter for a template query.  The
+		// auto-reset flag is required because we'll end up back in this
+		// function once the query string is built, but we need to take
+		// the 'else' path to avoid an infinite loop.
+		AutoFlag<> af(def.processing_);
 		return store(SQLQueryParms() << str);
 	}
 	else {
@@ -570,8 +579,12 @@ Query::unlock()
 ResUse
 Query::use(const SQLString& str)
 {
-	if (def.size()) {
-		// Take str to be a template query parameter
+	if ((def.size() == 1) && !def.processing_) {
+		// Take str to be a lone parameter for a template query.  The
+		// auto-reset flag is required because we'll end up back in this
+		// function once the query string is built, but we need to take
+		// the 'else' path to avoid an infinite loop.
+		AutoFlag<> af(def.processing_);
 		return use(SQLQueryParms() << str);
 	}
 	else {

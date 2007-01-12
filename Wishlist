@@ -39,9 +39,6 @@ v2.2 Plan
 	  by not using exrun script when running examples with a
 	  different library version installed.
 
-	o resetdb is hanging in Query::execute() on RHEL 3 test system.
-	  Find out why.
-
 	o Sort out the localtime_r thing on MinGW.
 
 	o Not building on Intel Mac, possbly due to move away from libtool?
