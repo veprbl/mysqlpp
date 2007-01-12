@@ -61,19 +61,19 @@
 			
 			<install-to>$(LIBDIR)</install-to>
 			
-			<if cond="FORMAT in ['msvc6prj', 'mingw']">
+			<if cond="FORMAT=='msvc6prj'">
 				<define>_UNICODE</define>
+				<define>MYSQLPP_MAKING_DLL</define>
 				<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
 				<lib-path>C:\Program Files\MySQL\MySQL Server 5.0\lib\opt</lib-path>
-			</if>
-
-			<if cond="FORMAT=='msvc6prj'">
-				<define>MYSQLPP_MAKING_DLL</define>
 				<sys-lib>libmysql</sys-lib>
 			</if>
 
 			<if cond="FORMAT=='mingw'">
+				<define>_UNICODE</define>
 				<define>MYSQLPP_NO_DLL</define>
+				<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
+				<lib-path>"C:\Program Files\MySQL\MySQL Server 5.0\lib\opt"</lib-path>
 				<sys-lib>mysqlclient</sys-lib>
 			</if>
 
@@ -124,26 +124,25 @@
 		<if cond="FORMAT in ['autoconf', 'mingw', 'gnu']">
 			<lib-path>.</lib-path>
 		</if>
-		<if cond="FORMAT=='msvc6prj'">
-			<lib-path>$(BUILD)</lib-path>
-		</if>
 
-		<if cond="FORMAT in ['msvc6prj', 'mingw']">
+		<if cond="FORMAT=='msvc6prj'">
 			<define>_UNICODE</define>
-			<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
+			<lib-path>$(BUILD)</lib-path>
 			<lib-path>C:\Program Files\MySQL\MySQL Server 5.0\lib\opt</lib-path>
+			<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
+			<sys-lib>libmysql</sys-lib>
 			<sys-lib>mysqlpp</sys-lib>
 		</if>
 
-		<if cond="FORMAT=='msvc6prj'">
-			<sys-lib>libmysql</sys-lib>
-		</if>
-
 		<if cond="FORMAT=='mingw'">
-			<ldflags>-Wl,--enable-auto-import</ldflags>
+			<define>_UNICODE</define>
 			<define>MYSQLPP_NO_DLL</define>
+			<ldflags>-Wl,--enable-auto-import</ldflags>
 			<lib-path>..\lib</lib-path>
+			<lib-path>"C:\Program Files\MySQL\MySQL Server 5.0\lib\opt"</lib-path>
+			<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
 			<sys-lib>mysqlclient</sys-lib>
+			<sys-lib>mysqlpp</sys-lib>
 		</if>
 
 		<if cond="FORMAT=='autoconf'">
