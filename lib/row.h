@@ -149,7 +149,8 @@ public:
 	/// See operator[](const char*) for more caveats.
 	const ColData at(size_type i) const;
 
-	/// \brief Return the value of a field given its index, in raw form.
+	/// \brief Return the value of a field as a C string given its
+	/// index, in raw form.
 	///
 	/// This is the same thing as operator[], except that the data isn't
 	/// converted to a ColData object first.  Also, this method does not
@@ -157,6 +158,16 @@ public:
 	const char* raw_data(int i) const
 	{
 		return data_[i].data();
+	}
+
+	/// \brief Return the value of a field as a C++ string given its
+	/// index, in raw form.
+	///
+	/// This is the same thing as operator[], except that the data isn't
+	/// converted to a ColData object first.
+	const std::string& raw_string(int i) const
+	{
+		return data_.at(i);
 	}
 
 	/// \brief Returns true if there is data in the row.
