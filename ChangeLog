@@ -57,6 +57,10 @@
 	  is simpler for the end user, and makes better dependency
 	  management possible.
 
+	o When looking for the MySQL C library on systems using
+	  autoconf, looking in .../lib64 wherever we are also looking
+	  in .../lib.
+
 	o RPM build process no longer depends on Bakefile.  It means
 	  you have to build the examples when building an RPM even
 	  though they're never used within the RPM, but it's a better
