@@ -21,8 +21,6 @@ v2.2 Plan
 	o Test that it still works under MinGW after the recent
 	  DLL linkage fixes for VC++.
 
-	o Not building on Intel Mac, possbly due to move away from libtool?
-
 
 v2.3 Plan
 ---------
