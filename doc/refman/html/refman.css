@@ -26,6 +26,7 @@ td.mdname1 { background-color: #FFFFCC; font-weight: bold; color: #602020; }
 .memItemRight { background-color: #FFFFCC; border: 1px solid #CCBBAA; }
 .memname { color: #501000; }
 .memproto { background-color: #DDDDAA; border: 1px solid #CCBBAA; }
+div.nav { background-color: #DDDDAA; border: 1px solid #CCBBAA; }
 
 
 /* Standard markup styles, borrowed from tangentsoft.net */
