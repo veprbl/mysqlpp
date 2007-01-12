@@ -137,7 +137,9 @@
 		<if cond="FORMAT=='mingw'">
 			<define>_UNICODE</define>
 			<define>MYSQLPP_NO_DLL</define>
-			<ldflags>-Wl,--enable-auto-import</ldflags>
+			<ldflags>
+				-Wl,--enable-auto-import -Wl,--enable-runtime-pseudo-reloc
+			</ldflags>
 			<lib-path>..\lib</lib-path>
 			<lib-path>"C:\Program Files\MySQL\MySQL Server 5.0\lib\opt"</lib-path>
 			<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
