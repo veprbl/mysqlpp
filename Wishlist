@@ -21,20 +21,11 @@ v2.2 Plan
 	o Test that it still works under MinGW after the recent
 	  DLL linkage fixes for VC++.
 
-	o Move to a single Bakefile probably breaks tarball build
-	  and more.  Also requires changes to README type files.
-
-	o Can simplify Windows Bakefile coverage in HACKERS file
-	  by just giving the "bakefile -f msvc6prj mysql++.bkl"
-	  command.  Then you don't need Cygwin or bakefilize.
-
 	o Add function to library to return its version number in a
 	  structured form.  Then, make resetdb query it to ensure that
 	  it's linked to the same version.  Prevents errors caused
 	  by not using exrun script when running examples with a
 	  different library version installed.
-
-	o Sort out the localtime_r thing on MinGW.
 
 	o Not building on Intel Mac, possbly due to move away from libtool?
 
