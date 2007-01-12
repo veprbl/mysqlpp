@@ -51,6 +51,8 @@
 /// actual library you're linking to.
 #define MYSQLPP_HEADER_VERSION MYSQLPP_VERSION(@MYSQLPP_VERSION_MAJOR@, @MYSQLPP_VERSION_MINOR@, @MYSQLPP_VERSION_BUGFIX@)
 
+namespace mysqlpp {
+
 /// \brief Get the current MySQL++ library version number
 ///
 /// MySQL++ version number that the program is actually linked to,
@@ -59,6 +61,8 @@
 /// program is using header files from the same version of MySQL++ as
 /// the actual library you're linking to.
 unsigned int get_library_version();
+
+} // end namespace mysqlpp
 
 // This #include order gives the fewest redundancies in the #include
 // dependency chain.
