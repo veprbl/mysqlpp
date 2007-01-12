@@ -84,7 +84,6 @@
 				<cxxflags>@PTHREAD_CFLAGS@</cxxflags>
 				<include>.</include>
 				<ldflags>@PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
-				<ldflags>-Wl,-soname -Wl,libmysqlpp.so.2</ldflags>
 				<sys-lib>@MYSQL_C_LIB@</sys-lib>
 
 				<if cond="ZLIB=='yes'">
