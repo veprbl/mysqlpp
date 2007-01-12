@@ -42,6 +42,10 @@ v2.2 Plan
 	o resetdb is hanging in Query::execute() on RHEL 3 test system.
 	  Find out why.
 
+	o Sort out the localtime_r thing on MinGW.
+
+	o Not building on Intel Mac, possbly due to move away from libtool?
+
 
 v2.3 Plan
 ---------
