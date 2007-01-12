@@ -273,7 +273,7 @@
 		<action id="ctags"><depends>tags</depends></action>
 
 		<action id="refman">
-			<command>doxygen</command>
+			<command>cd lib ; doxygen</command>
 			<command>
 				cd doc/refman/latex &amp;&amp; \
 				make pdf &amp;&amp; \
@@ -281,7 +281,13 @@
 			</command>
 		</action>
 
+		<action id="userman">
+			<command>cd doc/userman ; make html pdf</command>
+		</action>
+
 		<action id="dist">
+			<depends>refman</depends>
+			<depends>userman</depends>
 			<depends>dist-build</depends>
 			<command>tar czf $(PKGNAME).tar.gz $(PKGNAME)</command>
 			<command>rm -rf $(PKGNAME)</command>
