@@ -10,15 +10,6 @@ consider whether it could be reduced to an API feature that would be
 widely useful.  Patches or proposals of this sort are always welcome.
 
 
-v2.2 Plan
----------
-	This plan is fairly solid.  All that remains here are cleanup
-	items that we need to tackle before making this release.
-
-	o Test that it still works under MinGW after the recent
-	  DLL linkage fixes for VC++.
-
-
 v2.3 Plan
 ---------
 	Items in this plan may slip to a future release.  This

@@ -1,3 +1,12 @@
+MinGW Version
+~~~~~~~~~~~~~
+	You need a fairly recent version of MinGW for MySQL++ to work.
+	As I write this, the current release version includes GCC
+	3.4.2, which has known problems.  Unless they've released
+	a newer version since I wrote this, you'll probably need to
+	install the "candidate" version for best compatibility.
+
+
 Prerequisite: Create Import Library
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	Before you can build MySQL++ with MinGW, you will need to
