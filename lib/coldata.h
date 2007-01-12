@@ -291,8 +291,6 @@ operator_binary_int(ulonglong, ulonglong)
 #endif
 #endif // NO_BINARY_OPERS
 
-/// \endif
-
 /// \brief Converts this object to a SQL null
 ///
 /// Returns a copy of the global null object if the string data held by
