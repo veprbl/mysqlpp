@@ -130,20 +130,13 @@ void create_vector(const Container& c, std::vector<bool>& v,
 }
 
 
-/// \if INTERNAL
-// Doxygen will not generate documentation for this section.
-
-// Instantiate above template.  Not sure why this is necessary.  Either
-// find out, document and remove it from the INTERNAL section; or remove
-// it.
+// Instantiate above template.  Not sure why this is necessary.
 
 template void
 create_vector(const Row& c, std::vector<bool>& v, string s0,
 		string s1, string s2, string s3, string s4, string s5,
 		string s6, string s7, string s8, string s9, string sa,
 		string sb, string sc);
-
-/// \endif
 
 } // end namespace mysqlpp
 
