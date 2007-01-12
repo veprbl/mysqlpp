@@ -35,7 +35,7 @@ rm -f config.cache
 set -x
 
 ./rebake $BF_OPTIONS &&
-	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.lib &&
+	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&
 	aclocal -I config -I /usr/local/share/aclocal &&
 	autoheader &&
 	autoconf &&
