@@ -42,6 +42,19 @@ AC_PROG_CXX
 AC_HEADER_STDC
 
 
+# Figure out whether/how to handle threading support, if available.
+AC_ARG_ENABLE(thread-check,
+		[  --enable-thread-check  Check for threads, and use if available. ],
+		[ thread_check=yes ])
+if test "x$thread_check" = "xyes"
+then
+	ACX_PTHREAD
+	LIBS="$PTHREAD_LIBS $LIBS"
+	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+	CC="$PTHREAD_CC"
+fi
+
+
 # Checks for libraries and local system features
 AC_CHECK_HEADERS(zlib.h, AC_CHECK_LIB(z, gzread, [],
 		[ AC_MSG_ERROR([zlib is required]) ]))
@@ -58,19 +71,6 @@ AC_CHECK_LIB(intl, main)
 # compiler for all subsequent tests!
 AC_LANG_CPLUSPLUS
 STL_SLIST_EXTENSION
-
-
-# Figure out whether/how to handle threading support, if available.
-AC_ARG_ENABLE(thread-check,
-		[  --enable-thread-check  Check for threads, and use if available. ],
-		[ thread_check=yes ])
-if test "x$thread_check" = "xyes"
-then
-	ACX_PTHREAD
-	LIBS="$PTHREAD_LIBS $LIBS"
-	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-	CC="$PTHREAD_CC"
-fi
 
 
 # If this is Cygwin, add a linker flag to suppress a silly link message.
