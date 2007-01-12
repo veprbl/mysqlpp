@@ -10,7 +10,7 @@ FOPDIR=/usr/local/fop
 ## ------------------------
 
 BASENAME=userman
-DOCFILE=$(BASENAME).xml
+DOCFILE=$(BASENAME).dbx
 PDFFILE=$(BASENAME).pdf
 FOFILE=$(BASENAME).fo
 COMMON_SS=common.xsl
