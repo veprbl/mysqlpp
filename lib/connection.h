@@ -49,7 +49,14 @@
 
 namespace mysqlpp {
 
+
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
+
 class MYSQLPP_EXPORT Query;
+
+#endif // !defined(DOXYGEN_IGNORE)
+
 
 /// \brief Manages the connection to the MySQL database.
 
