@@ -300,7 +300,7 @@
 			<command>
 				cp Bakefiles.bkgen bootstrap ChangeLog cleanmf \
 					config.guess config.h.in config.sub configure* \
-					COPYING CREDITS HACKERS INSTALL install.bat \
+					COPYING CREDITS exrun* HACKERS INSTALL install.bat \
 					install-sh libmysqlclient.def LICENSE Makefile.* \
 					mysql++.* mysql++_*.ds? osver README* rebake \
 					reconf Wishlist $(PKGNAME)
