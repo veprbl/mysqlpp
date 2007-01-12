@@ -6,7 +6,12 @@ while [ $ARGS != 0 ]
 do
 	case "$1" in
 		noexamples)
-			BF_OPTIONS="-DEXAMPLES=no $BF_OPTIONS"
+			BF_OPTIONS="-DBUILDEXAMPLES=no $BF_OPTIONS"
+			shift
+			;;
+
+		nolibrary)
+			BF_OPTIONS="-DBUILDLIBRARY=no $BF_OPTIONS"
 			shift
 			;;
 
@@ -30,6 +35,7 @@ rm -f config.cache
 set -x
 
 ./rebake $BF_OPTIONS &&
+	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.lib &&
 	aclocal -I config -I /usr/local/share/aclocal &&
 	autoheader &&
 	autoconf &&

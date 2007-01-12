@@ -79,7 +79,7 @@ On Manipulating the Bakefiles and Autoconf Files
 	Unixy platform, you can run the "rebake" script to regenerate
 	all the Makefiles and project files:
 	
-		$ ./rebake
+		$ ./rebake [bakefile-options]
 	
 	If you're on Windows, things are a little trickier, because
 	the native Win32 port of Bakefile is incomplete, and Bakefile
@@ -95,7 +95,7 @@ On Manipulating the Bakefiles and Autoconf Files
 	the bootstrap script.  The bootstrap script also has other
 	functions:
 
-		$ ./bootstrap [pedantic] [noexamples] [configure options]
+		$ ./bootstrap [pedantic] [noexamples] [nolibrary] [configure options]
 
 	If you pass 'pedantic' to the bootstrap script, it will set
 	up the autoconf build system so it turns on all of GCC's
@@ -105,6 +105,9 @@ On Manipulating the Bakefiles and Autoconf Files
 
 	If you pass 'noexamples', the generated Makefiles and project
 	files won't try to build any of the examples.
+
+	If you pass 'nolibrary', the generated Makefiles and project
+	files won't try to build the MySQL++ library.
 
 	You can pass any of the previous options in any order.
 	As soon as the bootstrap script sees an option that it

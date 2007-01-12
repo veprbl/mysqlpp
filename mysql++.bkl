@@ -26,88 +26,93 @@
         <if cond="BUILD=='release'">off</if>
     </set>
 
-	<set var="EXAMPLES">yes</set>
+	<set var="BUILDLIBRARY">yes</set>
+	<set var="BUILDEXAMPLES">yes</set>
 	<set var="HEADER_DIR">$(PREFIX)/include/mysql++</set>
 
-	<dll id="mysqlpp">
-		<sources>
-			lib/coldata.cpp
-			lib/connection.cpp
-			lib/datetime.cpp
-			lib/field_names.cpp
-			lib/fields.cpp
-			lib/field_types.cpp
-			lib/manip.cpp
-			lib/myset.cpp
-			lib/qparms.cpp
-			lib/query.cpp
-			lib/result.cpp
-			lib/row.cpp
-			lib/sql_string.cpp
-			lib/string_util.cpp 
-			lib/transaction.cpp
-			lib/type_info.cpp
-			lib/vallist.cpp
-		</sources>
+	<if cond="BUILDLIBRARY=='yes'">
+		<dll id="mysqlpp">
+			<sources>
+				lib/coldata.cpp
+				lib/connection.cpp
+				lib/datetime.cpp
+				lib/field_names.cpp
+				lib/fields.cpp
+				lib/field_types.cpp
+				lib/manip.cpp
+				lib/myset.cpp
+				lib/qparms.cpp
+				lib/query.cpp
+				lib/result.cpp
+				lib/row.cpp
+				lib/sql_string.cpp
+				lib/string_util.cpp 
+				lib/transaction.cpp
+				lib/type_info.cpp
+				lib/vallist.cpp
+			</sources>
 
-		<debug-info>$(DEBUGINFO)</debug-info>
+			<debug-info>$(DEBUGINFO)</debug-info>
 
-		<threading>$(THREAD_TYPE)</threading>
-		<cxx-rtti>on</cxx-rtti>
-		<cxx-exceptions>on</cxx-exceptions>
-		
-		<install-to>$(LIBDIR)</install-to>
-		
-		<if cond="FORMAT in ['msvc6prj', 'mingw']">
-			<define>_UNICODE</define>
-			<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
-			<lib-path>C:\Program Files\MySQL\MySQL Server 5.0\lib\opt</lib-path>
-		</if>
-
-		<if cond="FORMAT=='msvc6prj'">
-			<define>MYSQLPP_MAKING_DLL</define>
-			<sys-lib>libmysql</sys-lib>
-		</if>
-
-		<if cond="FORMAT=='mingw'">
-			<define>MYSQLPP_NO_DLL</define>
-			<sys-lib>mysqlclient</sys-lib>
-		</if>
-
-		<if cond="FORMAT=='autoconf'">
-			<depends>lib/custom.h</depends>
-			<depends>lib/querydef.h</depends>
-
-			<cxxflags>@PTHREAD_CFLAGS@</cxxflags>
-			<include>.</include>
-			<ldflags>@PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
-			<ldflags>-Wl,-soname -Wl,libmysqlpp.so.2</ldflags>
-			<sys-lib>@MYSQL_C_LIB@</sys-lib>
-
-			<if cond="ZLIB=='yes'">
-				<sys-lib>z</sys-lib>
+			<threading>$(THREAD_TYPE)</threading>
+			<cxx-rtti>on</cxx-rtti>
+			<cxx-exceptions>on</cxx-exceptions>
+			
+			<install-to>$(LIBDIR)</install-to>
+			
+			<if cond="FORMAT in ['msvc6prj', 'mingw']">
+				<define>_UNICODE</define>
+				<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
+				<lib-path>C:\Program Files\MySQL\MySQL Server 5.0\lib\opt</lib-path>
 			</if>
 
-			<modify-target target="uninstall">
-				<command>
-					rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)mysqlpp.$(SO_SUFFIX)
-				</command>
-				<command>
-					for f in *.h ; do rm -f $(HEADER_DIR)/$(DBLDOLLAR)f ; done
-				</command>
-				<command>rmdir $(HEADER_DIR)</command>
-			</modify-target>
-		</if>
-	</dll>
+			<if cond="FORMAT=='msvc6prj'">
+				<define>MYSQLPP_MAKING_DLL</define>
+				<sys-lib>libmysql</sys-lib>
+			</if>
 
-	<data-files>
-		<files>lib/*.h</files>
-		<install-to>$(HEADER_DIR)</install-to>
-	</data-files>
+			<if cond="FORMAT=='mingw'">
+				<define>MYSQLPP_NO_DLL</define>
+				<sys-lib>mysqlclient</sys-lib>
+			</if>
+
+			<if cond="FORMAT=='autoconf'">
+				<depends>lib/custom.h</depends>
+				<depends>lib/querydef.h</depends>
+
+				<cxxflags>@PTHREAD_CFLAGS@</cxxflags>
+				<include>.</include>
+				<ldflags>@PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
+				<ldflags>-Wl,-soname -Wl,libmysqlpp.so.2</ldflags>
+				<sys-lib>@MYSQL_C_LIB@</sys-lib>
+
+				<if cond="ZLIB=='yes'">
+					<sys-lib>z</sys-lib>
+				</if>
+
+				<modify-target target="uninstall">
+					<command>
+						rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)mysqlpp.$(SO_SUFFIX)
+					</command>
+					<command>
+						for f in *.h ; do rm -f $(HEADER_DIR)/$(DBLDOLLAR)f ; done
+					</command>
+					<command>rmdir $(HEADER_DIR)</command>
+				</modify-target>
+			</if>
+		</dll>
+
+		<data-files>
+			<files>lib/*.h</files>
+			<install-to>$(HEADER_DIR)</install-to>
+		</data-files>
+	</if>	<!-- build library -->
 
 	<!-- Set up build options common to all examples -->
 	<template id="common-example">
-		<depends>mysqlpp</depends>
+		<if cond="BUILDLIBRARY=='yes'">
+			<depends>mysqlpp</depends>
+		</if>
 	
 		<threading>$(THREAD_TYPE)</threading>
 		<cxx-rtti>on</cxx-rtti>
@@ -169,7 +174,7 @@
 	</template>
 
 	<!-- Define output targets, if common-examples are enabled -->
-	<if cond="EXAMPLES=='yes'">
+	<if cond="BUILDEXAMPLES=='yes'">
 		<!-- The "util" convenience library -->
 		<lib id="util" template="common-example">
 			<libname>mysqlpp_util</libname>
@@ -234,7 +239,7 @@
 		<exe id="updel" template="common-example">
 			<sources>examples/updel.cpp</sources>
 		</exe>
-	</if>
+	</if>	<!-- build examples -->
 
 	<if cond="FORMAT=='autoconf'">
 		<action id="lib/custom.h">

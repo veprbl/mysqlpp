@@ -6,12 +6,8 @@
 
     <!-- List of output formats to generate: -->
     <add-formats>
-        autoconf,gnu,msvc6prj,mingw
+        autoconf,msvc6prj,mingw
     </add-formats>
-
-    <add-flags formats="gnu">
-        -o$(INPUT_FILE_DIR)/Makefile.simple
-    </add-flags>
 
     <add-flags formats="mingw">
         -o$(INPUT_FILE_DIR)/Makefile.mingw
