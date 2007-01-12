@@ -75,25 +75,10 @@ Adding Support for a Different Compiler
 
 On Manipulating the Bakefiles and Autoconf Files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	If you only change the Bakefile (mysql++.bkl) and you're on a
-	Unixy platform, you can run the "rebake" script to regenerate
-	all the Makefiles and project files:
-	
-		$ ./rebake [bakefile-options]
-	
-	If you're on Windows, things are a little trickier, because
-	the native Win32 port of Bakefile is incomplete, and Bakefile
-	doesn't build correctly under Cygwin.  Therefore, you need to
-	run the bakefile program directly.  You'll use one of these
-	two commands, depending on which compiler you're using:
-
-		C:\> bakefile -f msvc6prj mysql++.prj
-		C:\> bakefile -f mingw -o Makefile.mingw mysql++.prj
-
-	If you're on a Unixy platform and change any of the autotools
-	input files (configure.ac and config/*), you should re-run
-	the bootstrap script.  The bootstrap script also has other
-	functions:
+	If you're on a Unixy platform and change any of mysql++.bkl,
+	configure.ac, or config/*, you must re-run the bootstrap
+	script to regenerate the build files.  The bootstrap script
+	also has other functions:
 
 		$ ./bootstrap [pedantic] [noexamples] [nolibrary] [configure options]
 
@@ -114,6 +99,17 @@ On Manipulating the Bakefiles and Autoconf Files
 	doesn't understand, it stops processing the command line.
 	Any subsequent options are passed to the configure script.
 	See README.unix for more on configure script options.
+
+	If you're on Windows and you change the Bakefile (mysql++.bkl),
+	re-generating the Makefiles and project files from it is
+	a little tricky.  The above procedure doesn't work because
+	the native Win32 port of Bakefile is incomplete, and Bakefile
+	doesn't build correctly under Cygwin.  Therefore, you need to
+	run the bakefile program directly.  You'll use one of these
+	two commands, depending on which compiler you're using:
+
+		C:\> bakefile -f msvc6prj mysql++.bkl
+		C:\> bakefile -f mingw -o Makefile.mingw mysql++.bkl
 
 
 Maintaining a Private CVS Repository
