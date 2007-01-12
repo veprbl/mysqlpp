@@ -19,7 +19,7 @@ General Instructions
 
 	Start with resetdb:
 
-		$ ./resetdb [host] [user] [password] [port]
+		$ ./exrun resetdb [host] [user] [password] [port]
 
 	This sets up the mysql_cpp_data database used by most of the
 	other examples.
@@ -28,6 +28,14 @@ General Instructions
 	be in that order.  That is, if you want to give a user name,
 	you must give the host first.  It defaults to localhost with
 	your user name, no password, and the default MySQL port (3306).
+
+	The exrun wrapper script ensures that your system's dynamic
+	linker doesn't mistakenly use the installed MySQL++ library
+	with programs linked against a different version of the
+	MySQL++ header files.  This is easy to do if you have one
+	version of MySQL++ already installed, and are trying to build
+	a new version.	resetdb double-checks this, and reports an
+	error if it detects a mismatch.
 
 
 	The following examples use the database set up by resetdb,

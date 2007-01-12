@@ -21,12 +21,6 @@ v2.2 Plan
 	o Test that it still works under MinGW after the recent
 	  DLL linkage fixes for VC++.
 
-	o Add function to library to return its version number in a
-	  structured form.  Then, make resetdb query it to ensure that
-	  it's linked to the same version.  Prevents errors caused
-	  by not using exrun script when running examples with a
-	  different library version installed.
-
 	o Not building on Intel Mac, possbly due to move away from libtool?
 
 
