@@ -6,9 +6,9 @@
 #	number limits the number of parameters a MySQL++ template query can
 #	accept.  This value can be changed from its default, below.
 #
-# Copyright (c) 2006 by Educational Technology Resources, Inc.  Others
-# may also hold copyrights on code in this file.  See the CREDITS file
-# in the top directory of the distribution for details.
+# Copyright (c) 2006-2007 by Educational Technology Resources, Inc.
+# Others may also hold copyrights on code in this file.  See the CREDITS
+# file in the top directory of the distribution for details.
 #
 # This file is part of MySQL++.
 #
