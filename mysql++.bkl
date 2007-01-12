@@ -322,7 +322,7 @@
 				cp doc/README* doc/*.pdf doc/ssqls-pretty $(PKGNAME)/doc
 			</command>
 			<command>
-				for f in LICENSE Makefile mktxt README *.{xsl,xml} ; \
+				for f in LICENSE Makefile mktxt README *.{dbx,xsl} ; \
 				do \
 					cp doc/userman/$(DBLDOLLAR)f $(PKGNAME)/doc/userman ; \
 				done
