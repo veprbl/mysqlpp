@@ -17,6 +17,13 @@ then
 fi
 
 VERSION=`cat mysql++.spec | grep ^Version: | cut -f2 -d' '`
+case "$VERSION" in
+	*alpha*) SSH_TARGET=$SSH_TARGET/test ;;
+	*beta*) SSH_TARGET=$SSH_TARGET/test ;;
+	*rc[0-9]*) SSH_TARGET=$SSH_TARGET/test ;;
+	*) SSH_TARGET=$SSH_TARGET/releases ;;
+esac
+
 TMPDIR=`mktemp -d /tmp/mysqlpp-up.XXXXXXXXXX`
 
 if [ "$1" = "src" ]
