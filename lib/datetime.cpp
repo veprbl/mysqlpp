@@ -191,6 +191,8 @@ DateTime::DateTime(time_t t)
 	struct tm tm;
 #if defined(_MSC_VER)
 	localtime_s(&tm, &t);
+#elif defined(__MINGW32_VERSION)
+	memcpy(&tm, localtime(&t), sizeof(tm));
 #else
 	localtime_r(&t, &tm);
 #endif
