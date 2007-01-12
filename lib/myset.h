@@ -43,17 +43,6 @@ namespace mysqlpp {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
-template <class T, class value_type = typename T::value_type>
-class MYSQLPP_EXPORT ListInsert
-{
-public:
-	ListInsert(T* o) : object_(o) { }
-	void operator ()(const value_type& data) { object_->push_back(data); }
-
-private:
-	T* object_;
-};
-
 template <class T, class key_type = typename T::key_type>
 class MYSQLPP_EXPORT SetInsert
 {
@@ -69,12 +58,6 @@ template <class T>
 inline SetInsert< std::set<T> > set_insert(std::set<T>* o)
 {
 	return SetInsert< std::set<T> >(o);
-}
-
-template <class T>
-inline ListInsert< std::vector<T> > set_insert(std::vector<T> *o)
-{
-	return ListInsert< std::vector<T> >(o);
 }
 
 template <class Insert>
