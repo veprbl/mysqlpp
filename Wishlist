@@ -211,6 +211,9 @@ Future Features
 	They could happen at any time.	If you want one to appear at
 	some definite date, get coding and provide a patch!
 
+	o SSQLS v2.  Not sure how it will look yet, but there are ideas
+	  in play, and patches to study.
+
 	o Figure out some way to name debug DLL and library under VC++
 	  differently (trailing 'd'?) to prevent some problems due
 	  to mixing debug and release programs and MySQL++ DLLs.
