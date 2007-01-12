@@ -75,51 +75,42 @@ Adding Support for a Different Compiler
 
 On Manipulating the Bakefiles and Autoconf Files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	If change any of the Bakefiles (*.bkl) or the autoconf stuff
-	(configure.ac and everything in the config subdir), you need to
-	run the command:
+	If you only change the Bakefile (mysql++.bkl) and you're on a
+	Unixy platform, you can run the "rebake" script to regenerate
+	all the Makefiles and project files:
+	
+		$ ./rebake
+	
+	If you're on Windows, things are a little trickier, because
+	the native Win32 port of Bakefile is incomplete, and Bakefile
+	doesn't build correctly under Cygwin.  Therefore, you need to
+	run the bakefile program directly.  You'll use one of these
+	two commands, depending on which compiler you're using:
+
+		C:\> bakefile -f msvc6prj mysql++.prj
+		C:\> bakefile -f mingw -o Makefile.mingw mysql++.prj
+
+	If you're on a Unixy platform and change any of the autotools
+	input files (configure.ac and config/*), you should re-run
+	the bootstrap script.  The bootstrap script also has other
+	functions:
 
 		$ ./bootstrap [pedantic] [noexamples] [configure options]
 
-	This command rebuilds all of the project files and makefiles
-	that depend on the Bakefiles and Autoconf stuff.
+	If you pass 'pedantic' to the bootstrap script, it will set
+	up the autoconf build system so it turns on all of GCC's
+	warnings and such.  It's useful to build the library in this
+	mode when making changes to make sure there are no obvious
+	problems with the code.
 
-	If you pass 'pedantic' to the bootstrap script, it will set up
-	the autoconf build system so it turns on all of GCC's warnings
-	and such.  It's useful to build the library in this mode when
-	making changes to make sure there are no obvious problems with
-	the code.
+	If you pass 'noexamples', the generated Makefiles and project
+	files won't try to build any of the examples.
 
-	If you pass 'noexamples', the examples won't be built.
-
-	You can pass any of the previous options in any order.	As soon as
-	the bootstrap script sees an options that it doesn't understand,
-	it stops processing the command line.  Any subsequent options
-	are passed (indirectly) to the configure script.  See README.unix
-	for more on configure script options.
-
-	If you only change the Bakefiles (*.bkl), you can run the rebake
-	script instead.  This avoids rebuilding all the Autotools stuff.
-
-	Bakefile doesn't work very well on Windows at the moment.  There
-	is a native Win32 port, but it doesn't include the bakefilize
-	piece, since it depends on a Unix Bourne type shell to work.
-	And you can't work around this by building Bakefile under Cygwin,
-	as there seems to be a Python compatibility problem there.
-	There are two ways to work around this.  The first way is to
-	download both the native Win32 port of Bakefile and the source
-	tarball, install the Win32 port, and copy in the bakefile script
-	from the source tarball.  Then you can use the full Bakefile
-	tool set under Cygwin, in a hybrid way.  If most of your work
-	isn't really Win32 specific, the way I work instead is to do
-	most of the work on a better supported platform like Linux or
-	OS X, test there, and only copy it over for final testing and
-	tweaking on the Windows side.  This works because you build the
-	Win32 project files using Bakefile over on the other platform,
-	so you don't have to mess with Bakefile's oddities under Win32.
-	I use the first method when I need to do a lot of work on the
-	Win32 side, so the constant source tree copying is too much of
-	an overhead.
+	You can pass any of the previous options in any order.
+	As soon as the bootstrap script sees an option that it
+	doesn't understand, it stops processing the command line.
+	Any subsequent options are passed to the configure script.
+	See README.unix for more on configure script options.
 
 
 Maintaining a Private CVS Repository
@@ -146,5 +137,4 @@ Maintaining a Private CVS Repository
 
 		$ cvs rdiff -ru mysql++-1_7_35 -r mysql++-1_7_35_equal_list \
 			$(cat CVS/Repository) > equal_list.patch
-
 
