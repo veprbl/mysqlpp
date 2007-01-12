@@ -93,7 +93,7 @@ namespace mysqlpp {
 
 /// \brief Alias for 'true', to make code requesting exceptions more
 /// readable.
-extern const bool use_exceptions;
+const bool use_exceptions = true;
 
 /// \brief Used to disambiguate overloads of equal_list() in SSQLSes.
 enum sql_cmp_type { sql_use_compare };
