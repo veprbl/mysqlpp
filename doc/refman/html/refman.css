@@ -9,7 +9,8 @@ a.qindexHL { background-color: #501000; color: #FFEEBB }
 a.qindexHL:hover { background-color: #501000; color: #FFEEBB }
 a.qindexHL:visited { background-color: #501000; color: #FFEEBB }
 
-div.fragment { border: 1px solid #CCBBAA; background-color: #FFFFCC; }
+div.fragment { border: 1px solid #CCBBAA; background-color: #DDDDAA; }
+pre.fragment { border: 1px solid #CCBBAA; background-color: #FFFFDD; }
 
 TD.indexkey { background-color: #FFFFCC; }
 TD.indexvalue { background-color: #FFFFCC; }
@@ -20,8 +21,11 @@ td.mdname1 { background-color: #FFFFCC; font-weight: bold; color: #602020; }
 .mdTable { background-color: #FFFFCC; border: 1px solid #CCBBAA; }
 .mdescLeft { background-color: #FFFFCC; border: 1px none #CCBBAA; }
 .mdescRight { background-color: #FFFFCC; border: 1px none #CCBBAA; }
+.memitem { background-color: #FFFFCC; border: 1px solid #CCBBAA; }
 .memItemLeft { background-color: #FFFFCC; border: 1px solid #CCBBAA; }
 .memItemRight { background-color: #FFFFCC; border: 1px solid #CCBBAA; }
+.memname { color: #501000; }
+.memproto { background-color: #DDDDAA; border: 1px solid #CCBBAA; }
 
 
 /* Standard markup styles, borrowed from tangentsoft.net */
