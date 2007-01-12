@@ -249,14 +249,6 @@
 			<command>rm -f libmysqlpp.so.2</command>
 		</modify-target>
 			
-		<modify-target target="install">
-			<command>(cd lib &amp;&amp; $(DOLLAR)(MAKE) install)</command>
-		</modify-target>
-
-		<modify-target target="uninstall">
-			<command>(cd lib &amp;&amp; $(DOLLAR)(MAKE) uninstall)</command>
-		</modify-target>
-
 		<action id="lib/custom.h">
 			<command>cd lib ; ./custom.pl</command>
 			<depends-on-file>lib/custom.pl</depends-on-file>
