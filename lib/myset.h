@@ -29,7 +29,7 @@
 #ifndef MYSQLPP_MYSET_H
 #define MYSQLPP_MYSET_H
 
-#include "defs.h"
+#include "common.h"
 
 #include "coldata.h"
 #include "stream2string.h"

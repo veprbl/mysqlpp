@@ -34,7 +34,7 @@
 #ifndef MYSQLPP_SQL_STRING_H
 #define MYSQLPP_SQL_STRING_H
 
-#include "defs.h"
+#include "common.h"
 
 #include <stdio.h>
 #include <string>

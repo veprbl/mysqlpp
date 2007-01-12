@@ -28,7 +28,7 @@
 #ifndef MYSQLPP_QUERY_H
 #define MYSQLPP_QUERY_H
 
-#include "defs.h"
+#include "common.h"
 
 #include "lockable.h"
 #include "noexceptions.h"

@@ -29,7 +29,7 @@
 #ifndef MYSQLPP_CONST_STRING_H
 #define MYSQLPP_CONST_STRING_H
 
-#include "defs.h"
+#include "common.h"
 
 #include <algorithm>
 #include <iostream>

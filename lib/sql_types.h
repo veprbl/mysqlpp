@@ -27,7 +27,7 @@
 #if !defined(MYSQLPP_SQL_TYPES_H)
 #define MYSQLPP_SQL_TYPES_H
 
-#include "defs.h"
+#include "common.h"
 #include "myset.h"
 
 #include <string>

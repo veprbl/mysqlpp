@@ -29,7 +29,7 @@
 #ifndef MYSQLPP_DATETIME_H
 #define MYSQLPP_DATETIME_H
 
-#include "defs.h"
+#include "common.h"
 
 #include "coldata.h"
 #include "stream2string.h"

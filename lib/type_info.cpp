@@ -24,7 +24,7 @@
  USA
 ***********************************************************************/
 
-#include "platform.h"
+#include "common.h"
 
 #include "datetime.h"
 #include "sql_types.h"

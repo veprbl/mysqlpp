@@ -35,9 +35,7 @@
 #ifndef MYSQLPP_CONNECTION_H
 #define MYSQLPP_CONNECTION_H
 
-#include "platform.h"
-
-#include "defs.h"
+#include "common.h"
 
 #include "lockable.h"
 #include "noexceptions.h"

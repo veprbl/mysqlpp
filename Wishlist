@@ -15,9 +15,6 @@ v2.2 Plan
 	This plan is fairly solid.  All that remains here are cleanup
 	items that we need to tackle before making this release.
 
-	o We probably don't need both platform.h and defs.h.  Fold them
-	  together and rework the rest of the library to cope.
-
 	o Test that it still works under MinGW after the recent
 	  DLL linkage fixes for VC++.
 

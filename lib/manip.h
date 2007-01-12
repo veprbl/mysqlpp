@@ -42,7 +42,7 @@
 #ifndef MYSQLPP_MANIP_H
 #define MYSQLPP_MANIP_H
 
-#include "defs.h"
+#include "common.h"
 
 #include "datetime.h"
 #include "myset.h"

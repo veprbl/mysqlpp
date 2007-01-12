@@ -31,7 +31,7 @@
 #if !defined(MYSQLPP_TRANSACTION_H)
 #define MYSQLPP_TRANSACTION_H
 
-#include "platform.h"
+#include "common.h"
 
 namespace mysqlpp {
 

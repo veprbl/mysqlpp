@@ -28,6 +28,8 @@
 
 namespace mysqlpp {
 
+const bool use_exceptions = true;
+
 unsigned int 
 get_library_version()
 {

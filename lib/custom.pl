@@ -57,7 +57,7 @@ print OUT0 << "---";
 #ifndef MYSQLPP_CUSTOM_H
 #define MYSQLPP_CUSTOM_H
 
-#include "defs.h"
+#include "common.h"
 #include "tiny_int.h"
 
 #include <string>

@@ -28,7 +28,7 @@
 #ifndef MYSQLPP_RESULT_H
 #define MYSQLPP_RESULT_H
 
-#include "defs.h"
+#include "common.h"
 
 #include "exceptions.h"
 #include "fields.h"

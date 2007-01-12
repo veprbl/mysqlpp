@@ -29,7 +29,7 @@
 #ifndef MYSQLPP_STRING_UTIL_H
 #define MYSQLPP_STRING_UTIL_H
 
-#include "defs.h"
+#include "common.h"
 
 #include <ctype.h>
 
