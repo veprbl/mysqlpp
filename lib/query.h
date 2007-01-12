@@ -58,7 +58,10 @@
 
 namespace mysqlpp {
 
+#if !defined(DOXYGEN_IGNORE)
+// Make Doxygen ignore this
 class MYSQLPP_EXPORT Connection;
+#endif
 
 /// \brief Used for indicating whether a query object should auto-reset
 enum query_reset { DONT_RESET, RESET_QUERY };

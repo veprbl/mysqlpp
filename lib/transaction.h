@@ -35,7 +35,10 @@
 
 namespace mysqlpp {
 
+#if !defined(DOXYGEN_IGNORE)
+// Make Doxygen ignore this
 class MYSQLPP_EXPORT Connection;
+#endif
 
 /// \brief Helper object for creating exception-safe SQL transactions.
 

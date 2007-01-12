@@ -40,7 +40,10 @@
 
 namespace mysqlpp {
 
+#if !defined(DOXYGEN_IGNORE)
+// Make Doxygen ignore this
 class MYSQLPP_EXPORT NoExceptions;
+#endif
 
 /// \brief Interface allowing a class to have optional exceptions.
 ///

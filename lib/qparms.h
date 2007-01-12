@@ -38,8 +38,10 @@
 
 namespace mysqlpp {
 
+#if !defined(DOXYGEN_IGNORE)
+// Make Doxygen ignore this
 class MYSQLPP_EXPORT Query;
-
+#endif
 
 /// \brief This class holds the parameter values for filling
 /// template queries. 
