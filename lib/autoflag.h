@@ -1,7 +1,6 @@
 /// \file autoflag.h
-/// \brief Defines a template for setting a flag on a variable as long
-/// as the object that set it is in scope.  Flag resets when object goes
-/// out of scope.  Works on anything that looks like bool.
+/// \brief Defines a template for setting a flag within a given variable
+/// scope, and resetting it when exiting that scope.
 
 /***********************************************************************
  Copyright (c) 2007 by Educational Technology Resources, Inc.  Others
@@ -28,6 +27,10 @@
 
 #if !defined(MYSQLPP_AUTOFLAG_H)
 #define MYSQLPP_AUTOFLAG_H
+
+/// \brief A template for setting a flag on a variable as long as the
+/// object that set it is in scope.  Flag resets when object goes
+/// out of scope.  Works on anything that looks like bool.
 
 template <class T = bool>
 class AutoFlag

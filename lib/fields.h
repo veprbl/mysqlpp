@@ -51,7 +51,7 @@ public:
 	}
 
 	/// \brief Returns a field given its index.
-	const Field& at(size_type i) const;
+	const Field& at(Fields::size_type i) const;
 
 	/// \brief Returns a field given its index.
 	const Field& at(int i) const
