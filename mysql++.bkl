@@ -41,6 +41,7 @@
 				lib/field_types.cpp
 				lib/manip.cpp
 				lib/myset.cpp
+				lib/mysql++.cpp
 				lib/qparms.cpp
 				lib/query.cpp
 				lib/result.cpp
