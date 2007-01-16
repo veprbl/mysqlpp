@@ -117,6 +117,11 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o More robust fix for the Query stream base class init problem:
+	  http://www.boost.org/libs/utility/base_from_member.html
+
+	  Requires inheritance change, which is why it has to be in v3.
+
 	o Query::str() appends a null byte to the end of the string it
 	  returns each time it is called.  It is arguable whether it
 	  should append a null byte at all, since std::string doesn't
