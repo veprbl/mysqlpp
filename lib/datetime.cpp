@@ -189,7 +189,7 @@ DateTime::operator time_t() const
 DateTime::DateTime(time_t t)
 {
 	struct tm tm;
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(_STLP_VERSION)
 	localtime_s(&tm, &t);
 #elif defined(__MINGW32_VERSION)
 	memcpy(&tm, localtime(&t), sizeof(tm));
