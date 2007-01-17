@@ -32,8 +32,9 @@
 namespace mysqlpp {
 
 Query::Query(Connection* c, bool te) :
-#if defined(_MSC_VER)
-std::ostream(std::_Noinit), // prevents a double-init memory leak in RTL
+#if defined(_MSC_VER) && !defined(_STLP_VERSION)
+// prevents a double-init memory leak in native VC++ RTL (not STLport!)
+std::ostream(std::_Noinit), 
 #else
 std::ostream(0),
 #endif
