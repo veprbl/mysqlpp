@@ -279,8 +279,6 @@
 		</action>
 
 		<action id="dist">
-			<depends>refman</depends>
-			<depends>userman</depends>
 			<depends>dist-build</depends>
 			<command>tar czf $(PKGNAME).tar.gz $(PKGNAME)</command>
 			<command>rm -rf $(PKGNAME)</command>
