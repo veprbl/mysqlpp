@@ -182,6 +182,7 @@ DateTime::operator time_t() const
 	tm.tm_mday = day;
 	tm.tm_mon = month - (tiny_int)1;
 	tm.tm_year = year - 1900;
+	tm.tm_isdst = -1;
 
 	return mktime(&tm);
 };
