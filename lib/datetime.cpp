@@ -190,12 +190,12 @@ DateTime::operator time_t() const
 DateTime::DateTime(time_t t)
 {
 	struct tm tm;
-#if defined(_MSC_VER) && !defined(_STLP_VERSION)
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(_STLP_VERSION)
 	localtime_s(&tm, &t);
-#elif defined(__MINGW32_VERSION)
-	memcpy(&tm, localtime(&t), sizeof(tm));
-#else
+#elif !defined(__MINGW32_VERSION) && !defined(_STLP_VERSION)
 	localtime_r(&t, &tm);
+#else
+	memcpy(&tm, localtime(&t), sizeof(tm));
 #endif
 
 	year = tm.tm_year + 1900;
