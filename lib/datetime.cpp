@@ -191,10 +191,17 @@ DateTime::DateTime(time_t t)
 {
 	struct tm tm;
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(_STLP_VERSION)
+	// Use thread-safe localtime() replacement included with VS2005 and
+	// up, but only when using native RTL, not STLport.
 	localtime_s(&tm, &t);
-#elif !defined(__MINGW32_VERSION) && !defined(_STLP_VERSION)
+#elif defined(HAVE_LOCALTIME_R)
+	// Detected POSIX thread-safe localtime() replacement.
 	localtime_r(&t, &tm);
 #else
+	// No explicitly thread-safe localtime() replacement found.  This
+	// may still be thread-safe, as some C libraries take special steps
+	// within localtime() to get thread safety.  For example, thread-
+	// local storage (TLS) in some Windows compilers.
 	memcpy(&tm, localtime(&t), sizeof(tm));
 #endif
 
