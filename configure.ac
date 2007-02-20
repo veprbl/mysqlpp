@@ -33,12 +33,8 @@ AC_SUBST(MYSQLPP_VERSION_BUGFIX)
 AC_BAKEFILE([m4_include(config/autoconf_inc.m4)])
 
 
-# Checks for build system tools
-AC_PROG_CC
-AC_PROG_CXX
-
-
 # Check for Standard C support
+AC_PROG_CC
 AC_HEADER_STDC
 
 
@@ -67,19 +63,20 @@ AX_C_LOCALTIME_R
 AC_CHECK_LIB(intl, main)
 
 
-# Check for Standard C++ support, and extensions.  This must be near
-# the end, because the CPLUSPLUS directive makes autoconf use C++
-# compiler for all subsequent tests!
-AC_LANG_CPLUSPLUS
-STL_SLIST_EXTENSION
-
-
 # If this is Cygwin, add a linker flag to suppress a silly link message.
 case "${host}" in
 	*cygwin*)
 		LDFLAGS="$LDFLAGS -Wl,--enable-auto-import"
 		;;
 esac
+
+
+# Check for Standard C++ support, and extensions.  This must be near
+# the end, because the CPLUSPLUS directive makes autoconf use C++
+# compiler for all subsequent tests!
+AC_PROG_CXX
+AC_LANG_CPLUSPLUS
+STL_SLIST_EXTENSION
 
 
 #
