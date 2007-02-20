@@ -349,10 +349,9 @@ Query::pprepare(char option, SQLString& S, bool replace)
 char*
 Query::preview_char()
 {
-	*this << std::ends;
 	size_t length = sbuffer_.str().size();
 	char* s = new char[length + 1];
-	strncpy(s, sbuffer_.str().c_str(), length);
+	memcpy(s, sbuffer_.str().c_str(), length);
 	s[length] = '\0';
 	return s;
 }
@@ -545,8 +544,6 @@ Query::str(SQLQueryParms& p)
 	if (!parse_elems_.empty()) {
 		proc(p);
 	}
-
-	*this << std::ends;
 
 	return sbuffer_.str();
 }
