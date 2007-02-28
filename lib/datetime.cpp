@@ -190,7 +190,8 @@ DateTime::operator time_t() const
 DateTime::DateTime(time_t t)
 {
 	struct tm tm;
-#if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(_STLP_VERSION)
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(_STLP_VERSION) && \
+		!defined(_STLP_VERSION_STR)
 	// Use thread-safe localtime() replacement included with VS2005 and
 	// up, but only when using native RTL, not STLport.
 	localtime_s(&tm, &t);
