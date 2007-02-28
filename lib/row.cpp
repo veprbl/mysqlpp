@@ -49,8 +49,7 @@ initialized_(false)
 	is_nulls_.clear();
 	initialized_ = true;
 
-	size_type num_fields = size();
-	for (size_type i = 0; i < num_fields; ++i) {
+	for (size_type i = 0; i < size(); ++i) {
 		data_.insert(data_.end(),
 				(d[i] ?  std::string(d[i], jj[i]) : std::string("NULL")));
 		is_nulls_.insert(is_nulls_.end(), d[i] ? false : true);
@@ -68,7 +67,7 @@ Row::~Row()
 
 Row::size_type Row::size() const
 {
-	return data_.size();
+	return res_->num_fields();
 }
 
 const ColData Row::at(size_type i) const

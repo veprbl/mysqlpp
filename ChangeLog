@@ -11,10 +11,6 @@
 	o Fixed a bug in the Connection copy ctor where it didn't
 	  completely initialize the object.
 
-	o Minor speed optimizations in the Row() ctor that copies
-	  data from a MYSQL_ROW structure, and in Row::size().
-	  Patch by Korolyov Ilya.
-
 	o Optimized Query::preview_char() a bit.  Patch by Jonathan
 	  Wakely.
 
