@@ -278,6 +278,11 @@
 			<command>cd doc/userman ; make html pdf</command>
 		</action>
 
+		<action id="doc">
+			<depends>userman</depends>
+			<depends>refman</depends>
+		</action>
+
 		<action id="dist">
 			<depends>dist-build</depends>
 			<command>tar czf $(PKGNAME).tar.gz $(PKGNAME)</command>
