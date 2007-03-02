@@ -18,6 +18,9 @@ v2.3 Plan
 	list and help discuss it.  Or even better, provide a patch;
 	we rarely reject working code outright.
 
+	o Define HAVE_MYSQL_SSL_SET by default on Windows?  Make similar
+	  decisions for other autoconf-only macros.
+
 	o Extend the manipulators to handle nullable versions of
 	  the types we already support.  Should just be a matter of
 	  duplicating the existing type-specific manipulator functions,
