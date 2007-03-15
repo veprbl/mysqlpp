@@ -196,11 +196,11 @@
 		<exe id="simple3" template="util-example,common-example">
 			<sources>examples/simple3.cpp</sources>
 		</exe>
-		<exe id="usequery" template="util-example,common-example">
-			<sources>examples/usequery.cpp</sources>
-		</exe>
 		<exe id="multiquery" template="util-example,common-example">
 			<sources>examples/multiquery.cpp</sources>
+		</exe>
+		<exe id="usequery" template="util-example,common-example">
+			<sources>examples/usequery.cpp</sources>
 		</exe>
 		<exe id="custom1" template="util-example,common-example">
 			<sources>examples/custom1.cpp</sources>
@@ -261,7 +261,8 @@
 
 		<action id="tags">
 			<is-phony/>
-			<command>ctags {examples,lib}/*.cpp {examples,lib}/*.h</command>
+			<command>ctags `pwd`/{examples,lib}/*.{cpp,h}</command>
+			<command>for d in examples lib ; do cd $(DBLDOLLAR)d ; ln -sf ../tags . ; cd .. ; done</command>
 		</action>
 		<action id="ctags"><depends>tags</depends></action>
 
