@@ -94,7 +94,7 @@ Query::error()
 bool
 Query::exec(const std::string& str)
 {
-	success_ = !mysql_real_query(&conn_->mysql_, str.c_str(),
+	success_ = !mysql_real_query(&conn_->mysql_, str.data(),
 			static_cast<unsigned long>(str.length()));
 	if (!success_ && throw_exceptions()) {
 		throw BadQuery(error());
@@ -118,7 +118,7 @@ Query::execute(const SQLString& str)
 	}
 	else {
 		// Take str to be the entire query string
-		return execute(str.c_str(), str.length());
+		return execute(str.data(), str.length());
 	}
 }
 
@@ -307,7 +307,7 @@ Query::pprepare(char option, SQLString& S, bool replace)
 
 	if (option == 'r' || (option == 'q' && S.is_string)) {
 		char *s = new char[S.size() * 2 + 1];
-		mysql_real_escape_string(&conn_->mysql_, s, S.c_str(),
+		mysql_real_escape_string(&conn_->mysql_, s, S.data(),
 				static_cast<unsigned long>(S.size()));
 		SQLString *ss = new SQLString("'");
 		*ss += s;
@@ -351,7 +351,7 @@ Query::preview_char()
 {
 	const std::string& str(sbuffer_.str());
 	char* s = new char[str.size() + 1];
-	memcpy(s, str.c_str(), str.size() + 1); 
+	memcpy(s, str.data(), str.size() + 1); 
 	return s;
 }
 
@@ -416,7 +416,7 @@ Query::store(const SQLString& str)
 	}
 	else {
 		// Take str to be the entire query string
-		return store(str.c_str(), str.length());
+		return store(str.data(), str.length());
 	}
 }
 
@@ -586,7 +586,7 @@ Query::use(const SQLString& str)
 	}
 	else {
 		// Take str to be the entire query string
-		return use(str.c_str(), str.length());
+		return use(str.data(), str.length());
 	}
 }
 
