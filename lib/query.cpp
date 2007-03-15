@@ -363,7 +363,7 @@ Query::proc(SQLQueryParms& p)
 
 	for (std::vector<SQLParseElement>::iterator i = parse_elems_.begin();
 			i != parse_elems_.end(); ++i) {
-		dynamic_cast<std::ostream&>(*this) << i->before;
+		MYSQLPP_QUERY_THISPTR << i->before;
 		int num = i->num;
 		if (num >= 0) {
 			SQLQueryParms* c;
@@ -381,7 +381,7 @@ Query::proc(SQLQueryParms& p)
 
 			SQLString& param = (*c)[num];
 			SQLString* ss = pprepare(i->option, param, c->bound());
-			dynamic_cast<std::ostream&>(*this) << *ss;
+			MYSQLPP_QUERY_THISPTR << *ss;
 			if (ss != &param) {
 				// pprepare() returned a new string object instead of
 				// updating param in place, so we need to delete it.

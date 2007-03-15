@@ -56,6 +56,16 @@
 #  endif
 #endif
 
+// This macro returns '*this', either directly or upcast to Query's
+// base class to work around an error in the overloaded operator
+// lookup logic in VC++ 2003.  For an explanation of the problem, see:
+// http://groups.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
+#if defined(_MSC_VER) && (_MSC_VER < 1400)
+#	define MYSQLPP_QUERY_THISPTR dynamic_cast<std::ostream&>(*this)
+#else
+#	define MYSQLPP_QUERY_THISPTR *this
+#endif
+
 namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)
@@ -544,7 +554,7 @@ public:
 		// Cast required for VC++ 2003 due to error in overloaded operator
 		// lookup logic.  For an explanation of the problem, see:
 		// http://groups-beta.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
-		dynamic_cast<std::ostream&>(*this) << std::setprecision(16) <<
+		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 				"UPDATE " << o.table() << " SET " << n.equal_list() <<
 				" WHERE " << o.equal_list(" AND ", sql_use_compare);
 		return *this;
@@ -564,7 +574,7 @@ public:
 		reset();
 
 		// See above comment for cast rationale
-		dynamic_cast<std::ostream&>(*this) << std::setprecision(16) <<
+		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 				"INSERT INTO " << v.table() << " (" <<
 				v.field_list() << ") VALUES (" <<
 				v.value_list() << ')';
@@ -593,15 +603,14 @@ public:
 		}
 		
 		// See above comment for cast rationale
-		dynamic_cast<std::ostream&>(*this) << std::setprecision(16) <<
+		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 				"INSERT INTO " << first->table() << " (" <<
 				first->field_list() << ") VALUES (" <<
 				first->value_list() << ')';
 
 		Iter it = first + 1;
 		while (it != last) {
-			dynamic_cast<std::ostream&>(*this) << ",(" <<
-					it->value_list() << ')';
+			MYSQLPP_QUERY_THISPTR << ",(" << it->value_list() << ')';
 			++it;
 		}
 
@@ -623,7 +632,7 @@ public:
 		reset();
 
 		// See above comment for cast rationale
-		dynamic_cast<std::ostream&>(*this) << std::setprecision(16) <<
+		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 				"REPLACE INTO " << v.table() << " (" <<
 				v.field_list() << ") VALUES (" << v.value_list() << ')';
 		return *this;
