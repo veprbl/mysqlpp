@@ -108,11 +108,12 @@ Query::exec(const std::string& str)
 ResNSel
 Query::execute(const SQLString& str)
 {
-	if ((def.size() == 1) && !def.processing_) {
-		// Take str to be a lone parameter for a template query.  The
-		// auto-reset flag is required because we'll end up back in this
-		// function once the query string is built, but we need to take
-		// the 'else' path to avoid an infinite loop.
+	if (!parse_elems_.empty() && !def.processing_) {
+		// We're a template query and we haven't gone through this path
+		// before, so take str to be a lone parameter for the query.
+		// We will come back through this function with a completed
+		// query, but the processing_ flag will be reset, allowing us to
+		// take the 'else' path, avoiding an infinite loop.
 		AutoFlag<> af(def.processing_);
 		return execute(SQLQueryParms() << str);
 	}
@@ -406,11 +407,12 @@ Query::reset()
 Result 
 Query::store(const SQLString& str)
 {
-	if ((def.size() == 1) && !def.processing_) {
-		// Take str to be a lone parameter for a template query.  The
-		// auto-reset flag is required because we'll end up back in this
-		// function once the query string is built, but we need to take
-		// the 'else' path to avoid an infinite loop.
+	if (!parse_elems_.empty() && !def.processing_) {
+		// We're a template query and we haven't gone through this path
+		// before, so take str to be a lone parameter for the query.
+		// We will come back through this function with a completed
+		// query, but the processing_ flag will be reset, allowing us to
+		// take the 'else' path, avoiding an infinite loop.
 		AutoFlag<> af(def.processing_);
 		return store(SQLQueryParms() << str);
 	}
@@ -576,11 +578,12 @@ Query::unlock()
 ResUse
 Query::use(const SQLString& str)
 {
-	if ((def.size() == 1) && !def.processing_) {
-		// Take str to be a lone parameter for a template query.  The
-		// auto-reset flag is required because we'll end up back in this
-		// function once the query string is built, but we need to take
-		// the 'else' path to avoid an infinite loop.
+	if (!parse_elems_.empty() && !def.processing_) {
+		// We're a template query and we haven't gone through this path
+		// before, so take str to be a lone parameter for the query.
+		// We will come back through this function with a completed
+		// query, but the processing_ flag will be reset, allowing us to
+		// take the 'else' path, avoiding an infinite loop.
 		AutoFlag<> af(def.processing_);
 		return use(SQLQueryParms() << str);
 	}
