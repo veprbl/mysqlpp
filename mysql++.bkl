@@ -199,6 +199,9 @@
 		<exe id="multiquery" template="util-example,common-example">
 			<sources>examples/multiquery.cpp</sources>
 		</exe>
+		<exe id="tquery" template="util-example,common-example">
+			<sources>examples/tquery.cpp</sources>
+		</exe>
 		<exe id="usequery" template="util-example,common-example">
 			<sources>examples/usequery.cpp</sources>
 		</exe>
