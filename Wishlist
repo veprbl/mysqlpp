@@ -18,6 +18,12 @@ v2.3 Plan
 	list and help discuss it.  Or even better, provide a patch;
 	we rarely reject working code outright.
 
+	o Stop using ColData_Tmpl<T>::buf_ member.  It currently
+	  contains a duplicate (and, in the presence of nulls,
+	  truncated) copy of the data stored by the parent class when
+	  the template is instantiated with std::string.  Removal will
+	  have to wait for v3.0.
+
 	o Define HAVE_MYSQL_SSL_SET by default on Windows?  Make similar
 	  decisions for other autoconf-only macros.
 
@@ -124,6 +130,19 @@ v3.0 Plan
 	the ABI.  (i.e. removing functions, changing function
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
+
+	o Remove MutableColData.  It's only used once in the library,
+	  within myset.h, and that usage is inefficient to the point
+	  of wanting replacement anyway.
+
+	o Turn ColData_Tmpl<T> into a concrete class.  Maybe it still
+	  derives from const std::string, but privately, or maybe
+	  it just has a string member.	Either way, we don't need
+	  an is-a relationship here.  All we need is an internal
+	  representation of the data, which we transform as required.
+	  This ties into the deprecation of the buf_ member in v2.3,
+	  because it either becomes the only buffer, or it goes away
+	  in favor of the parent class's buffer.
 
 	o More robust fix for the Query stream base class init problem:
 	  http://www.boost.org/libs/utility/base_from_member.html
