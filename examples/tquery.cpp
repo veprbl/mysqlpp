@@ -47,15 +47,16 @@ main(int argc, char *argv[])
 		query << "select * from stock where item = %0q";
 		query.parse();
 
-		// Retrieve one item which will be there unless the examples
-		// aren't run in the order we hope they are.
+		// Retrieve an item added by resetdb; it won't be there if
+		// tquery or custom3 is run since resetdb.
 		mysqlpp::Result res1 = query.store("Nürnberger Brats");
 		if (res1.empty()) {
 			throw mysqlpp::BadQuery("UTF-8 bratwurst item not found in "
 					"table, run resetdb");
 		}
 
-		// Replace the UTF-8 German name with a 7-bit ASCII aproximation
+		// Replace the proper German name with a 7-bit ASCII
+		// approximation using a different template query.
 		query.reset();
 		query << "update stock set item = %0q where item = %1q";
 		query.parse();
