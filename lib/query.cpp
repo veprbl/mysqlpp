@@ -108,7 +108,7 @@ Query::exec(const std::string& str)
 ResNSel
 Query::execute(const SQLString& str)
 {
-	if (!parse_elems_.empty() && !def.processing_) {
+	if ((parse_elems_.size() == 2) && !def.processing_) {
 		// We're a template query and we haven't gone through this path
 		// before, so take str to be a lone parameter for the query.
 		// We will come back through this function with a completed
@@ -407,7 +407,7 @@ Query::reset()
 Result 
 Query::store(const SQLString& str)
 {
-	if (!parse_elems_.empty() && !def.processing_) {
+	if ((parse_elems_.size() == 2) && !def.processing_) {
 		// We're a template query and we haven't gone through this path
 		// before, so take str to be a lone parameter for the query.
 		// We will come back through this function with a completed
@@ -578,7 +578,7 @@ Query::unlock()
 ResUse
 Query::use(const SQLString& str)
 {
-	if (!parse_elems_.empty() && !def.processing_) {
+	if ((parse_elems_.size() == 2) && !def.processing_) {
 		// We're a template query and we haven't gone through this path
 		// before, so take str to be a lone parameter for the query.
 		// We will come back through this function with a completed
