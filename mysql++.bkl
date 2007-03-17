@@ -232,6 +232,9 @@
 		<exe id="fieldinf1" template="util-example,common-example">
 			<sources>examples/fieldinf1.cpp</sources>
 		</exe>
+		<exe id="load_file" template="util-example,common-example">
+			<sources>examples/load_file.cpp</sources>
+		</exe>
 		<exe id="xaction" template="util-example,common-example">
 			<sources>examples/xaction.cpp</sources>
 		</exe>
@@ -239,9 +242,6 @@
 		<!-- The few examples that don't use the util module -->
 		<exe id="cgi_image" template="common-example">
 			<sources>examples/cgi_image.cpp</sources>
-		</exe>
-		<exe id="load_file" template="common-example">
-			<sources>examples/load_file.cpp</sources>
 		</exe>
 		<exe id="updel" template="common-example">
 			<sources>examples/updel.cpp</sources>

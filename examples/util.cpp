@@ -218,6 +218,32 @@ print_stock_table(mysqlpp::Query& query)
 }
 
 
+//// print_usage ///////////////////////////////////////////////////////
+// Show the program's usage message
+
+void
+print_usage(const char* program_name, const char* extra_parms)
+{
+	cout << "usage: " << program_name <<
+			" [host [user [password [port]]]] " << extra_parms << endl;
+	cout << endl;
+	cout << "    If no arguments are given, connects to database "
+			"server on localhost" << endl;
+	cout << "    using your user name and no password.  You may give "
+			"any number of" << endl;
+	cout << "    these arguments, but they must be in the order "
+			"listed, and you" << endl;
+	cout << "    cannot skip preceding arguments." << endl;
+	if (strlen(extra_parms) > 0) {
+		cout << endl;
+		cout << "    The extra parameter " << extra_parms <<
+				" is required, regardless of which" << endl;
+		cout << "    other arguments you pass." << endl;
+	}
+	cout << endl;
+}
+
+
 //// connect_to_db /////////////////////////////////////////////////////
 // Establishes a connection to a MySQL database server, optionally
 // attaching to database kdb.  This is basically a command-line parser
@@ -238,17 +264,7 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 	}
 
 	if ((argc > 1) && (argv[1][0] == '-')) {
-		cout << "usage: " << argv[0] <<
-				" [host] [user] [password] [port]" << endl;
-		cout << endl << "\tConnects to database ";
-		if (strlen(kdb) > 0) {
-			cout << '"' << kdb << '"';
-		}
-		else {
-			cout << "server";
-		}
-		cout << " on localhost using your user" << endl;
-		cout << "\tname and no password by default." << endl << endl;
+		print_usage(argv[0]);
 		return false;
 	}
 

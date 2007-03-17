@@ -25,64 +25,79 @@
  USA
 ***********************************************************************/
 
+#include "util.h"
+
 #include <mysql++.h>
 
-#include <sys/stat.h>
-
 #include <fstream>
-
-#include <stdlib.h>
 
 using namespace std;
 using namespace mysqlpp;
 
-const char MY_DATABASE[] = "telcent";
-const char MY_TABLE[] = "fax";
-const char MY_HOST[] = "localhost";
-const char MY_USER[] = "root";
-const char MY_PASSWORD[] = "";
-const char MY_FIELD[] = "fax";	// BLOB field
+static bool
+is_jpeg(const unsigned char* img_data)
+{
+	return (img_data[0] == 0xFF) && (img_data[1] == 0xD8) &&
+			((memcmp(img_data + 6, "JFIF", 4) == 0) ||
+			 (memcmp(img_data + 6, "Exif", 4) == 0));
+}
+
 
 int
 main(int argc, char *argv[])
 {
-	if (argc < 2) {
-		cerr << "Usage : load_file full_file_path" << endl << endl;
-		return -1;
+	// Assume that the last command line argument is a file.  Try to
+	// read that file's data into img_data, and check it to see if it
+	// appears to be a JPEG file.  Bail otherwise.
+	string img_data;
+	if ((argc > 1) && (argv[1][0] != '-')) {
+		ifstream img_file(argv[argc - 1], ios::ate);
+		if (img_file) {
+			size_t img_size = img_file.tellg();
+			if (img_size > 10) {
+				img_file.seekg(0, ios::beg);
+				unsigned char* img_buffer = new unsigned char[img_size];
+				img_file.read((char*)img_buffer, img_size);
+				if (is_jpeg(img_buffer)) {
+					img_data.assign((char*)img_buffer, img_size);
+				}
+				else {
+					cerr << "File does not appear to be a JPEG!" << endl;
+				}
+				delete[] img_buffer;
+			}
+			else {
+				cerr << "File is too short to be a JPEG!" << endl;
+			}
+		}
 	}
+	if (img_data.empty()) {
+		print_usage(argv[0], "[jpeg_file]");
+		return 1;
+	}
+	--argc;		// pop filename argument off end of list
 
-	Connection con(use_exceptions);
 	try {
-		con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
+		// Establish the connection to the database server.
+		mysqlpp::Connection con(mysqlpp::use_exceptions);
+		if (!connect_to_db(argc, argv, con)) {
+			return 1;
+		}
+
+		// Insert image data into the BLOB column in the images table.
+		// We're inserting it as an std::string instead of using the raw
+		// data buffer allocated above because we don't want the data
+		// treated as a C string, which would truncate the data at the
+		// first null character.
 		Query query = con.query();
-		ifstream In(argv[1], ios::in | ios::binary);
-		if (In) {
-			struct stat for_len;
-			if (stat(argv[1], &for_len) < 0) {
-				cerr << "stat() failed for " << argv[1] << '!' << endl;
-				return -1;
-			}
+		query << "INSERT INTO images (data) VALUES(\"" <<
+				mysqlpp::escape << img_data << "\")";
+		ResNSel res = query.execute();
 
-			unsigned int blen = for_len.st_size;
-			if (blen == 0) {
-				cerr << "Sorry, " << argv[1] << " is empty; I won't "
-						"insert such a thing." << endl;
-				return -1;
-			}
-
-			char* read_buffer = new char[blen];
-			In.read(read_buffer, blen);
-			string fill(read_buffer, blen);
-			ostringstream strbuf;
-			strbuf << "INSERT INTO " << MY_TABLE << " (" << MY_FIELD <<
-					") VALUES(\"" << mysqlpp::escape << fill << "\")" <<
-					ends;
-			query.exec(strbuf.str());
-			delete[] read_buffer;
-		}
-		else {
-			cerr << "Failed to open " << argv[1] << '.' << endl;
-		}
+		// If we get here, insertion succeeded
+		cout << "Inserted \"" << argv[argc] <<
+				"\" into images table, " << img_data.size() <<
+				" bytes, ID " << res.insert_id << endl;
 	}
 	catch (const BadQuery& er) {
 		// Handle any query errors
