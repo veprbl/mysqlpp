@@ -40,9 +40,7 @@ v2.3 Plan
 	  that can have nulls, and it has the real data length at hand,
 	  change it to use the explicit length ColData ctor.
 
-	o Rework cgi_image so that you can drop it into a cgi-bin
-	  directory and immediately use it to query the database and
-	  return image data loaded by load_file in CGI format.
+	o Rework the docs for load_jpeg and cgi_jpeg.
 
 
 v2.4 Plan

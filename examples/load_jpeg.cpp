@@ -1,5 +1,5 @@
 /***********************************************************************
- load_file.cpp - Example showing how to insert BLOB data into the
+ load_jpeg.cpp - Example showing how to insert BLOB data into the
 	database from a file.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by

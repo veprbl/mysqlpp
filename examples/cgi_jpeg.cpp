@@ -1,10 +1,8 @@
 /***********************************************************************
- cgi_image.cpp - Example code showing how to fetch BLOB data from a
-	MySQL table and build a reply suitable for making this a CGI
-	handler.  Something very much like this could pull dynamic images
-	from a database to populate web pages, for instance.
-
-	See load_file.cpp for BLOB data insert example.
+ cgi_jpeg.cpp - Example code showing how to fetch JPEG data from a BLOB
+ 	column and send it back to a browser that requested it by ID.
+	
+	Use load_jpeg.cpp to load JPEG files into the database we query.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
  MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
