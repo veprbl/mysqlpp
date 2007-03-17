@@ -7,7 +7,7 @@
 	See load_file.cpp for BLOB data insert example.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -34,44 +34,72 @@
 using namespace std;
 using namespace mysqlpp;
 
-#define MY_DATABASE	"telcent"
-#define MY_TABLE	"fax"
-#define MY_HOST		"localhost"
-#define MY_USER		"root"
-#define MY_PASSWORD ""
-#define MY_FIELD    "fax"		// BLOB field
-#define MY_KEY      "datet"		// PRIMARY KEY
+#define IMG_DATABASE	"mysql_cpp_data"
+#define IMG_HOST		"localhost"
+#define IMG_USER		"root"
+#define IMG_PASSWORD 	"nunyabinness"
 
 int
 main(int argc, char *argv[])
 {
-	if (argc < 2) {
-		cerr << "Usage : cgi_image primary_key_value" << endl << endl;
-		return -1;
+	unsigned int img_id = 0;
+	char* cgi_query = getenv("QUERY_STRING");
+	if (cgi_query) {
+		if ((strlen(cgi_query) < 4) || memcmp(cgi_query, "id=", 3)) {
+			cout << "Content-type: text/plain" << endl << endl;
+			cout << "ERROR: Bad query string" << endl;
+			return 1;
+		}
+		else {
+			img_id = atoi(cgi_query + 3);
+		}
+	}
+	else {
+		cerr << "Put this program into a web server's cgi-bin "
+				"directory, then" << endl;
+		cerr << "invoke it with a URL like this:" << endl;
+		cerr << endl;
+		cerr << "    http://server.name.com/cgi-bin/cgi_image?id=2" <<
+				endl;
+		cerr << endl;
+		cerr << "This will retrieve the image with ID 2." << endl;
+		cerr << endl;
+		cerr << "You will probably have to change some of the #defines "
+				"at the top of" << endl;
+		cerr << "examples/cgi_image.cpp to allow the lookup to work." <<
+				endl;
+		return 1;
 	}
 
-	cout << "Content-type: image/jpeg" << endl;
 	Connection con(use_exceptions);
 	try {
-		con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
+		con.connect(IMG_DATABASE, IMG_HOST, IMG_USER, IMG_PASSWORD);
 		Query query = con.query();
-		query << "SELECT " << MY_FIELD << " FROM " << MY_TABLE << " WHERE "
-			<< MY_KEY << " = " << argv[1];
-		ResUse res = query.use();
-		Row row = res.fetch_row();
-		long unsigned int *jj = res.fetch_lengths();
-		cout << "Content-length: " << *jj << endl << endl;
-		fwrite(row.raw_data(0), 1, *jj, stdout);
+		query << "SELECT data FROM images WHERE id = " << img_id;
+		Row row;
+		Result res = query.store();
+		if (res && (res.num_rows() > 0) && (row = res.at(0))) {
+			unsigned long length = row.at(0).size();
+			cout << "Content-type: image/jpeg" << endl;
+			cout << "Content-length: " << length << endl << endl;
+			fwrite(row.at(0).data(), 1, length, stdout);
+		}
+		else {
+			cout << "Content-type: text/plain" << endl << endl;
+			cout << "ERROR: No such image with ID " << img_id << endl;
+		}
 	}
 	catch (const BadQuery& er) {
 		// Handle any query errors
-		cerr << "Query error: " << er.what() << endl;
-		return -1;
+		cout << "Content-type: text/plain" << endl << endl;
+		cout << "QUERY ERROR: " << er.what() << endl;
+		return 1;
 	}
 	catch (const Exception& er) {
 		// Catch-all for any other MySQL++ exceptions
-		cerr << "Error: " << er.what() << endl;
-		return -1;
+		cout << "Content-type: text/plain" << endl << endl;
+		cout << "GENERAL ERROR: " << er.what() << endl;
+		return 1;
 	}
 
 	return 0;
