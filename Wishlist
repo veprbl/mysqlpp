@@ -32,13 +32,8 @@ v2.3 Plan
 	  duplicating the existing type-specific manipulator functions,
 	  and wrapping the types in Null<>.
 
-	o Check that SSQLS works with BLOB now that ColData, const_string
-	  and Query classes cope with embedded nulls.  If not, fix.
-
-	o Find all other code that constructs ColData without using the
-	  ctor that takes an explicit length.  If that code is in a path
-	  that can have nulls, and it has the real data length at hand,
-	  change it to use the explicit length ColData ctor.
+	o Rework cgi_jpeg to use SSQLS.  If it no longer works after
+	  the conversion, there's still a code path using C strings.
 
 	o Rework the docs for load_jpeg and cgi_jpeg.
 
