@@ -32,6 +32,9 @@
 
 	<if cond="BUILDLIBRARY=='yes'">
 		<dll id="mysqlpp">
+			<libname>mysqlpp</libname>
+			<so_version>2.2.1</so_version>
+
 			<sources>
 				lib/coldata.cpp
 				lib/connection.cpp
