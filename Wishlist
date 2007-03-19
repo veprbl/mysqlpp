@@ -18,6 +18,10 @@ v2.3 Plan
 	list and help discuss it.  Or even better, provide a patch;
 	we rarely reject working code outright.
 
+	o It would be nice if 'make doc' didn't rebuild the docs if it
+	  didn't have to.  The dependencies to make that work for
+	  userman should be easy, but for refman...maybe not so easy.
+
 	o Stop using ColData_Tmpl<T>::buf_ member.  It currently
 	  contains a duplicate (and, in the presence of nulls,
 	  truncated) copy of the data stored by the parent class when
