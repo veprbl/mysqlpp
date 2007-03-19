@@ -1994,11 +1994,11 @@ MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
 
 		<para>All of this assumes you're using Windows NT
 		or one of its direct descendants: Windows 2000,
-		Windows XP, Windows 2003 Server, and someday Windows
-		Vista. Windows 95/98/ME and Windows CE do not support
-		UCS-2. They still have the 'W' APIs for compatibility,
-		but they just smash the data down to 8-bit and call
-		the 'A' version for you.</para>
+		Windows XP, Windows Vista, or any "Server" variant
+		of Windows. Windows 95 and its descendants (98, ME,
+		and CE) do not support UCS-2. They still have the 'W'
+		APIs for compatibility, but they just smash the data
+		down to 8-bit and call the 'A' version for you.</para>
 	</sect2>
 
 
