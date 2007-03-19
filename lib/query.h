@@ -56,10 +56,13 @@
 #  endif
 #endif
 
-// This macro returns '*this', either directly or upcast to Query's
-// base class to work around an error in the overloaded operator
-// lookup logic in VC++ 2003.  For an explanation of the problem, see:
-// http://groups.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
+/// \def MYSQLPP_QUERY_THISPTR
+/// \brief Helper macro used inside MySQL++ to work around a VC++ 2003 bug
+///
+/// This macro returns '*this', either directly or upcast to Query's
+/// base class to work around an error in the overloaded operator
+/// lookup logic in VC++ 2003.  For an explanation of the problem, see:
+/// http://groups.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
 #if defined(_MSC_VER) && (_MSC_VER < 1400)
 #	define MYSQLPP_QUERY_THISPTR dynamic_cast<std::ostream&>(*this)
 #else
