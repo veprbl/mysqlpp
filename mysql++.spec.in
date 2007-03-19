@@ -79,9 +79,12 @@ rm -rf %{buildroot} doc/examples
 
 %files manuals
 %defattr(-,root,root,-)
-%doc doc/*.pdf doc/README.manuals doc/refman doc/userman
+%doc doc/*.pdf doc/html doc/README.manuals
 
 %changelog
+* Mon Mar 19 2007 Warren Young <mysqlpp@etr-usa.com> 2.2.1-4
+- Reorganized locations of generated documentation
+
 * Mon Mar 19 2007 Warren Young <mysqlpp@etr-usa.com> 2.2.1-3
 - Merge of Remi Collet's spec file with official one
 

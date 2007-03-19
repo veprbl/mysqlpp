@@ -9,6 +9,7 @@ FOPDIR=/usr/local/fop
 ## Input files
 ## ------------------------
 
+HTML_DIR=../html/userman
 BASENAME=userman
 DOCFILE=$(BASENAME).dbx
 PDFFILE=$(BASENAME).pdf
@@ -26,7 +27,7 @@ EX_TXT=cgi_image.txt custom1.txt custom2.txt custom3.txt custom4.txt \
 ## Major output rules
 ## ------------------------
 
-html: html/index.html
+html: $(HTML_DIR)/index.html
 
 pdf: $(PDFFILE)
 
@@ -43,7 +44,7 @@ pdf: $(PDFFILE)
 all: html pdf
 
 clean:
-	rm -f tags *.fo html/*.html *.log *.out *.pdf *.txt
+	rm -f tags *.fo $(HTML_DIR)/*.html *.log *.out *.pdf *.txt
 
 
 ## ------------------------
@@ -53,12 +54,11 @@ clean:
 $(PDFFILE): $(DOCFILE) $(FO_SS) $(COMMON_SS)
 	xsltproc --xinclude $(FO_SS) $(DOCFILE) > $(FOFILE)
 	$(FOPDIR)/fop -q -fo $(FOFILE) $(PDFFILE)
-	cp $(PDFFILE) ../mysqlpp-$(PDFFILE)
+	cp $(PDFFILE) ..
 
-html/index.html: $(DOCFILE) $(EX_TXT) $(HTML_SS) $(COMMON_SS)
-	@mkdir -p html
+$(HTML_DIR)/index.html: $(DOCFILE) $(EX_TXT) $(HTML_SS) $(COMMON_SS)
 	@xmllint --xinclude --postvalid --noent --noout $(DOCFILE)
-	xsltproc --xinclude -o html/ $(HTML_SS) $(DOCFILE)
+	xsltproc --xinclude -o $(HTML_DIR)/ $(HTML_SS) $(DOCFILE)
 
 
 ## ------------------------

@@ -5,6 +5,7 @@
 	<include file="presets/simple.bkl"/>
 
 	<set var="DBLDOLLAR">$(DOLLAR)$(DOLLAR)</set>
+	<set var="AND">&amp;&amp;</set>
 	<set var="ZLIB">yes</set>
 
 	<set var="THREAD_TYPE">single</set>
@@ -252,7 +253,10 @@
 		<set var="PKGNAME">mysql++-@PACKAGE_VERSION@</set>
 
 		<modify-target target="clean">
-			<command>rm -f libmysqlpp.so.2</command>
+			<command>
+				cd doc/html/refman $(AND) \
+					rm -f doxygen.css [a-z]*.{dot,html,map,md5,png}
+			</command>
 		</modify-target>
 			
 		<action id="lib/custom.h">
@@ -273,11 +277,10 @@
 		<action id="ctags"><depends>tags</depends></action>
 
 		<action id="refman">
-			<command>cd lib ; doxygen</command>
+			<command>mkdir -p doc/latex</command>
 			<command>
-				cd doc/refman/latex &amp;&amp; \
-				make pdf &amp;&amp; \
-				mv refman.pdf ../../mysqlpp-refman.pdf
+				cd lib ; doxygen $(AND) cd ../doc/latex $(AND) \
+					make pdf $(AND) cp refman.pdf ..
 			</command>
 		</action>
 
@@ -299,7 +302,7 @@
 		<action id="dist-build">
 			<!-- Set up package directory -->
 			<command>
-				for d in config doc/refman/html doc/userman/html examples lib ; \
+				for d in config doc/{.,html}/{refman,userman} examples lib ; \
 				do \
 					mkdir -p $(PKGNAME)/$(DBLDOLLAR)d ; \
 				done
@@ -332,11 +335,11 @@
 			<command>
 				for d in refman userman ; do \
 					for f in *.{css,html} ; do \
-						cp doc/$(DBLDOLLAR)d/html/$(DBLDOLLAR)f \
-								$(PKGNAME)/doc/$(DBLDOLLAR)d/html ; \
+						cp doc/html/$(DBLDOLLAR)d/$(DBLDOLLAR)f \
+								$(PKGNAME)/doc/html/$(DBLDOLLAR)d ; \
 					done ; \
 				done ; \
-				cp doc/refman/html/*.png $(PKGNAME)/doc/refman/html
+				cp doc/html/refman/*.png $(PKGNAME)/doc/html/refman
 			</command>
 
 			<!-- examples subdir -->
