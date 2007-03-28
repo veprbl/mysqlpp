@@ -99,10 +99,8 @@ CExampleDlg::OnBnClickedConnectButton()
 	WCHAR awcTempBuf[100];
 	const int kTempBufSize = sizeof(awcTempBuf) / sizeof(awcTempBuf[0]);
 
-	// Pull user input into our member variables, then save that to the
-	// registry for future use.
+	// Pull user input into our member variables
 	UpdateData(TRUE);
-	SaveInputs(sServerAddress, sUserName);
 
 	// Clear out the results list, in case this isn't the first time
 	// we've come in here.
@@ -134,16 +132,20 @@ CExampleDlg::OnBnClickedConnectButton()
 	query << "select item from stock";
 	mysqlpp::Result res = query.store();
 
-	// Display the result set
 	if (res) {
+		// Display the result set
 		mysqlpp::Row row;
 		for (mysqlpp::Row::size_type i = 0; row = res.at(i); ++i) {
 			if (ToUCS2(awcTempBuf, kTempBufSize, row.at(0))) {
 				AddMessage(awcTempBuf);
 			}
 		}
+
+		// Retreive was successful, so save user inputs now
+		SaveInputs(sServerAddress, sUserName);
 	}
 	else {
+		// Retreive failed
 		AddMessage(_T("Failed to get item list:"));
 		if (ToUCS2(awcTempBuf, kTempBufSize, query.error().c_str())) {
 			AddMessage(awcTempBuf);
