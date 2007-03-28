@@ -34,10 +34,6 @@ public:
 	CExampleDlg(CWnd* pParent = 0);
 
 	//// Public data
-	// Dialog ID
-	enum { IDD = IDD_MFC_DIALOG };
-
-	// Dialog box control variables
 	CString sServerAddress;
 	CString sUserName;
 	CString sPassword;

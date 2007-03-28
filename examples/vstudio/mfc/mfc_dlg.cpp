@@ -39,7 +39,7 @@ END_MESSAGE_MAP()
 //// ctor //////////////////////////////////////////////////////////////
 
 CExampleDlg::CExampleDlg(CWnd* pParent) :
-CDialog(CExampleDlg::IDD, pParent)
+CDialog(IDD_MFC_DIALOG, pParent)
 {
 	// Load default input values from registry, if we can
 	HKEY key = OpenSettingsRegistryKey();
