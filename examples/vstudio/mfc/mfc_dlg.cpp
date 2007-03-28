@@ -39,8 +39,7 @@ END_MESSAGE_MAP()
 //// ctor //////////////////////////////////////////////////////////////
 
 CExampleDlg::CExampleDlg(CWnd* pParent) :
-CDialog(CExampleDlg::IDD, pParent),
-hIcon_(AfxGetApp()->LoadIcon(IDR_MAINFRAME))
+CDialog(CExampleDlg::IDD, pParent)
 {
 	// Load default input values from registry, if we can
 	HKEY key = OpenSettingsRegistryKey();
@@ -150,18 +149,4 @@ CExampleDlg::OnBnClickedConnectButton()
 			AddMessage(awcTempBuf);
 		}
 	}
-}
-
-
-//// OnInitDialog //////////////////////////////////////////////////////
-
-BOOL 
-CExampleDlg::OnInitDialog()
-{
-	CDialog::OnInitDialog();
-
-	SetIcon(hIcon_, TRUE);
-	SetIcon(hIcon_, FALSE);
-
-	return TRUE;
 }

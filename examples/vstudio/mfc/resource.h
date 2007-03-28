@@ -4,7 +4,6 @@
 //
 #define IDD_MFC_DIALOG                  102
 #define IDP_SOCKETS_INIT_FAILED         103
-#define IDR_MAINFRAME                   128
 #define IDC_SERVER_EDIT                 1000
 #define IDC_PASSWORD_EDIT               1001
 #define IDC_USER_EDIT                   1002

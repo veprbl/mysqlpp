@@ -46,14 +46,9 @@ public:
 protected:
 	//// Internal support functions
 	virtual void DoDataExchange(CDataExchange* pDX);
-	virtual BOOL OnInitDialog();
 	void AddMessage(LPCTSTR pcMessage);
 
 	//// Message map
 	afx_msg void OnBnClickedConnectButton();
 	DECLARE_MESSAGE_MAP()
-
-private:
-	//// Internal data
-	HICON hIcon_;
 };
