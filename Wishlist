@@ -17,10 +17,6 @@ v2.x Features
 	it can be done without breaking the ABI, which would force
 	a feature to v3.0.
 
-	o It would be nice if 'make doc' didn't rebuild the docs if it
-	  didn't have to.  The dependencies to make that work for
-	  userman should be easy, but for refman...maybe not so easy.
-
 	o Stop using ColData_Tmpl<T>::buf_ member.  It currently
 	  contains a duplicate (and, in the presence of nulls,
 	  truncated) copy of the data stored by the parent class when

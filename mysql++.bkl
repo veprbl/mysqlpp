@@ -276,30 +276,30 @@
 		</action>
 		<action id="ctags"><depends>tags</depends></action>
 
-		<action id="refman">
-			<command>mkdir -p doc/latex</command>
+		<action id="doc/html/refman/index.html">
+			<depends-on-file>lib/Doxyfile</depends-on-file>
+			<depends-on-file>lib/*.cpp</depends-on-file>
+			<depends-on-file>lib/*.h</depends-on-file>
 			<command>
-				cd lib ; doxygen $(AND) cd ../doc/latex $(AND) \
-					make pdf $(AND) cp refman.pdf ..
+				mkdir -p doc/latex ; cd lib ; doxygen > /dev/null $(AND) \
+					cd ../doc/latex $(AND) make pdf > /dev/null $(AND) \
+					cp refman.pdf ..
 			</command>
 		</action>
 
-		<action id="userman">
+		<action id="doc/html/userman/index.html">
+			<depends-on-file>doc/userman/userman.dbx</depends-on-file>
 			<command>cd doc/userman ; make html pdf</command>
 		</action>
 
 		<action id="doc">
-			<depends>userman</depends>
-			<depends>refman</depends>
+			<depends>doc/html/userman/index.html</depends>
+			<depends>doc/html/refman/index.html</depends>
 		</action>
 
 		<action id="dist">
-			<depends>dist-build</depends>
-			<command>tar czf $(PKGNAME).tar.gz $(PKGNAME)</command>
-			<command>rm -rf $(PKGNAME)</command>
-		</action>
+			<depends>doc</depends>
 
-		<action id="dist-build">
 			<!-- Set up package directory -->
 			<command>
 				for d in config doc/{.,html}/{refman,userman} examples lib ; \
@@ -351,6 +351,11 @@
 			<command>
 				cp lib/*.{cpp,h,in,pl} $(PKGNAME)/lib
 			</command>
+
+			<!-- distribution dir created, so pack up a copy and 
+			     nuke the temporary -->
+			<command>tar czf $(PKGNAME).tar.gz $(PKGNAME)</command>
+			<command>rm -rf $(PKGNAME)</command>
 		</action>
 
 		<action id="rpm-setup">
