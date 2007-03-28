@@ -25,6 +25,7 @@
 
 #pragma once
 #include "afxwin.h"
+#include "resource.h"
 
 class CExampleDlg : public CDialog
 {
@@ -44,16 +45,13 @@ public:
 
 protected:
 	//// Internal support functions
-	// DDX support
 	virtual void DoDataExchange(CDataExchange* pDX);
-
-	// Generated message map functions
 	virtual BOOL OnInitDialog();
+	void AddMessage(LPCTSTR pcMessage);
+
+	//// Message map
 	afx_msg void OnBnClickedConnectButton();
 	DECLARE_MESSAGE_MAP()
-
-	// Misc
-	void AddMessage(LPCTSTR pcMessage);
 
 private:
 	//// Internal data

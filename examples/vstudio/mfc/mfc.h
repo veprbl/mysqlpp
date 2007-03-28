@@ -30,14 +30,9 @@
 	#error "include 'stdafx.h' before including this file for PCH"
 #endif
 
-#include "resource.h"
-
 class CApp : public CWinApp
 {
 public:
 	CApp() { }
 	virtual BOOL InitInstance();
-	DECLARE_MESSAGE_MAP()
 };
-
-extern CApp gApplication;

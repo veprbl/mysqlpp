@@ -28,14 +28,6 @@
 #include "mfc.h"
 #include "mfc_dlg.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-BEGIN_MESSAGE_MAP(CApp, CWinApp)
-	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
-END_MESSAGE_MAP()
-
 CApp gApplication;
 
 BOOL CApp::InitInstance()
@@ -48,15 +40,15 @@ BOOL CApp::InitInstance()
 
 	CWinApp::InitInstance();
 
-	// Initialize Winsock, which we need to use when connecting to MySQL
-	if (!AfxSocketInit()) {
+	// Initialize Winsock for MySQL communication, start GUI
+	if (AfxSocketInit()) {
+		CExampleDlg dlg;
+		m_pMainWnd = &dlg;
+		dlg.DoModal();
+	}
+	else {
 		AfxMessageBox(IDP_SOCKETS_INIT_FAILED);
-		return FALSE;
 	}
 
-	// Run the application dialog
-	CExampleDlg dlg;
-	m_pMainWnd = &dlg;
-	dlg.DoModal();
 	return FALSE;
 }

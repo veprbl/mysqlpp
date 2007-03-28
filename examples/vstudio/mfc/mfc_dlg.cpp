@@ -25,21 +25,13 @@
 ***********************************************************************/
 
 #include "stdafx.h"
-#include "mfc.h"
+
 #include "mfc_dlg.h"
 #include "util.h"
 
 #include <mysql++.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-#define NELEMS(s) (sizeof(s) / sizeof(s[0]))
-
 BEGIN_MESSAGE_MAP(CExampleDlg, CDialog)
-	ON_WM_QUERYDRAGICON()
-	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_CONNECT_BUTTON, &CExampleDlg::OnBnClickedConnectButton)
 END_MESSAGE_MAP()
 
@@ -47,17 +39,18 @@ END_MESSAGE_MAP()
 //// ctor //////////////////////////////////////////////////////////////
 
 CExampleDlg::CExampleDlg(CWnd* pParent) :
-CDialog(CExampleDlg::IDD, pParent)
+CDialog(CExampleDlg::IDD, pParent),
+hIcon_(AfxGetApp()->LoadIcon(IDR_MAINFRAME))
 {
 	// Load default input values from registry, if we can
 	HKEY key = OpenSettingsRegistryKey();
 	if (key) {
 		// There are pre-existing defaults we can use, so copy them in
-		TCHAR acBuffer[100];
-		LoadSetting(key, _T("user"), acBuffer, sizeof(acBuffer));
-		sUserName = acBuffer;
-		LoadSetting(key, _T("server"), acBuffer, sizeof(acBuffer));
-		sServerAddress = acBuffer;
+		TCHAR acSetting[100];
+		LoadSetting(key, _T("user"), acSetting, sizeof(acSetting));
+		sUserName = acSetting;
+		LoadSetting(key, _T("server"), acSetting, sizeof(acSetting));
+		sServerAddress = acSetting;
 		RegCloseKey(key);
 	}
 	if ((sUserName.GetLength() == 0) || 
@@ -65,15 +58,12 @@ CDialog(CExampleDlg::IDD, pParent)
 		// Didn't find anything we can use, so have to make something
 		// plausible up instead.
 		sServerAddress = _T("localhost");
-
 		TCHAR acUserName[100];
 		DWORD nBufferSize = sizeof(acUserName);
 		if (GetUserName(acUserName, &nBufferSize)) {
 			sUserName = acUserName;
 		}
 	}
-
-	hIcon_ = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 
@@ -108,7 +98,7 @@ void
 CExampleDlg::OnBnClickedConnectButton()
 {
 	WCHAR awcTempBuf[100];
-	const int kTempBufSize = NELEMS(awcTempBuf);
+	const int kTempBufSize = sizeof(awcTempBuf) / sizeof(awcTempBuf[0]);
 
 	// Pull user input into our member variables, then save that to the
 	// registry for future use.
@@ -175,4 +165,3 @@ CExampleDlg::OnInitDialog()
 
 	return TRUE;
 }
-
