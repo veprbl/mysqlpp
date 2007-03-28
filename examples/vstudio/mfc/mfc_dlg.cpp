@@ -24,6 +24,7 @@
  USA
 ***********************************************************************/
 
+#include "stdafx.h"
 #include "mfc_dlg.h"
 #include "util.h"
 
@@ -88,6 +89,19 @@ void CExampleDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 
+//// LoadSetting ///////////////////////////////////////////////////////
+// Loads up the value of the named registry value underneath the given
+// key and returns it in pcValue.
+
+bool
+CExampleDlg::LoadSetting(HKEY key, LPCTSTR pcName, LPTSTR pcValue,
+		DWORD nValueSize)
+{
+	return RegQueryValueEx(key, pcName, 0, 0, LPBYTE(pcValue),
+			&nValueSize) == ERROR_SUCCESS;
+}
+
+
 //// OnBnClickedConnectButton //////////////////////////////////////////
 // This is essentially the same thing as examples/simple1.cpp
 
@@ -148,5 +162,104 @@ CExampleDlg::OnBnClickedConnectButton()
 		if (ToUCS2(awcTempBuf, kTempBufSize, query.error().c_str())) {
 			AddMessage(awcTempBuf);
 		}
+	}
+}
+
+
+//// OpenSettingsRegistryKey ///////////////////////////////////////////
+
+HKEY
+CExampleDlg::OpenSettingsRegistryKey()
+{
+	HKEY key1, key2;
+	if ((RegOpenKey(HKEY_CURRENT_USER, _T("Software"), &key1) ==
+			ERROR_SUCCESS) && (RegCreateKey(key1,
+			_T("MySQL++ Examples"), &key2) == ERROR_SUCCESS)) {
+		RegCloseKey(key1);
+		return key2;
+	}
+	else {
+		return 0;
+	}
+}
+
+
+//// SaveInputs ////////////////////////////////////////////////////////
+// Save the given strings to the registry so future runs and other
+// examples can use them.
+
+bool
+CExampleDlg::SaveInputs(LPCTSTR pcServerAddress, LPCTSTR pcUserName)
+{
+	HKEY key = OpenSettingsRegistryKey();
+	if (key) {
+		SaveSetting(key, _T("user"), pcUserName);
+		SaveSetting(key, _T("server"), pcServerAddress);
+		RegCloseKey(key);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+
+//// SaveSetting ///////////////////////////////////////////////////////
+// Saves the given value as a named entry under the given registry key.
+
+bool
+CExampleDlg::SaveSetting(HKEY key, LPCTSTR pcName, LPCTSTR pcValue)
+{
+	DWORD nBytes = DWORD(sizeof(TCHAR) * (_tcslen(pcValue) + 1));
+	return RegSetValueEx(key, pcName, 0, REG_SZ, LPBYTE(pcValue),
+			nBytes) == ERROR_SUCCESS;
+}
+
+
+//// ToUCS2 ////////////////////////////////////////////////////////////
+// Convert a C string in UTF-8 format to UCS-2 format.
+
+bool
+CExampleDlg::ToUCS2(LPTSTR pcOut, int nOutLen, const char* kpcIn)
+{
+	if (strlen(kpcIn) > 0) {
+		// Do the conversion normally
+		return MultiByteToWideChar(CP_UTF8, 0, kpcIn, -1, pcOut,
+				nOutLen) > 0;
+	}
+	else if (nOutLen > 1) {
+		// Can't distinguish no bytes copied from an error, so handle
+		// an empty input string as a special case.
+		_tccpy(pcOut, _T(""));
+		return true;
+	}
+	else {
+		// Not enough room to do anything!
+		return false;
+	}
+}
+
+
+//// ToUTF8 ////////////////////////////////////////////////////////////
+// Convert a UCS-2 multibyte string to the UTF-8 format required by
+// MySQL, and thus MySQL++.
+
+bool
+CExampleDlg::ToUTF8(char* pcOut, int nOutLen, LPCWSTR kpcIn)
+{
+	if (_tcslen(kpcIn) > 0) {
+		// Do the conversion normally
+		return WideCharToMultiByte(CP_UTF8, 0, kpcIn, -1, pcOut,
+				nOutLen, 0, 0) > 0;
+	}
+	else if (nOutLen > 0) {
+		// Can't distinguish no bytes copied from an error, so handle
+		// an empty input string as a special case.
+		*pcOut = '\0';
+		return true;
+	}
+	else {
+		// Not enough room to do anything!
+		return false;
 	}
 }

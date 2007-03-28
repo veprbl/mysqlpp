@@ -41,8 +41,15 @@ public:
 
 protected:
 	//// Internal support functions
-	virtual void DoDataExchange(CDataExchange* pDX);
 	void AddMessage(LPCTSTR pcMessage);
+	void DoDataExchange(CDataExchange* pDX);
+	bool LoadSetting(HKEY key, LPCTSTR pcName, LPTSTR pcValue,
+			DWORD nValueSize);
+	HKEY OpenSettingsRegistryKey();
+	bool SaveInputs(LPCTSTR pcServerAddress, LPCTSTR pcUserName);
+	bool SaveSetting(HKEY key, LPCTSTR pcName, LPCTSTR pcValue);
+	bool ToUCS2(LPTSTR pcOut, int nOutLen, const char* kpcIn);
+	bool ToUTF8(char* pcOut, int nOutLen, LPCWSTR kpcIn);
 
 	//// Message map
 	afx_msg void OnBnClickedConnectButton();
