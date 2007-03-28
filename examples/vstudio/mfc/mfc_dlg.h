@@ -54,15 +54,8 @@ protected:
 
 	// Misc
 	void AddMessage(LPCTSTR pcMessage);
-	bool LoadSetting(HKEY k, LPCTSTR pcName, CString& sValue);
-	void SaveInputs();
-	void SaveSetting(HKEY k, LPCTSTR pcName, const CString& sValue);
-	bool ToUCS2(LPTSTR out, int nOutLen, const char* in);
-	bool ToUTF8(char* pcOut, int nOutLen, LPCWSTR kpcIn);
 
 private:
 	//// Internal data
 	HICON hIcon_;
-public:
-	HKEY OpenSettingsRegistryKey(void);
 };

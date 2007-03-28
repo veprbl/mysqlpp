@@ -27,6 +27,7 @@
 #include "stdafx.h"
 #include "mfc.h"
 #include "mfc_dlg.h"
+#include "util.h"
 
 #include <mysql++.h>
 
@@ -52,8 +53,11 @@ CDialog(CExampleDlg::IDD, pParent)
 	HKEY key = OpenSettingsRegistryKey();
 	if (key) {
 		// There are pre-existing defaults we can use, so copy them in
-		LoadSetting(key, _T("user"), sUserName);
-		LoadSetting(key, _T("server"), sServerAddress);
+		TCHAR acBuffer[100];
+		LoadSetting(key, _T("user"), acBuffer, sizeof(acBuffer));
+		sUserName = acBuffer;
+		LoadSetting(key, _T("server"), acBuffer, sizeof(acBuffer));
+		sServerAddress = acBuffer;
 		RegCloseKey(key);
 	}
 	if ((sUserName.GetLength() == 0) || 
@@ -97,26 +101,6 @@ void CExampleDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 
-//// LoadSetting ///////////////////////////////////////////////////////
-// Loads up the value of the named registry value underneath the given
-// key and returns it in sValue.
-
-bool
-CExampleDlg::LoadSetting(HKEY key, LPCTSTR pcName, CString& sValue)
-{
-	TCHAR acBuffer[100];
-	DWORD nBufSize = sizeof(acBuffer);
-	if (RegQueryValueEx(key, pcName, 0, 0, LPBYTE(acBuffer),
-			&nBufSize) == ERROR_SUCCESS) {
-		sValue = acBuffer;
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-
 //// OnBnClickedConnectButton //////////////////////////////////////////
 // This is essentially the same thing as examples/simple1.cpp
 
@@ -126,9 +110,10 @@ CExampleDlg::OnBnClickedConnectButton()
 	WCHAR awcTempBuf[100];
 	const int kTempBufSize = NELEMS(awcTempBuf);
 
-	// Save the user inputs to our member variables, and as a side
-	// effect, to the registry for future use.
-	SaveInputs();
+	// Pull user input into our member variables, then save that to the
+	// registry for future use.
+	UpdateData(TRUE);
+	SaveInputs(sServerAddress, sUserName);
 
 	// Clear out the results list, in case this isn't the first time
 	// we've come in here.
@@ -191,98 +176,3 @@ CExampleDlg::OnInitDialog()
 	return TRUE;
 }
 
-
-//// OpenSettingsRegistryKey ///////////////////////////////////////////
-
-HKEY
-CExampleDlg::OpenSettingsRegistryKey()
-{
-	HKEY key1, key2;
-	if ((RegOpenKey(HKEY_CURRENT_USER, _T("Software"), &key1) ==
-			ERROR_SUCCESS) && (RegCreateKey(key1,
-			_T("MySQL++ Examples"), &key2) == ERROR_SUCCESS)) {
-		RegCloseKey(key1);
-		return key2;
-	}
-	else {
-		return 0;
-	}
-}
-
-
-//// SaveInputs ////////////////////////////////////////////////////////
-
-void CExampleDlg::SaveInputs()
-{
-	// Kick DDX code, make it give us current data
-	UpdateData(TRUE);
-
-	// Save that data to the registry so future runs and other examples
-	// can use it.
-	HKEY key = OpenSettingsRegistryKey();
-	if (key) {
-		SaveSetting(key, _T("user"), sUserName);
-		SaveSetting(key, _T("server"), sServerAddress);
-		RegCloseKey(key);
-	}
-}
-
-
-//// SaveSetting ///////////////////////////////////////////////////////
-// Saves the given value as a named entry under the given registry key.
-
-void
-CExampleDlg::SaveSetting(HKEY k, LPCTSTR pcName, const CString& sValue)
-{
-	RegSetValueEx(k, pcName, 0, REG_SZ, (const BYTE*)(LPCTSTR)(sValue),
-			sizeof(TCHAR) * (sValue.GetLength() + 1));
-}
-
-
-//// ToUCS2 ////////////////////////////////////////////////////////////
-// Convert a C string in UTF-8 format to UCS-2 format.
-
-bool CExampleDlg::ToUCS2(LPTSTR pcOut, int nOutLen,
-		const char* kpcIn)
-{
-	if (strlen(kpcIn) > 0) {
-		// Do the conversion normally
-		return MultiByteToWideChar(CP_UTF8, 0, kpcIn, -1, pcOut,
-				nOutLen) > 0;
-	}
-	else if (nOutLen > 1) {
-		// Can't distinguish no bytes copied from an error, so handle
-		// an empty input string as a special case.
-		_tccpy(pcOut, _T(""));
-		return true;
-	}
-	else {
-		// Not enough room to do anything!
-		return false;
-	}
-}
-
-
-//// ToUTF8 ////////////////////////////////////////////////////////////
-// Convert a UCS-2 multibyte string to the UTF-8 format required by
-// MySQL, and thus MySQL++.
-
-bool
-CExampleDlg::ToUTF8(char* pcOut, int nOutLen, LPCWSTR kpcIn)
-{
-	if (_tcslen(kpcIn) > 0) {
-		// Do the conversion normally
-		return WideCharToMultiByte(CP_UTF8, 0, kpcIn, -1, pcOut,
-				nOutLen, 0, 0) > 0;
-	}
-	else if (nOutLen > 0) {
-		// Can't distinguish no bytes copied from an error, so handle
-		// an empty input string as a special case.
-		*pcOut = '\0';
-		return true;
-	}
-	else {
-		// Not enough room to do anything!
-		return false;
-	}
-}
