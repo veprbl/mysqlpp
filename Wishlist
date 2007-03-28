@@ -100,6 +100,9 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o Connection::error() returns const char*, while Query::error()
+	  returns std::string.  Pick one.
+
 	o Remove MutableColData.  It's only used once in the library,
 	  within myset.h, and that usage is inefficient to the point
 	  of wanting replacement anyway.
