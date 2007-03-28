@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfc", "mfc\mfc.vcproj", "{34DBC9CD-54FC-431D-8AEA-E94D9C891C71}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wforms", "wforms\wforms.vcproj", "{9ED97AE4-9E38-45A1-9FDF-194C5B60BAE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{34DBC9CD-54FC-431D-8AEA-E94D9C891C71}.Debug|Win32.Build.0 = Debug|Win32
 		{34DBC9CD-54FC-431D-8AEA-E94D9C891C71}.Release|Win32.ActiveCfg = Release|Win32
 		{34DBC9CD-54FC-431D-8AEA-E94D9C891C71}.Release|Win32.Build.0 = Release|Win32
+		{9ED97AE4-9E38-45A1-9FDF-194C5B60BAE1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9ED97AE4-9E38-45A1-9FDF-194C5B60BAE1}.Debug|Win32.Build.0 = Debug|Win32
+		{9ED97AE4-9E38-45A1-9FDF-194C5B60BAE1}.Release|Win32.ActiveCfg = Release|Win32
+		{9ED97AE4-9E38-45A1-9FDF-194C5B60BAE1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
