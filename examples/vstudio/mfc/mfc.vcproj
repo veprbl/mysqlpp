@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..,..\..\..\lib, C:\Program Files\MySQL\MySQL Server 5.0\include"
+				AdditionalIncludeDirectories="..\..\..\lib, C:\Program Files\MySQL\MySQL Server 5.0\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..,..\..\..\lib, C:\Program Files\MySQL\MySQL Server 5.0\include"
+				AdditionalIncludeDirectories="..\..\..\lib, C:\Program Files\MySQL\MySQL Server 5.0\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
