@@ -1901,12 +1901,12 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
 
 	<sect2>
-		<title>Unicode and Win32</title>
+		<title>Unicode and Windows</title>
 
-		<para>Each Win32 API function that takes a
+		<para>Each Windows API function that takes a
 		string actually comes in two versions. One
 		version supports only 1-byte "ANSI" characters (a
-		superset of ASCII), so they end in 'A'. Win32 also
+		superset of ASCII), so they end in 'A'. Windows also
 		supports the 2-byte subset of Unicode called <ulink
 		url="http://en.wikipedia.org/wiki/UCS-2">UCS-2</ulink>.
 		Some call these "wide" characters, so the other
