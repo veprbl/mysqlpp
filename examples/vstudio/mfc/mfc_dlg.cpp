@@ -26,7 +26,6 @@
 
 #include "stdafx.h"
 #include "mfc_dlg.h"
-#include "util.h"
 
 #include <mysql++.h>
 
