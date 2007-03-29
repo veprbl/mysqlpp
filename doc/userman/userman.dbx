@@ -431,20 +431,14 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
 
 		<para>I referred to the
 		<computeroutput>util</computeroutput> module
-		above. Following is the source for that module,
-		which also contains other functions used by other
-		examples. It isn't important to understand this module
-		in detail, but understanding its outlines will make
-		the following examples more clear.</para>
+		above. Following is the source for that module. It
+		isn't important to understand this module in detail,
+		but understanding its outlines will make the following
+		examples more clear.</para>
 
 		<programlisting><xi:include href="util.txt"
 			parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 		</programlisting>
-
-		<para>This is actually an abridged version of util.cpp,
-		with the Unicode stuff removed. The interaction
-		between MySQL, MySQL++ and Unicode is covered in a
-		later chapter, <xref linkend="unicode"/>.</para>
 	</sect2>
 
 
@@ -1810,93 +1804,83 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
 		<subtitle>...with a focus on relevance to MySQL++</subtitle>
 
 		<para>In the old days, computer operating systems only
-		dealt with 8-bit character sets. This only gives you 256
-		possible characters, but the modern Western languages have
-		more characters combined than that by themselves. Add in
-		all the other lanauges of the world, plus the various
-		symbols people use, and you have a real mess! Since no
-		standards body held sway over things like international
-		character encoding in the early days of computing, many
-		different character sets were invented. These character
-		sets weren't even standardized between operating systems,
-		so heaven help you if you needed to move localized Greek
-		text on a Windows machine to a Russian Macintosh! The only
-		way we got any international communication done at all
-		was to build standards on the common 7-bit ASCII subset.
-		Either people used approximations like a plain "c" instead
-		of the French "&ccedil;", or they invented things like
-		HTML entities ("&amp;ccedil;" in this case) to encode
-		these additional characters using only 7-bit ASCII.</para>
+		dealt with 8-bit character sets. That only allows
+		for 256 possible characters, but the modern Western
+		languages have more characters combined than that
+		alone. Add in all the other languages of the world
+		plus the various symbols people use in writing,
+		and you have a real mess!</para>
+
+		<para>Since no standards body held sway over things
+		like international character encoding in the early
+		days of computing, many different character sets
+		were invented. These character sets weren't even
+		standardized between operating systems, so heaven help
+		you if you needed to move localized Greek text on a DOS
+		box to a Russian Macintosh! The only way we got any
+		international communication done at all was to build
+		standards on top of the common 7-bit ASCII subset.
+		Either people used approximations like a plain "c"
+		instead of the French "&ccedil;", or they invented
+		things like HTML entities ("&amp;ccedil;" in this
+		case) to encode these additional characters using
+		only 7-bit ASCII.</para>
 
 		<para>Unicode solves this problem. It encodes every
-		character in the world, using up to 4 bytes per
-		character. The subset covering the most economically
-		valuable cases takes two bytes per character, so most
-		Unicode-aware programs deal in 2-byte characters,
-		for efficiency.</para>
+		character used for writing in the world, using up
+		to 4 bytes per character. The subset covering the
+		most economically valuable cases takes two bytes per
+		character, so most Unicode-aware programs deal in
+		2-byte characters, for efficiency.</para>
 
-		<para>Unfortunately, Unicode came about two
-		decades too late for Unix and C. Converting the
-		Unix system call interface to use multi-byte
-		Unicode characters would break all existing
-		programs. The ISO lashed a wide character <ulink
-		url="http://www.jargon.net/jargonfile/s/sidecar.html">sidecar</ulink>
-		onto C in 1995, but in common practice C is still
-		tied to 8-bit characters.</para>
+		<para>Unfortunately, Unicode was invented about
+		two decades too late for Unix and C. Those decades
+		of legacy created an immense inertia preventing a
+		widespread move away from 8-bit characters. MySQL
+		and C++ come out of these older traditions, and so
+		they share the same practical limitations. MySQL++
+		doesn't have a reason to do anything more than just
+		pass data along unchanged, so you still need to be
+		aware of these underlying issues.</para>
 
-		<para>As Unicode began to take off in the early 1990s,
-		it became clear that some sort of accommodation
-		with Unicode was needed in legacy systems like
-		Unix and C. During the development of the <ulink
+		<para>During the development of the <ulink
 		url="http://en.wikipedia.org/wiki/Plan_9_from_Bell_Labs">Plan
 		9</ulink> operating system (a kind
 		of successor to Unix) Ken Thompson <ulink
 		url="http://www.cl.cam.ac.uk/~mgk25/ucs/utf-8-history.txt">invented</ulink>
-		the <ulink url="http://en.wikipedia.org/wiki/UTF-8">UTF-8
+		the <ulink
+		url="http://en.wikipedia.org/wiki/UTF-8">UTF-8
 		encoding</ulink>. UTF-8 is a superset of 7-bit ASCII
-		and is compatible with C strings, since it doesn't use 0
-		bytes anywhere as multi-byte Unicode encodings do. As a
-		result, many programs that deal in text will cope with
-		UTF-8 data even though they have no explicit support
-		for UTF-8. (Follow the last link above to see how the
-		design of UTF-8 allows this.)</para>
-
-		<para>The MySQL database server comes out of the
-		Unix/C tradition, so it only supports 8-bit characters
-		natively. All versions of MySQL could store UTF-8 data,
-		but sometimes the server actually needs to understand
-		the data; when sorting, for instance. To support this,
-		explicit UTF-8 support was added to MySQL in version
-		4.1.</para>
-
-		<para>Because MySQL++ does not need to
-		understand the text flowing through it, it
-		neither has nor needs explicit UTF-8 support.
-		C++'s <computeroutput>std::string</computeroutput>
-		stores UTF-8 data just fine. But, your program probably
-		<emphasis>does</emphasis> care about the text it gets
-		from the database via MySQL++. The remainder of this
-		chapter covers the choices you have for dealing with
-		UTF-8 encoded Unicode data in your program.</para>
+		and is compatible with C strings, since it doesn't
+		use 0 bytes anywhere as multi-byte Unicode encodings
+		do. As a result, many programs that deal in text
+		will cope with UTF-8 data even though they have no
+		explicit support for UTF-8. (Follow the last link above
+		to see how the design of UTF-8 allows this.) Thus,
+		when explicit support for Unicode was added in MySQL
+		v4.1, they chose to make UTF-8 the native encoding,
+		to preserve backward compatibility with programs that
+		had no Unicode support.</para>
 	</sect2>
 
 
 	<sect2>
 		<title>Unicode and Unix</title>
 
-		<para>Modern Unices support UTF-8 natively. Red Hat Linux,
-		for instance, has had system-wide UTF-8 support since
-		version 8. This continues in the Enterprise and Fedora
-		forks of Red Hat Linux, of course.</para>
+		<para>Linux and Unix have system-wide UTF-8 support
+		these days. If your system's operating system is of
+		2001 or newer vintage, there's a good chance it has
+		such support.</para>
 
-		<para>On such a Unix, the terminal I/O code understands
-		UTF-8 encoded data, so your program doesn't require any
-		special code to correctly display a UTF-8 string. If you
-		aren't sure whether your system supports UTF-8 natively,
-		just run the simple1 example: if the first item has
-		two high-ASCII characters in place of the "&uuml;" in
-		"N&uuml;rnberger Brats", you know it's not handling
-		UTF-8.</para>
+		<para>On such a system, the terminal I/O code
+		understands UTF-8 encoded data, so your program
+		doesn't require any special code to correctly
+		display a UTF-8 string. If you aren't sure whether
+		your system supports UTF-8 natively, just run the
+		<computeroutput>simple1</computeroutput> example:
+		if the first item has two high-ASCII characters in
+		place of the "&uuml;" in "N&uuml;rnberger Brats",
+		you know it's not handling UTF-8.</para>
 
 		<para>If your Unix doesn't support UTF-8 natively,
 		it likely doesn't support any form of Unicode at all,
@@ -1919,8 +1903,8 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
 	<sect2>
 		<title>Unicode and Win32</title>
 
-		<para>Each Win32 API function that takes
-		a string actually has two versions. One
+		<para>Each Win32 API function that takes a
+		string actually comes in two versions. One
 		version supports only 1-byte "ANSI" characters (a
 		superset of ASCII), so they end in 'A'. Win32 also
 		supports the 2-byte subset of Unicode called <ulink
@@ -1934,63 +1918,69 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
 		macro when building your program, the
 		<computeroutput>MessageBox()</computeroutput>
 		macro evaluates to
-		<computeroutput>MessageBoxW()</computeroutput>; otherwise,
-		to <computeroutput>MessageBoxA()</computeroutput>.</para>
+		<computeroutput>MessageBoxW()</computeroutput>;
+		otherwise, to
+		<computeroutput>MessageBoxA()</computeroutput>.</para>
 
-		<para>Since MySQL uses UTF-8 and Win32 uses UCS-2,
-		you must convert data going between the Win32
-		API and MySQL++. Since there's no point in trying
-		for portability &mdash; no other OS I'm aware of
-		uses UCS-2 &mdash; you might as well use native
-		Win32 functions for doing this translation. The following code
-		is distilled from <computeroutput>utf8_to_win32_ansi()</computeroutput>
-		in <filename>examples/util.cpp</filename>:</para>
+		<para>Since MySQL uses the UTF-8 Unicode encoding
+		and Windows uses UCS-2, you must convert data
+		when passing text between MySQL++ and the Windows
+		API. Since there's no point in trying for portability
+		&mdash; no other OS I'm aware of uses UCS-2 &mdash;
+		you might as well use platform-specific functions
+		to do this translation. Since version 2.2.2, MySQL++
+		ships with two Visual C++ specific examples showing
+		how to do this in a GUI program.  (In earlier versions
+		of MySQL++, we did Unicode conversion in the console
+		mode programs, but this was unrealistic.)</para>
+
+		<para>How you handle Unicode data depends on whether
+		you're using the native Windows API, or the newer
+		.NET API. First, the native case:</para>
 
 		<programlisting>
-void utf8_to_win32_ansi(const char* utf8_str, char* ansi_str, int ansi_len)
+// Convert a C string in UTF-8 format to UCS-2 format.
+void ToUCS2(LPTSTR pcOut, int nOutLen, const char* kpcIn)
 {
-    wchar_t ucs2_buf[100];
-    static const int ub_chars = sizeof(ucs2_buf) / sizeof(ucs2_buf[0]);
+    MultiByteToWideChar(CP_UTF8, 0, kpcIn, -1, pcOut, nOutLen);
+}
 
-    MultiByteToWideChar(CP_UTF8, 0, utf8_str, -1, ucs2_buf, ub_chars);
-    CPINFOEX cpi;
-    GetCPInfoEx(CP_OEMCP, 0, &amp;cpi);
-    WideCharToMultiByte(cpi.CodePage, 0, ucs2_buf, -1,
-            ansi_str, ansi_len, 0, 0);
+// Convert a UCS-2 string to C string in UTF-8 format.
+void ToUTF8(char* pcOut, int nOutLen, LPCWSTR kpcIn)
+{
+    WideCharToMultiByte(CP_UTF8, 0, kpcIn, -1, pcOut, nOutLen, 0, 0);
 }</programlisting>
 
-		<para>The examples use this function automatically on
-		Windows systems. To see it in action, run simple1 in
-		a console window (a.k.a. "DOS box"). The first item
-		should be "N&uuml;rnberger Brats". If not, see the
-		last paragraph in this section.</para>
+		<para>These functions leave out
+		some important error checking, so see
+		<filename>examples/vstudio/mfc/mfc_dlg.cpp</filename>
+		for the complete version.</para>
 
-		<para><computeroutput>utf8_to_win32_ansi()</computeroutput>
-		converts <computeroutput>utf8_str</computeroutput>
-		from UTF-8 to UCS-2, and from there to the local <ulink
-		url="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/unicode_81rn.asp">code
-		page</ulink>. "Waitaminnit," you shout! "I thought we
-		were trying to get away from the problem of local code
-		pages!" The console is one of the few Win32 facilities
-		that doesn't support UCS-2 by default. It can be <ulink
-		url="http://www.answers.com/topic/win32-console">put
-		into UCS-2 mode</ulink>, but that seems like more
-		work than we'd like to go to in a portable example
-		program.  Since the default code page in most versions
-		of Windows includes the "&uuml;" character used in the
-		sample database, this conversion works out fine for our
-		purposes.</para>
-		
-		<para>If your program is using the GUI to display
-		text, you don't need the second conversion. Prove
-		this to yourself by adding the following to
-		<computeroutput>utf8_to_win32_ansi()</computeroutput>
-		after the
-		<computeroutput>MultiByteToWideChar()</computeroutput>
-		call:</para>
+		<para>If you're building a .NET application (such as, perhaps,
+		because you're using Windows Forms), it's better to use the .NET
+		libraries for this:</para>
 
 		<programlisting>
-MessageBox(0, ucs2_buf, "UCS-2 version of Item", MB_OK);</programlisting>
+// Convert a C string in UTF-8 format to a .NET String in UCS-2 format.
+String^ ToUCS2(const char* utf8)
+{
+    return gcnew String(utf8, 0, strlen(utf8), System::Text::Encoding::UTF8);
+}
+
+// Convert a .NET String in UCS-2 format to a C string in UTF-8 format.
+System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
+{
+    array&lt;Byte&gt;^ bytes = System::Text::Encoding::UTF8->GetBytes(sIn);
+    nOutLen = Math::Min(nOutLen - 1, bytes->Length);
+    System::Runtime::InteropServices::Marshal::Copy(bytes, 0,
+        IntPtr(pcOut), nOutLen);
+    pcOut[nOutLen] = '\0';
+}</programlisting>
+
+		<para>Unlike the native API versions, these examples
+		are complete, since the .NET platform handles a lot
+		of things behind the scenes for us. We don't need any
+		error-checking code for such simple routines.</para>
 
 		<para>All of this assumes you're using Windows NT
 		or one of its direct descendants: Windows 2000,
