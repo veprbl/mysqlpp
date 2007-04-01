@@ -28,6 +28,20 @@ then
 		exit 1
 	fi
 	PROG=$1
+
+elif [ "$PROG" == 'gdb' ]
+then
+	TOOL='gdb --args'
+	shift
+	if [ -z "$1" ]
+	then
+		echo "usage: $0 gdb <example> [args...]"
+		echo
+		echo "   Run $0 without arguments for more detailed usage info."
+		echo
+		exit 1
+	fi
+	PROG=$1
 fi
 shift
 
