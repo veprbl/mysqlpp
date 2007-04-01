@@ -100,6 +100,10 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o Rename Query::def to Query::tquery_defaults.	Makes its
+	  purpose clearer.  Also, examine all other public data
+	  members, to see if they have a similar problem.
+
 	o Connection::error() returns const char*, while Query::error()
 	  returns std::string.  Pick one.
 
