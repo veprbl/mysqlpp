@@ -576,7 +576,6 @@ public:
 	{
 		reset();
 
-		// See above comment for cast rationale
 		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 				"INSERT INTO " << v.table() << " (" <<
 				v.field_list() << ") VALUES (" <<
@@ -605,7 +604,6 @@ public:
 			return *this;	// empty set!
 		}
 		
-		// See above comment for cast rationale
 		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 				"INSERT INTO " << first->table() << " (" <<
 				first->field_list() << ") VALUES (" <<
@@ -634,7 +632,6 @@ public:
 	{
 		reset();
 
-		// See above comment for cast rationale
 		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 				"REPLACE INTO " << v.table() << " (" <<
 				v.field_list() << ") VALUES (" << v.value_list() << ')';
