@@ -17,6 +17,13 @@ v2.x Features
 	it can be done without breaking the ABI, which would force
 	a feature to v3.0.
 
+	o Try SSQLS with BLOBs.  It probably won't work, because
+	  ColData converts to std::string (the most likely BLOB
+	  receiving type) via ColData::operator cchar*(), losing
+	  length information along the way.  Will probably have
+	  to add an operator std::string to ColData_Tmpl to make
+	  this work right.
+
 	o Stop using ColData_Tmpl<T>::buf_ member.  It currently
 	  contains a duplicate (and, in the presence of nulls,
 	  truncated) copy of the data stored by the parent class when
