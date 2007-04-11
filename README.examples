@@ -20,30 +20,28 @@ Getting Started with the Examples
     on Windows.  Since it isn't built in the same directory as the
     examples, this means that your system won't be able to find the
     library without help until you install it.  Since you generally
-    want to run the examples _before_ installing the library,
-    to test that the library actually works, we need a workaround.
+    want to run the examples _before_ installing the library, to test
+    that the library actually works, we need a workaround.
 
     That workaround is the exrun script.  There are two versions,
     a Bourne shell script called just exrun for POSIX systems, and
-    exrun.bat for Windows.  For the purposes of this section, they
-    behave the same way.  Wherever you see "$ ./exrun..." below,
-    just think "c:\path\to\mysql++> exrun.bat..." instead.  If you're
-    on a POSIX system, see below for more information on that
-    version of the script.
+    exrun.bat for Windows.
 
-    Start with resetdb:
+    Before running the other examples, you must first create the
+    sample database.  On POSIX systems, you do that like so:
 
         $ ./exrun resetdb [host] [user] [password] [port]
 
-    This sets up the mysql_cpp_data database used by most of the
-    other examples.
+    On Windows, that would instead be:
 
-    If you mistakenly run resetdb directly instead of through
-    exrun, it will either fail to run because it can't find the
-    MySQL++ library, or it will find an old version and complain
-    about it.  None of the other examples are protected in this
-    way, but since you have to run resetdb before all the other
-    examples, this should pose no problem.
+        C:\mysql++\> exrun.bat resetdb [host] [user] [pass] [port]
+
+    If you mistakenly run resetdb directly instead of through exrun,
+    it will either fail to run because it can't find the MySQL++
+    library, or it will find an old version and complain about it.
+    None of the other examples are protected against mixed versions
+    in this way, but since you have to run resetdb before all the
+    other examples, this should pose no problem.
 
     You can give as few of the parameters as you want, but they must
     be in that order.  That is, if you want to give a user name,
@@ -51,10 +49,10 @@ Getting Started with the Examples
     your user name, no password, and the default MySQL port (3306).
 
 
-Running the Other Examples
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-    The following examples use the database set up by resetdb,
-    and have the same command line format as resetdb:
+Running the Other Command Line Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    The following examples use the database set up by resetdb, and
+    have the same command line format as resetdb:
 
         simple1: Shows the item names for all records in the sample
             stock table.  Try this one if you do nothing else.
@@ -66,8 +64,8 @@ Running the Other Examples
             with a "use" query instead of a "store" query.  See the
             user manual for the difference between these methods.
 
-        custom1-6: Demonstrates the SQLSS features.  (See the user
-            manual.)
+        custom1-6: Demonstrates the SQLSS features.  These examples
+            are explained in the user manual.
 
         load_jpeg: Inserts a JPEG file into the sample database,
             for use by the cgi_jpeg example.  (See below.)  Unlike
