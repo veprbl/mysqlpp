@@ -43,6 +43,7 @@ protected:
 	//// Internal support functions
 	void AddMessage(LPCTSTR pcMessage);
 	void DoDataExchange(CDataExchange* pDX);
+	void LoadDefaults();
 	bool LoadSetting(HKEY key, LPCTSTR pcName, LPTSTR pcValue,
 			DWORD nValueSize);
 	HKEY OpenSettingsRegistryKey();

@@ -39,28 +39,7 @@ END_MESSAGE_MAP()
 CExampleDlg::CExampleDlg(CWnd* pParent) :
 CDialog(IDD_MFC_DIALOG, pParent)
 {
-	// Load default input values from registry, if we can
-	HKEY key = OpenSettingsRegistryKey();
-	if (key) {
-		// There are pre-existing defaults we can use, so copy them in
-		TCHAR acSetting[100];
-		LoadSetting(key, _T("user"), acSetting, sizeof(acSetting));
-		sUserName = acSetting;
-		LoadSetting(key, _T("server"), acSetting, sizeof(acSetting));
-		sServerAddress = acSetting;
-		RegCloseKey(key);
-	}
-	if ((sUserName.GetLength() == 0) || 
-			(sServerAddress.GetLength() == 0)) {
-		// Didn't find anything we can use, so have to make something
-		// plausible up instead.
-		sServerAddress = _T("localhost");
-		TCHAR acUserName[100];
-		DWORD nBufferSize = sizeof(acUserName);
-		if (GetUserName(acUserName, &nBufferSize)) {
-			sUserName = acUserName;
-		}
-	}
+	LoadDefaults();
 }
 
 
@@ -78,13 +57,45 @@ CExampleDlg::AddMessage(LPCTSTR pcMessage)
 //// DoDataExchange ////////////////////////////////////////////////////
 // Transfer data from the controls into our member variables
 
-void CExampleDlg::DoDataExchange(CDataExchange* pDX)
+void
+CExampleDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_SERVER_EDIT, sServerAddress);
 	DDX_Text(pDX, IDC_USER_EDIT, sUserName);
 	DDX_Text(pDX, IDC_PASSWORD_EDIT, sPassword);
 	DDX_Control(pDX, IDC_RESULTS_LIST, ResultsList);
+}
+
+
+//// LoadDefaults //////////////////////////////////////////////////////
+// Load default input values from registry, if they exist.
+
+void
+CExampleDlg::LoadDefaults()
+{
+	HKEY key = OpenSettingsRegistryKey();
+	if (key) {
+		TCHAR acSetting[100];
+		if (LoadSetting(key, _T("user"), acSetting, sizeof(acSetting))) {
+			sUserName = acSetting;
+		}
+		if (LoadSetting(key, _T("server"), acSetting, sizeof(acSetting))) {
+			sServerAddress = acSetting;
+		}
+		RegCloseKey(key);
+	}
+
+	if (sUserName.IsEmpty()) {
+		TCHAR acUserName[100];
+		DWORD nBufferSize = sizeof(acUserName);
+		if (GetUserName(acUserName, &nBufferSize)) {
+			sUserName = acUserName;
+		}
+	}
+	if (sServerAddress.IsEmpty()) {
+		sServerAddress = _T("localhost");
+	}
 }
 
 
