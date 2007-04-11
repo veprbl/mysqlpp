@@ -27,7 +27,9 @@ Getting Started with the Examples
     a Bourne shell script called just exrun for POSIX systems, and
     exrun.bat for Windows.  For the purposes of this section, they
     behave the same way.  Wherever you see "$ ./exrun..." below,
-    just think "c:\path\to\mysql++> exrun.bat..." instead.
+    just think "c:\path\to\mysql++> exrun.bat..." instead.  If you're
+    on a POSIX system, see below for more information on that
+    version of the script.
 
     Start with resetdb:
 
@@ -78,17 +80,32 @@ Running the Other Examples
 
         dbinfo: Dumps a bunch of information about the database
             server and the tables in its 'mysql' database.
-	
-	If you run the load_jpeg example, you should consider also
-	playing with the other half of the demonstration, cgi_jpeg.
-	To run it, you'll need to install MySQL++ on a machine with
-	a web server, then copy the cgi_jpeg program to the server's
-	CGI directory.	For example, on a stock Red Hat type box,
-	that would be /var/www/cgi-bin.  At that point, a request like
-	http://my.server.com/cgi-bin/cgi_jpeg?id=1 should show the
-	JPEG you loaded.  The ID value to use will be that reported
-	by load_jpeg.
+    
+    If you run the load_jpeg example, you should consider also
+    playing with the other half of the demonstration, cgi_jpeg.
+    To run it, you'll need to install MySQL++ on a machine with
+    a web server, then copy the cgi_jpeg program to the server's
+    CGI directory.  For example, on a stock Red Hat type box,
+    that would be /var/www/cgi-bin.  At that point, a request like
+    http://my.server.com/cgi-bin/cgi_jpeg?id=1 should show the
+    JPEG you loaded.  The ID value to use will be that reported
+    by load_jpeg.
 
     There is one other oddball, the updel example.  It shows how to
     use the power of the matching syntax available in MySQL's SELECT
     statement to do fine-grained UPDATE or DELETE queries.
+
+
+Special exrun Capabilities
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+    The Bourne shell version of the exrun script has a few features
+    not avaiable in the Windows batch file version.  These features
+    let you run the examples under various debugging tools.
+
+    You can get simple gdb debugging if you run an example like this:
+
+        $ ./exrun gdb simple1 foo bar qux
+
+    The script also supports valgrind, in memory leak testing mode:
+
+        $ ./exrun valgrind simple1 foo bar qux
