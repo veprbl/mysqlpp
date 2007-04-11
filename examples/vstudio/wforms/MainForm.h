@@ -30,6 +30,7 @@
 
 namespace wforms {
 
+	using namespace Microsoft::Win32;
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -40,9 +41,10 @@ namespace wforms {
 	public ref class MainForm : public System::Windows::Forms::Form
 	{
 	public:
-		MainForm(void)
+		MainForm()
 		{
 			InitializeComponent();
+			LoadDefaults();
 		}
 
 	protected:
@@ -54,19 +56,29 @@ namespace wforms {
 		}
 
 	private:
-		System::Void CloseButton_Click(Object^ sender, EventArgs^ e)
+		// Insert a text string into the output list control
+		Void AddMessage(String^ msg)
+		{
+			resultsList_->Items->Add(msg);
+		}
+
+		// Handle Close button click by shutting down application
+		Void CloseButton_Click(Object^ sender, EventArgs^ e)
 		{
 			Application::Exit();
 		}
 		
+		// Handle Connect button click.  The body of this function is
+		// essentially the same as the simple2 command line example, with
+		// some GUI overhead.
 		Void ConnectButton_Click(Object^ sender, EventArgs^ e)
 		{
 			// Clear out the results list, in case this isn't the first time
 			// we've come in here.
 			resultsList_->Items->Clear();
 
-			// Translate the Unicode text we get from the UI into the UTF-8 form
-			// that MySQL wants.
+			// Translate the Unicode text we get from the UI into the UTF-8
+			// form that MySQL wants.
 			const int kInputBufSize = 100;
 			char acServerAddress[kInputBufSize];
 			char acUserName[kInputBufSize];
@@ -97,7 +109,7 @@ namespace wforms {
 				}
 
 				// Retreive was successful, so save user inputs now
-				//SaveInputs(sServerAddress, sUserName);
+				SaveInputs();
 			}
 			else {
 				// Retreive failed
@@ -106,6 +118,60 @@ namespace wforms {
 			}
 		}
 
+		// Load the default input field values, if there are any
+		Void LoadDefaults()
+		{
+			RegistryKey^ settings = OpenSettingsRegistryKey();
+			if (settings) {
+				userName_->Text = LoadSetting(settings, L"user");
+				serverAddress_->Text = LoadSetting(settings, L"server");
+			}
+			
+			if (String::IsNullOrEmpty(userName_->Text)) {
+				userName_->Text = Environment::UserName;
+			}
+			if (String::IsNullOrEmpty(serverAddress_->Text)) {
+				serverAddress_->Text = L"localhost";
+			}
+		}
+
+		// Returns a setting from underneath the given registry key.
+		// Assumes that it's a string value under the MySQL++ examples' 
+		// settings area.
+		String^ LoadSetting(RegistryKey^ key, String^ name)
+		{
+			return (String^)key->GetValue(name);
+		}
+
+		// Returns a reference to the MySQL++ examples' settings area in the
+		// registry.
+		RegistryKey^ OpenSettingsRegistryKey()
+		{
+			RegistryKey^ key = Registry::CurrentUser->OpenSubKey(L"Software",
+					true);
+			return key ? key->CreateSubKey(L"MySQL++ Examples") : nullptr;
+		}
+
+		// Saves the input fields' values to the registry, except for the
+		// password field.
+		Void SaveInputs()
+		{
+			RegistryKey^ settings = OpenSettingsRegistryKey();
+			if (settings) {
+				SaveSetting(settings, "user", userName_->Text);
+				SaveSetting(settings, "server", serverAddress_->Text);
+			}			
+		}
+
+		// Saves the given value as a named entry under the given registry
+		// key.
+		Void SaveSetting(RegistryKey^ key, String^ name, String^ value)
+		{
+			key->SetValue(name, value);
+		}
+
+		// Takes a string in the .NET platform's native Unicode format and
+		// copies it to the given C string buffer in UTF-8 encoding.
 		Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
 		{
 			array<Byte>^ bytes = System::Text::Encoding::UTF8->GetBytes(sIn);
@@ -115,15 +181,12 @@ namespace wforms {
 			pcOut[nOutLen] = '\0';
 		}
 
+		// Takes the given C string encoded in UTF-8 and converts it to a
+		// Unicode string in the .NET platform's native Unicode encoding.
 		String^ ToUCS2(const char* utf8)
 		{
 			return gcnew String(utf8, 0, strlen(utf8), 
 					System::Text::Encoding::UTF8);
-		}
-
-		Void AddMessage(String^ msg)
-		{
-			resultsList_->Items->Insert(0, msg);
 		}
 
 	private: System::Windows::Forms::TextBox^ serverAddress_;
@@ -210,6 +273,7 @@ namespace wforms {
 			this->password_->Name = L"password_";
 			this->password_->Size = System::Drawing::Size(139, 20);
 			this->password_->TabIndex = 2;
+			this->password_->UseSystemPasswordChar = true;
 			// 
 			// userName_
 			// 
