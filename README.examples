@@ -111,9 +111,11 @@ Dedicated Windows Examples
             which doesn't include MFC.
 
     Open examples\vstudio\mysqlpp_gui_examples.sln to begin working
-    with these examples.  They probably only work correctly in Visual
-    Studio 2005, at the moment.  If you want to backport them to VS
-    2003, it's probably not hard, and we will accept patches for this.
+    with these examples.  They only work correctly in Visual Studio
+    2005 right now.  If you want to backport them to VS 2003, it's
+    probably not hard, and we will accept patches for this.  The main
+	difficulty is that VS 2003 supports Managed C++, which isn't
+	the same thing as C++/CLI.
 
     The main justification for these examples is that Unicode is
     handled differently in Windows GUI programs than on the POSIX
