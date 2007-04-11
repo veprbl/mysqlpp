@@ -110,8 +110,8 @@ Dedicated Windows Examples
             many developers are now using Visual Studio Express,
             which doesn't include MFC.
 
-    Open examples\vstudio\mysqlpp_vstudio.sln to begin working with
-    these examples.  They probably only work correctly in Visual
+    Open examples\vstudio\mysqlpp_gui_examples.sln to begin working
+    with these examples.  They probably only work correctly in Visual
     Studio 2005, at the moment.  If you want to backport them to VS
     2003, it's probably not hard, and we will accept patches for this.
 
