@@ -2443,6 +2443,53 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
 				</itemizedlist>
 			</sect4>
 		</sect3>
+
+		<sect3>
+			<title>v2.2.0</title>
+
+			<para>Code like this will have to change:</para>
+
+			<programlisting>
+Query q = con.query();
+q &lt;&lt; "delete from mytable where myfield=%0:myvalue";
+q.parse();
+q.def["myvalue"] = some_value;
+q.execute();</programlisting>
+
+			<para>...to something more like this:</para>
+
+			<programlisting>
+Query q = con.query();
+q &lt;&lt; "delete from mytable where myfield=%0";
+q.parse();
+q.execute(some_value);</programlisting>
+
+			<para>The first code snippet abuses the
+			default template query parameter mechanism
+			(<computeroutput>Query::def</computeroutput>)
+			to fill out the template instead of
+			using one of the overloaded forms of
+			<computeroutput>execute()</computeroutput>,
+			<computeroutput>store()</computeroutput> or
+			<computeroutput>use()</computeroutput>
+			taking one or more
+			<computeroutput>SQLString</computeroutput>
+			parameters.  The purpose of
+			<computeroutput>Query::def</computeroutput>
+			is to allow for default template parameters
+			over multiple queries. In the first snippet
+			above, there is only one parameter, so in
+			order to justify the use of template queries
+			in the first place, it must be changing with
+			each query. Therefore, it isn't really a
+			"default" parameter at all. We did not make
+			this change maliciously, but you can understand
+			why we are not in any hurry to restore this
+			"feature".</para>
+
+			<para>(Incidentally, this change was made to
+			allow better support for BLOB columns.)</para>
+		</sect3>
 	</sect2>
 
 
