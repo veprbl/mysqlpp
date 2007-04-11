@@ -40,18 +40,14 @@ Building the Library and Example Programs
 
 Using MySQL++ in an MFC Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    If you don't already have a project set up, open Visual Studio,
-    say File|New|Project, then choose Visual C++|MFC|MFC Application.
+    If you don't already have a project set up, open Visual Studio, say
+    File::New::Project, then choose Visual C++::MFC::MFC Application.
     Go through the wizard setting up the project as you see fit.
 
     Once you have your project open, right click on your top-level
     executable in the Solution Explorer, choose Properties, and make
     the following changes.  (Where it doesn't specify Debug or Release,
     make the change to both configurations.)
-
-        o Under Configuration Properties::General change "Common
-          Language Runtime support" to "No Common Language Runtime
-          support"
 
         o Append the following to C/C++::General::Additional Include
           Directories:
@@ -75,8 +71,65 @@ Using MySQL++ in an MFC Project
 
         o Under Linker::Input add the following to "Additional
           Dependencies":
-		  
-		    libmysql.lib wsock32.lib mysqlpp.lib
+          
+            libmysql.lib wsock32.lib mysqlpp.lib
+
+    You may want to study examples\vstudio\mfc\mfc.vcproj to see
+    this in action.  Note that some of the paths will be different,
+    because it can use relative paths for mysqlpp.dll.
+
+
+Using MySQL++ in a Windows Forms C++/CLI Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Before you start work on getting MySQL++ working with your own
+    program, you need to make some changes to the MySQL++ build settings.
+    Open mysqlpp.sln, then right-click on the mysqlpp target and select
+    Properties.  Make the following changes for both the Debug and
+    Release configurations:
+
+        o Under Configuration Properties::General, change "Common
+          Language Runtime support" to the /clr setting.
+
+        o Under C/C++::Command Line, remove the /EHsc from the
+          Additional Options section.
+
+    If you have already built MySQL++, be sure to perform a complete
+    rebuild after changing these options.  The compiler will emit several
+    C4835 warnings after making those changes, which are harmless when
+    using the DLL with a C++/CLI program, but which warn of real problems
+    when using it with unmanaged C++.  As a result, it's probably best
+    if you don't install the resulting DLL in a system level directory.
+    I'd recommend copying it only into the same directory as the EXE.
+
+    Once you have MySQL++ built with CLR support, open your program's
+    project.  If you don't already have a project set up, open Visual
+    Studio, say File::New::Project, then choose Visual C++::CLR::Windows
+    Forms Application.  Go through the wizard setting up the project as
+    you see fit.
+
+    The configuration process isn't much different from that for an
+    MFC project, so go through the list above first.  Then, make the
+    following changes particular to .NET and C++/CLI:
+
+        o Under Configuration Properties::General change the setting
+          from /clr:pure to /clr.  (You need mixed assembly support
+          to allow a C++/CLI program to use a plain C++ library like
+          MySQL++.)
+
+        o For the Linker::Input settings, you don't need wsock32.lib.
+          The mere fact that you're using .NET takes care of that
+          dependency for you.
+
+    In the MFC instructions above, it said that you need to build it
+    using the Multi-threaded DLL version of the C++ Runtime Library.
+    That's not strictly true for MFC, but it's an absolute requirement
+    for C++/CLI.  See the Remarks in this MSDN article for details:
+
+        http://msdn2.microsoft.com/en-us/library/k8d11d4s.aspx
+
+    You may want to study examples\vstudio\wforms\wforms.vcproj to see
+    all this in action.  Note that some of the paths will be different,
+    because it can use relative paths for mysqlpp.dll.
 
 
 If You Run into Problems...
