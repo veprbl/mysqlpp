@@ -64,7 +64,7 @@ Running the Other Command Line Examples
             with a "use" query instead of a "store" query.  See the
             user manual for the difference between these methods.
 
-        custom1-6: Demonstrates the SQLSS features.  These examples
+        custom1-6: Demonstrates the SSQLS features.  These examples
             are explained in the user manual.
 
         load_jpeg: Inserts a JPEG file into the sample database,
@@ -92,6 +92,36 @@ Running the Other Command Line Examples
     There is one other oddball, the updel example.  It shows how to
     use the power of the matching syntax available in MySQL's SELECT
     statement to do fine-grained UPDATE or DELETE queries.
+
+
+Dedicated Windows Examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+    If you're a Visual C++ user, there are two examples specially
+    created for you:
+
+        examples\vstudio\mfc.vcproj: A GUI replacement for the simple2
+            example, it simply logs in and displays the stock table's
+            contents.  Uses good old C++ and MFC.
+
+        examples\vstudio\wforms.vcproj: The same thing, only written in
+            C++/CLI and using Windows Forms.  We needed a second
+            example for two reasons.  First, string handling is quite
+            different under .NET than in unmanaged C++.  Second,
+            many developers are now using Visual Studio Express,
+            which doesn't include MFC.
+
+    Open examples\vstudio\mysqlpp_vstudio.sln to begin working with
+    these examples.  They probably only work correctly in Visual
+    Studio 2005, at the moment.  If you want to backport them to VS
+    2003, it's probably not hard, and we will accept patches for this.
+
+    The main justification for these examples is that Unicode is
+    handled differently in Windows GUI programs than on the POSIX
+    systems where MySQL++ was born and raised.  In earlier versions
+    of MySQL++, the command line examples had very limited Unicode
+    support on Windows, but it was unrealistic and confusing.  Now the
+    command line examples don't even try to handle Unicode on Windows,
+    leaving that up to these new GUI examples.
 
 
 Special exrun Capabilities
