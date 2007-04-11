@@ -47,7 +47,7 @@ protected:
 	bool LoadSetting(HKEY key, LPCTSTR pcName, LPTSTR pcValue,
 			DWORD nValueSize);
 	HKEY OpenSettingsRegistryKey();
-	bool SaveInputs(LPCTSTR pcServerAddress, LPCTSTR pcUserName);
+	bool SaveInputs();
 	bool SaveSetting(HKEY key, LPCTSTR pcName, LPCTSTR pcValue);
 	bool ToUCS2(LPTSTR pcOut, int nOutLen, const char* kpcIn);
 	bool ToUTF8(char* pcOut, int nOutLen, LPCWSTR kpcIn);

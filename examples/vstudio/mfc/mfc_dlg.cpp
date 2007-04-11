@@ -164,7 +164,7 @@ CExampleDlg::OnBnClickedConnectButton()
 		}
 
 		// Retreive was successful, so save user inputs now
-		SaveInputs(sServerAddress, sUserName);
+		SaveInputs();
 	}
 	else {
 		// Retreive failed
@@ -195,16 +195,16 @@ CExampleDlg::OpenSettingsRegistryKey()
 
 
 //// SaveInputs ////////////////////////////////////////////////////////
-// Save the given strings to the registry so future runs and other
-// examples can use them.
+// Saves the input fields' values to the registry, except for the
+// password field.
 
 bool
-CExampleDlg::SaveInputs(LPCTSTR pcServerAddress, LPCTSTR pcUserName)
+CExampleDlg::SaveInputs()
 {
 	HKEY key = OpenSettingsRegistryKey();
 	if (key) {
-		SaveSetting(key, _T("user"), pcUserName);
-		SaveSetting(key, _T("server"), pcServerAddress);
+		SaveSetting(key, _T("user"), sUserName);
+		SaveSetting(key, _T("server"), sServerAddress);
 		RegCloseKey(key);
 		return true;
 	}
