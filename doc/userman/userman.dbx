@@ -431,7 +431,7 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         Library, it's possible to catch all exceptions from MySQL++
         by just catching <classname>std::exception</classname>
         by reference. However, it's usually better to catch the
-        all of the concret eexception types that you expect,
+        all of the concrete exception types that you expect,
         and add a handler for <classname>Exception</classname> or
         <classname>std::exception</classname> to act as a "catch-all"
         for unexpected exceptions.</para>
