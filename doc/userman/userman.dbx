@@ -401,21 +401,6 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
 
 
     <sect2>
-        <title>Examples' Utility Module</title>
-
-        <para>I referred to the <filename>util</filename>
-        module above. Following is the source for that module. It
-        isn't important to understand this module in detail, but
-        understanding its outlines will make the following examples
-        more clear.</para>
-
-        <programlisting><xi:include href="util.txt"
-            parse="text" xmlns:xi="http://www.w3.org/2001/XInclude"/>
-        </programlisting>
-    </sect2>
-
-
-    <sect2>
         <title>A More Complicated Example</title>
 
         <para>The <filename>simple1</filename> example above
