@@ -29,7 +29,6 @@
 
 #include <iostream>
 #include <iomanip>
-//#include <stdlib.h>
 
 // This include isn't needed by util module.  It's just a test of the
 // new SSQLS feature allowing the structure to be defined in many
