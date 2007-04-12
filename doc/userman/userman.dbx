@@ -330,7 +330,7 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
 	the most useful fraction.</para>
 
 	<para>This tutorial assumes you know C++ fairly well,
-	in particuler the Standard Template Library (STL) and
+	in particular the Standard Template Library (STL) and
 	exceptions.</para>
 
 
@@ -338,53 +338,64 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
 		<title>Running the Examples</title>
 
 		<para>All of the examples are complete running
-		programs. They may or may not be built for you already,
-		depending on how you installed the library.</para>
+		programs. If you built the library from source,
+		the examples should have been built as well. If
+		you installed it via the RPM package, the example
+		source code and a simplified Makefile is in
+		the examples subdirectory of the mysql++-devel
+		package's documentation directory. (This is usually
+		<filename>/usr/share/doc/mysql++-devel-*</filename>,
+		but it can vary on different Linuxes.)</para>
 
-		<para>If you installed MySQL++ from the source
-		tarball on a Unixy system, the examples should
-		have been built along with the library. If not,
-		simply go into the examples directory and type
-		<computeroutput>make</computeroutput>.</para>
+		<para>Before you get started, please read through
+		any of the README.* files included with the MySQL++
+		distribution that are relevant to your platform. We
+		won't repeat all of that here.</para>
 
-		<para>If you installed the library via
-		RPM, the examples are in the mysql++-devel
-		RPM. After installing that, the examples are in
-		<computeroutput>/usr/src/mysql++/examples</computeroutput>.
-		To build them, go into that directory
-		and type <computeroutput>make -f
-		Makefile.simple</computeroutput>. See the file
-		<computeroutput>/usr/share/doc/mysql++-devel*/README.examples</computeroutput>
-		for more details.</para>
+		<para>The first example you must run is the
+		<filename>resetdb</filename> example. This builds
+		and populates the sample tables used by the other
+		examples. The usage of resetdb is as follows:</para>
 
-		<para>If you are on a Windows system, the build process
-		for the library should have built the examples as
-		well. Where the programs are depends on which compiler
-		you're using. There should be a README.* file in the
-		distribution specific to your compiler with further
-		instructions.</para>
+		<screen>	./exrun resetdb [host [user [password [port]]]]</screen>
 
-		<para>Once you have the examples building, you need
-		to initialize the sample database by running the
-		<computeroutput>resetdb</computeroutput> example. The
-		usage of resetdb is as follows:</para>
+		<para><filename>exrun</filename> is a script that
+		ensures that the MySQL++ example program you give as
+		its first argument finds the correct shared library
+		version. If you run the example program directly, it
+		will search the system directories for the MySQL++
+		shared library. The only way that will work right
+		is if you installed the library before running the
+		examples, but usually you want to run the examples
+		before then to ensure that the library is working
+		correctly. The <filename>exrun</filename> script solves
+		this problem. See <filename>README.examples</filename>
+		for more details. (We've been using POSIX file
+		and path names for simplicity above, but there's
+		a windows version of <filename>exrun</filename>,
+		called <filename>exrun.bat</filename>. It works the
+		same way.)</para>
 
-		<screen>	resetdb [host [user [password [port]]]]</screen>
+		<para>As for the remaining program arguments, they are
+		all optional, but they must be in the order listed. If
+		you leave off the port number, it uses the default
+		value, 3306. If you leave off the password, it assumes
+		you don't need one to log in.  If you leave off the
+		user name, it uses the name you used when logging on
+		to the computer. And if you leave off the host name,
+		it assumes the MySQL server is running on the local
+		host.</para>
 
-		<para>If you leave off host, localhost is assumed. If
-		you leave off user, your current username is assumed. If
-		you leave of the password, it is assumed that you don't
-		need one. And if you leave off the port, it will use
-		the standard MySQL port number.</para>
+		<para>For <filename>resetdb</filename>, the user
+		name needs to be for an account with permission
+		to create databases. Once the database is
+		created, you can use any account that has read
+		and write permissions for the sample database,
+		<computeroutput>mysql_cpp_data</computeroutput>.</para>
 
-		<para>The user you give resetdb needs to be an account
-		with permission to create databases. Once the database is
-		created you can use any account that has full permission
-		to the sample database mysql_cpp_data.</para>
-
-		<para>You may also have to re-run resetdb after
-		running some of the other examples, as they change the
-		database.</para>
+		<para>You may also have to re-run
+		<filename>resetdb</filename> after running some of
+		the other examples, as they change the database.</para>
 	</sect2>
 
 
