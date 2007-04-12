@@ -1865,12 +1865,11 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
 
 	<sect2>
-		<title>Unicode and Unix</title>
+		<title>Unicode on Unixy Systems</title>
 
 		<para>Linux and Unix have system-wide UTF-8 support
-		these days. If your system's operating system is of
-		2001 or newer vintage, there's a good chance it has
-		such support.</para>
+		these days. If your operating system is of 2001 or
+		newer vintage, it probably has such support.</para>
 
 		<para>On such a system, the terminal I/O code
 		understands UTF-8 encoded data, so your program
@@ -1901,7 +1900,7 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
 
 	<sect2>
-		<title>Unicode and Windows</title>
+		<title>Unicode on Windows</title>
 
 		<para>Each Windows API function that takes a
 		string actually comes in two versions. One
