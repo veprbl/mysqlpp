@@ -680,19 +680,19 @@ q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </prog
         <para>There is no equivalent of SQL's null in the standard C++
         type system.</para>
 
-        <para>The primary distinction is one of type: in SQL, null is a
-        column attribute, which affects whether that column can hold a
-        SQL null. Just like the 'const' keyword in the C++ type system,
-        this effectively doubles the number of SQL data types. To
-        emulate this, MySQL++ provides the <ulink type="classref"
-        url="null">Null</ulink> template to allow the creation of
-        distinct "nullable" versions of existing C++ types. So for
-        example, if you have a <type>TINY INT UNSIGNED</type> column
-        that can have nulls, the proper declaration for MySQL++
-        would be:</para>
+        <para>The primary distinction is one of type: in SQL, null
+        is a column attribute, which affects whether that column
+        can hold a SQL null. Just like the <symbol>const</symbol>
+        keyword in the C++ type system, this effectively doubles the
+        number of SQL data types. To emulate this, MySQL++ provides
+        the <ulink type="classref" url="null">Null</ulink> template
+        to allow the creation of distinct "nullable" versions of
+        existing C++ types. So for example, if you have a <type>TINY
+        INT UNSIGNED</type> column that can have nulls, the proper
+        declaration for MySQL++ would be:</para>
 
         <programlisting>
-mysqlpp::Null&lt;unsigned char&gt; myfield;</programlisting>
+mysqlpp::Null&lt;mysqlpp::sql_tinyint_unsigned&gt; myfield;</programlisting>
 
         <para>Template instantiations are first-class types in
         the C++ language, on par with any other type. You can
@@ -864,8 +864,9 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
             but their use is sometimes not straightforward. Besides
             showing how easy it can be with MySQL++, this
             example demonstrates several features of MySQL++.
-            The program requires one command line parameter,
-            which is a full path to the binary file. This is
+            The program requires one command line parameter over
+            that required by the other examples you've seen so
+            far, which is a full path to a JPEG file. This is
             <filename>examples/load_jpeg.cpp</filename>:</para>
 
             <programlisting><xi:include href="load_jpeg.txt" parse="text"
@@ -880,16 +881,22 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         <sect3>
             <title>Displaying images in HTML from BLOB column</title>
 
-            <para>This example is also a very short one,
-            considering the function that it performs. Although
-            all modern versions of MySQL have a command that
-            dumps data from a BLOB column to a binary file,
-            this example shows how to do it in your code instead,
-            without requiring an temporary file on disk. This is
-            <filename>examples/cgi_jpeg.cpp</filename>:</para>
+            <para>This example is also a very short one, considering
+            the function that it performs. This one will retreive data
+            loaded by <filename>load_jpeg</filename> and print it out
+            in the form a web server can accept for a CGI call. This
+            is <filename>examples/cgi_jpeg.cpp</filename>:</para>
 
             <programlisting><xi:include href="cgi_jpeg.txt" parse="text"
             xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+
+            <para>You install this in a web server's
+            CGI program directory (usually called
+            <filename>cgi-bin</filename>), then call it with a URL like
+            <userinput>http://my.server.com/cgi-bin/cgi_jpeg?id=1</userinput>.
+            That retrieves the JPEG with ID 1 from the table and
+            returns it to the web server, which will send it on to
+            the browser.</para>
         </sect3>
 
         <sect3>
