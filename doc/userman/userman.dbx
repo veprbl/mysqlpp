@@ -2008,6 +2008,101 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
 </sect1>
 
 
+<sect1 id="capilimits">
+	<title>Important Underlying C API Limitations</title>
+
+	<para>Since MySQL++ is built on top of the MySQL C API
+	(libmysqlclient), it shares all of its limitations. The
+	following points out some of these limitations that frequently
+	bite newbies. Some of these may be papered over at the MySQL++
+	layer in future releases, but it's best to write your program
+	as if they were permanent fixtures of the universe.</para>
+
+	<orderedlist>
+		<listitem>
+			<para><emphasis>Only one active query per
+			connection.</emphasis> This one bites MySQL++
+			newbies most often in multithreaded programs.
+			If the program has only one Connection object
+			and each thread gets their Query objects from
+			it, it's inevitable that one of those query
+			objects will try to execute while another
+			query is already running on that single
+			connection. The safest course is to have
+			a separate Connection object per thread,
+			and for your code to get Query objects in
+			a thread only from that thread's Connection
+			object. Alternately, you can confine MySQL
+			database access to a single thread.</para>
+		</listitem>
+
+		<listitem>
+			<para><emphasis>You must consume all rows
+			from a query before you can start a new
+			query.</emphasis> This one bites MySQL++
+			newbies most often when they try code like
+			this:</para>
+
+			<programlisting>
+Connection c(...);
+Query q = c.query();
+Result r1 = q.use("select garbage from plink where foobie='tamagotchi'");
+Result r2 = q.use("select blah from bonk where bletch='smurf'");</programlisting>
+
+			<para>This will fail because a "use" query
+			consumes rows only on demand, so the MySQL
+			server is still keeping information around
+			about the first query when the second one
+			comes in on the connection.  When you try the
+			second query, MySQL++ will throw an exception
+			containing an obscure MySQL C API error
+			message about "commands out of sync".</para>
+
+			<para>This is not the only situation where
+			this can happen, but all of these issues
+			boil down to the fact that MySQL requires
+			that certain operations complete before you
+			can start a new one.</para>
+		</listitem>
+
+		<listitem>
+			<para><emphasis>The
+			<computeroutput>Result</computeroutput>
+			object must outlive the use of any
+			<computeroutput>Row</computeroutput> objects
+			it returns.</emphasis> This is because the
+			<computeroutput>Row</computeroutput>
+			objects refer back to the
+			<computeroutput>Result</computeroutput> object
+			that created them for certain data. (Field
+			names, for example.) MySQL does this for
+			efficiency, because there is some information
+			about a row that is the same for all rows in a
+			result set. We could avoid this in MySQL++ by
+			making redundant copies of this data for each
+			row, but that would be quite wasteful.</para>
+
+			<para>Beware of some of the more obscure ways
+			this can happen. For example:</para>
+
+			<programlisting>
+Connection c(...);
+Query q = c.query();
+Result res = q.store("...");
+Row row = res.at(0);
+res = q.store("...");</programlisting>
+
+			<para>At this point, the
+			<computeroutput>row</computeroutput> variable's
+			contents are likely no longer usable. The
+			program may run, but the row object will use
+			data (field names, etc.) from the second query,
+			not the first.</para>
+		</listitem>
+	</orderedlist>
+</sect1>
+
+
 <sect1 id="breakages">
 	<title>Incompatible Library Changes</title>
 
