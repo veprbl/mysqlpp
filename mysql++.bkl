@@ -344,7 +344,7 @@
 
 			<!-- examples subdir -->
 			<command>
-				cp examples/*.{cpp,h} $(PKGNAME)/examples
+				cp examples/*.{cpp,h,jpg} $(PKGNAME)/examples
 			</command>
 
 			<!-- lib subdir -->
