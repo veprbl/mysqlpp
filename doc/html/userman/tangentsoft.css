@@ -82,3 +82,11 @@ pre.programlisting {
 	background-color: #FFFFCC;
 }
 
+.type {
+	font-family: monospace;
+}
+
+.symbol {
+	font-family: monospace;
+}
+
