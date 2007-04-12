@@ -378,7 +378,7 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         <filename>examples/simple1.cpp</filename>:</para>
 
         <programlisting><xi:include href="simple1.txt" parse="text"
-		xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
         <para>This example simply gets the entire "item" column from
         the example table, and prints those values out.</para>
@@ -407,26 +407,12 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         <filename>examples/simple2.cpp</filename>:</para>
 
         <programlisting><xi:include href="simple2.txt" parse="text"
-		xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-        <para>This example illustrates several new concepts.</para>
-
-        <para>First, notice that we store the result
-        set in a <ulink type="classref" url="Result"/>
-        object. Like the a <classname>std::vector</classname>
-        we used in the <filename>simple1</filename> example,
-        <classname>Result</classname> is a container type, so iterating
-        through it is straightforward. The main difference is that
-        <classname>Result</classname> is less distanced from the
-        way the underlying MySQL C API works, so it is somewhat more
-        efficient.</para>
-
-        <para>Second, we access each row's data indirectly through
-        a <ulink type="classref" url="Row"/> object. This affords
-        several nice features, such as the ability to access a field
-        by name.  You can also access fields by position, as we did
-        in the <filename>simple1</filename> example, which is more
-        efficient, but makes your code less flexible.</para>
+        <para>The main point of this example is that we're accessing
+        fields in the row objects by name, instead of index. This is
+        slower, but obviously clearer. We're also printing out the
+        entire table, not just one column.</para>
     </sect2>
 
 
@@ -591,7 +577,7 @@ q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </prog
             is <filename>examples/custom1.cpp</filename>:</para>
 
             <programlisting><xi:include href="custom1.txt" parse="text" 
-			xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+            xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
             <para>Here is the stock.h header used by that example,
             and many others:</para>
@@ -611,7 +597,7 @@ q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </prog
             is <filename>examples/custom2.cpp</filename>:</para>
 
             <programlisting><xi:include href="custom2.txt" parse="text" 
-			xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+            xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
             <para>That's all there is to it!</para>
 
@@ -633,7 +619,7 @@ q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </prog
             is <filename>examples/custom3.cpp</filename>:</para>
 
             <programlisting><xi:include href="custom3.txt" parse="text"
-			xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+            xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
             <para>When you run the example you will notice that in the
             WHERE clause only the 'item' field is checked for. This
@@ -652,7 +638,7 @@ q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </prog
             <filename>examples/custom4.cpp</filename>:</para>
 
             <programlisting><xi:include href="custom4.txt" parse="text"
-			xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+            xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
             <para>For more details on the SSQLS feature, see the
             <xref linkend="ssqls"/> chapter.</para>
@@ -783,7 +769,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         this:</para>
 
         <programlisting><xi:include href="xaction.txt" parse="text"
-		xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
     </sect2>
 
 
@@ -834,7 +820,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         in <filename>examples/simple3.cpp</filename>:</para>
 
         <programlisting><xi:include href="simple3.txt" parse="text"
-		xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
         <para>This example does the same thing as
         <filename>simple2</filename>, only with a "use" query instead
@@ -854,7 +840,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         <filename>examples/fieldinf1.cpp</filename>:</para>
 
         <programlisting><xi:include href="fieldinf1.txt" parse="text"
-		xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
     </sect2>
 
 
@@ -883,7 +869,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
             <filename>examples/load_jpeg.cpp</filename>:</para>
 
             <programlisting><xi:include href="load_jpeg.txt" parse="text"
-			xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+            xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
             <para>Notice that we used the <type>escape</type>
             manipulator when building the INSERT query above. This
@@ -903,7 +889,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
             <filename>examples/cgi_jpeg.cpp</filename>:</para>
 
             <programlisting><xi:include href="cgi_jpeg.txt" parse="text"
-			xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+            xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
         </sect3>
 
         <sect3>
@@ -919,7 +905,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
             <filename>examples/updel.cpp</filename>:</para>
 
             <programlisting><xi:include href="updel.txt" parse="text"
-			xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+            xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
             <para>Notice that the row values used in the IN clause
             aren't escaped or quoted. This is because row elements are
@@ -955,7 +941,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     the examples:</para>
 
     <programlisting><xi:include href="resetdb.txt" parse="text" 
-	xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+    xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
     <para>The line just before the call to
     <methodname>query.parse()</methodname> sets the template, and the
@@ -1342,7 +1328,7 @@ stock foo("Hotdog", 52);</programlisting>
         this:</para>
 
         <programlisting><xi:include href="custom6.txt" parse="text"
-		xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
         <para>(See the simple1 example in the <xref
         linkend="tutorial"/> for another way to accomplish the same
@@ -1496,7 +1482,7 @@ Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,date = '1
         <filename>examples/custom5.cpp</filename>:</para>
 
         <programlisting><xi:include href="custom5.txt" parse="text" 
-		xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
         <para>This example uses the list form of
         <methodname>equal_list()</methodname>. The
