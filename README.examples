@@ -104,18 +104,26 @@ Dedicated Windows Examples
             contents.  Uses good old C++ and MFC.
 
         examples\vstudio\wforms.vcproj: The same thing, only written in
-            C++/CLI and using Windows Forms.  We needed a second
-            example for two reasons.  First, string handling is quite
-            different under .NET than in unmanaged C++.  Second,
-            many developers are now using Visual Studio Express,
-            which doesn't include MFC.
+            C++/CLI and using Windows Forms.  We needed a second example
+            for two reasons.  First, string handling is quite different
+            under .NET than in unmanaged C++.  Second, many developers
+            are now using Visual Studio Express, which doesn't include
+            MFC.  Please read README.vc before trying to run this example.
+            The MySQL++ build settings must be modified before it will
+            run correctly.
+
+    Before trying to run these examples, run the updexdll.bat file
+    in the top MySQL++ directory.  This copies the built mysqlpp.dll
+    files into the Windows examples' EXE output directories so you
+    can run them before you're ready to formally install the DLL on
+    your system.
 
     Open examples\vstudio\mysqlpp_gui_examples.sln to begin working
     with these examples.  They only work correctly in Visual Studio
     2005 right now.  If you want to backport them to VS 2003, it's
     probably not hard, and we will accept patches for this.  The main
-	difficulty is that VS 2003 supports Managed C++, which isn't
-	the same thing as C++/CLI.
+    difficulty is that VS 2003 supports Managed C++, which isn't
+    the same thing as C++/CLI.
 
     The main justification for these examples is that Unicode is
     handled differently in Windows GUI programs than on the POSIX
