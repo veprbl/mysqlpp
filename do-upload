@@ -16,7 +16,7 @@ then
 	exit 1
 fi
 
-VERSION=`cat mysql++.spec | grep ^Version: | cut -f2 -d' '`
+VERSION=`grep ^Version: mysql++.spec | awk '{ print $2 }'`
 case "$VERSION" in
 	*alpha*) SSH_TARGET=$SSH_TARGET/test ;;
 	*beta*) SSH_TARGET=$SSH_TARGET/test ;;
