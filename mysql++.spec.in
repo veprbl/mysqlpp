@@ -1,12 +1,12 @@
 Summary:    C++ wrapper for the MySQL C API
 Name:       @PACKAGE_NAME@
 Version:    @PACKAGE_VERSION@
-Release:    3%{?dist}
+Release:    1%{?dist}
 License:    LGPL
 Group:      Development/Libraries
 URL:        http://tangentsoft.net/mysql++/
 Source0:    http://tangentsoft.net/mysql++/releases/mysql++-%{version}.tar.gz
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u}
+BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: MySQL-shared-compat
 
 %description
@@ -37,8 +37,8 @@ it's so large, and it doesn't change with every release.
 %setup -q
 
 %build
-%{__make} %{?_smp_mflags}
 %configure --disable-dependency-tracking
+%{__make} %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot} doc/examples doc/html
