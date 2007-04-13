@@ -7,7 +7,7 @@ Group:      Development/Libraries
 URL:        http://tangentsoft.net/mysql++/
 Source0:    http://tangentsoft.net/mysql++/releases/mysql++-%{version}.tar.gz
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: MySQL-shared-compat
+BuildRequires: MySQL-shared mysql-devel
 
 %description
 MySQL++ makes working with MySQL server queries as easy as working
