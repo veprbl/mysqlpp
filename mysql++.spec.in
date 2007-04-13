@@ -41,7 +41,7 @@ it's so large, and it doesn't change with every release.
 %{__make} %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot} doc/examples doc/html
+rm -rf %{buildroot} doc/examples
 
 %{__mkdir_p} %{buildroot}{%{_libdir},%{_includedir}}
 
