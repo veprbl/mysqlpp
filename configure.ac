@@ -14,7 +14,7 @@
 # USA
 
 # Standard autotools stuff
-AC_INIT(mysql++, 2.2.1, plusplus@lists.mysql.com, mysql++)
+AC_INIT(mysql++, 2.2.2, plusplus@lists.mysql.com, mysql++)
 AC_CONFIG_HEADER(config.h)
 AC_DISABLE_STATIC
 AC_CANONICAL_SYSTEM
@@ -82,5 +82,5 @@ STL_SLIST_EXTENSION
 #
 # Configure process complete; write out files generated from *.in.
 #
-AC_OUTPUT([Makefile mysql++.spec lib/Doxyfile lib/mysql++.h])
+AC_OUTPUT([Makefile mysql++.bkl mysql++.spec lib/Doxyfile lib/mysql++.h])
 
