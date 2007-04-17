@@ -17,12 +17,13 @@ v2.x Features
 	it can be done without breaking the ABI, which would force
 	a feature to v3.0.
 
-	o Try SSQLS with BLOBs.  It probably won't work, because
-	  ColData converts to std::string (the most likely BLOB
-	  receiving type) via ColData::operator cchar*(), losing
-	  length information along the way.  Will probably have
-	  to add an operator std::string to ColData_Tmpl to make
-	  this work right.
+	o Fix SSQLS to work with BLOBs.  Most likely source of problems
+	  is that ColData converts to std::string (the most likely BLOB
+	  receiving type) via ColData::operator cchar*(), losing length
+	  information along the way.  Will probably have to add an
+	  operator std::string to ColData_Tmpl to make this work right.
+
+	o That done, rework cgi_jpeg to use SSQLS as a test.
 
 	o Stop using ColData_Tmpl<T>::buf_ member.  It currently
 	  contains a duplicate (and, in the presence of nulls,
@@ -37,11 +38,6 @@ v2.x Features
 	  the types we already support.  Should just be a matter of
 	  duplicating the existing type-specific manipulator functions,
 	  and wrapping the types in Null<>.
-
-	o Rework cgi_jpeg to use SSQLS.  If it no longer works after
-	  the conversion, there's still a code path using C strings.
-
-	o Rework the docs for load_jpeg and cgi_jpeg.
 
 	o Add a few features to date and time classes:
 
