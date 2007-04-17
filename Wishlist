@@ -224,6 +224,11 @@ Future Features
 	They could happen at any time.	If you want one to appear at
 	some definite date, get coding and provide a patch!
 
+	o Currently, the operator= for an SSQLS assumes that the row
+	  contains the entire row's data.  By using the list of known
+	  field names, we should be able to map a row subset onto an
+	  SSQLS correctly.
+
 	o SSQLS v2.  Not sure how it will look yet, but there are ideas
 	  in play, and patches to study.
 
