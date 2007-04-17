@@ -28,7 +28,6 @@
 ***********************************************************************/
 
 #include <mysql++.h>
-#include <custom.h>
 
 using namespace std;
 using namespace mysqlpp;
@@ -37,11 +36,6 @@ using namespace mysqlpp;
 #define IMG_HOST		"localhost"
 #define IMG_USER		"root"
 #define IMG_PASSWORD 	"nunyabinness"
-
-sql_create_2(images,
-	1, 2,
-	mysqlpp::sql_int_unsigned, id,
-	mysqlpp::sql_blob, data)
 
 int
 main(int argc, char *argv[])
@@ -79,14 +73,14 @@ main(int argc, char *argv[])
 	try {
 		con.connect(IMG_DATABASE, IMG_HOST, IMG_USER, IMG_PASSWORD);
 		Query query = con.query();
-		query << "SELECT * FROM images WHERE id = " << img_id;
-		ResUse res = query.use();
-		if (res) {
-			images img = res.fetch_row();
-			unsigned long length = img.data.size();
+		query << "SELECT data FROM images WHERE id = " << img_id;
+		Row row;
+		Result res = query.store();
+		if (res && (res.num_rows() > 0) && (row = res.at(0))) {
+			unsigned long length = row.at(0).size();
 			cout << "Content-type: image/jpeg" << endl;
 			cout << "Content-length: " << length << endl << endl;
-			fwrite(img.data.data(), 1, length, stdout);
+			fwrite(row.at(0).data(), 1, length, stdout);
 		}
 		else {
 			cout << "Content-type: text/plain" << endl << endl;
