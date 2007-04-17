@@ -1,9 +1,6 @@
 Patches for any of these thoughtfully considered!  See the HACKERS file
 for instructions on sending patches.
 
-The items in the bug fix/maintenance section are the easiest to do
-without breaking things, so if you're looking for a project....
-
 Here's a meta-item that doesn't really fit into any of the categories
 below: any time you must hand-roll some SQL code in your program,
 consider whether it could be reduced to an API feature that would be
