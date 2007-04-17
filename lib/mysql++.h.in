@@ -78,9 +78,9 @@ MYSQLPP_EXPORT unsigned int get_library_version();
 
 	\section getting_started Getting Started
 
-	The best place to get started is the <a
-	href="../userman/index.html">user manual</a>. It provides a
-	guide to the example programs and more.
+	The best place to get started is the
+	<a href="../userman/index.html">user manual</a>. It provides
+	a guide to the example programs and more.
 
 
 	\section classes Major Classes
