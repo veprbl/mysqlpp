@@ -35,7 +35,7 @@
 	<if cond="BUILDLIBRARY=='yes'">
 		<dll id="mysqlpp">
 			<libname>mysqlpp</libname>
-			<so_version>2.2.2</so_version>
+			<so_version>2.2.3</so_version>
 
 			<sources>
 				lib/coldata.cpp
@@ -305,7 +305,7 @@
 			<command>
 				for d in config doc/{.,html}/{refman,userman} examples lib ; \
 				do \
-					mkdir -p $(PKGNAME)/$(DDD) \
+					mkdir -p $(PKGNAME)/$(DDD) ; \
 				done
 			</command>
 
@@ -347,11 +347,11 @@
 				cp examples/*.{cpp,h,jpg} $(PKGNAME)/examples
 			</command>
 			<command>
-				for d in mfc wforms \
+				for d in mfc wforms ; \
 				do \
 					mkdir -p $(PKGNAME)/examples/vstudio/$(DDD) ; \
-					cp examples/vstudio/$(DDD)/*.{cpp,h,rc,resX,vcproj} \
-						$(PKGNAME)/examples/vstudio/$(DDD)
+					cp examples/vstudio/$(DDD)/*.{cpp,h,r*,vcproj} \
+						$(PKGNAME)/examples/vstudio/$(DDD) ; \
 				done
 			</command>
 
