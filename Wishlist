@@ -100,6 +100,16 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o Evaluate whether Query's copy ctor should be made private.
+	  Copying these objects probably never makes sense.  Ditto for
+	  Connection.
+
+	o Rename Query::success() and Query::success_.	The names imply
+	  that they only have meaning once a query is tried, but
+	  that isn't true.  They're an indicator of whether the
+	  object has had any problems at all, not just problems in
+	  query execution.
+
 	o Rename Query::def to Query::tquery_defaults.	Makes its
 	  purpose clearer.  Also, examine all other public data
 	  members, to see if they have a similar problem.
