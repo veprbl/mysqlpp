@@ -49,8 +49,9 @@ success_(false)
 }
 
 Query::Query(const Query& q) :
-#if defined(_MSC_VER)
-std::ostream(std::_Noinit), // prevents a double-init memory leak in RTL
+#if defined(_MSC_VER) && !defined(_STLP_VERSION) && !defined(_STLP_VERSION_STR)
+// ditto above
+std::ostream(std::_Noinit),
 #else
 std::ostream(0),
 #endif
