@@ -104,6 +104,15 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o SSQLS should allow table column order to differ from
+	  structure field order.  Not only will this decouple the
+	  definitions, it will allow queries for a subset of the fields
+	  without restricting you to the first N contiguous fields.
+	  This will require doing a by-name lookup for each field
+	  when populating it from the MYSQL_ROW object, but if you
+	  need the highest possible speed, you shouldn't be using
+	  SSQLS to begin with.
+
 	o Evaluate whether Query's copy ctor should be made private.
 	  Copying these objects probably never makes sense.
 
@@ -236,11 +245,6 @@ Future Features
 	These changes are not assigned to any particular version.
 	They could happen at any time.	If you want one to appear at
 	some definite date, get coding and provide a patch!
-
-	o Currently, the operator= for an SSQLS assumes that the row
-	  contains the entire row's data.  By using the list of known
-	  field names, we should be able to map a row subset onto an
-	  SSQLS correctly.
 
 	o SSQLS v2.  Not sure how it will look yet, but there are ideas
 	  in play, and patches to study.
