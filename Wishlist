@@ -104,6 +104,8 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o Add table creation ability to SSQLS.  It has the schema, so...
+
 	o SSQLS should allow table column order to differ from
 	  structure field order.  Not only will this decouple the
 	  definitions, it will allow queries for a subset of the fields
