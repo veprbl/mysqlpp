@@ -14,6 +14,9 @@ v2.x Features
 	it can be done without breaking the ABI, which would force
 	a feature to v3.0.
 
+	o Use tquery.cpp instead of resetdb.cpp in the userman at
+	  the top of chapter 4.
+
 	o Create Query::delete() for SSQLS?  Only works with sortable
 	  SSQLSes by assuming that the fields to sort on are
 	  collectively a key.
