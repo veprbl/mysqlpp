@@ -1,7 +1,11 @@
-Compatibility
+Prerequisites
 ~~~~~~~~~~~~~
-    MySQL++ requires Visual Studio 2003 or later.  Earlier versions did
-    not support a sufficiently broad set of the Standard C++ language.
+    MySQL++ requires Visual Studio 2003 or later.  Earlier versions
+    did not support a sufficiently broad subset of Standard C++.
+
+    You also need to have MySQL installed.  The installer may have
+    given you the option of whether to install the development files
+    or not; if you didn't let it install them, you need to reinstall.
 
 
 Building the Library and Example Programs
