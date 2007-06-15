@@ -282,9 +282,10 @@
 			<depends-on-file>lib/*.cpp</depends-on-file>
 			<depends-on-file>lib/*.h</depends-on-file>
 			<command>
-				mkdir -p doc/latex ; cd lib ; doxygen > /dev/null $(AND) \
-					cd ../doc/latex $(AND) make > /dev/null $(AND) \
-					cp refman.pdf ..
+				mkdir -p doc/latex ; cd lib ; doxygen > /dev/null
+			</command>
+			<command>
+				cd doc/latex $(AND) make > /dev/null $(AND) cp refman.pdf ..
 			</command>
 		</action>
 
