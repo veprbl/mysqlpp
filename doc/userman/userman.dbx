@@ -824,7 +824,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         <filename>simple2</filename>, only with a "use" query instead
         of a "store" query. If your program uses exceptions, you should
         instead look at <filename>examples/usequery.cpp</filename>,
-        which does the same thing as <filename>simple</filename>,
+        which does the same thing as <filename>simple3</filename>,
         but with exception-awareness.</para>
     </sect2>
 
