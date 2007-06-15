@@ -20,7 +20,7 @@ HTML_SS=html.xsl
 EX_TXT=cgi_jpeg.txt custom1.txt custom2.txt custom3.txt custom4.txt \
 		custom5.txt custom6.txt fieldinf1.txt load_jpeg.txt \
 		resetdb.txt simple1.txt simple2.txt simple3.txt stock.txt \
-		updel.txt xaction.txt
+		tquery.txt updel.txt xaction.txt
 
 
 ## ------------------------
