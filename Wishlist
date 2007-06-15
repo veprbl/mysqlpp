@@ -14,8 +14,6 @@ v2.x Features
 	it can be done without breaking the ABI, which would force
 	a feature to v3.0.
 
-	o Fix Doxygen build on EL4 and EL5.
-
 	o Document Connection::opt_* constants.
 	
 	o Use tquery.cpp instead of resetdb.cpp in the userman at

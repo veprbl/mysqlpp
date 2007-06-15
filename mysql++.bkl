@@ -283,7 +283,7 @@
 			<depends-on-file>lib/*.h</depends-on-file>
 			<command>
 				mkdir -p doc/latex ; cd lib ; doxygen > /dev/null $(AND) \
-					cd ../doc/latex $(AND) make pdf > /dev/null $(AND) \
+					cd ../doc/latex $(AND) make > /dev/null $(AND) \
 					cp refman.pdf ..
 			</command>
 		</action>
