@@ -327,15 +327,13 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         that are relevant to your platform. We won't repeat all of
         that here.</para>
 
-        <para>The first example you must run is the
-        <filename>resetdb</filename> example. This builds and populates
-        the sample tables used by the other examples. The usage of
-        resetdb is as follows:</para>
+        <para>Most of the examples require a test database, created
+        by <filename>resetdb</filename>. You run it like so:</para>
 
         <screen>    ./exrun resetdb [host [user [password [port]]]]</screen>
 
-        <para><filename>exrun</filename> is a script that ensures
-        that the MySQL++ example program you give as its first
+        <para><filename>exrun</filename> is a shell script that
+        ensures that the MySQL++ example program you give as its first
         argument finds the correct shared library version. If you
         run the example program directly, it will search the system
         directories for the MySQL++ shared library. The only way that
@@ -345,7 +343,7 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         <filename>exrun</filename> script solves this problem. See
         <filename>README.examples</filename> for more details. (We've
         been using POSIX file and path names for simplicity above, but
-        there's a windows version of <filename>exrun</filename>, called
+        there's a Windows version of <filename>exrun</filename>, called
         <filename>exrun.bat</filename>. It works the same way.)</para>
 
         <para>As for the remaining program arguments, they are all
