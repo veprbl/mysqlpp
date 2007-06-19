@@ -385,7 +385,7 @@ public:
 	{	
 		mysqlpp::ResUse res = use(query);
 		if (res) {
-			mysqlpp::NoExceptions ne(*this);
+			mysqlpp::NoExceptions ne(res);
 			while (mysqlpp::Row row = res.fetch_row()) {
 				fn(row);
 			}
@@ -416,9 +416,9 @@ public:
 	template <class Sequence, typename Function>
 	Function store_if(Sequence& seq, const SQLString& query, Function fn)
 	{	
-		mysqlpp::NoExceptions ne(*this);
 		mysqlpp::ResUse res = use(query);
 		if (res) {
+			mysqlpp::NoExceptions ne(res);
 			while (mysqlpp::Row row = res.fetch_row()) {
 				if (fn(row)) {
 					seq.push_back(row);
