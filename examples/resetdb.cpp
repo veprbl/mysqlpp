@@ -136,9 +136,9 @@ main(int argc, char *argv[])
 		// have to do to store Unicode data in recent versions of MySQL
 		// is use UTF-8 encoding.
 		cout << "Populating stock table..." << endl;
-		query.execute("Nürnberger Brats", 92, 1.5, 8.79, "2005-03-10");
+		query.execute("Nürnberger Brats", 97, 1.5, 8.79, "2005-03-10");
 		query.execute("Pickle Relish", 87, 1.5, 1.75, "1998-09-04");
-		query.execute("Hot Mustard", 75, .95, .97, "1998-05-25");
+		query.execute("Hot Mustard", 73, .95, .97, "1998-05-25");
 		query.execute("Hotdog Buns", 65, 1.1, 1.1, "1998-04-23");
 
 		// Now create empty images table, for testing BLOB and auto-
