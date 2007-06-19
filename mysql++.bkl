@@ -240,6 +240,9 @@
 		<exe id="xaction" template="util-example,common-example">
 			<sources>examples/xaction.cpp</sources>
 		</exe>
+		<exe id="store_if" template="util-example,common-example">
+			<sources>examples/store_if.cpp</sources>
+		</exe>
 
 		<!-- The few examples that don't use the util module -->
 		<exe id="cgi_jpeg" template="common-example">
