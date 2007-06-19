@@ -394,6 +394,27 @@ public:
 		return fn;
 	}
 
+	/// \brief Execute the query, and call a functor for each returned row
+	///
+	/// Just like for_each(const SQLString&, Function), but it uses
+	/// the query string held by the Query object already
+	///
+	/// \param fn the functor called for each row
+	/// \return a copy of the passed functor
+	template <typename Function>
+	Function for_each(Function fn)
+	{	
+		mysqlpp::ResUse res = use();
+		if (res) {
+			mysqlpp::NoExceptions ne(res);
+			while (mysqlpp::Row row = res.fetch_row()) {
+				fn(row);
+			}
+		}
+
+		return fn;
+	}
+
 	/// \brief Execute a query, conditionally storing each row in a
 	/// container
 	///
@@ -417,6 +438,31 @@ public:
 	Function store_if(Sequence& seq, const SQLString& query, Function fn)
 	{	
 		mysqlpp::ResUse res = use(query);
+		if (res) {
+			mysqlpp::NoExceptions ne(res);
+			while (mysqlpp::Row row = res.fetch_row()) {
+				if (fn(row)) {
+					seq.push_back(row);
+				}
+			}
+		}
+
+		return fn;
+	}
+
+	/// \brief Execute the query, conditionally storing each row in a
+	/// container
+	///
+	/// Just like store_if(Sequence&, const SQLString&, Function), but
+	/// it uses the query string held by the Query object already
+	///
+	/// \param seq the destination container; needs a push_back() method
+	/// \param fn the functor called for each row
+	/// \return a copy of the passed functor
+	template <class Sequence, typename Function>
+	Function store_if(Sequence& seq, Function fn)
+	{	
+		mysqlpp::ResUse res = use();
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
 			while (mysqlpp::Row row = res.fetch_row()) {
