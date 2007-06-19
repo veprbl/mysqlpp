@@ -353,7 +353,8 @@ Query::preview_char()
 {
 	const std::string& str(sbuffer_.str());
 	char* s = new char[str.size() + 1];
-	memcpy(s, str.data(), str.size() + 1); 
+	memcpy(s, str.data(), str.size()); 
+	s[str.size()] = '\0';
 	return s;
 }
 
