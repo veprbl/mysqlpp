@@ -33,6 +33,8 @@
 
 #include <iostream>
 
+#include <math.h>
+
 
 // Define a functor for testing primality.
 struct is_prime
@@ -48,7 +50,7 @@ struct is_prime
 		else {
 			// The only possibility left is that it's divisible by an
 			// odd number that's less or equal to its square root.
-			for (int i = 3; i <= sqrt(s.num); i += 2) {
+			for (int i = 3; i <= sqrt(double(s.num)); i += 2) {
 				if ((s.num % i) == 0) {
 					return false;
 				}
