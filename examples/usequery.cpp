@@ -1,5 +1,5 @@
 /***********************************************************************
- usequery.cpp - Same as simple2 example, only with exceptions enabled.
+ usequery.cpp - Same as simple3 example, only with exceptions enabled.
 	The end of the result set is signalled differently in this case.
 
  Copyright (c) 2005 by Educational Technology Resources, Inc.
