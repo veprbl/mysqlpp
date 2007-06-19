@@ -43,7 +43,7 @@ namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
-class MYSQLPP_EXPORT FieldNames;
+class FieldNames;
 class MYSQLPP_EXPORT ResUse;
 #endif
 
