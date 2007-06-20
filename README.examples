@@ -67,6 +67,35 @@ Running the Other Command Line Examples
         custom1-6: Demonstrates the SSQLS features.  These examples
             are explained in the user manual.
 
+        usequery: Demonstrates Query::use().  Unlike simple3, which
+            also showcases this function, this one shows how use
+            queries interact with exception handling: when you walk
+            past the end of a "use" query set with exceptions enabled,
+            MySQL++ throws an exception to indicate end of results,
+            which you must catch.
+
+        multiquery: MySQL++ allows you to issue multiple queries at
+            once, and get the results as separate sets.  This shows
+            that, and also how to use stored procedures, which return
+            their results in the same way as a multiquery.
+
+        tquery: A simple example showing how to use the template query
+            facility.
+
+        xaction: Shows how to use the Transaction class to create
+            transaction sets which automatically roll back if not
+            explicitly committed.
+
+        store_if: Demonstrates the Query::store_if() method, which
+            allows you to store the results of a query in an STL
+            container conditionally.  Think of it as a more powerful
+            alternative to the SQL WHERE clause.
+
+        for_each: Demonstrates the Query::for_each() method, which
+            allows you to execute a query and call a functor on each
+            returned row.  This example uses this to gather statistics
+            on the sample table's contents.
+
         load_jpeg: Inserts a JPEG file into the sample database,
             for use by the cgi_jpeg example.  (See below.)  Unlike
             the other examples, this one takes the last command
