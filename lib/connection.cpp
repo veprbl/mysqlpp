@@ -182,13 +182,13 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 		client_flag |= CLIENT_MULTI_STATEMENTS;
 	}
 #endif
+	apply_pending_options();
 
 	// Establish connection
 	if (mysql_real_connect(&mysql_, host, user, passwd, db, port,
 			socket_name, client_flag)) {
 		unlock();
 		success_ = is_connected_ = true;
-		apply_pending_options();
 
 		if (db && db[0]) {
 			// Also attach to given database
@@ -598,12 +598,8 @@ Connection::option_arg_type(Option option)
 void
 Connection::apply_pending_options()
 {
-	if (pending_options_.size() == 0) {
-		return;
-	}
-
-	for (deque<OptionInfo>::const_iterator it(pending_options_.begin());
-			it != pending_options_.end(); ++it) {
+	OptionListIt it;
+	for (it = pending_options_.begin(); it != pending_options_.end(); ++it) {
 		// Try to set the option
 		bool success;
 		switch (it->arg_type) {
@@ -651,8 +647,8 @@ Connection::apply_pending_options()
 bool
 Connection::option_pending(Option option, bool arg) const
 {
-	for (deque<OptionInfo>::const_iterator it(pending_options_.begin());
-			it != pending_options_.end(); ++it) {
+	OptionListIt it;
+	for (it = pending_options_.begin(); it != pending_options_.end(); ++it) {
 		if (it->option == option) {
 			// Found the option, but return true only if the pending
 			// option was given a bool argument equal to the value

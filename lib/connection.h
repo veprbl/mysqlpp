@@ -563,12 +563,14 @@ private:
 		{
 		}
 	};
+	typedef std::deque<OptionInfo> OptionList;
+	typedef OptionList::const_iterator OptionListIt;
 
 	MYSQL mysql_;
 	bool is_connected_;
 	bool connecting_;
 	bool success_;
-	std::deque<OptionInfo> pending_options_;
+	OptionList pending_options_;
 	static OptionArgType legal_opt_arg_types_[];
 };
 
