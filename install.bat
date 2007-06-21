@@ -13,15 +13,17 @@ if not exist %INST_LIB_DIR%\release mkdir %INST_LIB_DIR%\release
 
 copy lib\*.h "%INST_INC_DIR%" > NUL
 
-if exist debug\*.a goto install_mingw
+if exist *.a goto install_mingw
 copy debug\*.dll "%INST_LIB_DIR%\debug" > NUL
 copy debug\*.lib "%INST_LIB_DIR%\debug" > NUL
 copy release\*.dll "%INST_LIB_DIR%\release" > NUL
 copy release\*.lib "%INST_LIB_DIR%\release" > NUL
 goto install_done
 :install_mingw
-copy debug\*.a "%INST_LIB_DIR%\debug" > NUL
-copy release\*.a "%INST_LIB_DIR%\release" > NUL
+copy *.a "%INST_LIB_DIR%\debug" > NUL
+echo WARNING: I assume you built a debug version of the library, as that
+echo is what you get with MinGW unless you make a special effort.  You
+echo must do a manual install if you make a release version.
 
 :install_done
 echo MySQL++ (%1 version) installed successfully!
