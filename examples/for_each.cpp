@@ -35,7 +35,7 @@
 #include <math.h>
 
 
-// Define a functor to maintain statistics about the stock table
+// Define a functor to collect statistics about the stock table
 class gather_stock_stats
 {
 public:
@@ -84,11 +84,10 @@ main(int argc, char *argv[])
 			return 1;
 		}
 
-		// Gather and display the stats for the entire table
+		// Gather and display the stats for the entire stock table
 		mysqlpp::Query query = con.query();
-		std::cout << "There are " << query.for_each(
-				"select * from stock", gather_stock_stats()) <<
-				'.' << std::endl;
+		std::cout << "There are " << query.for_each(stock(),
+				gather_stock_stats()) << '.' << std::endl;
 	}
 	catch (const mysqlpp::BadQuery& e) {
 		// Something went wrong with the SQL query.

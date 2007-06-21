@@ -415,6 +415,32 @@ public:
 		return fn;
 	}
 
+	/// \brief Run a functor for every row in a table
+	///
+	/// Just like for_each(Function), except that it builds a
+	/// "select * from TABLE" query using the SQL table name from
+	/// the SSQLS instance you pass.
+	///
+	/// \param ssqls the SSQLS instance to get a table name from
+	/// \param fn the functor called for each row
+	///
+	/// \return a copy of the passed functor
+	template <class SSQLS, typename Function>
+	Function for_each(const SSQLS& ssqls, Function fn)
+	{	
+		SQLString query("select * from ");
+		query += ssqls._table;
+		mysqlpp::ResUse res = use(query);
+		if (res) {
+			mysqlpp::NoExceptions ne(res);
+			while (mysqlpp::Row row = res.fetch_row()) {
+				fn(row);
+			}
+		}
+
+		return fn;
+	}
+
 	/// \brief Execute a query, conditionally storing each row in a
 	/// container
 	///
