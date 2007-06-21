@@ -401,7 +401,8 @@ public:
 	/// C API's option setting mechanisms, so it may become further
 	/// abstracted from these mechanisms.
 	///
-	/// \retval true if option was successfully set
+	/// \retval true if option was successfully set, or at least queued
+	/// for setting during connection establishment sequence
 	///
 	/// If exceptions are enabled, a false return means the C API
 	/// rejected the option, or the connection is not established and
@@ -496,6 +497,11 @@ protected:
 
 	/// \brief Given option value, return its proper argument type
 	OptionArgType option_arg_type(Option option);
+
+	/// \brief Queues given option if it's in the list of valid options,
+	/// to be set during connection establishment proces.
+	bool queue_option(Option option, Option* valid_options,
+			size_t num_valid);
 
 	/// \brief Set MySQL C API connection option
 	///
