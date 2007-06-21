@@ -172,15 +172,18 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 		disconnect();
 	}
 
-	// Set pre-connection options
-	scoped_var_set<bool> sb(connecting_, true);
-	set_option(opt_read_default_file, "my");
-	set_option(opt_connect_timeout, connect_timeout);
+	// Set defaults for some options.  We put these at the front of the
+	// queue so that if user sets these, too, that will override these
+	// values.
+	pending_options_.push_front(OptionInfo(opt_read_default_file, "my"));
+	pending_options_.push_front(OptionInfo(opt_connect_timeout,
+			connect_timeout));
 	if (compress) {
-		set_option(opt_compress);
+		pending_options_.push_front(OptionInfo(opt_compress));
 	}
 
 	// Establish connection
+	scoped_var_set<bool> sb(connecting_, true);
 	if (apply_pending_options() &&
 			mysql_real_connect(&mysql_, host, user, passwd, db, port,
 			socket_name, client_flag)) {
