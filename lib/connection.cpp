@@ -179,15 +179,10 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 	if (compress) {
 		set_option(opt_compress);
 	}
-#if MYSQL_VERSION_ID >= 40101
-	if (option_pending(opt_multi_statements, true)) {
-		client_flag |= CLIENT_MULTI_STATEMENTS;
-	}
-#endif
-	apply_pending_options();
 
 	// Establish connection
-	if (mysql_real_connect(&mysql_, host, user, passwd, db, port,
+	if (apply_pending_options() &&
+			mysql_real_connect(&mysql_, host, user, passwd, db, port,
 			socket_name, client_flag)) {
 		unlock();
 		success_ = is_connected_ = true;
@@ -534,7 +529,7 @@ Connection::queue_option(Option option, Option* valid_options,
 }
 
 
-void
+bool
 Connection::apply_pending_options()
 {
 	bool success = true;
@@ -710,9 +705,9 @@ Connection::apply_pending_options()
 
 	pending_options_.clear();
 
-	// If option failed, throw an exception to report the problem unless
-	// that isn't allowed, in which case the failure will be lost.
 	if (!success && throw_exceptions()) {
+		// Failed to set one of the queued options, so throw an exception
+		// to report the problem.
 		ostringstream os;
 		os << "Failed to set pending option " << it->option;
 		if (it->arg_type != opt_type_none) {
@@ -727,24 +722,8 @@ Connection::apply_pending_options()
 		}
 		throw BadOption(os.str(), it->option);
 	}
-}
 
-
-bool
-Connection::option_pending(Option option, bool arg) const
-{
-	OptionListIt it;
-	for (it = pending_options_.begin(); it != pending_options_.end(); ++it) {
-		if (it->option == option) {
-			// Found the option, but return true only if the pending
-			// option was given a bool argument equal to the value
-			// passed to this function.
-			return it->arg_type == opt_type_boolean &&
-					it->bool_arg == arg;
-		}
-	}
-
-	return false;
+	return success;
 }
 
 

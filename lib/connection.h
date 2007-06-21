@@ -472,19 +472,12 @@ protected:
 	/// object should always be connected.
 	void disconnect();
 
-	/// \brief Returns true if the given option is to be set once
-	/// connection comes up.
+	/// \brief Set all options that have been queued pending connection
+	/// establishment.
 	///
-	/// \param option option to check for in queue
-	/// \param arg argument to match against
-	bool option_pending(Option option, bool arg) const;
-
-	/// \brief For each option in pending option queue, call
-	/// set_option()
-	///
-	/// Called within connect() method after connection is established.
-	/// Despools options in the order given to set_option().
-	void apply_pending_options();
+	/// Called within connect() method just before we try opening the
+	/// database server connection.
+	bool apply_pending_options();
 
 	/// \brief Generic wrapper for bad_option_*()
 	bool bad_option(Option option, OptionArgType type);
