@@ -75,7 +75,7 @@ SQLQueryParms& operator <<(quote_type2 p, SQLString& in)
 	}
 	else {
 		in.processed = true;
-		return *p.qparms << in.c_str();
+		return *p.qparms << in;
 	}
 }
 
@@ -313,7 +313,7 @@ SQLQueryParms& operator <<(quote_only_type2 p, SQLString& in)
 	}
 	else {
 		in.processed = true;
-		return *p.qparms << in.c_str();
+		return *p.qparms << in;
 	}
 }
 
@@ -372,7 +372,7 @@ SQLQueryParms& operator <<(quote_double_only_type2 p, SQLString& in)
 	}
 	else {
 		in.processed = true;
-		return *p.qparms << in.c_str();
+		return *p.qparms << in;
 	}
 }
 
@@ -430,7 +430,7 @@ SQLQueryParms& operator <<(escape_type2 p, SQLString& in)
 	}
 	else {
 		in.processed = true;
-		return *p.qparms << in.c_str();
+		return *p.qparms << in;
 	}
 }
 
@@ -523,7 +523,7 @@ std::ostream& operator <<(escape_type1 o, const ColData_Tmpl<const_string>& in)
 SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
 {
 	in.processed = true;
-	return *p.qparms << in.c_str();
+	return *p.qparms << in;
 }
 
 
@@ -532,7 +532,7 @@ SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
 
 SQLQueryParms& operator <<(ignore_type2 p, SQLString& in)
 {
-	return *p.qparms << in.c_str();
+	return *p.qparms << in;
 }
 
 } // end namespace mysqlpp
