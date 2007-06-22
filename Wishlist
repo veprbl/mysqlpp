@@ -111,6 +111,11 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o Connection::bad_option() should save its built error message
+	  in a class variable used by Connection::error(), so option
+	  setting errors with exceptions disabled can still get info
+	  about the reason for the failure.
+
 	o The Connection::connect() arguments for turning on compression
 	  and setting the connection timeout should be removed.  These
 	  can be set directly using Connection::set_option().
