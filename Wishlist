@@ -111,6 +111,10 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o The Connection::connect() arguments for turning on compression
+	  and setting the connection timeout should be removed.  These
+	  can be set directly using Connection::set_option().
+
 	o Add table creation ability to SSQLS.  It has the schema, so...
 
 	o SSQLS should allow table column order to differ from
