@@ -644,7 +644,6 @@ Connection::option_arg_type(Option option)
 		// Non-optional exception.  Something is wrong with the library
 		// internals if this one is thrown.
 		throw BadOption("bad value given to option_arg_type()", option);
-		//! return opt_type_none;		// warning eater
 	}
 }
 
