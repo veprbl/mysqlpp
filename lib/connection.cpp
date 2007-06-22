@@ -508,17 +508,10 @@ Connection::set_option(Option option, unsigned int arg)
 bool
 Connection::set_option(Option option, bool arg)
 {
-	if (connected()) {
-		if (option == opt_multi_statements) {
-			// This is the only option taking a bool argument that can
-			// be set after the connection is already up.
-			return set_option_impl(arg ?
-					MYSQL_OPTION_MULTI_STATEMENTS_ON :
-					MYSQL_OPTION_MULTI_STATEMENTS_OFF);
-		}
-		else {
-			return bad_option(option, opt_err_conn);
-		}
+	if (connected() && (option != opt_multi_statements)) {
+		// We're connected and it isn't an option that can be set
+		// after connection is up, so complain to user.
+		return bad_option(option, opt_err_conn);
 	}
 
 	bool success = false;
