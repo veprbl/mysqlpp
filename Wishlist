@@ -18,11 +18,11 @@ v2.x Features
 
 	  http://lists.mysql.com/plusplus/6631
 	
-	o Fix SSQLS to work with BLOBs.  Most likely source of problems
-	  is that ColData converts to std::string (the most likely BLOB
-	  receiving type) via ColData::operator cchar*(), losing length
-	  information along the way.  Will probably have to add an
-	  operator std::string to ColData_Tmpl to make this work right.
+	o BLOB columns are truncated when using SSQLS because ColData
+	  converts to mysqlpp::sql_blob via ColData::operator cchar*(),
+	  losing length information along the way.  Can't just add an
+	  operator std::string to ColData_Tmpl, because that creates
+	  a bunch of type conversion ambiguities.
 
 	o That done, rework cgi_jpeg to use SSQLS as a test.
 
