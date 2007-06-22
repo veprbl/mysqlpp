@@ -365,10 +365,16 @@ Connection::set_option(Option option)
 		return bad_option(option, opt_type_none);
 	}
 	else {
-		Option valid_options[] = { opt_compress,
-				opt_named_pipe, opt_use_result, opt_use_remote_connection,
-				opt_use_embedded_connection, opt_guess_connection };
-		return queue_option(option, valid_options, NELEMS(valid_options));
+		Option valid_options[] = {
+				opt_compress,
+				opt_named_pipe,
+				opt_use_result,
+				opt_use_remote_connection,
+				opt_use_embedded_connection,
+				opt_guess_connection
+			};
+		return queue_option(option, valid_options,
+		NELEMS(valid_options));
 	}
 }
 
@@ -382,11 +388,17 @@ Connection::set_option(Option option, const char* arg)
 		return bad_option(option, opt_type_string);
 	}
 	else {
-		Option valid_options[] = { opt_init_command, opt_read_default_file,
-				opt_read_default_group, opt_set_charset_dir,
-				opt_set_charset_name, opt_shared_memory_base_name,
-				opt_set_client_ip };
-		return queue_option(option, valid_options, NELEMS(valid_options));
+		Option valid_options[] = {
+				opt_init_command,
+				opt_read_default_file,
+				opt_read_default_group,
+				opt_set_charset_dir,
+				opt_set_charset_name,
+				opt_shared_memory_base_name,
+				opt_set_client_ip
+			};
+		return queue_option(option, valid_options,
+		NELEMS(valid_options));
 	}
 }
 
@@ -400,9 +412,15 @@ Connection::set_option(Option option, unsigned int arg)
 		return bad_option(option, opt_type_integer);
 	}
 	else {
-		Option valid_options[] = { opt_connect_timeout, opt_local_infile,
-				opt_protocol, opt_read_timeout, opt_write_timeout };
-		return queue_option(option, valid_options, NELEMS(valid_options));
+		Option valid_options[] = {
+				opt_connect_timeout,
+				opt_local_infile,
+				opt_protocol,
+				opt_read_timeout,
+				opt_write_timeout
+			};
+		return queue_option(option, valid_options,
+		NELEMS(valid_options));
 	}
 }
 
@@ -423,9 +441,14 @@ Connection::set_option(Option option, bool arg)
 		}
 	}
 	else {
-		Option valid_options[] = { opt_secure_auth, opt_multi_statements,
-				opt_report_data_truncation, opt_reconnect };
-		return queue_option(option, valid_options, NELEMS(valid_options));
+		Option valid_options[] = {
+				opt_secure_auth,
+				opt_multi_statements,
+				opt_report_data_truncation,
+				opt_reconnect
+			};
+		return queue_option(option, valid_options,
+		NELEMS(valid_options));
 	}
 }
 
