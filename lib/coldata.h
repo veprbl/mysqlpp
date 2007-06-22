@@ -110,6 +110,20 @@ public:
 	{
 	}
 
+	/// \brief C++ string version of full ctor
+	///
+	/// \param str the string this object represents
+	/// \param t MySQL type information for data within str
+	/// \param n if true, str is a SQL null
+	explicit ColData_Tmpl(const std::string& str,
+			mysql_type_info t = mysql_type_info::string_type,
+			bool n = false) :
+	Str(str),
+	type_(t),
+	null_(n)
+	{
+	}
+
 	/// \brief Null-terminated C string version of full ctor
 	///
 	/// \param str the string this object represents
@@ -120,7 +134,6 @@ public:
 			bool n = false) :
 	Str(str),
 	type_(t),
-	buf_(str),
 	null_(n)
 	{
 	}
@@ -136,7 +149,6 @@ public:
 			bool n = false) :
 	Str(str, len),
 	type_(t),
-	buf_(str),
 	null_(n)
 	{
 	}
@@ -161,12 +173,9 @@ public:
 	/// \brief Returns true if this object is a SQL null.
 	inline const bool is_null() const { return null_; }
 	
-	/// \brief Returns the string form of this object's data.
-	inline const std::string& get_string() const { return buf_; }
-	
 	/// \brief Returns a const char pointer to the string form of
 	/// this object's data.
-	operator cchar*() const { return buf_.c_str(); }
+	operator cchar*() const { return c_str(); }
 	
 	/// \brief Converts this object's string data to a signed char
 	operator signed char() const
@@ -229,7 +238,11 @@ public:
 
 private:
 	mysql_type_info type_;
-	std::string buf_;
+
+	// We will re-enable this field in v3.0 when we make ColData 
+	// concrete, with no parent class.  See the Wishlist for details.
+	std::string DISABLED_IN_V2_3_;	
+
 	bool null_;
 };
 
@@ -313,7 +326,7 @@ ColData_Tmpl<Str>::operator Null<T, B>() const
 template <class Str> template <class Type>
 Type ColData_Tmpl<Str>::conv(Type /* dummy */) const
 {
-	std::string strbuf = buf_;
+	std::string strbuf(*this);
 	strip_all_blanks(strbuf);
 	std::string::size_type len = strbuf.size();
 	const char* str = strbuf.c_str();

@@ -177,7 +177,7 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<string>& in)
 {
 	if (dont_quote_auto || (o.rdbuf() == cout.rdbuf()) ||
 			(o.rdbuf() == cerr.rdbuf())) {
-		return o << in.get_string();
+		return o << in;
 	}
 
 	if (in.escape_q()) {
@@ -191,10 +191,10 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<string>& in)
 		delete[] s;
 	}
 	else if (in.quote_q()) {
-		o << '\'' << in.get_string() << '\'';
+		o << '\'' << in << '\'';
 	}
 	else {
-		o << in.get_string();
+		o << in;
 	}
 	return o;
 }
@@ -211,7 +211,7 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
 {
 	if (dont_quote_auto || (o.rdbuf() == cout.rdbuf()) ||
 			(o.rdbuf() == cerr.rdbuf())) {
-		return o << in.get_string();
+		return o << in;
 	}
 
 	if (in.escape_q()) {
@@ -224,10 +224,10 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
 		delete[] s;
 	}
 	else if (in.quote_q()) {
-		o << '\'' << in.get_string() << '\'';
+		o << '\'' << in << '\'';
 	}
 	else {
-		o << in.get_string();
+		o << in;
 	}
 	return o;
 }
@@ -242,7 +242,7 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
 Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
 {
 	if (dont_quote_auto) {
-		o << in.get_string();
+		o << in;
 		return o;
 	}
 	if (in.escape_q()) {
@@ -256,10 +256,10 @@ Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
 		delete[] s;
 	}
 	else if (in.quote_q()) {
-		static_cast<ostream&>(o) << '\'' << in.get_string() << '\'';
+		static_cast<ostream&>(o) << '\'' << in << '\'';
 	}
 	else {
-		static_cast<ostream&>(o) << in.get_string();
+		static_cast<ostream&>(o) << in;
 	}
 	return o;
 }
@@ -274,7 +274,7 @@ Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
 Query& operator <<(Query& o, const ColData_Tmpl<const_string>& in)
 {
 	if (dont_quote_auto) {
-		o << in.get_string();
+		o << in;
 		return o;
 	}
 	if (in.escape_q()) {
@@ -287,10 +287,10 @@ Query& operator <<(Query& o, const ColData_Tmpl<const_string>& in)
 		delete[] s;
 	}
 	else if (in.quote_q()) {
-		static_cast<ostream&>(o) << '\'' << in.get_string() << '\'';
+		static_cast<ostream&>(o) << '\'' << in << '\'';
 	}
 	else {
-		static_cast<ostream&>(o) << in.get_string();
+		static_cast<ostream&>(o) << in;
 	}
 	return o;
 }
