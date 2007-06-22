@@ -111,10 +111,14 @@ v3.0 Plan
 	signatures, etc.)  This plan is very tenuous.  Some of this
 	could slip to v4.0.
 
+	o Refactor option mechanism in Connection class into its own
+	  class.  There are a whole lot of functions, structs and
+	  enums related to this.
+
 	o Connection::bad_option() should save its built error message
-	  in a class variable used by Connection::error(), so option
-	  setting errors with exceptions disabled can still get info
-	  about the reason for the failure.
+	  in an instance variable, and Connection::error() should
+	  use that when set, so you can get an explanation of option
+	  setting errors when exceptions are disabled.
 
 	o The Connection::connect() arguments for turning on compression
 	  and setting the connection timeout should be removed.  These
