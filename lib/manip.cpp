@@ -75,7 +75,7 @@ SQLQueryParms& operator <<(quote_type2 p, SQLString& in)
 	}
 	else {
 		in.processed = true;
-		return *p.qparms << in;
+		return *p.qparms << in.c_str();
 	}
 }
 
@@ -130,10 +130,10 @@ inline ostream& _manip(quote_type1 o, const ColData_Tmpl<Str>& in)
 		delete[] s;
 	}
 	else if (in.quote_q()) {
-		*o.ostr << '\'' << in << '\'';
+		*o.ostr << '\'' << in.c_str() << '\'';
 	}
 	else {
-		*o.ostr << in;
+		*o.ostr << in.c_str();
 	}
 	return *o.ostr;
 }
@@ -177,7 +177,7 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<string>& in)
 {
 	if (dont_quote_auto || (o.rdbuf() == cout.rdbuf()) ||
 			(o.rdbuf() == cerr.rdbuf())) {
-		return o << in;
+		return o << in.c_str();
 	}
 
 	if (in.escape_q()) {
@@ -191,10 +191,10 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<string>& in)
 		delete[] s;
 	}
 	else if (in.quote_q()) {
-		o << '\'' << in << '\'';
+		o << '\'' << in.c_str() << '\'';
 	}
 	else {
-		o << in;
+		o << in.c_str();
 	}
 	return o;
 }
@@ -211,7 +211,7 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
 {
 	if (dont_quote_auto || (o.rdbuf() == cout.rdbuf()) ||
 			(o.rdbuf() == cerr.rdbuf())) {
-		return o << in;
+		return o << in.c_str();
 	}
 
 	if (in.escape_q()) {
@@ -224,10 +224,10 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
 		delete[] s;
 	}
 	else if (in.quote_q()) {
-		o << '\'' << in << '\'';
+		o << '\'' << in.c_str() << '\'';
 	}
 	else {
-		o << in;
+		o << in.c_str();
 	}
 	return o;
 }
@@ -242,7 +242,7 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
 Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
 {
 	if (dont_quote_auto) {
-		o << in;
+		o << in.c_str();
 		return o;
 	}
 	if (in.escape_q()) {
@@ -256,10 +256,10 @@ Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
 		delete[] s;
 	}
 	else if (in.quote_q()) {
-		static_cast<ostream&>(o) << '\'' << in << '\'';
+		static_cast<ostream&>(o) << '\'' << in.c_str() << '\'';
 	}
 	else {
-		static_cast<ostream&>(o) << in;
+		static_cast<ostream&>(o) << in.c_str();
 	}
 	return o;
 }
@@ -274,7 +274,7 @@ Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
 Query& operator <<(Query& o, const ColData_Tmpl<const_string>& in)
 {
 	if (dont_quote_auto) {
-		o << in;
+		o << in.c_str();
 		return o;
 	}
 	if (in.escape_q()) {
@@ -287,10 +287,10 @@ Query& operator <<(Query& o, const ColData_Tmpl<const_string>& in)
 		delete[] s;
 	}
 	else if (in.quote_q()) {
-		static_cast<ostream&>(o) << '\'' << in << '\'';
+		static_cast<ostream&>(o) << '\'' << in.c_str() << '\'';
 	}
 	else {
-		static_cast<ostream&>(o) << in;
+		static_cast<ostream&>(o) << in.c_str();
 	}
 	return o;
 }
@@ -313,7 +313,7 @@ SQLQueryParms& operator <<(quote_only_type2 p, SQLString& in)
 	}
 	else {
 		in.processed = true;
-		return *p.qparms << in;
+		return *p.qparms << in.c_str();
 	}
 }
 
@@ -327,10 +327,10 @@ template <>
 ostream& operator <<(quote_only_type1 o, const ColData_Tmpl<string>& in)
 {
 	if (in.quote_q()) {
-		*o.ostr << '\'' << in << '\'';
+		*o.ostr << '\'' << in.c_str() << '\'';
 	}
 	else {
-		*o.ostr << in;
+		*o.ostr << in.c_str();
 	}
 	return *o.ostr;
 }
@@ -346,10 +346,10 @@ ostream& operator <<(quote_only_type1 o,
 		const ColData_Tmpl<const_string>& in)
 {
 	if (in.quote_q()) {
-		*o.ostr << '\'' << in << '\'';
+		*o.ostr << '\'' << in.c_str() << '\'';
 	}
 	else {
-		*o.ostr << in;
+		*o.ostr << in.c_str();
 	}
 	return *o.ostr;
 }
@@ -372,7 +372,7 @@ SQLQueryParms& operator <<(quote_double_only_type2 p, SQLString& in)
 	}
 	else {
 		in.processed = true;
-		return *p.qparms << in;
+		return *p.qparms << in.c_str();
 	}
 }
 
@@ -387,10 +387,10 @@ ostream& operator <<(quote_double_only_type1 o,
 		const ColData_Tmpl<string>& in)
 {
 	if (in.quote_q()) {
-		*o.ostr << '\'' << in << '\'';
+		*o.ostr << '\'' << in.c_str() << '\'';
 	}
 	else {
-		*o.ostr << in;
+		*o.ostr << in.c_str();
 	}
 	return *o.ostr;
 }
@@ -407,10 +407,10 @@ ostream& operator <<(quote_double_only_type1 o,
 		const ColData_Tmpl<const_string>& in)
 {
 	if (in.quote_q()) {
-		*o.ostr << '\'' << in << '\'';
+		*o.ostr << '\'' << in.c_str() << '\'';
 	}
 	else {
-		*o.ostr << in;
+		*o.ostr << in.c_str();
 	}
 	return *o.ostr;
 }
@@ -430,7 +430,7 @@ SQLQueryParms& operator <<(escape_type2 p, SQLString& in)
 	}
 	else {
 		in.processed = true;
-		return *p.qparms << in;
+		return *p.qparms << in.c_str();
 	}
 }
 
@@ -484,7 +484,7 @@ inline ostream& _manip(escape_type1 o, const ColData_Tmpl<Str>& in)
 		delete[] s;
 	}
 	else {
-		*o.ostr << in;
+		*o.ostr << in.c_str();
 	}
 	return *o.ostr;
 }
@@ -523,7 +523,7 @@ std::ostream& operator <<(escape_type1 o, const ColData_Tmpl<const_string>& in)
 SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
 {
 	in.processed = true;
-	return *p.qparms << in;
+	return *p.qparms << in.c_str();
 }
 
 
@@ -532,7 +532,7 @@ SQLQueryParms& operator <<(do_nothing_type2 p, SQLString& in)
 
 SQLQueryParms& operator <<(ignore_type2 p, SQLString& in)
 {
-	return *p.qparms << in;
+	return *p.qparms << in.c_str();
 }
 
 } // end namespace mysqlpp
