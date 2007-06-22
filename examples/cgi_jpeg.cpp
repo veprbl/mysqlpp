@@ -38,7 +38,7 @@ using namespace mysqlpp;
 #define IMG_PASSWORD 	"nunyabinness"
 
 int
-main(int argc, char *argv[])
+main()
 {
 	unsigned int img_id = 0;
 	char* cgi_query = getenv("QUERY_STRING");
@@ -74,13 +74,13 @@ main(int argc, char *argv[])
 		con.connect(IMG_DATABASE, IMG_HOST, IMG_USER, IMG_PASSWORD);
 		Query query = con.query();
 		query << "SELECT data FROM images WHERE id = " << img_id;
-		Row row;
-		Result res = query.store();
-		if (res && (res.num_rows() > 0) && (row = res.at(0))) {
-			unsigned long length = row.at(0).size();
+		ResUse res = query.use();
+		if (res) {
+			Row row = res.fetch_row();
+			unsigned long length = row.raw_size(0);
 			cout << "Content-type: image/jpeg" << endl;
 			cout << "Content-length: " << length << endl << endl;
-			fwrite(row.at(0).data(), 1, length, stdout);
+			fwrite(row.raw_data(0), 1, length, stdout);
 		}
 		else {
 			cout << "Content-type: text/plain" << endl << endl;
