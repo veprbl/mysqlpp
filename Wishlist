@@ -18,10 +18,6 @@ v2.x Features
 
 	  http://lists.mysql.com/plusplus/6631
 	
-	o Create Query::delete() for SSQLS?  Only works with sortable
-	  SSQLSes by assuming that the fields to sort on are
-	  collectively a key.
-
 	o Fix SSQLS to work with BLOBs.  Most likely source of problems
 	  is that ColData converts to std::string (the most likely BLOB
 	  receiving type) via ColData::operator cchar*(), losing length
