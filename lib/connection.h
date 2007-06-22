@@ -423,6 +423,18 @@ public:
 	/// \brief Sets a connection option, with Boolean argument
 	bool set_option(Option option, bool arg);
 
+	/// \brief Same as set_option(), except that it won't override
+	/// a previously-set option.
+	bool set_option_default(Option option);
+
+	/// \brief Same as set_option(), except that it won't override
+	/// a previously-set option.
+	template <typename T>
+	bool set_option_default(Option option, T arg);
+
+	/// \brief Returns true if the given option has been set already
+	bool option_set(Option option);
+
 	/// \brief Enable SSL-encrypted connection.
 	///
 	/// \param key the pathname to the key file
@@ -465,6 +477,13 @@ public:
 	std::ostream& api_version(std::ostream& os);
 
 protected:
+	/// \brief Types of option setting errors we can diagnose
+	enum OptionError {
+		opt_err_type,
+		opt_err_value,
+		opt_err_conn,
+	};
+	
 	/// \brief Drop the connection to the database server
 	///
 	/// This method is protected because it should only be used within
@@ -472,29 +491,11 @@ protected:
 	/// object should always be connected.
 	void disconnect();
 
-	/// \brief Set all options that have been queued pending connection
-	/// establishment.
-	///
-	/// Called within connect() method just before we try opening the
-	/// database server connection.
-	bool apply_pending_options();
-
-	/// \brief Generic wrapper for bad_option_*()
-	bool bad_option(Option option, OptionArgType type);
-
-	/// \brief Handles call of incorrect set_option() overload
-	bool bad_option_type(Option option);
-
-	/// \brief Handles bad option values sent to set_option()
-	bool bad_option_value(Option option);
+	/// \brief Error handling routine for set_option()
+	bool bad_option(Option option, OptionError error);
 
 	/// \brief Given option value, return its proper argument type
 	OptionArgType option_arg_type(Option option);
-
-	/// \brief Queues given option if it's in the list of valid options,
-	/// to be set during connection establishment proces.
-	bool queue_option(Option option, Option* valid_options,
-			size_t num_valid);
 
 	/// \brief Set MySQL C API connection option
 	///
@@ -569,7 +570,7 @@ private:
 	bool is_connected_;
 	bool connecting_;
 	bool success_;
-	OptionList pending_options_;
+	OptionList applied_options_;
 	static OptionArgType legal_opt_arg_types_[];
 };
 
