@@ -160,6 +160,12 @@ public:
 		return data_[i].data();
 	}
 
+	/// \brief Return the size of a field's raw data given its index.
+	std::string::size_type raw_size(int i) const
+	{
+		return data_[i].length();
+	}
+
 	/// \brief Return the value of a field as a C++ string given its
 	/// index, in raw form.
 	///
