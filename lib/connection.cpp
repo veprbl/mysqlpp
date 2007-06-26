@@ -32,7 +32,8 @@
 #include "query.h"
 #include "result.h"
 
-#if defined(HAVE_MYSQL_SHUTDOWN_LEVEL_ARG)
+// An argument was added to mysql_shutdown() in MySQL 4.1.3 and 5.0.1.
+#if ((MYSQL_VERSION_ID >= 40103) && (MYSQL_VERSION_ID <= 49999)) || (MYSQL_VERSION_ID >= 50001)
 #	define SHUTDOWN_ARG ,SHUTDOWN_DEFAULT
 #else
 #	define SHUTDOWN_ARG
