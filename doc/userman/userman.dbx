@@ -390,12 +390,12 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         is ever 0, because of the way we do overloading, so it's
         safer to call <function>at()</function> instead.</para>
 
-        <para>The only thing that isn't explicitly handled
-        in the code block above is that we delegate connection
-        establishment to <function>connect_to_db()</function> in the
-        <filename>util</filename> module.  We do this only because
-        that function also handles the command line parsing for the
-        examples, so they have a consistent interface.</para>
+        <para>The only thing that isn't explicit in the code above is
+        that we delegate command line argument parsing and connection
+        establishment to <function>connect_to_db()</function> in
+        the <filename>util</filename> module. This function exists
+        to give the examples a consistent interface, not to hide
+        important details.</para>
     </sect2>
 
 
