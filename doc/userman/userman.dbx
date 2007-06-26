@@ -468,8 +468,8 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         one is created. There's no way to globally enable or disable
         this flag on existing objects in a single call.</para>
 
-        <para>There are a few classes of exceptions MySQL++ can throw
-        that are not optional:</para>
+        <para>There are some exceptions MySQL++ can throw that are
+        not optional:</para>
 
         <itemizedlist>
             <listitem><para>The largest set of non-optional exceptions
@@ -497,6 +497,11 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
             don't pass enough parameters when instantiating the
             template, <classname>Query</classname> will throw
             a <ulink type="classref" url="BadParamCount"/>
+            exception.</para></listitem>
+
+            <listitem><para>If you pass a bad option value to
+            <methodname>Connection::set_option</methodname>, it will
+            throw a <classname>BadOption</classname>
             exception.</para></listitem>
         </itemizedlist>
 
