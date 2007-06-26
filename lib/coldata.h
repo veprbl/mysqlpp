@@ -174,7 +174,7 @@ public:
 	inline const bool is_null() const { return null_; }
 	
 	/// \brief Returns a const char pointer to the object's raw data
-	operator cchar*() const { return data(); }
+	operator cchar*() const { return Str::data(); }
 	
 	/// \brief Converts this object's string data to a signed char
 	operator signed char() const
@@ -325,7 +325,7 @@ ColData_Tmpl<Str>::operator Null<T, B>() const
 template <class Str> template <class Type>
 Type ColData_Tmpl<Str>::conv(Type /* dummy */) const
 {
-	std::string strbuf(data(), length());
+	std::string strbuf(Str::data(), Str::length());
 	strip_all_blanks(strbuf);
 	std::string::size_type len = strbuf.size();
 	const char* str = strbuf.c_str();
