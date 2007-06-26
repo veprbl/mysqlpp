@@ -95,6 +95,9 @@ v3.0 Plan
     signatures, etc.)  This plan is very tenuous.  Some of this
     could slip to v4.0.
 
+	o Remove all remaining query_reset function parameters, unless
+	  the function doesn't actually override them.
+
     o Refactor option mechanism in Connection class into its own
       class.  There are a whole lot of functions, structs and
       enums related to this.
@@ -251,7 +254,9 @@ Future Features
     some definite date, get coding and provide a patch!
 
     o SSQLS v2.  Not sure how it will look yet, but there are ideas
-      in play, and patches to study.
+      in play, and patches to study.  Consider removing ColData at
+	  the same time, as it's the culprit in SSQLS BLOB
+	  incompatibility.
 
     o Figure out some way to name debug DLL and library under VC++
       differently (trailing 'd'?) to prevent some problems due
