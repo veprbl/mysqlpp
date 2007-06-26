@@ -211,7 +211,9 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
 {
 	if (dont_quote_auto || (o.rdbuf() == cout.rdbuf()) ||
 			(o.rdbuf() == cerr.rdbuf())) {
-		return o << in.c_str();
+		// Write out the raw data.  Have to do it this way in case
+		// it's a BLOB field.
+		return o.write(in.data(), in.length());
 	}
 
 	if (in.escape_q()) {

@@ -1643,36 +1643,39 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
     <sect2>
         <title>SSQLS and BLOB Columns</title>
 
-        <para>You can't currently use SSQLS to store binary
-        data.</para>
+        <para>It takes special care to use SSQLS with BLOB
+        columns. It's safest to declare the column as a
+        <classname>mysqlpp::sql_blob</classname> variable. This
+        is currently a typedef alias for <ulink type="classref"
+        url="ColData__Tmpl">ColData</ulink>, which is the form the
+        data is in just before the SSQLS mechanism populates the
+        structure. Thus, you end up getting a simple copy of the
+        <classname>ColData</classname> object's contents, without
+        interference.</para>
 
-        <para>BLOB columns are truncated when they contain null
-        characters if you store them in an SSQLS. This happens because
-        to get from the raw data format returned by the MySQL database
-        to an SSQLS field, the data goes through a conversion step via
-        <ulink type="classref" url="ColData__Tmpl">ColData</ulink>. The
-        most correct target type for a BLOB column is
-        <classname>mysqlpp::sql_blob</classname>, which is
-        currently an alias for <classname>std::string</classname>.
-        <classname>ColData</classname> converts to that via
-        <methodname>ColData::operator cchar*()</methodname>,
-        which means the data is treated as a C string, so embedded
-        nulls are treated as end-of-data markers. We can't just
-        add an <methodname>operator std::string</methodname> to
-        <classname>ColData</classname>, because that creates a bunch
-        of type conversion ambiguities.</para>
+        <para>You might think you could use
+        <classname>std::string</classname> instead of
+        <classname>sql_blob</classname>, but the current
+        design of <classname>ColData</classname> converts to
+        <classname>std::string</classname> via a C string. There's
+        no way to fix that without completely redesigning either
+        <classname>ColData</classname> or the SSQLS mechanism.</para>
 
-        <para>I'm documenting this here because I don't
-        see any easy fixes. The fix might require redesigning
-        <classname>ColData</classname>, which would have to wait until
-        v3.0. Alternately, we could possibly create a dedicated BLOB
-        data type, to make the correct conversion unambiguous to
-        the compiler.</para>
+        <para>The <classname>sql_blob</classname> typedef may be
+        changed to alias a different type in the future, so using it
+        instead of <classname>ColData</classname> ensures that your
+        code tracks these library changes automatically. Besides,
+        <classname>ColData</classname> is only intended to be an
+        internal mechanism within MySQL++. The only reason the
+        layering is so thin here is because it's the only way to
+        prevent BLOB data from being corrupted, short of redesigning
+        either SSQLS or <classname>ColData</classname>.</para>
 
-        <para>In the meantime, you will have to use
-        lower-level mechanisms to deal with BLOB data. See
-        <filename>examples/cgi_jpeg.cpp</filename> for the recommended
-        method.</para>
+        <para>You can see this technique in action in the
+        <filename>cgi_jpeg</filename> example:</para>
+
+        <programlisting><xi:include href="cgi_jpeg.txt" parse="text"
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
     </sect2>
 </sect1>
 

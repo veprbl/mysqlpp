@@ -18,11 +18,6 @@ v2.x Features
 
       http://lists.mysql.com/plusplus/6631
     
-    o Create a type dedicated to holding BLOB data, then add that
-      type to ColData?  This would fix the SSQLS incompatibilty.
-      Only other way would be to redesign the convert-via-ColData
-      mechanism, which will have to wait for v3.
-
     o Define HAVE_MYSQL_SSL_SET by default on Windows?  Make similar
       decisions for other autoconf-only macros.
 
@@ -254,9 +249,7 @@ Future Features
     some definite date, get coding and provide a patch!
 
     o SSQLS v2.  Not sure how it will look yet, but there are ideas
-      in play, and patches to study.  Consider removing ColData at
-	  the same time, as it's the culprit in SSQLS BLOB
-	  incompatibility.
+      in play, and patches to study.
 
     o Figure out some way to name debug DLL and library under VC++
       differently (trailing 'd'?) to prevent some problems due

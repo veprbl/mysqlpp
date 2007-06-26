@@ -56,10 +56,10 @@ typedef double			sql_decimal;
 
 typedef std::string		sql_enum;
 
-typedef std::string		sql_blob;
-typedef std::string		sql_tinyblob;
-typedef std::string		sql_mediumblob;
-typedef std::string		sql_longblob;
+typedef ColData			sql_blob;
+typedef ColData			sql_tinyblob;
+typedef ColData			sql_mediumblob;
+typedef ColData			sql_longblob;
 
 typedef std::string		sql_char;
 typedef std::string		sql_varchar;

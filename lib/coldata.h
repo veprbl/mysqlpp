@@ -98,6 +98,16 @@ public:
 	{
 	}
 
+	/// \brief Copy ctor
+	///
+	/// \param cd the other ColData_Tmpl object
+	ColData_Tmpl(const ColData_Tmpl<Str>& cd) :
+	Str(cd.data(), cd.length()),
+	type_(cd.type_),
+	null_(cd.null_)
+	{
+	}
+
 	/// \brief Constructor allowing you to set the null flag and the
 	/// type data.
 	///
