@@ -562,7 +562,7 @@ public:
 	template <class Sequence>
 	void storein_sequence(Sequence& con, query_reset r = RESET_QUERY)
 	{
-		storein_sequence_(con, def, r);
+		storein_sequence(con, def, r);
 	}
 
 	/// \brief Execute a query, storing the result set in an STL
