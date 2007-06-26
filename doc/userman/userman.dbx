@@ -1597,12 +1597,22 @@ sql_create_complete_5(stock, 2, 5,
         <filename>doc/ssqls-pretty</filename>, like so:</para>
 
         <programlisting>
-ssqls-pretty &lt; myprog.cpp |less</programlisting>
+doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
-        <para>This locates the first SSQLS declaration in that file
-        and uses the C++ preprocessor to expand that macro. You
-        may have to change the script to tell it where your MySQL++
-        header files are.</para>
+        <para>This Perl script locates the first SSQLS declaration
+        in that file, then uses the C++ preprocessor to expand that
+        macro. (The script assumes that your system's preprocessor
+        is called <filename>cpp</filename>, and that its command line
+        interface follows Unix conventions.)</para>
+
+        <para>If you run it from the top MySQL++ directory, as shown
+        above, it will use the header files in the distribution's
+        <filename>lib</filename> subdirectory. Otherwise, it
+        assumes the MySQL++ headers are in their default location,
+        <filename>/usr/include/mysql++</filename>. If you want to
+        use headers in some other location, you'll need to change
+        the directory name in <command>-I</command> flag at the top
+        of the script.</para>
     </sect2>
 
 
