@@ -1624,22 +1624,23 @@ ssqls-pretty &lt; myprog.cpp |less</programlisting>
         <para>BLOB columns are truncated when they contain null
         characters if you store them in an SSQLS. This happens because
         to get from the raw data format returned by the MySQL database
-        to an SSQLS field, the data goes through a conversion step
-        via <typename>ColData</typename>. The most correct target type
-        for a BLOB column is <typename>mysqlpp::sql_blob</typename>,
-        which is an alias for <typename>std::string</typename> at
-        the moment.  <typename>ColData</typename> converts to that
-        via <methodname>ColData::operator cchar*()</methodname>,
+        to an SSQLS field, the data goes through a conversion step via
+        <ulink type="classref" url="ColData__Tmpl">ColData</ulink>. The
+        most correct target type for a BLOB column is
+        <classname>mysqlpp::sql_blob</classname>, which is
+        currently an alias for <classname>std::string</classname>.
+        <classname>ColData</classname> converts to that via
+        <methodname>ColData::operator cchar*()</methodname>,
         which means the data is treated as a C string, so embedded
         nulls are treated as end-of-data markers. We can't just
         add an <methodname>operator std::string</methodname> to
-        <typename>ColData</typename>, because that creates a bunch
+        <classname>ColData</classname>, because that creates a bunch
         of type conversion ambiguities.</para>
 
         <para>I'm documenting this here because I don't
         see any easy fixes. The fix might require redesigning
-        <typename>ColData</typename>, which would have to wait until
-        v3.0. Alternately, we might have to create a dedicated BLOB
+        <classname>ColData</classname>, which would have to wait until
+        v3.0. Alternately, we could possibly create a dedicated BLOB
         data type, to make the correct conversion unambiguous to
         the compiler.</para>
 
