@@ -1121,46 +1121,35 @@ query.storein(my_vector, SQLString(1));</programlisting>
     </sect2>
 
     <sect2>
-        <title>Using Defaults</title>
+        <title>Default Parameters</title>
 
-        <para>You can also set the parameters one at a time by means
-        of class Query's public data member def. To change the values
-        of the def, simply use the subscript operator. You can refer
-        to the parameters either by number or by name. The following
-        two examples have the same effect:</para>
-
-        <programlisting>
-query.def[0] = "Dinner Rolls"; 
-query.def[1] = "item"; 
-query.def[2] = "item"; 
-query.def[3] = "price";</programlisting>
-
-        <para>and</para>
+        <para>The template query mechanism allows you to set
+        default parameter values. You simply assign a value
+        for the parameter to the appropriate position in the
+        <varname>Query::def</varname> array. You can refer to the
+        parameters either by position or by name:</para>
 
         <programlisting>
-query.def["what"] = "Dinner Rolls"; 
-query.def["wheref"] = "item"; 
-query.def["field1"] = "item"; 
-query.def["field2"] = "price";</programlisting>
+query.def[1] = "item";
+query.def["wheref"] = "item";</programlisting>
 
-        <para>Once all the parameters are set simply execute as you
-        would have executed the query before you knew about template
-        queries:</para>
+        <para>Both do the same thing.</para>
 
-        <programlisting>
-Result res = query.store()</programlisting>
-    </sect2>
+        <para>This mechanism works much like C++'s default function
+        parameter mechanism: if you set defaults for the parameters at
+        the end of the list, you can call one of
+        <classname>Query</classname>'s query execution methods without
+        passing all of the values. If the query takes four parameters
+        and you've set defaults for the last three, you can execute the
+        query using as little as just one explicit parameter.</para>
 
-
-    <sect2>
-        <title>Combining the Two</title>
-
-        <para>You can also combine the use of setting the parameters
-        at execution time and setting them via the def object
-        by calling <methodname>Query::store()</methodname>
-        (or <methodname>use()</methodname> or
-        <methodname>execute()</methodname>) without passing the full
-        number of parameters that the template supports:</para>
+        <para>Now you can see why we numbered the template query
+        parameters the way we did a few sections earlier. We ordered
+        them so that the ones less likely to change have higher
+        numbers, so we don't always have to pass them. We can just give
+        them defaults and take those defaults when applicable. This
+        is most useful when some parameters in a template query vary
+        less often than other parameters. For example:</para>
 
         <programlisting>
 query.def["field1"] = "item"; 
@@ -1168,34 +1157,35 @@ query.def["field2"] = "price";
 Result res1 = query.store("Hamburger Buns", "item"); 
 Result res2 = query.store(1.25, "price"); </programlisting>
 
-        <para>Would store the query:</para>
+        <para>This stores the result of the following queries
+        in <varname>res1</varname> and <varname>res2</varname>,
+        respectively:</para>
 
         <programlisting>
-select (item, price) from stock where item = "Hamburger Buns" </programlisting>
+select (item, price) from stock where item = "Hamburger Buns"
+select (item, price) from stock where price = 1.25</programlisting>
 
-        <para>for res1 and</para>
+        <para>Default parameters are useful in this example because
+        we have two queries to issue, and parameters 2 and 3 remain
+        the same for both, while parameters 0 and 1 vary.</para>
 
-        <programlisting>
-select (item, price) from stock where price = 1.25 </programlisting>
-
-        <para>for res2.</para>
-
-        <para>Now you see why we ordered the placeholders in the
-        template above as we did: we used positions 0 and 1 for the
-        ones we want to change frequently, and used 2 and 3 for the
-        parameters that seldom change.</para>
-
-        <para>One thing to watch out for, however, is that
-        <methodname>Query::store(const char* q)</methodname>
-        is also defined for executing the query q. Therefore,
-        when you call <methodname>Query::store()</methodname>
-        (or <methodname>use()</methodname>, or
-        <methodname>execute()</methodname>) with only one item and
-        that item is a const char*, you need to explicitly convert
-        it into a SQLString to get the right overload:</para>
+        <para>Some have been tempted into using this mechanism as a
+        way to set all of the template parameters in a query:</para>
 
         <programlisting>
-Result res = query.store(SQLString("Hamburger Buns")); </programlisting>
+query.def["what"] = "Hamburger Buns";
+query.def["wheref"] = "item";
+query.def["field1"] = "item"; 
+query.def["field2"] = "price"; 
+Result res1 = query.store();</programlisting>
+
+        <para>This can work, but it is <emphasis>not designed
+        to</emphasis>. In fact, it's known to fail horribly in one
+        common case. You will not get sympathy if you complain on
+        the mailing list about it not working. If your code doesn't
+        actively reuse at least one of the parameters in subsequent
+        queries, you're abusing MySQL++, and it is likely to take
+        its revenge on you.</para>
     </sect2>
 
 
@@ -1204,9 +1194,10 @@ Result res = query.store(SQLString("Hamburger Buns")); </programlisting>
 
         <para>If for some reason you did not specify all the parameters
         when executing the query and the remaining parameters do not
-        have their values set via def, the query object will throw a
-        <ulink type="classref" url="BadParamCount"/> object. If this
-        happens, you can get an explanation of what happened by calling
+        have their values set via <varname>Query::def</varname>,
+        the query object will throw a <ulink type="classref"
+        url="BadParamCount"/> object. If this happens, you
+        can get an explanation of what happened by calling
         <methodname>BadParamCount::what()</methodname>, like so:</para>
 
         <programlisting>
@@ -1214,9 +1205,8 @@ query.def["field1"] = "item";
 query.def["field2"] = "price"; 
 Result res = query.store(1.25); </programlisting>
 
-        <para>This would throw
-        <classname>BadParamCount</classname> because the
-        wheref is not specified.</para>
+        <para>This would throw <classname>BadParamCount</classname>
+        because the <varname>wheref</varname> is not specified.</para>
 
         <para>In theory, this exception should never be thrown. If
         the exception is thrown it probably a logic error in your
