@@ -62,18 +62,15 @@ v2.x Features
       to use the iterator.  Tricky bit: how do we make it not
       interfere with subclass Result's random-access iterator?
 
-    o It may be possible to optimize the use of ColData in
-      the return from Row::operator[].  Currently, that operator
-      returns a temporary ColData object, which contains a
-      std::string buffer which is initialized by a const char*
-      pointer to data within the Row object.  Since the ColData
-      object is temporary, you currently must copy the data a
-      second time to store it when using Row::operator[].  If the
-      end user just wants a const char*, this double copy could
-      be prevented.  See:
-      
-        http://lists.mysql.com/plusplus/4451
-        http://lists.mysql.com/plusplus/4460
+    o It may be possible to optimize the use of ColData in the return
+      from Row::operator[].  Currently, that operator returns a
+      temporary ColData object, which contains a copy of the field data
+      in its std::string base class instead of a const char* pointer
+      to data within the Row object.  If the caller just wants a
+      const char*, we can avoid at least one copy here, maybe two. See:
+
+	  http://lists.mysql.com/plusplus/4451
+	  http://lists.mysql.com/plusplus/4460
 
     o Add Chris Frey's packarray class?
 
