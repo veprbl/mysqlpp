@@ -1056,8 +1056,9 @@ query.parse();</programlisting>
         a query simply use <methodname>Query::store(const
         SQLString &amp;parm0, [..., const SQLString
         &amp;parm11])</methodname>. This type of multiple overload
-        also exists for <methodname>Query::use()</methodname>
-        and <methodname>Query::execute()</methodname>.  'parm0'
+        also exists for <methodname>Query::storein()</methodname>,
+        <methodname>Query::use()</methodname> and
+        <methodname>Query::execute()</methodname>. 'parm0'
         corresponds to the first parameter, etc. You may specify up
         to 25 parameters. For example:</para>
 
@@ -1079,6 +1080,45 @@ select (%0:field1, %1:field2) from stock where %2:wheref = %3q:what</programlist
         <para>...will become apparent shortly.</para>
     </sect2>
 
+
+    <sect2>
+        <title>Parameter Types and Function Overloads</title>
+
+        <para>There are quite a few overloads for each of
+        <classname>Query</classname>'s query execution
+        functions. (<methodname>store()</methodname>,
+        <methodname>use()</methodname>,
+        <methodname>execute()</methodname>...) It's possible to
+        have code that looks like it should work, but which doesn't,
+        because it's calling the wrong overload. For instance:</para>
+
+        <programlisting>
+query.storein(my_vector, "1");
+query.storein(my_vector, 1);</programlisting>
+
+        <para>The first one works, and the second does
+        not. The cause is a vestigial second parameter to one
+        of <methodname>storein()</methodname>'s overloads that's
+        compatible with integers. Being vestigial, it's only getting
+        in the way right now, but we can't fix it until the next
+        major version of the libary, where it will be okay to break
+        the ABI. Until then, we're stuck with it.</para>
+
+        <para>If the MySQL server keeps rejecting your template
+        queries, try explicitly casting the parameters to
+        <classname>SQLString</classname>:</para>
+
+        <programlisting>
+query.storein(my_vector, SQLString(1));</programlisting>
+
+        <para>This ensures that your code calls one of the overloads
+        meant to handle template query parameters. I don't recommend
+        doing this habitually, because it will clutter your code. For
+        the most part, MySQL++'s interface is set up to do the right
+        thing. It's just that there are still a few corner cases
+        that can't be fixed until the next time we can redesign the
+        interface.</para>
+    </sect2>
 
     <sect2>
         <title>Using defaults</title>
