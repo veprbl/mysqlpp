@@ -1684,17 +1684,17 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
         copy of the <classname>ColData</classname> object's contents,
         without interference.</para>
 
-        <para>You might think you can use
-        <classname>std::string</classname> instead of
-        <classname>sql_blob</classname>, but the current
+        <para>Because <classname>ColData</classname> derives
+        from <classname>std::string</classname> and C++
+        strings handle binary data just fine, you might think
+        you can use <classname>std::string</classname> instead
+        of <classname>sql_blob</classname>, but the current
         design of <classname>ColData</classname> converts to
-        <classname>std::string</classname> via a C string. Thus,
-        the BLOB data is truncated at the first embedded null
-        character during the conversion from MySQL++'s internal data
-        structure to the <classname>std::string</classname> field in
-        your SSQLS. There's no way to fix that without completely
-        redesigning either <classname>ColData</classname> or the
-        SSQLS mechanism.</para>
+        <classname>std::string</classname> via a C string. As a
+        result, the BLOB data is truncated at the first embedded
+        null character during population of the SSQLS. There's
+        no way to fix that without completely redesigning either
+        <classname>ColData</classname> or the SSQLS mechanism.</para>
 
         <para>The <classname>sql_blob</classname> typedef may be
         changed to alias a different type in the future, so using it
