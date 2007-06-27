@@ -1644,32 +1644,37 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
         <title>SSQLS and BLOB Columns</title>
 
         <para>It takes special care to use SSQLS with BLOB
-        columns. It's safest to declare the column as a
-        <classname>mysqlpp::sql_blob</classname> variable. This
+        columns. It's safest to declare the SSQLS field as of
+        type <classname>mysqlpp::sql_blob</classname>. This
         is currently a typedef alias for <ulink type="classref"
         url="ColData__Tmpl">ColData</ulink>, which is the form the
         data is in just before the SSQLS mechanism populates the
-        structure. Thus, you end up getting a simple copy of the
-        <classname>ColData</classname> object's contents, without
-        interference.</para>
+        structure. Thus, when the data is copied from the internal
+        MySQL++ data structures into your SSQLS, you get a direct
+        copy of the <classname>ColData</classname> object's contents,
+        without interference.</para>
 
-        <para>You might think you could use
+        <para>You might think you can use
         <classname>std::string</classname> instead of
         <classname>sql_blob</classname>, but the current
         design of <classname>ColData</classname> converts to
-        <classname>std::string</classname> via a C string. There's
-        no way to fix that without completely redesigning either
-        <classname>ColData</classname> or the SSQLS mechanism.</para>
+        <classname>std::string</classname> via a C string. Thus,
+        the BLOB data is truncated at the first embedded null
+        character during the conversion from MySQL++'s internal data
+        structure to the <classname>std::string</classname> field in
+        your SSQLS. There's no way to fix that without completely
+        redesigning either <classname>ColData</classname> or the
+        SSQLS mechanism.</para>
 
         <para>The <classname>sql_blob</classname> typedef may be
         changed to alias a different type in the future, so using it
         instead of <classname>ColData</classname> ensures that your
         code tracks these library changes automatically. Besides,
         <classname>ColData</classname> is only intended to be an
-        internal mechanism within MySQL++. The only reason the
-        layering is so thin here is because it's the only way to
-        prevent BLOB data from being corrupted, short of redesigning
-        either SSQLS or <classname>ColData</classname>.</para>
+        internal mechanism within MySQL++. The only reason the layering
+        is so thin here is because it's the only way to prevent BLOB
+        data from being corrupted while staying within the current
+        library interface design.</para>
 
         <para>You can see this technique in action in the
         <filename>cgi_jpeg</filename> example:</para>
