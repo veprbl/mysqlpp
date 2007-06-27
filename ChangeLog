@@ -66,7 +66,8 @@
 
 	o Fixed a few more embedded null handling problems.
 
-	o ColData used to keep two copies of all data it held.	Fixed.
+	o ColData used to keep two copies of all data it held.
+	  Now it keeps just one.
 
 	o Fixed install.bat script to track the unified Bakefile change
 	  and the lack of separate debug and release builds under MinGW.
@@ -74,7 +75,7 @@
 	o Yet another STLport + Query memory leak fix.
 
 	o Squished a warning in newer GCCs having to do with identifier
-	  shadowing.  Patch by Jonathan Wakely>
+	  shadowing.  Patch by Jonathan Wakely.
 
 	o Fixed a null-termination bug in Query::parse().  If you
 	  somehow constructed a query string without a terminating null
@@ -91,7 +92,7 @@
 
 	o Partial fix to Doxygen PDF build on RHEL4 and 5.  Doesn't yet
 	  run automatically, but it can be coaxed on by hand now.  Proper
-	  fix is pending a respnonse from the Doxygen folk.
+	  fix is pending a response from the Doxygen folk.
 	
 	o Lots of documentation improvements.
 
