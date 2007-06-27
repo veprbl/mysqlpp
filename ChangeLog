@@ -1,3 +1,101 @@
+2.3.0, 2007.06.27 (not yet released)
+
+	o Added Query::for_each() and Query::store_if() methods
+	  proposed by Joel Fielder, and added examples for each.
+
+	o It's now possible to store BLOB data in an SSQLS.  It's not
+	  foolproof, so added a section to the user manual (5.9) to
+	  document the method.	Also, changed examples/cgi_jpeg to
+	  use this new mechanism, instead of the ugly "raw row data"
+	  method it used to use.
+
+	o Revamped Connection::set_option() handling.  These options
+	  used to be queued up, and applied only just before actually
+	  establishing the connection.	This made error reporting
+	  less helpful because the diagnostic was separated from
+	  the cause.  Plus, the error messages were misleading to
+	  begin with.  Now, set_option() takes effect immediately if
+	  the connection is not yet up (excepting one special option
+	  that can actually be set after the connection is up) and
+	  issues better diagnostics when it detects errors.
+
+	o Connection::connect() used to set a few options in such a
+	  way that the user couldn't override them.  Now it's smart
+	  enough to set them with the desired default values only
+	  when we see that the user hasn't given them other values.
+
+	o SQLString can now be initialized from a mysqlpp::null,
+	  giving a "NULL" string.  This is useful for template queries.
+	  Patch by Michael Hanselmann.
+
+	o resetdb error message about mixing library and header version
+	  numbers is now more explicit.
+
+	o Changed BadConversion exception's "what" message text to be
+	  more like the other exceptions.  The inconsistency lead
+	  one to incorrectly copy-paste code from another exception
+	  handler, expecting it to behave the same way.  Now it does.
+
+	o Added Row::raw_size(), as a shortcut for Row::at().size().
+
+	o ssqls-pretty now detects when it's being run from within
+	  the MySQL++ distribution tree and gives a different -I
+	  flag to the compiler, so that it picks up the distribution
+	  headers instead of those that may be on the system already.
+
+	o Fixed a build bug on older Solaris versions where the
+	  test for the C API library was erroneously failing, stopping
+	  the configuration process.
+
+	o Simplified mysql_shutdown() level argument detection.
+	  Already had to do a version number ifdef check for the
+	  Windows case, so there's really no point to doing it with
+	  autoconf on Unixy platforms.	Moved version number check
+	  into lib/connection.cpp, and nuked the separate autoconf
+	  and Windows tests.
+
+	o Removed dependency of sql_types.h on myset.h and (indirectly)
+	  datetime.h.  Now we only define sql_* typedef aliases for
+	  those MySQL++ types if the headers are included before
+	  sql_types.h.
+
+	o Fixed a typo in one of the storein_sequence() template
+	  overloads, which is apparently rarely (or never?) used,
+	  because no one reported the compiler error you'd get if
+	  you tried.
+
+	o Fixed a few more embedded null handling problems.
+
+	o ColData used to keep two copies of all data it held.	Fixed.
+
+	o Fixed install.bat script to track the unified Bakefile change
+	  and the lack of separate debug and release builds under MinGW.
+
+	o Yet another STLport + Query memory leak fix.
+
+	o Squished a warning in newer GCCs having to do with identifier
+	  shadowing.  Patch by Jonathan Wakely>
+
+	o Fixed a null-termination bug in Query::parse().  If you
+	  somehow constructed a query string without a terminating null
+	  character, then tried to parse it as a template query, it
+	  could walk off the end of the string.  Patch by Worster Chen.
+
+	o Removed MYSQLPP_EXPORT tag from FieldNames and FieldTypes
+	  class declarations, as this can cause problems in programs
+	  that use vector<string> in VC++.  It has to do with multiply
+	  defined templates, since these classes derive from that
+	  template, and VC++ can't resolve the conflict without help.
+	  Since these classes aren't actually used outside the library,
+	  this shouldn't cause a problem.  Patch by Nils Woetzel.
+
+	o Partial fix to Doxygen PDF build on RHEL4 and 5.  Doesn't yet
+	  run automatically, but it can be coaxed on by hand now.  Proper
+	  fix is pending a respnonse from the Doxygen folk.
+	
+	o Lots of documentation improvements.
+
+
 2.2.3, 2007.04.17 (r1538) "The Tax Day Release"
 
 	o Previous version left examples/vstudio/* out of the tarball
