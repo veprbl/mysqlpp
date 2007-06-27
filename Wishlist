@@ -35,13 +35,9 @@ v2.x Features
       - Arithmetic features?  (See "Practical Algorithms for
         Programmers" by Binstock and Rex.)
 
-    o Conditionally allow the Lockable mechanism to use the
-      Boost.Threads library.  If MYSQLPP_BOOST_THREADS is defined,
-      #include the proper header and use Boost's mutexes.  Add a
-      configure script option that defines this macro and adds
-      any needed libraries to the <sys-lib> tags.
-
-      Mechanism must reflect these MySQL C API restrictions:
+    o Add conditional code to the Lockable mechanism to use platform
+	  mutexes if available, to implement these MySQL C API
+	  restrictions:
 
       - Only one query executing at once per connection
 
