@@ -971,7 +971,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
 
     <sect2>
-        <title>Setting up template queries</title>
+        <title>Setting up Template Queries</title>
 
         <para>To set up a template query, you simply insert it into the
         Query object, using numbered placeholders wherever you want
@@ -1050,7 +1050,7 @@ query.parse();</programlisting>
 
 
     <sect2>
-        <title>Setting the parameters at execution time</title>
+        <title>Setting the Parameters at Execution Time</title>
 
         <para>To specify the parameters when you want to execute
         a query simply use <methodname>Query::store(const
@@ -1121,7 +1121,7 @@ query.storein(my_vector, SQLString(1));</programlisting>
     </sect2>
 
     <sect2>
-        <title>Using defaults</title>
+        <title>Using Defaults</title>
 
         <para>You can also set the parameters one at a time by means
         of class Query's public data member def. To change the values
@@ -1153,7 +1153,7 @@ Result res = query.store()</programlisting>
 
 
     <sect2>
-        <title>Combining the two</title>
+        <title>Combining the Two</title>
 
         <para>You can also combine the use of setting the parameters
         at execution time and setting them via the def object
