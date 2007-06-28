@@ -2383,6 +2383,28 @@ q.execute(some_value);</programlisting>
             <para>(Incidentally, this change was made to allow better
             support for BLOB columns.)</para>
         </sect3>
+
+
+        <sect3>
+            <title>v2.3.0</title>
+
+            <para><methodname>Connection::set_option()</methodname>
+            calls now set the connection option immediately, instead
+            of waiting until just before the connnection is actually
+            established. Code that relied on the old behavior could see
+            unhandled exceptions, since option setting errors are now
+            thrown from a different part of the code. You want to wrap
+            the actual <methodname>set_option()</methodname> call now,
+            not <methodname>Connection::connect()</methodname></para>
+
+            <para><classname>FieldNames</classname> and
+            <classname>FieldTypes</classname> are no longer exported
+            from the library. If you are using these classes directly
+            from Visual C++ or MinGW, your code won't be able to
+            dynamically link to a DLL version of the library any
+            more. These are internal classes, however, so no one
+            should be using them directly.</para>
+        </sect3>
     </sect2>
 
 
