@@ -870,7 +870,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         techniques.</para>
 
         <sect3>
-            <title>Loading binary file in a BLOB column</title>
+            <title>Loading a binary file into a BLOB column</title>
 
             <para>This example shows how to insert binary data
             into a MySQL table's BLOB column with MySQL++,
@@ -892,12 +892,12 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         </sect3>
 
         <sect3>
-            <title>Displaying images in HTML from BLOB column</title>
+            <title>Serving images from BLOB column via CGI</title>
 
             <para>This example is also a very short one, considering
-            the function that it performs. This one will retreive data
-            loaded by <filename>load_jpeg</filename> and print it out
-            in the form a web server can accept for a CGI call. This
+            the function that it performs. It retreives data loaded
+            by <filename>load_jpeg</filename> and prints it out in
+            the form a web server can accept for a CGI call. This
             is <filename>examples/cgi_jpeg.cpp</filename>:</para>
 
             <programlisting><xi:include href="cgi_jpeg.txt" parse="text"
