@@ -844,6 +844,48 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
 
     <sect2>
+        <title>Executing Code for Each Row In a Result Set</title>
+
+        <para>SQL is more than just a database query language. Modern
+        database engines can actually do some calculations on the data
+        on the server side. But, this isn't always the best way to
+        get something done. When you need to mix code and a query,
+        MySQL++'s new <methodname>Query::for_each()</methodname>
+        facility might be just what you need. This is
+        <filename>examples/for_each.cpp</filename>:</para>
+
+        <programlisting><xi:include href="for_each.txt" parse="text"
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+
+		<para>You only need to read the
+		<function>main()</function> function to get a
+		good idea of what the program does. The key line
+		of code passes an SSQLS examplar and a functor
+		to <methodname>Query::for_each()</methodname>.
+		<methodname>for_each()</methodname> uses the SSQLS
+		instance to build a <computeroutput>select
+		* from TABLE</computeroutput> query,
+		<computeroutput>stock</computeroutput> in this
+		case. It runs that query internally, calling
+		<classname>gather_stock_stats</classname> on each
+		row. This is a pretty contrived example; you could
+		actually do this in SQL, but we're trying to prevent
+		the complexity of the code from getting in the way
+		of the demonstration here.</para>
+
+		<para>If you need a more complex query than the
+		one <methodname>for_each()</methodname> knows
+		how to build, there are two overloads that let
+		you use your own query string. One just takes a
+		functor and uses the query string held within the
+		<classname>Query</classname> object, which you probably
+		built up using <classname>Query</classname>'s stream
+		interface. The other overload just takes the query
+		string directly, along with the functor.</para>
+    </sect2>
+
+
+    <sect2>
         <title>Getting Field Meta-Information</title>
 
         <para>The following example demonstrates how to get
