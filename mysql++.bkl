@@ -251,9 +251,6 @@
 		<exe id="cgi_jpeg" template="common-example">
 			<sources>examples/cgi_jpeg.cpp</sources>
 		</exe>
-		<exe id="updel" template="common-example">
-			<sources>examples/updel.cpp</sources>
-		</exe>
 	</if>	<!-- build examples -->
 
 	<if cond="FORMAT=='autoconf'">

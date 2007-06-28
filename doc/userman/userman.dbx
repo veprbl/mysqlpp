@@ -910,36 +910,6 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
             returns it to the web server, which will send it on to
             the browser.</para>
         </sect3>
-
-        <sect3>
-            <title>DELETE or UPDATE from SELECT</title>
-
-            <para>MySQL's SELECT statement has more power to winnow
-            out just the items of interest from the database than
-            do DELETE or UPDATE queries. Therefore, many people
-            have wanted the ability to execute a SELECT statement
-            that in fact deletes or updates the rows matched,
-            rather than returning them. This example implements
-            that feature in just a few lines of code. It is
-            <filename>examples/updel.cpp</filename>:</para>
-
-            <programlisting><xi:include href="updel.txt" parse="text"
-            xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-
-            <para>Notice that the row values used in the IN clause
-            aren't escaped or quoted. This is because row elements are
-            <ulink type="classref" url="ColData__Tmpl">ColData</ulink>
-            types, so they have automatic escaping and quoting, as
-            appropriate to the type being inserted. If you want to
-            disable this feature, it's easily done: click the ColData
-            link for the details.</para>
-
-            <para>Users of this example should beware that one more
-            check is required in order to run this query safely:
-            in some extreme cases, the size of the query might grow
-            larger than MySQL's maximum allowed packet size. This
-            check should be added.</para>
-        </sect3>
     </sect2>
 </sect1>
 

@@ -118,10 +118,6 @@ Running the Other Command Line Examples
     JPEG you loaded.  The ID value to use will be that reported
     by load_jpeg.
 
-    There is one other oddball, the updel example.  It shows how to
-    use the power of the matching syntax available in MySQL's SELECT
-    statement to do fine-grained UPDATE or DELETE queries.
-
 
 Dedicated Windows Examples
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
