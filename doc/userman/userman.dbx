@@ -857,28 +857,29 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
 
     <sect2>
-        <title>Let's Do Something Useful</title>
+        <title>Dealing with Binary Data</title>
 
-        <para>These next few examples demonstrate just how powerful
-        C++ can be, allowing you to do a lot of work in few lines of
-        code without losing efficiency.</para>
-
-        <para>Since the code is meant to be re-used as-is, constants
-        that can differ from one case to another have been grouped in
-        order to simplify editing. Also, all of these examples have
-        full error checking code, showing off the power of MySQL++'s
-        exception handling features.</para>
+        <para>The tricky part about dealing with binary data in
+        MySQL++ is to ensure that you don't ever treat the data as a
+        C string, which is really easy to do accidentally. C strings
+        treat zero bytes as special end-of-string characters, but
+        they're not special at all in binary data. Recent releases
+        of MySQL++ do a better job of letting you keep data in
+        forms that don't have this problem, but it's still possible
+        to do it incorrectly. These examples demonstrate correct
+        techniques.</para>
 
         <sect3>
             <title>Loading binary file in a BLOB column</title>
 
-            <para>Since MySQL 3.23, BLOB columns have been available,
-            but their use is sometimes not straightforward. Besides
-            showing how easy it can be with MySQL++, this
-            example demonstrates several features of MySQL++.
-            The program requires one command line parameter over
-            that required by the other examples you've seen so
-            far, which is a full path to a JPEG file. This is
+            <para>This example shows how to insert binary data
+            into a MySQL table's BLOB column with MySQL++,
+            and also how to get the value of the auto-increment
+            column from the previous insert. (This MySQL feature
+            is usually used to create unique IDs for rows as
+            they're inserted.) The program requires one command
+            line parameter over that required by the other examples
+            you've seen so far, the path to a JPEG file. This is
             <filename>examples/load_jpeg.cpp</filename>:</para>
 
             <programlisting><xi:include href="load_jpeg.txt" parse="text"
