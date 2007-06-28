@@ -71,10 +71,10 @@ main(int argc, char *argv[])
 			return 1;
 		}
 
-		// Pull only the stock items with prime quantities
+		// Collect the stock items with prime quantities
 		std::vector<stock> results;
 		mysqlpp::Query query = con.query();
-		query.store_if(results, "select * from stock", is_prime());
+		query.store_if(results, stock(), is_prime());
 
 		// Show the results
 		print_stock_header(results.size());

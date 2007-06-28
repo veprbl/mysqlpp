@@ -865,6 +865,13 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         you a container full of results meeting a criterion that you
         probably can't express in SQL. You will no doubt have much
         more useful criteria in your own programs.</para>
+
+        <para>If you need a more complex query than the one
+        <methodname>store_if()</methodname> knows how to build when
+        given an SSQLS examplar, there are two overloads that let
+        you use your own query string. One overload takes the query
+        string directly, and the other uses the query string built
+        with <classname>Query</classname>'s stream interface.</para>
     </sect2>
 
 
@@ -895,14 +902,10 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         SQL, but we're trying to prevent the complexity of the code
         from getting in the way of the demonstration here.</para>
 
-        <para>If you need a more complex query than the one
-        <methodname>for_each()</methodname> knows how to build,
-        there are two overloads that let you use your own query
-        string. One just takes a functor and uses the query string
-        held within the <classname>Query</classname> object, which
-        you probably built up using <classname>Query</classname>'s
-        stream interface. The other overload just takes the query
-        string directly, along with the functor.</para>
+        <para>Just as with <methodname>store_if()</methodname>,
+        described above, there are two other overloads for
+        <methodname>for_each()</methodname> that let you use your
+        own query string.</para>
     </sect2>
 
 

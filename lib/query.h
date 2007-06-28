@@ -476,6 +476,35 @@ public:
 		return fn;
 	}
 
+	/// \brief Pulls every row in a table, conditionally storing each
+	/// one in a container
+	///
+	/// Just like store_if(Sequence&, const SQLString&, Function), but
+	/// it uses the SSQLS instance to construct a "select * from TABLE"
+	/// query, using the table name field in the SSQLS.
+	///
+	/// \param seq the destination container; needs a push_back() method
+	/// \param ssqls the SSQLS instance to get a table name from
+	/// \param fn the functor called for each row
+	/// \return a copy of the passed functor
+	template <class Sequence, class SSQLS, typename Function>
+	Function store_if(Sequence& seq, const SSQLS& ssqls, Function fn)
+	{	
+		SQLString query("select * from ");
+		query += ssqls._table;
+		mysqlpp::ResUse res = use(query);
+		if (res) {
+			mysqlpp::NoExceptions ne(res);
+			while (mysqlpp::Row row = res.fetch_row()) {
+				if (fn(row)) {
+					seq.push_back(row);
+				}
+			}
+		}
+
+		return fn;
+	}
+
 	/// \brief Execute the query, conditionally storing each row in a
 	/// container
 	///
