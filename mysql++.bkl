@@ -114,7 +114,7 @@
 	</if>	<!-- build library -->
 
 	<!-- Set up build options common to all examples -->
-	<template id="example">
+	<template id="examples">
 		<if cond="BUILDLIBRARY=='yes'">
 			<depends>mysqlpp</depends>
 		</if>
@@ -170,78 +170,82 @@
 			<sys-lib>mysqlpp</sys-lib>
 			<sys-lib>mysqlclient</sys-lib>
 		</if>
+	</template>
 
+	<!-- Additional options specific to examples that depend on
+	     the util module. -->
+	<template id="libutil-user">
 		<depends>util</depends>
 		<sys-lib>mysqlpp_util</sys-lib>
 	</template>
 
-	<!-- Define output targets, if examples are enabled -->
+	<!-- Define output targets, if exampless are enabled -->
 	<if cond="BUILDEXAMPLES=='yes'">
-		<!-- The "util" convenience library common to all examples -->
-		<lib id="util" template="example">
+		<!-- The "util" convenience library, used by the examples -->
+		<lib id="util" template="examples">
 			<libname>mysqlpp_util</libname>
 			<sources>examples/util.cpp</sources>
 		</lib>
 		
-		<!-- The examples, which use the util library. -->
-		<exe id="resetdb" template="example">
+		<!-- The examples themselves -->
+		<exe id="resetdb" template="libutil-user,examples">
 			<sources>examples/resetdb.cpp</sources>
 		</exe>
-		<exe id="simple1" template="example">
+		<exe id="simple1" template="libutil-user,examples">
 			<sources>examples/simple1.cpp</sources>
 		</exe>
-		<exe id="simple2" template="example">
+		<exe id="simple2" template="libutil-user,examples">
 			<sources>examples/simple2.cpp</sources>
 		</exe>
-		<exe id="simple3" template="example">
+		<exe id="simple3" template="libutil-user,examples">
 			<sources>examples/simple3.cpp</sources>
 		</exe>
-		<exe id="multiquery" template="example">
+		<exe id="multiquery" template="libutil-user,examples">
 			<sources>examples/multiquery.cpp</sources>
 		</exe>
-		<exe id="tquery" template="example">
+		<exe id="tquery" template="libutil-user,examples">
 			<sources>examples/tquery.cpp</sources>
 		</exe>
-		<exe id="usequery" template="example">
+		<exe id="usequery" template="libutil-user,examples">
 			<sources>examples/usequery.cpp</sources>
 		</exe>
-		<exe id="custom1" template="example">
+		<exe id="custom1" template="libutil-user,examples">
 			<sources>examples/custom1.cpp</sources>
 		</exe>
-		<exe id="custom2" template="example">
+		<exe id="custom2" template="libutil-user,examples">
 			<sources>examples/custom2.cpp</sources>
 		</exe>
-		<exe id="custom3" template="example">
+		<exe id="custom3" template="libutil-user,examples">
 			<sources>examples/custom3.cpp</sources>
 		</exe>
-		<exe id="custom4" template="example">
+		<exe id="custom4" template="libutil-user,examples">
 			<sources>examples/custom4.cpp</sources>
 		</exe>
-		<exe id="custom5" template="example">
+		<exe id="custom5" template="libutil-user,examples">
 			<sources>examples/custom5.cpp</sources>
 		</exe>
-		<exe id="custom6" template="example">
+		<exe id="custom6" template="libutil-user,examples">
 			<sources>examples/custom6.cpp</sources>
 		</exe>
-		<exe id="dbinfo" template="example">
+		<exe id="dbinfo" template="libutil-user,examples">
 			<sources>examples/dbinfo.cpp</sources>
 		</exe>
-		<exe id="fieldinf1" template="example">
+		<exe id="fieldinf1" template="libutil-user,examples">
 			<sources>examples/fieldinf1.cpp</sources>
 		</exe>
-		<exe id="load_jpeg" template="example">
+		<exe id="load_jpeg" template="libutil-user,examples">
 			<sources>examples/load_jpeg.cpp</sources>
 		</exe>
-		<exe id="xaction" template="example">
+		<exe id="xaction" template="libutil-user,examples">
 			<sources>examples/xaction.cpp</sources>
 		</exe>
-		<exe id="store_if" template="example">
+		<exe id="store_if" template="libutil-user,examples">
 			<sources>examples/store_if.cpp</sources>
 		</exe>
-		<exe id="for_each" template="example">
+		<exe id="for_each" template="libutil-user,examples">
 			<sources>examples/for_each.cpp</sources>
 		</exe>
-		<exe id="cgi_jpeg" template="example">
+		<exe id="cgi_jpeg" template="libutil-user,examples">
 			<sources>examples/cgi_jpeg.cpp</sources>
 		</exe>
 	</if>	<!-- build examples -->
