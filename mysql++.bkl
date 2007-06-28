@@ -114,7 +114,7 @@
 	</if>	<!-- build library -->
 
 	<!-- Set up build options common to all examples -->
-	<template id="common-example">
+	<template id="example">
 		<if cond="BUILDLIBRARY=='yes'">
 			<depends>mysqlpp</depends>
 		</if>
@@ -170,85 +170,78 @@
 			<sys-lib>mysqlpp</sys-lib>
 			<sys-lib>mysqlclient</sys-lib>
 		</if>
-	</template>
 
-	<!-- Additional options specific to examples that depend on
-	     the util module. -->
-	<template id="util-example">
 		<depends>util</depends>
 		<sys-lib>mysqlpp_util</sys-lib>
 	</template>
 
-	<!-- Define output targets, if common-examples are enabled -->
+	<!-- Define output targets, if examples are enabled -->
 	<if cond="BUILDEXAMPLES=='yes'">
-		<!-- The "util" convenience library -->
-		<lib id="util" template="common-example">
+		<!-- The "util" convenience library common to all examples -->
+		<lib id="util" template="example">
 			<libname>mysqlpp_util</libname>
 			<sources>examples/util.cpp</sources>
 		</lib>
 		
-		<!-- The "standard" examples, being the ones that depend on
-			the util library. -->
-		<exe id="resetdb" template="util-example,common-example">
+		<!-- The examples, which use the util library. -->
+		<exe id="resetdb" template="example">
 			<sources>examples/resetdb.cpp</sources>
 		</exe>
-		<exe id="simple1" template="util-example,common-example">
+		<exe id="simple1" template="example">
 			<sources>examples/simple1.cpp</sources>
 		</exe>
-		<exe id="simple2" template="util-example,common-example">
+		<exe id="simple2" template="example">
 			<sources>examples/simple2.cpp</sources>
 		</exe>
-		<exe id="simple3" template="util-example,common-example">
+		<exe id="simple3" template="example">
 			<sources>examples/simple3.cpp</sources>
 		</exe>
-		<exe id="multiquery" template="util-example,common-example">
+		<exe id="multiquery" template="example">
 			<sources>examples/multiquery.cpp</sources>
 		</exe>
-		<exe id="tquery" template="util-example,common-example">
+		<exe id="tquery" template="example">
 			<sources>examples/tquery.cpp</sources>
 		</exe>
-		<exe id="usequery" template="util-example,common-example">
+		<exe id="usequery" template="example">
 			<sources>examples/usequery.cpp</sources>
 		</exe>
-		<exe id="custom1" template="util-example,common-example">
+		<exe id="custom1" template="example">
 			<sources>examples/custom1.cpp</sources>
 		</exe>
-		<exe id="custom2" template="util-example,common-example">
+		<exe id="custom2" template="example">
 			<sources>examples/custom2.cpp</sources>
 		</exe>
-		<exe id="custom3" template="util-example,common-example">
+		<exe id="custom3" template="example">
 			<sources>examples/custom3.cpp</sources>
 		</exe>
-		<exe id="custom4" template="util-example,common-example">
+		<exe id="custom4" template="example">
 			<sources>examples/custom4.cpp</sources>
 		</exe>
-		<exe id="custom5" template="util-example,common-example">
+		<exe id="custom5" template="example">
 			<sources>examples/custom5.cpp</sources>
 		</exe>
-		<exe id="custom6" template="util-example,common-example">
+		<exe id="custom6" template="example">
 			<sources>examples/custom6.cpp</sources>
 		</exe>
-		<exe id="dbinfo" template="util-example,common-example">
+		<exe id="dbinfo" template="example">
 			<sources>examples/dbinfo.cpp</sources>
 		</exe>
-		<exe id="fieldinf1" template="util-example,common-example">
+		<exe id="fieldinf1" template="example">
 			<sources>examples/fieldinf1.cpp</sources>
 		</exe>
-		<exe id="load_jpeg" template="util-example,common-example">
+		<exe id="load_jpeg" template="example">
 			<sources>examples/load_jpeg.cpp</sources>
 		</exe>
-		<exe id="xaction" template="util-example,common-example">
+		<exe id="xaction" template="example">
 			<sources>examples/xaction.cpp</sources>
 		</exe>
-		<exe id="store_if" template="util-example,common-example">
+		<exe id="store_if" template="example">
 			<sources>examples/store_if.cpp</sources>
 		</exe>
-		<exe id="for_each" template="util-example,common-example">
+		<exe id="for_each" template="example">
 			<sources>examples/for_each.cpp</sources>
 		</exe>
-
-		<!-- The few examples that don't use the util module -->
-		<exe id="cgi_jpeg" template="common-example">
+		<exe id="cgi_jpeg" template="example">
 			<sources>examples/cgi_jpeg.cpp</sources>
 		</exe>
 	</if>	<!-- build examples -->
