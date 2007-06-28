@@ -844,6 +844,31 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
 
     <sect2>
+        <title>Conditional Result Row Handling</title>
+
+        <para><methodname>Query::store()</methodname> is fine if
+        you really need all the rows the query returns. It sometimes
+        happens that you can't express the full selection criteria
+        in a SQL query. Instead of storing the full result set,
+        then picking over it to find the rows you want to keep,
+        use <methodname>Query::store_if()</methodname>.  This is
+        <filename>examples/store_if.cpp</filename>:</para>
+
+        <programlisting><xi:include href="store_if.txt" parse="text"
+        xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+
+        <para>I doubt anyone really needs to select rows from
+        a table that have a prime number in a given field. This
+        example is meant to be just barely more complex than SQL
+        can manage, to avoid obscuring the point. Point being, the
+        <methodname>Query::store_if()</methodname> call here gives
+        you a container full of results meeting a criterion that you
+        probably can't express in SQL. You will no doubt have much
+        more useful criteria in your own programs.</para>
+    </sect2>
+
+
+    <sect2>
         <title>Executing Code for Each Row In a Result Set</title>
 
         <para>SQL is more than just a database query language. Modern
@@ -857,31 +882,27 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         <programlisting><xi:include href="for_each.txt" parse="text"
         xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-		<para>You only need to read the
-		<function>main()</function> function to get a
-		good idea of what the program does. The key line
-		of code passes an SSQLS examplar and a functor
-		to <methodname>Query::for_each()</methodname>.
-		<methodname>for_each()</methodname> uses the SSQLS
-		instance to build a <computeroutput>select
-		* from TABLE</computeroutput> query,
-		<computeroutput>stock</computeroutput> in this
-		case. It runs that query internally, calling
-		<classname>gather_stock_stats</classname> on each
-		row. This is a pretty contrived example; you could
-		actually do this in SQL, but we're trying to prevent
-		the complexity of the code from getting in the way
-		of the demonstration here.</para>
+        <para>You only need to read the <function>main()</function>
+        function to get a good idea of what the program
+        does. The key line of code passes an SSQLS examplar and
+        a functor to <methodname>Query::for_each()</methodname>.
+        <methodname>for_each()</methodname> uses the SSQLS instance to
+        build a <computeroutput>select * from TABLE</computeroutput>
+        query, <computeroutput>stock</computeroutput> in
+        this case. It runs that query internally, calling
+        <classname>gather_stock_stats</classname> on each row. This
+        is a pretty contrived example; you could actually do this in
+        SQL, but we're trying to prevent the complexity of the code
+        from getting in the way of the demonstration here.</para>
 
-		<para>If you need a more complex query than the
-		one <methodname>for_each()</methodname> knows
-		how to build, there are two overloads that let
-		you use your own query string. One just takes a
-		functor and uses the query string held within the
-		<classname>Query</classname> object, which you probably
-		built up using <classname>Query</classname>'s stream
-		interface. The other overload just takes the query
-		string directly, along with the functor.</para>
+        <para>If you need a more complex query than the one
+        <methodname>for_each()</methodname> knows how to build,
+        there are two overloads that let you use your own query
+        string. One just takes a functor and uses the query string
+        held within the <classname>Query</classname> object, which
+        you probably built up using <classname>Query</classname>'s
+        stream interface. The other overload just takes the query
+        string directly, along with the functor.</para>
     </sect2>
 
 
