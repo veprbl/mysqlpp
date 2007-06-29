@@ -285,7 +285,7 @@
 				mkdir -p doc/latex ; cd lib ; doxygen > /dev/null
 			</command>
 			<command>
-				cd doc/latex $(AND) make > /dev/null $(AND) cp refman.pdf ..
+				cd doc/latex ; make ; cp refman.pdf ..
 			</command>
 		</action>
 
