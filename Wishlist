@@ -14,7 +14,7 @@ v2.x Features
     it can be done without breaking the ABI, which would force
     a feature to v3.0.
 
-    o Define HAVE_MYSQL_SSL_SET by default on Windows?	Make similar
+    o Define HAVE_MYSQL_SSL_SET by default on Windows?  Make similar
       decisions for other autoconf-only macros.
 
     o Add ConnectionPool class, described in this post:
@@ -36,8 +36,8 @@ v2.x Features
         Programmers" by Binstock and Rex.)
 
     o Add conditional code to the Lockable mechanism to use platform
-	  mutexes if available, to implement these MySQL C API
-	  restrictions:
+      mutexes if available, to implement these MySQL C API
+      restrictions:
 
       - Only one query executing at once per connection
 
@@ -69,8 +69,8 @@ v2.x Features
       to data within the Row object.  If the caller just wants a
       const char*, we can avoid at least one copy here, maybe two. See:
 
-	  http://lists.mysql.com/plusplus/4451
-	  http://lists.mysql.com/plusplus/4460
+      http://lists.mysql.com/plusplus/4451
+      http://lists.mysql.com/plusplus/4460
 
     o Add Chris Frey's packarray class?
 
@@ -83,8 +83,8 @@ v3.0 Plan
     signatures, etc.)  This plan is very tenuous.  Some of this
     could slip to v4.0.
 
-	o Remove all remaining query_reset function parameters, unless
-	  the function doesn't actually override them.
+    o Remove all remaining query_reset function parameters, unless
+      the function doesn't actually override them.
 
     o Refactor option mechanism in Connection class into its own
       class.  There are a whole lot of functions, structs and
