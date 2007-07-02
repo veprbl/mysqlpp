@@ -1,4 +1,4 @@
-2.3.0, 2007.06.27 (r1638)
+2.3.0, 2007.07.02 (r1641)
 
     o Added Query::for_each() and Query::store_if() methods
       proposed by Joel Fielder, and added examples for each.
@@ -42,6 +42,12 @@
       the MySQL++ distribution tree and gives a different -I flag
       to the compiler, so that it picks up the distribution headers
       instead of those that may be on the system already.
+
+	o The quote manipulator now works for char[] correctly.
+	  Thanks for this patch go to Andrew Sayers.  (It's always
+	  worked for char*, but C++ doesn't consider that to be the
+	  same type, so it used the generic quote handling path,
+	  which doesn't do anything for char[].)
 
     o Fixed a build bug on older Solaris versions where the
       test for the C API library was erroneously failing, stopping
