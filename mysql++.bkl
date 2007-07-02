@@ -286,13 +286,15 @@
 				mkdir -p doc/latex ; cd lib ; doxygen > /dev/null
 			</command>
 			<command>
-				cd doc/latex ; make ; cp refman.pdf ..
+				mkdir -p doc/pdf ; cd doc/latex ; make ; cp *.pdf ../pdf
 			</command>
 		</action>
 
 		<action id="doc/html/userman/index.html">
 			<depends-on-file>doc/userman/userman.dbx</depends-on-file>
-			<command>cd doc/userman ; make html pdf</command>
+			<command>
+				cd doc/userman ; make html pdf ; cp *.pdf ../pdf
+			</command>
 		</action>
 
 		<action id="doc">
@@ -330,7 +332,7 @@
 			<!-- doc subdir -->
 			<if cond="BUILDDOCS=='yes'">
 				<command>
-					cp doc/README* doc/*.pdf doc/ssqls-pretty $(PKGNAME)/doc
+					cp -r doc/README* doc/pdf doc/ssqls-pretty $(PKGNAME)/doc
 				</command>
 				<command>
 					for f in LICENSE Makefile mktxt README *.{dbx,xsl} ; \
@@ -345,6 +347,12 @@
 						done ; \
 					done ; \
 					cp doc/html/refman/*.png $(PKGNAME)/doc/html/refman
+				</command>
+			</if>
+			<if cond="BUILDDOCS=='no'">
+				<command>
+					mkdir -p $(PKGNAME)/doc/html $(PKGNAME)/doc/pdf ;
+					cp -r doc/README* doc/ssqls-pretty $(PKGNAME)/doc
 				</command>
 			</if>
 
