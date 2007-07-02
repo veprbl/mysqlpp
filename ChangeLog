@@ -1,4 +1,4 @@
-2.3.0, 2007.07.02 (r1641)
+2.3.0, 2007.07.02 (r1642)
 
     o Added Query::for_each() and Query::store_if() methods
       proposed by Joel Fielder, and added examples for each.
@@ -94,9 +94,17 @@
       Since these classes aren't actually used outside the library,
       this shouldn't cause a problem.  Patch by Nils Woetzel.
 
-    o Partial fix to Doxygen PDF build on RHEL4 and 5.  Doesn't yet
-      run automatically, but it can be coaxed on by hand now.
-      Proper fix is pending a response from the Doxygen folk.
+    o Partial fix to Doxygen PDF build on RHEL4 and 5.  Needs
+      hand-coaxing to complete successfully on RHEL4, and doesn't
+      yet work at all on RHEL5.
+
+    o Shortened the "no*" options to the bootstrap script, so that
+      the usage message fits on a single line.
+
+    o Added "nodoc" bootstrap script option, for disabling the
+      documentation build during the dist target build.  Allows for
+      building binary RPMs on CentOS 5.0, where doc building is
+      currently broken.
 
     o Removed the updel example program.  It was kind of silly,
       and if you were to rewrite it today, you'd use for_each() anyway.

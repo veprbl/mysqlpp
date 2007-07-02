@@ -28,8 +28,9 @@
         <if cond="BUILD=='release'">off</if>
     </set>
 
-	<set var="BUILDLIBRARY">yes</set>
+	<set var="BUILDDOCS">yes</set>
 	<set var="BUILDEXAMPLES">yes</set>
+	<set var="BUILDLIBRARY">yes</set>
 	<set var="HEADER_DIR">$(PREFIX)/include/mysql++</set>
 
 	<if cond="BUILDLIBRARY=='yes'">
@@ -300,7 +301,9 @@
 		</action>
 
 		<action id="dist">
-			<depends>doc</depends>
+			<if cond="BUILDDOCS=='yes'">
+				<depends>doc</depends>
+			</if>
 
 			<!-- Set up package directory -->
 			<command>
