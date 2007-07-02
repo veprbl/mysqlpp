@@ -1,4 +1,4 @@
-2.3.0, 2007.07.02 (r1642)
+2.3.0, 2007.07.02 (r1643)
 
     o Added Query::for_each() and Query::store_if() methods
       proposed by Joel Fielder, and added examples for each.
