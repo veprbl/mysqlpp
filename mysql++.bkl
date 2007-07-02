@@ -256,8 +256,9 @@
 
 		<modify-target target="clean">
 			<command>
-				cd doc/html/refman $(AND) \
-					rm -f doxygen.css [a-z]*.{dot,html,map,md5,png}
+				cd doc/html/refman ; \
+				rm -f doxygen.css [a-z]*.{dot,html,map,md5,png} ; \
+				rm -rf doc/latex doc/pdf
 			</command>
 		</modify-target>
 			
@@ -286,20 +287,20 @@
 				mkdir -p doc/latex ; cd lib ; doxygen > /dev/null
 			</command>
 			<command>
-				mkdir -p doc/pdf ; cd doc/latex ; make ; cp *.pdf ../pdf
+				mkdir -p doc/pdf ; cd doc/latex ; make ; cp refman.pdf ../pdf
 			</command>
 		</action>
 
 		<action id="doc/html/userman/index.html">
 			<depends-on-file>doc/userman/userman.dbx</depends-on-file>
 			<command>
-				cd doc/userman ; make html pdf ; cp *.pdf ../pdf
+				cd doc/userman ; make html pdf ; cp userman.pdf ../pdf
 			</command>
 		</action>
 
 		<action id="doc">
-			<depends>doc/html/userman/index.html</depends>
 			<depends>doc/html/refman/index.html</depends>
+			<depends>doc/html/userman/index.html</depends>
 		</action>
 
 		<action id="dist">
