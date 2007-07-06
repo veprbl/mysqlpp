@@ -83,10 +83,9 @@ main()
 		ResUse res = query.use();
 		if (res) {
 			images img = res.fetch_row();
-			string img_data(img.data, img.data.length());
 			cout << "Content-type: image/jpeg" << endl;
-			cout << "Content-length: " << img_data.length() << "\n\n";
-			cout << img_data;
+			cout << "Content-length: " << img.data.length() << "\n\n";
+			cout << img.data;
 		}
 		else {
 			cout << "Content-type: text/plain" << endl << endl;
