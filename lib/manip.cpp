@@ -105,7 +105,6 @@ ostream& operator <<(quote_type1 o, const string& in)
 template <>
 ostream& operator <<(quote_type1 o, const char* const& in)
 {
-	std::cout << "CRUMB 4" << std::endl;
 	size_t size = strlen(in);
 	char* s = new char[size * 2 + 1];
 	mysql_escape_string(s, in, static_cast<unsigned long>(size));
