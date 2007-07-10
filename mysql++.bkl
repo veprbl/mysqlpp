@@ -70,6 +70,7 @@
 			<if cond="FORMAT=='msvc6prj'">
 				<define>_UNICODE</define>
 				<define>MYSQLPP_MAKING_DLL</define>
+				<define>HAVE_MYSQL_SSL_SET</define>
 				<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
 				<lib-path>C:\Program Files\MySQL\MySQL Server 5.0\lib\opt</lib-path>
 				<sys-lib>libmysql</sys-lib>
@@ -78,6 +79,7 @@
 			<if cond="FORMAT=='mingw'">
 				<define>_UNICODE</define>
 				<define>MYSQLPP_NO_DLL</define>
+				<define>HAVE_MYSQL_SSL_SET</define>
 				<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
 				<lib-path>"C:\Program Files\MySQL\MySQL Server 5.0\lib\opt"</lib-path>
 				<sys-lib>mysqlclient</sys-lib>
