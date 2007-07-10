@@ -560,10 +560,6 @@ inline std::ostream& operator <<(escape_type1 o,
 	return operator <<(o, static_cast<const char* const&>(in));
 }
 
-
-/// \brief Inserts an array of const char into a stream, escaping special
-/// SQL characters.
-
 inline std::ostream& operator <<(escape_type1 o,
 		const char in[])
 {
