@@ -48,8 +48,6 @@
 #include "myset.h"
 #include "sql_string.h"
 
-#include <mysql.h>
-
 #include <iostream>
 
 /// All global symbols in MySQL++ are in namespace mysqlpp.  This is

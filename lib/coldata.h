@@ -41,8 +41,6 @@
 #include "string_util.h"
 #include "type_info.h"
 
-#include <mysql.h>
-
 #include <typeinfo>
 #include <string>
 #include <sstream>
