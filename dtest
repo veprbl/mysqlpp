@@ -1,15 +1,22 @@
 #!/bin/sh
 
-# Disable UTF-8 translation stuff
-export LANG=C
-
-echo -n "Running tests: "
+echo -n 'Running tests:'
 TMP=`mktemp bmXXXXXX`
-for t in resetdb simple1 simple2 simple3 multiquery tquery usequery \
-	custom1 custom2 custom3 custom4 custom5 custom6 store_if for_each
+# Yes, the repeated use of resetdb is intentional!  We're running it
+# after the examples that change the database in a way that will cause
+# subsequent examples to fail because data they need isn't present.
+for t in resetdb simple1 simple2 simple3 store_if for_each \
+	multiquery tquery resetdb usequery custom1 custom2 custom3 custom4 \
+	custom5 custom6
 do
 	if [ -x $t ]
 	then
+		if [ "$t" = "resetdb" ]
+		then
+			echo
+			echo -n "   "
+		fi
+	
 		echo -n "$t "
 		echo "---------------- BEGIN $t OUTPUT ----------------" >> $TMP
 		if ! ./exrun $t $* >> $TMP
@@ -20,6 +27,7 @@ do
 			exit $?
 		fi
 		echo "================ END $t OUTPUT ================" >> $TMP
+		echo >> $TMP
 	else
 		echo "Failed to find test program $t. Is it built?"
 		rm -f $TMP
@@ -33,11 +41,13 @@ if [ -f $BFILE ]
 then
 	if diff -u -w $BFILE $TMP
 	then
+		echo
 		echo 'No changes in test results.'
 	fi
 	rm -f $TMP
 else
 	mv $TMP $BFILE
 	chmod -w $BFILE
+	echo
 	echo 'Benchmark file regenerated.'
 fi
