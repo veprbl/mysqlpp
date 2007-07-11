@@ -1,3 +1,20 @@
+2.3.2, 2007.07.11 (r1669)
+
+	o Previous release's const_string change caused more problems
+	  than it fixed.  This release contains the real fix. :)
+
+	o New Connection::set_option() handling deals with the multi
+	  statements option correctly again.  examples/multiquery now
+	  runs again as a result.
+
+	o Added new unit testing script, called dtest.	See the
+	  HACKERS file for details.  (This tool caught the previous
+	  two problems!)
+
+	o Squished a GCC pedantic warning.  Thanks for the patch go to
+	  Andrew Sayers.
+
+
 2.3.1, 2007.07.10 (r1659) The "After the Fireworks" release
 
 	o const_string objects now keep a copy of their data, not
