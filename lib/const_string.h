@@ -94,7 +94,7 @@ public:
 	/// \brief Initialize string from existing C string
 	const_string(const char* str) :
 	str_data_(0),
-	length_(size_type(strlen(str)))
+	length_(size_type(strlen(str) + 1))
 	{
 		str_data_ = new char[length_];
 		memcpy(str_data_, str, length_);
@@ -103,7 +103,7 @@ public:
 	/// \brief Initialize string from existing C string of known length
 	const_string(const char* str, size_type len) :
 	str_data_(0),
-	length_(size_type(len))
+	length_(size_type(len + 1))
 	{
 		str_data_ = new char[length_];
 		memcpy(str_data_, str, length_);
