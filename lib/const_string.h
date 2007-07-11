@@ -87,8 +87,9 @@ public:
 	str_data_(0),
 	length_(str.length())
 	{
-		str_data_ = new char[length_];
+		str_data_ = new char[length_ + 1];
 		memcpy(str_data_, str.data(), length_);
+		str_data_[length_] = '\0';
 	}
 	
 	/// \brief Initialize string from existing C string
