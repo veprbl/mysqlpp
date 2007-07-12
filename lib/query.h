@@ -572,7 +572,7 @@ public:
 	template <class Sequence>
 	void storein_sequence(Sequence& con)
 	{
-		storein_sequence(con, def);
+		storein_sequence(con, str(def));
 	}
 
 	/// \brief Execute a query, storing the result set in an STL
@@ -585,7 +585,7 @@ public:
 	template <class Set>
 	void storein_set(Set& con)
 	{
-		storein_set(con, def);
+		storein_set(con, str(def));
 	}
 
 	/// \brief Execute a query, and store the entire result set
@@ -609,26 +609,26 @@ public:
 	template <class Container>
 	void storein(Container& con)
 	{
-		storein(con, def);
+		storein(con, str(def));
 	}
 
 	/// \brief Specialization of storein_sequence() for \c std::vector
 	template <class T>
-	void storein(std::vector<T>& con, const char* s)
+	void storein(std::vector<T>& con, const SQLString& s)
 	{
 		storein_sequence(con, s);
 	}
 
 	/// \brief Specialization of storein_sequence() for \c std::deque
 	template <class T>
-	void storein(std::deque<T>& con, const char* s)
+	void storein(std::deque<T>& con, const SQLString& s)
 	{
 		storein_sequence(con, s);
 	}
 
 	/// \brief Specialization of storein_sequence() for \c std::list
 	template <class T>
-	void storein(std::list<T>& con, const char* s)
+	void storein(std::list<T>& con, const SQLString& s)
 	{
 		storein_sequence(con, s);
 	}
@@ -637,7 +637,7 @@ public:
 	/// \brief Specialization of storein_sequence() for g++ STL
 	/// extension \c slist
 	template <class T>
-	void storein(__gnu_cxx::slist<T>& con, const char* s)
+	void storein(__gnu_cxx::slist<T>& con, const SQLString& s)
 	{
 		storein_sequence(con, s);
 	}
@@ -649,7 +649,7 @@ public:
 	/// in the global namespace.  This is a common language extension,
 	/// so this may also work for other compilers.
 	template <class T>
-	void storein(slist<T>& con, const char* s)
+	void storein(slist<T>& con, const SQLString& s)
 	{
 		storein_sequence(con, s);
 	}
@@ -660,7 +660,7 @@ public:
 	/// This is for those benighted compilers that include an \c slist
 	/// implementation, but erroneously put it in the \c std namespace!
 	template <class T>
-	void storein(std::slist<T>& con, const char* s)
+	void storein(std::slist<T>& con, const SQLString& s)
 	{
 		storein_sequence(con, s);
 	}
@@ -668,14 +668,14 @@ public:
 
 	/// \brief Specialization of storein_set() for \c std::set
 	template <class T>
-	void storein(std::set<T>& con, const char* s)
+	void storein(std::set<T>& con, const SQLString& s)
 	{
 		storein_set(con, s);
 	}
 
 	/// \brief Specialization of storein_set() for \c std::multiset
 	template <class T>
-	void storein(std::multiset<T>& con, const char* s)
+	void storein(std::multiset<T>& con, const SQLString& s)
 	{
 		storein_set(con, s);
 	}
@@ -795,9 +795,9 @@ public:
 	mysql_query_define0(ResNSel, execute)
 	mysql_query_define0(Result, store)
 	mysql_query_define0(ResUse, use)
-	mysql_query_define2(storein_sequence)
-	mysql_query_define2(storein_set)
-	mysql_query_define2(storein)
+	mysql_query_define1(storein_sequence)
+	mysql_query_define1(storein_set)
+	mysql_query_define1(storein)
 #endif // !defined(DOXYGEN_IGNORE)
 
 	/// \brief The default template parameters
@@ -847,15 +847,8 @@ private:
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
-template <class Seq>
-void Query::storein_sequence(Seq& seq, SQLQueryParms& p)
-{
-	storein_sequence(seq, str(p).c_str());
-}
-
-
 template <class Sequence>
-void Query::storein_sequence(Sequence& con, const char* s)
+void Query::storein_sequence(Sequence& con, const SQLString& s)
 {
 	ResUse result = use(s);
 	while (1) {
@@ -872,14 +865,7 @@ void Query::storein_sequence(Sequence& con, const char* s)
 
 
 template <class Set>
-void Query::storein_set(Set& sett, SQLQueryParms& p)
-{
-	storein_set(sett, str(p).c_str());
-}
-
-
-template <class Set>
-void Query::storein_set(Set& con, const char* s)
+void Query::storein_set(Set& con, const SQLString& s)
 {
 	ResUse result = use(s);
 	while (1) {
@@ -893,14 +879,6 @@ void Query::storein_set(Set& con, const char* s)
 		con.insert(typename Set::value_type(row));
 	}
 }
-
-
-template <class T>
-void Query::storein(T& con, SQLQueryParms& p)
-{
-	storein(con, str(p).c_str());
-}
-
 
 #endif // !defined(DOXYGEN_IGNORE)
 

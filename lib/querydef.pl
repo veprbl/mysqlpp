@@ -70,20 +70,19 @@ for (my $i = 1; $i < $max_parameters; ++$i) {
 	print OUT ")); } \\\n";
 }
 
-## Add mysql_query_define2 macro
+## Add mysql_query_define1 macro
 print OUT << "---";
 
-#define mysql_query_define2(FUNC) \\
-	template <class T> void FUNC(T& container, const char* str); \\
-	template <class T> void FUNC(T& container, SQLQueryParms& p); \\
+#define mysql_query_define1(FUNC) \\
+	template <class T> void FUNC(T& container, const SQLString& arg0); \\
 ---
-for (my $i = 0; $i < $max_parameters; ++$i) {
+for (my $i = 1; $i < $max_parameters; ++$i) {
 	print OUT "\ttemplate <class T> void FUNC(T& container";
 	for (my $j = 0; $j < $i + 1; ++$j) {
 		print OUT ', const SQLString& arg', $j;
 	}
 	print OUT ") \\\n";
-	print OUT "\t\t{ FUNC(container, SQLQueryParms()";
+	print OUT "\t\t{ FUNC(container, str(SQLQueryParms())";
 	for (my $j = 0; $j < $i + 1; ++$j) {
 		print OUT ' << arg', $j;
 	}
