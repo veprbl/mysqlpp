@@ -77,6 +77,12 @@ public:
 	/// \retval a pointer to the most recently used connection
 	Connection* connection();
 
+	/// \brief Mark the given connection as no longer in use.
+	///
+	/// If you don't call this function, connections returned by
+	/// connection() will never go away!
+	void release(const Connection* pc);
+
 protected:
 	//// Subclass overrides
 	/// \brief Create a new connection

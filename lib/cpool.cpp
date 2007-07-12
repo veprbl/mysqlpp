@@ -82,5 +82,23 @@ ConnectionPool::connection()
 	}
 }
 
+
+//// release ///////////////////////////////////////////////////////////
+
+void
+ConnectionPool::release(const Connection* pc)
+{
+	lock();
+
+	for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
+		if (it->conn == pc) {
+			it->in_use = false;
+			break;
+		}
+	}
+
+	unlock();
+}
+
 } // end namespace mysqlpp
 
