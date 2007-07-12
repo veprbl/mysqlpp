@@ -124,6 +124,7 @@ main(int argc, char *argv[])
 		// Set up the template query to insert the data.  The parse()
 		// call tells the query object that this is a template and
 		// not a literal query string.
+		query.reset();
 		query << "insert into %5:table values (%0q, %1q, %2, %3, %4q)";
 		query.parse();
 
