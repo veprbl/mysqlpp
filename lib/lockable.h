@@ -68,24 +68,26 @@ public:
 };
 
 
-/// \brief Trivial Lock subclass, using a boolean variable as the
-/// lock flag.
+/// \brief A trivial Lock subclass, using an unprotected boolean variable
+/// as the lock flag.
 ///
-/// This is the only Lock implementation available in this version of
-/// MySQL++.  It will be supplemented with a better implementation for
-/// use with threads at a later date.
+/// As its name indicates, this lock is about as useful as the one on
+/// a child's diary.  It is only used when no better option using
+/// platform mutexes can be found.  If this is all you have available,
+/// you mustn't call MySQL++ from multiple threads.  Havoc is all but
+/// guaranteed.
 
-class MYSQLPP_EXPORT BasicLock : public Lock
+class MYSQLPP_EXPORT DiaryLock : public Lock
 {
 public:
 	/// \brief Create object
-	BasicLock(bool is_locked = false) :
+	DiaryLock(bool is_locked = false) :
 	locked_(is_locked)
 	{
 	}
 	
 	/// \brief Destroy object
-	~BasicLock() { }
+	~DiaryLock() { }
 
 	/// \brief Lock the object
 	///
@@ -123,7 +125,7 @@ class MYSQLPP_EXPORT Lockable
 protected:
 	/// \brief Default constructor
 	Lockable(bool is_locked) :
-	pimpl_(new BasicLock(is_locked))
+	pimpl_(new DiaryLock(is_locked))
 	{
 	}
 
