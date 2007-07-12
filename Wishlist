@@ -190,6 +190,10 @@ v3.0 "Maybe" Stuff
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
 
+    o Replace Query::preview() with operator<<, for easy debugging?
+      If one really wants a std::string, they can still call str(),
+      which is currently the same thing.
+
     o Does Query::reset() provide any benefit?  Why doesn't it reset
       automatically for all queries?  I guess if you were to re-run
       the same query multiple times, but who does that?
