@@ -188,7 +188,7 @@ public:
 	/// \param arg0 the value to substitute for the first template query
 	/// parameter
 	std::string preview(const SQLString& arg0)
-			{ return preview(SQLQueryParms() << arg0); }
+			{ return str(SQLQueryParms() << arg0); }
 
 	/// \brief Return the query string currently in the buffer.
 	std::string preview(SQLQueryParms& p) { return str(p); }
@@ -202,7 +202,7 @@ public:
 	/// \param arg0 the value to substitute for the first template query
 	/// parameter
 	std::string str(const SQLString& arg0)
-			{ return preview(SQLQueryParms() << arg0); }
+			{ return str(SQLQueryParms() << arg0); }
 
 	/// \brief Get built query as a null-terminated C++ string
 	///
