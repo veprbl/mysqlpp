@@ -107,20 +107,20 @@ Query::exec(const std::string& str)
 
 
 ResNSel
-Query::execute(const SQLString& str)
+Query::execute(const SQLString& s)
 {
 	if ((parse_elems_.size() == 2) && !def.processing_) {
 		// We're a template query and we haven't gone through this path
-		// before, so take str to be a lone parameter for the query.
+		// before, so take s to be a lone parameter for the query.
 		// We will come back through this function with a completed
 		// query, but the processing_ flag will be reset, allowing us to
 		// take the 'else' path, avoiding an infinite loop.
 		AutoFlag<> af(def.processing_);
-		return execute(SQLQueryParms() << str);
+		return execute(str(SQLQueryParms() << s));
 	}
 	else {
-		// Take str to be the entire query string
-		return execute(str.data(), str.length());
+		// Take s to be the entire query string
+		return execute(s.data(), s.length());
 	}
 }
 
@@ -158,18 +158,6 @@ Query::execute(const char* str, size_t len)
 		return ResNSel();
 	}
 }
-
-
-#if !defined(DOXYGEN_IGNORE)
-// Doxygen will not generate documentation for this section.
-
-ResNSel
-Query::execute(SQLQueryParms& p)
-{
-	return execute(str(p));
-}
-
-#endif // !defined(DOXYGEN_IGNORE)
 
 
 std::string
@@ -407,20 +395,20 @@ Query::reset()
 
 
 Result 
-Query::store(const SQLString& str)
+Query::store(const SQLString& s)
 {
 	if ((parse_elems_.size() == 2) && !def.processing_) {
 		// We're a template query and we haven't gone through this path
-		// before, so take str to be a lone parameter for the query.
+		// before, so take s to be a lone parameter for the query.
 		// We will come back through this function with a completed
 		// query, but the processing_ flag will be reset, allowing us to
 		// take the 'else' path, avoiding an infinite loop.
 		AutoFlag<> af(def.processing_);
-		return store(SQLQueryParms() << str);
+		return store(str(SQLQueryParms() << s));
 	}
 	else {
-		// Take str to be the entire query string
-		return store(str.data(), str.length());
+		// Take s to be the entire query string
+		return store(s.data(), s.length());
 	}
 }
 
@@ -472,18 +460,6 @@ Query::store(const char* str, size_t len)
 		return Result();
 	}
 }
-
-
-#if !defined(DOXYGEN_IGNORE)
-// Doxygen will not generate documentation for this section.
-
-Result
-Query::store(SQLQueryParms& p)
-{
-	return store(str(p));
-}
-
-#endif // !defined(DOXYGEN_IGNORE)
 
 
 Result
@@ -567,20 +543,20 @@ Query::unlock()
 
 
 ResUse
-Query::use(const SQLString& str)
+Query::use(const SQLString& s)
 {
 	if ((parse_elems_.size() == 2) && !def.processing_) {
 		// We're a template query and we haven't gone through this path
-		// before, so take str to be a lone parameter for the query.
+		// before, so take s to be a lone parameter for the query.
 		// We will come back through this function with a completed
 		// query, but the processing_ flag will be reset, allowing us to
 		// take the 'else' path, avoiding an infinite loop.
 		AutoFlag<> af(def.processing_);
-		return use(SQLQueryParms() << str);
+		return use(str(SQLQueryParms() << s));
 	}
 	else {
-		// Take str to be the entire query string
-		return use(str.data(), str.length());
+		// Take s to be the entire query string
+		return use(s.data(), s.length());
 	}
 }
 
@@ -629,17 +605,6 @@ Query::use(const char* str, size_t len)
 	}
 }
 
-
-#if !defined(DOXYGEN_IGNORE)
-// Doxygen will not generate documentation for this section.
-
-ResUse
-Query::use(SQLQueryParms& p)
-{
-	return use(str(p));
-}
-
-#endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp
 

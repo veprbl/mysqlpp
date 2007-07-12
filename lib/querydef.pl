@@ -63,20 +63,12 @@ for (my $i = 1; $i < $max_parameters; ++$i) {
 	}
 	print OUT ") \\\n";
 
-	print OUT "\t\t{ return FUNC(SQLQueryParms()";
+	print OUT "\t\t{ return FUNC(str(SQLQueryParms()";
 	for (my $j = 0; $j < $i + 1; ++$j) {
 		print OUT ' << arg', $j;
 	}
-	print OUT "); } \\\n";
+	print OUT ")); } \\\n";
 }
-
-## Add mysql_query_define1 macro
-print OUT << "---";
-
-#define mysql_query_define1(RETURN, FUNC) \\
-	RETURN FUNC(SQLQueryParms& p); \\
-	mysql_query_define0(RETURN, FUNC)
----
 
 ## Add mysql_query_define2 macro
 print OUT << "---";

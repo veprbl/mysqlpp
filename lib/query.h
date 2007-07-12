@@ -239,7 +239,7 @@ public:
 	/// \return ResNSel status information about the query
 	///
 	/// \sa exec(), store(), storein(), and use()
-	ResNSel execute() { return execute(def); }
+	ResNSel execute() { return execute(str(def)); }
 
 	/// \brief Execute query in a C++ string, or substitute string into
 	/// a template query and execute it.
@@ -284,7 +284,7 @@ public:
 	/// \return ResUse object that can walk through result set serially
 	///
 	/// \sa exec(), execute(), store() and storein()
-	ResUse use() { return use(def); }
+	ResUse use() { return use(str(def)); }
 
 	/// \brief Execute query in a C++ string
 	///
@@ -328,7 +328,7 @@ public:
 	/// \return Result object containing entire result set
 	///
 	/// \sa exec(), execute(), storein(), and use()
-	Result store() { return store(def); }
+	Result store() { return store(str(def)); }
 
 	/// \brief Execute query in a C++ string
 	///
@@ -792,9 +792,9 @@ public:
 	// like method declarations.
 	mysql_query_define0(std::string, preview)
 	mysql_query_define0(std::string, str)
-	mysql_query_define1(ResNSel, execute)
-	mysql_query_define1(Result, store)
-	mysql_query_define1(ResUse, use)
+	mysql_query_define0(ResNSel, execute)
+	mysql_query_define0(Result, store)
+	mysql_query_define0(ResUse, use)
 	mysql_query_define2(storein_sequence)
 	mysql_query_define2(storein_set)
 	mysql_query_define2(storein)
