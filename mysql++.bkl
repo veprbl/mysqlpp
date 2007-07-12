@@ -41,6 +41,7 @@
 			<sources>
 				lib/coldata.cpp
 				lib/connection.cpp
+				lib/cpool.cpp
 				lib/datetime.cpp
 				lib/field_names.cpp
 				lib/fields.cpp
