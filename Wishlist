@@ -60,8 +60,6 @@ v3.0 Plan, For-Sure Stuff
         template functions like Query::insert<T> might become regular
         member functions, taking a reference to the SSQLS base class.
 
-    o Remove all remaining query_reset function parameters.
-
     o Remove Connection::connect() arguments for turning on compression
       and setting the connection timeout.  These things are already
       provided by Connection::set_option().

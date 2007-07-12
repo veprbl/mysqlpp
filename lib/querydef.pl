@@ -83,8 +83,7 @@ print OUT << "---";
 
 #define mysql_query_define2(FUNC) \\
 	template <class T> void FUNC(T& container, const char* str); \\
-	template <class T> void FUNC(T& container, SQLQueryParms& p, \\
-  		query_reset r = RESET_QUERY); \\
+	template <class T> void FUNC(T& container, SQLQueryParms& p); \\
 ---
 for (my $i = 0; $i < $max_parameters; ++$i) {
 	print OUT "\ttemplate <class T> void FUNC(T& container";

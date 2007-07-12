@@ -166,7 +166,7 @@ Query::execute(const char* str, size_t len)
 ResNSel
 Query::execute(SQLQueryParms& p)
 {
-	return execute(str(p, parse_elems_.size() ? DONT_RESET : RESET_QUERY));
+	return execute(str(p));
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -480,7 +480,7 @@ Query::store(const char* str, size_t len)
 Result
 Query::store(SQLQueryParms& p)
 {
-	return store(str(p, parse_elems_.size() ? DONT_RESET : RESET_QUERY));
+	return store(str(p));
 }
 
 #endif // !defined(DOXYGEN_IGNORE)
@@ -549,17 +549,6 @@ Query::str(SQLQueryParms& p)
 	}
 
 	return sbuffer_.str();
-}
-
-
-std::string
-Query::str(SQLQueryParms& p, query_reset r)
-{
-	std::string tmp = str(p);
-	if (r == RESET_QUERY) {
-		reset();
-	}
-	return tmp;
 }
 
 
@@ -647,7 +636,7 @@ Query::use(const char* str, size_t len)
 ResUse
 Query::use(SQLQueryParms& p)
 {
-	return use(str(p, parse_elems_.size() ? DONT_RESET : RESET_QUERY));
+	return use(str(p));
 }
 
 #endif // !defined(DOXYGEN_IGNORE)

@@ -74,9 +74,6 @@ namespace mysqlpp {
 class MYSQLPP_EXPORT Connection;
 #endif
 
-/// \brief Used for indicating whether a query object should auto-reset
-enum query_reset { DONT_RESET, RESET_QUERY };
-
 /// \brief A class for building and executing SQL queries.
 ///
 /// This class is derived from SQLQuery. It adds to that a tie between
@@ -209,23 +206,9 @@ public:
 
 	/// \brief Get built query as a null-terminated C++ string
 	///
-	/// \param r if equal to \c RESET_QUERY, query object is cleared
-	/// after this call
-	std::string str(query_reset r) { return str(def, r); }
-
-	/// \brief Get built query as a null-terminated C++ string
-	///
 	/// \param p template query parameters to use, overriding the ones
 	/// this object holds, if any
 	std::string str(SQLQueryParms& p);
-
-	/// \brief Get built query as a null-terminated C++ string
-	///
-	/// \param p template query parameters to use, overriding the ones
-	/// this object holds, if any
-	/// \param r if equal to \c RESET_QUERY, query object is cleared
-	/// after this call
-	std::string str(SQLQueryParms& p, query_reset r);
 
 	/// \brief Execute a query
 	///
@@ -587,9 +570,9 @@ public:
 	///
 	/// \sa exec(), execute(), store(), and use()
 	template <class Sequence>
-	void storein_sequence(Sequence& con, query_reset r = RESET_QUERY)
+	void storein_sequence(Sequence& con)
 	{
-		storein_sequence(con, def, r);
+		storein_sequence(con, def);
 	}
 
 	/// \brief Execute a query, storing the result set in an STL
@@ -600,9 +583,9 @@ public:
 	/// that detail, that method's comments apply equally well to this
 	/// one.
 	template <class Set>
-	void storein_set(Set& con, query_reset r = RESET_QUERY)
+	void storein_set(Set& con)
 	{
-		storein_set(con, def, r);
+		storein_set(con, def);
 	}
 
 	/// \brief Execute a query, and store the entire result set
@@ -624,9 +607,9 @@ public:
 	/// See exec(), execute(), store(), and use() for alternative
 	/// query execution mechanisms.
 	template <class Container>
-	void storein(Container& con, query_reset r = RESET_QUERY)
+	void storein(Container& con)
 	{
-		storein(con, def, r);
+		storein(con, def);
 	}
 
 	/// \brief Specialization of storein_sequence() for \c std::vector
@@ -865,10 +848,9 @@ private:
 // Doxygen will not generate documentation for this section.
 
 template <class Seq>
-void Query::storein_sequence(Seq& seq, SQLQueryParms& p, query_reset r)
+void Query::storein_sequence(Seq& seq, SQLQueryParms& p)
 {
-	r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
-	storein_sequence(seq, str(p, r).c_str());
+	storein_sequence(seq, str(p).c_str());
 }
 
 
@@ -890,10 +872,9 @@ void Query::storein_sequence(Sequence& con, const char* s)
 
 
 template <class Set>
-void Query::storein_set(Set& sett, SQLQueryParms& p, query_reset r)
+void Query::storein_set(Set& sett, SQLQueryParms& p)
 {
-	r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
-	storein_set(sett, str(p, r).c_str());
+	storein_set(sett, str(p).c_str());
 }
 
 
@@ -915,10 +896,9 @@ void Query::storein_set(Set& con, const char* s)
 
 
 template <class T>
-void Query::storein(T& con, SQLQueryParms& p, query_reset r)
+void Query::storein(T& con, SQLQueryParms& p)
 {
-	r = parse_elems_.size() ? DONT_RESET : RESET_QUERY;
-	storein(con, str(p, r).c_str());
+	storein(con, str(p).c_str());
 }
 
 
