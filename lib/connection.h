@@ -195,12 +195,6 @@ public:
 		return is_connected_;
 	}
 
-	/// \brief Return true if the last query was successful
-	bool success() const
-	{
-		return success_;
-	}
-
 	/// \brief Alias for close()
 	void purge() { close(); }
 
@@ -213,22 +207,27 @@ public:
 	/// is connected to.
 	Query query();
 
-	/// \brief Alias for success()
+	/// \brief Test whether the connection has experienced an error
+	/// condition.
 	///
-	/// Alias for success() member function. Allows you to have code
-	/// constructs like this:
+	/// Allows for code constructs like this:
 	///
 	/// \code
-	///	    Connection conn;
-	///	    .... use conn
-	///	    if (conn) {
-	///	        ... last SQL query was successful
-	///	    }
-	///	    else {
-	///	        ... error occurred in SQL query
-	///	    }
+	///	Connection conn;
+	///	.... use conn
+	///	if (conn) {
+	///	    ... last SQL query was successful
+	///	}
+	///	else {
+	///	    ... error occurred in SQL query
+	///	}
 	/// \endcode
-	operator bool() { return success(); }
+	///
+	/// Prior to version 3, this function could never return true if
+	/// we weren't connected.  As of version 3, a true return simply
+	/// indicates a lack of errors; call connected() to test whether
+	/// the connection is established.
+	operator bool() const { return copacetic_; }
 
 	/// \brief Copy an existing Connection object's state into this
 	/// object.
@@ -567,7 +566,7 @@ private:
 	MYSQL mysql_;
 	bool is_connected_;
 	bool connecting_;
-	bool success_;
+	bool copacetic_;
 	OptionList applied_options_;
 	static OptionArgType legal_opt_arg_types_[];
 };

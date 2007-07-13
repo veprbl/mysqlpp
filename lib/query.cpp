@@ -42,10 +42,9 @@ OptionalExceptions(te),
 Lockable(false),
 template_defaults(this),
 conn_(c),
-success_(false)
+copacetic_(true)
 {
 	init(&sbuffer_);
-	success_ = true;
 }
 
 Query::Query(const Query& q) :
@@ -59,7 +58,7 @@ OptionalExceptions(q.throw_exceptions()),
 Lockable(q.locked()),
 template_defaults(q.template_defaults),
 conn_(q.conn_),
-success_(q.success_)
+copacetic_(q.copacetic_)
 {
 	init(&sbuffer_);
 }
@@ -72,7 +71,7 @@ Query::operator=(const Query& rhs)
 	set_lock(rhs.locked());
 	template_defaults = rhs.template_defaults;
 	conn_ = rhs.conn_;
-	success_ = rhs.success_;
+	copacetic_ = rhs.copacetic_;
 
 	return *this;
 }
@@ -95,13 +94,13 @@ Query::error()
 bool
 Query::exec(const std::string& str)
 {
-	success_ = !mysql_real_query(&conn_->mysql_, str.data(),
+	copacetic_ = !mysql_real_query(&conn_->mysql_, str.data(),
 			static_cast<unsigned long>(str.length()));
-	if (!success_ && throw_exceptions()) {
+	if (!copacetic_ && throw_exceptions()) {
 		throw BadQuery(error());
 	}
 	else {
-		return success_;
+		return copacetic_;
 	}
 }
 
@@ -136,7 +135,7 @@ ResNSel
 Query::execute(const char* str, size_t len)
 {
 	if (lock()) {
-		success_ = false;
+		copacetic_ = false;
 		if (throw_exceptions()) {
 			throw LockFailed();
 		}
@@ -145,10 +144,10 @@ Query::execute(const char* str, size_t len)
 		}
 	}
 
-	success_ = !mysql_real_query(&conn_->mysql_, str, len);
+	copacetic_ = !mysql_real_query(&conn_->mysql_, str, len);
 
 	unlock();
-	if (success_) {
+	if (copacetic_) {
 		return ResNSel(conn_);
 	}
 	else if (throw_exceptions()) {
@@ -424,7 +423,7 @@ Result
 Query::store(const char* str, size_t len)
 {
 	if (lock()) {
-		success_ = false;
+		copacetic_ = false;
 		if (throw_exceptions()) {
 			throw LockFailed();
 		}
@@ -434,14 +433,14 @@ Query::store(const char* str, size_t len)
 	}
 
 
-	if (success_ = !mysql_real_query(&conn_->mysql_, str, len)) {
+	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
 		MYSQL_RES* res = mysql_store_result(&conn_->mysql_);
 		if (res) {
 			unlock();
 			return Result(res, throw_exceptions());
 		}
 		else {
-			success_ = false;
+			copacetic_ = false;
 		}
 	}
 	unlock();
@@ -528,13 +527,6 @@ Query::str(SQLQueryParms& p)
 }
 
 
-bool
-Query::success()
-{
-	return success_ && conn_->success();
-}
-
-
 void
 Query::unlock()
 {
@@ -572,7 +564,7 @@ ResUse
 Query::use(const char* str, size_t len)
 {
 	if (lock()) {
-		success_ = false;
+		copacetic_ = false;
 		if (throw_exceptions()) {
 			throw LockFailed();
 		}
@@ -581,11 +573,14 @@ Query::use(const char* str, size_t len)
 		}
 	}
 
-	if (success_ = !mysql_real_query(&conn_->mysql_, str, len)) {
+	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
 		MYSQL_RES* res = mysql_use_result(&conn_->mysql_);
 		if (res) {
 			unlock();
 			return ResUse(res, conn_, throw_exceptions());
+		}
+		else {
+			copacetic_ = false;
 		}
 	}
 	unlock();

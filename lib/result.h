@@ -444,26 +444,39 @@ inline void swap(Result& x, Result& y)
 	y = tmp;
 }
 
-/// \brief Holds the information on the success of queries that
-/// don't return any results.
+/// \brief Holds information on queries that don't return data.
 class MYSQLPP_EXPORT ResNSel
 {
 public:
-	bool success;			///< if true, query was successful
-	my_ulonglong insert_id;	///< last value used for AUTO_INCREMENT field
-	my_ulonglong rows;		///< number of rows affected
-	std::string info;		///< additional info about query result
-
+	/// \brief Default ctor
 	ResNSel() :
-	success(false)
+	copacetic_(false),
+	insert_id_(0),
+	rows_(0)
 	{
 	}
 
 	/// \brief Initialize object
-	ResNSel(Connection* q);
+	ResNSel(Connection* c);
 
-	/// \brief Returns true if the query was successful
-	operator bool() { return success; }
+	/// \brief Test whether the query was successful
+	operator bool() const { return copacetic_; }
+
+	/// \brief Get the last value used for an AUTO_INCREMENT field
+	my_ulonglong insert_id() const { return insert_id_; }
+
+	/// \brief Get the number of rows affected by the query
+	my_ulonglong rows() const { return rows_; }
+
+	/// \brief Get any additional information about the query returned
+	/// by the server.
+	const char* info() const { return info_.c_str(); }
+
+private:
+	bool copacetic_;
+	my_ulonglong insert_id_;
+	my_ulonglong rows_;
+	std::string info_;
 };
 
 

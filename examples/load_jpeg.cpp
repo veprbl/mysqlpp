@@ -97,7 +97,7 @@ main(int argc, char *argv[])
 		// If we get here, insertion succeeded
 		cout << "Inserted \"" << argv[argc] <<
 				"\" into images table, " << img_data.size() <<
-				" bytes, ID " << res.insert_id << endl;
+				" bytes, ID " << res.insert_id() << endl;
 	}
 	catch (const BadQuery& er) {
 		// Handle any query errors

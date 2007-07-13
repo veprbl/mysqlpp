@@ -150,19 +150,35 @@ public:
 	/// ctor.
 	Query& operator=(const Query& rhs);
 
+	/// \brief Test whether the object has experienced an error condition
+	///
+	/// Allows for code constructs like this:
+	///
+	/// \code
+	///	Query q = conn.query();
+	///	.... use query object
+	///	if (q) {
+	///	    ... no problems in using query object
+	///	}
+	///	else {
+	///	    ... an error has occurred
+	///	}
+	/// \endcode
+	///
+	/// This method returns false if either the Query object or its
+	/// associated Connection object has seen an error condition since
+	/// the last operation.
+	operator bool() const { return *conn_ && copacetic_; }
+
+	/// \brief Return true if the object has experienced an error
+	bool operator !() { return !copacetic_; }
+
 	/// \brief Get the last error message that was set.
 	///
 	/// This class has an internal error message string, but if it
 	/// isn't set, we return the last error message that happened
 	/// on the connection we're bound to instead.
 	std::string error();
-
-	/// \brief Returns true if the last operation succeeded
-	///
-	/// Returns true if the last query succeeded, and the associated
-	/// Connection object's success() method also returns true.  If
-	/// either object is unhappy, this method returns false.
-	bool success();
 
 	/// \brief Treat the contents of the query string as a template
 	/// query.
@@ -779,12 +795,6 @@ public:
 		return *this;
 	}
 
-	/// \brief Return true if the last query was successful
-	operator bool() { return success(); }
-
-	/// \brief Return true if the last query failed
-	bool operator !() { return !success(); }
-
 #if !defined(DOXYGEN_IGNORE)
 	// Declare the remaining overloads.  These are hidden down here partly
 	// to keep the above code clear, but also so that we may hide them
@@ -812,7 +822,7 @@ private:
 	Connection* conn_;
 
 	/// \brief If true, last query succeeded
-	bool success_;
+	bool copacetic_;
 
 	/// \brief List of template query parameters
 	std::vector<SQLParseElement> parse_elems_;

@@ -30,11 +30,11 @@
 
 namespace mysqlpp {
 
-ResNSel::ResNSel(Connection* q) :
-success(q->success()),
-insert_id(q->insert_id()),
-rows(q->affected_rows()),
-info(q->info())
+ResNSel::ResNSel(Connection* c) :
+copacetic_(c->copacetic_),
+insert_id_(c->insert_id()),
+rows_(c->affected_rows()),
+info_(c->info())
 {
 }
 

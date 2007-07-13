@@ -107,7 +107,7 @@ OptionalExceptions(te),
 Lockable(false),
 is_connected_(false),
 connecting_(false),
-success_(false)
+copacetic_(true)
 {
 	mysql_init(&mysql_);
 }
@@ -125,11 +125,11 @@ connecting_(false)
 	if (connect(db, host, user, passwd, port, compress,
 			connect_timeout, socket_name, client_flag)) {
 		unlock();
-		success_ = is_connected_ = true;
+		copacetic_ = is_connected_ = true;
 	}
 	else {
 		unlock();
-		success_ = is_connected_ = false;
+		copacetic_ = is_connected_ = false;
 		if (throw_exceptions()) {
 			throw ConnectionFailed(error());
 		}
@@ -195,22 +195,25 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 	if (mysql_real_connect(&mysql_, host, user, passwd, db, port,
 			socket_name, client_flag)) {
 		unlock();
-		success_ = is_connected_ = true;
+		is_connected_ = true;
 
 		if (db && db[0]) {
 			// Also attach to given database
-			success_ = select_db(db);
+			copacetic_ = select_db(db);
+		}
+		else {
+			copacetic_ = true;
 		}
 	}
 	else {
 		unlock();
-		success_ = is_connected_ = false;
+		copacetic_ = is_connected_ = false;
 		if (throw_exceptions()) {
 			throw ConnectionFailed(error());
 		}
 	}
 
-	return success_;
+	return is_connected_;
 }
 
 
@@ -241,7 +244,7 @@ Connection::copy(const Connection& other)
 	else {
 		is_connected_ = false;
 		connecting_ = false;
-		success_ = false;
+		copacetic_ = other.copacetic_;
 	}
 }
 
