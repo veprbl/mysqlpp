@@ -84,13 +84,6 @@ Query::affected_rows() const
 }
 
 
-std::string
-Query::error()
-{
-	return conn_->error();
-}
-
-
 bool
 Query::exec(const std::string& str)
 {

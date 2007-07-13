@@ -237,10 +237,7 @@ public:
 	/// this connection.
 	///
 	/// Simply wraps \c mysql_error() in the C API.
-	const char* error()
-	{
-		return mysql_error(&mysql_);
-	}
+	const char* error() { return mysql_error(&mysql_); }
 
 	/// \brief Return last MySQL error number associated with this
 	/// connection

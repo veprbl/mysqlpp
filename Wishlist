@@ -68,9 +68,6 @@ v3.0 Plan, For-Sure Stuff
       instance variable, used by Connection::error() when set.
       Useful when exceptions are disabled.
 
-    o Connection::error() returns const char*, while Query::error()
-      returns std::string.  Pick one.
-
     o Remove MutableColData.  It's only used within myset.h, and that
       usage is inefficient to the point of wanting replacement anyway.
 

@@ -175,10 +175,9 @@ public:
 
 	/// \brief Get the last error message that was set.
 	///
-	/// This class has an internal error message string, but if it
-	/// isn't set, we return the last error message that happened
-	/// on the connection we're bound to instead.
-	std::string error();
+	/// This just delegates to Connection::error().  Query has nothing
+	/// extra to say, so use either, as makes sense in your program.
+	const char* error() const { return conn_->error(); }
 
 	/// \brief Treat the contents of the query string as a template
 	/// query.
