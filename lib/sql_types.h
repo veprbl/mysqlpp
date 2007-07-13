@@ -69,7 +69,7 @@ typedef std::string		sql_varchar;
     // them matching the style of the above types.
     typedef Date		sql_date;
     typedef Time		sql_time;
-    typedef Time		sql_timestamp;
+    typedef DateTime	sql_timestamp;
     typedef DateTime	sql_datetime;
 #endif
 #ifdef MYSQLPP_MYSET_H

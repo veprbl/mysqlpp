@@ -81,8 +81,6 @@ v3.0 Plan, For-Sure Stuff
     o More robust fix for the Query stream base class init problem:
       http://www.boost.org/libs/utility/base_from_member.html
 
-    o Change sql_timestamp typedef to be for DateTime class.
-
     o Apply Richard Forrest's iterator patch:
 
           http://lists.mysql.com/plusplus/5338
