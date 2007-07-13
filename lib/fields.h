@@ -54,13 +54,12 @@ public:
 	}
 
 	/// \brief Returns a field given its index.
-	const Field& at(Fields::size_type i) const;
+	const Field& at(int i) const;
 
 	/// \brief Returns a field given its index.
-	const Field& at(int i) const
-	{
-		return at(static_cast<size_type>(i));
-	}
+	///
+	/// Just a synonym for at()
+	const Field& operator [](int i) const { return at(i); }
 
 	size_type size() const;	///< get the number of fields
 

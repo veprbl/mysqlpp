@@ -3,7 +3,7 @@
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -420,11 +420,16 @@ public:
 	}
 
 	/// \brief Get the row with an offset of i.
-	const Row at(size_type i) const
+	const Row at(int i) const
 	{
 		data_seek(i);
 		return fetch_row();
 	}
+
+	/// \brief Get the row with an offset of i.
+	///
+	/// Just a synonym for at()
+	const Row operator [](int i) const { return at(i); }
 };
 
 

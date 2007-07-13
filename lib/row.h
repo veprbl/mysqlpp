@@ -3,7 +3,7 @@
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -124,14 +124,11 @@ public:
 	/// \brief Get the value of a field given its index.
 	///
 	/// This function is just syntactic sugar, wrapping the at() method.
-	/// The at() method is the only way to get at the first field in a
-	/// result set by index, as \c row[0] is ambiguous: it could call
-	/// either \c operator[] overload.
 	///
 	/// \sa at() for the full documentation for this operator, and
 	/// operator[](const char*) for further caveats about using this
 	/// operator.
-	const ColData operator [](size_type i) const
+	const ColData operator [](int i) const
 	{
 		return at(i);
 	}
@@ -147,7 +144,7 @@ public:
 	/// retrieving data from this row object.
 	///
 	/// See operator[](const char*) for more caveats.
-	const ColData at(size_type i) const;
+	const ColData at(int i) const;
 
 	/// \brief Return the value of a field as a C string given its
 	/// index, in raw form.

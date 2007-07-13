@@ -94,14 +94,6 @@ v3.0 Plan, For-Sure Stuff
 
           http://lists.mysql.com/plusplus/5617
 
-    o Change operator[](unsigned int) in Row and the iterator classes
-      to take a plain int.  This should fix the ambiguous overload
-      problems, such as with row[0].  Details:
-
-          http://lists.mysql.com/plusplus/4947
-          http://lists.mysql.com/plusplus/4952
-          http://lists.mysql.com/plusplus/4960
-    
     o Apply Waba's patch allowing Null<T> fields in SSQLSes:
       
           http://lists.mysql.com/plusplus/5433

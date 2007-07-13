@@ -3,7 +3,7 @@
  	programs.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2006 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -86,34 +86,7 @@ print_stock_row(const mysqlpp::sql_char& item, mysqlpp::sql_bigint num,
 void
 print_stock_row(const mysqlpp::Row& row)
 {
-	// The brief code below illustrates several aspects of the library
-	// worth noting:
-	//
-	// 1. You can subscript a row by integer (position of the field in
-	// the row) or by string (name of field in the row).  The former is
-	// more efficient, while the latter trades some efficiency for
-	// robustness in the face of schema changes.  (Consider using SSQLS
-	// if you need a tradeoff in between these two positions.)
-	// 
-	// 2. You can also get at a row's field's with Row::at(), which is
-	// much like Row::operator[](int).  Besides the syntax difference,
-	// the only practical difference is that only at() can access field
-	// 0: this is because '0' can be converted to both int and to const
-	// char*, so the compiler rightly complains that it can't decide
-	// which overload to call.
-	//
-	// 3. Notice that we make an explicit temporary copy of the first
-	// field, which is the only string field.  We must tolerate the
-	// inefficiency of this copy, because Row::operator[] returns a
-	// ColData object, which goes away after it is converted to some
-	// other form.  So, while we could have made print_stock_row()
-	// take a const char* argument (as past versions mistakenly did!)
-	// this would result in a dangling pointer, since it points into the
-	// ColData object, which is dead by the time the pointer is
-	// evaluated in print_stock_row().  It will probably even work this
-	// way, but like any memory bug, it can wreak subtle havoc.
-	std::string item(row.at(0));
-	print_stock_row(item, row["num"], row[2], row[3], row[4]);
+	print_stock_row(string(row[0]), row[1], row[2], row[3], row[4]);
 }
 
 

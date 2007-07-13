@@ -3,7 +3,7 @@
 	database schema, such as table names, column types, etc.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -69,7 +69,7 @@ main(int argc, char* argv[])
 		Result::iterator i;
 		for (i = res.begin(); i != res.end(); ++i) {
 			row = *i;
-			cout << endl << '\t' << setw(17) << row.at(0);
+			cout << endl << '\t' << setw(17) << row[0];
 		}
 		cout << separator;
 		
@@ -86,8 +86,8 @@ main(int argc, char* argv[])
 		cout.setf(ios::left);
 		for (i = res.begin(); i != res.end(); ++i) {
 			row = *i;
-			string xx(row.at(0));
-			cout << endl << '\t' << setw(17) << row.at(0);
+			string xx(row[0]);
+			cout << endl << '\t' << setw(17) << row[0];
 			yy.push_back(xx);
 		}
 		cout << separator;

@@ -2,7 +2,7 @@
  fields.cpp - Implements the Fields class.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -35,7 +35,8 @@ Fields::size_type Fields::size() const
 	return res_->num_fields();
 }
 
-const Field& Fields::at(Fields::size_type i) const
+const Field&
+Fields::at(int i) const
 {
 	res_->field_seek(i);
 	return res_->fetch_field();

@@ -54,7 +54,7 @@ main(int argc, char *argv[])
 		mysqlpp::Row row;
 		mysqlpp::Row::size_type i;
 		for (i = 0; row = res.at(i); ++i) {
-			cout << '\t' << row.at(0) << endl;
+			cout << '\t' << row[0] << endl;
 		}
 	}
 	else {

@@ -3,7 +3,7 @@
 	Specialized SQL Structures feature of MySQL++.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -58,7 +58,7 @@ main(int argc, char *argv[])
 		// there's no point in storing the result in an STL container.
 		// We can store the first row directly into a stock structure
 		// because one of an SSQLS's constructors takes a Row object.
-		stock row = res.at(0);
+		stock row = res[0];
 
 		// Create a copy so that the replace query knows what the
 		// original values are.

@@ -61,7 +61,7 @@ main(int argc, char *argv[])
 		query << "update stock set item = %0q where item = %1q";
 		query.parse();
 		mysqlpp::ResNSel res2 = query.execute("Nuerenberger Bratwurst",
-				res1.at(0).at(0).c_str());
+				res1[0][0].c_str());
 
 		// Print the new table contents.
 		print_stock_table(query);

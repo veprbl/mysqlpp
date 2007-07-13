@@ -8,7 +8,7 @@
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -45,7 +45,7 @@ template <class OnType, class ReturnType, class SizeType,
 /// \brief A base class that one derives from to become a random
 /// access container, which can be accessed with subscript notation.
 ///
-/// OnType must have the member functions \c operator[](SizeType) and
+/// OnType must have the member functions \c operator[](int) and
 // \c size() defined for it.
 
 template <class OnType,
@@ -82,7 +82,7 @@ public:
 	virtual size_type size() const = 0;	
 
 	/// \brief Return element at given index in container
-	virtual ReturnType at(SizeType i) const = 0;
+	virtual ReturnType at(int i) const = 0;
 
 	/// \brief Return maximum number of elements that can be stored
 	/// in container without resizing.
@@ -182,7 +182,7 @@ public:
 	
 	/// \brief Return a copy of the element at the given position
 	/// within the container.
-	ReturnType operator [](SizeType n) const { return d_->at(n); }
+	ReturnType operator [](int n) const { return d_->at(n); }
 	
 	/// \brief Move the iterator to the next element, returning an
 	/// iterator to that element
