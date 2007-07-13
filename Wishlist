@@ -73,8 +73,6 @@ v3.0 Plan, For-Sure Stuff
       isn't true.  They're an indicator of whether the object has
       had any problems at all, not just problems in query execution.
 
-    o Rename Query::def to tquery_defaults to clarify its purpose.
-
     o Connection::error() returns const char*, while Query::error()
       returns std::string.  Pick one.
 

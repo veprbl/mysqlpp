@@ -180,7 +180,7 @@ public:
 	void reset();
 
 	/// \brief Return the query string currently in the buffer.
-	std::string preview() { return str(def); }
+	std::string preview() { return str(template_defaults); }
 
 	/// \brief Return the query string currently in the buffer with
 	/// template query parameter substitution.
@@ -194,7 +194,7 @@ public:
 	std::string preview(SQLQueryParms& p) { return str(p); }
 
 	/// \brief Get built query as a null-terminated C++ string
-	std::string str() { return str(def); }
+	std::string str() { return str(template_defaults); }
 
 	/// \brief Get built query as a null-terminated C++ string with
 	/// template query parameter substitution.
@@ -239,7 +239,7 @@ public:
 	/// \return ResNSel status information about the query
 	///
 	/// \sa exec(), store(), storein(), and use()
-	ResNSel execute() { return execute(str(def)); }
+	ResNSel execute() { return execute(str(template_defaults)); }
 
 	/// \brief Execute query in a C++ string, or substitute string into
 	/// a template query and execute it.
@@ -284,7 +284,7 @@ public:
 	/// \return ResUse object that can walk through result set serially
 	///
 	/// \sa exec(), execute(), store() and storein()
-	ResUse use() { return use(str(def)); }
+	ResUse use() { return use(str(template_defaults)); }
 
 	/// \brief Execute query in a C++ string
 	///
@@ -328,7 +328,7 @@ public:
 	/// \return Result object containing entire result set
 	///
 	/// \sa exec(), execute(), storein(), and use()
-	Result store() { return store(str(def)); }
+	Result store() { return store(str(template_defaults)); }
 
 	/// \brief Execute query in a C++ string
 	///
@@ -572,7 +572,7 @@ public:
 	template <class Sequence>
 	void storein_sequence(Sequence& con)
 	{
-		storein_sequence(con, str(def));
+		storein_sequence(con, str(template_defaults));
 	}
 
 	/// \brief Execute a query, storing the result set in an STL
@@ -585,7 +585,7 @@ public:
 	template <class Set>
 	void storein_set(Set& con)
 	{
-		storein_set(con, str(def));
+		storein_set(con, str(template_defaults));
 	}
 
 	/// \brief Execute a query, and store the entire result set
@@ -609,7 +609,7 @@ public:
 	template <class Container>
 	void storein(Container& con)
 	{
-		storein(con, str(def));
+		storein(con, str(template_defaults));
 	}
 
 	/// \brief Specialization of storein_sequence() for \c std::vector
@@ -803,7 +803,7 @@ public:
 	/// \brief The default template parameters
 	///
 	/// Used for filling in parameterized queries.
-	SQLQueryParms def;
+	SQLQueryParms template_defaults;
 
 private:
 	friend class SQLQueryParms;

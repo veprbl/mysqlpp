@@ -40,7 +40,7 @@ std::ostream(0),
 #endif
 OptionalExceptions(te),
 Lockable(false),
-def(this),
+template_defaults(this),
 conn_(c),
 success_(false)
 {
@@ -57,7 +57,7 @@ std::ostream(0),
 #endif
 OptionalExceptions(q.throw_exceptions()),
 Lockable(q.locked()),
-def(q.def),
+template_defaults(q.template_defaults),
 conn_(q.conn_),
 success_(q.success_)
 {
@@ -70,7 +70,7 @@ Query::operator=(const Query& rhs)
 {
 	set_exceptions(rhs.throw_exceptions());
 	set_lock(rhs.locked());
-	def = rhs.def;
+	template_defaults = rhs.template_defaults;
 	conn_ = rhs.conn_;
 	success_ = rhs.success_;
 
@@ -109,13 +109,13 @@ Query::exec(const std::string& str)
 ResNSel
 Query::execute(const SQLString& s)
 {
-	if ((parse_elems_.size() == 2) && !def.processing_) {
+	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
 		// We're a template query and we haven't gone through this path
 		// before, so take s to be a lone parameter for the query.
 		// We will come back through this function with a completed
 		// query, but the processing_ flag will be reset, allowing us to
 		// take the 'else' path, avoiding an infinite loop.
-		AutoFlag<> af(def.processing_);
+		AutoFlag<> af(template_defaults.processing_);
 		return execute(str(SQLQueryParms() << s));
 	}
 	else {
@@ -361,8 +361,8 @@ Query::proc(SQLQueryParms& p)
 			if (size_t(num) < p.size()) {
 				c = &p;
 			}
-			else if (size_t(num) < def.size()) {
-				c = &def;
+			else if (size_t(num) < template_defaults.size()) {
+				c = &template_defaults;
 			}
 			else {
 				*this << " ERROR";
@@ -390,20 +390,20 @@ Query::reset()
 	sbuffer_.str("");
 
 	parse_elems_.clear();
-	def.clear();
+	template_defaults.clear();
 }
 
 
 Result 
 Query::store(const SQLString& s)
 {
-	if ((parse_elems_.size() == 2) && !def.processing_) {
+	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
 		// We're a template query and we haven't gone through this path
 		// before, so take s to be a lone parameter for the query.
 		// We will come back through this function with a completed
 		// query, but the processing_ flag will be reset, allowing us to
 		// take the 'else' path, avoiding an infinite loop.
-		AutoFlag<> af(def.processing_);
+		AutoFlag<> af(template_defaults.processing_);
 		return store(str(SQLQueryParms() << s));
 	}
 	else {
@@ -545,13 +545,13 @@ Query::unlock()
 ResUse
 Query::use(const SQLString& s)
 {
-	if ((parse_elems_.size() == 2) && !def.processing_) {
+	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
 		// We're a template query and we haven't gone through this path
 		// before, so take s to be a lone parameter for the query.
 		// We will come back through this function with a completed
 		// query, but the processing_ flag will be reset, allowing us to
 		// take the 'else' path, avoiding an infinite loop.
-		AutoFlag<> af(def.processing_);
+		AutoFlag<> af(template_defaults.processing_);
 		return use(str(SQLQueryParms() << s));
 	}
 	else {

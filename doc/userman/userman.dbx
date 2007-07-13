@@ -1163,8 +1163,8 @@ query.storein(my_vector, SQLString(1));</programlisting>
         <para>The template query mechanism allows you to set
         default parameter values. You simply assign a value
         for the parameter to the appropriate position in the
-        <varname>Query::def</varname> array. You can refer to the
-        parameters either by position or by name:</para>
+        <varname>Query::template_defaults</varname> array. You can
+        refer to the parameters either by position or by name:</para>
 
         <programlisting>
 query.def[1] = "item";
@@ -1229,10 +1229,11 @@ Result res1 = query.store();</programlisting>
     <sect2>
         <title>Error Handling</title>
 
-        <para>If for some reason you did not specify all the parameters
-        when executing the query and the remaining parameters do not
-        have their values set via <varname>Query::def</varname>,
-        the query object will throw a <ulink type="classref"
+        <para>If for some reason you did not specify all
+        the parameters when executing the query and the
+        remaining parameters do not have their values set
+        via <varname>Query::template_defaults</varname>, the
+        query object will throw a <ulink type="classref"
         url="BadParamCount"/> object. If this happens, you
         can get an explanation of what happened by calling
         <methodname>BadParamCount::what()</methodname>, like so:</para>
