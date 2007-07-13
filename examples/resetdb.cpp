@@ -128,8 +128,8 @@ main(int argc, char *argv[])
 		query << "insert into %5:table values (%0q, %1q, %2, %3, %4q)";
 		query.parse();
 
-		// Set the template query parameter "table" to "stock".
-		query.def["table"] = "stock";
+		// Set a default for template query parameter "table".
+		query.template_defaults["table"] = "stock";
 
 		// Notice that we don't give a sixth parameter in these calls,
 		// so the default value of "stock" is used.  Also notice that
