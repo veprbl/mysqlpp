@@ -264,11 +264,6 @@ public:
 	/// takes the string as a complete SQL query and executes it.
 	ResNSel execute(const SQLString& str);
 
-	/// \brief Execute query in a C string
-	///
-	/// Executes the query immediately, and returns the results.
-	ResNSel execute(const char* str);
-
 	/// \brief Execute query in a known-length string of characters.
 	/// This can include null characters.
 	///
@@ -308,13 +303,6 @@ public:
 	/// sequence.  This is more memory-efficient than store().
 	ResUse use(const SQLString& str);
 
-	/// \brief Execute query in a C string
-	///
-	/// Executes the query immediately, and returns an object that
-	/// lets you walk through the result set one row at a time, in
-	/// sequence.  This is more memory-efficient than store().
-	ResUse use(const char* str);
-
 	/// \brief Execute query in a known-length C string
 	///
 	/// Executes the query immediately, and returns an object that
@@ -351,13 +339,6 @@ public:
 	/// contains the entire result set.  This is less memory-efficient
 	/// than use(), but it lets you have random access to the results.
 	Result store(const SQLString& str);
-
-	/// \brief Execute query in a C string
-	///
-	/// Executes the query immediately, and returns an object that
-	/// contains the entire result set.  This is less memory-efficient
-	/// than use(), but it lets you have random access to the results.
-	Result store(const char* str);
 
 	/// \brief Execute query in a known-length C string
 	///

@@ -106,9 +106,6 @@ v3.0 Plan, For-Sure Stuff
       
           http://lists.mysql.com/plusplus/5433
 
-    o Remove simple const char* version of Query::execute(), store(),
-      and use().  The ones taking SQLString will work transparently.
-
     o manip.cpp uses mysql_escape_string(), which doesn't take the
       selected database's character set into account.  To do that, you
       must use mysql_real_escape_string(), which differs by taking

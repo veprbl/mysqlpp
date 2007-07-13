@@ -118,13 +118,6 @@ Query::execute(const SQLString& s)
 
 
 ResNSel
-Query::execute(const char* str)
-{
-	return execute(SQLString(str));
-}
-
-
-ResNSel
 Query::execute(const char* str, size_t len)
 {
 	if (!lock()) {
@@ -406,13 +399,6 @@ Query::store(const SQLString& s)
 
 
 Result
-Query::store(const char* str)
-{
-	return store(SQLString(str));
-}
-
-
-Result
 Query::store(const char* str, size_t len)
 {
 	if (!lock()) {
@@ -543,13 +529,6 @@ Query::use(const SQLString& s)
 		// Take s to be the entire query string
 		return use(s.data(), s.length());
 	}
-}
-
-
-ResUse
-Query::use(const char* str)
-{
-	return use(SQLString(str));
 }
 
 
