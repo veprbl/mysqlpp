@@ -330,7 +330,7 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         <para>Most of the examples require a test database, created
         by <filename>resetdb</filename>. You run it like so:</para>
 
-        <screen>        ./exrun resetdb [host [user [password [port]]]]</screen>
+        <screen>        ./exrun resetdb [password [user [server_addr]]]</screen>
 
         <para><filename>exrun</filename> is a shell script that
         ensures that the MySQL++ example program you give as its
@@ -346,16 +346,72 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         there's a Windows version of <filename>exrun</filename>, called
         <filename>exrun.bat</filename>. It works the same way.)</para>
 
-        <para>As for the remaining program arguments, they are all
-        optional, but they must be in the order listed. If you leave
-        off the port number, it uses the default value, 3306. If you
-        leave off the password, it assumes you don't need one to
-        log in.  If you leave off the user name, it uses the name
-        you used when logging on to the computer. And if you leave
-        off the host name, it assumes the MySQL server is running on
-        the local host. A typical invocation is:</para>
+        <para>All of the program arguments are optional, but they
+        must be in the order listed, and you can't skip over any
+        arguments. The arguments are in this order on purpose. The
+        most likely one you'll need to change is the password, so
+        it's first.  After that is the user name, in case you use
+        a different login scheme with the database than the host
+        operating system. Last of all is the server address, since
+        most of the time developers have a database server on the
+        machine they're using to work with MySQL++.</para>
 
-        <screen>        ./exrun resetdb localhost root nunyabinness</screen>
+        <para>If you leave off the server address, it uses the MySQL C
+        API defaults. It assumes the server is on the local machine,
+        and can be contacted in any number of ways, depending on how
+        the C API library and server are configured. You may pass
+        many different sorts of things for the server address:</para>
+
+        <itemizedlist>
+            <listitem>
+                <para><emphasis>localhost</emphasis> &mdash; this is
+                the default; it doesn't buy you anything</para>
+            </listitem>
+
+            <listitem>
+                <para>On Windows, a simple period tells the
+                underlying MySQL C API to use named pipes, if it's
+                available.</para>
+            </listitem>
+
+            <listitem>
+                <para><emphasis>172.20.0.252:12345</emphasis>
+                &mdash; this would connect to IP address
+                <computeroutput>172.20.0.252</computeroutput> on TCP
+                port <computeroutput>12345</computeroutput>.</para>
+            </listitem>
+
+            <listitem>
+                <para><emphasis>my.server.name:svc_name</emphasis>
+                &mdash; this would first look up TCP service
+                name <computeroutput>svc_name</computeroutput>
+                in your system's network services database
+                (<filename>/etc/services</filename>
+                on Unixy systems, and something like
+                <filename>c:\windows\system32\drivers\etc\services</filename>
+                on modern Windows variants). If it finds an entry
+                for the service, it then tries to connect to that
+                port on the domain name given.</para>
+            </listitem>
+        </itemizedlist>
+
+        <para>You can mix symbolic host and service names in any
+        combination. If the name doesn't contain a colon, it uses
+        the default port, 3306.</para>
+
+        <para>If you leave off the user name, it uses your login
+        name.</para>
+
+        <para>If you leave off the password, it probably won't work,
+        because it will go looking for a login defaults file, and
+        the examples don't set that up for you. If you really have
+        no password on the server, you can probably give "" here to
+        indicate a blank password. Better is to just add a password for
+        that user. It's a wild world out there; play safe, kids.</para>
+
+        <para>A typical invocation is:</para>
+
+        <screen>        ./exrun resetdb nunyabinness mydbuser</screen>
 
         <para>For <filename>resetdb</filename>, the user name needs to
         be for an account with permission to create databases. Once
