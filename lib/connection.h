@@ -317,10 +317,7 @@ public:
 	/// \c status command.  Among other things, it contains uptime 
 	/// in seconds, and the number of running threads, questions
 	/// and open tables.
-	std::string stat()
-	{
-		return std::string(mysql_stat(&mysql_));
-	}
+	const char* status() { return mysql_stat(&mysql_); }
 
 	/// \brief Create a database
 	///
