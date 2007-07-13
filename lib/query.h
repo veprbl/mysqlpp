@@ -581,7 +581,6 @@ public:
 	/// string, or a container and template query parameters.
 	///
 	/// \param con any STL sequence container, such as \c std::vector
-	/// \param r whether the query automatically resets after being used
 	///
 	/// \sa exec(), execute(), store(), and use()
 	template <class Sequence>
