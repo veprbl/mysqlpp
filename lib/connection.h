@@ -240,8 +240,14 @@ public:
 	/// \brief Return error message for last MySQL error associated with
 	/// this connection.
 	///
-	/// Simply wraps \c mysql_error() in the C API.
-	const char* error() { return mysql_error(&mysql_); }
+	/// Can return a MySQL++ Connection-specific error message if there
+	/// is one.  If not, it simply wraps \c mysql_error() in the C API.
+	const char* error()
+	{
+		return error_message_.empty() ?
+				mysql_error(&mysql_) :
+				error_message_.c_str();
+	}
 
 	/// \brief Return last MySQL error number associated with this
 	/// connection
@@ -519,6 +525,11 @@ protected:
 	bool parse_ipc_method(const char* server, std::string& host,
 			unsigned int& port, std::string& socket_name);
 
+	/// \brief Build an error message in a standard form.
+	///
+	/// This is used when MySQL++ itself encounters an error.
+	void build_error_message(const char* core);
+
 private:
 	friend class ResNSel;
 	friend class ResUse;
@@ -571,6 +582,7 @@ private:
 	bool is_connected_;
 	bool connecting_;
 	bool copacetic_;
+	std::string error_message_;
 	OptionList applied_options_;
 	static OptionArgType legal_opt_arg_types_[];
 };

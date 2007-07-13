@@ -60,10 +60,6 @@ v3.0 Plan, For-Sure Stuff
         template functions like Query::insert<T> might become regular
         member functions, taking a reference to the SSQLS base class.
 
-    o Save error message built in Connection::bad_option() in an
-      instance variable, used by Connection::error() when set.
-      Useful when exceptions are disabled.
-
     o Remove MutableColData.  It's only used within myset.h, and that
       usage is inefficient to the point of wanting replacement anyway.
 
