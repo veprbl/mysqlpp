@@ -176,7 +176,7 @@ void
 print_usage(const char* program_name, const char* extra_parms)
 {
 	cout << "usage: " << program_name <<
-			" [host [user [password [port]]]] " << extra_parms << endl;
+			" [password [user [server_addr]]] " << extra_parms << endl;
 	cout << endl;
 	cout << "    If no arguments are given, connects to database "
 			"server on localhost" << endl;
@@ -228,11 +228,8 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 	else if (argc == 3) {
 		con.connect(kdb, argv[1], argv[2]);
 	}
-	else if (argc == 4) {
+	else if (argc >= 4) {
 		con.connect(kdb, argv[1], argv[2], argv[3]);
-	}
-	else if (argc >= 5) {
-		con.connect(kdb, argv[1], argv[2], argv[3], atoi(argv[4]));
 	}
 
 	if (con) {

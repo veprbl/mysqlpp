@@ -32,6 +32,12 @@
 #include "query.h"
 #include "result.h"
 
+#if !defined(MYSQLPP_PLATFORM_WINDOWS)
+#	include <unistd.h>
+#	include <sys/stat.h>
+#	include <netdb.h>
+#endif
+
 // An argument was added to mysql_shutdown() in MySQL 4.1.3 and 5.0.1.
 #if ((MYSQL_VERSION_ID >= 40103) && (MYSQL_VERSION_ID <= 49999)) || (MYSQL_VERSION_ID >= 50001)
 #	define SHUTDOWN_ARG ,SHUTDOWN_DEFAULT
@@ -113,15 +119,14 @@ copacetic_(true)
 }
 
 
-Connection::Connection(const char* db, const char* host,
-		const char* user, const char* passwd, uint port,
-		cchar* socket_name, unsigned long client_flag) :
+Connection::Connection(cchar* db, cchar* password, cchar* user,
+		cchar* server, unsigned long client_flag) :
 OptionalExceptions(),
 Lockable(false),
 connecting_(false)
 {
 	mysql_init(&mysql_);
-	if (connect(db, host, user, passwd, port, socket_name, client_flag)) {
+	if (connect(db, password, user, server, client_flag)) {
 		unlock();
 		copacetic_ = is_connected_ = true;
 	}
@@ -159,9 +164,8 @@ Connection::operator=(const Connection& rhs)
 
 
 bool
-Connection::connect(cchar* db, cchar* host, cchar* user,
-		cchar* passwd, uint port, cchar* socket_name,
-		unsigned long client_flag)
+Connection::connect(cchar* db, cchar* password, cchar* user,
+		cchar* server, unsigned long client_flag)
 {
 	lock();
 
@@ -183,10 +187,15 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 	}
 #endif
 
-	// Establish connection
+	// Figure out what the server parameter means, then establish 
+	// the connection.
+	unsigned int port = 0;
+	string host, socket_name;
 	scoped_var_set<bool> sb(connecting_, true);
-	if (mysql_real_connect(&mysql_, host, user, passwd, db, port,
-			socket_name, client_flag)) {
+	if (parse_ipc_method(server, host, port, socket_name) &&
+			mysql_real_connect(&mysql_, host.c_str(), user, password, db,
+			port, (socket_name.empty() ? 0 : socket_name.c_str()),
+			client_flag)) {
 		unlock();
 		is_connected_ = true;
 
@@ -213,8 +222,20 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 bool
 Connection::connect(const MYSQL& mysql)
 {
-	return connect(mysql.db, mysql.host, mysql.user, mysql.passwd,
-			mysql.port, mysql.unix_socket, mysql.client_flag);
+	if (mysql.unix_socket && (strlen(mysql.unix_socket) > 0)) {
+		return connect(mysql.db, mysql.passwd, mysql.user, 
+				mysql.unix_socket, mysql.client_flag);
+	}
+	else {
+		string server(mysql.host);
+		if (mysql.port > 0) {
+			char ac[10];
+			snprintf(ac, sizeof(ac), ":%d", mysql.port);
+			server += ac;
+		}
+		return connect(mysql.db, mysql.passwd, mysql.user, 
+				server.c_str(), mysql.client_flag);
+	}
 }
 
 
@@ -712,6 +733,73 @@ Connection::ping()
 		// order to re-connect, if we once were connected.
 		return 1;
 	}
+}
+
+
+bool
+Connection::parse_ipc_method(const char* server, string& host,
+		unsigned int& port, string& socket_name)
+{
+	if (server == 0) {
+		// Just take all the defaults
+		return true;
+	}
+
+	// Try the platform-specific alternatives first.
+#if MYSQLPP_PLATFORM_WINDOWS
+	if (strcmp(server, ".") == 0) {
+		// Use Windows named pipes
+		host = server;
+		return true;
+	}
+#else
+	struct stat fi;
+	if ((access(server, R_OK | W_OK) == 0) &&
+			(stat(server, &fi) == 0) &&
+			S_ISSOCK(fi.st_mode)) {
+		// It's a Unix domain socket, and we have permission to use it.
+		socket_name = server;
+		return true;
+	}
+#endif
+
+	// Lacking any better idea, it must be some kind of TCP/IP address.
+	// See if it includes a trailing port or service name.
+	const char* colon = strchr(server, ':');
+	if (colon) {
+		if (colon[1]) {
+			// Not just a lonely trailing colon, so assume what follows
+			// the colon is of substance.
+			const char* service = colon + 1;
+			if (isdigit(service[0])) {
+				port = atoi(service);
+				if ((port < 1) || (port > USHRT_MAX)) {
+					return false;
+				}
+				else {
+				}
+			}
+			else {
+				servent* pse = getservbyname(service, "tcp");
+				if (pse) {
+					port = ntohs(pse->s_port);
+				}
+				else {
+					return false;
+				}
+			}
+		}
+
+		// We're happy with what we found after the colon, so treat the
+		// rest of the name as a host address.
+		host.assign(server, colon - server);
+	}
+	else {
+		// No colon, so treat the whole thing as a host address.
+		host = server;
+	}
+
+	return true;
 }
 
 

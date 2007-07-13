@@ -30,11 +30,29 @@ Getting Started with the Examples
     Before running the other examples, you must first create the
     sample database.  On POSIX systems, you do that like so:
 
-        $ ./exrun resetdb [host] [user] [password] [port]
+        $ ./exrun resetdb [password] [user] [server_addr]
 
     On Windows, that would instead be:
 
-        C:\mysql++\> exrun.bat resetdb [host] [user] [pass] [port]
+        C:\mysql++\> exrun.bat resetdb [password] [user] [server_addr]
+
+    You may give any number of these arguments, but they must be in
+    the order listed, and you can't skip over arguments.  So, you
+    may give just a password, in which case it will assume you mean
+    to connect using your current user name to a server on the local
+    machine using the default connection method.  If you wanted to give
+    a host name, you would also have to give a user name and password.
+
+    The server_addr parameter accepts many different forms.  The main
+    one is some sort of TCP/IP address, in either dotted quad IP form
+    or as a host or domain name.  You can also give a Unix domain
+    socket name, or just a period if on Windows to select named pipes.
+    If you give a TCP/IP address, you can follow it with a colon and
+    a port number or a symbolic service name.  All of these are legal:
+
+        localhost
+        172.20.0.252:12345
+        my.server.name.com:mysql
 
     If you mistakenly run resetdb directly instead of through exrun,
     it will either fail to run because it can't find the MySQL++

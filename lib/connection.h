@@ -117,29 +117,40 @@ public:
 	/// \brief Create object and connect to database server in one step.
 	///
 	/// This constructor allows you to most fully specify the options
-	/// used when connecting to the MySQL database.  It is the thinnest
-	/// layer in MySQL++ over the MySQL C API function
-	/// \c mysql_real_connect().  The correspondence isn't exact, as we
-	/// reorder some of the parameters, give most of them defaults, and
-	/// leave some of them out.
+	/// used when connecting to the MySQL database.  It is a thick
+	/// wrapper around the MySQL C API function \c mysql_real_connect()
+	/// with a greatly simplified interface.
 	///
 	/// \param db name of database to use
-	/// \param host host name or IP address of MySQL server, or 0
-	/// 	if server is running on the same host as your program
+	/// \param password password to use when logging in
 	/// \param user user name to log in under, or 0 to use the user
 	///		name this program is running under
-	/// \param passwd password to use when logging in
-	/// \param port TCP port number MySQL server is listening on, or 0
-	///		to use default value
-	/// \param socket_name Unix domain socket server is using, if
-	///		connecting to MySQL server on the same host as this program
-	///		running on, or 0 to use default name
+	/// \param server specifies the IPC method and parameters for
+	///     contacting the server; see below for details
 	/// \param client_flag special connection flags. See MySQL C API
 	///     documentation for \c mysql_real_connect() for details.	
-	Connection(const char* db, const char* host = "",
-			const char* user = "", const char* passwd = "",
-			uint port = 0, cchar* socket_name = 0,
-			unsigned long client_flag = 0);
+	///
+	/// The server parameter can be any of several different forms:
+	///
+	/// - \b 0: Let the MySQL C API decide how to connect.  This usually
+	///   means Unix domain sockets with the default socket name on
+	///   *ix systems, and shared memory on Windows.  If those options
+	///   aren't available, it will be a TCP/IP connection to the
+	///   localhost address.
+	/// - \b ".": On Windows, this means named pipes, if the server
+	///   supports it
+	/// - \b "/some/domain/socket/path": If the passed string doesn't
+	///   match one of the previous alternatives and we're on a system
+	///   that supports Unix domain sockets, MySQL++ will test it to see
+	///   if it names one, and use it if we have permission.
+	/// - \b "host.name.or.ip:port": If the previous test fails, or if
+	///   the system doesn't support Unix domain sockets at all, it
+	///   assumes the string is some kind of network address, optionally
+	///   followed by a colon and port.  The name can be in dotted quad
+	///   form, a host name, or a domain name.  The port can either be a
+	///   TCP/IP port number or a symbolic service name.
+	Connection(cchar* db, cchar* password = 0, cchar* user = 0,
+			cchar* server = 0, unsigned long client_flag = 0);
 
 	/// \brief Establish a new connection using the same parameters as
 	/// an existing C API connection.
@@ -164,9 +175,8 @@ public:
 	/// If you call this method on an object that is already connected
 	/// to a database server, the previous connection is dropped and a
 	/// new connection is established.
-	bool connect(cchar* db = "", cchar* host = "",
-			cchar* user = "", cchar* passwd = "", uint port = 0,
-			cchar* socket_name = 0, unsigned long client_flag = 0);
+	bool connect(cchar* db, cchar* password = 0, cchar* user = 0,
+			cchar* server = 0, unsigned long client_flag = 0);
 
 	/// \brief Close connection to MySQL server.
 	///
@@ -502,6 +512,12 @@ protected:
 	///
 	/// \param other the connection to copy
 	void copy(const Connection& other);
+
+	/// \brief Parse the server parameter to the connect-on-creation
+	/// ctor and connect() into values suitable for passing to the
+	/// MySQL C API's \c mysql_real_connect() function.
+	bool parse_ipc_method(const char* server, std::string& host,
+			unsigned int& port, std::string& socket_name);
 
 private:
 	friend class ResNSel;
