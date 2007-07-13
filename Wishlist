@@ -102,10 +102,6 @@ v3.0 Plan, For-Sure Stuff
           http://lists.mysql.com/plusplus/4952
           http://lists.mysql.com/plusplus/4960
     
-    o Several MySQL++ functions wrap the MySQL C API too literally:
-      they indicate success by returning 0 instead of true, as most
-      other wrapper functions do.
-
     o Apply Waba's patch allowing Null<T> fields in SSQLSes:
       
           http://lists.mysql.com/plusplus/5433

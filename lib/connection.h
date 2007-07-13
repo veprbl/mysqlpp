@@ -270,16 +270,15 @@ public:
 
 	/// \brief "Pings" the MySQL database
 	///
-	/// Wraps \c mysql_ping() in the C API.  As a result, this function
-	/// will try to reconnect to the server if the connection has been
-	/// dropped.
+	/// This function will try to reconnect to the server if the 
+	/// connection has been dropped.  Wraps \c mysql_ping() in the C API.
 	/// 
-	/// \retval 0 if server is responding, regardless of whether we had
+	/// \retval true if server is responding, regardless of whether we had
 	/// to reconnect or not
-	/// \retval nonzero if either we already know the connection is down
+	/// \retval false if either we already know the connection is down
 	/// and cannot re-establish it, or if the server did not respond to
 	/// the ping and we could not re-establish the connection.
-	int ping();
+	bool ping();
 
 	/// \brief Kill a MySQL server thread
 	///

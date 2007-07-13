@@ -749,18 +749,18 @@ Connection::api_version(ostream& os)
 }
 
 
-int
+bool
 Connection::ping()
 {
 	if (connected()) {
 		error_message_.clear();
-		return mysql_ping(&mysql_);
+		return !mysql_ping(&mysql_);
 	}
 	else {
 		// Not connected, and we've forgotten everything we need in
 		// order to re-connect, if we once were connected.
 		build_error_message("ping database server");
-		return 1;
+		return false;
 	}
 }
 
