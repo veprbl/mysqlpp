@@ -115,15 +115,13 @@ copacetic_(true)
 
 Connection::Connection(const char* db, const char* host,
 		const char* user, const char* passwd, uint port,
-		my_bool compress, unsigned int connect_timeout,
-		cchar* socket_name, unsigned int client_flag) :
+		cchar* socket_name, unsigned long client_flag) :
 OptionalExceptions(),
 Lockable(false),
 connecting_(false)
 {
 	mysql_init(&mysql_);
-	if (connect(db, host, user, passwd, port, compress,
-			connect_timeout, socket_name, client_flag)) {
+	if (connect(db, host, user, passwd, port, socket_name, client_flag)) {
 		unlock();
 		copacetic_ = is_connected_ = true;
 	}
@@ -162,9 +160,8 @@ Connection::operator=(const Connection& rhs)
 
 bool
 Connection::connect(cchar* db, cchar* host, cchar* user,
-		cchar* passwd, uint port, my_bool compress,
-		unsigned int connect_timeout, cchar* socket_name,
-		unsigned int client_flag)
+		cchar* passwd, uint port, cchar* socket_name,
+		unsigned long client_flag)
 {
 	lock();
 
@@ -173,13 +170,9 @@ Connection::connect(cchar* db, cchar* host, cchar* user,
 		disconnect();
 	}
 
-	// Set defaults for certain connection options.  User can override
-	// these by calling set_option() before connect().
+	// Set defaults for connection options.  User can override these
+	// by calling set_option() before connect().
 	set_option_default(opt_read_default_file, "my");
-	set_option_default(opt_connect_timeout, connect_timeout);
-	if (compress) {
-		set_option_default(opt_compress);
-	}
 
 #if MYSQL_VERSION_ID >= 40101
 	// Check to see if user turned on multi-statements before
@@ -221,9 +214,7 @@ bool
 Connection::connect(const MYSQL& mysql)
 {
 	return connect(mysql.db, mysql.host, mysql.user, mysql.passwd,
-			mysql.port, mysql.options.compress,
-			mysql.options.connect_timeout, mysql.unix_socket,
-			mysql.client_flag);
+			mysql.port, mysql.unix_socket, mysql.client_flag);
 }
 
 

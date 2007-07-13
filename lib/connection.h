@@ -119,9 +119,9 @@ public:
 	/// This constructor allows you to most fully specify the options
 	/// used when connecting to the MySQL database.  It is the thinnest
 	/// layer in MySQL++ over the MySQL C API function
-	/// \c mysql_real_connect().  The correspondence isn't exact as
-	/// we have some additional parameters you'd have to set with
-	/// \c mysql_option() when using the C API.
+	/// \c mysql_real_connect().  The correspondence isn't exact, as we
+	/// reorder some of the parameters, give most of them defaults, and
+	/// leave some of them out.
 	///
 	/// \param db name of database to use
 	/// \param host host name or IP address of MySQL server, or 0
@@ -131,20 +131,15 @@ public:
 	/// \param passwd password to use when logging in
 	/// \param port TCP port number MySQL server is listening on, or 0
 	///		to use default value
-	/// \param compress if true, compress data passing through
-	///		connection, to save bandwidth at the expense of CPU time
-	/// \param connect_timeout max seconds to wait for server to
-	///		respond to our connection attempt
 	/// \param socket_name Unix domain socket server is using, if
 	///		connecting to MySQL server on the same host as this program
 	///		running on, or 0 to use default name
-	///	\param client_flag special connection flags. See MySQL C API
-	///		documentation for \c mysql_real_connect() for details.
+	/// \param client_flag special connection flags. See MySQL C API
+	///     documentation for \c mysql_real_connect() for details.	
 	Connection(const char* db, const char* host = "",
 			const char* user = "", const char* passwd = "",
-			uint port = 0, my_bool compress = 0,
-			unsigned int connect_timeout = 60, cchar* socket_name = 0,
-			unsigned int client_flag = 0);
+			uint port = 0, cchar* socket_name = 0,
+			unsigned long client_flag = 0);
 
 	/// \brief Establish a new connection using the same parameters as
 	/// an existing C API connection.
@@ -171,8 +166,7 @@ public:
 	/// new connection is established.
 	bool connect(cchar* db = "", cchar* host = "",
 			cchar* user = "", cchar* passwd = "", uint port = 0,
-			my_bool compress = 0, unsigned int connect_timeout = 60,
-			cchar* socket_name = 0, unsigned int client_flag = 0);
+			cchar* socket_name = 0, unsigned long client_flag = 0);
 
 	/// \brief Close connection to MySQL server.
 	///
