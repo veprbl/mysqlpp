@@ -68,9 +68,6 @@ v3.0 Plan, For-Sure Stuff
       instance variable, used by Connection::error() when set.
       Useful when exceptions are disabled.
 
-    o Make Query's copy ctor private.  Nothing good can come from
-      copying queries.
-
     o Rename Query::success() and Query::success_.  The names imply
       that they only have meaning once a query is tried, but that
       isn't true.  They're an indicator of whether the object has
