@@ -127,7 +127,7 @@ Query::execute(const char* str)
 ResNSel
 Query::execute(const char* str, size_t len)
 {
-	if (lock()) {
+	if (!lock()) {
 		copacetic_ = false;
 		if (throw_exceptions()) {
 			throw LockFailed();
@@ -415,7 +415,7 @@ Query::store(const char* str)
 Result
 Query::store(const char* str, size_t len)
 {
-	if (lock()) {
+	if (!lock()) {
 		copacetic_ = false;
 		if (throw_exceptions()) {
 			throw LockFailed();
@@ -458,7 +458,7 @@ Result
 Query::store_next()
 {
 #if MYSQL_VERSION_ID > 41000		// only in MySQL v4.1 +
-	if (lock()) {
+	if (!lock()) {
 		if (throw_exceptions()) {
 			throw LockFailed();
 		}
@@ -556,7 +556,7 @@ Query::use(const char* str)
 ResUse
 Query::use(const char* str, size_t len)
 {
-	if (lock()) {
+	if (!lock()) {
 		copacetic_ = false;
 		if (throw_exceptions()) {
 			throw LockFailed();

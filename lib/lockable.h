@@ -54,7 +54,7 @@ public:
 
 	/// \brief Lock the object
 	///
-	/// \return true if object was already locked
+	/// \return false if object was already locked
 	virtual bool lock() = 0;
 
 	/// \brief Unlock the object
@@ -91,14 +91,14 @@ public:
 
 	/// \brief Lock the object
 	///
-	/// \return true if object was already locked
+	/// \return false if object was already locked
 	bool lock()
 	{
 		if (locked_) {
-			return true;
+			return false;
 		}
 		locked_ = true;
-		return false;
+		return true;
 	}
 
 	/// \brief Unlock the object
@@ -137,7 +137,7 @@ protected:
 
 	/// \brief Lock the object
 	///
-	/// \return true if object was already locked
+	/// \return false if object was already locked
 	virtual bool lock() { return pimpl_->lock(); }
 
 	/// \brief Unlock the object

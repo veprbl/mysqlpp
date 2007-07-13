@@ -106,8 +106,6 @@ v3.0 Plan, For-Sure Stuff
       
           http://lists.mysql.com/plusplus/5433
 
-    o Change Lockable::lock() to return true if it succeeds.
-
     o Remove simple const char* version of Query::execute(), store(),
       and use().  The ones taking SQLString will work transparently.
 
