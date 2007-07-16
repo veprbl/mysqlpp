@@ -18,9 +18,6 @@ v3.0 Plan, For-Sure Stuff
       uncommon case where you don't know the number of parameters at
       compile time.
 
-    o Use AT&T getopt code in examples for platform-independent
-      command line parsing.
-
     o Fix single-parameter template query stuff.
 
     o Add conditional code to the Lockable mechanism to use platform

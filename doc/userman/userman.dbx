@@ -330,7 +330,7 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         <para>Most of the examples require a test database, created
         by <filename>resetdb</filename>. You run it like so:</para>
 
-        <screen>        ./exrun resetdb [password [user [server_addr]]]</screen>
+        <screen>        ./exrun resetdb [-s server_addr] [-u user] [-p password]</screen>
 
         <para><filename>exrun</filename> is a shell script that
         ensures that the MySQL++ example program you give as its
@@ -346,21 +346,15 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         there's a Windows version of <filename>exrun</filename>, called
         <filename>exrun.bat</filename>. It works the same way.)</para>
 
-        <para>All of the program arguments are optional, but they
-        must be in the order listed, and you can't skip over any
-        arguments. The arguments are in this order on purpose. The
-        most likely one you'll need to change is the password, so
-        it's first.  After that is the user name, in case you use
-        a different login scheme with the database than the host
-        operating system. Last of all is the server address, since
-        most of the time developers have a database server on the
-        machine they're using to work with MySQL++.</para>
+        <para>All of the program arguments are optional.</para>
 
-        <para>If you leave off the server address, it uses the MySQL C
-        API defaults. It assumes the server is on the local machine,
-        and can be contacted in any number of ways, depending on how
-        the C API library and server are configured. You may pass
-        many different sorts of things for the server address:</para>
+        <para>If you don't give <option>-s</option>, the underlying
+        MySQL C API assumes the server is on the local machine.
+        Depending on how the C API library and the server are
+        configured, it can use any of several different IPC methods
+        to contact the server. You can instead specify how to contact
+        the server yourself, with the method depending on the value
+        you give for the server address:</para>
 
         <itemizedlist>
             <listitem>
@@ -399,19 +393,16 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         combination. If the name doesn't contain a colon, it uses
         the default port, 3306.</para>
 
-        <para>If you leave off the user name, it uses your login
-        name.</para>
+        <para>If you don't give <option>-u</option>, it uses your
+        user name to log into the database server.</para>
 
-        <para>If you leave off the password, it probably won't work,
-        because it will go looking for a login defaults file, and
-        the examples don't set that up for you. If you really have
-        no password on the server, you can probably give "" here to
-        indicate a blank password. Better is to just add a password for
-        that user. It's a wild world out there; play safe, kids.</para>
+        <para>If you don't give <option>-p</option>, it will assume
+        the MySQL user doesn't have a password, which had better not be
+        the case.  It's a wild world out there; play safe, kids.</para>
 
         <para>A typical invocation is:</para>
 
-        <screen>        ./exrun resetdb nunyabinness mydbuser</screen>
+        <screen>        ./exrun resetdb -u mydbuser -p nunyabinness</screen>
 
         <para>For <filename>resetdb</filename>, the user name needs to
         be for an account with permission to create databases. Once

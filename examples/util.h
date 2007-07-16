@@ -43,7 +43,7 @@ void get_stock_table(mysqlpp::Query& query, mysqlpp::Result& res);
 void print_usage(const char* program_name,
 		const char* extra_parms = "");
 bool connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
-		const char* kdb = 0);
+		const char* kdb = 0, const char* extra_parms = "");
 
 #endif // !defined(MYSQLPP_UTIL_H)
 

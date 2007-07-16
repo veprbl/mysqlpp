@@ -189,6 +189,7 @@
 		<lib id="util" template="examples">
 			<libname>mysqlpp_util</libname>
 			<sources>examples/util.cpp</sources>
+			<sources>examples/att_getopt.cpp</sources>
 		</lib>
 		
 		<!-- The examples themselves -->

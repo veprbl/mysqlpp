@@ -26,6 +26,7 @@
 ***********************************************************************/
 
 #include "util.h"
+#include "att_getopt.h"
 
 #include <iostream>
 #include <iomanip>
@@ -149,15 +150,12 @@ void
 print_usage(const char* program_name, const char* extra_parms)
 {
 	cout << "usage: " << program_name <<
-			" [password [user [server_addr]]] " << extra_parms << endl;
+			" [-s server_addr] [-u user] [-p password] " <<
+			extra_parms << endl;
 	cout << endl;
-	cout << "    If no arguments are given, connects to database "
+	cout << "    If no options are given, connects to database "
 			"server on localhost" << endl;
-	cout << "    using your user name and no password.  You may give "
-			"any number of" << endl;
-	cout << "    these arguments, but they must be in the order "
-			"listed, and you" << endl;
-	cout << "    cannot skip preceding arguments." << endl;
+	cout << "    using your user name and no password." << endl;
 	if (strlen(extra_parms) > 0) {
 		cout << endl;
 		cout << "    The extra parameter " << extra_parms <<
@@ -176,7 +174,7 @@ print_usage(const char* program_name, const char* extra_parms)
 
 bool
 connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
-		const char *kdb)
+		const char *kdb, const char* extra_parms)
 {
 	if (argc < 1) {
 		cerr << "Bad argument count: " << argc << '!' << endl;
@@ -187,25 +185,22 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 		kdb = kpcSampleDatabase;
 	}
 
-	if ((argc > 1) && (argv[1][0] == '-')) {
-		print_usage(argv[0]);
-		return false;
+	int ch;
+	const char* pass = "";     // 0 means something different!
+	const char* server = 0;
+	const char* user = 0;
+	while ((ch = att_getopt(argc, argv, "p:s:u:")) != EOF) {
+		switch (ch) {
+			case 'p': pass = ag_optarg;   break;
+			case 's': server = ag_optarg; break;
+			case 'u': user = ag_optarg;   break;
+			default:
+				print_usage(argv[0], extra_parms);
+				return false;
+		}
 	}
 
-	if (argc == 1) {
-		con.connect(kdb);
-	}
-	else if (argc == 2) {
-		con.connect(kdb, argv[1]);
-	}
-	else if (argc == 3) {
-		con.connect(kdb, argv[1], argv[2]);
-	}
-	else if (argc >= 4) {
-		con.connect(kdb, argv[1], argv[2], argv[3]);
-	}
-
-	if (con) {
+	if (con.connect(kdb, server, user, pass)) {
 		return true;
 	}
 	else {

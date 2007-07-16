@@ -30,41 +30,33 @@ Getting Started with the Examples
     Before running the other examples, you must first create the
     sample database.  On POSIX systems, you do that like so:
 
-        $ ./exrun resetdb [password] [user] [server_addr]
+        $ ./exrun resetdb [-s server_addr] [-u user] [-p password]
 
     On Windows, that would instead be:
 
-        C:\mysql++\> exrun.bat resetdb [password] [user] [server_addr]
+        C:\mysql++\> exrun.bat resetdb [-s server] [-u user] [-p pass]
 
-    You may give any number of these arguments, but they must be in
-    the order listed, and you can't skip over arguments.  So, you
-    may give just a password, in which case it will assume you mean
-    to connect using your current user name to a server on the local
-    machine using the default connection method.  If you wanted to give
-    a host name, you would also have to give a user name and password.
+    You don't have to give any of these options.  If you don't pass -s,
+    it assumes the database server is running on the same machine,
+    and so tries to contact the server over some form of local IPC.
+    If you don't pass -u, it uses your own user name when logging
+    into to the database server.  If you don't pass -p, it assumes the
+    database user has an empty password, which hopefully is not true.
 
-    The server_addr parameter accepts many different forms.  The main
-    one is some sort of TCP/IP address, in either dotted quad IP form
-    or as a host or domain name.  You can also give a Unix domain
-    socket name, or just a period if on Windows to select named pipes.
-    If you give a TCP/IP address, you can follow it with a colon and
-    a port number or a symbolic service name.  All of these are legal:
+    The -s option accepts many different forms of address.  The main
+    one is some sort of TCP/IP address, with an optional port number
+    or service name.  On Unixy systems, you can give a Unix domain
+    socket name.  On Windows, you can give just a period to use named
+    pipes, if the server supports it.  All of these are legal:
 
+        .
         localhost
         172.20.0.252:12345
+        /var/run/mysqld.sock
         my.server.name.com:mysql
 
-    If you mistakenly run resetdb directly instead of through exrun,
-    it will either fail to run because it can't find the MySQL++
-    library, or it will find an old version and complain about it.
-    None of the other examples are protected against mixed versions
-    in this way, but since you have to run resetdb before all the
-    other examples, this should pose no problem.
-
-    You can give as few of the parameters as you want, but they must
-    be in that order.  That is, if you want to give a user name,
-    you must give the host first.  It defaults to localhost with
-    your user name, no password, and the default MySQL port (3306).
+    If you give -s but don't give a port number or service name with
+    it, it assumes the default, port 3306.
 
 
 Running the Other Command Line Examples
