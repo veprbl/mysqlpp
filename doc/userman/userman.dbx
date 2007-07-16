@@ -1039,9 +1039,9 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     those placeholders.</para>
 
     <para>The following program demonstrates how to use this
-    feature. This is <filename>examples/tquery.cpp</filename>:</para>
+    feature. This is <filename>examples/tquery1.cpp</filename>:</para>
 
-    <programlisting><xi:include href="tquery.txt" parse="text" 
+    <programlisting><xi:include href="tquery1.txt" parse="text" 
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
     <para>The line just before the call to

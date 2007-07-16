@@ -101,6 +101,7 @@ Query::exec(const std::string& str)
 ResNSel
 Query::execute(SQLQueryParms& p)
 {
+	AutoFlag<> af(template_defaults.processing_);
 	return execute(str(p));
 }
 
@@ -389,6 +390,7 @@ Query::reset()
 Result
 Query::store(SQLQueryParms& p)
 {
+	AutoFlag<> af(template_defaults.processing_);
 	return store(str(p));
 }
 
@@ -530,6 +532,7 @@ Query::unlock()
 ResUse
 Query::use(SQLQueryParms& p)
 {
+	AutoFlag<> af(template_defaults.processing_);
 	return use(str(p));
 }
 

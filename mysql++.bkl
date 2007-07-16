@@ -208,8 +208,11 @@
 		<exe id="multiquery" template="libutil-user,examples">
 			<sources>examples/multiquery.cpp</sources>
 		</exe>
-		<exe id="tquery" template="libutil-user,examples">
-			<sources>examples/tquery.cpp</sources>
+		<exe id="tquery1" template="libutil-user,examples">
+			<sources>examples/tquery1.cpp</sources>
+		</exe>
+		<exe id="tquery2" template="libutil-user,examples">
+			<sources>examples/tquery2.cpp</sources>
 		</exe>
 		<exe id="usequery" template="libutil-user,examples">
 			<sources>examples/usequery.cpp</sources>

@@ -1,6 +1,9 @@
 /***********************************************************************
- tquery.cpp - Example similar to custom3.cpp, except that it uses
-	template queries instead of SSQLS.
+ tquery2.cpp - Same as tquery1.cpp, except that it passes the template
+    query parameters in a SQLQueryParms object, instead of separately.
+	This is useful when the calling code doesn't know in advance how
+	many parameters there will be.  This is most likely because the
+	templates are coming from somewhere else, or being generated.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
  MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
@@ -48,8 +51,10 @@ main(int argc, char *argv[])
 		query.parse();
 
 		// Retrieve an item added by resetdb; it won't be there if
-		// tquery or custom3 is run since resetdb.
-		mysqlpp::Result res1 = query.store("Nürnberger Brats");
+		// tquery* or custom3 is run since resetdb.
+		mysqlpp::SQLQueryParms sqp;
+		sqp << "Nürnberger Brats";
+		mysqlpp::Result res1 = query.store(sqp);
 		if (res1.empty()) {
 			throw mysqlpp::BadQuery("UTF-8 bratwurst item not found in "
 					"table, run resetdb");
@@ -60,8 +65,9 @@ main(int argc, char *argv[])
 		query.reset();
 		query << "update stock set item = %0q where item = %1q";
 		query.parse();
-		mysqlpp::ResNSel res2 = query.execute("Nuerenberger Bratwurst",
-				res1[0][0].c_str());
+		sqp.clear();
+		sqp << "Nuerenberger Bratwurst" << res1[0][0].c_str();
+		mysqlpp::ResNSel res2 = query.execute(sqp);
 
 		// Print the new table contents.
 		print_stock_table(query);

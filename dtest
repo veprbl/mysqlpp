@@ -6,8 +6,8 @@ TMP=`mktemp bmXXXXXX`
 # after the examples that change the database in a way that will cause
 # subsequent examples to fail because data they need isn't present.
 for t in resetdb simple1 simple2 simple3 store_if for_each \
-	multiquery tquery resetdb usequery custom1 custom2 custom3 custom4 \
-	custom5 custom6
+	multiquery tquery1 resetdb tquery2 resetdb usequery \
+	custom1 custom2 custom3 custom4 custom5 custom6
 do
 	if [ -x $t ]
 	then
