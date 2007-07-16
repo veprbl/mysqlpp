@@ -94,7 +94,10 @@ public:
 		opt_set_client_ip,
 		opt_secure_auth,
 
-		// Set multi-query statement support; no argument
+		// Set multi-query statement support, and multiple result sets.
+		// These may be set at run time, in which case the C API turns
+		// on both flags automatically.
+		opt_multi_results,
 		opt_multi_statements,
 
 		// Set reporting of data truncation errors
@@ -103,6 +106,22 @@ public:
 		// Enable or disable automatic reconnection to the server if
 		// the connection is found to have been lost.
 		opt_reconnect,
+
+		// Return the number of matched rows in result sets, not the
+		// number of changed rows.
+		opt_found_rows,
+
+		// Allow spaces after function names in queries.
+		opt_ignore_space,
+
+		// Mark program as interactive; affects connection timeout
+		opt_interactive,
+
+		// Enable LOAD DATA LOCAL statement
+		opt_local_files,
+
+		// Disable db.tbl.col syntax in queries
+		opt_no_schema,
 
 		// Number of options supported.  Never send this to
 		// set_option()!
@@ -127,8 +146,6 @@ public:
 	/// \param user user name to log in under, or 0 to use the user
 	///		name this program is running under
 	/// \param password password to use when logging in
-	/// \param client_flag special connection flags. See MySQL C API
-	///     documentation for \c mysql_real_connect() for details.	
 	/// \param port TCP port number MySQL server is listening on, or 0
 	///		to use default value; note that you may also give this as
 	///     part of the \c server parameter
@@ -156,8 +173,7 @@ public:
 	///   service name is given here and a nonzero value is passed for
 	///   the \c port parameter, the latter takes precedence.
 	Connection(cchar* db, cchar* server = 0, cchar* user = 0,
-			cchar* password = 0, unsigned long client_flag = 0,
-			unsigned int port = 0);
+			cchar* password = 0, unsigned int port = 0);
 
 	/// \brief Establish a new connection using the same parameters as
 	/// an existing C API connection.
@@ -183,8 +199,7 @@ public:
 	/// to a database server, the previous connection is dropped and a
 	/// new connection is established.
 	bool connect(cchar* db, cchar* server = 0, cchar* user = 0,
-			cchar* password = 0, unsigned long client_flag = 0,
-			unsigned int port = 0);
+			cchar* password = 0, unsigned int port = 0);
 
 	/// \brief Close connection to MySQL server.
 	///
@@ -520,6 +535,13 @@ protected:
 	/// overloads above.
 	bool set_option_impl(enum_mysql_set_option msoption);
 #endif
+
+	/// \brief Set MySQL C API connection option
+	///
+	/// Manipulates the MYSQL.client_flag bit mask.  This allows these
+	/// flags to be treated the same way as any other connection option,
+	/// even though the C API handles them differently.
+	bool set_option_impl(int option, bool arg);
 
 	/// \brief Establish a new connection as a copy of an existing one
 	///

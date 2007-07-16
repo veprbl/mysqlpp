@@ -102,9 +102,15 @@ Connection::legal_opt_arg_types_[Connection::opt_COUNT] = {
 	Connection::opt_type_none,		// opt_guess_connection
 	Connection::opt_type_string,	// opt_set_client_ip
 	Connection::opt_type_boolean,	// opt_secure_auth
+	Connection::opt_type_boolean,	// opt_multi_results
 	Connection::opt_type_boolean,	// opt_multi_statements
 	Connection::opt_type_boolean,	// opt_report_data_truncation
 	Connection::opt_type_boolean,   // opt_reconnect
+	Connection::opt_type_boolean,   // opt_found_rows
+	Connection::opt_type_boolean,   // opt_ignore_space
+	Connection::opt_type_boolean,   // opt_interactive
+	Connection::opt_type_boolean,   // opt_local_files
+	Connection::opt_type_boolean,   // opt_no_schema
 };
 
 
@@ -120,13 +126,13 @@ copacetic_(true)
 
 
 Connection::Connection(cchar* db, cchar* server, cchar* user,
-		cchar* password, unsigned long client_flag, unsigned int port) :
+		cchar* password, unsigned int port) :
 OptionalExceptions(),
 Lockable(false),
 connecting_(false)
 {
 	mysql_init(&mysql_);
-	if (connect(db, server, user, password, client_flag, port)) {
+	if (connect(db, server, user, password, port)) {
 		unlock();
 		copacetic_ = is_connected_ = true;
 	}
@@ -174,7 +180,7 @@ Connection::build_error_message(const char* core)
 
 bool
 Connection::connect(cchar* db, cchar* server, cchar* user,
-		cchar* password, unsigned long client_flag, unsigned int port)
+		cchar* password, unsigned int port)
 {
 	lock();
 
@@ -187,15 +193,6 @@ Connection::connect(cchar* db, cchar* server, cchar* user,
 	// by calling set_option() before connect().
 	set_option_default(opt_read_default_file, "my");
 
-#if MYSQL_VERSION_ID >= 40101
-	// Check to see if user turned on multi-statements before
-	// establishing the connection.  This one we handle specially, by
-	// setting a flag during connection establishment.
-	if (option_set(opt_multi_statements)) {
-		client_flag |= CLIENT_MULTI_STATEMENTS;
-	}
-#endif
-
 	// Figure out what the server parameter means, then establish 
 	// the connection.
 	error_message_.clear();
@@ -204,7 +201,7 @@ Connection::connect(cchar* db, cchar* server, cchar* user,
 	if (parse_ipc_method(server, host, port, socket_name) &&
 			mysql_real_connect(&mysql_, host.c_str(), user, password, db,
 			port, (socket_name.empty() ? 0 : socket_name.c_str()),
-			client_flag)) {
+			mysql_.client_flag)) {
 		unlock();
 		is_connected_ = true;
 
@@ -229,22 +226,45 @@ Connection::connect(cchar* db, cchar* server, cchar* user,
 
 
 bool
-Connection::connect(const MYSQL& mysql)
+Connection::connect(const MYSQL& other)
 {
-	if (mysql.unix_socket && (strlen(mysql.unix_socket) > 0)) {
-		return connect(mysql.db, mysql.passwd, mysql.user, 
-				mysql.unix_socket, mysql.client_flag);
+	lock();
+
+	// Drop previous connection, if any
+	if (connected()) {
+		disconnect();
+	}
+
+	// Set defaults for connection options.  User can override these
+	// by calling set_option() before connect().
+	set_option_default(opt_read_default_file, "my");
+
+	// Figure out what the server parameter means, then establish 
+	// the connection.
+	error_message_.clear();
+	if (mysql_real_connect(&mysql_, other.host, other.user,
+			other.passwd, other.db, other.port, other.unix_socket,
+			other.client_flag)) {
+		unlock();
+		is_connected_ = true;
+
+		if (other.db && other.db[0]) {
+			// Also attach to given database
+			copacetic_ = select_db(other.db);
+		}
+		else {
+			copacetic_ = true;
+		}
 	}
 	else {
-		string server(mysql.host);
-		if (mysql.port > 0) {
-			char ac[10];
-			snprintf(ac, sizeof(ac), ":%d", mysql.port);
-			server += ac;
+		unlock();
+		copacetic_ = is_connected_ = false;
+		if (throw_exceptions()) {
+			throw ConnectionFailed(error());
 		}
-		return connect(mysql.db, mysql.passwd, mysql.user, 
-				server.c_str(), mysql.client_flag);
 	}
+
+	return is_connected_;
 }
 
 
@@ -551,7 +571,9 @@ Connection::set_option(Option option, unsigned int arg)
 bool
 Connection::set_option(Option option, bool arg)
 {
-	if (connected() && (option != opt_multi_statements)) {
+	if (connected() &&
+			(option != opt_multi_results) &&
+			(option != opt_multi_statements)) {
 		// We're connected and it isn't an option that can be set
 		// after connection is up, so complain to user.
 		return bad_option(option, opt_err_conn);
@@ -564,20 +586,24 @@ Connection::set_option(Option option, bool arg)
 			success = set_option_impl(MYSQL_SECURE_AUTH, &arg);
 			break;
 
+		case opt_multi_results:
 		case opt_multi_statements:
-			// If connection is up, set the flag immediately.  If not,
-			// and caller wants this turned on, pretend success so that
-			// we store the info we need to turn this flag on when
-			// bringing the connection up.  (If the caller is turning it
-			// off before conn comes up, we effectively ignore this, 
-			// because that's the default.)
+			// This connection option is unique in that it can be set
+			// either before or after the connection is up.  Note
+			// however that setting either of these two options after
+			// connection is up sets both; else, it sets only the one.
 			if (connected()) {
-				success = set_option_impl(arg ?
+				success = set_option_impl(
+						arg ?
 						MYSQL_OPTION_MULTI_STATEMENTS_ON :
 						MYSQL_OPTION_MULTI_STATEMENTS_OFF);
 			}
 			else {
-				success = arg;
+				success = set_option_impl(
+						option == opt_multi_results ?
+						CLIENT_MULTI_RESULTS :
+						CLIENT_MULTI_STATEMENTS,
+						arg);
 			}
 			break;
 #endif
@@ -591,6 +617,26 @@ Connection::set_option(Option option, bool arg)
 			success = set_option_impl(MYSQL_OPT_RECONNECT, &arg);
 			break;
 #endif
+		case opt_found_rows:
+			success = set_option_impl(CLIENT_FOUND_ROWS, arg);
+			break;
+
+		case opt_ignore_space:
+			success = set_option_impl(CLIENT_IGNORE_SPACE, arg);
+			break;
+
+		case opt_interactive:
+			success = set_option_impl(CLIENT_INTERACTIVE, arg);
+			break;
+
+		case opt_local_files:
+			success = set_option_impl(CLIENT_LOCAL_FILES, arg);
+			break;
+
+		case opt_no_schema:
+			success = set_option_impl(CLIENT_NO_SCHEMA, arg);
+			break;
+
 		default:
 			return bad_option(option, opt_err_type);
 	}
@@ -647,6 +693,37 @@ Connection::set_option_impl(enum_mysql_set_option msoption)
 	return !mysql_set_server_option(&mysql_, msoption);
 }
 #endif
+
+
+bool
+Connection::set_option_impl(int option, bool arg)
+{
+	// If we get through this loop and n is 1, only one bit is set in
+	// the option value, which is as it should be.
+	int n = option;
+	while (n && ((n & 1) == 0)) {
+		n >>= 1;
+	}
+	
+	if ((n == 1) && 
+			(option >= CLIENT_LONG_PASSWORD) && 
+			(option <= CLIENT_MULTI_RESULTS)) {
+		// Option value seems sane, so go ahead and set/clear the flag
+		if (arg) {
+			mysql_.client_flag |= option;
+		}
+		else {
+			mysql_.client_flag &= ~option;
+		}
+
+		return true;
+	}
+	else {
+		// Option value is outside the range we understand, or caller
+		// erroneously passed a value with multiple bits set.
+		return false;
+	}
+}
 
 
 bool
