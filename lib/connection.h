@@ -122,17 +122,21 @@ public:
 	/// with a greatly simplified interface.
 	///
 	/// \param db name of database to use
-	/// \param password password to use when logging in
-	/// \param user user name to log in under, or 0 to use the user
-	///		name this program is running under
 	/// \param server specifies the IPC method and parameters for
 	///     contacting the server; see below for details
+	/// \param user user name to log in under, or 0 to use the user
+	///		name this program is running under
+	/// \param password password to use when logging in
 	/// \param client_flag special connection flags. See MySQL C API
 	///     documentation for \c mysql_real_connect() for details.	
+	/// \param port TCP port number MySQL server is listening on, or 0
+	///		to use default value; note that you may also give this as
+	///     part of the \c server parameter
 	///
 	/// The server parameter can be any of several different forms:
 	///
-	/// - \b 0: Let the MySQL C API decide how to connect.  This usually
+	/// - \b 0: Server is running on the same machine as the client;
+	///   let the MySQL C API decide how to connect.  This usually
 	///   means Unix domain sockets with the default socket name on
 	///   *ix systems, and shared memory on Windows.  If those options
 	///   aren't available, it will be a TCP/IP connection to the
@@ -148,9 +152,12 @@ public:
 	///   assumes the string is some kind of network address, optionally
 	///   followed by a colon and port.  The name can be in dotted quad
 	///   form, a host name, or a domain name.  The port can either be a
-	///   TCP/IP port number or a symbolic service name.
-	Connection(cchar* db, cchar* password = 0, cchar* user = 0,
-			cchar* server = 0, unsigned long client_flag = 0);
+	///   TCP/IP port number or a symbolic service name.  If a port or
+	///   service name is given here and a nonzero value is passed for
+	///   the \c port parameter, the latter takes precedence.
+	Connection(cchar* db, cchar* server = 0, cchar* user = 0,
+			cchar* password = 0, unsigned long client_flag = 0,
+			unsigned int port = 0);
 
 	/// \brief Establish a new connection using the same parameters as
 	/// an existing C API connection.
@@ -175,8 +182,9 @@ public:
 	/// If you call this method on an object that is already connected
 	/// to a database server, the previous connection is dropped and a
 	/// new connection is established.
-	bool connect(cchar* db, cchar* password = 0, cchar* user = 0,
-			cchar* server = 0, unsigned long client_flag = 0);
+	bool connect(cchar* db, cchar* server = 0, cchar* user = 0,
+			cchar* password = 0, unsigned long client_flag = 0,
+			unsigned int port = 0);
 
 	/// \brief Close connection to MySQL server.
 	///

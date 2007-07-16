@@ -119,14 +119,14 @@ copacetic_(true)
 }
 
 
-Connection::Connection(cchar* db, cchar* password, cchar* user,
-		cchar* server, unsigned long client_flag) :
+Connection::Connection(cchar* db, cchar* server, cchar* user,
+		cchar* password, unsigned long client_flag, unsigned int port) :
 OptionalExceptions(),
 Lockable(false),
 connecting_(false)
 {
 	mysql_init(&mysql_);
-	if (connect(db, password, user, server, client_flag)) {
+	if (connect(db, server, user, password, client_flag, port)) {
 		unlock();
 		copacetic_ = is_connected_ = true;
 	}
@@ -173,8 +173,8 @@ Connection::build_error_message(const char* core)
 
 
 bool
-Connection::connect(cchar* db, cchar* password, cchar* user,
-		cchar* server, unsigned long client_flag)
+Connection::connect(cchar* db, cchar* server, cchar* user,
+		cchar* password, unsigned long client_flag, unsigned int port)
 {
 	lock();
 
@@ -199,7 +199,6 @@ Connection::connect(cchar* db, cchar* password, cchar* user,
 	// Figure out what the server parameter means, then establish 
 	// the connection.
 	error_message_.clear();
-	unsigned int port = 0;
 	string host, socket_name;
 	scoped_var_set<bool> sb(connecting_, true);
 	if (parse_ipc_method(server, host, port, socket_name) &&
@@ -793,12 +792,11 @@ Connection::parse_ipc_method(const char* server, string& host,
 #endif
 
 	// Lacking any better idea, it must be some kind of TCP/IP address.
-	// See if it includes a trailing port or service name.
 	const char* colon = strchr(server, ':');
 	if (colon) {
-		if (colon[1]) {
-			// Not just a lonely trailing colon, so assume what follows
-			// the colon is of substance.
+		if ((port == 0) && colon[1]) {
+			// Not a lonely trailing colon, and we don't already have a
+			// port, so treat what follows the colon as interesting.
 			const char* service = colon + 1;
 			if (isdigit(service[0])) {
 				port = atoi(service);
@@ -821,8 +819,7 @@ Connection::parse_ipc_method(const char* server, string& host,
 			}
 		}
 
-		// We're happy with what we found after the colon, so treat the
-		// rest of the name as a host address.
+		// Everything in front of the colon is the host address.
 		host.assign(server, colon - server);
 	}
 	else {
