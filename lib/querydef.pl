@@ -63,11 +63,11 @@ for (my $i = 1; $i < $max_parameters; ++$i) {
 	}
 	print OUT ") \\\n";
 
-	print OUT "\t\t{ return FUNC(str(SQLQueryParms()";
+	print OUT "\t\t{ return FUNC(SQLQueryParms()";
 	for (my $j = 0; $j < $i + 1; ++$j) {
 		print OUT ' << arg', $j;
 	}
-	print OUT ")); } \\\n";
+	print OUT "); } \\\n";
 }
 
 ## Add mysql_query_define1 macro
@@ -82,7 +82,7 @@ for (my $i = 1; $i < $max_parameters; ++$i) {
 		print OUT ', const SQLString& arg', $j;
 	}
 	print OUT ") \\\n";
-	print OUT "\t\t{ FUNC(container, str(SQLQueryParms())";
+	print OUT "\t\t{ FUNC(container, SQLQueryParms()";
 	for (my $j = 0; $j < $i + 1; ++$j) {
 		print OUT ' << arg', $j;
 	}

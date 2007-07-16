@@ -99,6 +99,13 @@ Query::exec(const std::string& str)
 
 
 ResNSel
+Query::execute(SQLQueryParms& p)
+{
+	return execute(str(p));
+}
+
+
+ResNSel
 Query::execute(const SQLString& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
@@ -108,7 +115,7 @@ Query::execute(const SQLString& s)
 		// query, but the processing_ flag will be reset, allowing us to
 		// take the 'else' path, avoiding an infinite loop.
 		AutoFlag<> af(template_defaults.processing_);
-		return execute(str(SQLQueryParms() << s));
+		return execute(SQLQueryParms() << s);
 	}
 	else {
 		// Take s to be the entire query string
@@ -379,6 +386,13 @@ Query::reset()
 }
 
 
+Result
+Query::store(SQLQueryParms& p)
+{
+	return store(str(p));
+}
+
+
 Result 
 Query::store(const SQLString& s)
 {
@@ -389,7 +403,7 @@ Query::store(const SQLString& s)
 		// query, but the processing_ flag will be reset, allowing us to
 		// take the 'else' path, avoiding an infinite loop.
 		AutoFlag<> af(template_defaults.processing_);
-		return store(str(SQLQueryParms() << s));
+		return store(SQLQueryParms() << s);
 	}
 	else {
 		// Take s to be the entire query string
@@ -514,6 +528,13 @@ Query::unlock()
 
 
 ResUse
+Query::use(SQLQueryParms& p)
+{
+	return use(str(p));
+}
+
+
+ResUse
 Query::use(const SQLString& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
@@ -523,7 +544,7 @@ Query::use(const SQLString& s)
 		// query, but the processing_ flag will be reset, allowing us to
 		// take the 'else' path, avoiding an infinite loop.
 		AutoFlag<> af(template_defaults.processing_);
-		return use(str(SQLQueryParms() << s));
+		return use(SQLQueryParms() << s);
 	}
 	else {
 		// Take s to be the entire query string

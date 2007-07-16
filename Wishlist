@@ -13,11 +13,6 @@ v3.0 Plan, For-Sure Stuff
     get done in v3.0.  Most of them break the ABI, so they can't wait
     for a future version, because v4 could be years out.
 
-    o Restore execute(SQLQueryParams&) et al., make them public,
-      and document them in both userman and refman.  Needed for the
-      uncommon case where you don't know the number of parameters at
-      compile time.
-
     o Fix single-parameter template query stuff.
 
     o Add conditional code to the Lockable mechanism to use platform
