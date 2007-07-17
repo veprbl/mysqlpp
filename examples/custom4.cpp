@@ -5,7 +5,7 @@
 	style.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -48,8 +48,7 @@ main(int argc, char *argv[])
 		// STL set.  Notice that this works just as well as storing them
 		// in a vector, which we did in custom1.cpp.  It works because
 		// SSQLS objects are less-than comparable.
-		mysqlpp::Query query = con.query();
-		query << "select * from stock";
+		mysqlpp::Query query = con.query("select * from stock");
 		set<stock> res;
 		query.storein(res);
 

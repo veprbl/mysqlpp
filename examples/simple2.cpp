@@ -44,8 +44,7 @@ main(int argc, char *argv[])
 	}
 
 	// Retrieve the sample stock table set up by resetdb
-	mysqlpp::Query query = con.query();
-	query << "select * from stock";
+	mysqlpp::Query query = con.query("select * from stock");
 	mysqlpp::Result res = query.store();
 
 	// Display results

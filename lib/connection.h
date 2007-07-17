@@ -232,7 +232,10 @@ public:
 	/// \link mysqlpp::Query::execute() execute() \endlink
 	/// on that object, the query is sent to the server this object
 	/// is connected to.
-	Query query();
+	///
+	/// \param qstr an optional query string for populating the
+	/// new Query object
+	Query query(const char* qstr = 0);
 
 	/// \brief Test whether the connection has experienced an error
 	/// condition.

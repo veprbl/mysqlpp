@@ -43,8 +43,8 @@ main(int argc, char *argv[])
 
 		// Build a template query to retrieve a stock item given by
 		// item name.
-		mysqlpp::Query query = con.query();
-		query << "select * from stock where item = %0q";
+		mysqlpp::Query query = con.query(
+				"select * from stock where item = %0q");
 		query.parse();
 
 		// Retrieve an item added by resetdb; it won't be there if

@@ -4,7 +4,7 @@
 	the same thing, without using SSQLS.
  
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -56,8 +56,7 @@ main(int argc, char *argv[])
 
 		// Retrieve a subset of the stock table, and store the data in
 		// a vector of 'stock_subset' SSQLS structures.
-		mysqlpp::Query query = con.query();
-		query << "select item from stock";
+		mysqlpp::Query query = con.query("select item from stock");
 		vector<stock_subset> res;
 		query.storein(res);
 

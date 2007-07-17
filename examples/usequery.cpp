@@ -2,7 +2,7 @@
  usequery.cpp - Same as simple3 example, only with exceptions enabled.
 	The end of the result set is signalled differently in this case.
 
- Copyright (c) 2005 by Educational Technology Resources, Inc.
+ Copyright (c) 2005-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -41,8 +41,7 @@ main(int argc, char *argv[])
 		}
 
 		// Build query to retrieve the entire stock table
-		mysqlpp::Query query = con.query();
-		query << "select * from stock";
+		mysqlpp::Query query = con.query("select * from stock");
 
 		// Execute the query, but don't save results in memory
 		mysqlpp::ResUse res = query.use();

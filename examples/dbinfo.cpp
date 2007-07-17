@@ -52,10 +52,9 @@ main(int argc, char* argv[])
 
 		// Show MySQL version
 		cout << "MySQL version: " << con.client_info() << separator;
-		mysqlpp::Query query = con.query();
 
 		// Show all the databases we can see
-		query << "show databases";
+		mysqlpp::Query query = con.query("show databases");
 		cout << "Query: " << query.preview() << endl;
 
 		mysqlpp::Result res = query.store();

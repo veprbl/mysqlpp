@@ -31,7 +31,7 @@
 
 namespace mysqlpp {
 
-Query::Query(Connection* c, bool te) :
+Query::Query(Connection* c, bool te, const char* qstr) :
 #if defined(_MSC_VER) && !defined(_STLP_VERSION) && !defined(_STLP_VERSION_STR)
 // prevents a double-init memory leak in native VC++ RTL (not STLport!)
 std::ostream(std::_Noinit), 
@@ -45,6 +45,9 @@ conn_(c),
 copacetic_(true)
 {
 	init(&sbuffer_);
+	if (qstr) {
+		sbuffer_.str(qstr);
+	}
 }
 
 Query::Query(const Query& q) :

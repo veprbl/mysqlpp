@@ -3,7 +3,7 @@
  	some SSQLS types to build SELECT queries with custom WHERE clauses.
  
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, (c) 2004, 2005 by Educational Technology Resources, Inc., and
+ MySQL AB, (c) 2004-2007 by Educational Technology Resources, Inc., and
  (c) 2005 by Chris Frey.  Others may also hold copyrights on code in
  this file.  See the CREDITS file in the top directory of the
  distribution for details.
@@ -44,8 +44,7 @@ main(int argc, char *argv[])
 		}
 
 		// Get all the rows in the stock table.
-		mysqlpp::Query query = con.query();
-		query << "select * from stock";
+		mysqlpp::Query query = con.query("select * from stock");
 		vector<stock> res;
 		query.storein(res);
 
@@ -54,7 +53,7 @@ main(int argc, char *argv[])
 			// returned by our previous query.
 			query.reset();
 			query << "select * from stock where " <<
-				res[0].equal_list(" and ", stock_weight, stock_price);
+					res[0].equal_list(" and ", stock_weight, stock_price);
 
 			// Display the finished query.
 			cout << "Custom query:\n" << query.preview() << endl;

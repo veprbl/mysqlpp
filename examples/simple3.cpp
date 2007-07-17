@@ -3,7 +3,7 @@
 	a table, as opposed to the more common 'store' method illustrated
 	by the simple2 example.
 
- Copyright (c) 2005 by Educational Technology Resources, Inc.
+ Copyright (c) 2005-2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -45,8 +45,7 @@ main(int argc, char *argv[])
 
 	// Ask for all rows from the sample stock table set up by resetdb.
 	// Unlike simple2 example, we don't store result set in memory.
-	mysqlpp::Query query = con.query();
-	query << "select * from stock";
+	mysqlpp::Query query = con.query("select * from stock");
 	mysqlpp::ResUse res = query.use();
 
 	// Retreive result rows one by one, and display them.
