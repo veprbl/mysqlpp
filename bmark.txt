@@ -197,3 +197,16 @@ Tables found: 2
  sdate                   date                  YES        NULL            
 ================ END dbinfo OUTPUT ================
 
+---------------- BEGIN fieldinf OUTPUT ----------------
+Field   SQL Type       Equivalent C++ Type                                      
+======= ============== ======================================================== 
+item    CHAR NOT NULL  n/a                                                      
+num     BIGINT NULL    n/a                                                      
+weight  DOUBLE NULL    n/a                                                      
+price   DOUBLE NULL    n/a                                                      
+sdate   DATE NULL      n/a                                                      
+
+SQL type of 'item' field most closely resembles the C++ string type.
+SQL type of 'num' field most closely resembles MySQL++'s longlong type.
+================ END fieldinf OUTPUT ================
+

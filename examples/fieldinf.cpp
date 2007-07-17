@@ -45,11 +45,11 @@ main(int argc, char *argv[])
 		mysqlpp::Query query = con.query("select * from stock");
 		mysqlpp::Result res = query.store();
 
-		char widths[] = { 8, 15, 20 };
+		char widths[] = { 8, 15, 57 };
 		cout.setf(ios::left);
 		cout << setw(widths[0]) << "Field" <<
 				setw(widths[1]) << "SQL Type" <<
-				setw(widths[2]) << "Mangled C++ Type" <<
+				setw(widths[2]) << "Equivalent C++ Type" <<
 				endl;
 		for (int i = 0; i < sizeof(widths) / sizeof(widths[0]); ++i) {
 			cout << string(widths[i] - 1, '=') << ' ';
@@ -57,9 +57,12 @@ main(int argc, char *argv[])
 		cout << endl;
 		
 		for (size_t i = 0; i < res.names().size(); i++) {
+			// Suppress C++ type name outputs when run under dtest,
+			// as they're system-specific.
+			const char* cname = dtest_mode ? "n/a" : res.types(i).name();
 			cout << setw(widths[0]) << res.names(i).c_str() <<
 					setw(widths[1]) << res.types(i).sql_name() <<
-					setw(widths[2]) << res.types(i).name() <<
+					setw(widths[2]) << cname <<
 					endl;
 		}
 		cout << endl;
