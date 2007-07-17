@@ -60,23 +60,33 @@ v3.0 Plan, For-Sure Stuff
         template functions like Query::insert<T> might become regular
         member functions, taking a reference to the SSQLS base class.
 
-    o Remove MutableColData.  It's only used within myset.h, and that
-      usage is inefficient to the point of wanting replacement anyway.
+    o Revamp ColData:
 
-    o Change ColData from a template deriving from std::string into
-      a concrete class that implements the std::string interface.
-      Make its internal buffer a smart pointer to MYSQL_FIELD data.
-      As long as that field is alive, this prevents all the extra
-      copies we see now in Row::operator[] and the population of
-      SSQLSes.  If the MYSQL_FIELD is destroyed before the ColData,
-      the smart pointer makes a duplicate copy of the buffer first,
-      so the rest of the ColData code doesn't see any difference.
-      Further info:
+      - Merge const_string into ColData_Tmpl<T>, creating concrete
+        ColData class.
 
-          http://lists.mysql.com/plusplus/4451
-          http://lists.mysql.com/plusplus/4460
+      - Change buffer management back to the v2.2 way, where ColData
+        just held a copy of the pointer, not a copy of the data.
 
-    o Remove const_string class.  No longer needed after above.
+      - Implement as much of the std::string interface as necessary
+        to allow replacing MutableColData in myset.h, adding CoW
+        semantics for any new function that can change the buffer.
+
+      - Remove ColData_Tmpl<T> typedefs and const_string class.
+
+      - Make Valgrind study all examples, especially load_jpeg
+        with a large file.
+
+    o Rework elment access in subscript_iterator derivatives:
+
+      - Add a vector<ColData> to Row as a parallel to MYSQL_ROW, with
+        each element pointing into a MYSQL_FIELD.
+
+      - Change operator[] from value to reference semantics.  (This
+        isn't possible in Row without previous change.)
+
+      - Add operator->()  (Similar to above, it can't work when the
+        underlying container can only provide value semantics.)
 
     o More robust fix for the Query stream base class init problem:
       http://www.boost.org/libs/utility/base_from_member.html
