@@ -91,6 +91,42 @@ Hot Mustard          73        0.95      0.97      1998-05-25
 Hotdog Buns          65        1.1       1.1       1998-04-23
 ================ END tquery2 OUTPUT ================
 
+---------------- BEGIN dbinfo OUTPUT ----------------
+
+
+================================= show tables ==================================
+Tables found: 2
+	images
+	stock
+
+=============================== describe images ================================
+|field                 ||type                ||null||key||default        |
+ id                      int(10) unsigned            PRI  NULL            
+ data                    blob                  YES        NULL            
+
+
+================================ describe stock ================================
+|field                 ||type                ||null||key||default        |
+ item                    char(20)                                         
+ num                     bigint(20)            YES        NULL            
+ weight                  double                YES        NULL            
+ price                   double                YES        NULL            
+ sdate                   date                  YES        NULL            
+================ END dbinfo OUTPUT ================
+
+---------------- BEGIN fieldinf OUTPUT ----------------
+Field   SQL Type       Equivalent C++ Type                                      
+======= ============== ======================================================== 
+item    CHAR NOT NULL  n/a                                                      
+num     BIGINT NULL    n/a                                                      
+weight  DOUBLE NULL    n/a                                                      
+price   DOUBLE NULL    n/a                                                      
+sdate   DATE NULL      n/a                                                      
+
+SQL type of 'item' field most closely resembles the C++ string type.
+SQL type of 'num' field most closely resembles MySQL++'s longlong type.
+================ END fieldinf OUTPUT ================
+
 ---------------- BEGIN resetdb OUTPUT ----------------
 Connecting to database server...
 Dropping existing sample data tables...
@@ -173,40 +209,4 @@ We have:
 	Hotdog Buns
 	Hot Dogs
 ================ END custom6 OUTPUT ================
-
----------------- BEGIN dbinfo OUTPUT ----------------
-
-
-================================= show tables ==================================
-Tables found: 2
-	images
-	stock
-
-=============================== describe images ================================
-|field                 ||type                ||null||key||default        |
- id                      int(10) unsigned            PRI  NULL            
- data                    blob                  YES        NULL            
-
-
-================================ describe stock ================================
-|field                 ||type                ||null||key||default        |
- item                    char(20)                                         
- num                     bigint(20)            YES        NULL            
- weight                  double                YES        NULL            
- price                   double                YES        NULL            
- sdate                   date                  YES        NULL            
-================ END dbinfo OUTPUT ================
-
----------------- BEGIN fieldinf OUTPUT ----------------
-Field   SQL Type       Equivalent C++ Type                                      
-======= ============== ======================================================== 
-item    CHAR NOT NULL  n/a                                                      
-num     BIGINT NULL    n/a                                                      
-weight  DOUBLE NULL    n/a                                                      
-price   DOUBLE NULL    n/a                                                      
-sdate   DATE NULL      n/a                                                      
-
-SQL type of 'item' field most closely resembles the C++ string type.
-SQL type of 'num' field most closely resembles MySQL++'s longlong type.
-================ END fieldinf OUTPUT ================
 
