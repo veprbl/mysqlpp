@@ -35,9 +35,6 @@
 #include <vector>
 
 using namespace std;
-using namespace mysqlpp;
-
-vector<string> yy;
 
 static ostream&
 separator(ostream& os)
@@ -49,27 +46,25 @@ separator(ostream& os)
 int
 main(int argc, char* argv[])
 {
-	Connection con(use_exceptions);
+	mysqlpp::Connection con(mysqlpp::use_exceptions);
 	try {
 		connect_to_db(argc, argv, con, "");
 
 		// Show MySQL version
 		cout << "MySQL version: " << con.client_info() << separator;
-		Query query = con.query();
+		mysqlpp::Query query = con.query();
 
 		// Show all the databases we can see
 		query << "show databases";
 		cout << "Query: " << query.preview() << endl;
 
-		Result res = query.store();
+		mysqlpp::Result res = query.store();
 		cout << "Databases found: " << res.size();
 
-		Row row;
 		cout.setf(ios::left);
-		Result::iterator i;
-		for (i = res.begin(); i != res.end(); ++i) {
-			row = *i;
-			cout << endl << '\t' << setw(17) << row[0];
+		mysqlpp::Result::iterator rit;
+		for (rit = res.begin(); rit != res.end(); ++rit) {
+			cout << endl << '\t' << setw(17) << (*rit)[0];
 		}
 		cout << separator;
 		
@@ -83,25 +78,26 @@ main(int argc, char* argv[])
 		res = query.store();
 		cout << "Tables found: " << res.size();
 
+		vector<string> tables;
 		cout.setf(ios::left);
-		for (i = res.begin(); i != res.end(); ++i) {
-			row = *i;
-			string xx(row[0]);
-			cout << endl << '\t' << setw(17) << row[0];
-			yy.push_back(xx);
+		for (rit = res.begin(); rit != res.end(); ++rit) {
+			string tbl((*rit)[0]);
+			cout << endl << '\t' << setw(17) << tbl;
+			tables.push_back(tbl);
 		}
 		cout << separator;
 
 		// Show information about each of the tables we found
-		for (unsigned int j = 0; j < yy.size(); ++j) {
+		vector<string>::iterator vit;
+		for (vit = tables.begin(); vit != tables.end(); ++vit) {
 			query.reset();
-			query << "describe " << yy[j] << "";
+			query << "describe " << *vit;
 			cout << "Query: " << query.preview() << endl;
 			res = query.store();
-			unsigned int columns = res.num_fields(), counter;
+			unsigned int columns = res.num_fields();
 			vector<int> widths;
-			for (counter = 0; counter < columns; counter++) {
-				string s = res.names(counter);
+			for (int i = 0; i < columns; ++i) {
+				string s = res.names(i);
 				if (s.compare("field") == 0) {
 					widths.push_back(22);
 				}
@@ -121,19 +117,17 @@ main(int argc, char* argv[])
 					widths.push_back(15);
 				}
 
-				if (widths[counter]) {
-					cout << '|' << setw(widths[counter]) <<
-							res.names(counter) << '|';
+				if (widths[i]) {
+					cout << '|' << setw(widths[i]) <<
+							res.names(i) << '|';
 				}
 			}
 			cout << endl;
 
-			for (i = res.begin(); i != res.end(); ++i) {
-				row = *i;
-				for (counter = 0; counter < columns; counter++) {
-					if (widths[counter]) {
-						cout << ' ' << setw(widths[counter]) <<
-								row.at(counter) << ' ';
+			for (rit = res.begin(); rit != res.end(); ++rit) {
+				for (int i = 0; i < columns; ++i) {
+					if (widths[i]) {
+						cout << ' ' << setw(widths[i]) << (*rit)[i] << ' ';
 					}
 				}
 				cout << endl;
@@ -154,27 +148,26 @@ main(int argc, char* argv[])
 		volatile MYSQL_RES* ress = res.raw_result();
 		if (!ress)
 			return -1;
-		for (i = res.begin(); i != res.end(); ++i) {
-			row = *i;
-			for (int counter = 0; counter < columns; counter++) {
-				cout << row.at(counter) << "  ";
+		for (rit = res.begin(); rit != res.end(); ++rit) {
+			for (int i = 0; i < columns; ++i) {
+				cout << (*rit)[i] << "  ";
 			}
 			cout << endl;
 		}
 	}
-	catch (const BadQuery& er) {
+	catch (const mysqlpp::BadQuery& er) {
 		// Handle any query errors
 		cerr << "Query error: " << er.what() << endl;
 		return -1;
 	}
-	catch (const BadConversion& er) {
+	catch (const mysqlpp::BadConversion& er) {
 		// Handle bad conversions
 		cerr << "Conversion error: " << er.what() << endl <<
 				"\tretrieved data size: " << er.retrieved <<
 				", actual size: " << er.actual_size << endl;
 		return -1;
 	}
-	catch (const Exception& er) {
+	catch (const mysqlpp::Exception& er) {
 		// Catch-all for any other MySQL++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
