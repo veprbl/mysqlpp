@@ -1,12 +1,11 @@
 /***********************************************************************
- fieldinf1.cpp - Example showing how to request information about the
- 	fields in a table, such as their SQL and C++-equivalent types, as
-	MySQL++ sees it.
+ fieldinf.cpp - Shows how to request information about the fields in a 
+    table, such as their SQL and C++-equivalent types.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -28,83 +27,66 @@
 
 #include "util.h"
 
-#include <mysql++.h>
-
 #include <iostream>
 #include <iomanip>
 
 using namespace std;
-using namespace mysqlpp;
+
 
 int
 main(int argc, char *argv[])
 {
 	try {
-		Connection con(use_exceptions);
+		mysqlpp::Connection con;
 		if (!connect_to_db(argc, argv, con)) {
 			return 1;
 		}
 
-		Query query = con.query("select * from stock");
-		cout << "Query: " << query.preview() << endl;
+		mysqlpp::Query query = con.query("select * from stock");
+		mysqlpp::Result res = query.store();
 
-		Result res = query.store();
-		cout << "Records Found: " << res.size() << endl << endl;
-
-		cout << "Query Info:\n";
+		char widths[] = { 8, 15, 20 };
 		cout.setf(ios::left);
-
-		for (unsigned int i = 0; i < res.names().size(); i++) {
-			cout << setw(2) << i
-					// this is the name of the field
-					<< setw(15) << res.names(i).c_str()
-					// this is the SQL identifier name
-					// Result::types(unsigned int) returns a mysql_type_info which in many
-					// ways is like type_info except that it has additional sql type
-					// information in it. (with one of the methods being sql_name())
-					<< setw(15) << res.types(i).sql_name()
-					// this is the C++ identifier name which most closely resembles
-					// the sql name (its is implementation defined and often not very readable)
-					<< setw(20) << res.types(i).name()
-					<< endl;
+		cout << setw(widths[0]) << "Field" <<
+				setw(widths[1]) << "SQL Type" <<
+				setw(widths[2]) << "Mangled C++ Type" <<
+				endl;
+		for (int i = 0; i < sizeof(widths) / sizeof(widths[0]); ++i) {
+			cout << string(widths[i] - 1, '=') << ' ';
 		}
-
+		cout << endl;
+		
+		for (size_t i = 0; i < res.names().size(); i++) {
+			cout << setw(widths[0]) << res.names(i).c_str() <<
+					setw(widths[1]) << res.types(i).sql_name() <<
+					setw(widths[2]) << res.types(i).name() <<
+					endl;
+		}
 		cout << endl;
 
+		// Simple type check
 		if (res.types(0) == typeid(string)) {
-			// this is demonstrating how a mysql_type_info can be 
-			// compared with a C++ type_info.
-			cout << "Field 'item' is of an SQL type which most "
-					"closely resembles\nthe C++ string type\n";
+			cout << "SQL type of 'item' field most closely resembles "
+					"the C++ string type." << endl;
 		}
 
-		if (res.types(1) == typeid(longlong)) {
-			cout << "Field 'num' is of an SQL type which most "
-					"closely resembles\nC++ long long int type\n";
+		// Tricky type check: the 'if' path shouldn't happen because the
+		// num field has the NULL attribute.  We need to dig a little
+		// deeper if we want to ignore this in our type checks.
+		if (res.types(1) == typeid(mysqlpp::longlong)) {
+			cout << "Should not happen! Type check failure." << endl;
 		}
-		else if (res.types(1).base_type() == typeid(longlong)) {
-			// you have to be careful as if it can be null the actual
-			// type is Null<TYPE> not TYPE.  So you should always use
-			// the base_type method to get at the underlying type.
-			// If the type is not null than this base type would be
-			// the same as its type.
-			cout << "Field 'num' base type is of an SQL type which "
-					"most closely\nresembles the C++ long long int type\n";
+		else {
+			cout << "SQL type of 'num' field most closely resembles "
+					"MySQL++'s longlong type." << endl;
 		}
 	}
-	catch (const BadQuery& er) {
+	catch (const mysqlpp::BadQuery& er) {
 		// Handle any query errors
 		cerr << "Query error: " << er.what() << endl;
 		return -1;
 	}
-	catch (const BadConversion& er) {
-		// Handle bad conversions
-		cerr << "Conversion error: " << er.what() << endl <<
-				"\tretrieved data size: " << er.retrieved <<
-				", actual size: " << er.actual_size << endl;
-		return -1;
-	}
-	catch (const Exception& er) {
+	catch (const mysqlpp::Exception& er) {
 		// Catch-all for any other MySQL++ exceptions
 		cerr << "Error: " << er.what() << endl;
 		return -1;
