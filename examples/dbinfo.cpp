@@ -36,134 +36,142 @@
 
 using namespace std;
 
-static ostream&
-separator(ostream& os)
+
+// Insert a bar into the stream with the given query string centered
+static void
+separator(ostream& os, string qstr)
 {
-	os << endl << "---------------------------" << endl << endl;
-	return os;
+	string sep("========================================"
+			"========================================");
+	if (qstr.size()) {
+		string::size_type start = (sep.size() - qstr.size()) / 2;
+		sep.replace(start - 1, 1, 1, ' ');
+		sep.replace(start, qstr.size(), qstr);
+		sep.replace(start + qstr.size(), 1, 1, ' ');
+		os << "\n\n";
+	}
+	os << sep << endl;
 }
 
+
+// Print out the MySQL server version
+static void
+show_mysql_version(mysqlpp::Connection& con)
+{
+	separator(cout, "");
+    cout << "MySQL version: " << con.client_info();
+}
+
+
+// Print out the names of all the databases managed by the server
+static void
+show_databases(mysqlpp::Connection& con)
+{
+    mysqlpp::Query query = con.query("show databases");
+	separator(cout, query.preview());
+    mysqlpp::Result res = query.store();
+
+    cout << "Databases found: " << res.size();
+    cout.setf(ios::left);
+    mysqlpp::Result::iterator rit;
+    for (rit = res.begin(); rit != res.end(); ++rit) {
+        cout << "\n\t" << (*rit)[0];
+    }
+}
+
+
+// Print information about each of the tables we found
+static void
+show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
+{
+	vector<string>::const_iterator it;
+	for (it = tables.begin(); it != tables.end(); ++it) {
+		mysqlpp::Query query = con.query();
+		query << "describe " << *it;
+		separator(cout, query.preview());
+		mysqlpp::Result res = query.store();
+
+		unsigned int columns = res.num_fields();
+		vector<int> widths;
+		for (int i = 0; i < columns; ++i) {
+			string s = res.names(i);
+			if (s.compare("field") == 0) {
+				widths.push_back(22);
+			}
+			else if (s.compare("type") == 0) {
+				widths.push_back(20);
+			}
+			else if (s.compare("null") == 0) {
+				widths.push_back(4);
+			}
+			else if (s.compare("key") == 0) {
+				widths.push_back(3);
+			}
+			else if (s.compare("extra") == 0) {
+				widths.push_back(0);
+			}
+			else {
+				widths.push_back(15);
+			}
+
+			if (widths[i]) {
+				cout << '|' << setw(widths[i]) << res.names(i) << '|';
+			}
+		}
+		cout << endl;
+
+		mysqlpp::Result::iterator rit;
+		for (rit = res.begin(); rit != res.end(); ++rit) {
+			for (int i = 0; i < columns; ++i) {
+				if (widths[i]) {
+					cout << ' ' << setw(widths[i]) <<
+							(*rit)[i].c_str() << ' ';
+				}
+			}
+			cout << endl;
+		}
+	}
+}
+
+
+// Print out the names of all tables in the sample database, and
+// return the list of tables.
+static void
+show_tables(mysqlpp::Connection& con)
+{
+    mysqlpp::Query query = con.query("show tables");
+	separator(cout, query.preview());
+	mysqlpp::Result res = query.store();
+
+	cout << "Tables found: " << res.size();
+	cout.setf(ios::left);
+	vector<string> tables;
+    mysqlpp::Result::iterator rit;
+	for (rit = res.begin(); rit != res.end(); ++rit) {
+		string tbl((*rit)[0]);
+		cout << "\n\t" << tbl;
+		tables.push_back(tbl);
+	}
+
+	show_table_info(con, tables);
+}
+
+
+// Call all the above functions in sequence
 int
 main(int argc, char* argv[])
 {
-	mysqlpp::Connection con(mysqlpp::use_exceptions);
 	try {
-		connect_to_db(argc, argv, con, "");
-
-		// Show MySQL version
-		cout << "MySQL version: " << con.client_info() << separator;
-
-		// Show all the databases we can see
-		mysqlpp::Query query = con.query("show databases");
-		cout << "Query: " << query.preview() << endl;
-
-		mysqlpp::Result res = query.store();
-		cout << "Databases found: " << res.size();
-
-		cout.setf(ios::left);
-		mysqlpp::Result::iterator rit;
-		for (rit = res.begin(); rit != res.end(); ++rit) {
-			cout << endl << '\t' << setw(17) << (*rit)[0];
-		}
-		cout << separator;
-		
-		// Show the tables in the mysql database
-		con.select_db("mysql");
-
-		query.reset();
-		query << "show tables";
-		cout << "Query: " << query.preview() << endl;
-
-		res = query.store();
-		cout << "Tables found: " << res.size();
-
-		vector<string> tables;
-		cout.setf(ios::left);
-		for (rit = res.begin(); rit != res.end(); ++rit) {
-			string tbl((*rit)[0]);
-			cout << endl << '\t' << setw(17) << tbl;
-			tables.push_back(tbl);
-		}
-		cout << separator;
-
-		// Show information about each of the tables we found
-		vector<string>::iterator vit;
-		for (vit = tables.begin(); vit != tables.end(); ++vit) {
-			query.reset();
-			query << "describe " << *vit;
-			cout << "Query: " << query.preview() << endl;
-			res = query.store();
-			unsigned int columns = res.num_fields();
-			vector<int> widths;
-			for (int i = 0; i < columns; ++i) {
-				string s = res.names(i);
-				if (s.compare("field") == 0) {
-					widths.push_back(22);
-				}
-				else if (s.compare("type") == 0) {
-					widths.push_back(20);
-				}
-				else if (s.compare("null") == 0) {
-					widths.push_back(4);
-				}
-				else if (s.compare("key") == 0) {
-					widths.push_back(3);
-				}
-				else if (s.compare("extra") == 0) {
-					widths.push_back(0);
-				}
-				else {
-					widths.push_back(15);
-				}
-
-				if (widths[i]) {
-					cout << '|' << setw(widths[i]) <<
-							res.names(i) << '|';
-				}
-			}
-			cout << endl;
-
-			for (rit = res.begin(); rit != res.end(); ++rit) {
-				for (int i = 0; i < columns; ++i) {
-					if (widths[i]) {
-						cout << ' ' << setw(widths[i]) << (*rit)[i] << ' ';
-					}
-				}
-				cout << endl;
-			}
-
-			cout << separator;
-		}
-
-		// Show the user table contents
-		query.reset();
-	 	query << "select * from user";
-		cout << "Query: " << query.preview() << endl << endl;
-
-		res = query.store();
-		int columns = res.num_fields();
-		cout << "fields = " << res.num_fields() << ", rows = " <<
-				res.size() << endl;
-		volatile MYSQL_RES* ress = res.raw_result();
-		if (!ress)
-			return -1;
-		for (rit = res.begin(); rit != res.end(); ++rit) {
-			for (int i = 0; i < columns; ++i) {
-				cout << (*rit)[i] << "  ";
-			}
-			cout << endl;
+		mysqlpp::Connection con;
+		if (connect_to_db(argc, argv, con)) {
+            show_mysql_version(con);
+            show_databases(con);
+			show_tables(con);
 		}
 	}
 	catch (const mysqlpp::BadQuery& er) {
 		// Handle any query errors
 		cerr << "Query error: " << er.what() << endl;
-		return -1;
-	}
-	catch (const mysqlpp::BadConversion& er) {
-		// Handle bad conversions
-		cerr << "Conversion error: " << er.what() << endl <<
-				"\tretrieved data size: " << er.retrieved <<
-				", actual size: " << er.actual_size << endl;
 		return -1;
 	}
 	catch (const mysqlpp::Exception& er) {
