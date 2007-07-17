@@ -238,8 +238,8 @@
 		<exe id="dbinfo" template="libutil-user,examples">
 			<sources>examples/dbinfo.cpp</sources>
 		</exe>
-		<exe id="fieldinf1" template="libutil-user,examples">
-			<sources>examples/fieldinf1.cpp</sources>
+		<exe id="fieldinf" template="libutil-user,examples">
+			<sources>examples/fieldinf.cpp</sources>
 		</exe>
 		<exe id="load_jpeg" template="libutil-user,examples">
 			<sources>examples/load_jpeg.cpp</sources>

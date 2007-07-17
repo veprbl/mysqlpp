@@ -112,7 +112,7 @@ Running the Other Command Line Examples
             line argument to be a JPEG file name.  We've included
             examples/logo.jpg as a sample, if you want to use that.
 
-        fieldinf1: Shows how to get information about the fields in
+        fieldinf: Shows how to get information about the fields in
             a result set.  (Types, etc.)
 
         dbinfo: Dumps a bunch of information about the database
