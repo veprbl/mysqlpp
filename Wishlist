@@ -88,6 +88,17 @@ v3.0 Plan, For-Sure Stuff
       - Add operator->()  (Similar to above, it can't work when the
         underlying container can only provide value semantics.)
 
+    o ColData and SQLString are inverses.  ColData is initialized
+      with string data from SQL results and can convert it to typical
+      C++ data types.  SQLString is initialized with any of several
+      typical C++ data types, which it converts internally into a
+      string form suitable for use in SQL statements.  At minimum,
+      rename these classes to make this duality obvious; DataToSQL
+      and SQLToData?  Better would be to merge them.  "SQLString"
+      would be an appropriate name, as both hold a string, plus type
+      data necessary for conversions.  Best counterargument is weak:
+      it allows silly things like "int m = 1, n = SQLString(m);"
+
     o More robust fix for the Query stream base class init problem:
       http://www.boost.org/libs/utility/base_from_member.html
 
