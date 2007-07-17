@@ -164,8 +164,12 @@ main(int argc, char* argv[])
 	try {
 		mysqlpp::Connection con;
 		if (connect_to_db(argc, argv, con)) {
-            show_mysql_version(con);
-            show_databases(con);
+			if (!dtest_mode) {
+				// Only run system-specific tests when run by hand.
+				// dtest only wants repeatable output.
+	            show_mysql_version(con);
+    	        show_databases(con);
+			}
 			show_tables(con);
 		}
 	}

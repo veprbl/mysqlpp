@@ -43,7 +43,11 @@
 
 using namespace std;
 
+
+//// global variables //////////////////////////////////////////////////
+
 const char* kpcSampleDatabase = "mysql_cpp_data";
+bool dtest_mode = false;		// true when running under dtest
 
 
 //// print_stock_header ////////////////////////////////////////////////
@@ -189,11 +193,12 @@ connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
 	const char* pass = "";     // 0 means something different!
 	const char* server = 0;
 	const char* user = 0;
-	while ((ch = att_getopt(argc, argv, "p:s:u:")) != EOF) {
+	while ((ch = att_getopt(argc, argv, "p:s:u:D")) != EOF) {
 		switch (ch) {
 			case 'p': pass = ag_optarg;   break;
 			case 's': server = ag_optarg; break;
 			case 'u': user = ag_optarg;   break;
+			case 'D': dtest_mode = true;  break;
 			default:
 				print_usage(argv[0], extra_parms);
 				return false;

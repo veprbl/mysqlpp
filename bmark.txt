@@ -174,3 +174,26 @@ We have:
 	Hot Dogs
 ================ END custom6 OUTPUT ================
 
+---------------- BEGIN dbinfo OUTPUT ----------------
+
+
+================================= show tables ==================================
+Tables found: 2
+	images
+	stock
+
+=============================== describe images ================================
+|field                 ||type                ||null||key||default        |
+ id                      int(10) unsigned            PRI  NULL            
+ data                    blob                  YES        NULL            
+
+
+================================ describe stock ================================
+|field                 ||type                ||null||key||default        |
+ item                    char(20)                                         
+ num                     bigint(20)            YES        NULL            
+ weight                  double                YES        NULL            
+ price                   double                YES        NULL            
+ sdate                   date                  YES        NULL            
+================ END dbinfo OUTPUT ================
+

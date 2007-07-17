@@ -7,7 +7,7 @@ TMP=`mktemp bmXXXXXX`
 # subsequent examples to fail because data they need isn't present.
 for t in resetdb simple1 simple2 simple3 store_if for_each \
 	multiquery tquery1 resetdb tquery2 resetdb usequery \
-	custom1 custom2 custom3 custom4 custom5 custom6
+	custom1 custom2 custom3 custom4 custom5 custom6 dbinfo
 do
 	if [ -x $t ]
 	then
@@ -19,7 +19,7 @@ do
 	
 		echo -n "$t "
 		echo "---------------- BEGIN $t OUTPUT ----------------" >> $TMP
-		if ! ./exrun $t $* >> $TMP
+		if ! ./exrun $t -D $* >> $TMP
 		then
 			echo
 			echo 'TESTING ABORTED.'

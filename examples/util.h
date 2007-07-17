@@ -31,6 +31,7 @@
 #include <mysql++.h>
 
 extern const char* kpcSampleDatabase;
+extern bool dtest_mode;
 
 void print_stock_header(int rows);
 void print_stock_row(const mysqlpp::Row& r);
