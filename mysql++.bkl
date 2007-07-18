@@ -31,6 +31,7 @@
 	<set var="BUILDDOCS">yes</set>
 	<set var="BUILDEXAMPLES">yes</set>
 	<set var="BUILDLIBRARY">yes</set>
+	<set var="BUILDTEST">yes</set>
 	<set var="HEADER_DIR">$(PREFIX)/include/mysql++</set>
 
 	<if cond="BUILDLIBRARY=='yes'">
@@ -55,6 +56,7 @@
 				lib/row.cpp
 				lib/sql_string.cpp
 				lib/string_util.cpp 
+				lib/tcp_connection.cpp
 				lib/transaction.cpp
 				lib/type_info.cpp
 				lib/vallist.cpp
@@ -117,8 +119,8 @@
 		</data-files>
 	</if>	<!-- build library -->
 
-	<!-- Set up build options common to all examples -->
-	<template id="examples">
+	<!-- Set up build options common to all built executables -->
+	<template id="programs">
 		<if cond="BUILDLIBRARY=='yes'">
 			<depends>mysqlpp</depends>
 		</if>
@@ -176,84 +178,91 @@
 		</if>
 	</template>
 
-	<!-- Additional options specific to examples that depend on
-	     the util module. -->
-	<template id="libutil-user">
-		<depends>util</depends>
-		<sys-lib>mysqlpp_util</sys-lib>
-	</template>
+	<!-- Define library testing programs' output targets, if enabled -->
+	<if cond="BUILDTEST=='yes'">
+		<exe id="test_tcp" template="programs">
+			<sources>test/test_tcp.cpp</sources>
+		</exe>
+	</if>	<!-- build library test programs -->
 
-	<!-- Define output targets, if exampless are enabled -->
+	<!-- Define example programs' output targets, if enabled -->
 	<if cond="BUILDEXAMPLES=='yes'">
+		<!-- Additional options specific to examples that depend on
+			 the util module. -->
+		<template id="libutil-user">
+			<depends>util</depends>
+			<sys-lib>mysqlpp_util</sys-lib>
+		</template>
+
 		<!-- The "util" convenience library, used by the examples -->
-		<lib id="util" template="examples">
+		<lib id="util" template="programs">
 			<libname>mysqlpp_util</libname>
 			<sources>examples/util.cpp</sources>
 			<sources>examples/att_getopt.cpp</sources>
 		</lib>
-		
+
 		<!-- The examples themselves -->
-		<exe id="resetdb" template="libutil-user,examples">
+		<exe id="resetdb" template="libutil-user,programs">
 			<sources>examples/resetdb.cpp</sources>
 		</exe>
-		<exe id="simple1" template="libutil-user,examples">
+		<exe id="simple1" template="libutil-user,programs">
 			<sources>examples/simple1.cpp</sources>
 		</exe>
-		<exe id="simple2" template="libutil-user,examples">
+		<exe id="simple2" template="libutil-user,programs">
 			<sources>examples/simple2.cpp</sources>
 		</exe>
-		<exe id="simple3" template="libutil-user,examples">
+		<exe id="simple3" template="libutil-user,programs">
 			<sources>examples/simple3.cpp</sources>
 		</exe>
-		<exe id="multiquery" template="libutil-user,examples">
+		<exe id="multiquery" template="libutil-user,programs">
 			<sources>examples/multiquery.cpp</sources>
 		</exe>
-		<exe id="tquery1" template="libutil-user,examples">
+		<exe id="tquery1" template="libutil-user,programs">
 			<sources>examples/tquery1.cpp</sources>
 		</exe>
-		<exe id="tquery2" template="libutil-user,examples">
+		<exe id="tquery2" template="libutil-user,programs">
 			<sources>examples/tquery2.cpp</sources>
 		</exe>
-		<exe id="usequery" template="libutil-user,examples">
+		<exe id="usequery" template="libutil-user,programs">
 			<sources>examples/usequery.cpp</sources>
 		</exe>
-		<exe id="custom1" template="libutil-user,examples">
+		<exe id="custom1" template="libutil-user,programs">
 			<sources>examples/custom1.cpp</sources>
 		</exe>
-		<exe id="custom2" template="libutil-user,examples">
+		<exe id="custom2" template="libutil-user,programs">
 			<sources>examples/custom2.cpp</sources>
 		</exe>
-		<exe id="custom3" template="libutil-user,examples">
+		<exe id="custom3" template="libutil-user,programs">
 			<sources>examples/custom3.cpp</sources>
 		</exe>
-		<exe id="custom4" template="libutil-user,examples">
+		<exe id="custom4" template="libutil-user,programs">
 			<sources>examples/custom4.cpp</sources>
 		</exe>
-		<exe id="custom5" template="libutil-user,examples">
+		<exe id="custom5" template="libutil-user,programs">
 			<sources>examples/custom5.cpp</sources>
 		</exe>
-		<exe id="custom6" template="libutil-user,examples">
+		<exe id="custom6" template="libutil-user,programs">
 			<sources>examples/custom6.cpp</sources>
 		</exe>
-		<exe id="dbinfo" template="libutil-user,examples">
+		<exe id="dbinfo" template="libutil-user,programs">
 			<sources>examples/dbinfo.cpp</sources>
 		</exe>
-		<exe id="fieldinf" template="libutil-user,examples">
+		<exe id="fieldinf" template="libutil-user,programs">
 			<sources>examples/fieldinf.cpp</sources>
 		</exe>
-		<exe id="load_jpeg" template="libutil-user,examples">
+		<exe id="load_jpeg" template="libutil-user,programs">
 			<sources>examples/load_jpeg.cpp</sources>
 		</exe>
-		<exe id="xaction" template="libutil-user,examples">
+		<exe id="xaction" template="libutil-user,programs">
 			<sources>examples/xaction.cpp</sources>
 		</exe>
-		<exe id="store_if" template="libutil-user,examples">
+		<exe id="store_if" template="libutil-user,programs">
 			<sources>examples/store_if.cpp</sources>
 		</exe>
-		<exe id="for_each" template="libutil-user,examples">
+		<exe id="for_each" template="libutil-user,programs">
 			<sources>examples/for_each.cpp</sources>
 		</exe>
-		<exe id="cgi_jpeg" template="libutil-user,examples">
+		<exe id="cgi_jpeg" template="libutil-user,programs">
 			<sources>examples/cgi_jpeg.cpp</sources>
 		</exe>
 	</if>	<!-- build examples -->

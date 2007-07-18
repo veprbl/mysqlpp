@@ -53,7 +53,7 @@
 
 // This #include order gives the fewest redundancies in the #include
 // dependency chain.
-#include "connection.h"
+#include "tcp_connection.h"
 #include "query.h"
 #include "sql_types.h"
 

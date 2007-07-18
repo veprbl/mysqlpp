@@ -26,16 +26,15 @@
 
 #define MYSQLPP_NOT_HEADER
 #include "common.h"
-
 #include "connection.h"
 
 #include "query.h"
 #include "result.h"
+#include "tcp_connection.h"
 
 #if !defined(MYSQLPP_PLATFORM_WINDOWS)
 #	include <unistd.h>
 #	include <sys/stat.h>
-#	include <netdb.h>
 #endif
 
 // An argument was added to mysql_shutdown() in MySQL 4.1.3 and 5.0.1.
@@ -859,42 +858,9 @@ Connection::parse_ipc_method(const char* server, string& host,
 #endif
 
 	// Lacking any better idea, it must be some kind of TCP/IP address.
-	const char* colon = strchr(server, ':');
-	if (colon) {
-		if ((port == 0) && colon[1]) {
-			// Not a lonely trailing colon, and we don't already have a
-			// port, so treat what follows the colon as interesting.
-			const char* service = colon + 1;
-			if (isdigit(service[0])) {
-				port = atoi(service);
-				if ((port < 1) || (port > USHRT_MAX)) {
-					error_message_ = "Invalid TCP port number ";
-					error_message_ += service;
-					return false;
-				}
-			}
-			else {
-				servent* pse = getservbyname(service, "tcp");
-				if (pse) {
-					port = ntohs(pse->s_port);
-				}
-				else {
-					error_message_ = "Failed to look up TCP service ";
-					error_message_ += service;
-					return false;
-				}
-			}
-		}
-
-		// Everything in front of the colon is the host address.
-		host.assign(server, colon - server);
-	}
-	else {
-		// No colon, so treat the whole thing as a host address.
-		host = server;
-	}
-
-	return true;
+	// Delegate parsing and checking to subclass utility function.
+	host = server;
+	return TCPConnection::parse_address(host, port, error_message_);
 }
 
 

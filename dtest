@@ -1,11 +1,12 @@
 #!/bin/sh
 
-echo -n 'Running tests:'
+echo 'Running tests:'
+echo -n "   "
 TMP=`mktemp bmXXXXXX`
 # Yes, the repeated use of resetdb is intentional!  We're running it
 # after the examples that change the database in a way that will cause
 # subsequent examples to fail because data they need isn't present.
-for t in \
+for t in test_* \
 	resetdb simple[0-9] store_if for_each multiquery tquery1 \
 	resetdb tquery2 dbinfo fieldinf \
 	resetdb usequery custom[0-9]
@@ -29,10 +30,6 @@ do
 		fi
 		echo "================ END $t OUTPUT ================" >> $TMP
 		echo >> $TMP
-	else
-		echo "Failed to find test program $t. Is it built?"
-		rm -f $TMP
-		exit 101
 	fi
 done
 echo

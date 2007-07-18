@@ -9,10 +9,10 @@
 /// the Connection object that created them, directly or indirectly.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -176,19 +176,19 @@ public:
 			cchar* password = 0, unsigned int port = 0);
 
 	/// \brief Establish a new connection using the same parameters as
-	/// an existing C API connection.
+	/// an existing connection.
 	///
 	/// \param other existing Connection object
 	Connection(const Connection& other);
+
+	/// \brief Destroy object
+	virtual ~Connection();
 
 	/// \brief Establish a new connection using the same parameters as
 	/// an existing C API connection.
 	///
 	/// \param mysql existing MySQL C API connection object
-	bool connect(const MYSQL& mysql);
-
-	/// \brief Destroy connection object
-	~Connection();
+	virtual bool connect(const MYSQL& mysql);
 
 	/// \brief Connect to database after object is created.
 	///
@@ -198,8 +198,9 @@ public:
 	/// If you call this method on an object that is already connected
 	/// to a database server, the previous connection is dropped and a
 	/// new connection is established.
-	bool connect(cchar* db, cchar* server = 0, cchar* user = 0,
-			cchar* password = 0, unsigned int port = 0);
+	virtual bool connect(cchar* db = 0, cchar* server = 0,
+			cchar* user = 0, cchar* password = 0,
+			unsigned int port = 0);
 
 	/// \brief Close connection to MySQL server.
 	///
@@ -562,6 +563,9 @@ protected:
 	/// This is used when MySQL++ itself encounters an error.
 	void build_error_message(const char* core);
 
+	//// Subclass data
+	std::string error_message_;		///< MySQL++ specific error, if any
+
 private:
 	friend class ResNSel;
 	friend class ResUse;
@@ -614,7 +618,6 @@ private:
 	bool is_connected_;
 	bool connecting_;
 	bool copacetic_;
-	std::string error_message_;
 	OptionList applied_options_;
 	static OptionArgType legal_opt_arg_types_[];
 };

@@ -1,3 +1,7 @@
+---------------- BEGIN test_tcp OUTPUT ----------------
+TCP address parsing passed.
+================ END test_tcp OUTPUT ================
+
 ---------------- BEGIN resetdb OUTPUT ----------------
 Connecting to database server...
 Dropping existing sample data tables...

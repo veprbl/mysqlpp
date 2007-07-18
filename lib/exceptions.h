@@ -349,6 +349,19 @@ public:
 };
 
 
+/// \brief Used within MySQL++'s test harness only.
+
+class MYSQLPP_EXPORT SelfTestFailed : public Exception
+{
+public:
+	/// \brief Create exception object
+	explicit SelfTestFailed(const std::string& w) :
+	Exception(w)
+	{
+	}
+};
+
+
 } // end namespace mysqlpp
 
 #endif
