@@ -1,5 +1,5 @@
-/// \file tcp_connection.h
-/// \brief Declares the TCPConnection class.
+/// \file np_connection.h
+/// \brief Declares the WindowsNamedPipeConnection class.
 
 /***********************************************************************
  Copyright (c) 2007 by Educational Technology Resources, Inc.
@@ -24,58 +24,51 @@
  USA
 ***********************************************************************/
 
-#if !defined(MYSQLPP_TCP_CONNECTION_H)
-#define MYSQLPP_TCP_CONNECTION_H
+#if !defined(MYSQLPP_WNP_CONNECTION_H)
+#define MYSQLPP_WNP_CONNECTION_H
 
 #include "connection.h"
 
 namespace mysqlpp {
 
-/// \brief Specialization of \c Connection for TCP/IP
+/// \brief Specialization of \c Connection for Windows named pipes
 ///
 /// This class just simplifies the connection creation interface of
 /// \c Connection.  It does not add new functionality.
 
-class TCPConnection : public Connection
+class WindowsNamedPipeConnection : public Connection
 {
 public:
 	/// \brief Create object without connecting it to the MySQL server.
-	TCPConnection() :
+	WindowsNamedPipeConnection() :
 	Connection()
 	{
 	}
 
-	/// \brief Create object and connect to database server over TCP/IP
-	/// in one step.
+	/// \brief Create object and connect to database server over Windows
+	/// named pipes in one step.
 	///
-	/// \param addr TCP/IP address of server, in either dotted quad form
-	///     or as a host or domain name; may be followed by a colon and
-	///     a port number or service name to override default port
 	/// \param db name of database to use
 	/// \param user user name to log in under, or 0 to use the user
 	///		name the program is running under
 	/// \param password password to use when logging in
-	///
-	/// \b BEWARE: These parameters are not in the same order as those
-	/// in the corresponding constructor for Connection.  This is a
-	/// feature, not a bug. :)
-	TCPConnection(cchar* addr, cchar* db = 0, cchar* user = 0,
+	WindowsNamedPipeConnection(cchar* db = 0, cchar* user = 0,
 			cchar* password = 0)
 	{
-		connect(addr, db, user, password);
+		connect(db, user, password);
 	}
 
 	/// \brief Establish a new connection using the same parameters as
 	/// an existing connection.
 	///
 	/// \param other pre-existing connection to clone
-	TCPConnection(const TCPConnection& other)
+	WindowsNamedPipeConnection(const WindowsNamedPipeConnection& other)
 	{
 		copy(other);	// slices it, but that's okay
 	}
 
 	/// \brief Destroy object
-	~TCPConnection() { }
+	~WindowsNamedPipeConnection() { }
 
 	/// \brief Connect to database after object is created.
 	///
@@ -85,42 +78,20 @@ public:
 	/// If you call this method on an object that is already connected
 	/// to a database server, the previous connection is dropped and a
 	/// new connection is established.
-	bool connect(cchar* addr = 0, cchar* db = 0, cchar* user = 0,
-			cchar* password = 0);
+	bool connect(cchar* db = 0, cchar* user = 0, cchar* password = 0);
 
-	/// \brief Break the given TCP/IP address up into a separate address
-	/// and port form
+	/// \brief Check that given string denotes a Windows named pipe
+	/// connection to MySQL
 	///
-	/// Does some sanity checking on the address.  Only intended to
-	/// try and prevent library misuse, not ensure that the address can
-	/// actually be used to contact a server.
+	/// \param server the server address
 	///
-	/// It understands the following forms:
-	///
-	///	- 1.2.3.4
-	/// - 1.2.3.4:567
-	/// - 1.2.3.4:mysvcport
-	/// - a.b.com:89
-	/// - a.b.com:mysql
-	///
-	/// It also understands IPv6 addresses, but to avoid confusion
-	/// between the colons they use and the colon separating the address
-	/// part from the service/port part, they must be in RFC 2732 form.
-	/// Example: \c [2010:836B:4179::836B:4179]:1234
-	///
-	/// \param addr the address and optional port/service combo to check
-	/// on input, and the verified address on successful return
-	/// \param port the port number (resolved from the service name if
-	/// necessary) on successful return
-	/// \param error on false return, reason for failure is placed here
-	///
-	/// \return false if address fails to pass sanity checks
-	static bool parse_address(std::string& addr, unsigned int& port,
-			std::string& error);
+	/// \return false if server address does not denote a Windows
+	/// named pipe connection, or we are not running on Windows
+	static bool is_wnp(cchar* server);
 };
 
 
 } // end namespace mysqlpp
 
-#endif // !defined(MYSQLPP_TCP_CONNECTION_H)
+#endif // !defined(MYSQLPP_WNP_CONNECTION_H)
 

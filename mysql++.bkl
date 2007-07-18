@@ -59,7 +59,9 @@
 				lib/tcp_connection.cpp
 				lib/transaction.cpp
 				lib/type_info.cpp
+				lib/uds_connection.cpp
 				lib/vallist.cpp
+				lib/wnp_connection.cpp
 			</sources>
 
 			<debug-info>$(DEBUGINFO)</debug-info>

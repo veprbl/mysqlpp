@@ -1,5 +1,5 @@
-/// \file tcp_connection.h
-/// \brief Declares the TCPConnection class.
+/// \file uds_connection.h
+/// \brief Declares the UnixDomainSocketConnection class.
 
 /***********************************************************************
  Copyright (c) 2007 by Educational Technology Resources, Inc.
@@ -24,33 +24,31 @@
  USA
 ***********************************************************************/
 
-#if !defined(MYSQLPP_TCP_CONNECTION_H)
-#define MYSQLPP_TCP_CONNECTION_H
+#if !defined(MYSQLPP_UDS_CONNECTION_H)
+#define MYSQLPP_UDS_CONNECTION_H
 
 #include "connection.h"
 
 namespace mysqlpp {
 
-/// \brief Specialization of \c Connection for TCP/IP
+/// \brief Specialization of \c Connection for Unix domain sockets
 ///
 /// This class just simplifies the connection creation interface of
 /// \c Connection.  It does not add new functionality.
 
-class TCPConnection : public Connection
+class UnixDomainSocketConnection : public Connection
 {
 public:
 	/// \brief Create object without connecting it to the MySQL server.
-	TCPConnection() :
+	UnixDomainSocketConnection() :
 	Connection()
 	{
 	}
 
-	/// \brief Create object and connect to database server over TCP/IP
-	/// in one step.
+	/// \brief Create object and connect to database server over Unix
+	/// domain sockets in one step.
 	///
-	/// \param addr TCP/IP address of server, in either dotted quad form
-	///     or as a host or domain name; may be followed by a colon and
-	///     a port number or service name to override default port
+	/// \param path filesystem path to socket
 	/// \param db name of database to use
 	/// \param user user name to log in under, or 0 to use the user
 	///		name the program is running under
@@ -59,23 +57,23 @@ public:
 	/// \b BEWARE: These parameters are not in the same order as those
 	/// in the corresponding constructor for Connection.  This is a
 	/// feature, not a bug. :)
-	TCPConnection(cchar* addr, cchar* db = 0, cchar* user = 0,
-			cchar* password = 0)
+	UnixDomainSocketConnection(cchar* path, cchar* db = 0,
+			cchar* user = 0, cchar* password = 0)
 	{
-		connect(addr, db, user, password);
+		connect(path, db, user, password);
 	}
 
 	/// \brief Establish a new connection using the same parameters as
 	/// an existing connection.
 	///
 	/// \param other pre-existing connection to clone
-	TCPConnection(const TCPConnection& other)
+	UnixDomainSocketConnection(const UnixDomainSocketConnection& other)
 	{
 		copy(other);	// slices it, but that's okay
 	}
 
 	/// \brief Destroy object
-	~TCPConnection() { }
+	~UnixDomainSocketConnection() { }
 
 	/// \brief Connect to database after object is created.
 	///
@@ -85,42 +83,22 @@ public:
 	/// If you call this method on an object that is already connected
 	/// to a database server, the previous connection is dropped and a
 	/// new connection is established.
-	bool connect(cchar* addr = 0, cchar* db = 0, cchar* user = 0,
+	bool connect(cchar* path, cchar* db = 0, cchar* user = 0,
 			cchar* password = 0);
 
-	/// \brief Break the given TCP/IP address up into a separate address
-	/// and port form
+	/// \brief Check that the given path names a Unix domain socket and
+	/// that we have read-write permission for it
 	///
-	/// Does some sanity checking on the address.  Only intended to
-	/// try and prevent library misuse, not ensure that the address can
-	/// actually be used to contact a server.
-	///
-	/// It understands the following forms:
-	///
-	///	- 1.2.3.4
-	/// - 1.2.3.4:567
-	/// - 1.2.3.4:mysvcport
-	/// - a.b.com:89
-	/// - a.b.com:mysql
-	///
-	/// It also understands IPv6 addresses, but to avoid confusion
-	/// between the colons they use and the colon separating the address
-	/// part from the service/port part, they must be in RFC 2732 form.
-	/// Example: \c [2010:836B:4179::836B:4179]:1234
-	///
-	/// \param addr the address and optional port/service combo to check
-	/// on input, and the verified address on successful return
-	/// \param port the port number (resolved from the service name if
-	/// necessary) on successful return
-	/// \param error on false return, reason for failure is placed here
+	/// \param path the filesystem path to the socket
+	/// \param error on failure, reason is placed here; take default
+	/// if you do not need a reason if it fails
 	///
 	/// \return false if address fails to pass sanity checks
-	static bool parse_address(std::string& addr, unsigned int& port,
-			std::string& error);
+	static bool is_socket(cchar* path, std::string* error = 0);
 };
 
 
 } // end namespace mysqlpp
 
-#endif // !defined(MYSQLPP_TCP_CONNECTION_H)
+#endif // !defined(MYSQLPP_UDS_CONNECTION_H)
 

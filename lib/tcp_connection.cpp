@@ -30,8 +30,6 @@
 #include "exceptions.h"
 
 #if !defined(MYSQLPP_PLATFORM_WINDOWS)
-#	include <unistd.h>
-#	include <sys/stat.h>
 #	include <netdb.h>
 #endif
 
@@ -42,23 +40,8 @@ using namespace std;
 namespace mysqlpp {
 
 
-TCPConnection::TCPConnection(cchar* db, cchar* addr, cchar* user,
-		cchar* pass) :
-Connection()
-{
-	connect(db, addr, user, pass);
-}
-
-
-TCPConnection::TCPConnection(const TCPConnection& other) :
-Connection()
-{
-	copy(other);	// slices it, but that's okay
-}
-
-
 bool
-TCPConnection::connect(cchar* db, cchar* addr, cchar* user, cchar* pass)
+TCPConnection::connect(cchar* addr, cchar* db, cchar* user, cchar* pass)
 {
 	error_message_.clear();
 

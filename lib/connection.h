@@ -625,5 +625,10 @@ private:
 
 } // end namespace mysqlpp
 
+// Not strictly required, but bring in our specialization subclasses
+#include "tcp_connection.h"
+#include "uds_connection.h"
+#include "wnp_connection.h"
+
 #endif
 

@@ -30,12 +30,6 @@
 
 #include "query.h"
 #include "result.h"
-#include "tcp_connection.h"
-
-#if !defined(MYSQLPP_PLATFORM_WINDOWS)
-#	include <unistd.h>
-#	include <sys/stat.h>
-#endif
 
 // An argument was added to mysql_shutdown() in MySQL 4.1.3 and 5.0.1.
 #if ((MYSQL_VERSION_ID >= 40103) && (MYSQL_VERSION_ID <= 49999)) || (MYSQL_VERSION_ID >= 50001)
@@ -834,33 +828,31 @@ bool
 Connection::parse_ipc_method(const char* server, string& host,
 		unsigned int& port, string& socket_name)
 {
+	// NOTE: This routine has no connection type knowledge.  It can only
+	// recognize a 0 value for the server parameter.  All substantial
+	// tests are delegated to our specialized subclasses, which figure
+	// out what kind of connection the server address denotes.  We do
+	// the platform-specific tests first as they're the most reliable.
+	
 	if (server == 0) {
 		// Just take all the defaults
 		return true;
 	}
-
-	// Try the platform-specific alternatives first.
-#if MYSQLPP_PLATFORM_WINDOWS
-	if (strcmp(server, ".") == 0) {
+	else if (WindowsNamedPipeConnection::is_wnp(server)) {
 		// Use Windows named pipes
 		host = server;
 		return true;
 	}
-#else
-	struct stat fi;
-	if ((access(server, R_OK | W_OK) == 0) &&
-			(stat(server, &fi) == 0) &&
-			S_ISSOCK(fi.st_mode)) {
-		// It's a Unix domain socket, and we have permission to use it.
+	else if (UnixDomainSocketConnection::is_socket(server)) {
+		// Use Unix domain sockets
 		socket_name = server;
 		return true;
 	}
-#endif
-
-	// Lacking any better idea, it must be some kind of TCP/IP address.
-	// Delegate parsing and checking to subclass utility function.
-	host = server;
-	return TCPConnection::parse_address(host, port, error_message_);
+	else {
+		// Failing above, it can only be some kind of TCP/IP address.
+		host = server;
+		return TCPConnection::parse_address(host, port, error_message_);
+	}
 }
 
 
