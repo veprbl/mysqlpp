@@ -1,10 +1,10 @@
 /***********************************************************************
  connection.cpp - Implements the Connection class.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -132,17 +132,7 @@ Lockable(false),
 connecting_(false)
 {
 	mysql_init(&mysql_);
-	if (connect(db, server, user, password, port)) {
-		unlock();
-		copacetic_ = is_connected_ = true;
-	}
-	else {
-		unlock();
-		copacetic_ = is_connected_ = false;
-		if (throw_exceptions()) {
-			throw ConnectionFailed(error());
-		}
-	}
+	connect(db, server, user, password);
 }
 
 
