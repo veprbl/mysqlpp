@@ -30,6 +30,26 @@
 #include <string>
 
 
+template <class T>
+static bool
+test_quote(mysqlpp::Query& q, T test, size_t len)
+{
+	q.reset();
+	q << mysqlpp::quote << test;
+	std::string result = q.str();
+	if ((result.length() == (len + 2)) &&
+			(result[0] == '\'') &&
+			(result[len + 1] == '\'') &&
+			(result.compare(1, len, test) == 0)) {
+		return true;
+	}
+	else {
+		std::cerr << "Failed to quote " << typeid(test).name() << std::endl;
+		return false;
+	}
+}
+
+
 int
 main()
 {
@@ -38,15 +58,13 @@ main()
 
 	char test[] = "Doodle me, James, doodle me!";
 	const size_t len = strlen(test);
-	
-	q << mysqlpp::quote << test;
-	std::string result = q.str();
-	if ((result.length() == (len + 2)) && (result[0] == '\'') &&
-			(result[len + 1] == '\'')) {
+	if (test_quote(q, test, len) &&
+			test_quote(q, (char*)test, len) &&
+			test_quote(q, (const char*)test, len) &&
+			test_quote(q, std::string(test), len)) {
 		return 0;
 	}
 	else {
-		std::cerr << "Failed to quote char[]" << std::endl;
 		return 1;
 	}
 }
