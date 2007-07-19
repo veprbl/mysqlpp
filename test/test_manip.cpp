@@ -32,40 +32,99 @@
 
 template <class T>
 static bool
-test_quote(mysqlpp::Query& q, T test, size_t len)
+is_quoted(const std::string& s, T orig_str, size_t orig_len)
+{
+	return (s.length() == (orig_len + 2)) &&
+			(s.at(0) == '\'') &&
+			(s.at(orig_len + 1) == '\'') &&
+			(s.compare(1, orig_len, orig_str) == 0);
+}
+
+
+// Stringish types should be quoted when inserted into Query when an
+// explicit quote manipulator is used.
+template <class T>
+static bool
+test_explicit_query_quote(mysqlpp::Query& q, T test, size_t len)
 {
 	q.reset();
 	q << mysqlpp::quote << test;
-	std::string result = q.str();
-	if ((result.length() == (len + 2)) &&
-			(result[0] == '\'') &&
-			(result[len + 1] == '\'') &&
-			(result.compare(1, len, test) == 0)) {
+	if (is_quoted(q.str(), test, len)) {
 		return true;
 	}
 	else {
-		std::cerr << "Failed to quote " << typeid(test).name() <<
-				": " << result << std::endl;
+		std::cerr << "Explicit quote of " << typeid(test).name() <<
+				" in Query failed: " << q.str() << std::endl;
 		return false;
 	}
 }
 
 
+// Stringish types should be quoted when inserted into an ostream when
+// an explicit quote manipulator is used.
 template <class T>
 static bool
-fail_quote(T test, size_t len)
+test_explicit_ostream_quote(T test, size_t len)
 {
 	std::ostringstream outs;
 	outs << mysqlpp::quote << test;
-	if ((outs.str().length() == len) && 
-			(outs.str().compare(0, len, test) == 0)) {
+	if (is_quoted(outs.str(), test, len)) {
+		return true;
+	}
+	else {
+		std::cerr << "Explicit quote of " << typeid(test).name() <<
+				" in ostream failed: " << outs.str() << std::endl;
+		return false;
+	}
+}
+
+
+// Stringish types should be implicitly quoted when inserted into Query
+template <class T>
+static bool
+test_implicit_query_quote(mysqlpp::Query& q, T test, size_t len)
+{
+	q.reset();
+	q << test;
+	if (is_quoted(q.str(), test, len)) {
+		return true;
+	}
+	else {
+		std::cerr << "Implicit quote of " << typeid(test).name() <<
+				" in Query failed: " << q.str() << std::endl;
+		return false;
+	}
+}
+
+
+// Stringish types should NOT be implicitly quoted when inserted into
+// non-Query ostreams
+template <class T>
+static bool
+fail_implicit_ostream_quote(T test, size_t len)
+{
+	std::ostringstream outs;
+	outs << mysqlpp::quote << test;
+	if (!is_quoted(outs.str(), test, len)) {
 		return true;
 	}
 	else {
 		std::cerr << "Erroneously quoted " << typeid(test).name() <<
-				": " << outs.str() << std::endl;
+				" in non-Query ostream: " << outs.str() << std::endl;
 		return false;
 	}
+}
+
+
+// Run all tests above for the given type
+template <class T>
+static bool
+test(mysqlpp::Query& q, T test, size_t len)
+{
+	return test_explicit_query_quote(q, test, len) &&
+			test_explicit_ostream_quote(test, len) &&
+			test_implicit_query_quote(q, test, len) &&
+			!fail_implicit_ostream_quote(test, len);
 }
 
 
@@ -75,22 +134,15 @@ main()
 	mysqlpp::Connection c;
 	mysqlpp::Query q(&c);
 
-	char test[] = "Doodle me, James, doodle me!";
-	const size_t len = strlen(test);
-	if (test_quote(q, test, len) &&
-			test_quote(q, (char*)test, len) &&
-			test_quote(q, (const char*)test, len) &&
-			test_quote(q, std::string(test), len) &
-			test_quote(q, mysqlpp::ColData(test), len) &&
-			fail_quote(test, len) &&
-			fail_quote((char*)test, len) &&
-			fail_quote((const char*)test, len) &&
-			fail_quote(std::string(test), len) &
-			fail_quote(mysqlpp::ColData(test), len)) {
-		return 0;
-	}
-	else {
-		return 1;
-	}
+	char s[] = "Doodle me, James, doodle me!";
+	const size_t len = strlen(s);
+
+	int failures = 0;
+	failures += test(q, s, len) == false;
+	failures += test(q, (char*)s, len) == false;
+	failures += test(q, (const char*)s, len) == false;
+	failures += test(q, std::string(s), len) == false;
+	failures += test(q, mysqlpp::ColData(s), len) == false;
+	return failures;
 }
 
