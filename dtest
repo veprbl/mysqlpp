@@ -1,12 +1,38 @@
-#!/bin/sh
+#!/bin/bash
 
-echo 'Running tests:'
-echo -n "   "
 TMP=`mktemp bmXXXXXX`
-# Yes, the repeated use of resetdb is intentional!  We're running it
-# after the examples that change the database in a way that will cause
-# subsequent examples to fail because data they need isn't present.
-for t in test_* \
+
+# Run simple unit tests first.
+typeset -i count=0
+echo -n 'Running unit tests:'
+for t in test_*
+do
+	if [ -x "$t" ]
+	then
+		errmsg=`./exrun "$t" 2>&1`
+		errno=$?
+		if [ "$errno" == 0 ]
+		then
+			count=count+1
+		else
+			rm -f $TMP
+			echo " $t FAILED"
+			echo
+			echo "	Code $errno: $errmsg"
+			exit $?
+		fi
+	fi
+done
+echo " $count tests succeeded"
+echo 'All unit tests passed' >> $TMP
+
+
+# Now run examples to test high-level behavior.  The repeated use of
+# resetdb is intentional!  It's run after each example that changes
+# the database in a way that will cause a subsequent example to fail
+# because data it expects isn't present.
+echo -n 'Running examples:'
+for t in \
 	resetdb simple[0-9] store_if for_each multiquery tquery1 \
 	resetdb tquery2 dbinfo fieldinf \
 	resetdb usequery custom[0-9]
@@ -34,18 +60,21 @@ do
 done
 echo
 
+
+# Check for any changes
 BFILE=bmark.txt
 if [ -f $BFILE ]
 then
 	if diff -u -w $BFILE $TMP
 	then
 		echo
-		echo 'No changes in test results.'
+		echo 'All tests passed.'
 	fi
 	rm -f $TMP
 else
 	mv $TMP $BFILE
 	chmod -w $BFILE
 	echo
-	echo 'Benchmark file regenerated.'
+	echo 'BENCHMARK FILE REGENERATED.'
+	echo
 fi
