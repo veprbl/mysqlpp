@@ -182,6 +182,9 @@
 
 	<!-- Define library testing programs' output targets, if enabled -->
 	<if cond="BUILDTEST=='yes'">
+		<exe id="test_manip" template="programs">
+			<sources>test/test_manip.cpp</sources>
+		</exe>
 		<exe id="test_tcp" template="programs">
 			<sources>test/test_tcp.cpp</sources>
 		</exe>
