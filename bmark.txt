@@ -2,6 +2,12 @@
 TCP address parsing passed.
 ================ END test_tcp OUTPUT ================
 
+---------------- BEGIN test_uds OUTPUT ----------------
+================ END test_uds OUTPUT ================
+
+---------------- BEGIN test_wnp OUTPUT ----------------
+================ END test_wnp OUTPUT ================
+
 ---------------- BEGIN resetdb OUTPUT ----------------
 Connecting to database server...
 Dropping existing sample data tables...

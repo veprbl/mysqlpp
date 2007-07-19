@@ -185,6 +185,12 @@
 		<exe id="test_tcp" template="programs">
 			<sources>test/test_tcp.cpp</sources>
 		</exe>
+		<exe id="test_uds" template="programs">
+			<sources>test/test_uds.cpp</sources>
+		</exe>
+		<exe id="test_wnp" template="programs">
+			<sources>test/test_wnp.cpp</sources>
+		</exe>
 	</if>	<!-- build library test programs -->
 
 	<!-- Define example programs' output targets, if enabled -->
