@@ -44,7 +44,26 @@ test_quote(mysqlpp::Query& q, T test, size_t len)
 		return true;
 	}
 	else {
-		std::cerr << "Failed to quote " << typeid(test).name() << std::endl;
+		std::cerr << "Failed to quote " << typeid(test).name() <<
+				": " << result << std::endl;
+		return false;
+	}
+}
+
+
+template <class T>
+static bool
+fail_quote(T test, size_t len)
+{
+	std::ostringstream outs;
+	outs << mysqlpp::quote << test;
+	if ((outs.str().length() == len) && 
+			(outs.str().compare(0, len, test) == 0)) {
+		return true;
+	}
+	else {
+		std::cerr << "Erroneously quoted " << typeid(test).name() <<
+				": " << outs.str() << std::endl;
 		return false;
 	}
 }
@@ -61,7 +80,13 @@ main()
 	if (test_quote(q, test, len) &&
 			test_quote(q, (char*)test, len) &&
 			test_quote(q, (const char*)test, len) &&
-			test_quote(q, std::string(test), len)) {
+			test_quote(q, std::string(test), len) &
+			test_quote(q, mysqlpp::ColData(test), len) &&
+			fail_quote(test, len) &&
+			fail_quote((char*)test, len) &&
+			fail_quote((const char*)test, len) &&
+			fail_quote(std::string(test), len) &
+			fail_quote(mysqlpp::ColData(test), len)) {
 		return 0;
 	}
 	else {
