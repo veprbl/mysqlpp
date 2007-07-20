@@ -29,7 +29,6 @@
 #define MYSQLPP_ROW_H
 
 #include "coldata.h"
-#include "exceptions.h"
 #include "noexceptions.h"
 #include "resiter.h"
 #include "vallist.h"
