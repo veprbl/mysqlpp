@@ -13,6 +13,8 @@ v3.0 Plan, For-Sure Stuff
     get done in v3.0.  Most of them break the ABI, so they can't wait
     for a future version, because v4 could be years out.
 
+    o Audit use of headers in lib/*.h, to reduce dependencies.
+
     o Add conditional code to the Lockable mechanism to use platform
       mutexes if available, to implement these MySQL C API
       restrictions:
