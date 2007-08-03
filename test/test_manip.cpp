@@ -79,14 +79,17 @@ test_explicit_ostream_quote(T test, size_t len)
 }
 
 
-// Stringish types should be implicitly quoted when inserted into Query
+// The only stringish type that should be implicitly quoted when
+// inserted into Query is ColData, and not always then; we don't know
+// enough about anything else to make good automated choices.
 template <class T>
 static bool
 test_implicit_query_quote(mysqlpp::Query& q, T test, size_t len)
 {
 	q.reset();
 	q << test;
-	if (is_quoted(q.str(), test, len)) {
+	if (is_quoted(q.str(), test, len) || 
+			(typeid(test) != typeid(mysqlpp::ColData))) {
 		return true;
 	}
 	else {
