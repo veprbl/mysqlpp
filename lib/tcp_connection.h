@@ -98,10 +98,8 @@ public:
 	/// It understands the following forms:
 	///
 	///	- 1.2.3.4
-	/// - 1.2.3.4:567
 	/// - 1.2.3.4:mysvcport
 	/// - a.b.com:89
-	/// - a.b.com:mysql
 	///
 	/// It also understands IPv6 addresses, but to avoid confusion
 	/// between the colons they use and the colon separating the address
