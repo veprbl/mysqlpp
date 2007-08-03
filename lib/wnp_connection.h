@@ -1,4 +1,4 @@
-/// \file np_connection.h
+/// \file wnp_connection.h
 /// \brief Declares the WindowsNamedPipeConnection class.
 
 /***********************************************************************
