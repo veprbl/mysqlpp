@@ -99,13 +99,9 @@ public:
 	///
 	///	- 1.2.3.4
 	///
-	///	- 1.2.3.4:567
-	///
-	/// - 1.2.3.4:mysvcport
-	///
 	/// - a.b.com:89
 	///
-	/// - d.e.fr:othersvc
+	/// - d.e.fr:mysvcname
 	///
 	/// It also understands IPv6 addresses, but to avoid confusion
 	/// between the colons they use and the colon separating the address
