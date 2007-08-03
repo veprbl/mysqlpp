@@ -37,7 +37,7 @@
 	<if cond="BUILDLIBRARY=='yes'">
 		<dll id="mysqlpp">
 			<libname>mysqlpp</libname>
-			<so_version>2.3.2</so_version>
+			<so_version>2.9.0</so_version>
 
 			<sources>
 				lib/coldata.cpp
@@ -337,7 +337,7 @@
 
 			<!-- Set up package directory -->
 			<command>
-				for d in config doc/{.,html}/{refman,userman} examples lib ; \
+				for d in config doc/{.,html}/{refman,userman} examples lib test ; \
 				do \
 					mkdir -p $(PKGNAME)/$(DDD) ; \
 				done
@@ -400,6 +400,11 @@
 			<!-- lib subdir -->
 			<command>
 				cp lib/*.{cpp,h,in,pl} $(PKGNAME)/lib
+			</command>
+
+			<!-- test subdir -->
+			<command>
+				cp test/*.cpp $(PKGNAME)/test
 			</command>
 
 			<!-- distribution dir created, so pack up a copy and 
