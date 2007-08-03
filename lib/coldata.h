@@ -195,7 +195,7 @@ public:
 	///
 	/// This method is arguably useful with plain \c ColData objects,
 	/// but there are more efficient alternatives.  If you know your
-	/// data is a null-terminated C string, just cast this object to
+	/// data is a null-terminated C string, just assign this object to
 	/// a \c const \c char* or call the \c data() method.  This gives
 	/// you a pointer to our internal buffer, so the copy isn't needed.
 	/// If the \c ColData can contain embedded null characters, you do
