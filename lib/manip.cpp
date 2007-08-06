@@ -272,9 +272,9 @@ SQLQueryParms& operator <<(quote_double_only_type2 p, SQLString& in)
 template <>
 ostream& operator <<(quote_double_only_type1 o, const ColData& in)
 {
-	if (in.quote_q()) o.ostr->write("'", 1);
+	if (in.quote_q()) o.ostr->write("\"", 1);
 	o.ostr->write(in.data(), in.length());
-	if (in.quote_q()) o.ostr->write("'", 1);
+	if (in.quote_q()) o.ostr->write("\"", 1);
 
 	return *o.ostr;
 }
