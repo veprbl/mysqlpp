@@ -3,23 +3,24 @@
 ///
 /// These manipulators let you automatically quote elements or escape
 /// characters that are special in SQL when inserting them into an
-/// \c std::ostream. Since mysqlpp::Query is an ostream, these
+/// \c std::ostream.  Since mysqlpp::Query is an ostream, these
 /// manipulators make it easier to build syntactically-correct SQL
 /// queries.
 ///
-/// This file also includes \c operator<< definitions for ColData_Tmpl,
-/// one of the MySQL++ string-like classes.  When inserting such items
-/// into a stream, they are automatically quoted and escaped as
-/// necessary unless the global variable dont_quote_auto is set to true.
-/// These operators are smart enough to turn this behavior off when
-/// the stream is \c cout or \c cerr, however, since quoting and
-/// escaping are surely not required in that instance.
+/// This file also includes special \c operator<< definitions for class
+/// \c ColData.  When inserting these objects into a Query using its
+/// stream interface, they are automatically quoted and escaped as
+/// necessary depending on data type unless the global variable
+/// dont_quote_auto is set to true.   Automatic quoting and escaping
+/// does not happen when inserting ColData objects into other stream
+/// types, but you can use the explicit quote and escape manipulators.
+/// See test/test_manip.cpp to see the expected behavior.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -126,15 +127,7 @@ inline std::ostream& operator <<(quote_type1 o, const T & in)
 
 
 MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
-		const ColData_Tmpl<std::string>& in);
-
-
-MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 		const ColData& in);
-
-
-MYSQLPP_EXPORT Query& operator <<(Query& o,
-		const ColData_Tmpl<std::string>& in);
 
 
 MYSQLPP_EXPORT Query& operator <<(Query& o,
@@ -148,11 +141,6 @@ MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
 template <>
 MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
 		const char* const& in);
-
-
-template <>
-MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
-		const ColData_Tmpl<std::string>& in);
 
 
 template <>
@@ -284,11 +272,6 @@ inline std::ostream& operator <<(quote_only_type1 o,
 
 template <>
 MYSQLPP_EXPORT std::ostream& operator <<(quote_only_type1 o,
-		const ColData_Tmpl<std::string>& in);
-
-
-template <>
-MYSQLPP_EXPORT std::ostream& operator <<(quote_only_type1 o,
 		const ColData& in);
 
 
@@ -393,11 +376,6 @@ inline std::ostream& operator <<(
 {
 	return *o.ostr << '"' << in << '"';
 }
-
-
-template <>
-MYSQLPP_EXPORT std::ostream& operator <<(quote_double_only_type1 o,
-		const ColData_Tmpl<std::string>& in);
 
 
 template <>
@@ -523,11 +501,6 @@ MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
 template <>
 MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
 		const char* const& in);
-
-
-template <>
-MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
-		const ColData_Tmpl<std::string>& in);
 
 
 template <>

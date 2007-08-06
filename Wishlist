@@ -67,10 +67,6 @@ v3.0 Plan, For-Sure Stuff
       - Change buffer management back to the v2.2 way, where ColData
         just held a copy of the pointer, not a copy of the data.
 
-      - Implement as much of the std::string interface as necessary
-        to allow replacing MutableColData in myset.h, adding CoW
-        semantics for any new function that can change the buffer.
-
       - Make Valgrind study all examples, especially load_jpeg
         with a large file.
 

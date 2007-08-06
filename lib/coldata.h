@@ -49,187 +49,34 @@
 
 namespace mysqlpp {
 
-/// \brief Template for string data that can convert itself to any
-/// standard C data type.
+/// \brief A std::string work-alike that can convert itself from SQL
+/// text data formats to C++ data types.
 ///
-/// Do not use this class directly. Use the typedef ColData or
-/// MutableColData instead. ColData is a \c ColData_Tmpl<const
-/// \c std::string> and MutableColData is a
-/// \c ColData_Tmpl<std::string>.
+/// This class is an intermediate form for a SQL field, normally
+/// converted to a more useful native C++ type.  It is not normally
+/// used directly by MySQL++ programs, but instead is the return type
+/// from several Row class members.
 ///
-/// The ColData types add to the C++ string type the ability to
-/// automatically convert the string data to any of the basic C types.
-/// This is important with SQL, because all data coming from the
-/// database is in string form.  MySQL++ uses this class internally
-/// to hold the data it receives from the server, so you can use it
-/// naturally, because it does the conversions implicitly:
+/// ColData's implicit conversion operators let you can use these
+/// objects naturally:
 ///
 /// \code ColData("12.86") + 2.0 \endcode
 ///
-/// That works fine, but be careful.  If you had said this instead:
+/// That will give you 14.86 (approximately) as you expect, but be
+/// careful not to get tripped up by C++'s type conversion rules.  If
+/// you had said this instead:
 /// 
 /// \code ColData("12.86") + 2 \endcode
 /// 
 /// the result would be 14 because 2 is an integer, and C++'s type
 /// conversion rules put the ColData object in an integer context.
 ///
-/// If these automatic conversions scare you, define the macro
-/// NO_BINARY_OPERS to disable this behavior.
+/// You can disable the operator overloads that allow these things by
+/// defining MYSQLPP_NO_BINARY_OPERS.
 ///
 /// This class also has some basic information about the type of data
 /// stored in it, to allow it to do the conversions more intelligently
 /// than a trivial implementation would allow.
-
-template <class Str>
-class MYSQLPP_EXPORT ColData_Tmpl : public Str
-{
-public:
-	/// \brief Default constructor
-	///
-	/// Null flag is set to false, type data is not set, and string
-	/// data is left empty.
-	///
-	/// It's probably a bad idea to use this ctor, becuase there's no
-	/// way to set the type data once the object's constructed.
-	ColData_Tmpl() :
-	null_(false)
-	{
-	}
-
-	/// \brief Copy ctor
-	///
-	/// \param cd the other ColData_Tmpl object
-	ColData_Tmpl(const ColData_Tmpl<Str>& cd) :
-	Str(cd.data(), cd.length()),
-	type_(cd.type_),
-	null_(cd.null_)
-	{
-	}
-
-	/// \brief Constructor allowing you to set the null flag and the
-	/// type data.
-	///
-	/// \param n if true, data is a SQL null
-	/// \param t MySQL type information for data being stored
-	explicit ColData_Tmpl(bool n,
-			mysql_type_info t = mysql_type_info::string_type) :
-	type_(t),
-	null_(n)
-	{
-	}
-
-	/// \brief C++ string version of full ctor
-	///
-	/// \param str the string this object represents
-	/// \param t MySQL type information for data within str
-	/// \param n if true, str is a SQL null
-	explicit ColData_Tmpl(const std::string& str,
-			mysql_type_info t = mysql_type_info::string_type,
-			bool n = false) :
-	Str(str),
-	type_(t),
-	null_(n)
-	{
-	}
-
-	/// \brief Null-terminated C string version of full ctor
-	///
-	/// \param str the string this object represents
-	/// \param t MySQL type information for data within str
-	/// \param n if true, str is a SQL null
-	explicit ColData_Tmpl(const char* str,
-			mysql_type_info t = mysql_type_info::string_type,
-			bool n = false) :
-	Str(str),
-	type_(t),
-	null_(n)
-	{
-	}
-
-	/// \brief Full constructor.
-	///
-	/// \param str the string this object represents
-	/// \param len the length of the string; embedded nulls are legal
-	/// \param t MySQL type information for data within str
-	/// \param n if true, str is a SQL null
-	explicit ColData_Tmpl(const char* str, typename Str::size_type len,
-			mysql_type_info t = mysql_type_info::string_type,
-			bool n = false) :
-	Str(str, len),
-	type_(t),
-	null_(n)
-	{
-	}
-
-	/// \brief Get this object's current MySQL type.
-	mysql_type_info type() const { return type_; }
-
-	/// \brief Returns true if data of this type should be quoted, false
-	/// otherwise.
-	bool quote_q() const { return type_.quote_q(); }
-
-	/// \brief Returns true if data of this type should be escaped, false
-	/// otherwise.
-	bool escape_q() const { return type_.escape_q(); }
-	
-	/// \brief Set a flag indicating that this object is a SQL null.
-	void it_is_null() { null_ = true; }
-
-	/// \brief Returns true if this object is a SQL null.
-	inline const bool is_null() const { return null_; }
-	
-	/// \brief Returns this object's data in C++ string form.
-	///
-	/// This method is inefficient, and not recommended.  It makes a
-	/// duplicate copy of the string that lives as long as the
-	/// \c ColData object itself.
-	///
-	/// If you are using the \c MutableColData typedef for this
-	/// template, you can avoid the duplicate copy entirely.  You can
-	/// pass a \c MutableColData object to anything expecting a
-	/// \c std::string and get the right result.  (This didn't work
-	/// reliably prior to v2.3.)
-	///
-	/// This method is arguably useful with plain \c ColData objects,
-	/// but there are more efficient alternatives.  If you know your
-	/// data is a null-terminated C string, just assign this object to
-	/// a \c const \c char* or call the \c data() method.  This gives
-	/// you a pointer to our internal buffer, so the copy isn't needed.
-	/// If the \c ColData can contain embedded null characters, you do
-	/// need to make a copy, but it's better to make your own copy of 
-	/// the string, instead of calling get_string(), so you can better
-	/// control its lifetime:
-	///
-	/// \code
-	/// ColData cd = ...;
-	/// std::string s(cd.data(), cd.length());
-	/// \endcode
-	inline const std::string& get_string() const
-	{
-		temp_buf_.assign(Str::data(), Str::length());
-		return temp_buf_;
-	}
-
-	/// \brief Returns a const char pointer to the object's raw data
-	operator cchar*() const { return Str::data(); }
-	
-	template <class T, class B> operator Null<T, B>() const;
-
-private:
-	mysql_type_info type_;
-	mutable std::string temp_buf_;	
-	bool null_;
-};
-
-/// \typedef ColData_Tmpl<std::string> MutableColData
-/// \brief The type that is returned by mutable rows
-typedef ColData_Tmpl<std::string> MutableColData;
-
-
-/// \brief Temporary implementation of ColData, being a merger of 
-/// ColData_Tmpl and const_string, instead of ColData_Tmpl<const_string>
-/// which amounts to the same thing.  ColData_Tmpl will be going away
-/// soon.
 
 class MYSQLPP_EXPORT ColData
 {
@@ -562,11 +409,11 @@ private:
 
 
 
-#if !defined(NO_BINARY_OPERS) && !defined(DOXYGEN_IGNORE)
-// Ignore this section is NO_BINARY_OPERS is defined, or if this section
-// is being parsed by Doxygen.  In the latter case, it's ignored because
-// Doxygen doesn't understand it correctly, and we can't be bothered to
-// explain it to Doxygen.
+#if !defined(MYSQLPP_NO_BINARY_OPERS) && !defined(DOXYGEN_IGNORE)
+// Ignore this section is MYSQLPP_NO_BINARY_OPERS is defined, or if this
+// section is being parsed by Doxygen.  In the latter case, it's ignored
+// because Doxygen doesn't understand it correctly, and we can't be
+// bothered to explain it to Doxygen.
 
 #define oprsw(opr, other, conv) \
 	inline other operator opr (ColData x, other y) \
@@ -606,7 +453,7 @@ operator_binary_int(unsigned long int, unsigned long int)
 operator_binary_int(longlong, longlong)
 operator_binary_int(ulonglong, ulonglong)
 #endif
-#endif // NO_BINARY_OPERS
+#endif // MYSQLPP_NO_BINARY_OPERS
 
 /// \brief Converts this object to a SQL null
 ///

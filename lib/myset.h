@@ -132,20 +132,27 @@ inline std::ostream& operator <<(std::ostream& s,
 template <class Insert>
 void set2container(const char* str, Insert insert)
 {
-	while (1) {
-		MutableColData s("");
-		while (*str != ',' && *str) {
-			s += *str;
-			str++;
+	std::string temp;
+
+	// Break str up using comma separators
+	while (str && *str) {
+		if (*str == ',') {
+			insert(temp);
+			temp.clear();
+
+			// Handle comma at end of string case
+			if (*++str) {
+				++str;
+			}
 		}
-
-		insert(s);
-
-		if (!*str) {
-			break; 
+		else {
+			temp += *str++;
 		}
+	}
 
-		str++;
+	// Save final element of set, if any
+	if (temp.size()) {
+		insert(temp);
 	}
 }
 

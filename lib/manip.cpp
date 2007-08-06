@@ -152,15 +152,6 @@ ostream& operator <<(quote_type1 o, const ColData& in)
 }
 
 
-/// \brief Inserts a ColData_Tmpl<std::string> into a non-Query stream.
-
-ostream& operator <<(ostream& o, const ColData_Tmpl<string>& in)
-{
-	o.write(in.data(), in.length());
-	return o;
-}
-
-
 /// \brief Inserts a ColData into a non-Query stream.
 ///
 /// Although we know how to automatically quote and escape ColData
@@ -177,37 +168,6 @@ ostream& operator <<(ostream& o, const ColData_Tmpl<string>& in)
 ostream& operator <<(ostream& o, const ColData& in)
 {
 	o.write(in.data(), in.length());
-	return o;
-}
-
-
-/// \brief Insert a ColData into a SQLQuery
-///
-/// This operator appears to be a workaround for a weakness in one
-/// compiler's implementation of the C++ type system.  See Wishlist for
-/// current plan on what to do about this.
-
-Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
-{
-	if (dont_quote_auto) {
-		o.write(in.data(), in.length());
-	}
-	else if (in.escape_q()) {
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
-
-		if (in.quote_q()) o.write("'", 1);
-		o.write(s, len);
-		if (in.quote_q()) o.write("'", 1);
-
-		delete[] s;
-	}
-	else {
-		if (in.quote_q()) o.write("'", 1);
-		o.write(in.data(), in.length());
-		if (in.quote_q()) o.write("'", 1);
-	}
-
 	return o;
 }
 
@@ -265,22 +225,6 @@ SQLQueryParms& operator <<(quote_only_type2 p, SQLString& in)
 }
 
 
-/// \brief Inserts a ColData into a stream, quoted
-///
-/// Because ColData was designed to contain MySQL type data, we may
-/// choose not to actually quote the data, if it is not needed.
-
-template <>
-ostream& operator <<(quote_only_type1 o, const ColData_Tmpl<string>& in)
-{
-	if (in.quote_q()) o.ostr->write("'", 1);
-	o.ostr->write(in.data(), in.length());
-	if (in.quote_q()) o.ostr->write("'", 1);
-
-	return *o.ostr;
-}
-
-
 /// \brief Inserts a ColData with const string into a stream, quoted
 ///
 /// Because ColData was designed to contain MySQL type data, we may
@@ -316,23 +260,6 @@ SQLQueryParms& operator <<(quote_double_only_type2 p, SQLString& in)
 		in.processed = true;
 		return *p.qparms << in;
 	}
-}
-
-
-/// \brief Inserts a ColData into a stream, double-quoted (")
-///
-/// Because ColData was designed to contain MySQL type data, we may
-/// choose not to actually quote the data, if it is not needed.
-
-template <>
-ostream& operator <<(quote_double_only_type1 o,
-		const ColData_Tmpl<string>& in)
-{
-	if (in.quote_q()) o.ostr->write("\"", 1);
-	o.ostr->write(in.data(), in.length());
-	if (in.quote_q()) o.ostr->write("\"", 1);
-
-	return *o.ostr;
 }
 
 
