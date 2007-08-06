@@ -64,17 +64,12 @@ v3.0 Plan, For-Sure Stuff
 
     o Revamp ColData:
 
-      - Merge const_string into ColData_Tmpl<T>, creating concrete
-        ColData class.
-
       - Change buffer management back to the v2.2 way, where ColData
         just held a copy of the pointer, not a copy of the data.
 
       - Implement as much of the std::string interface as necessary
         to allow replacing MutableColData in myset.h, adding CoW
         semantics for any new function that can change the buffer.
-
-      - Remove ColData_Tmpl<T> typedefs and const_string class.
 
       - Make Valgrind study all examples, especially load_jpeg
         with a large file.
@@ -107,10 +102,6 @@ v3.0 Plan, For-Sure Stuff
     o Apply Richard Forrest's iterator patch:
 
           http://lists.mysql.com/plusplus/5338
-
-    o Honor only explicit use of quote and escape manipulators when
-      inserting into something other than a Query stream.  Recognize
-      Query streams instead of excluding only cout and cerr.
 
     o The quote manipulator (and presumably the others as well) don't
       work properly with char*.  See this for details:

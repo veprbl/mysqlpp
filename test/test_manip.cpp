@@ -45,7 +45,7 @@ is_quoted(const std::string& s, T orig_str, size_t orig_len)
 // explicit quote manipulator is used.
 template <class T>
 static bool
-test_explicit_query_quote(mysqlpp::Query& q, T test, size_t len)
+explicit_query_quote(mysqlpp::Query& q, T test, size_t len)
 {
 	q.reset();
 	q << mysqlpp::quote << test;
@@ -64,7 +64,7 @@ test_explicit_query_quote(mysqlpp::Query& q, T test, size_t len)
 // an explicit quote manipulator is used.
 template <class T>
 static bool
-test_explicit_ostream_quote(T test, size_t len)
+explicit_ostream_quote(T test, size_t len)
 {
 	std::ostringstream outs;
 	outs << mysqlpp::quote << test;
@@ -84,7 +84,7 @@ test_explicit_ostream_quote(T test, size_t len)
 // enough about anything else to make good automated choices.
 template <class T>
 static bool
-test_implicit_query_quote(mysqlpp::Query& q, T test, size_t len)
+implicit_query_quote(mysqlpp::Query& q, T test, size_t len)
 {
 	q.reset();
 	q << test;
@@ -100,20 +100,23 @@ test_implicit_query_quote(mysqlpp::Query& q, T test, size_t len)
 }
 
 
-// Stringish types should NOT be implicitly quoted when inserted into
-// non-Query ostreams
+// No stringish type should be implicitly quoted when inserted into
+// non-Query ostreams, not even ColData carrying data that would be
+// quoted when inserted into Query.  Implicit quoting is only for
+// building SQL queries.
 template <class T>
 static bool
-fail_implicit_ostream_quote(T test, size_t len)
+implicit_ostream_quote(T test, size_t len)
 {
 	std::ostringstream outs;
-	outs << mysqlpp::quote << test;
+	outs << test;
 	if (!is_quoted(outs.str(), test, len)) {
 		return true;
 	}
 	else {
-		std::cerr << "Erroneously quoted " << typeid(test).name() <<
-				" in non-Query ostream: " << outs.str() << std::endl;
+		std::cerr << typeid(test).name() << " erroneously implicitly "
+				"quoted in non-Query ostream: " << outs.str() <<
+				std::endl;
 		return false;
 	}
 }
@@ -124,10 +127,10 @@ template <class T>
 static bool
 test(mysqlpp::Query& q, T test, size_t len)
 {
-	return test_explicit_query_quote(q, test, len) &&
-			test_explicit_ostream_quote(test, len) &&
-			test_implicit_query_quote(q, test, len) &&
-			!fail_implicit_ostream_quote(test, len);
+	return explicit_query_quote(q, test, len) &&
+			explicit_ostream_quote(test, len) &&
+			implicit_query_quote(q, test, len) &&
+			implicit_ostream_quote(test, len);
 }
 
 

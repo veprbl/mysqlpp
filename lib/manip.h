@@ -130,7 +130,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 
 
 MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
-		const ColData_Tmpl<const_string>& in);
+		const ColData& in);
 
 
 MYSQLPP_EXPORT Query& operator <<(Query& o,
@@ -138,8 +138,7 @@ MYSQLPP_EXPORT Query& operator <<(Query& o,
 
 
 MYSQLPP_EXPORT Query& operator <<(Query& o,
-		const ColData_Tmpl<const_string>& in);
-
+		const ColData& in);
 
 template <>
 MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
@@ -158,7 +157,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
 
 template <>
 MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
-		const ColData_Tmpl<const_string>& in);
+		const ColData& in);
 
 
 template <>
@@ -290,7 +289,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(quote_only_type1 o,
 
 template <>
 MYSQLPP_EXPORT std::ostream& operator <<(quote_only_type1 o,
-		const ColData_Tmpl<const_string>& in);
+		const ColData& in);
 
 
 template <>
@@ -403,7 +402,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(quote_double_only_type1 o,
 
 template <>
 MYSQLPP_EXPORT std::ostream & operator <<(quote_double_only_type1 o,
-		const ColData_Tmpl<const_string>& in);
+		const ColData& in);
 
 
 template <>
@@ -533,7 +532,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
 
 template <>
 MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
-		const ColData_Tmpl<const_string>& in);
+		const ColData& in);
 
 
 /// \brief Inserts a C string into a stream, escaping special SQL

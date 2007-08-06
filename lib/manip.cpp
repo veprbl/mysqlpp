@@ -122,10 +122,15 @@ ostream& operator <<(quote_type1 o, const char* const& in)
 }
 
 
-/// \brief Utility function used by operator<<(quote_type1, ColData)
+/// \brief Inserts a ColData with const string into a stream, quoted and
+/// escaped
+///
+/// Because ColData was designed to contain MySQL type data, we may
+/// choose not to actually quote or escape the data, if it is not
+/// needed.
 
-template<class Str>
-inline ostream& _manip(quote_type1 o, const ColData_Tmpl<Str>& in)
+template <>
+ostream& operator <<(quote_type1 o, const ColData& in)
 {
 	if (in.escape_q()) {
 		char* s = new char[in.length() * 2 + 1];
@@ -147,103 +152,31 @@ inline ostream& _manip(quote_type1 o, const ColData_Tmpl<Str>& in)
 }
 
 
-/// \brief Inserts a ColData into a stream, quoted and escaped
-///
-/// Because ColData was designed to contain MySQL type data, we may
-/// choose not to actually quote or escape the data, if it is not
-/// needed.
-
-template <>
-ostream& operator <<(quote_type1 o, const ColData_Tmpl<string>& in)
-{
-	return _manip(o, in);
-}
-
-
-/// \brief Inserts a ColData with const string into a stream, quoted and
-/// escaped
-///
-/// Because ColData was designed to contain MySQL type data, we may
-/// choose not to actually quote or escape the data, if it is not
-/// needed.
-
-template <>
-ostream& operator <<(quote_type1 o, const ColData_Tmpl<const_string>& in)
-{
-	return _manip(o, in);
-}
-
-
-/// \brief Inserts a ColData into a stream.
-///
-/// Because ColData was designed to contain MySQL type data, this
-/// operator has the information needed to choose to quote and/or escape
-/// the data as it is inserted into the stream, even if you don't use
-/// any of the quoting or escaping manipulators.
+/// \brief Inserts a ColData_Tmpl<std::string> into a non-Query stream.
 
 ostream& operator <<(ostream& o, const ColData_Tmpl<string>& in)
 {
-	// Decide if we're allowed to escape or quote the data.
-	bool transform_ok =
-			!dont_quote_auto &&
-			(o.rdbuf() != cout.rdbuf()) &&
-			(o.rdbuf() != cerr.rdbuf());
-
-	if (transform_ok && in.escape_q()) {
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
-
-		if (in.quote_q()) o << '\'';
-		o.write(s, len);
-		if (in.quote_q()) o << '\'';
-
-		delete[] s;
-	}
-	else {
-		bool add_quote = transform_ok && in.quote_q();
-
-		if (add_quote) o << '\'';
-		o.write(in.data(), in.length());
-		if (add_quote) o << '\'';
-	}
-
+	o.write(in.data(), in.length());
 	return o;
 }
 
 
-/// \brief Inserts a ColData with const string into a stream.
+/// \brief Inserts a ColData into a non-Query stream.
 ///
-/// Because ColData was designed to contain MySQL type data, this
-/// operator has the information needed to choose to quote and/or escape
-/// the data as it is inserted into the stream, even if you don't use
-/// any of the quoting or escaping manipulators.
+/// Although we know how to automatically quote and escape ColData
+/// objects, we only do that when inserting them into Query streams
+/// because this feature is only intended to make it easier to build
+/// syntactically-correct SQL queries.  You can force the library to
+/// give you quoting and escaping with the quote manipulator:
+///
+/// \code
+/// mysqlpp::ColData cd("...");
+/// cout << mysqlpp::quote << cd << endl;
+/// \endcode
 
-ostream& operator <<(ostream& o, const ColData_Tmpl<const_string>& in)
+ostream& operator <<(ostream& o, const ColData& in)
 {
-	// Decide if we're allowed to escape or quote the data.
-	bool transform_ok =
-			!dont_quote_auto &&
-			(o.rdbuf() != cout.rdbuf()) &&
-			(o.rdbuf() != cerr.rdbuf());
-
-	if (transform_ok && in.escape_q()) {
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
-
-		if (in.quote_q()) o << '\'';
-		o.write(s, len);
-		if (in.quote_q()) o << '\'';
-
-		delete[] s;
-	}
-	else {
-		bool add_quote = transform_ok && in.quote_q();
-
-		if (add_quote) o << '\'';
-		o.write(in.data(), in.length());
-		if (add_quote) o << '\'';
-	}
-
+	o.write(in.data(), in.length());
 	return o;
 }
 
@@ -285,7 +218,7 @@ Query& operator <<(Query& o, const ColData_Tmpl<string>& in)
 /// compiler's implementation of the C++ type system.  See Wishlist for
 /// current plan on what to do about this.
 
-Query& operator <<(Query& o, const ColData_Tmpl<const_string>& in)
+Query& operator <<(Query& o, const ColData& in)
 {
 	if (dont_quote_auto) {
 		o.write(in.data(), in.length());
@@ -354,8 +287,7 @@ ostream& operator <<(quote_only_type1 o, const ColData_Tmpl<string>& in)
 /// choose not to actually quote the data, if it is not needed.
 
 template <>
-ostream& operator <<(quote_only_type1 o,
-		const ColData_Tmpl<const_string>& in)
+ostream& operator <<(quote_only_type1 o, const ColData& in)
 {
 	if (in.quote_q()) o.ostr->write("'", 1);
 	o.ostr->write(in.data(), in.length());
@@ -411,8 +343,7 @@ ostream& operator <<(quote_double_only_type1 o,
 /// choose not to actually quote the data, if it is not needed.
 
 template <>
-ostream& operator <<(quote_double_only_type1 o,
-		const ColData_Tmpl<const_string>& in)
+ostream& operator <<(quote_double_only_type1 o, const ColData& in)
 {
 	if (in.quote_q()) o.ostr->write("'", 1);
 	o.ostr->write(in.data(), in.length());
@@ -478,10 +409,13 @@ ostream& operator <<(escape_type1 o, const char* const& in)
 }
 
 
-/// \brief Utility function used by operator<<(escape_type1, ColData)
+/// \brief Inserts a ColData with const string into a stream, escaping
+/// special SQL characters
+///
+/// Because ColData was designed to contain MySQL type data, we may
+/// choose not to escape the data, if it is not needed.
 
-template <class Str>
-inline ostream& _manip(escape_type1 o, const ColData_Tmpl<Str>& in)
+std::ostream& operator <<(escape_type1 o, const ColData& in)
 {
 	if (in.escape_q()) {
 		char* s = new char[in.length() * 2 + 1];
@@ -494,33 +428,6 @@ inline ostream& _manip(escape_type1 o, const ColData_Tmpl<Str>& in)
 	}
 
 	return *o.ostr;
-}
-
-
-/// \brief Inserts a ColData into a stream, escaping special SQL
-/// characters
-///
-/// Because ColData was designed to contain MySQL type data, we may
-/// choose not to escape the data, if it is not needed.
-
-template <>
-std::ostream& operator <<(escape_type1 o,
-		const ColData_Tmpl<std::string>& in)
-{
-	return _manip(o, in);
-}
-
-
-/// \brief Inserts a ColData with const string into a stream, escaping
-/// special SQL characters
-///
-/// Because ColData was designed to contain MySQL type data, we may
-/// choose not to escape the data, if it is not needed.
-
-template <>
-std::ostream& operator <<(escape_type1 o, const ColData_Tmpl<const_string>& in)
-{
-	return _manip(o, in);
 }
 
 

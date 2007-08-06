@@ -34,16 +34,16 @@
 
 #include "common.h"
 
-#include "const_string.h"
 #include "convert.h"
 #include "exceptions.h"
 #include "null.h"
 #include "string_util.h"
 #include "type_info.h"
 
-#include <typeinfo>
-#include <string>
 #include <sstream>
+#include <stdexcept>
+#include <string>
+#include <typeinfo>
 
 #include <stdlib.h>
 
@@ -172,9 +172,6 @@ public:
 	/// otherwise.
 	bool escape_q() const { return type_.escape_q(); }
 	
-	/// \brief Template for converting data from one type to another.
-	template <class Type> Type conv(Type dummy) const;
-
 	/// \brief Set a flag indicating that this object is a SQL null.
 	void it_is_null() { null_ = true; }
 
@@ -215,6 +212,286 @@ public:
 
 	/// \brief Returns a const char pointer to the object's raw data
 	operator cchar*() const { return Str::data(); }
+	
+	template <class T, class B> operator Null<T, B>() const;
+
+private:
+	mysql_type_info type_;
+	mutable std::string temp_buf_;	
+	bool null_;
+};
+
+/// \typedef ColData_Tmpl<std::string> MutableColData
+/// \brief The type that is returned by mutable rows
+typedef ColData_Tmpl<std::string> MutableColData;
+
+
+/// \brief Temporary implementation of ColData, being a merger of 
+/// ColData_Tmpl and const_string, instead of ColData_Tmpl<const_string>
+/// which amounts to the same thing.  ColData_Tmpl will be going away
+/// soon.
+
+class MYSQLPP_EXPORT ColData
+{
+public:
+	/// \brief Type of the data stored in this object, when it is not
+	/// equal to SQL null.
+	typedef const char value_type;
+
+	/// \brief Type of "size" integers
+	typedef unsigned int size_type;
+
+	/// \brief Type used when returning a reference to a character in
+	/// the string.
+	typedef const char& const_reference;
+
+	/// \brief Type of iterators
+	typedef const char* const_iterator;
+
+	/// \brief Same as const_iterator because the data cannot be
+	/// changed.
+	typedef const_iterator iterator;
+
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
+	typedef int difference_type;
+	typedef const_reference reference;
+	typedef const char* const_pointer;
+	typedef const_pointer pointer;
+#endif // !defined(DOXYGEN_IGNORE)
+
+	/// \brief Default constructor
+	///
+	/// Null flag is set to false, type data is not set, and string
+	/// data is left empty.
+	///
+	/// It's probably a bad idea to use this ctor, because there's no
+	/// way to set the type data once the object's constructed.
+	ColData() :
+	str_data_(0),
+	length_(0),
+	null_(false)
+	{
+	}
+
+	/// \brief Copy ctor
+	///
+	/// \param cd the other ColData object
+	ColData(const ColData& cd) :
+	str_data_(0),
+	length_(0),
+	type_(cd.type_),
+	null_(cd.null_)
+	{
+		length_ = cd.length_;
+		str_data_ = new char[length_ + 1];
+		memcpy(str_data_, cd.str_data_, length_);
+		str_data_[length_] = '\0';
+	}
+
+	/// \brief Constructor allowing you to set the null flag and the
+	/// type data.
+	///
+	/// \param n if true, data is a SQL null
+	/// \param t MySQL type information for data being stored
+	explicit ColData(bool n,
+			mysql_type_info t = mysql_type_info::string_type) :
+	str_data_(0),
+	length_(0),
+	type_(t),
+	null_(n)
+	{
+	}
+
+	/// \brief C++ string version of full ctor
+	///
+	/// \param str the string this object represents
+	/// \param t MySQL type information for data within str
+	/// \param n if true, str is a SQL null
+	explicit ColData(const std::string& str,
+			mysql_type_info t = mysql_type_info::string_type,
+			bool n = false) :
+	str_data_(0),
+	length_(str.length()),
+	type_(t),
+	null_(n)
+	{
+		str_data_ = new char[length_ + 1];
+		memcpy(str_data_, str.data(), length_);
+		str_data_[length_] = '\0';
+	}
+
+	/// \brief Null-terminated C string version of full ctor
+	///
+	/// \param str the string this object represents
+	/// \param t MySQL type information for data within str
+	/// \param n if true, str is a SQL null
+	explicit ColData(const char* str,
+			mysql_type_info t = mysql_type_info::string_type,
+			bool n = false) :
+	str_data_(0),
+	length_(size_type(strlen(str))),
+	type_(t),
+	null_(n)
+	{
+		str_data_ = new char[length_ + 1];
+		memcpy(str_data_, str, length_);
+		str_data_[length_] = '\0';
+	}
+
+	/// \brief Full constructor.
+	///
+	/// \param str the string this object represents
+	/// \param len the length of the string; embedded nulls are legal
+	/// \param t MySQL type information for data within str
+	/// \param n if true, str is a SQL null
+	explicit ColData(const char* str, size_type len,
+			mysql_type_info t = mysql_type_info::string_type,
+			bool n = false) :
+	str_data_(0),
+	length_(len),
+	type_(t),
+	null_(n)
+	{
+		str_data_ = new char[length_ + 1];
+		memcpy(str_data_, str, length_);
+		str_data_[length_] = '\0';
+	}
+
+	/// \brief Destroy string
+	~ColData()
+	{
+		delete[] str_data_;
+	}
+
+	/// \brief Return a reference to a character within the string.
+	///
+	/// Unlike \c operator[](), this function throws an 
+	/// \c std::out_of_range exception if the index isn't within range.
+	const_reference at(size_type pos) const
+	{
+		if (pos >= size())
+			throw std::out_of_range("");
+		else
+			return str_data_[pos];
+	}
+
+	/// \brief Return iterator pointing to the first character of
+	/// the string
+	const_iterator begin() const { return str_data_; }
+
+	/// \brief Return a const pointer to the string data.  Not
+	/// necessarily null-terminated!
+	const char* c_str() const { return str_data_; }
+	
+	/// \brief Template for converting data from one type to another.
+	template <class Type> Type conv(Type dummy) const;
+
+	/// \brief Lexically compare this string to another.
+	///
+	/// \param str string to compare against this one
+	///
+	/// \retval <0 if str1 is lexically "less than" str2
+	/// \retval 0 if str1 is equal to str2
+	/// \retval >0 if str1 is lexically "greater than" str2
+	int compare(const ColData& other) const
+	{
+		size_type i = 0, short_len = std::min(length(), other.length());
+		while ((i < short_len) && (str_data_[i] != other.str_data_[i])) {
+			++i;
+		}
+		return str_data_[i] - other.str_data_[i];
+	}
+
+	/// \brief Alias for \c c_str()
+	const char* data() const { return str_data_; }
+	
+	/// \brief Return iterator pointing to one past the last character
+	/// of the string.
+	const_iterator end() const { return str_data_ + size(); }
+
+	/// \brief Returns true if data of this type should be escaped, false
+	/// otherwise.
+	bool escape_q() const { return type_.escape_q(); }
+	
+	/// \brief Returns this object's data in C++ string form.
+	///
+	/// This method is inefficient, and not recommended.  It makes a
+	/// duplicate copy of the string that lives as long as the
+	/// \c ColData object itself.
+	///
+	/// A more efficient alternative, if you know your data is a
+	/// null-terminated C string, is to just assign this object to
+	/// a \c const \c char* or call the \c data() method.  This gives
+	/// you a pointer to our internal buffer, so the copy isn't needed.
+	///
+	/// If the \c ColData can contain embedded null characters, you do
+	/// need to make a copy, but it's better to make your own copy of 
+	/// the string, instead of calling get_string(), so you can better
+	/// control its lifetime:
+	///
+	/// \code
+	/// ColData cd = ...;
+	/// std::string s(cd.data(), cd.length());
+	/// \endcode
+	inline const std::string& get_string() const
+	{
+		temp_buf_.assign(data(), length());
+		return temp_buf_;
+	}
+
+	/// \brief Returns true if this object is a SQL null.
+	inline const bool is_null() const { return null_; }
+	
+	/// \brief Set a flag indicating that this object is a SQL null.
+	void it_is_null() { null_ = true; }
+
+	/// \brief Return number of characters in the string
+	size_type length() const { return length_; }
+	
+	/// \brief Return the maximum number of characters in the string.
+	///
+	/// Because this is a \c const string, this is just an alias for
+	/// size(); its size is always equal to the amount of data currently
+	/// stored.
+	size_type max_size() const { return size(); }
+
+	/// \brief Returns true if data of this type should be quoted, false
+	/// otherwise.
+	bool quote_q() const { return type_.quote_q(); }
+
+	/// \brief Return number of characters in string
+	size_type size() const { return length_; }
+
+	/// \brief Get this object's current MySQL type.
+	mysql_type_info type() const { return type_; }
+
+	/// \brief Assignment operator, from C string
+	ColData& operator =(const char* str)
+	{
+		delete[] str_data_;
+		length_ = size_type(strlen(str));
+		str_data_ = new char[length_];
+		memcpy(str_data_, str, length_);
+		return *this;
+	}
+
+	/// \brief Assignment operator, from other ColData
+	ColData& operator =(const ColData& cs)
+	{
+		delete[] str_data_;
+		length_ = cs.length_;
+		str_data_ = new char[length_];
+		memcpy(str_data_, cs.str_data_, length_);
+		return *this;
+	}
+	
+	/// \brief Return a reference to a character within the string.
+	const_reference operator [](size_type pos) const
+			{ return str_data_[pos]; }
+
+	/// \brief Returns a const char pointer to the object's raw data
+	operator cchar*() const { return data(); }
 	
 	/// \brief Converts this object's string data to a signed char
 	operator signed char() const
@@ -276,18 +553,13 @@ public:
 	template <class T, class B> operator Null<T, B>() const;
 
 private:
+	char* str_data_;
+	size_type length_;
 	mysql_type_info type_;
 	mutable std::string temp_buf_;	
 	bool null_;
 };
 
-/// \typedef ColData_Tmpl<const_string> ColData
-/// \brief The type that is returned by constant rows
-typedef ColData_Tmpl<const_string> ColData;
-
-/// \typedef ColData_Tmpl<std::string> MutableColData
-/// \brief The type that is returned by mutable rows
-typedef ColData_Tmpl<std::string> MutableColData;
 
 
 #if !defined(NO_BINARY_OPERS) && !defined(DOXYGEN_IGNORE)
@@ -297,12 +569,10 @@ typedef ColData_Tmpl<std::string> MutableColData;
 // explain it to Doxygen.
 
 #define oprsw(opr, other, conv) \
-  template<class Str> \
-  inline other operator opr (ColData_Tmpl<Str> x, other y) \
-    {return static_cast<conv>(x) opr y;} \
-  template<class Str> \
-  inline other operator opr (other x, ColData_Tmpl<Str> y) \
-    {return x opr static_cast<conv>(y);}
+	inline other operator opr (ColData x, other y) \
+			{ return static_cast<conv>(x) opr y; } \
+	inline other operator opr (other x, ColData y) \
+			{ return x opr static_cast<conv>(y); }
 
 #define operator_binary(other, conv) \
   oprsw(+, other, conv) \
@@ -343,10 +613,10 @@ operator_binary_int(ulonglong, ulonglong)
 /// Returns a copy of the global null object if the string data held by
 /// the object is exactly equal to "NULL".  Else, it constructs an empty
 /// object of type T and tries to convert it to Null<T, B>.
-template <class Str> template<class T, class B>
-ColData_Tmpl<Str>::operator Null<T, B>() const
+template<class T, class B>
+ColData::operator Null<T, B>() const
 {
-	if ((Str::size() == 4) &&
+	if ((size() == 4) &&
 			(*this)[0] == 'N' &&
 			(*this)[1] == 'U' &&
 			(*this)[2] == 'L' &&
@@ -358,13 +628,13 @@ ColData_Tmpl<Str>::operator Null<T, B>() const
 	}
 }
 
-template <class Str> template <class Type>
-Type ColData_Tmpl<Str>::conv(Type /* dummy */) const
+template <class Type>
+Type ColData::conv(Type /* dummy */) const
 {
-	std::string strbuf(Str::data(), Str::length());
+	std::string strbuf(data(), length());
 	strip_all_blanks(strbuf);
 	std::string::size_type len = strbuf.size();
-	const char* str = strbuf.c_str();
+	const char* str = strbuf.data();
 	const char* end = str;
 	Type num = mysql_convert<Type>(str, end);
 
@@ -374,7 +644,7 @@ Type ColData_Tmpl<Str>::conv(Type /* dummy */) const
 	}
 	
 	if (*end != '\0' && end != 0) {
-		throw BadConversion(typeid(Type).name(), Str::c_str(),
+		throw BadConversion(typeid(Type).name(), data(),
 				end - str, len);
 	}
 
