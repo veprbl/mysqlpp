@@ -113,11 +113,10 @@ ResNSel
 Query::execute(const SQLString& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
-		// We're a template query and we haven't gone through this path
-		// before, so take s to be a lone parameter for the query.
-		// We will come back through this function with a completed
-		// query, but the processing_ flag will be reset, allowing us to
-		// take the 'else' path, avoiding an infinite loop.
+		// We're a template query and this isn't a recursive call, so
+		// take s to be a lone parameter for the query.  We will come
+		// back in here with a completed query, but the processing_
+		// flag will be set, allowing us to avoid an infinite loop.
 		AutoFlag<> af(template_defaults.processing_);
 		return execute(SQLQueryParms() << s);
 	}
@@ -403,11 +402,10 @@ Result
 Query::store(const SQLString& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
-		// We're a template query and we haven't gone through this path
-		// before, so take s to be a lone parameter for the query.
-		// We will come back through this function with a completed
-		// query, but the processing_ flag will be reset, allowing us to
-		// take the 'else' path, avoiding an infinite loop.
+		// We're a template query and this isn't a recursive call, so
+		// take s to be a lone parameter for the query.  We will come
+		// back in here with a completed query, but the processing_
+		// flag will be set, allowing us to avoid an infinite loop.
 		AutoFlag<> af(template_defaults.processing_);
 		return store(SQLQueryParms() << s);
 	}
@@ -543,11 +541,10 @@ ResUse
 Query::use(const SQLString& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
-		// We're a template query and we haven't gone through this path
-		// before, so take s to be a lone parameter for the query.
-		// We will come back through this function with a completed
-		// query, but the processing_ flag will be reset, allowing us to
-		// take the 'else' path, avoiding an infinite loop.
+		// We're a template query and this isn't a recursive call, so
+		// take s to be a lone parameter for the query.  We will come
+		// back in here with a completed query, but the processing_
+		// flag will be set, allowing us to avoid an infinite loop.
 		AutoFlag<> af(template_defaults.processing_);
 		return use(SQLQueryParms() << s);
 	}
