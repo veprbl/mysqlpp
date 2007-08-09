@@ -144,6 +144,7 @@ Query::execute(const char* str, size_t len)
 	copacetic_ = !mysql_real_query(&conn_->mysql_, str, len);
 
 	unlock();
+
 	if (copacetic_) {
 		return ResNSel(conn_);
 	}
@@ -430,31 +431,29 @@ Query::store(const char* str, size_t len)
 		}
 	}
 
-
+	MYSQL_RES* res = 0;
 	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
-		MYSQL_RES* res = mysql_store_result(&conn_->mysql_);
-		if (res) {
-			unlock();
-			return Result(res, throw_exceptions());
-		}
-		else {
-			copacetic_ = false;
-		}
+		res = mysql_store_result(&conn_->mysql_);
 	}
+
 	unlock();
 
-	// One of the MySQL API calls failed, but it's not an error if we
-	// just get an empty result set.  It happens when store()ing a query
-	// that doesn't always return results.  While it's better to use 
-	// exec*() in that situation, it's legal to call store() instead,
-	// and sometimes you have no choice.  For example, if the SQL comes
-	// from outside the program so you can't predict whether there will
-	// be results.
-	if (conn_->errnum() && throw_exceptions()) {
-		throw BadQuery(error());
+	if (res) {
+		return Result(res, throw_exceptions());
 	}
 	else {
-		return Result();
+		// Either result set is empty (which is copacetic), or there
+		// was a problem returning the result set (which is not).  If
+		// caller knows the result set will be empty (e.g. query is
+		// INSERT, DELETE...) it should call exec{ute}() instead, but
+		// there are good reasons for it to be unable to predict this.
+		copacetic_ = mysql_field_count(&conn_->mysql_) == 0;
+		if (copacetic_ || !throw_exceptions()) {
+			return Result();
+		}
+		else {
+			throw BadQuery(error());
+		}
 	}
 }
 
@@ -572,30 +571,29 @@ Query::use(const char* str, size_t len)
 		}
 	}
 
+	MYSQL_RES* res = 0;
 	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
-		MYSQL_RES* res = mysql_use_result(&conn_->mysql_);
-		if (res) {
-			unlock();
-			return ResUse(res, conn_, throw_exceptions());
-		}
-		else {
-			copacetic_ = false;
-		}
+		res = mysql_use_result(&conn_->mysql_);
 	}
+
 	unlock();
 
-	// One of the MySQL API calls failed, but it's not an error if we
-	// just get an empty result set.  It happens when use()ing a query
-	// that doesn't always return results.  While it's better to use 
-	// exec*() in that situation, it's legal to call use() instead, and
-	// sometimes you have no choice.  For example, if the SQL comes
-	// from outside the program so you can't predict whether there will
-	// be results.
-	if (conn_->errnum() && throw_exceptions()) {
-		throw BadQuery(error());
+	if (res) {
+		return ResUse(res, conn_, throw_exceptions());
 	}
 	else {
-		return ResUse();
+		// Either result set is empty (which is copacetic), or there
+		// was a problem returning the result set (which is not).  If
+		// caller knows the result set will be empty (e.g. query is
+		// INSERT, DELETE...) it should call exec{ute}() instead, but
+		// there are good reasons for it to be unable to predict this.
+		copacetic_ = mysql_field_count(&conn_->mysql_) == 0;
+		if (copacetic_ || !throw_exceptions()) {
+			return ResUse();
+		}
+		else {
+			throw BadQuery(error());
+		}
 	}
 }
 
