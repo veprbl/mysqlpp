@@ -252,9 +252,7 @@ public:
 	/// the pointer.
 	ColData& operator =(const char* str)
 	{
-		if (buffer_ && (--buffer_->refs_ == 0)) {
-			delete buffer_;
-		}
+		dec_ref_count();
 
 		buffer_ = new Buffer(str, strlen(str),
 				mysql_type_info::string_type, false);
@@ -269,9 +267,7 @@ public:
 	/// deep copy, assign a string to this object instead.
 	ColData& operator =(const ColData& cd)
 	{
-		if (buffer_ && (--buffer_->refs_ == 0)) {
-			delete buffer_;
-		}
+		dec_ref_count();
 
 		buffer_ = cd.buffer_;
 		++buffer_->refs_;
@@ -348,6 +344,17 @@ public:
 	template <class T, class B> operator Null<T, B>() const;
 
 private:
+	/// \brief Decrement the buffer's reference count
+	///
+	/// Called by dtor and by operator=()s before replacing the buffer's
+	/// contents.  If ref count falls to 0, deallocates the buffer.
+	void dec_ref_count()
+	{
+		if (buffer_ && (--buffer_->refs_ == 0)) {
+			delete buffer_;
+		}
+	}
+	
 	/// \brief Holds a ColData object's internal reference-counted
 	/// string buffer.
 	class Buffer {

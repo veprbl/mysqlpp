@@ -33,9 +33,7 @@ namespace mysqlpp {
 
 ColData::~ColData()
 {
-	if (buffer_ && (--buffer_->refs_ == 0)) {
-		delete buffer_;
-	}
+	dec_ref_count();
 }
 
 
