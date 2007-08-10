@@ -52,12 +52,7 @@ class MYSQLPP_EXPORT Row : public OptionalExceptions
 public:
 	typedef int difference_type;			///< type for index differences
 	typedef unsigned int size_type;			///< type of returned sizes
-
 	typedef ColData value_type;				///< type of data in container
-	typedef value_type& reference;			///< reference to value_type
-	typedef const value_type& const_reference;///< const ref to value_type
-	typedef value_type* pointer;			///< pointer to value_type
-	typedef const value_type* const_pointer;///< const pointer to value_type
 
 	/// \brief regular iterator type
 	///
@@ -103,17 +98,25 @@ public:
 	{
 	}
 	
+	/// \brief Copy constructor
+	Row(const Row& r) :
+	data_(r.data_.begin(), r.data_.end()),
+	res_(r.res_),
+	initialized_(r.initialized_)
+	{
+	}
+	
 	/// \brief Create a row object
 	///
 	/// \param d MySQL C API row data
 	/// \param r result set that the row comes from
-	/// \param jj length of each item in d
+	/// \param lengths length of each item in d
 	/// \param te if true, throw exceptions on errors
 	Row(const MYSQL_ROW& d, const ResUse* r,
-			unsigned long* jj, bool te = true);
+			unsigned long* lengths, bool te = true);
 
 	/// \brief Destroy object
-	~Row();
+	~Row() { }
 
 	/// \brief Get a reference to our parent class.
 	const ResUse& parent() const
@@ -124,6 +127,15 @@ public:
 	/// \brief Get the number of fields in the row.
 	size_type size() const;
 
+	/// \brief Assignment operator
+	Row& operator=(const Row& rhs)
+	{
+		data_.assign(rhs.data_.begin(), rhs.data_.end());
+		res_ = rhs.res_;
+		initialized_ = rhs.initialized_;
+		return *this;
+	}
+
 	/// \brief Get the value of a field given its name.
 	///
 	/// If the field does not exist in this row, we throw a BadFieldName
@@ -132,37 +144,16 @@ public:
 	/// For this operator to work, the Result or ResUse object that
 	/// created this object must still exist.  In other words, you
 	/// cannot re-use or destroy the result object until you are done
-	/// retrieving data from this row object.
+	/// retrieving data from this row object if you look fields up
+	/// in the result by name.  Note that it is the lookup-by-name
+	/// aspect of things that matters here, not the row indexing
+	/// operation itself; this means you can avoid this restriction by
+	/// using \c operator[](int) instead.
 	///
-	/// Note that we return the
-	/// \link mysqlpp::ColData_Tmpl ColData \endlink object by value.
-	/// The purpose of ColData is to make it easy to convert the string
-	/// data returned by the MySQL server to some more appropriate type,
-	/// so you're almost certain to use this operator in a construct
-	/// like this:
-	///
-	/// \code
-	///  string s = row["myfield"];
-	/// \endcode
-	///
-	/// That accesses myfield within the row, returns a temporary
-	/// ColData object, which is then automatically converted to a
-	/// \c std::string and copied into \c s.  That works fine, but
-	/// beware of this similar but incorrect construct:
-	///
-	/// \code
-	///  const char* pc = row["myfield"];
-	/// \endcode
-	///
-	/// This one line of code does what you expect, but \c pc is then a
-	/// dangling pointer: it points to memory owned by the temporary
-	/// ColData object, which will have been destroyed by the time you
-	/// get around to actually \e using the pointer.
-	///
-	/// This function is rather inefficient.  If that is a concern for
-	/// you, use at(), operator[](size_type) or the SSQLS mechanism'
-	/// instead.
-	const value_type operator [](const char* field) const;
+	/// Another reason to use operator[](int) or at(int) instead is
+	/// efficiency: looking up a field by name is slower than looking
+	/// it up by position within the row.
+	const value_type& operator [](const char* field) const;
 
 	/// \brief Get the value of a field given its index.
 	///
@@ -171,10 +162,7 @@ public:
 	/// \sa at() for the full documentation for this operator, and
 	/// operator[](const char*) for further caveats about using this
 	/// operator.
-	const value_type operator [](int i) const
-	{
-		return at(i);
-	}
+	const value_type& operator [](int i) const { return at(i); }
 
 	/// \brief Get the value of a field given its index.
 	///
@@ -187,40 +175,10 @@ public:
 	/// retrieving data from this row object.
 	///
 	/// See operator[](const char*) for more caveats.
-	const value_type at(int i) const;
-
-	/// \brief Return the value of a field as a C string given its
-	/// index, in raw form.
-	///
-	/// This is the same thing as operator[], except that the data isn't
-	/// converted to a ColData object first.  Also, this method does not
-	/// check for out-of-bounds array indices.
-	const char* raw_data(int i) const
-	{
-		return data_[i].data();
-	}
-
-	/// \brief Return the size of a field's raw data given its index.
-	std::string::size_type raw_size(int i) const
-	{
-		return data_[i].length();
-	}
-
-	/// \brief Return the value of a field as a C++ string given its
-	/// index, in raw form.
-	///
-	/// This is the same thing as operator[], except that the data isn't
-	/// converted to a ColData object first.
-	const std::string& raw_string(int i) const
-	{
-		return data_.at(i);
-	}
+	const value_type& at(int i) const { return data_.at(i); }
 
 	/// \brief Returns true if there is data in the row.
-	operator bool() const
-	{
-		return data_.size();
-	}
+	operator bool() const { return data_.size(); }
 
 	/// \brief Get a list of the values in this row
 	///
@@ -508,8 +466,7 @@ public:
 			const char* e, Manip m) const;
 
 private:
-	std::vector<std::string> data_;
-	std::vector<bool> is_nulls_;
+	std::vector<value_type> data_;
 	const ResUse* res_;
 	bool initialized_;
 };

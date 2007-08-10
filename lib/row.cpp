@@ -30,38 +30,29 @@
 
 namespace mysqlpp {
 
-Row::Row(const MYSQL_ROW& d, const ResUse* r,
-		unsigned long* jj, bool te) :
-OptionalExceptions(te),
+Row::Row(const MYSQL_ROW& d, const ResUse* r, unsigned long* lengths,
+		bool throw_exceptions) :
+OptionalExceptions(throw_exceptions),
 res_(r),
 initialized_(false)
 {
-	if (!d || !r) {
-		if (throw_exceptions()) {
-			throw BadQuery("ROW or RES is NULL");
+	if (d && r) {
+		size_type fields = res_->num_fields();
+		data_.reserve(fields);
+		for (size_type i = 0; i < fields; ++i) {
+			bool is_null = d[i] == 0;
+			data_.push_back(value_type(
+					is_null ? "NULL" : d[i],
+					is_null ? 4 : lengths[i],
+					res_->types(i),
+					is_null));
 		}
-		else {
-			return;
-		}
+
+		initialized_ = true;
 	}
-
-	data_.clear();
-	is_nulls_.clear();
-	initialized_ = true;
-
-	for (size_type i = 0; i < size(); ++i) {
-		data_.insert(data_.end(),
-				(d[i] ?  std::string(d[i], jj[i]) : std::string("NULL")));
-		is_nulls_.insert(is_nulls_.end(), d[i] ? false : true);
+	else if (throw_exceptions) {
+		throw BadQuery("ROW or RES is NULL");
 	}
-}
-
-
-Row::~Row()
-{
-	data_.clear();
-	is_nulls_.clear();
-	initialized_ = false;
 }
 
 
@@ -70,24 +61,9 @@ Row::size_type Row::size() const
 	return res_->num_fields();
 }
 
-const ColData Row::at(int i) const
-{
-	if (initialized_) {
-		const std::string& s = data_.at(i);
-		return ColData(s.data(), s.length(), res_->types(i),
-				is_nulls_[i]);
-	}
-	else {
-		if (throw_exceptions()) {
-			throw std::out_of_range("Row not initialized");
-		}
-		else {
-			return ColData();
-		}
-	}
-}
 
-const ColData Row::operator [](const char* field) const
+const Row::value_type&
+Row::operator [](const char* field) const
 {
 	size_type si = res_->field_num(std::string(field));
 	if (si < size()) {

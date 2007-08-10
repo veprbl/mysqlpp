@@ -77,7 +77,9 @@ v3.0 Plan, For-Sure Stuff
       - Change operator[] from value to reference semantics every
         place this is possible.
 
-      - Add operator->() whereever reference semantics are possible
+      - If we can get reference semantics everywhere, we can add
+        operator->() to subscript_iterator.  It can't work with
+        value semantics.
 
     o Sort out the ResUse::fetch_row() vs. Result::fetch_row() mess.
       Probably ResUse can't really justify having this.

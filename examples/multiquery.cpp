@@ -59,8 +59,8 @@ static void
 print_row(IntVectorType& widths, Row& row)
 {
 	cout << "  |" << setfill(' ');
-	for (size_t i = 0; i < row.size(); i++) {
-		cout << " " << setw(widths.at(i)) << row.raw_data(i) << " |";
+	for (size_t i = 0; i < row.size(); ++i) {
+		cout << " " << setw(widths.at(i)) << row[i] << " |";
 	}
 	cout << endl;
 }
