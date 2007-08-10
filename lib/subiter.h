@@ -1,10 +1,6 @@
-/// \file resiter.h
-/// \brief Declares templates for adapting existing classes to
-/// be iteratable random-access containers.
-///
-/// The file name seems to tie it to the mysqlpp::Result class, which
-/// is so adapted, but these templates are also used to adapt the
-/// mysqlpp::Fields and mysqlpp::Row classes.
+/// \file subiter.h
+/// \brief Declares the subscript_iterator template, used to add a
+/// special kind of iterator to MySQL++'s container-like classes.
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
@@ -30,8 +26,8 @@
  USA
 ***********************************************************************/
 
-#ifndef MYSQLPP_RESITER_H
-#define MYSQLPP_RESITER_H
+#if !defined(MYSQLPP_SUBITER_H)
+#define MYSQLPP_SUBITER_H
 
 #include "common.h"
 
@@ -201,4 +197,4 @@ operator +(SizeType x,
 
 } // end namespace mysqlpp
 
-#endif
+#endif // !defined(MYSQLPP_SUBITER_H)

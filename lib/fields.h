@@ -29,7 +29,7 @@
 #ifndef MYSQLPP_FIELDS_H
 #define MYSQLPP_FIELDS_H
 
-#include "resiter.h"
+#include "subiter.h"
 
 namespace mysqlpp {
 

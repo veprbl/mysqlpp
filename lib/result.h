@@ -35,8 +35,8 @@
 #include "field_names.h"
 #include "field_types.h"
 #include "noexceptions.h"
-#include "resiter.h"
 #include "row.h"
+#include "subiter.h"
 
 #include <map>
 #include <set>
