@@ -7,10 +7,10 @@
 /// mysqlpp::Fields and mysqlpp::Row classes.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -39,83 +39,12 @@
 
 namespace mysqlpp {
 
-template <class OnType, class ReturnType, class SizeType,
-	class DiffType> class subscript_iterator;
-
-/// \brief A base class that one derives from to become a random
-/// access container, which can be accessed with subscript notation.
-///
-/// OnType must have the member functions \c operator[](int) and
-// \c size() defined for it.
-
-template <class OnType,
-		class ValueType,
-		class ReturnType = const ValueType&,
-		class SizeType = unsigned int,
-		class DiffType = int>
-class const_subscript_container
-{
-public:
-	typedef const_subscript_container<OnType, ValueType, ReturnType,
-			SizeType, DiffType> this_type; ///< this object's type
-	typedef subscript_iterator<const this_type, ReturnType, SizeType,
-			DiffType> iterator;			///< mutable iterator type
-	typedef iterator const_iterator;	///< constant iterator type
-	typedef const std::reverse_iterator<iterator>
-			reverse_iterator;			///< mutable reverse iterator type
-	typedef const std::reverse_iterator<const_iterator>
-			const_reverse_iterator;		///< const reverse iterator type
-
-	typedef ValueType value_type;		///< type of data stored in container
-	typedef value_type& reference;		///< reference to value_type
-	typedef value_type& const_reference;///< const ref to value_type
-	typedef value_type* pointer;		///< pointer to value_type
-	typedef value_type* const_pointer;	///< const pointer to value_type
-
-	typedef DiffType difference_type;	///< for index differences
-	typedef SizeType size_type;			///< for returned sizes
-
-	/// \brief Destroy object
-	virtual ~const_subscript_container() { }
-
-	/// \brief Return count of elements in container
-	virtual size_type size() const = 0;	
-
-	/// \brief Return element at given index in container
-	virtual ReturnType at(int i) const = 0;
-
-	/// \brief Return maximum number of elements that can be stored
-	/// in container without resizing.
-	size_type max_size() const { return size(); }
-
-	/// \brief Returns true if container is empty
-	bool empty() const { return size() == 0; }
-
-	/// \brief Return iterator pointing to first element in the
-	/// container
-	iterator begin() const { return iterator(this, 0); }
-
-	/// \brief Return iterator pointing to one past the last element
-	/// in the container
-	iterator end() const { return iterator(this, size()); }
-
-	/// \brief Return reverse iterator pointing to first element in the
-	/// container
-	reverse_iterator rbegin() const { return reverse_iterator(end()); }
-
-	/// \brief Return reverse iterator pointing to one past the last
-	/// element in the container
-	reverse_iterator rend() const { return reverse_iterator(begin()); }
-};
-
-
 /// \brief Iterator that can be subscripted.
 ///
-/// This is the type of iterator used by the const_subscript_container
-/// template.
+/// This is the type of iterator offered by most of MySQL++'s
+/// container-like classes.
 
-template <class OnType, class ReturnType, class SizeType,
-		class DiffType>
+template <class OnType, class ReturnType, class SizeType, class DiffType>
 class subscript_iterator : public std::iterator<ReturnType, SizeType>
 {
 public:
@@ -259,9 +188,8 @@ private:
 };
 
 
-#if !defined(DOXYGEN_IGNORE)
-// Doxygen will not generate documentation for this section.
-
+/// \brief Add a constant to a subscript_iterator, returning a
+/// subscript_iterator offset by that amount
 template <class OnType, class ReturnType, class SizeType,
 		class DiffType> 
 inline subscript_iterator<OnType, ReturnType, SizeType, DiffType>
@@ -270,8 +198,6 @@ operator +(SizeType x,
 {
 	return y + x;
 }
-
-#endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp
 

@@ -2,10 +2,10 @@
 /// \brief Declares classes for holding SQL query result sets.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -338,10 +338,55 @@ protected:
 /// provides a reverse random-access iterator in addition to the normal
 /// forward one.
 
-class MYSQLPP_EXPORT Result : public ResUse,
-		public const_subscript_container<Result, Row, const Row>
+class MYSQLPP_EXPORT Result : public ResUse
 {
 public:
+	typedef int difference_type;			///< type for index differences
+	typedef unsigned int size_type;			///< type of returned sizes
+
+	typedef Row value_type;					///< type of data in container
+	typedef value_type& reference;			///< reference to value_type
+	typedef const value_type& const_reference;///< const ref to value_type
+	typedef value_type* pointer;			///< pointer to value_type
+	typedef const value_type* const_pointer;///< const pointer to value_type
+
+	/// \brief regular iterator type
+	///
+	/// Note that this is the same as const_iterator; we don't have a
+	/// mutable iterator type.
+	typedef subscript_iterator<const Result, const value_type, size_type,
+			difference_type> iterator;	
+	typedef iterator const_iterator;		///< constant iterator type
+
+	/// \brief mutable reverse iterator type
+	typedef const std::reverse_iterator<iterator> reverse_iterator;			
+
+	/// \brief const reverse iterator type
+	typedef const std::reverse_iterator<const_iterator> const_reverse_iterator;		
+
+	/// \brief Return maximum number of elements that can be stored
+	/// in container without resizing.
+	size_type max_size() const { return size(); }
+
+	/// \brief Returns true if container is empty
+	bool empty() const { return size() == 0; }
+
+	/// \brief Return iterator pointing to first element in the
+	/// container
+	iterator begin() const { return iterator(this, 0); }
+
+	/// \brief Return iterator pointing to one past the last element
+	/// in the container
+	iterator end() const { return iterator(this, size()); }
+
+	/// \brief Return reverse iterator pointing to first element in the
+	/// container
+	reverse_iterator rbegin() const { return reverse_iterator(end()); }
+
+	/// \brief Return reverse iterator pointing to one past the last
+	/// element in the container
+	reverse_iterator rend() const { return reverse_iterator(begin()); }
+
 	/// \brief Default constructor
 	Result()
 	{
@@ -355,8 +400,7 @@ public:
 
 	/// \brief Initialize object as a copy of another Result object
 	Result(const Result& other) :
-	ResUse(other),
-	const_subscript_container<Result, Row, const Row>() // no copying here
+	ResUse(other)
 	{
 		conn_ = 0;
 	}
@@ -369,7 +413,7 @@ public:
 	/// This is simply the const version of the same function in our
 	/// \link mysqlpp::ResUse parent class \endlink . Why this cannot
 	/// actually \e be in our parent class is beyond me.
-	const Row fetch_row() const
+	const value_type fetch_row() const
 	{
 		if (!result_) {
 			if (throw_exceptions()) {
@@ -420,7 +464,7 @@ public:
 	}
 
 	/// \brief Get the row with an offset of i.
-	const Row at(int i) const
+	const value_type at(int i) const
 	{
 		data_seek(i);
 		return fetch_row();
@@ -429,7 +473,7 @@ public:
 	/// \brief Get the row with an offset of i.
 	///
 	/// Just a synonym for at()
-	const Row operator [](int i) const { return at(i); }
+	const value_type operator [](int i) const { return at(i); }
 };
 
 

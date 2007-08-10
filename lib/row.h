@@ -2,10 +2,10 @@
 /// \brief Declares the classes for holding row data from a result set.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -47,11 +47,55 @@ class MYSQLPP_EXPORT ResUse;
 #endif
 
 /// \brief Manages rows from a result set.
-class MYSQLPP_EXPORT Row :
-		public const_subscript_container<Row, ColData, const ColData>,
-		public OptionalExceptions
+class MYSQLPP_EXPORT Row : public OptionalExceptions
 {
 public:
+	typedef int difference_type;			///< type for index differences
+	typedef unsigned int size_type;			///< type of returned sizes
+
+	typedef ColData value_type;				///< type of data in container
+	typedef value_type& reference;			///< reference to value_type
+	typedef const value_type& const_reference;///< const ref to value_type
+	typedef value_type* pointer;			///< pointer to value_type
+	typedef const value_type* const_pointer;///< const pointer to value_type
+
+	/// \brief regular iterator type
+	///
+	/// Note that this is the same as const_iterator; we don't have a
+	/// mutable iterator type.
+	typedef subscript_iterator<const Row, const value_type, size_type,
+			difference_type> iterator;	
+	typedef iterator const_iterator;		///< constant iterator type
+
+	/// \brief mutable reverse iterator type
+	typedef const std::reverse_iterator<iterator> reverse_iterator;			
+
+	/// \brief const reverse iterator type
+	typedef const std::reverse_iterator<const_iterator> const_reverse_iterator;		
+
+	/// \brief Return maximum number of elements that can be stored
+	/// in container without resizing.
+	size_type max_size() const { return size(); }
+
+	/// \brief Returns true if container is empty
+	bool empty() const { return size() == 0; }
+
+	/// \brief Return iterator pointing to first element in the
+	/// container
+	iterator begin() const { return iterator(this, 0); }
+
+	/// \brief Return iterator pointing to one past the last element
+	/// in the container
+	iterator end() const { return iterator(this, size()); }
+
+	/// \brief Return reverse iterator pointing to first element in the
+	/// container
+	reverse_iterator rbegin() const { return reverse_iterator(end()); }
+
+	/// \brief Return reverse iterator pointing to one past the last
+	/// element in the container
+	reverse_iterator rend() const { return reverse_iterator(begin()); }
+
 	/// \brief Default constructor
 	Row() :
 	res_(0),
@@ -118,7 +162,7 @@ public:
 	/// This function is rather inefficient.  If that is a concern for
 	/// you, use at(), operator[](size_type) or the SSQLS mechanism'
 	/// instead.
-	const ColData operator [](const char* field) const;
+	const value_type operator [](const char* field) const;
 
 	/// \brief Get the value of a field given its index.
 	///
@@ -127,7 +171,7 @@ public:
 	/// \sa at() for the full documentation for this operator, and
 	/// operator[](const char*) for further caveats about using this
 	/// operator.
-	const ColData operator [](int i) const
+	const value_type operator [](int i) const
 	{
 		return at(i);
 	}
@@ -143,7 +187,7 @@ public:
 	/// retrieving data from this row object.
 	///
 	/// See operator[](const char*) for more caveats.
-	const ColData at(int i) const;
+	const value_type at(int i) const;
 
 	/// \brief Return the value of a field as a C string given its
 	/// index, in raw form.

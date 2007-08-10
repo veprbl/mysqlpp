@@ -3,10 +3,10 @@
 /// fields.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -41,9 +41,55 @@ class MYSQLPP_EXPORT ResUse;
 /// \brief A container similar to \c std::vector for holding
 /// mysqlpp::Field records.
 
-class MYSQLPP_EXPORT Fields : public const_subscript_container<Fields, Field>
+class MYSQLPP_EXPORT Fields
 {
 public:
+	typedef int difference_type;			///< type for index differences
+	typedef unsigned int size_type;			///< type of returned sizes
+
+	typedef Field value_type;				///< type of data in container
+	typedef value_type& reference;			///< reference to value_type
+	typedef const value_type& const_reference;///< const ref to value_type
+	typedef value_type* pointer;			///< pointer to value_type
+	typedef const value_type* const_pointer;///< const pointer to value_type
+
+	/// \brief regular iterator type
+	///
+	/// Note that this is the same as const_iterator; we don't have a
+	/// mutable iterator type.
+	typedef subscript_iterator<const Fields, const value_type, size_type,
+			difference_type> iterator;	
+	typedef iterator const_iterator;		///< constant iterator type
+
+	/// \brief mutable reverse iterator type
+	typedef const std::reverse_iterator<iterator> reverse_iterator;			
+
+	/// \brief const reverse iterator type
+	typedef const std::reverse_iterator<const_iterator> const_reverse_iterator;		
+
+	/// \brief Return maximum number of elements that can be stored
+	/// in container without resizing.
+	size_type max_size() const { return size(); }
+
+	/// \brief Returns true if container is empty
+	bool empty() const { return size() == 0; }
+
+	/// \brief Return iterator pointing to first element in the
+	/// container
+	iterator begin() const { return iterator(this, 0); }
+
+	/// \brief Return iterator pointing to one past the last element
+	/// in the container
+	iterator end() const { return iterator(this, size()); }
+
+	/// \brief Return reverse iterator pointing to first element in the
+	/// container
+	reverse_iterator rbegin() const { return reverse_iterator(end()); }
+
+	/// \brief Return reverse iterator pointing to one past the last
+	/// element in the container
+	reverse_iterator rend() const { return reverse_iterator(begin()); }
+
 	/// \brief Default constructor
 	Fields() { }
 	
@@ -54,12 +100,12 @@ public:
 	}
 
 	/// \brief Returns a field given its index.
-	const Field& at(int i) const;
+	const value_type& at(int i) const;
 
 	/// \brief Returns a field given its index.
 	///
 	/// Just a synonym for at()
-	const Field& operator [](int i) const { return at(i); }
+	const value_type& operator [](int i) const { return at(i); }
 
 	size_type size() const;	///< get the number of fields
 

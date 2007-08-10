@@ -70,14 +70,17 @@ v3.0 Plan, For-Sure Stuff
 
     o Rework elment access in subscript_iterator derivatives:
 
-      - Add a vector<ColData> to Row as a parallel to MYSQL_ROW, with
-        each element pointing into a MYSQL_FIELD.
+      - Change data management to work like ColData's new reference-
+        counted buffer mechanism where possible to avoid copying
+        large data blocks when returning things by value.
 
-      - Change operator[] from value to reference semantics.  (This
-        isn't possible in Row without previous change.)
+      - Change operator[] from value to reference semantics every
+        place this is possible.
 
-      - Add operator->()  (Similar to above, it can't work when the
-        underlying container can only provide value semantics.)
+      - Add operator->() whereever reference semantics are possible
+
+    o Sort out the ResUse::fetch_row() vs. Result::fetch_row() mess.
+      Probably ResUse can't really justify having this.
 
     o ColData and SQLString are inverses.  ColData is initialized
       with string data from SQL results and can convert it to typical
