@@ -102,7 +102,7 @@ public:
 	///
 	/// This is not a thin wrapper. It does a lot of error checking before
 	/// returning the mysqlpp::Row object containing the row data.
-	Row fetch_row()
+	Row fetch_row() const
 	{
 		if (!result_) {
 			if (throw_exceptions()) {
@@ -407,34 +407,6 @@ public:
 
 	/// \brief Destroy result set
 	virtual ~Result() { }
-
-	/// \brief Wraps mysql_fetch_row() in MySQL C API.
-	///
-	/// This is simply the const version of the same function in our
-	/// \link mysqlpp::ResUse parent class \endlink . Why this cannot
-	/// actually \e be in our parent class is beyond me.
-	const value_type fetch_row() const
-	{
-		if (!result_) {
-			if (throw_exceptions()) {
-				throw BadQuery("Results not fetched");
-			}
-			else {
-				return Row();
-			}
-		}
-		MYSQL_ROW row = mysql_fetch_row(result_);
-		unsigned long* length = mysql_fetch_lengths(result_);
-		if (!row || !length) {
-			if (throw_exceptions()) {
-				throw EndOfResults();
-			}
-			else {
-				return Row();
-			}
-		}
-		return Row(row, this, length, throw_exceptions());
-	}
 
 	/// \brief Wraps mysql_num_rows() in MySQL C API.
 	my_ulonglong num_rows() const

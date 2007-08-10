@@ -81,9 +81,6 @@ v3.0 Plan, For-Sure Stuff
         operator->() to subscript_iterator.  It can't work with
         value semantics.
 
-    o Sort out the ResUse::fetch_row() vs. Result::fetch_row() mess.
-      Probably ResUse can't really justify having this.
-
     o ColData and SQLString are inverses.  ColData is initialized
       with string data from SQL results and can convert it to typical
       C++ data types.  SQLString is initialized with any of several
