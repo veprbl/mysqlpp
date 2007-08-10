@@ -62,12 +62,6 @@ v3.0 Plan, For-Sure Stuff
         template functions like Query::insert<T> might become regular
         member functions, taking a reference to the SSQLS base class.
 
-    o Revamp ColData:
-
-      - Add operator =(const std::string&)
-
-      - Add assign() methods to parallel all ctors
-
     o Rework elment access in subscript_iterator derivatives:
 
       - Change data management to work like ColData's new reference-

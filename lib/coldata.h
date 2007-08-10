@@ -174,6 +174,48 @@ public:
 	/// \brief Destroy string
 	~ColData();
 
+	/// \brief Assign raw data to this object
+	///
+	/// This parallels the ctor with the same parameters, for when you
+	/// must do a 2-step create, or when you want to reassign the data 
+	/// without creating a ColData temporary to get around the fact
+	/// that operator=() can only take one parameter.
+	void assign(const char* str, size_type len,
+			mysql_type_info type = mysql_type_info::string_type,
+			bool is_null = false)
+	{
+		dec_ref_count();
+		buffer_ = new Buffer(str, len, type, is_null);
+	}
+
+	/// \brief Assign a C++ string to this object
+	///
+	/// This parallels the ctor with the same parameters, for when you
+	/// must do a 2-step create, or when you want to reassign the data 
+	/// without creating a ColData temporary to get around the fact
+	/// that operator=() can only take one parameter.
+	void assign(const std::string& str,
+			mysql_type_info type = mysql_type_info::string_type,
+			bool is_null = false)
+	{
+		dec_ref_count();
+		buffer_ = new Buffer(str.data(), str.length(), type, is_null);
+	}
+
+	/// \brief Assign a C string to this object
+	///
+	/// This parallels the ctor with the same parameters, for when you
+	/// must do a 2-step create, or when you want to reassign the data 
+	/// without creating a ColData temporary to get around the fact
+	/// that operator=() can only take one parameter.
+	void assign(const char* str,
+			mysql_type_info type = mysql_type_info::string_type,
+			bool is_null = false)
+	{
+		dec_ref_count();
+		buffer_ = new Buffer(str, strlen(str), type, is_null);
+	}
+
 	/// \brief Return a character within the string.
 	///
 	/// Unlike \c operator[](), this function throws an 
@@ -245,6 +287,17 @@ public:
 
 	/// \brief Get this object's current MySQL type.
 	mysql_type_info type() const { return buffer_->type(); }
+
+	/// \brief Assignment operator, from C++ string
+	ColData& operator =(const std::string& rhs)
+	{
+		dec_ref_count();
+
+		buffer_ = new Buffer(rhs.data(), rhs.length(),
+				mysql_type_info::string_type, false);
+
+		return *this;
+	}
 
 	/// \brief Assignment operator, from C string
 	///
