@@ -6,10 +6,10 @@
 /// mysqlpp::SQLString.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -88,10 +88,6 @@ public:
 	/// \brief Type of "size" integers
 	typedef unsigned int size_type;
 
-	/// \brief Type used when returning a reference to a character in
-	/// the string.
-	typedef const char& const_reference;
-
 	/// \brief Type of iterators
 	typedef const char* const_iterator;
 
@@ -102,134 +98,94 @@ public:
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 	typedef int difference_type;
-	typedef const_reference reference;
 	typedef const char* const_pointer;
 	typedef const_pointer pointer;
 #endif // !defined(DOXYGEN_IGNORE)
 
 	/// \brief Default constructor
 	///
-	/// Null flag is set to false, type data is not set, and string
-	/// data is left empty.
-	///
-	/// It's probably a bad idea to use this ctor, because there's no
-	/// way to set the type data once the object's constructed.
+	/// An object constructed this way is essentially useless, but
+	/// sometimes you just need to construct a default object.
 	ColData() :
-	str_data_(0),
-	length_(0),
-	null_(false)
+	buffer_(0)
 	{
 	}
 
 	/// \brief Copy ctor
 	///
 	/// \param cd the other ColData object
+	///
+	/// This ctor only copies the pointer to the other ColData's data
+	/// buffer and increments its reference counter.  If you need a
+	/// deep copy, use one of the ctors that takes a string.
 	ColData(const ColData& cd) :
-	str_data_(0),
-	length_(0),
-	type_(cd.type_),
-	null_(cd.null_)
+	buffer_(cd.buffer_)
 	{
-		length_ = cd.length_;
-		str_data_ = new char[length_ + 1];
-		memcpy(str_data_, cd.str_data_, length_);
-		str_data_[length_] = '\0';
+		++buffer_->refs_;
 	}
 
-	/// \brief Constructor allowing you to set the null flag and the
-	/// type data.
+	/// \brief Full constructor.
 	///
-	/// \param n if true, data is a SQL null
-	/// \param t MySQL type information for data being stored
-	explicit ColData(bool n,
-			mysql_type_info t = mysql_type_info::string_type) :
-	str_data_(0),
-	length_(0),
-	type_(t),
-	null_(n)
+	/// \param str the string this object represents, or 0 for SQL null
+	/// \param len the length of the string; embedded nulls are legal
+	/// \param type MySQL type information for data within str
+	/// \param is_null string represents a SQL null, not literal data
+	///
+	/// The resulting object will contain a copy of the string buffer.
+	/// The buffer will actually be 1 byte longer than the value given
+	/// for \c len, to hold a null terminator for safety.  We do this
+	/// because this ctor may be used for things other than
+	/// null-terminated C strings.  (e.g. BLOB data)
+	explicit ColData(const char* str, size_type len,
+			mysql_type_info type = mysql_type_info::string_type,
+			bool is_null = false) :
+	buffer_(new Buffer(str, len, type, is_null))
 	{
 	}
 
 	/// \brief C++ string version of full ctor
 	///
-	/// \param str the string this object represents
-	/// \param t MySQL type information for data within str
-	/// \param n if true, str is a SQL null
+	/// \param str the string this object represents, or 0 for SQL null
+	/// \param type MySQL type information for data within str
+	/// \param is_null string represents a SQL null, not literal data
+	///
+	/// The resulting object will contain a copy of the string buffer.
 	explicit ColData(const std::string& str,
-			mysql_type_info t = mysql_type_info::string_type,
-			bool n = false) :
-	str_data_(0),
-	length_(str.length()),
-	type_(t),
-	null_(n)
+			mysql_type_info type = mysql_type_info::string_type,
+			bool is_null = false) :
+	buffer_(new Buffer(str.data(), str.length(), type, is_null))
 	{
-		str_data_ = new char[length_ + 1];
-		memcpy(str_data_, str.data(), length_);
-		str_data_[length_] = '\0';
 	}
 
 	/// \brief Null-terminated C string version of full ctor
 	///
-	/// \param str the string this object represents
-	/// \param t MySQL type information for data within str
-	/// \param n if true, str is a SQL null
-	explicit ColData(const char* str,
-			mysql_type_info t = mysql_type_info::string_type,
-			bool n = false) :
-	str_data_(0),
-	length_(size_type(strlen(str))),
-	type_(t),
-	null_(n)
-	{
-		str_data_ = new char[length_ + 1];
-		memcpy(str_data_, str, length_);
-		str_data_[length_] = '\0';
-	}
-
-	/// \brief Full constructor.
+	/// \param str the string this object represents, or 0 for SQL null
+	/// \param type MySQL type information for data within str
+	/// \param is_null string represents a SQL null, not literal data
 	///
-	/// \param str the string this object represents
-	/// \param len the length of the string; embedded nulls are legal
-	/// \param t MySQL type information for data within str
-	/// \param n if true, str is a SQL null
-	explicit ColData(const char* str, size_type len,
-			mysql_type_info t = mysql_type_info::string_type,
-			bool n = false) :
-	str_data_(0),
-	length_(len),
-	type_(t),
-	null_(n)
+	/// The resulting object will contain a copy of the string buffer.
+	explicit ColData(const char* str,
+			mysql_type_info type = mysql_type_info::string_type,
+			bool is_null = false) :
+	buffer_(new Buffer(str, strlen(str), type, is_null))
 	{
-		str_data_ = new char[length_ + 1];
-		memcpy(str_data_, str, length_);
-		str_data_[length_] = '\0';
 	}
 
 	/// \brief Destroy string
-	~ColData()
-	{
-		delete[] str_data_;
-	}
+	~ColData();
 
-	/// \brief Return a reference to a character within the string.
+	/// \brief Return a character within the string.
 	///
 	/// Unlike \c operator[](), this function throws an 
 	/// \c std::out_of_range exception if the index isn't within range.
-	const_reference at(size_type pos) const
-	{
-		if (pos >= size())
-			throw std::out_of_range("");
-		else
-			return str_data_[pos];
-	}
+	char at(size_type pos) const;
 
 	/// \brief Return iterator pointing to the first character of
 	/// the string
-	const_iterator begin() const { return str_data_; }
+	const_iterator begin() const { return data(); }
 
-	/// \brief Return a const pointer to the string data.  Not
-	/// necessarily null-terminated!
-	const char* c_str() const { return str_data_; }
+	/// \brief Return a const pointer to the string data.
+	const char* c_str() const { return data(); }
 	
 	/// \brief Template for converting data from one type to another.
 	template <class Type> Type conv(Type dummy) const;
@@ -241,60 +197,28 @@ public:
 	/// \retval <0 if str1 is lexically "less than" str2
 	/// \retval 0 if str1 is equal to str2
 	/// \retval >0 if str1 is lexically "greater than" str2
-	int compare(const ColData& other) const
-	{
-		size_type i = 0, short_len = std::min(length(), other.length());
-		while ((i < short_len) && (str_data_[i] != other.str_data_[i])) {
-			++i;
-		}
-		return str_data_[i] - other.str_data_[i];
-	}
+	int compare(const ColData& other) const;
 
-	/// \brief Alias for \c c_str()
-	const char* data() const { return str_data_; }
+	/// \brief Raw access to the underlying buffer, with no C string
+	/// interpretation.
+	const char* data() const;
 	
 	/// \brief Return iterator pointing to one past the last character
 	/// of the string.
-	const_iterator end() const { return str_data_ + size(); }
+	const_iterator end() const;
 
 	/// \brief Returns true if data of this type should be escaped, false
 	/// otherwise.
-	bool escape_q() const { return type_.escape_q(); }
-	
-	/// \brief Returns this object's data in C++ string form.
-	///
-	/// This method is inefficient, and not recommended.  It makes a
-	/// duplicate copy of the string that lives as long as the
-	/// \c ColData object itself.
-	///
-	/// A more efficient alternative, if you know your data is a
-	/// null-terminated C string, is to just assign this object to
-	/// a \c const \c char* or call the \c data() method.  This gives
-	/// you a pointer to our internal buffer, so the copy isn't needed.
-	///
-	/// If the \c ColData can contain embedded null characters, you do
-	/// need to make a copy, but it's better to make your own copy of 
-	/// the string, instead of calling get_string(), so you can better
-	/// control its lifetime:
-	///
-	/// \code
-	/// ColData cd = ...;
-	/// std::string s(cd.data(), cd.length());
-	/// \endcode
-	inline const std::string& get_string() const
-	{
-		temp_buf_.assign(data(), length());
-		return temp_buf_;
-	}
+	bool escape_q() const;
 
 	/// \brief Returns true if this object is a SQL null.
-	inline const bool is_null() const { return null_; }
-	
+	bool is_null() const;
+
 	/// \brief Set a flag indicating that this object is a SQL null.
-	void it_is_null() { null_ = true; }
+	void it_is_null();
 
 	/// \brief Return number of characters in the string
-	size_type length() const { return length_; }
+	size_type length() const;
 	
 	/// \brief Return the maximum number of characters in the string.
 	///
@@ -305,37 +229,61 @@ public:
 
 	/// \brief Returns true if data of this type should be quoted, false
 	/// otherwise.
-	bool quote_q() const { return type_.quote_q(); }
+	bool quote_q() const;
 
 	/// \brief Return number of characters in string
-	size_type size() const { return length_; }
+	size_type size() const { return length(); }
+	
+	/// \brief Copies this object's data into a C++ string.
+	///
+	/// If you know the data doesn't contain null characters (i.e. it's
+	/// a typical string, not BLOB data), it's more efficient to just
+	/// assign this object to anything taking \c const \c char*.  (Or
+	/// equivalently, call the \c data() method.)  This copies a pointer
+	/// to a buffer instead of copying the buffer's contents.
+	void to_string(std::string& s) const;
 
 	/// \brief Get this object's current MySQL type.
-	mysql_type_info type() const { return type_; }
+	mysql_type_info type() const { return buffer_->type(); }
 
 	/// \brief Assignment operator, from C string
+	///
+	/// This creates a copy of the entire string, not just a copy of
+	/// the pointer.
 	ColData& operator =(const char* str)
 	{
-		delete[] str_data_;
-		length_ = size_type(strlen(str));
-		str_data_ = new char[length_];
-		memcpy(str_data_, str, length_);
+		if (buffer_ && (--buffer_->refs_ == 0)) {
+			delete buffer_;
+		}
+
+		buffer_ = new Buffer(str, strlen(str),
+				mysql_type_info::string_type, false);
+
 		return *this;
 	}
 
 	/// \brief Assignment operator, from other ColData
-	ColData& operator =(const ColData& cs)
+	///
+	/// This only copies the pointer to the other ColData's data
+	/// buffer and increments its reference counter.  If you need a
+	/// deep copy, assign a string to this object instead.
+	ColData& operator =(const ColData& cd)
 	{
-		delete[] str_data_;
-		length_ = cs.length_;
-		str_data_ = new char[length_];
-		memcpy(str_data_, cs.str_data_, length_);
+		if (buffer_ && (--buffer_->refs_ == 0)) {
+			delete buffer_;
+		}
+
+		buffer_ = cd.buffer_;
+		++buffer_->refs_;
+
 		return *this;
 	}
-	
-	/// \brief Return a reference to a character within the string.
-	const_reference operator [](size_type pos) const
-			{ return str_data_[pos]; }
+
+	/// \brief Return a character within the string.
+	///
+	/// Unlike at(), this access method doesn't check the index for
+	/// sanity.
+	char operator [](size_type pos) const;
 
 	/// \brief Returns a const char pointer to the object's raw data
 	operator cchar*() const { return data(); }
@@ -400,11 +348,54 @@ public:
 	template <class T, class B> operator Null<T, B>() const;
 
 private:
-	char* str_data_;
-	size_type length_;
-	mysql_type_info type_;
-	mutable std::string temp_buf_;	
-	bool null_;
+	/// \brief Holds a ColData object's internal reference-counted
+	/// string buffer.
+	class Buffer {
+	public:
+		/// \brief Standard constructor
+		///
+		/// Copies the string into a new buffer one byte longer than
+		/// the length value given, using that to hold a C string null
+		/// terminator, just for safety.  The length value we keep does
+		/// not include this extra byte, allowing this same mechanism
+		/// to work for both C strings and binary data.
+		Buffer(const char* data, size_type length, mysql_type_info type,
+				bool is_null);
+
+		/// \brief Destructor
+		~Buffer();
+
+		/// \brief Return pointer to raw data buffer
+		const char* data() const { return data_; }
+
+		/// \brief Return number of bytes in data buffer
+		///
+		/// Count does not include the trailing null we tack on to our
+		/// copy of the buffer for ease of use in C string contexts.
+		/// We do this because we can be holding binary data just as
+		/// easily as a C string.
+		size_type length() const { return length_; }
+
+		/// \brief Return the SQL type of the data held in the buffer
+		const mysql_type_info& type() const { return type_; }
+
+		/// \brief Return true if buffer's contents represent a SQL
+		/// null.
+		///
+		/// The buffer's actual content will probably be "NULL" or
+		/// something like it, but in the SQL data type system, a SQL
+		/// null is distinct from a plain string with value "NULL".
+		bool is_null() const { return is_null_; }
+
+	private:
+		const char* data_;		///< pointer to the raw data buffer
+		size_type length_;		///< bytes in buffer, without trailing null
+		mysql_type_info type_;	///< SQL type of data in the buffer
+		bool is_null_;			///< if true, string represents a SQL null
+		unsigned int refs_;		///< reference count for this object
+
+		friend class ColData;	// allow our parent to modify us
+	} *buffer_;
 };
 
 
