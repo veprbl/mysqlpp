@@ -39,18 +39,17 @@ v3.0 Plan, For-Sure Stuff
 
     o SSQLS v2:
 
-      - Switch from C macros to some sort of DSL or XML microformat?
-        Part of the MySQL++ build process would create a tool to
-        convert that to C++ .cpp and .h files.  To be valuable, this
-        must add type safety, better transparency of what's going on,
-        better debuggability, etc.
+      - Switch from C macros to a DSL that is translated to .cpp and
+        .h files by a tool built along with MySQL++ library.
 
-      - If SSQLS v2 isn't a complete redesign, at least remove
-        sql_create_basic_*  They're deprecated, and weak.
+      - Add features to that tool to write SSQLSv2 declaration files
+        from existing schemas extracted from CREATE TABLE statements,
+        from running databases, and from C++ files containing old
+        SSQLS v1 declarations.
 
       - Add table creation ability to SSQLS.  It has the schema...
 
-      - Decouple SSQLS field order MYSQL_ROW field order.  We can
+      - Decouple SSQLS field order from MYSQL_ROW field order.  We can
         use field names to match up assigments, allowing you to have
         just one SSQLS definition, and have it cope no matter what
         subset of the table you query.  This will be slower than the
