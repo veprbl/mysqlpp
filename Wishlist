@@ -214,17 +214,6 @@ v3.0 "Maybe" Stuff
       and another for storing a larger set of bits in a more flexible
       way, perhaps as a BLOB.
 
-    o Row object currently depends on the associated ResUse object
-      to stick around through all calls to .at(), because it needs
-      the list of field types in the result set to construct ColData
-      objects.  This means it's not possible to store the result of
-      several queries before accessing the data.  Currently, this
-      is just a documented limitation, but it would be nice if there
-      were a clean way to avoid this.  Obviously you could just copy
-      the type list when constructing the Row object, but that seems
-      pointlessly inefficient.  Some sort of ownership hand-off if
-      the ResUse object goes away or gets reused first?
-
     o Consider using MySQL C API enum constants in
       mysql_type_info::types definition instead of hard-coded values.
       This could potentially break a lot of infrastructure, though,

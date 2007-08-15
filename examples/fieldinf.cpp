@@ -56,7 +56,7 @@ main(int argc, char *argv[])
 		}
 		cout << endl;
 		
-		for (size_t i = 0; i < res.names().size(); i++) {
+		for (size_t i = 0; i < res.names()->size(); i++) {
 			// Suppress C++ type name outputs when run under dtest,
 			// as they're system-specific.
 			const char* cname = dtest_mode ? "n/a" : res.types(i).name();

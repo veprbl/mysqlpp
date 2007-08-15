@@ -35,6 +35,7 @@
 #include "field_names.h"
 #include "field_types.h"
 #include "noexceptions.h"
+#include "refcounted.h"
 #include "row.h"
 #include "subiter.h"
 
@@ -68,7 +69,6 @@ public:
 	conn_(0),
 	result_(0),
 	initialized_(false),
-	names_(0),
 	types_(0),
 	fields_(this)
 	{
@@ -167,7 +167,6 @@ public:
 			result_ = 0;
 		}
 
-		delete names_;
 		names_ = 0;
 
 		delete types_;
@@ -228,10 +227,10 @@ public:
 	const std::string& field_name(int) const;
 
 	/// \brief Get the names of the fields within this result set.
-	FieldNames& field_names();
+	RefCountedPointer<FieldNames> field_names();
 
 	/// \brief Get the names of the fields within this result set.
-	const FieldNames& field_names() const;
+	const RefCountedPointer<FieldNames> field_names() const;
 
 	/// \brief Reset the names in the field list to their original
 	/// values.
@@ -264,10 +263,11 @@ public:
 	const std::string& names(int i) const { return field_name(i); }
 
 	/// \brief Alias for field_names()
-	FieldNames& names() { return field_names(); }
+	RefCountedPointer<FieldNames> names() { return field_names(); }
 
 	/// \brief Alias for field_names()
-	const FieldNames& names() const { return field_names(); }
+	const RefCountedPointer<FieldNames> names() const
+			{ return field_names(); }
 
 	/// \brief Alias for reset_field_names()
 	void reset_names() { reset_field_names(); }
@@ -314,10 +314,12 @@ protected:
 	Connection* conn_;			///< server result set comes from
 	mutable MYSQL_RES* result_;	///< underlying C API result set
 	bool initialized_;			///< if true, object is fully initted
-	mutable FieldNames* names_;	///< list of field names in result
 	mutable FieldTypes* types_;	///< list of field types in result
 	Fields fields_;				///< list of fields in result
 	std::string table_;			///< table result set comes from
+
+	/// \brief list of field names in result
+	mutable RefCountedPointer<FieldNames> names_;
 
 	/// \brief Copy another ResUse object's contents into this one.
 	///

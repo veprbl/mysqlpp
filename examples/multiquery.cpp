@@ -48,7 +48,7 @@ static void
 print_header(IntVectorType& widths, Result& res)
 {
 	cout << "  |" << setfill(' ');
-	for (size_t i = 0; i < res.names().size(); i++) {
+	for (size_t i = 0; i < res.names()->size(); i++) {
 		cout << " " << setw(widths.at(i)) << res.names(i) << " |";
 	}
 	cout << endl;

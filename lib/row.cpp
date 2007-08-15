@@ -33,18 +33,21 @@ namespace mysqlpp {
 Row::Row(const MYSQL_ROW& d, const ResUse* r, unsigned long* lengths,
 		bool throw_exceptions) :
 OptionalExceptions(throw_exceptions),
-res_(r),
-initialized_(false)
+initialized_(false),
+size_(r ? r->num_fields() : 0)
 {
+	if (r) {
+		field_names_ = r->names();
+	}
+	
 	if (d && r) {
-		size_type fields = res_->num_fields();
-		data_.reserve(fields);
-		for (size_type i = 0; i < fields; ++i) {
+		data_.reserve(size_);
+		for (size_type i = 0; i < size_; ++i) {
 			bool is_null = d[i] == 0;
 			data_.push_back(value_type(
 					is_null ? "NULL" : d[i],
 					is_null ? 4 : lengths[i],
-					res_->types(i),
+					r->types(i),
 					is_null));
 		}
 
@@ -56,16 +59,10 @@ initialized_(false)
 }
 
 
-Row::size_type Row::size() const
-{
-	return res_->num_fields();
-}
-
-
 const Row::value_type&
 Row::operator [](const char* field) const
 {
-	size_type si = res_->field_num(std::string(field));
+	size_type si = field_num(field);
 	if (si < size()) {
 		return at(si);
 	}
@@ -75,38 +72,55 @@ Row::operator [](const char* field) const
 }
 
 
+Row::size_type
+Row::field_num(const char* name) const
+{
+	if (field_names_) {
+		return (*field_names_)[name];
+	}
+	else {
+		if (throw_exceptions()) {
+			throw BadFieldName(name);
+		}
+		else {
+			return 0;
+		}
+	}
+}
+
+
 value_list_ba<FieldNames, do_nothing_type0>
 Row::field_list(const char* d) const
 {
 	return value_list_ba<FieldNames, do_nothing_type0>
-			(parent().names(), d, do_nothing);
+			(*field_names_, d, do_nothing);
 }
 
 template <class Manip>
 value_list_ba<FieldNames, Manip>
 Row::field_list(const char *d, Manip m) const
 {
-	return value_list_ba<FieldNames, Manip>(parent().names(), d, m);
+	return value_list_ba<FieldNames, Manip>(*field_names_, d, m);
 }
 
 template <class Manip>
 value_list_b<FieldNames, Manip>
 Row::field_list(const char *d, Manip m, const std::vector<bool>& vb) const
 {
-	return value_list_b<FieldNames, Manip>(parent().names(), vb, d, m);
+	return value_list_b<FieldNames, Manip>(*field_names_, vb, d, m);
 }
 
 value_list_b<FieldNames, quote_type0>
 Row::field_list(const char* d, const std::vector<bool>& vb) const
 {
-	return value_list_b<FieldNames, quote_type0>(parent().names(),
+	return value_list_b<FieldNames, quote_type0>(*field_names_,
 			vb, d, quote);
 }
 
 value_list_b<FieldNames, quote_type0>
 Row::field_list(const std::vector<bool>& vb) const
 {
-	return value_list_b<FieldNames, quote_type0>(parent().names(),
+	return value_list_b<FieldNames, quote_type0>(*field_names_,
 			vb, ",", quote);
 }
 
@@ -116,9 +130,9 @@ Row::field_list(const char* d, Manip m, bool t0, bool t1, bool t2,
 		bool ta, bool tb, bool tc) const
 {
 	std::vector<bool> vb;
-	create_vector(parent().names().size(), vb, t0, t1, t2, t3, t4,
+	create_vector(field_names_->size(), vb, t0, t1, t2, t3, t4,
 			t5, t6, t7, t8, t9, ta, tb, tc);
-	return value_list_b<FieldNames, Manip>(parent().names(), vb, d, m);
+	return value_list_b<FieldNames, Manip>(*field_names_, vb, d, m);
 }
 
 value_list_b<FieldNames, quote_type0>
@@ -127,9 +141,9 @@ Row::field_list(const char *d, bool t0, bool t1, bool t2, bool t3,
 		bool tb, bool tc) const
 {
 	std::vector<bool> vb;
-	create_vector(parent().names().size(), vb, t0, t1, t2, t3, t4,
+	create_vector(field_names_->size(), vb, t0, t1, t2, t3, t4,
 			t5, t6, t7, t8, t9, ta, tb, tc);
-	return value_list_b<FieldNames, quote_type0>(parent().names(),
+	return value_list_b<FieldNames, quote_type0>(*field_names_,
 			vb, d, quote);
 }
 
@@ -139,9 +153,9 @@ Row::field_list(bool t0, bool t1, bool t2, bool t3, bool t4, bool t5,
 		bool tc) const
 {
 	std::vector<bool> vb;
-	create_vector(parent().names().size(), vb, t0, t1, t2, t3, t4,
+	create_vector(field_names_->size(), vb, t0, t1, t2, t3, t4,
 			t5, t6, t7, t8, t9, ta, tb, tc);
-	return value_list_b<FieldNames, quote_type0>(parent().names(),
+	return value_list_b<FieldNames, quote_type0>(*field_names_,
 			vb, ",", quote);
 }
 
@@ -149,7 +163,7 @@ equal_list_ba<FieldNames, Row, quote_type0>
 Row::equal_list(const char* d, const char* e) const
 {
 	return equal_list_ba<FieldNames, Row, quote_type0>(
-			parent().names(), *this, d, e, quote);
+			*field_names_, *this, d, e, quote);
 }
 
 template <class Manip>
@@ -157,7 +171,7 @@ equal_list_ba<FieldNames, Row, Manip>
 Row::equal_list(const char* d, const char* e, Manip m) const 
 {
 	return equal_list_ba<FieldNames, Row, Manip>(
-			parent().names(), *this, d, e, m);
+			*field_names_, *this, d, e, m);
 }
 
 } // end namespace mysqlpp

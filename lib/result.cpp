@@ -43,23 +43,17 @@ ResUse::ResUse(MYSQL_RES* result, Connection* c, bool te) :
 OptionalExceptions(te),
 conn_(c),
 initialized_(false),
-names_(0),
 types_(0),
 fields_(this)
 {
-	if (!result) {
-		result_ = 0;
-		types_ = 0;
-		names_ = 0;
-		return;
+	if ((result_ = result) != 0) {
+		names_ = new FieldNames(this);
+		if (names_) {
+			types_ = new FieldTypes(this);
+		}
+		table_ = fields(0).table;
+		initialized_ = true;
 	}
-	result_ = result;
-	names_ = new FieldNames(this);
-	if (names_) {
-		types_ = new FieldTypes(this);
-	}
-	table_ = fields(0).table;
-	initialized_ = true;
 }
 
 
@@ -78,35 +72,29 @@ ResUse::copy(const ResUse& other)
 
 	set_exceptions(other.throw_exceptions());
 
-	if (!other.result_) {
+	if (other.result_) {
+		result_ = other.result_;
+		fields_ = Fields(this);
+		names_ = other.names_;
+		
+		if (other.types_) {
+			types_ = new FieldTypes(*other.types_);
+		}
+		else {
+			types_ = 0;
+		}
+
+		table_ = other.table_;
+
+		conn_ = other.conn_;
+		initialized_ = true;
+	}
+	else {
 		result_ = 0;
 		types_ = 0;
 		names_ = 0;
 		initialized_ = other.initialized_;
-		return;
 	}
-
-	result_ = other.result_;
-	fields_ = Fields(this);
-
-	if (other.names_) {
-		names_ = new FieldNames(*other.names_);
-	}
-	else {
-		names_ = 0;
-	}
-	
-	if (other.types_) {
-		types_ = new FieldTypes(*other.types_);
-	}
-	else {
-		types_ = 0;
-	}
-
-	table_ = other.table_;
-
-	conn_ = other.conn_;
-	initialized_ = true;
 }
 
 
@@ -132,7 +120,7 @@ ResUse::field_name(int i)
 	if (!names_) {
 		names_ = new FieldNames(this);
 	}
-	return (*names_)[i];
+	return names_->at(i);
 }
 
 
@@ -142,35 +130,33 @@ ResUse::field_name(int i) const
 	if (!names_) {
 		names_ = new FieldNames(this);
 	}
-	return (*names_)[i];
+	return names_->at(i);
 }
 
 
-FieldNames&
+RefCountedPointer<FieldNames>
 ResUse::field_names()
 {
 	if (!names_) {
 		names_ = new FieldNames(this);
 	}
-	return *names_;
+	return names_;
 }
 
 
-const FieldNames&
+const RefCountedPointer<FieldNames>
 ResUse::field_names() const
 {
 	if (!names_) {
 		names_ = new FieldNames(this);
 	}
-	return *names_;
+	return names_;
 }
 
 
 void
 ResUse::reset_field_names()
 {
-	delete names_;
-	names_ = 0;
 	names_ = new FieldNames(this);
 }
 

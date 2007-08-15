@@ -30,6 +30,7 @@
 
 #include "coldata.h"
 #include "noexceptions.h"
+#include "refcounted.h"
 #include "subiter.h"
 #include "vallist.h"
 
@@ -43,7 +44,6 @@ namespace mysqlpp {
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
 class FieldNames;
-class MYSQLPP_EXPORT ResUse;
 #endif
 
 /// \brief Manages rows from a result set.
@@ -93,19 +93,20 @@ public:
 
 	/// \brief Default constructor
 	Row() :
-	res_(0),
-	initialized_(false)
+	initialized_(false),
+	size_(0)
 	{
 	}
 	
 	/// \brief Copy constructor
 	Row(const Row& r) :
 	data_(r.data_.begin(), r.data_.end()),
-	res_(r.res_),
-	initialized_(r.initialized_)
+	field_names_(r.field_names_),
+	initialized_(r.initialized_),
+	size_(r.size_)
 	{
 	}
-	
+
 	/// \brief Create a row object
 	///
 	/// \param d MySQL C API row data
@@ -118,21 +119,16 @@ public:
 	/// \brief Destroy object
 	~Row() { }
 
-	/// \brief Get a reference to our parent class.
-	const ResUse& parent() const
-	{
-		return *res_;
-	}
-
 	/// \brief Get the number of fields in the row.
-	size_type size() const;
+	size_type size() const { return size_; }
 
 	/// \brief Assignment operator
 	Row& operator=(const Row& rhs)
 	{
 		data_.assign(rhs.data_.begin(), rhs.data_.end());
-		res_ = rhs.res_;
+		field_names_.assign(rhs.field_names_);
 		initialized_ = rhs.initialized_;
+		size_ = rhs.size_;
 		return *this;
 	}
 
@@ -141,44 +137,25 @@ public:
 	/// If the field does not exist in this row, we throw a BadFieldName
 	/// exception.
 	///
-	/// For this operator to work, the Result or ResUse object that
-	/// created this object must still exist.  In other words, you
-	/// cannot re-use or destroy the result object until you are done
-	/// retrieving data from this row object if you look fields up
-	/// in the result by name.  Note that it is the lookup-by-name
-	/// aspect of things that matters here, not the row indexing
-	/// operation itself; this means you can avoid this restriction by
-	/// using \c operator[](int) instead.
-	///
-	/// Another reason to use operator[](int) or at(int) instead is
-	/// efficiency: looking up a field by name is slower than looking
-	/// it up by position within the row.
+	/// This operator is fairly inefficient.  operator[](int) is faster.
 	const value_type& operator [](const char* field) const;
 
 	/// \brief Get the value of a field given its index.
 	///
 	/// This function is just syntactic sugar, wrapping the at() method.
-	///
-	/// \sa at() for the full documentation for this operator, and
-	/// operator[](const char*) for further caveats about using this
-	/// operator.
 	const value_type& operator [](int i) const { return at(i); }
 
 	/// \brief Get the value of a field given its index.
 	///
 	/// If the index value is bad, the underlying std::vector is
 	/// supposed to throw an exception, according to the Standard.
-	///
-	/// For this function to work, the Result or ResUse object that
-	/// created this object must still exist.  In other words, you
-	/// cannot re-use or destroy the result object until you are done
-	/// retrieving data from this row object.
-	///
-	/// See operator[](const char*) for more caveats.
 	const value_type& at(int i) const { return data_.at(i); }
 
 	/// \brief Returns true if there is data in the row.
 	operator bool() const { return data_.size(); }
+
+	/// \brief Returns a field's index given its name
+	size_type field_num(const char* name) const;
 
 	/// \brief Get a list of the values in this row
 	///
@@ -467,8 +444,9 @@ public:
 
 private:
 	std::vector<value_type> data_;
-	const ResUse* res_;
+	RefCountedPointer<FieldNames> field_names_;
 	bool initialized_;
+	size_type size_;
 };
 
 } // end namespace mysqlpp

@@ -47,6 +47,12 @@ class FieldNames : public std::vector<std::string>
 public:
 	/// \brief Default constructor
 	FieldNames() { }
+
+	/// \brief Copy constructor
+	FieldNames(const FieldNames& other)
+	{
+		assign(other.begin(), other.end());
+	}
 	
 	/// \brief Create field name list from a result set
 	FieldNames(const ResUse* res)
@@ -89,9 +95,9 @@ public:
 	}
 
 	/// \brief Get the index number of a field given its name
-	uint operator [](std::string i) const
+	uint operator [](const std::string& s) const
 	{
-		std::string temp(i);
+		std::string temp(s);
 		str_to_lwr(temp);
 		return uint(std::find(begin(), end(), temp) - begin());
 	}
