@@ -56,7 +56,7 @@ public:
 	/// \param c A pointer to the managed object.  If you leave it at
 	/// its default (or pass 0 explicitly) this object is useless until
 	/// you vivify it with operator =() or assign().
-	RefCountedPointer(T* c = 0) :
+	explicit RefCountedPointer(T* c = 0) :
 	counted_(c),
 	refs_(c ? new size_t(1) : 0)
 	{
@@ -174,13 +174,14 @@ private:
 	/// \brief Detach ourselves from the managed memory block.
 	///
 	/// If we are managing memory, decreases the reference count and
-	/// destroys the memory if the counter falls to 0.  We don't zero
-	/// out the pointers because none of our callers need it.
+	/// destroys the memory if the counter falls to 0.
 	void detach()
 	{
 		if (refs_ && (--(*refs_) == 0)) {
 			delete counted_;
 			delete refs_;
+			counted_ = 0;
+			refs_ = 0;
 		}
 	}
 	
