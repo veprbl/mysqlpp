@@ -30,12 +30,11 @@ Building the Library and Example Programs
 
     Be sure to build both the Debug and Release versions of the
     library.  You will need them both because when you build your
-    program in Release mode, it won't work with mysqlpp.dll built
-    in Debug mode.  The converse may also be true, but I'm not sure.
-    The simplest way to ensure that you're running your program against
-    the correct DLL is to copy the debug version of the MySQL++ DLL
-    into your program's Debug build directory, and the same for the
-    release version.
+    program in Release mode, it won't work with a MySQL++ DLL built
+    in Debug mode.  The simplest way to ensure that you're running
+    your program against the correct DLL is to copy the debug version
+    of the MySQL++ DLL into your program's Debug build directory,
+    and the same for the Release directory.
 
     With the library built, run at least the resetdb and simple1
     examples to ensure that the library is working correctly.
