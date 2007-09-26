@@ -58,7 +58,7 @@ bool
 WindowsNamedPipeConnection::is_wnp(cchar* server)
 {
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
-	return server && (strcmp(".") == 0);
+	return server && (strcmp(server, ".") == 0);
 #else
 	return false;
 #endif
