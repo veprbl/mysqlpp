@@ -36,7 +36,7 @@ namespace mysqlpp {
 /// This class just simplifies the connection creation interface of
 /// \c Connection.  It does not add new functionality.
 
-class WindowsNamedPipeConnection : public Connection
+class MYSQLPP_EXPORT WindowsNamedPipeConnection : public Connection
 {
 public:
 	/// \brief Create object without connecting it to the MySQL server.
@@ -52,8 +52,9 @@ public:
 	/// \param user user name to log in under, or 0 to use the user
 	///		name the program is running under
 	/// \param password password to use when logging in
-	WindowsNamedPipeConnection(cchar* db = 0, cchar* user = 0,
-			cchar* password = 0)
+	WindowsNamedPipeConnection(cchar* db, cchar* user = 0,
+			cchar* password = 0) :
+	Connection()
 	{
 		connect(db, user, password);
 	}
