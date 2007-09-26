@@ -19,7 +19,7 @@ att_getopt(int argc, char* const argv[], const char* ag_opts)
 {
 	static int sp = 1;
 	register int c;
-	register char *cp;
+	register const char *cp;
 
 	if (sp == 1) {
 		/* If all args are processed, finish */
