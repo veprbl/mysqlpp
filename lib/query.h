@@ -846,7 +846,7 @@ public:
 	mysql_query_define0(ResNSel, execute)
 	mysql_query_define0(Result, store)
 	mysql_query_define0(ResUse, use)
-	mysql_query_define1(storein_conuence)
+	mysql_query_define1(storein_sequence)
 	mysql_query_define1(storein_set)
 	mysql_query_define1(storein)
 #endif // !defined(DOXYGEN_IGNORE)
