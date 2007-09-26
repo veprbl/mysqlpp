@@ -79,6 +79,7 @@
 				<include>"C:\Program Files\MySQL\MySQL Server 5.0\include"</include>
 				<lib-path>C:\Program Files\MySQL\MySQL Server 5.0\lib\opt</lib-path>
 				<sys-lib>libmysql</sys-lib>
+				<sys-lib>wsock32</sys-lib>
 			</if>
 
 			<if cond="FORMAT=='mingw'">
