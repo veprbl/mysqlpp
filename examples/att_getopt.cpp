@@ -12,7 +12,7 @@
 
 int ag_optind = 1;
 int ag_optopt;
-char* ag_optarg;
+const char* ag_optarg;
 
 int
 att_getopt(int argc, char* const argv[], const char* ag_opts)
