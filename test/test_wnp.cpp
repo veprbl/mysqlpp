@@ -34,14 +34,14 @@ int
 main()
 {
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
-	if (!WindowsNamedPipeConnection::is_wnp(".")) {
+	if (!mysqlpp::WindowsNamedPipeConnection::is_wnp(".")) {
 		std::cerr << "Failed to identify Windows named pipe" << std::endl;
 	
 	}
-	else if (WindowsNamedPipeConnection::is_wnp("bogus")) {
+	else if (mysqlpp::WindowsNamedPipeConnection::is_wnp("bogus")) {
 		std::cerr << "Failed to fail for bogus named pipe" << std::endl;
 	}
-	else if (WindowsNamedPipeConnection::is_wnp(0)) {
+	else if (mysqlpp::WindowsNamedPipeConnection::is_wnp(0)) {
 		std::cerr << "Failed to fail for null named pipe" << std::endl;
 	}
 	else {
