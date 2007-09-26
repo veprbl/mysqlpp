@@ -320,14 +320,14 @@ public:
 	///
 	/// Executes the query immediately, and returns an object that
 	/// lets you walk through the result set one row at a time, in
-	/// conuence.  This is more memory-efficient than store().
+	/// sequence.  This is more memory-efficient than store().
 	ResUse use(const SQLString& str);
 
 	/// \brief Execute query in a known-length C string
 	///
 	/// Executes the query immediately, and returns an object that
 	/// lets you walk through the result set one row at a time, in
-	/// conuence.  This is more memory-efficient than store().
+	/// sequence.  This is more memory-efficient than store().
 	ResUse use(const char* str, size_t len);
 
 	/// \brief Execute a query that can return a result set
@@ -453,7 +453,7 @@ public:
 	///
 	/// This method wraps a use() query, calling the given functor for
 	/// every returned row, and storing the results in the given
-	/// conuence container if the functor returns true.
+	/// sequence container if the functor returns true.
 	///
 	/// This is analogous to the STL copy_if() algorithm, except that
 	/// the source rows come from a database query instead of another
@@ -579,7 +579,7 @@ public:
 	bool more_results();
 
 	/// \brief Execute a query, storing the result set in an STL
-	/// conuence container.
+	/// sequence container.
 	///
 	/// This function works much like store() from the caller's
 	/// perspective, because it returns the entire result set at once.
@@ -591,17 +591,17 @@ public:
 	/// the front of the list.  So, you can pass a container and a query
 	/// string, or a container and template query parameters.
 	///
-	/// \param con any STL conuence container, such as \c std::vector
+	/// \param con any STL sequence container, such as \c std::vector
 	///
 	/// \sa exec(), execute(), store(), and use()
 	template <class Sequence>
-	void storein_conuence(Sequence& con)
+	void storein_sequence(Sequence& con)
 	{
-		storein_conuence(con, str(template_defaults));
+		storein_sequence(con, str(template_defaults));
 	}
 
 	/// \brief Execute template query using given parameters, storing
-    /// the results in a conuence type container.
+    /// the results in a sequence type container.
     ///
     /// This method should only be used by code that doesn't know,
     /// at compile time, how many parameters it will have.  This is
@@ -611,15 +611,15 @@ public:
 	/// \param con container that will receive the results
 	/// \param p parameters to use in the template query.
     template <class Seq>
-    void storein_conuence(Seq& con, SQLQueryParms& p)
+    void storein_sequence(Seq& con, SQLQueryParms& p)
     {
-        storein_conuence(con, str(p));
+        storein_sequence(con, str(p));
     }
 
 	/// \brief Execute a query, storing the result set in an STL
 	/// associative container.
 	///
-	/// The same thing as storein_conuence(), except that it's used with
+	/// The same thing as storein_sequence(), except that it's used with
 	/// associative STL containers, such as \c std::set.  Other than
 	/// that detail, that method's comments apply equally well to this
 	/// one.
@@ -649,7 +649,7 @@ public:
 	/// in an STL container.
 	///
 	/// This is a set of specialized template functions that call either
-	/// storein_conuence() or storein_set(), depending on the type of
+	/// storein_sequence() or storein_set(), depending on the type of
 	/// container you pass it. It understands \c std::vector, \c deque,
 	/// \c list, \c slist (a common C++ library extension), \c set,
 	/// and \c multiset.
@@ -658,7 +658,7 @@ public:
 	/// of functions. See the other functions' documentation for details.
 	///
 	/// Use this function if you think you might someday switch your
-	/// program from using a set-associative container to a conuence
+	/// program from using a set-associative container to a sequence
 	/// container for storing result sets, or vice versa.
 	///
 	/// See exec(), execute(), store(), and use() for alternative
@@ -669,37 +669,37 @@ public:
 		storein(con, str(template_defaults));
 	}
 
-	/// \brief Specialization of storein_conuence() for \c std::vector
+	/// \brief Specialization of storein_sequence() for \c std::vector
 	template <class T>
 	void storein(std::vector<T>& con, const SQLString& s)
 	{
-		storein_conuence(con, s);
+		storein_sequence(con, s);
 	}
 
-	/// \brief Specialization of storein_conuence() for \c std::deque
+	/// \brief Specialization of storein_sequence() for \c std::deque
 	template <class T>
 	void storein(std::deque<T>& con, const SQLString& s)
 	{
-		storein_conuence(con, s);
+		storein_sequence(con, s);
 	}
 
-	/// \brief Specialization of storein_conuence() for \c std::list
+	/// \brief Specialization of storein_sequence() for \c std::list
 	template <class T>
 	void storein(std::list<T>& con, const SQLString& s)
 	{
-		storein_conuence(con, s);
+		storein_sequence(con, s);
 	}
 
 #if defined(HAVE_EXT_SLIST)
-	/// \brief Specialization of storein_conuence() for g++ STL
+	/// \brief Specialization of storein_sequence() for g++ STL
 	/// extension \c slist
 	template <class T>
 	void storein(__gnu_cxx::slist<T>& con, const SQLString& s)
 	{
-		storein_conuence(con, s);
+		storein_sequence(con, s);
 	}
 #elif defined(HAVE_GLOBAL_SLIST)
-	/// \brief Specialization of storein_conuence() for STL
+	/// \brief Specialization of storein_sequence() for STL
 	/// extension \c slist
 	///
 	/// This is primarily for older versions of g++, which put \c slist
@@ -708,10 +708,10 @@ public:
 	template <class T>
 	void storein(slist<T>& con, const SQLString& s)
 	{
-		storein_conuence(con, s);
+		storein_sequence(con, s);
 	}
 #elif defined(HAVE_STD_SLIST)
-	/// \brief Specialization of storein_conuence() for STL
+	/// \brief Specialization of storein_sequence() for STL
 	/// extension \c slist
 	///
 	/// This is for those benighted compilers that include an \c slist
@@ -719,7 +719,7 @@ public:
 	template <class T>
 	void storein(std::slist<T>& con, const SQLString& s)
 	{
-		storein_conuence(con, s);
+		storein_sequence(con, s);
 	}
 #endif
 
@@ -899,7 +899,7 @@ private:
 // Doxygen will not generate documentation for this section.
 
 template <class Sequence>
-void Query::storein_conuence(Sequence& con, const SQLString& s)
+void Query::storein_sequence(Sequence& con, const SQLString& s)
 {
 	ResUse result = use(s);
 	while (1) {
