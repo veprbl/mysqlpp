@@ -36,7 +36,7 @@ namespace mysqlpp {
 /// This class just simplifies the connection creation interface of
 /// \c Connection.  It does not add new functionality.
 
-class TCPConnection : public Connection
+class MYSQLPP_EXPORT TCPConnection : public Connection
 {
 public:
 	/// \brief Create object without connecting it to the MySQL server.
