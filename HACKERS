@@ -97,53 +97,77 @@ Adding Support for a Different Compiler
     compensating value.
 
 
-On Manipulating the Bakefiles and Autoconf Files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    If you're on a Unixy platform and change any of mysql++.bkl,
-    configure.ac, or config/*, you must re-run the bootstrap script
-    to regenerate the build files.  The bootstrap script also has
-    other functions:
+On Manipulating the Build System Source Files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    If you're using Visual C++, there are two ways to change the Visual
+    Studio project files:
+    
+    - You can just make the changes directly within Visual Studio.  This
+      is a fine way to do it if you're only making small changes for
+      your own purposes.
 
-        $ ./bootstrap [pedantic] [no{doc,ex,lib,opt}] [configure flags]
+    - The Visual Studio project files are actually generated from
+      mysql++.bkl by a tool called Bakefile, not maintained directly.
+      (We do it this way because Bakefile can generate many different
+      types of makefiles and project files from this single source file,
+      so all the platforms we support get all the changes at once.)  So,
+      if you want to make changes to the project files and contribute
+      them back to the MySQL++ project, you need to do the changes
+      in mysql++.bkl instead.  Rather than run Bakefile directly to
+      regenerate the project files, we've wrapped up the necessary steps
+      in the rebake.bat batch file.  Any arguments passed to rebake get
+      sent on to Bakefile without change.
 
-    If you pass 'pedantic' to the bootstrap script, it will set up
-    the autoconf build system so it turns on all of GCC's warnings and
-    such.  It's useful to build the library in this mode when making
-    changes to make sure there are no obvious problems with the code.
+    If you're on a Unixy platform, things are a little more complex
+    because the build system uses Autoconf in addition to Bakefile.
+    The source files are mysql++.bkl, configure.ac, and config/*.  If you
+    change any of these, run the bootstrap script to rebuild all their
+    descendant files.
 
-    If you pass 'nodoc', the documentation won't be considered a
-    prerequisite for building the distribution tarball.  This is
-    useful on systems where the documentation doesn't build correctly,
-    and you only need to make a binary RPM.  That process requires
-    a tarball, but doesn't need the documentation.  Don't distribute
-    the tarball or SRPM that results, as they are broken.
+    The bootstrap script also has other functions besides running
+    Bakefile and Autoconf for you:
 
-    If you pass 'noex', the generated Makefiles and project files
-    won't try to build any of the examples.
+        $ ./bootstrap [no{doc,ex,lib,opt}] [pedantic] [vstudio] \
+                      [configure flags]
 
-    If you pass 'nolib', the generated Makefiles and project files
-    won't try to build the MySQL++ library.
+    Arguments:
 
-    If you pass 'noopt', compiler optimization will be turned off
-    on systems that use configure.  (It currently has no effect on
-    MinGW or Visual C++.)
+    nodoc   The documentation won't be considered a prerequisite for
+            building the distribution tarball.  This is useful on systems
+            where the documentation doesn't build correctly, and you only
+            need to make a binary RPM.  That process requires a tarball,
+            but doesn't need the documentation.  Don't distribute the
+            tarball or SRPM that results, as they are no good for any
+            other purpose.
 
-    You can pass any of the previous options in any order.  As soon as
-    the bootstrap script sees an option that it doesn't understand,
-    it stops processing the command line.  Any subsequent options
-    are passed to the configure script.  See README.unix for more on
-    configure script options.
+    noex    The generated Makefiles and project files won't try to build
+            any of the examples.
 
-    If you're on Windows and you change the Bakefile (mysql++.bkl),
-    re-generating the Makefiles and project files from it is a
-    little tricky.  The above procedure doesn't work because the
-    native Win32 port of Bakefile is incomplete, and Bakefile doesn't
-    build correctly under Cygwin.  Therefore, you need to run the
-    bakefile program directly.  You'll use one of these two commands,
-    depending on which compiler you're using:
+    nolib   The generated Makefiles and project files won't try to build
+            the MySQL++ library.
 
-        C:\> bakefile -f msvc6prj mysql++.bkl
-        C:\> bakefile -f mingw -o Makefile.mingw mysql++.bkl
+    noopt   Compiler optimization will be turned off.  (This currently
+            has no effect on MinGW or Visual C++.)
+
+    pedantic
+            Turns on all of GCC's warnings and portability checks.
+            Good for checking changes before making a public release.
+
+    vstudio Builds only the Visual Studio project files.  (That is, it
+            runs rebake.bat for you.)  This is useful when using Cygwin
+            just as a command shell in preference to cmd.exe, as opposed
+            to using Cygwin to build MySQL++ using its native tools.
+            Passing 'vstudio' stops all command line processing in the
+            bootstrap script, so if you also pass some of the other
+            options, make 'vstudio' last.  Not all of the above options
+            are supported for Visual Studio, so don't be suprised if
+            they have no effect on the built project files.
+
+    configure options
+            As soon as the bootstrap script sees an option that it
+            doesn't understand, it stops processing the command line.
+            Any subsequent options are passed to the configure script.
+            See README.unix for more on configure script options.
 
 
 Maintaining a Private CVS Repository
