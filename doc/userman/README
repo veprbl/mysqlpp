@@ -1,9 +1,7 @@
 The user manual is written in XML DocBook format, version 4.2.
 It uses the official DocBook XSL stylesheets, and will build with
 versions as old as 1.58.1.  (Why these versions?  They're what comes
-with Red Hat Linux 9, the oldest system I still use.)  We restrict
-ourselves to Simplified DocBook 1.1 as much as practical, to make it
-easier for new people to get started hacking on the manual.
+with Red Hat Linux 9, the oldest system I still use.)
 
 To make the HTML version of the user manual, just type 'make' in this
 directory.  (Or 'make html' if you want to be pedantic.)  To make the
@@ -98,20 +96,12 @@ for getting up to speed on DocBook:
 		This is the best tutorial I've found.
 		
 
-	Walsh and Muellner's _Simplified DocBook: The Definitive Guide_ book:
-
-		http://www.docbook.org/tdg/simple/en/html/sdocbook.html
-
-		This is the most accessible reference.
-
-
 	Walsh and Muellner's _DocBook: The Definitive Guide_ book, second
 	edition, online version:
 
 		http://www.docbook.org/tdg/en/html/docbook.html
 
-		This is the official DocBook referece; the "Simplified" guide is a
-		subset of this book.
+		This is the official DocBook referece.
 
 
 	DocBook FAQ:
