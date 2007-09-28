@@ -25,34 +25,32 @@ it's in userman.dbx.
 
 There are many alternatives for the tools in the square brackets:
 
-	The first replaceable piece is an XSLT processor, which
-	translates XML into other text formats, such as HTML or other
-	varieties of XML.  We use xsltproc from the Gnome project.
-	(http://xmlsoft.org/XSLT/)  There are numerous alternatives,
-	but each supports different extensions to the standard,
-	so it's simplest if everyone uses the same processor for a
-	given document.
+    The first replaceable piece is an XSLT processor, which
+    translates XML into other text formats, such as HTML or other
+    varieties of XML.  We use xsltproc from the Gnome project.
+    (http://xmlsoft.org/XSLT/)  There are numerous alternatives,
+    but each supports different extensions to the standard, so it's
+    simplest if everyone uses the same processor for a given document.
 
-	We use the XSLT processor to do two transforms.  One is
-	directly to HTML.  The other is to XSL-FO, an XML-based page
-	layout language.  We do this intermediary transform because
-	XSLT is not good at creating binary formats like PDF.
+    We use the XSLT processor to do two transforms.  One is directly to
+    HTML.  The other is to XSL-FO, an XML-based page layout language.
+    We do this intermediary transform because XSLT is not good at
+    creating binary formats like PDF.
 
-	The second replaceable piece in the diagram above is an
-	XSL-FO processor, which converts XSL-FO to a more directly
-	useful page layout format, like PDF.  We've chosen FOP from
-	the Apache Project (http://xml.apache.org/fop/), because it's
-	the best of the free-as-in-freedom XSL-FO processors.
+    The second replaceable piece in the diagram above is an XSL-FO
+    processor, which converts XSL-FO to a more directly useful
+    page layout format, like PDF.  We've chosen FOP from the Apache
+    Project (http://xml.apache.org/fop/), because it's the best of
+    the free-as-in-freedom XSL-FO processors.
 
-	FOP isn't without its faults.  If you'd like to try some of
-	the commercial XSL-FO processors, RenderX's XEP (renderx.com)
-	is avalable in a free-as-in-beer version that adds watermarks
-	to your pages.	Another popular option is Antenna House's XSL
-	Formatter (antennahouse.com), but there is no free offering.
-	The low-end commercial version of each of these is around $300.
-	Another relatively inexpensive option is Lunasil's Xinc
-	(lunasil.com), which is available in a personal-use edition
-	for under $100.
+    FOP isn't without its faults.  If you'd like to try some of
+    the commercial XSL-FO processors, RenderX's XEP (renderx.com) is
+    avalable in a free-as-in-beer version that adds watermarks to your
+    pages.  Another popular option is Antenna House's XSL Formatter
+    (antennahouse.com), but there is no free offering.  The low-end
+    commercial version of each of these is around $300.  Another
+    relatively inexpensive option is Lunasil's Xinc (lunasil.com),
+    which is available in a personal-use edition for under $100.
 
 The third replaceable piece above is the DocBook XSL stylesheet set.
 The stylesheets are the XSLT processor's rules, controlling how
@@ -67,9 +65,9 @@ your net connection is down.
 A better option is to have a copy of the stylesheets on your system.
 It's likely that there is a pre-built package for your system:
 
-	Red Hat Linux: docbook-style-xsl RPM (same for Fedora Core)
-	Mac OS X:      docbook-xsl Fink package (http://fink.sf.net)
-	Cygwin:        docbook-xml?? package (?? = DocBook version)
+    Red Hat/Fedora: docbook-style-xsl RPM package
+    Mac OS X:       docbook-xsl Fink package (http://fink.sf.net)
+    Cygwin:         docbook-xml?? package (?? = DocBook version)
 
 (Please send the name of the package for your system to the mailing
 list if it isn't listed above, and I'll add it to the list.)
@@ -86,33 +84,34 @@ You might also find the FOP and/or DocBook mailing lists helpful.
 
 
 
-If you're looking to hack on the manual, here are some helpful resources
-for getting up to speed on DocBook:
+If you're looking to hack on the manual, here are some helpful
+resources for getting up to speed on DocBook:
 
-	Mills' "Installing And Using An XML/SGML DocBook Editing Suite" article:
+    Mills' "Installing And Using An XML/SGML DocBook Editing Suite"
+    article:
 
-		http://tinyurl.com/8alb2
+        http://tinyurl.com/8alb2
 
-		This is the best tutorial I've found.
-		
+        This is the best tutorial I've found.
+        
 
-	Walsh and Muellner's _DocBook: The Definitive Guide_ book, second
-	edition, online version:
+    Walsh and Muellner's _DocBook: The Definitive Guide_ book, second
+    edition, online version:
 
-		http://www.docbook.org/tdg/en/html/docbook.html
+        http://www.docbook.org/tdg/en/html/docbook.html
 
-		This is the official DocBook referece.
-
-
-	DocBook FAQ:
-
-		http://www.dpawson.co.uk/docbook/
-
-		Go here when you have a question that the tutorials and references
-		do not answer.
+        This is the official DocBook referece.
 
 
-	The official DocBook site:
+    DocBook FAQ:
 
-		http://docbook.org/
+        http://www.dpawson.co.uk/docbook/
+
+        Go here when you have a question that the tutorials and
+        references do not answer.
+
+
+    The official DocBook site:
+
+        http://docbook.org/
 
