@@ -58,7 +58,7 @@ print_stock_header(int rows)
 {
 	cout << "Records found: " << rows << endl << endl;
 	cout.setf(ios::left);
-	cout << setw(21) << "Item" <<
+	cout << setw(31) << "Item" <<
 			setw(10) << "Num" <<
 			setw(10) << "Weight" <<
 			setw(10) << "Price" <<
@@ -76,7 +76,7 @@ print_stock_row(const mysqlpp::sql_char& item, mysqlpp::sql_bigint num,
 		const mysqlpp::sql_date& date)
 {
 	char buf[100];
-	cout << setw(20) << item << ' ' <<
+	cout << setw(30) << item << ' ' <<
 			setw(9) << num << ' ' <<
 			setw(9) << weight << ' ' <<
 			setw(9) << price << ' ' <<

@@ -112,7 +112,7 @@ main(int argc, char *argv[])
 		mysqlpp::Query query = con.query();
 		query << 
 				"CREATE TABLE stock (" <<
-				"  item CHAR(20) NOT NULL, " <<
+				"  item CHAR(30) NOT NULL, " <<
 				"  num BIGINT, " <<
 				"  weight DOUBLE, " <<
 				"  price DOUBLE, " <<
