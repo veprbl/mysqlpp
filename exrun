@@ -31,19 +31,24 @@ if [ -n "$1" ]
 then
 	shift
 
-	if [ ! -e libmysqlpp.so.2 ]
+	if [ `uname -o` != 'Cygwin' ]
 	then
-		( ln -sf libmysqlpp.so libmysqlpp.so.2 )
-	fi
+		if [ ! -e libmysqlpp.so.2 ]
+		then
+			( ln -sf libmysqlpp.so libmysqlpp.so.2 )
+		fi
 
-	if [ -e /usr/bin/ldd ]
-	then
-		LD_LIBRARY_PATH=. $TOOL ./$PROG $*
-	elif [ -e /usr/bin/otool ]
-	then
-		DYLD_LIBRARY_PATH=. $TOOL ./$PROG $*
+		if [ -e /usr/bin/ldd ]
+		then
+			LD_LIBRARY_PATH=. $TOOL ./$PROG $*
+		elif [ -e /usr/bin/otool ]
+		then
+			DYLD_LIBRARY_PATH=. $TOOL ./$PROG $*
+		else
+			echo "ERROR: I don't grok this system's dynamic linkage system."
+		fi
 	else
-		echo ERROR: I don\'t grok this system\'s dynamic linkage system.
+		cmd.exe /c exrun.bat $PROG $*
 	fi
 else
 	echo "usage: $0 $TOOL <example> [args...]"
