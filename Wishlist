@@ -128,6 +128,31 @@ v3.0 Plan, For-Sure Stuff
       object may be able to look up a suitable Connection object
       for the manipulators.
 
+    o Refactor option mechanism in Connection, in several steps:
+    
+      - Create new optionlist module, initially empty.  Each step below
+        moves code and declarations into this module.
+
+      - Replace OptionInfo struct, OptionArgType enum, and Option
+        enum with a class hierarchy: totally abstract Option interface
+        at the top level, BoolOption, IntOption, and StringOption at
+        second level.  Each second-level class is subclassed once
+        for each of the options currently defined in Options enum.
+        This binds the legal option argument types with the options
+        themselves, instead of requiring a lookup table to match enum
+        values to types.  OptionList then becomes a list of Option*.
+
+      - Create OptionSetter class as a base class for Connection.  It
+        contains the actual option list object, provides the public
+        interface to that list, and possibly a callback mechanism for
+        Connection to override to give the Option objects the access
+        they need to actually implement the option setting operation.
+        (They need access to Connection::mysql_, for example.)
+
+      - Add new Option subclass SSLOption, and reimplement
+        Connection::enable_ssl() in terms of it.  The success of this
+        will prove the value of an extensible option type system.
+
     o Some field_list() functions use the do_nothing manipulator,
       while others use the quote manipulator.  Need to pick one.
       In the vast majority of cases, quoting won't be necessary, so
@@ -137,6 +162,10 @@ v3.0 Plan, For-Sure Stuff
       the same system to get different quoting rules.  Otherwise,
       it will probably have to be a configure script flag, which will
       "burn" the choice into the built binary.
+
+    o Query::preview(void) should not crash when query string is
+      a parsed template.  It's probably running off the end of the
+      default argument list, or trying to dereference a null pointer.
 
     o Add user-settable floating-point comparison precisions:
 
@@ -197,10 +226,6 @@ v3.0 "Maybe" Stuff
       table, for instance.
 
     o Chris Frey's packarray class
-
-    o Refactor option mechanism in Connection class into its own
-      class.  There are a whole lot of functions, structs and enums
-      related to this.
 
     o Figure out some way to name debug DLL and library under VC++
       differently (trailing 'd'?) to prevent some problems due
