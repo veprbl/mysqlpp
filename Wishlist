@@ -32,30 +32,6 @@ v3.0 Plan, For-Sure Stuff
     o Add multithreaded examples to test above features and the new
       ConnectionPool class?  They'd have to be platform-specific...
 
-    o SSQLS v2:
-
-      - Switch from C macros to a DSL that is translated to .cpp and
-        .h files by a tool built along with MySQL++ library.
-
-      - Add features to that tool to write SSQLSv2 declaration files
-        from existing schemas extracted from CREATE TABLE statements,
-        from running databases, and from C++ files containing old
-        SSQLS v1 declarations.
-
-      - Add table creation ability to SSQLS.  It has the schema...
-
-      - Decouple SSQLS field order from MYSQL_ROW field order.  We can
-        use field names to match up assigments, allowing you to have
-        just one SSQLS definition, and have it cope no matter what
-        subset of the table you query.  This will be slower than the
-        current method, but SSQLS (and MySQL++ in general for that
-        matter) isn't about speed.
-
-      - Consider whether some of the current boilerplate can be
-        made into a base class that all SSQLSes derive from.  Some
-        template functions like Query::insert<T> might become regular
-        member functions, taking a reference to the SSQLS base class.
-
     o Rework elment access in subscript_iterator derivatives:
 
       - Change data management to work like ColData's new reference-
@@ -95,33 +71,6 @@ v3.0 Plan, For-Sure Stuff
     o Apply Waba's patch allowing Null<T> fields in SSQLSes:
       
           http://lists.mysql.com/plusplus/5433
-
-    o manip.cpp uses mysql_escape_string(), which doesn't take the
-      selected database's character set into account.  To do that, you
-      must use mysql_real_escape_string(), which differs by taking
-      a MYSQL instance as an additional parameter.  The problem
-      is, Connection owns the relevant MYSQL instance, and the
-      manipulator functionality is implemented in global functions
-      (operator<<() and such) so they have no direct access to the
-      relevant Connection object.
-
-      The key question for all operator<<'s for manipulators
-      to ask is, "which Query object am I being inserted into?"
-      From there, you can look up the associated Connection object.
-
-      In some cases, this answer to the question is easy, because
-      the operator takes an ostream parameter, which can be
-      dynamically cast to Query.  From there, it's just a lookup
-      table problem.
-      
-      Other operator<<'s don't take an ostream, but they do take
-      a manipulator.  Right now, manipulators are just enum values,
-      but they could in fact be classes.  Classes can carry data,
-      so there may be a way to "bind" them to the appropriate
-      Connection object.  If not, then perhaps some other method
-      will pop out of the database driver class idea.  The driver
-      object may be able to look up a suitable Connection object
-      for the manipulators.
 
     o Refactor option mechanism in Connection, in several steps:
     
@@ -172,6 +121,57 @@ v3.0 "Maybe" Stuff
     This is stuff that would be nice to have, but it wouldn't be a
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
+
+    o SSQLS v2:
+
+      - Switch from C macros to a DSL that is translated to .cpp and
+        .h files by a tool built along with MySQL++ library.
+
+      - Add features to that tool to write SSQLSv2 declaration files
+        from existing schemas extracted from CREATE TABLE statements,
+        from running databases, and from C++ files containing old
+        SSQLS v1 declarations.
+
+      - Add table creation ability to SSQLS.  It has the schema...
+
+      - Decouple SSQLS field order from MYSQL_ROW field order.  We can
+        use field names to match up assigments, allowing you to have
+        just one SSQLS definition, and have it cope no matter what
+        subset of the table you query.  This will be slower than the
+        current method, but SSQLS (and MySQL++ in general for that
+        matter) isn't about speed.
+
+      - Consider whether some of the current boilerplate can be
+        made into a base class that all SSQLSes derive from.  Some
+        template functions like Query::insert<T> might become regular
+        member functions, taking a reference to the SSQLS base class.
+
+    o manip.cpp uses mysql_escape_string(), which doesn't take the
+      selected database's character set into account.  To do that, you
+      must use mysql_real_escape_string(), which differs by taking
+      a MYSQL instance as an additional parameter.  The problem
+      is, Connection owns the relevant MYSQL instance, and the
+      manipulator functionality is implemented in global functions
+      (operator<<() and such) so they have no direct access to the
+      relevant Connection object.
+
+      The key question for all operator<<'s for manipulators
+      to ask is, "which Query object am I being inserted into?"
+      From there, you can look up the associated Connection object.
+
+      In some cases, this answer to the question is easy, because
+      the operator takes an ostream parameter, which can be
+      dynamically cast to Query.  From there, it's just a lookup
+      table problem.
+      
+      Other operator<<'s don't take an ostream, but they do take
+      a manipulator.  Right now, manipulators are just enum values,
+      but they could in fact be classes.  Classes can carry data,
+      so there may be a way to "bind" them to the appropriate
+      Connection object.  If not, then perhaps some other method
+      will pop out of the database driver class idea.  The driver
+      object may be able to look up a suitable Connection object
+      for the manipulators.
 
     o Replace Query::preview() with operator<<, for easy debugging?
       If one really wants a std::string, they can still call str(),
