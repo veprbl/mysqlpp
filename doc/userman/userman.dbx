@@ -832,7 +832,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     </sect2>
 
 
-    <sect2>
+    <sect2 id="querytypes">
         <title>Which Query Type to Use?</title>
 
         <para>There are three major ways to execute a query in
@@ -1024,6 +1024,57 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
             returns it to the web server, which will send it on to
             the browser.</para>
         </sect3>
+    </sect2>
+
+
+    <sect2 id="concurrentqueries">
+        <title>Concurrent Queries on a Connection</title>
+
+        <para>An important limitation of the MySQL C API library
+        &mdash; which MySQL++ is built atop, so it shares this
+        limitation &mdash; is that you can't have two concurrent
+        queries running on a single connection. If you try, you get an
+        obscure error message about "Commands out of sync" from the
+        underlying C API library. (You get it in a MySQL++ exception
+        unless you have exceptions disabled, in which case you get a
+        failure code and <methodname>Connection::error()</methodname>
+        returns this message.)</para>
+
+        <para>The easiest way to cause this error is in a multithreaded
+        program where you have a single <ulink type="classref"
+        url="Connection"/> object, but allow multiple threads to issue
+        queries on it. Unless you put in a lot of work to synchronize
+        access, this is almost guaranteed to fail.</para>
+
+        <para>If you give each thread that issues queries has
+        its own <classname>Connection</classname> object, you can
+        still run into trouble if you pass the data you get from
+        queries around to other threads. What can happen is that
+        one of these child objects indirectly calls back to the
+        <classname>Connection</classname> at a time where it's involved
+        with another query. (There are other ways to run into trouble
+        when sharing MySQL++ data structures among threads, but the
+        whole topic is complex enough to deserve its own chapter,
+        <xref linkend="threads"/>.)</para>
+
+        <para>It's possible to run into this problem in a
+        single-threaded program as well. As discussed above (<xref
+        linkend="querytypes"/>), one of the options MySQL offers for
+        executing a query lets you issue the query, then consume the
+        rows one at a time, on demand: it's the "use" query. If you
+        don't consume all rows from a query before you issue another
+        on that connection, you are effectively trying to have multiple
+        concurrent queries on a single connection, and you end up with
+        the same problem. The simplest recipie for disaster is:</para>
+
+        <programlisting>
+Connection c(...);
+Query q = c.query();
+Result r1 = q.use("select garbage from plink where foobie='tamagotchi'");
+Result r2 = q.use("select blah from bonk where bletch='smurf'");</programlisting>
+
+        <para>The second <methodname>use()</methodname> call fails
+        because the first result set hasn't been consumed yet.</para>
     </sect2>
 </sect1>
 
@@ -1992,85 +2043,129 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
 </sect1>
 
 
-<sect1 id="capilimits">
-    <title>Important Underlying C API Limitations</title>
+<sect1 id="threads">
+    <title>Using MySQL++ in a Multithreaded Program</title>
 
-    <para>Since MySQL++ is built on top of the MySQL C API
-    (libmysqlclient), it shares all of its limitations. The
-    following points out some of these limitations that frequently
-    bite newbies. Some of these may be papered over at the MySQL++
-    layer in future releases, but it's best to write your program as
-    if they were permanent fixtures of the universe.</para>
+    <para>MySQL++ doesn't fall out of the box ready to be used with
+    threads. Furthermore, once you build a thread-aware program with
+    MySQL++, it isn't "thread safe" in an absolute sense: there
+    exist incorrect usage patterns which will cause errors. This
+    section will discuss these issues, and give advice on how to
+    avoid problems.</para>
 
-    <orderedlist>
-        <listitem>
-            <para><emphasis>Only one active query per
-            connection.</emphasis> This one bites MySQL++ newbies most
-            often in multithreaded programs.  If the program has only
-            one Connection object and each thread gets their Query
-            objects from it, it's inevitable that one of those query
-            objects will try to execute while another query is already
-            running on that single connection. The safest course is
-            to have a separate Connection object per thread, and for
-            your code to get Query objects in a thread only from that
-            thread's Connection object. Alternately, you can confine
-            MySQL database access to a single thread.</para>
-        </listitem>
+    <sect2>
+        <title>Build Issues</title>
 
-        <listitem>
-            <para><emphasis>You must consume all rows from a query
-            before you can start a new query.</emphasis> This one
-            bites MySQL++ newbies most often when they try code
-            like this:</para>
+        <para>Before you can safely use MySQL++ with threads, there are
+        several things you must do to get a thread-aware build:</para>
 
-            <programlisting>
-Connection c(...);
-Query q = c.query();
-Result r1 = q.use("select garbage from plink where foobie='tamagotchi'");
-Result r2 = q.use("select blah from bonk where bletch='smurf'");</programlisting>
+        <orderedlist>
+            <listitem>
+                <para>Build MySQL++ itself with thread awareness turned
+                on. The way you do this depends on your platform,
+                so see the <filename>README</filename> file specific
+                to your platform for further details.</para>
+            </listitem>
 
-            <para>This will fail because a "use" query consumes rows
-            only on demand, so the MySQL server is still keeping
-            information around about the first query when the second
-            one comes in on the connection.  When you try the second
-            query, MySQL++ will throw an exception containing an
-            obscure MySQL C API error message about "commands out
-            of sync".</para>
+            <listitem>
+                <para>Link your program to a thread-aware build of
+                the MySQL C API library. Depending on your platform,
+                you might have to build this yourself (e.g. Cygwin),
+                or you might get only one library which is always
+                thread-aware (e.g. Visual C++), or there might be
+                two different MySQL C API libraries, one of which is
+                thread-aware and the other not (e.g. Linux). Again,
+                see the <filename>README</filename>s, and also the
+                MySQL developer documentation.</para>
+            </listitem>
 
-            <para>This is not the only situation where this can happen,
-            but all of these issues boil down to the fact that MySQL
-            requires that certain operations complete before you can
-            start a new one.</para>
-        </listitem>
+            <listitem>
+                <para>Enable thread safety in your program's build
+                options. This is different for every platform, but
+                it's usually the case that you don't get thread-aware
+                builds by default. You might have to turn on a compiler
+                option, or link your program to a different library,
+                or some combination of both. See your development
+                environment's documentation, or study how MySQL++
+                itself turns on thread-aware build options when
+                requested.</para>
+            </listitem>
+        </orderedlist>
+    </sect2>
 
-        <listitem>
-            <para><emphasis>The <classname>Result</classname> object
-            must outlive the use of any <classname>Row</classname>
-            objects it returns.</emphasis> This is because the
-            <classname>Row</classname> objects refer back to the
-            <classname>Result</classname> object that created them for
-            certain data. (Field names, for example.) MySQL does this
-            for efficiency, because there is some information about a
-            row that is the same for all rows in a result set. We could
-            avoid this in MySQL++ by making redundant copies of this
-            data for each row, but that would be quite wasteful.</para>
+    <sect2>
+        <title>Concurrent Queries on a Connection</title>
 
-            <para>Beware of some of the more obscure ways this can
-            happen. For example:</para>
+        <para>This is discussed more deeply in <xref
+        linkend="concurrentqueries"/>, but in brief, the MySQL C API
+        underpinning MySQL++ does not allow multiple concurrent queries
+        on a single connection. You can get into trouble with this in
+        a single-threaded program with one of the three major query
+        types (see <xref linkend="querytypes"/>), but with threads, all
+        three connection types are susceptiple to this problem.</para>
 
-            <programlisting>
-Connection c(...);
-Query q = c.query();
-Result res = q.store("...");
-Row row = res.at(0);
-res = q.store("...");</programlisting>
+        <para>MySQL++ doesn't &mdash; and can't &mdash; prevent
+        your program from getting into this situation. The best we
+        could do is block the second thread while the first finishes
+        running. In effect, we'd be slowing your program down (or
+        even potentially deadlocking it) just to work around your bug.
+        It's better to let the error occur, which causes you to read
+        this chapter, which causes you to realize that you shouldn't
+        try to issue multiple queries on a single connection in the
+        first place.</para>
 
-            <para>At this point, the <varname>row</varname> variable's
-            contents are likely no longer usable. The program may run,
-            but the row object will use data (field names, etc.) from
-            the second query, not the first.</para>
-        </listitem>
-    </orderedlist>
+        <para>There are two easy fixes for this problem. The easiest
+        is to just create a separarate <ulink url="Connection"
+        type="classref"/> for each thread that needs to make database
+        queries. If the number of threads is large or the query
+        frequency is low, a better solution is to use the <ulink
+        url="ConnectionPool" type="classref"/> class. It manages a
+        pool of <classname>Connection</classname>s like library books:
+        a thread checks one out, uses it, and then returns it to the
+        pool when it's done with it. This keeps the number of active
+        connections as low as possible.</para>
+    </sect2>
+
+
+    <sect2>
+        <title>Sharing MySQL++ Data Structures</title>
+
+        <para>We're in the process of making MySQL++'s data structures
+        more easily shared across threads.</para>
+
+        <para>By way of illustration, let me explain a problem we
+        had up until MySQL++ v3.0. When you issue a database query,
+        part of the data you get back in the result set is common
+        to all rows in that result set. For example, there's a
+        list of what columns are in each row.  Since this data is
+        the same for each row, older versions of MySQL++ kept this
+        information in the <ulink url="Result" type="classref"/>
+        object, and each <ulink url="Row" type="classref"/> kept
+        a pointer back to the <classname>Result</classname> that
+        created it, so it could access this common data at need. This
+        is fine as long as each <classname>Result</classname> object
+        outlives the <classname>Row</classname> objects it returns,
+        which isn't a hardship in a single-threaded program. But
+        in a multi-threaded program, there's frequently a desire to
+        let one connection do the queries, and other threads process
+        the results. You can see how avoiding lifetime problems here
+        would require a careful locking strategy. We got around this
+        by giving these shared data structures a lifetime independent
+        of the <classname>Result</classname> object that intitially
+        creates it, so the last one out could turn off the lights,
+        so to speak.</para>
+
+        <para>Although this is now a solved problem, I bring it up
+        because there are likely other similar lifetime and sequencing
+        problems waiting to be discovered inside MySQL++. If you
+        would like to help us find these, by all means, share data
+        between threads willy-nilly. We welcome your crash reports
+        on the MySQL++ mailing list. But if you'd prefer to avoid
+        problems, it's better to keep all data about a query within
+        a single thread. Between this and the previous section's
+        advice, you should be able to use threads with MySQL++
+        without trouble.</para>
+    </sect2>
 </sect1>
 
 
