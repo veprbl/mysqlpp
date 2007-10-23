@@ -1,4 +1,4 @@
-/// \file mutex.h
+/// \file beemutex.h
 /// \brief MUTually EXclusive lock class.
 /// \author Bob Deblier <bob.deblier@telenet.be>
 ///
@@ -47,6 +47,13 @@
 
 namespace mysqlpp {
 
+/// \brief Wrapper around platform-specific mutexes.
+///
+/// This class is only intended to be used within the library.  We don't
+/// really want to support this as a general purpose class.  If it works
+/// for you as-is, that's great, we won't try to stop you.  But if you
+/// run into a problem that doesn't affect MySQL++ itself, we're not
+/// likely to bother enhancing this class to fix the problem.
 class BeecryptMutex
 {
 public:
