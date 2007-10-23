@@ -53,7 +53,7 @@ clean:
 
 $(PDFFILE): $(DOCFILE) $(FO_SS) $(COMMON_SS)
 	xsltproc --xinclude $(FO_SS) $(DOCFILE) > $(FOFILE)
-	$(FOPDIR)/fop -q -fo $(FOFILE) $(PDFFILE)
+	-$(FOPDIR)/fop -fo $(FOFILE) $(PDFFILE) > /dev/null 2>&1
 	cp $(PDFFILE) ../pdf
 
 $(HTML_DIR)/index.html: $(DOCFILE) $(EX_TXT) $(HTML_SS) $(COMMON_SS)
