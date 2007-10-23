@@ -2094,35 +2094,77 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
     </sect2>
 
     <sect2>
-        <title>Concurrent Queries</title>
+        <title>Connection Management</title>
 
         <para>The MySQL C API underpinning MySQL++ does not allow
         multiple concurrent queries on a single connection. You
         can run into this problem in a single-threaded program,
         too, which is why we cover the details elsewhere, in <xref
-        linkend="concurrentqueries"/>. It is, however, easier to run
-        into the limit when using threads.</para>
+        linkend="concurrentqueries"/>. It's a thornier problem when
+        using threads, though.</para>
 
-        <para>MySQL++ doesn't &mdash; and shouldn't &mdash; prevent
-        your program from getting into this situation. The best we
-        could do is block the second thread while the first finishes
-        consuming its result set. In effect, we'd be slowing your
-        program down (or even potentially deadlocking it) just to
-        work around your bug.  It's better to let the error occur,
-        which causes you to read this chapter, which causes you to
-        realize that you shouldn't try to issue multiple queries on
-        a single connection in the first place.</para>
+        <para>The simple fix is to just create a separarate <ulink
+        url="Connection" type="classref"/> object for each thread
+        that needs to make database queries. This works well if you
+        have a small number of threads that need to make queries, and
+        each thread uses its connection often enough that the server
+        doesn't time out waiting for queries. (By default, current
+        MySQL servers have an 8 hour idle timeout on connections. It's
+        a configuration option, though, so your server may be set
+        differently.)</para>
 
-        <para>There are two easy fixes for this problem. The easiest
-        is to just create a separarate <ulink url="Connection"
-        type="classref"/> for each thread that needs to make database
-        queries. If the number of threads is large or the query
-        frequency is low, a better solution is to use the <ulink
+        <para>If you have lots of threads or the frequency
+        of queries is low, the connection management overhead
+        will be excessive. To avoid that, we created the <ulink
         url="ConnectionPool" type="classref"/> class. It manages a
         pool of <classname>Connection</classname>s like library books:
         a thread checks one out, uses it, and then returns it to the
         pool when it's done with it. This keeps the number of active
-        connections as low as possible.</para>
+        connections as low as possible. The class is abstract because
+        it has two Template Methods that you need to define, to provide
+        implementation details MySQL++ can't know itself. In designing
+        your <classname>ConnectionPool</classname> derivative, you
+        might consider making it a Singleton (see Gamma et al.),
+        since there should only be one pool in a program.</para>
+        
+        <para>Here is an example showing how to use connection
+        pools with POSIX threads:</para>
+
+        <!-- FIXME: CPOOL EXAMPLE GOES HERE -->
+
+        <para>There are other examples in the MySQL++ examples
+        subdirectory for other thread implementations, but they're
+        functionally identical to this.</para>
+
+        <para>Beware, connection pools only work correctly with threads
+        if you build MySQL++ with thread support. The mutex lock
+        mechanism used to keep the pool's internal data consistent
+        while multiple threads access it will just quietly become
+        a no-op if MySQL++ is built without thread support. We do
+        it this way because we don't want to make thread support a
+        MySQL++ prerequisite. And, although it would be of limited
+        value, this lets you use <classname>ConnectionPool</classname>
+        in single-threaded programs.</para>
+
+        <para>You might wonder why we don't just work around this
+        weakness in the C API transparently in MySQL++ instead of
+        mandating design guidelines to avoid it. We'd like to do
+        just that, but how? If you consider just the threaded case,
+        you could argue for the use of mutexes to protect a connection
+        from trying to execute two queries at once. The cure is worse
+        than the disease: it turns a design error into a performance
+        sap, as the second thread is blocked indefinitely waiting
+        for the connection to free up. Much better to let the program
+        get the "Commands out of sync" error, which will guide you to
+        this section of the manual, which tells you how to avoid the
+        error with a better design. Another option would be to bury
+        <classname>ConnectionPool</classname> functionality within
+        MySQL++ itself, so the library could create new connections at
+        need. Unfortunately, that increases the complexity of using
+        the library; the above example is one of the most complex
+        in MySQL++. The whole point of the library is to make using
+        the database easier. We added the pool option for those that
+        really need it, but an option it must remain.</para>
     </sect2>
 
 
