@@ -41,7 +41,6 @@ info_(c->info())
 
 ResUse::ResUse(MYSQL_RES* result, Connection* c, bool te) :
 OptionalExceptions(te),
-conn_(c),
 initialized_(false),
 types_(0),
 fields_(this)
@@ -86,7 +85,6 @@ ResUse::copy(const ResUse& other)
 
 		table_ = other.table_;
 
-		conn_ = other.conn_;
 		initialized_ = true;
 	}
 	else {

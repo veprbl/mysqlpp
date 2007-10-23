@@ -66,7 +66,6 @@ public:
 	/// \brief Default constructor
 	ResUse() :
 	OptionalExceptions(),
-	conn_(0),
 	result_(0),
 	initialized_(false),
 	types_(0),
@@ -149,12 +148,6 @@ public:
 		return mysql_num_fields(result_);
 	}
 	
-	/// \brief Documentation needed!
-	void parent_leaving()
-	{
-		conn_ = 0;
-	}
-
 	/// \brief Free all resources held by the object.
 	///
 	/// This class's destructor is little more than a call to purge(),
@@ -311,7 +304,6 @@ public:
 	}
 
 protected:
-	Connection* conn_;			///< server result set comes from
 	mutable MYSQL_RES* result_;	///< underlying C API result set
 	bool initialized_;			///< if true, object is fully initted
 	mutable FieldTypes* types_;	///< list of field types in result
@@ -404,7 +396,6 @@ public:
 	Result(const Result& other) :
 	ResUse(other)
 	{
-		conn_ = 0;
 	}
 
 	/// \brief Destroy result set
