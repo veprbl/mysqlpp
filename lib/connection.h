@@ -37,7 +37,6 @@
 
 #include "common.h"
 
-#include "lockable.h"
 #include "noexceptions.h"
 
 #include <deque>
@@ -52,7 +51,7 @@ class MYSQLPP_EXPORT Query;
 
 /// \brief Manages the connection to the MySQL database.
 
-class MYSQLPP_EXPORT Connection : public OptionalExceptions, public Lockable
+class MYSQLPP_EXPORT Connection : public OptionalExceptions
 {
 public:
 	/// \brief Legal types of option arguments

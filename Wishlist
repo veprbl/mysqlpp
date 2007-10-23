@@ -15,27 +15,22 @@ v3.0 Plan, For-Sure Stuff
 
     o Audit use of headers in lib/*.h, to reduce dependencies.
 
-    o Add conditional code to the Lockable mechanism to use platform
-      mutexes if available, to implement these MySQL C API
-      restrictions:
+	o Go back over mailing list thread to fold in any other changes
+	  suggested for RefCountedPointer.  Most especially, use
+	  atomic increment/decrement.  Until we do this, we don't
+	  yet have thread-safety.
 
-      - Only one query executing at once per connection
+    o Add Connection::thread_start() and thread_end(), wrapping C API.
+      Mention in userman threads chapter that these only need to
+      be called when doing something tricky or linking statically
+      on Windows.  Automatic otherwise.
 
-      - For "use" queries, Connection (and therefore Query) object must
-        remain locked until last row is consumed
+    o Add Connection::thread_safe(), wrapping mysql_thread_safe() plus
+      maybe also a #defined value set at MySQL++ library build time
+      if thread awareness is enabled.
 
-      - Safest to have one Connection per thread.  Rules for sharing:
-        http://dev.mysql.com/doc/mysql/en/threaded-clients.html
-
-      Need some way to call mysql_thread_init() and mysql_thread_end()
-      per thread.  Also, work in some way to call mysql_thread_safe()
-      automatically, perhaps the first time through the function that
-      calls mysql_thread_init().  If the C API library reports that it
-      is not thread-safe, report this to the caller, perhaps through
-      an exception, or simply by refusing to init more than one thread.
-
-    o Add multithreaded example to test above features and the new
-      ConnectionPool class.
+    o Add multithreaded examples to test above features and the new
+      ConnectionPool class?  They'd have to be platform-specific...
 
     o SSQLS v2:
 

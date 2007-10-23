@@ -30,7 +30,6 @@
 
 #include "common.h"
 
-#include "lockable.h"
 #include "noexceptions.h"
 #include "qparms.h"
 #include "querydef.h"
@@ -123,8 +122,9 @@ class MYSQLPP_EXPORT Connection;
 ///
 /// See the user manual for more details about these options.
 
-class MYSQLPP_EXPORT Query : public std::ostream,
-		public OptionalExceptions, public Lockable
+class MYSQLPP_EXPORT Query :
+        public std::ostream,
+		public OptionalExceptions
 {
 public:
 	/// \brief Create a new query object attached to a connection.
@@ -886,10 +886,6 @@ private:
 
 	/// \brief Process a parameterized query list.
 	void proc(SQLQueryParms& p);
-
-	// Locking mechanism
-	bool lock();
-	void unlock();
 
 	SQLString* pprepare(char option, SQLString& S, bool replace = true);
 };

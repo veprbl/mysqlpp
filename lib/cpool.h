@@ -27,8 +27,7 @@
 #if !defined(MYSQLPP_CPOOL_H)
 #define MYSQLPP_CPOOL_H
 
-#include "common.h"
-#include "lockable.h"
+#include "beemutex.h"
 
 #include <list>
 
@@ -57,25 +56,22 @@ class MYSQLPP_EXPORT Connection;
 /// pool of sparsely used connections because we'd keep resetting the
 /// last-used time of the least recently used connection.
 
-class ConnectionPool : public Lockable
+class ConnectionPool
 {
 public:
 	/// \brief Default ctor
-	ConnectionPool() :
-	Lockable(false)
-	{
-	}
+	ConnectionPool() { }
 
 	/// \brief Dtor
 	virtual ~ConnectionPool() { }
 	
-	/// \brief Get the most recently used connection in the pool.
+	/// \brief Get the most recently used free connection in the pool.
 	///
 	/// This method creates a new connection if an unused one doesn't
 	/// exist, and destroys any that have remained unused for too long.
 	///
 	/// \retval a pointer to the most recently used connection
-	Connection* connection();
+	Connection* grab();
 
 	/// \brief Mark the given connection as no longer in use.
 	///
@@ -126,6 +122,7 @@ private:
 
 	//// Internal data
 	PoolT pool_;
+	BeecryptMutex mutex_;
 };
 
 } // end namespace mysqlpp

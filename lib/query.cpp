@@ -1,10 +1,10 @@
 /***********************************************************************
  query.cpp - Implements the Query class.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -39,7 +39,6 @@ std::ostream(std::_Noinit),
 std::ostream(0),
 #endif
 OptionalExceptions(te),
-Lockable(false),
 template_defaults(this),
 conn_(c),
 copacetic_(true)
@@ -58,7 +57,6 @@ std::ostream(std::_Noinit),
 std::ostream(0),
 #endif
 OptionalExceptions(q.throw_exceptions()),
-Lockable(q.locked()),
 template_defaults(q.template_defaults),
 conn_(q.conn_),
 copacetic_(q.copacetic_)
@@ -71,7 +69,6 @@ Query&
 Query::operator=(const Query& rhs)
 {
 	set_exceptions(rhs.throw_exceptions());
-	set_lock(rhs.locked());
 	template_defaults = rhs.template_defaults;
 	conn_ = rhs.conn_;
 	copacetic_ = rhs.copacetic_;
@@ -130,21 +127,7 @@ Query::execute(const SQLString& s)
 ResNSel
 Query::execute(const char* str, size_t len)
 {
-	if (!lock()) {
-		copacetic_ = false;
-		if (throw_exceptions()) {
-			throw LockFailed();
-		}
-		else {
-			return ResNSel();
-		}
-	}
-
-	copacetic_ = !mysql_real_query(&conn_->mysql_, str, len);
-
-	unlock();
-
-	if (copacetic_) {
+	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
 		return ResNSel(conn_);
 	}
 	else if (throw_exceptions()) {
@@ -167,13 +150,6 @@ my_ulonglong
 Query::insert_id()
 {
 	return conn_->insert_id();
-}
-
-
-bool
-Query::lock()
-{
-    return conn_->lock();
 }
 
 
@@ -419,22 +395,10 @@ Query::store(const SQLString& s)
 Result
 Query::store(const char* str, size_t len)
 {
-	if (!lock()) {
-		copacetic_ = false;
-		if (throw_exceptions()) {
-			throw LockFailed();
-		}
-		else {
-			return Result();
-		}
-	}
-
 	MYSQL_RES* res = 0;
 	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
 		res = mysql_store_result(&conn_->mysql_);
 	}
-
-	unlock();
 
 	if (res) {
 		return Result(res, throw_exceptions());
@@ -460,20 +424,10 @@ Result
 Query::store_next()
 {
 #if MYSQL_VERSION_ID > 41000		// only in MySQL v4.1 +
-	if (!lock()) {
-		if (throw_exceptions()) {
-			throw LockFailed();
-		}
-		else {
-			return Result();
-		}
-	}
-
 	int ret;
 	if ((ret = mysql_next_result(&conn_->mysql_)) == 0) {
 		// There are more results, so return next result set.
 		MYSQL_RES* res = mysql_store_result(&conn_->mysql_);
-		unlock();
 		if (res) {
 			return Result(res, throw_exceptions());
 		} 
@@ -490,20 +444,16 @@ Query::store_next()
 			}
 		}
 	}
-	else {
-		// No more results, or some other error occurred.
-		unlock();
-		if (throw_exceptions()) {
-			if (ret > 0) {
-				throw BadQuery(error());
-			}
-			else {
-				throw EndOfResultSets();
-			}
-		}
-		else {
-			return Result();
-		}
+	else if (throw_exceptions()) {
+        if (ret > 0) {
+            throw BadQuery(error());
+        }
+        else {
+            throw EndOfResultSets();
+        }
+    }
+    else {
+        return Result();
 	}
 #else
 	return store();
@@ -519,13 +469,6 @@ Query::str(SQLQueryParms& p)
 	}
 
 	return sbuffer_.str();
-}
-
-
-void
-Query::unlock()
-{
-	conn_->unlock();
 }
 
 
@@ -558,22 +501,10 @@ Query::use(const SQLString& s)
 ResUse
 Query::use(const char* str, size_t len)
 {
-	if (!lock()) {
-		copacetic_ = false;
-		if (throw_exceptions()) {
-			throw LockFailed();
-		}
-		else {
-			return ResUse();
-		}
-	}
-
 	MYSQL_RES* res = 0;
 	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
 		res = mysql_use_result(&conn_->mysql_);
 	}
-
-	unlock();
 
 	if (res) {
 		return ResUse(res, conn_, throw_exceptions());

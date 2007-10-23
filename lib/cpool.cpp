@@ -30,12 +30,12 @@
 namespace mysqlpp {
 
 
-//// connection ////////////////////////////////////////////////////////
+//// grab //////////////////////////////////////////////////////////////
 
 Connection*
-ConnectionPool::connection()
+ConnectionPool::grab()
 {
-	lock();
+	mutex_.lock();
 
 	// Find first unused connection in the pool
 	PoolIt it = pool_.begin();
@@ -69,7 +69,7 @@ ConnectionPool::connection()
 		}
 
 		mru->in_use = true;
-		unlock();
+		mutex_.unlock();
 		return mru->conn;
 	}
 	else {
@@ -77,7 +77,7 @@ ConnectionPool::connection()
 		// return a new one.
 		pool_.push_back(ConnectionInfo(create()));
 		Connection* pc = pool_.back().conn;
-		unlock();
+		mutex_.unlock();
 		return pc;
 	}
 }
@@ -88,7 +88,7 @@ ConnectionPool::connection()
 void
 ConnectionPool::release(const Connection* pc)
 {
-	lock();
+	mutex_.lock();
 
 	for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
 		if (it->conn == pc) {
@@ -97,7 +97,7 @@ ConnectionPool::release(const Connection* pc)
 		}
 	}
 
-	unlock();
+	mutex_.unlock();
 }
 
 } // end namespace mysqlpp

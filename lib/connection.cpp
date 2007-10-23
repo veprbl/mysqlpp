@@ -109,7 +109,6 @@ Connection::legal_opt_arg_types_[Connection::opt_COUNT] = {
 
 Connection::Connection(bool te) :
 OptionalExceptions(te),
-Lockable(false),
 is_connected_(false),
 connecting_(false),
 copacetic_(true)
@@ -121,7 +120,6 @@ copacetic_(true)
 Connection::Connection(cchar* db, cchar* server, cchar* user,
 		cchar* password, unsigned int port) :
 OptionalExceptions(),
-Lockable(false),
 connecting_(false)
 {
 	mysql_init(&mysql_);
@@ -131,7 +129,6 @@ connecting_(false)
 
 Connection::Connection(const Connection& other) :
 OptionalExceptions(),
-Lockable(false),
 is_connected_(false)
 {
 	copy(other);
@@ -165,8 +162,6 @@ bool
 Connection::connect(cchar* db, cchar* server, cchar* user,
 		cchar* password, unsigned int port)
 {
-	lock();
-
 	// Drop previous connection, if any
 	if (connected()) {
 		disconnect();
@@ -185,7 +180,6 @@ Connection::connect(cchar* db, cchar* server, cchar* user,
 			mysql_real_connect(&mysql_, host.c_str(), user, password, db,
 			port, (socket_name.empty() ? 0 : socket_name.c_str()),
 			mysql_.client_flag)) {
-		unlock();
 		is_connected_ = true;
 
 		if (db && db[0]) {
@@ -197,7 +191,6 @@ Connection::connect(cchar* db, cchar* server, cchar* user,
 		}
 	}
 	else {
-		unlock();
 		copacetic_ = is_connected_ = false;
 		if (throw_exceptions()) {
 			throw ConnectionFailed(error());
@@ -211,8 +204,6 @@ Connection::connect(cchar* db, cchar* server, cchar* user,
 bool
 Connection::connect(const MYSQL& other)
 {
-	lock();
-
 	// Drop previous connection, if any
 	if (connected()) {
 		disconnect();
@@ -228,7 +219,6 @@ Connection::connect(const MYSQL& other)
 	if (mysql_real_connect(&mysql_, other.host, other.user,
 			other.passwd, other.db, other.port, other.unix_socket,
 			other.client_flag)) {
-		unlock();
 		is_connected_ = true;
 
 		if (other.db && other.db[0]) {
@@ -240,7 +230,6 @@ Connection::connect(const MYSQL& other)
 		}
 	}
 	else {
-		unlock();
 		copacetic_ = is_connected_ = false;
 		if (throw_exceptions()) {
 			throw ConnectionFailed(error());

@@ -40,6 +40,7 @@
 			<so_version>2.9.0</so_version>
 
 			<sources>
+				lib/beemutex.cpp
 				lib/coldata.cpp
 				lib/connection.cpp
 				lib/cpool.cpp
