@@ -2094,25 +2094,24 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
     </sect2>
 
     <sect2>
-        <title>Concurrent Queries on a Connection</title>
+        <title>Concurrent Queries</title>
 
-        <para>This is discussed more deeply in <xref
-        linkend="concurrentqueries"/>, but in brief, the MySQL C API
-        underpinning MySQL++ does not allow multiple concurrent queries
-        on a single connection. You can get into trouble with this in
-        a single-threaded program with one of the three major query
-        types (see <xref linkend="querytypes"/>), but with threads, all
-        three connection types are susceptiple to this problem.</para>
+        <para>The MySQL C API underpinning MySQL++ does not allow
+        multiple concurrent queries on a single connection. You
+        can run into this problem in a single-threaded program,
+        too, which is why we cover the details elsewhere, in <xref
+        linkend="concurrentqueries"/>. It is, however, easier to run
+        into the limit when using threads.</para>
 
-        <para>MySQL++ doesn't &mdash; and can't &mdash; prevent
+        <para>MySQL++ doesn't &mdash; and shouldn't &mdash; prevent
         your program from getting into this situation. The best we
         could do is block the second thread while the first finishes
-        running. In effect, we'd be slowing your program down (or
-        even potentially deadlocking it) just to work around your bug.
-        It's better to let the error occur, which causes you to read
-        this chapter, which causes you to realize that you shouldn't
-        try to issue multiple queries on a single connection in the
-        first place.</para>
+        consuming its result set. In effect, we'd be slowing your
+        program down (or even potentially deadlocking it) just to
+        work around your bug.  It's better to let the error occur,
+        which causes you to read this chapter, which causes you to
+        realize that you shouldn't try to issue multiple queries on
+        a single connection in the first place.</para>
 
         <para>There are two easy fixes for this problem. The easiest
         is to just create a separarate <ulink url="Connection"
@@ -2130,8 +2129,8 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
     <sect2>
         <title>Sharing MySQL++ Data Structures</title>
 
-        <para>We're in the process of making MySQL++'s data structures
-        more easily shared across threads.</para>
+        <para>We're in the process of making it safer to share
+        MySQL++'s data structures across threads.</para>
 
         <para>By way of illustration, let me explain a problem we
         had up until MySQL++ v3.0. When you issue a database query,
