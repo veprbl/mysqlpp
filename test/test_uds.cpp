@@ -36,6 +36,8 @@
 #include <sys/un.h>
 #include <sys/socket.h>
 
+#include <errno.h>
+
 static const char* success_path = "test_uds_success.sock";
 static const char* failure_path = "test_uds_failure.sock";
 
