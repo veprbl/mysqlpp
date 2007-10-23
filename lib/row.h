@@ -44,6 +44,7 @@ namespace mysqlpp {
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
 class FieldNames;
+class MYSQLPP_EXPORT ResUse;
 #endif
 
 /// \brief Manages rows from a result set.
