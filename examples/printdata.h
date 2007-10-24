@@ -1,11 +1,11 @@
 /***********************************************************************
- util.h - Declares functions and such required by several of the
- 	example programs.
+ printdata.h - Declares utility routines for printing out data in
+    common forms, used by most of the example programs.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2006 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -25,13 +25,10 @@
  USA
 ***********************************************************************/
 
-#if !defined(MYSQLPP_UTIL_H)
-#define MYSQLPP_UTIL_H
+#if !defined(MYSQLPP_PRINTDATA_H)
+#define MYSQLPP_PRINTDATA_H
 
 #include <mysql++.h>
-
-extern const char* kpcSampleDatabase;
-extern bool dtest_mode;
 
 void print_stock_header(int rows);
 void print_stock_row(const mysqlpp::Row& r);
@@ -40,11 +37,6 @@ void print_stock_row(const mysqlpp::sql_char& item,
 		mysqlpp::sql_double price, const mysqlpp::sql_date& date);
 void print_stock_rows(mysqlpp::Result& res);
 void print_stock_table(mysqlpp::Query& query);
-void get_stock_table(mysqlpp::Query& query, mysqlpp::Result& res);
-void print_usage(const char* program_name,
-		const char* extra_parms = "");
-bool connect_to_db(int argc, char *argv[], mysqlpp::Connection& con,
-		const char* kdb = 0, const char* extra_parms = "");
 
-#endif // !defined(MYSQLPP_UTIL_H)
+#endif // !defined(MYSQLPP_PRINTDATA_H)
 

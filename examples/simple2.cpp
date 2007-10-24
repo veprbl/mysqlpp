@@ -25,7 +25,8 @@
  USA
 ***********************************************************************/
 
-#include "util.h"
+#include "cmdline.h"
+#include "printdata.h"
 
 #include <mysql++.h>
 
@@ -37,9 +38,15 @@ using namespace std;
 int
 main(int argc, char *argv[])
 {
+	// Get database access parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+		return 1;
+	}
+
 	// Connect to the sample database.
 	mysqlpp::Connection con(false);
-	if (!connect_to_db(argc, argv, con)) {
+	if (!con.connect(db, server, user, pass)) {
 		return 1;
 	}
 

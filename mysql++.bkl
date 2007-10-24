@@ -200,82 +200,81 @@
 
 	<!-- Define example programs' output targets, if enabled -->
 	<if cond="BUILDEXAMPLES=='yes'">
-		<!-- Additional options specific to examples that depend on
-			 the util module. -->
-		<template id="libutil-user">
-			<depends>util</depends>
-			<sys-lib>mysqlpp_util</sys-lib>
+		<!-- Options specific to examples that depend on libexcommon -->
+		<template id="libexcommon-user">
+			<depends>excommon</depends>
+			<sys-lib>mysqlpp_excommon</sys-lib>
 		</template>
 
-		<!-- The "util" convenience library, used by the examples -->
-		<lib id="util" template="programs">
-			<libname>mysqlpp_util</libname>
-			<sources>examples/util.cpp</sources>
-			<sources>examples/att_getopt.cpp</sources>
+		<!-- Convenience library of routines used by most examples -->
+		<lib id="excommon" template="programs">
+			<libname>mysqlpp_excommon</libname>
+			<sources>examples/cmdline.cpp</sources>
+			<sources>examples/printdata.cpp</sources>
 		</lib>
 
 		<!-- The examples themselves -->
-		<exe id="resetdb" template="libutil-user,programs">
+		<exe id="resetdb" template="libexcommon-user,programs">
 			<sources>examples/resetdb.cpp</sources>
 		</exe>
-		<exe id="simple1" template="libutil-user,programs">
+		<exe id="simple1" template="libexcommon-user,programs">
 			<sources>examples/simple1.cpp</sources>
 		</exe>
-		<exe id="simple2" template="libutil-user,programs">
+		<exe id="simple2" template="libexcommon-user,programs">
 			<sources>examples/simple2.cpp</sources>
 		</exe>
-		<exe id="simple3" template="libutil-user,programs">
+		<exe id="simple3" template="libexcommon-user,programs">
 			<sources>examples/simple3.cpp</sources>
 		</exe>
-		<exe id="multiquery" template="libutil-user,programs">
+		<exe id="multiquery" template="libexcommon-user,programs">
 			<sources>examples/multiquery.cpp</sources>
 		</exe>
-		<exe id="tquery1" template="libutil-user,programs">
+		<exe id="tquery1" template="libexcommon-user,programs">
 			<sources>examples/tquery1.cpp</sources>
 		</exe>
-		<exe id="tquery2" template="libutil-user,programs">
+		<exe id="tquery2" template="libexcommon-user,programs">
 			<sources>examples/tquery2.cpp</sources>
 		</exe>
-		<exe id="usequery" template="libutil-user,programs">
+		<exe id="usequery" template="libexcommon-user,programs">
 			<sources>examples/usequery.cpp</sources>
 		</exe>
-		<exe id="custom1" template="libutil-user,programs">
+		<exe id="custom1" template="libexcommon-user,programs">
 			<sources>examples/custom1.cpp</sources>
 		</exe>
-		<exe id="custom2" template="libutil-user,programs">
+		<exe id="custom2" template="libexcommon-user,programs">
 			<sources>examples/custom2.cpp</sources>
 		</exe>
-		<exe id="custom3" template="libutil-user,programs">
+		<exe id="custom3" template="libexcommon-user,programs">
 			<sources>examples/custom3.cpp</sources>
 		</exe>
-		<exe id="custom4" template="libutil-user,programs">
+		<exe id="custom4" template="libexcommon-user,programs">
 			<sources>examples/custom4.cpp</sources>
 		</exe>
-		<exe id="custom5" template="libutil-user,programs">
+		<exe id="custom5" template="libexcommon-user,programs">
 			<sources>examples/custom5.cpp</sources>
 		</exe>
-		<exe id="custom6" template="libutil-user,programs">
+		<exe id="custom6" template="libexcommon-user,programs">
 			<sources>examples/custom6.cpp</sources>
 		</exe>
-		<exe id="dbinfo" template="libutil-user,programs">
+		<exe id="dbinfo" template="libexcommon-user,programs">
 			<sources>examples/dbinfo.cpp</sources>
 		</exe>
-		<exe id="fieldinf" template="libutil-user,programs">
+		<exe id="fieldinf" template="libexcommon-user,programs">
 			<sources>examples/fieldinf.cpp</sources>
 		</exe>
-		<exe id="load_jpeg" template="libutil-user,programs">
+		<exe id="load_jpeg" template="libexcommon-user,programs">
 			<sources>examples/load_jpeg.cpp</sources>
 		</exe>
-		<exe id="xaction" template="libutil-user,programs">
+		<exe id="xaction" template="libexcommon-user,programs">
 			<sources>examples/xaction.cpp</sources>
 		</exe>
-		<exe id="store_if" template="libutil-user,programs">
+		<exe id="store_if" template="libexcommon-user,programs">
 			<sources>examples/store_if.cpp</sources>
 		</exe>
-		<exe id="for_each" template="libutil-user,programs">
+		<exe id="for_each" template="libexcommon-user,programs">
 			<sources>examples/for_each.cpp</sources>
 		</exe>
-		<exe id="cgi_jpeg" template="libutil-user,programs">
+		<exe id="cgi_jpeg" template="libexcommon-user,programs">
 			<sources>examples/cgi_jpeg.cpp</sources>
 		</exe>
 	</if>	<!-- build examples -->

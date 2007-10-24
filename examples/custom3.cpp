@@ -2,10 +2,10 @@
  custom3.cpp - Example showing how to update an SQL row using the
 	Specialized SQL Structures feature of MySQL++.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -25,8 +25,9 @@
  USA
 ***********************************************************************/
 
+#include "cmdline.h"
+#include "printdata.h"
 #include "stock.h"
-#include "util.h"
 
 #include <iostream>
 
@@ -35,12 +36,15 @@ using namespace std;
 int
 main(int argc, char *argv[])
 {
+	// Get database access parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+		return 1;
+	}
+
 	try {
 		// Establish the connection to the database server.
-		mysqlpp::Connection con(mysqlpp::use_exceptions);
-		if (!connect_to_db(argc, argv, con)) {
-			return 1;
-		}
+		mysqlpp::Connection con(db, server, user, pass);
 
 		// Build a query to retrieve the stock item that has Unicode
 		// characters encoded in UTF-8 form.
@@ -79,9 +83,8 @@ main(int argc, char *argv[])
 		// result set.
 		query.execute();
 
-		// Print the new table contents.
-		get_stock_table(query, res);
-		print_stock_rows(res);
+		// Retrieve and print out the new table contents.
+        print_stock_table(query);
 	}
 	catch (const mysqlpp::BadQuery& er) {
 		// Handle any query errors

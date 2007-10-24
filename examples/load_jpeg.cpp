@@ -25,8 +25,8 @@
  USA
 ***********************************************************************/
 
-#include "util.h"
-#include "att_getopt.h"
+#include "cmdline.h"
+#include "printdata.h"
 
 #include <mysql++.h>
 
@@ -34,6 +34,13 @@
 
 using namespace std;
 using namespace mysqlpp;
+
+
+// Pull in a state variable used by att_getopt() implementation so we
+// can pick up where standard command line processing leaves off.  Feel
+// free to ignore this implementation detail.
+extern int ag_optind;
+
 
 static bool
 is_jpeg(const unsigned char* img_data)
@@ -47,13 +54,16 @@ is_jpeg(const unsigned char* img_data)
 int
 main(int argc, char *argv[])
 {
+	// Get database access parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass,
+			"[jpeg_file]")) {
+		return 1;
+	}
+
 	try {
-		// Parse the command line and establish the connection to the
-		// database server.
-		mysqlpp::Connection con(mysqlpp::use_exceptions);
-		if (!connect_to_db(argc, argv, con, 0, "[jpeg_file]")) {
-			return 1;
-		}
+		// Establish the connection to the database server.
+		mysqlpp::Connection con(db, server, user, pass);
 
 		// Assume that the last command line argument is a file.  Try
 		// to read that file's data into img_data, and check it to see

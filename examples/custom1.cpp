@@ -26,8 +26,9 @@
  USA
 ***********************************************************************/
 
+#include "cmdline.h"
+#include "printdata.h"
 #include "stock.h"
-#include "util.h"
 
 #include <iostream>
 #include <vector>
@@ -37,14 +38,15 @@ using namespace std;
 int
 main(int argc, char *argv[])
 {
-	// Wrap all MySQL++ interactions in one big try block, so any
-	// errors are handled gracefully.
+	// Get database access parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+		return 1;
+	}
+
 	try {						
 		// Establish the connection to the database server.
-		mysqlpp::Connection con(mysqlpp::use_exceptions);
-		if (!connect_to_db(argc, argv, con)) {
-			return 1;
-		}
+		mysqlpp::Connection con(db, server, user, pass);
 
 		// Retrieve the entire contents of the stock table, and store
 		// the data in a vector of 'stock' SSQLS structures.

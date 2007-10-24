@@ -25,7 +25,8 @@
  USA
 ***********************************************************************/
 
-#include "util.h"
+#include "cmdline.h"
+#include "printdata.h"
 
 #include <iostream>
 #include <iomanip>
@@ -33,18 +34,29 @@
 using namespace std;
 
 
+// Access the flag that's set when running under the dtest framework, so
+// we modify our output to be testable.
+extern bool dtest_mode;
+
+
 int
 main(int argc, char *argv[])
 {
-	try {
-		mysqlpp::Connection con;
-		if (!connect_to_db(argc, argv, con)) {
-			return 1;
-		}
+	// Get database access parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+		return 1;
+	}
 
+	try {
+		// Establish the connection to the database server.
+		mysqlpp::Connection con(db, server, user, pass);
+
+		// Get contents of main example table
 		mysqlpp::Query query = con.query("select * from stock");
 		mysqlpp::Result res = query.store();
 
+		// Show info about each field in that table
 		char widths[] = { 8, 15, 57 };
 		cout.setf(ios::left);
 		cout << setw(widths[0]) << "Field" <<

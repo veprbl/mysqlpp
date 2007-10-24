@@ -5,10 +5,10 @@
 	many parameters there will be.  This is most likely because the
 	templates are coming from somewhere else, or being generated.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -28,7 +28,8 @@
  USA
 ***********************************************************************/
 
-#include "util.h"
+#include "cmdline.h"
+#include "printdata.h"
 
 #include <iostream>
 
@@ -37,12 +38,15 @@ using namespace std;
 int
 main(int argc, char *argv[])
 {
+	// Get database access parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+		return 1;
+	}
+
 	try {
 		// Establish the connection to the database server.
-		mysqlpp::Connection con(mysqlpp::use_exceptions);
-		if (!connect_to_db(argc, argv, con)) {
-			return 1;
-		}
+		mysqlpp::Connection con(db, server, user, pass);
 
 		// Build a template query to retrieve a stock item given by
 		// item name.

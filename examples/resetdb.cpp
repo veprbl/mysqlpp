@@ -27,13 +27,19 @@
  USA
 ***********************************************************************/
 
-#include "util.h"
+#include "cmdline.h"
+#include "printdata.h"
 
 #include <mysql++.h>
 
 #include <iostream>
 
 using namespace std;
+
+
+// Pull in the sample database name from the cmdline module.
+extern const char* kpcSampleDatabase;
+
 
 // Convert a packed version number in the format used within MySQL++
 // to a printable string.
@@ -67,10 +73,12 @@ main(int argc, char *argv[])
 	}
 	
 	// Connect to database server
+    const char *server = 0, *user = 0, *pass = "";
 	mysqlpp::Connection con;
 	try {
 		cout << "Connecting to database server..." << endl;
-		if (!connect_to_db(argc, argv, con, "")) {
+		if (!parse_command_line(argc, argv, 0, &server, &user, &pass) ||
+                !con.connect(0, server, user, pass)) {
 			return 1;
 		}
 	}

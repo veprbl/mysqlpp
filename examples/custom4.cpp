@@ -4,10 +4,10 @@
 	how one can manipulate MySQL++ result sets in a very natural C++
 	style.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -27,8 +27,9 @@
  USA
 ***********************************************************************/
 
+#include "cmdline.h"
+#include "printdata.h"
 #include "stock.h"
-#include "util.h"
 
 #include <iostream>
 
@@ -37,12 +38,15 @@ using namespace std;
 int
 main(int argc, char *argv[])
 {
+	// Get database access parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+		return 1;
+	}
+
 	try {
 		// Establish the connection to the database server.
-		mysqlpp::Connection con(mysqlpp::use_exceptions);
-		if (!connect_to_db(argc, argv, con)) {
-			return 1;
-		}
+		mysqlpp::Connection con(db, server, user, pass);
 
 		// Retrieve all rows from the stock table and put them in an
 		// STL set.  Notice that this works just as well as storing them

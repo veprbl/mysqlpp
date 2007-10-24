@@ -2,10 +2,10 @@
  dbinfo.cpp - Example showing how to request information about the
 	database schema, such as table names, column types, etc.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -25,7 +25,8 @@
  USA
 ***********************************************************************/
 
-#include "util.h"
+#include "cmdline.h"
+#include "printdata.h"
 
 #include <mysql++.h>
 
@@ -35,6 +36,11 @@
 #include <vector>
 
 using namespace std;
+
+
+// Access the flag that's set when running under the dtest framework, so
+// we modify our output to be testable.
+extern bool dtest_mode;
 
 
 // Insert a bar into the stream with the given query string centered
@@ -161,17 +167,24 @@ show_tables(mysqlpp::Connection& con)
 int
 main(int argc, char* argv[])
 {
+	// Get database access parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+		return 1;
+	}
+
 	try {
-		mysqlpp::Connection con;
-		if (connect_to_db(argc, argv, con)) {
-			if (!dtest_mode) {
-				// Only run system-specific tests when run by hand.
-				// dtest only wants repeatable output.
-	            show_mysql_version(con);
-    	        show_databases(con);
-			}
-			show_tables(con);
+		// Establish the connection to the database server.
+		mysqlpp::Connection con(db, server, user, pass);
+
+		// Show system-specific tests info when run by hand only.
+		if (!dtest_mode) {
+			show_mysql_version(con);
+			show_databases(con);
 		}
+
+		// Show database info that's platform-independent
+		show_tables(con);
 	}
 	catch (const mysqlpp::BadQuery& er) {
 		// Handle any query errors

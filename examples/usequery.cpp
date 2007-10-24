@@ -24,7 +24,8 @@
  USA
 ***********************************************************************/
 
-#include "util.h"
+#include "cmdline.h"
+#include "printdata.h"
 
 #include <mysql++.h>
 
@@ -33,12 +34,15 @@
 int
 main(int argc, char *argv[])
 {
+	// Get database access parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+		return 1;
+	}
+
 	try {
-		// Connect to the sample database
-		mysqlpp::Connection con;
-		if (!connect_to_db(argc, argv, con)) {
-			return 1;
-		}
+		// Establish the connection to the database server.
+		mysqlpp::Connection con(db, server, user, pass);
 
 		// Build query to retrieve the entire stock table
 		mysqlpp::Query query = con.query("select * from stock");

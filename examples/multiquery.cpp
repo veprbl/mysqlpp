@@ -29,7 +29,8 @@
  USA
 ***********************************************************************/
 
-#include "util.h"
+#include "cmdline.h"
+#include "printdata.h"
 
 #include <mysql++.h>
 
@@ -139,21 +140,65 @@ print_multiple_results(Query& query)
 int
 main(int argc, char *argv[])
 {
-	Connection con;
+	// Get connection parameters from command line
+    const char* db = 0, *server = 0, *user = 0, *pass = "";
+	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+		return 1;
+	}
+
 	try {
-		// Enable multi-queries.  Notice that we can set connection
-		// options before the connection is established, which the
-		// underlying MySQL C API does not allow.  In this particular
-		// case, this is not a mere nicety: the multi-query option has
-		// a side effect of setting one of the flags used when 
-		// establishing the database server connection.  We could set it
-		// directly, but then we couldn't use connect_to_db().
+		// Enable multi-queries.  Notice that you almost always set
+		// MySQL++ connection options before establishing the server
+		// connection, and options are always set using this one
+		// interface.  If you're familiar with the underlying C API,
+		// you know that there is poor consistency on these matters;
+		// MySQL++ abstracts these differences away.
+		Connection con;
 		con.set_option(Connection::opt_multi_statements, true);
 
-		// Connect to database
-		if (!connect_to_db(argc, argv, con)) {
+		// Connect to the database
+		if (!con.connect(db, server, user, pass)) {
 			return 1;
 		}
+
+		// Set up query with multiple queries.
+		Query query = con.query();
+		query << "DROP TABLE IF EXISTS test_table;" << endl <<
+				"CREATE TABLE test_table(id INT);" << endl <<
+				"INSERT INTO test_table VALUES(10);" << endl <<
+				"UPDATE test_table SET id=20 WHERE id=10;" << endl <<
+				"SELECT * FROM test_table;" << endl <<
+				"DROP TABLE test_table" << endl;
+		cout << "Multi-query: " << endl << query.preview() << endl;
+
+		// Execute statement and display all result sets.
+		print_multiple_results(query);
+
+#if MYSQL_VERSION_ID >= 50000
+		// If it's MySQL v5.0 or higher, also test stored procedures, which
+		// return their results the same way multi-queries do.
+		query.reset();
+		query << "DROP PROCEDURE IF EXISTS get_stock;" << endl <<
+				"CREATE PROCEDURE get_stock" << endl <<
+				"( i_item varchar(20) )" << endl <<
+				"BEGIN" << endl <<
+				"SET i_item = concat('%', i_item, '%');" << endl <<
+				"SELECT * FROM stock WHERE lower(item) like lower(i_item);" <<
+				endl << "END" << endl <<
+				";";
+		cout << "Stored procedure query: " << endl << query.preview() << endl;
+
+		// Create the stored procedure.
+		print_multiple_results(query);
+
+		// Call the stored procedure and display its results.
+		query.reset();
+		query << "CALL get_stock('relish')";
+		cout << "Query: " << query.preview() << endl;
+		print_multiple_results(query);
+#endif
+
+		return 0;
 	}
 	catch (const BadOption& err) {
 		if (err.what_option() == Connection::opt_multi_statements) {
@@ -176,43 +221,4 @@ main(int argc, char *argv[])
 		cerr << "Error: " << er.what() << endl;
 		return 1;
 	}
-
-	// Set up query with multiple queries.
-	Query query = con.query();
-	query << "DROP TABLE IF EXISTS test_table;" << endl <<
-			"CREATE TABLE test_table(id INT);" << endl <<
-			"INSERT INTO test_table VALUES(10);" << endl <<
-			"UPDATE test_table SET id=20 WHERE id=10;" << endl <<
-			"SELECT * FROM test_table;" << endl <<
-			"DROP TABLE test_table" << endl;
-	cout << "Multi-query: " << endl << query.preview() << endl;
-
-	// Execute statement and display all result sets.
-	print_multiple_results(query);
-
-#if MYSQL_VERSION_ID >= 50000
-	// If it's MySQL v5.0 or higher, also test stored procedures, which
-	// return their results the same way multi-queries do.
-	query.reset();
-	query << "DROP PROCEDURE IF EXISTS get_stock;" << endl <<
-			"CREATE PROCEDURE get_stock" << endl <<
-			"( i_item varchar(20) )" << endl <<
-			"BEGIN" << endl <<
-			"SET i_item = concat('%', i_item, '%');" << endl <<
-			"SELECT * FROM stock WHERE lower(item) like lower(i_item);" << endl <<
-			"END" << endl <<
-			";";
-	cout << "Stored procedure query: " << endl << query.preview() << endl;
-
-	// Create the stored procedure.
-	print_multiple_results(query);
-
-	// Call the stored procedure and display its results.
-	query.reset();
-	query << "CALL get_stock('relish')";
-	cout << "Query: " << query.preview() << endl;
-	print_multiple_results(query);
-#endif
-
-	return 0;
 }
