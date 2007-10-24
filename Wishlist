@@ -15,10 +15,10 @@ v3.0 Plan, For-Sure Stuff
 
     o Audit use of headers in lib/*.h, to reduce dependencies.
 
-	o Go back over mailing list thread to fold in any other changes
-	  suggested for RefCountedPointer.  Most especially, use
-	  atomic increment/decrement.  Until we do this, we don't
-	  yet have thread-safety.
+    o Go back over mailing list thread to fold in any other changes
+      suggested for RefCountedPointer.  Most especially, use
+      atomic increment/decrement.  Until we do this, we don't
+      yet have thread-safety.
 
     o Add Connection::thread_start() and thread_end(), wrapping C API.
       Mention in userman threads chapter that these only need to
