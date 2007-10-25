@@ -161,7 +161,7 @@ class MYSQLPP_EXPORT BadFieldName : public Exception
 public:
 	/// \brief Create exception object
 	///
-	/// \param bad_field name of field the MySQL server didn't like
+	/// \param bad_field name of field the database server didn't like
 	explicit BadFieldName(const char* bad_field) :
 	Exception(std::string("Unknown field name: ") + bad_field)
 	{
@@ -248,12 +248,16 @@ public:
 };
 
 
-/// \brief Exception thrown when MySQL encounters a problem while
-/// processing your query.
+/// \brief Exception thrown when the database server encounters a problem
+/// while processing your query.
 ///
-/// This exception is typically only thrown when the server rejects a
-/// SQL query.  In v1.7, it was used as a more generic exception type,
-/// for no particularly good reason.
+/// Beware that in older versions of MySQL++, this was effectively the
+/// generic exception type.  (This is most especially true in v1.7.x,
+/// but it continued to a lesser extent through the v2.x series.)  When
+/// converting old code to new versions of MySQL++, it's therefore
+/// possible to get seemingly "new" exceptions thrown, which could crash
+/// your program if you don't also catch a more generic type like
+/// mysqlpp::Exception or std::exception.
 
 class MYSQLPP_EXPORT BadQuery : public Exception
 {
