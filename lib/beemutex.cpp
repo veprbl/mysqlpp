@@ -62,8 +62,9 @@ BeecryptMutex::BeecryptMutex() throw (MutexFailed)
 	: pmutex_(new bc_mutex_t)
 #endif
 {
-#if MYSQLPP_PLATFORM_WINDOWS
-	impl_val(pmutex_) = CreateMutex((LPSECURITY_ATTRIBUTES) 0, FALSE, (LPCSTR) 0);
+#if defined(MYSQLPP_PLATFORM_WINDOWS)
+	*impl_ptr(pmutex_) = CreateMutex((LPSECURITY_ATTRIBUTES) 0, FALSE,
+			(LPCSTR) 0);
 	if (!impl_val(pmutex_))
 		throw MutexFailed("CreateMutex failed");
 #else
@@ -82,7 +83,7 @@ BeecryptMutex::BeecryptMutex() throw (MutexFailed)
 BeecryptMutex::~BeecryptMutex()
 {
 #if defined(ACTUALLY_DOES_SOMETHING)
-#	if MYSQLPP_PLATFORM_WINDOWS
+#	if defined(MYSQLPP_PLATFORM_WINDOWS)
 		CloseHandle(impl_val(pmutex_));
 #	elif HAVE_SYNCH_H
 		mutex_destroy(impl_ptr(pmutex_));
@@ -98,7 +99,7 @@ BeecryptMutex::~BeecryptMutex()
 void
 BeecryptMutex::lock() throw (MutexFailed)
 {
-#if MYSQLPP_PLATFORM_WINDOWS
+#if defined(MYSQLPP_PLATFORM_WINDOWS)
 	if (WaitForSingleObject(impl_val(pmutex_), INFINITE) == WAIT_OBJECT_0)
 		return;
 	throw MutexFailed("WaitForSingleObject failed");
@@ -119,7 +120,7 @@ bool
 BeecryptMutex::trylock() throw (MutexFailed)
 {
 #if defined(ACTUALLY_DOES_SOMETHING)
-#	if MYSQLPP_PLATFORM_WINDOWS
+#	if defined(MYSQLPP_PLATFORM_WINDOWS)
 		switch (WaitForSingleObject(impl_val(pmutex_), 0)) {
 			case WAIT_TIMEOUT:
 				return false;
@@ -153,7 +154,7 @@ BeecryptMutex::trylock() throw (MutexFailed)
 void
 BeecryptMutex::unlock() throw (MutexFailed)
 {
-#if MYSQLPP_PLATFORM_WINDOWS
+#if defined(MYSQLPP_PLATFORM_WINDOWS)
 	if (!ReleaseMutex(impl_val(pmutex_)))
 		throw MutexFailed("ReleaseMutex failed");
 #else
