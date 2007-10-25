@@ -29,8 +29,6 @@
 #include "printdata.h"
 #include "stock.h"
 
-#include <transaction.h>
-
 #include <iostream>
 
 using namespace std;
