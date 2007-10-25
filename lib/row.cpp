@@ -54,7 +54,7 @@ size_(r ? r->num_fields() : 0)
 		initialized_ = true;
 	}
 	else if (throw_exceptions) {
-		throw BadQuery("ROW or RES is NULL");
+		throw ObjectNotInitialized("ROW or RES is NULL");
 	}
 }
 
