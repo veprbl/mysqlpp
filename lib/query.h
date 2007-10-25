@@ -174,6 +174,12 @@ public:
 	/// \brief Return true if the object has experienced an error
 	bool operator !() { return !copacetic_; }
 
+	/// \brief Get the last error number that was set.
+	///
+	/// This just delegates to Connection::errnum().  Query has nothing
+	/// extra to say, so use either, as makes sense in your program.
+	int errnum() const { return conn_->errnum(); }
+
 	/// \brief Get the last error message that was set.
 	///
 	/// This just delegates to Connection::error().  Query has nothing
