@@ -193,7 +193,7 @@ Connection::connect(cchar* db, cchar* server, cchar* user,
 	else {
 		copacetic_ = is_connected_ = false;
 		if (throw_exceptions()) {
-			throw ConnectionFailed(error());
+			throw ConnectionFailed(error(), errnum());
 		}
 	}
 
@@ -232,7 +232,7 @@ Connection::connect(const MYSQL& other)
 	else {
 		copacetic_ = is_connected_ = false;
 		if (throw_exceptions()) {
-			throw ConnectionFailed(error());
+			throw ConnectionFailed(error(), errnum());
 		}
 	}
 
@@ -295,7 +295,7 @@ Connection::select_db(const char *db)
 	if (connected()) {
 		bool suc = !(mysql_select_db(&mysql_, db));
 		if (throw_exceptions() && !suc) {
-			throw DBSelectionFailed(error());
+			throw DBSelectionFailed(error(), errnum());
 		}
 		else {
 			return suc;
@@ -324,7 +324,7 @@ Connection::reload()
 			// query, but it's acceptable to signal errors with BadQuery
 			// because the new mechanism is the FLUSH PRIVILEGES query.
 			// A program won't have to change when doing it the new way.
-			throw BadQuery(error());
+			throw BadQuery(error(), errnum());
 		}
 		else {
 			return suc;
@@ -332,7 +332,7 @@ Connection::reload()
 	}
 	else {
 		if (throw_exceptions()) {
-			throw BadQuery("MySQL++ connection not established");
+			throw ConnectionFailed("MySQL++ connection not established");
 		}
 		else {
 			build_error_message("reload grant tables");
@@ -349,7 +349,7 @@ Connection::shutdown()
 	if (connected()) {
 		bool suc = !(mysql_shutdown(&mysql_ SHUTDOWN_ARG));
 		if (throw_exceptions() && !suc) {
-			throw ConnectionFailed(error());
+			throw ConnectionFailed(error(), errnum());
 		}
 		else {
 			return suc;

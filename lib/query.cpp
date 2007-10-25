@@ -90,7 +90,7 @@ Query::exec(const std::string& str)
 	copacetic_ = !mysql_real_query(&conn_->mysql_, str.data(),
 			static_cast<unsigned long>(str.length()));
 	if (!copacetic_ && throw_exceptions()) {
-		throw BadQuery(error());
+		throw BadQuery(error(), errnum());
 	}
 	else {
 		return copacetic_;
@@ -131,7 +131,7 @@ Query::execute(const char* str, size_t len)
 		return ResNSel(conn_);
 	}
 	else if (throw_exceptions()) {
-		throw BadQuery(error());
+		throw BadQuery(error(), errnum());
 	}
 	else {
 		return ResNSel();
@@ -414,7 +414,7 @@ Query::store(const char* str, size_t len)
 			return Result();
 		}
 		else {
-			throw BadQuery(error());
+			throw BadQuery(error(), errnum());
 		}
 	}
 }
@@ -437,7 +437,7 @@ Query::store_next()
 			// result set, which is harmless.  We return an empty result
 			// set if exceptions are disabled, as well.
 			if (conn_->errnum() && throw_exceptions()) {
-				throw BadQuery(error());
+				throw BadQuery(error(), errnum());
 			} 
 			else {
 				return Result();
@@ -446,7 +446,7 @@ Query::store_next()
 	}
 	else if (throw_exceptions()) {
         if (ret > 0) {
-            throw BadQuery(error());
+            throw BadQuery(error(), errnum());
         }
         else {
             throw EndOfResultSets();
@@ -520,7 +520,7 @@ Query::use(const char* str, size_t len)
 			return ResUse();
 		}
 		else {
-			throw BadQuery(error());
+			throw BadQuery(error(), errnum());
 		}
 	}
 }

@@ -5,10 +5,10 @@
 /// derivative, any of these exceptions can be thrown on error.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -28,7 +28,7 @@
  USA
 ***********************************************************************/
 
-#ifndef MYSQLPP_EXCEPTIONS_H
+#if !defined(MYSQLPP_EXCEPTIONS_H)
 #define MYSQLPP_EXCEPTIONS_H
 
 #include "connection.h"
@@ -251,6 +251,15 @@ public:
 /// \brief Exception thrown when the database server encounters a problem
 /// while processing your query.
 ///
+/// Unlike most other MySQL++ exceptions, which carry just an error
+/// message, this type carries an error number to preserve
+/// Connection::errnum()'s return value at the point the exception is 
+/// thrown.  We do this because when using the Transaction class, the
+/// rollback process that occurs during stack unwinding issues a query
+/// to the database server, overwriting the error value.  This rollback
+/// should always succeed, so this effect can fool code that relies on
+/// Connection::errnum() into believing that there was no error.
+///
 /// Beware that in older versions of MySQL++, this was effectively the
 /// generic exception type.  (This is most especially true in v1.7.x,
 /// but it continued to a lesser extent through the v2.x series.)  When
@@ -262,46 +271,102 @@ public:
 class MYSQLPP_EXPORT BadQuery : public Exception
 {
 public:
-	/// \brief Create exception object, taking C string
-	explicit BadQuery(const char* w = "") :
-	Exception(w)
+	/// \brief Create exception object
+	///
+	/// \param w explanation for why the exception was thrown
+	/// \param e the error number from the underlying database API
+	explicit BadQuery(const char* w = "", int e = 0) :
+	Exception(w), 
+	errnum_(e)
 	{
 	}
 
-	/// \brief Create exception object, taking C++ string
-	explicit BadQuery(const std::string& w) :
-	Exception(w)
+	/// \brief Create exception object
+	///
+	/// \param w explanation for why the exception was thrown
+	/// \param e the error number from the underlying database API
+	explicit BadQuery(const std::string& w, int e = 0) :
+	Exception(w), 
+	errnum_(e)
 	{
 	}
+
+	/// \brief Return the error number corresponding to the error
+	/// message returned by what()
+	///
+	/// This may return the same value as Connection::errnum(), but not
+	/// always.  See the overview documentation for this class for the
+	/// reason for the difference.
+	int errnum() const { return errnum_; }
+	
+private:	
+	int	errnum_;	///< error number associated with execption
 };
 
 
-/// \brief Exception thrown when there is a problem establishing the
-/// database server connection.  It's also thrown if
-/// Connection::shutdown() fails.
+/// \brief Exception thrown when there is a problem related to the
+/// database server connection.
+///
+/// This is thrown not just on making the connection, but also on
+/// shutdown and when calling certain of Connection's methods that
+/// require a connection when there isn't one.
 
 class MYSQLPP_EXPORT ConnectionFailed : public Exception
 {
 public:
 	/// \brief Create exception object
-	explicit ConnectionFailed(const char* w = "") :
-	Exception(w)
+	///
+	/// \param w explanation for why the exception was thrown
+	/// \param err the error number from the underlying database API
+	explicit ConnectionFailed(const char* w = "", int e = 0) :
+	Exception(w),
+	errnum_(e)
 	{
 	}
+
+	/// \brief Return the error number corresponding to the error
+	/// message returned by what(), if any.
+	///
+	/// If the error number is 0, it means that the error message
+	/// doesn't come from the underlying database API, but rather from
+	/// MySQL++ itself.  This happens when an error condition is
+	/// detected up at this higher level instead of letting the
+	/// underlying database API do it.
+	int errnum() const { return errnum_; }
+	
+private:	
+	int	errnum_;	///< error number associated with execption
 };
 
 
 /// \brief Exception thrown when the program tries to select a new
-/// database and the server refuses for some reason.
+/// database and the database server refuses for some reason.
 
 class MYSQLPP_EXPORT DBSelectionFailed : public Exception
 {
 public:
 	/// \brief Create exception object
-	explicit DBSelectionFailed(const char* w = "") :
-	Exception(w)
+	///
+	/// \param w explanation for why the exception was thrown
+	/// \param err the error number from the underlying database API
+	explicit DBSelectionFailed(const char* w = "", int e = 0) :
+	Exception(w),
+	errnum_(e)
 	{
 	}
+
+	/// \brief Return the error number corresponding to the error
+	/// message returned by what(), if any.
+	///
+	/// If the error number is 0, it means that the error message
+	/// doesn't come from the underlying database API, but rather from
+	/// MySQL++ itself.  This happens when an error condition is
+	/// detected up at this higher level instead of letting the
+	/// underlying database API do it.
+	int errnum() const { return errnum_; }
+	
+private:	
+	int	errnum_;	///< error number associated with execption
 };
 
 
@@ -375,4 +440,4 @@ public:
 
 } // end namespace mysqlpp
 
-#endif
+#endif // !defined(MYSQLPP_EXCEPTIONS_H)
