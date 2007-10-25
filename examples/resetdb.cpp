@@ -94,11 +94,13 @@ main(int argc, char *argv[])
 		mysqlpp::NoExceptions ne(con);
 		mysqlpp::Query query = con.query();
 		if (con.select_db(kpcSampleDatabase)) {
-			// Toss old table, if it exists.  If it doesn't, we don't
-			// really care, as it'll get created next.
+			// Toss old tables, ignoring errors because it would just
+			// mean the table doesn't exist, which doesn't matter.
 			cout << "Dropping existing sample data tables..." << endl;
 			query.exec("drop table stock");
 			query.exec("drop table images");
+			query.exec("drop table deadlock_test1");
+			query.exec("drop table deadlock_test2");
 		}
 		else {
 			// Database doesn't exist yet, so create and select it.
@@ -161,6 +163,17 @@ main(int argc, char *argv[])
 				"  PRIMARY KEY (id)" <<
 				")";
 		query.execute();
+
+		// Create the tables used by examples/deadlock.cpp
+		cout << "Creating deadlock testing tables..." << endl;
+		query.reset();
+		query.execute("CREATE TABLE deadlock_test1 (x INT) ENGINE=innodb");
+		query.reset();
+		query.execute("CREATE TABLE deadlock_test2 (x INT) ENGINE=innodb");
+		query.reset();
+		query.execute("INSERT INTO deadlock_test1 VALUES (1);");
+		query.reset();
+		query.execute("INSERT INTO deadlock_test2 VALUES (2);");
 
 		// Report success
 		cout << (new_db ? "Created" : "Reinitialized") <<

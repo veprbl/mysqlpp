@@ -226,6 +226,9 @@
 		<exe id="simple3" template="libexcommon-user,programs">
 			<sources>examples/simple3.cpp</sources>
 		</exe>
+		<exe id="deadlock" template="libexcommon-user,programs">
+			<sources>examples/deadlock.cpp</sources>
+		</exe>
 		<exe id="multiquery" template="libexcommon-user,programs">
 			<sources>examples/multiquery.cpp</sources>
 		</exe>

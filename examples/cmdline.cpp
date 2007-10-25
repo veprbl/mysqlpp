@@ -35,6 +35,7 @@
 //// globals and constants /////////////////////////////////////////////
 
 bool dtest_mode = false;		// true when running under dtest
+int run_mode = 0;				// -m switch's value
 const char* kpcSampleDatabase = "mysql_cpp_data";
 
 
@@ -155,12 +156,13 @@ parse_command_line(int argc, char *argv[], const char** ppdb,
     }
 
     int ch;
-    while ((ch = att_getopt(argc, argv, "p:s:u:D")) != EOF) {
+    while ((ch = att_getopt(argc, argv, "m:p:s:u:D")) != EOF) {
         switch (ch) {
-            case 'p': *pppass = ag_optarg;   break;
-            case 's': *ppserver = ag_optarg; break;
-            case 'u': *ppuser = ag_optarg;   break;
-            case 'D': dtest_mode = true;     break;
+			case 'm': run_mode = atoi(ag_optarg); break;
+            case 'p': *pppass = ag_optarg;        break;
+            case 's': *ppserver = ag_optarg;      break;
+            case 'u': *ppuser = ag_optarg;        break;
+            case 'D': dtest_mode = true;          break;
             default:
                 print_usage(argv[0], extra_parms);
                 return false;
