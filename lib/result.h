@@ -105,7 +105,7 @@ public:
 	{
 		if (!result_) {
 			if (throw_exceptions()) {
-				throw BadQuery("Results not fetched");
+				throw UseQueryError("Results not fetched");
 			}
 			else {
 				return Row();

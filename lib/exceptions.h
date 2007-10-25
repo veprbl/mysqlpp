@@ -234,6 +234,19 @@ public:
 	~BadParamCount() throw() { }
 };
 
+/// \brief Exception thrown when something goes wrong in processing a
+/// "use" query.
+
+class MYSQLPP_EXPORT UseQueryError : public Exception
+{
+public:
+	/// \brief Create exception object
+	explicit UseQueryError(const char* w = "") :
+	Exception(w)
+	{
+	}
+};
+
 
 /// \brief Exception thrown when MySQL encounters a problem while
 /// processing your query.
