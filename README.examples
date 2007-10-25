@@ -96,6 +96,10 @@ Running the Other Command Line Examples
             transaction sets which automatically roll back if not
             explicitly committed.
 
+        deadlock: Shows how to handle errors that happen when the
+            database server detects a deadlock in a transaction set.
+            Also demonstrates the need for BadQuery::errnum()
+
         store_if: Demonstrates the Query::store_if() method, which
             allows you to store the results of a query in an STL
             container conditionally.  Think of it as a more powerful
