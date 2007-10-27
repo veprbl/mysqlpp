@@ -63,6 +63,10 @@ typedef ColData			sql_longblob;
 
 typedef std::string		sql_char;
 typedef std::string		sql_varchar;
+typedef std::string		sql_tinytext;
+typedef std::string		sql_text;
+typedef std::string		sql_mediumtext;
+typedef std::string		sql_longtext;
 
 #ifdef MYSQLPP_DATETIME_H
     // MySQL++ date and time types are defined, so make aliases for
