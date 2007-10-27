@@ -2,10 +2,10 @@
  simple2.cpp - Retrieves the entire contents of the sample stock table
  	using a "store" query, and prints it out.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -66,8 +66,7 @@ main(int argc, char *argv[])
 
 		// Get each row in result set, and print its contents
 		mysqlpp::Row row;
-		mysqlpp::Row::size_type i;
-		for (i = 0; row = res.at(i); ++i) {
+		for (int i = 0; row = res[i]; ++i) {
 			cout << setw(20) << row["item"] << ' ' <<
 					setw(9) << row["num"] << ' ' <<
 					setw(9) << row["weight"] << ' ' <<

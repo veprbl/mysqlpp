@@ -2,10 +2,10 @@
  simple1.cpp - Example showing the simplest way to get data from a MySQL
     table with MySQL++.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -58,8 +58,7 @@ main(int argc, char *argv[])
 	cout << "We have:" << endl;
 	if (res) {
 		mysqlpp::Row row;
-		mysqlpp::Row::size_type i;
-		for (i = 0; row = res.at(i); ++i) {
+		for (int i = 0; row = res[i]; ++i) {
 			cout << '\t' << row[0] << endl;
 		}
 	}
