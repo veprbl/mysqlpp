@@ -13,10 +13,6 @@ v3.0 Plan, For-Sure Stuff
     get done in v3.0.  Most of them break the ABI, so they can't wait
     for a future version, because v4 could be years out.
 
-	o Update userman references to util module
-	
-	o Document MYSQLPP_SSQLS_NO_STATICS
-
     o Audit use of headers in lib/*.h, to reduce dependencies.
 
     o Go back over mailing list thread to fold in any other changes

@@ -1647,6 +1647,42 @@ stock::table() = "MyStockData";</programlisting>
 
 
     <sect2>
+        <title>Using an SSQLS in Multiple Modules</title>
+
+        <para>Unless you use one of the emasculated forms of SSQLS
+        described below, you'll run into a problem when trying to
+        use it in more than one module. The more advanced forms of
+        SSQLS include a few static data members to hold information
+        common to all structures of that type. (The table name and
+        the list of field names.) A typical way to run into this
+        is to put the SSQLS definition in a header file and then
+        <userinput>#include</userinput> that in all the modules that
+        need to use SSQLSes of that type. This results in each module
+        defining its own copy of the static data members, which causes
+        a multiply-defined symbol error at link time.</para>
+
+        <para>The way around this is to add this before all but one
+        of the places where you pull in the header definining the
+        SSQLS:</para>
+
+        <programlisting>
+#define MYSQLPP_SSQLS_NO_STATICS</programlisting>
+
+        <para>This suppresses the static data members in any SSQLS
+        defined thereafter.</para>
+
+        <para>These data members must exist, so one (and only
+        one!) module must bring in the SSQLS definition without
+        this being defined. Thus, you don't want to put this
+        <userinput>#define</userinput> in the header file with the
+        SSQLS definition. It's usually easy to find one module in a
+        program that logically "owns" each SSQLS, and it can pull in
+        the header definining the SSQLS directly, without suppressing
+        the static data members.</para>
+    </sect2>
+
+
+    <sect2>
         <title>Harnessing SSQLS Internals</title>
 
         <para>Continuing the discussion in the previous section,
