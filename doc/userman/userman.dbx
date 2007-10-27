@@ -1020,9 +1020,9 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         <para>The following example demonstrates how to get
         information about the fields in a result set, such
         as the name of the field and the SQL type. This is
-        <filename>examples/fieldinf1.cpp</filename>:</para>
+        <filename>examples/fieldinf.cpp</filename>:</para>
 
-        <programlisting><xi:include href="fieldinf1.txt" parse="text"
+        <programlisting><xi:include href="fieldinf.txt" parse="text"
         xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
     </sect2>
 

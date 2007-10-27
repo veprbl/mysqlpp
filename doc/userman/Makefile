@@ -18,7 +18,7 @@ COMMON_SS=common.xsl
 FO_SS=fo.xsl
 HTML_SS=html.xsl
 EX_TXT=cgi_jpeg.txt custom1.txt custom2.txt custom3.txt custom4.txt \
-		custom5.txt custom6.txt deadlock.txt fieldinf1.txt for_each.txt \
+		custom5.txt custom6.txt deadlock.txt fieldinf.txt for_each.txt \
 		load_jpeg.txt resetdb.txt simple1.txt simple2.txt simple3.txt \
 		stock.txt store_if.txt tquery1.txt transaction.txt
 
