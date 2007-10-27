@@ -214,32 +214,8 @@
 		</lib>
 
 		<!-- The examples themselves -->
-		<exe id="resetdb" template="libexcommon-user,programs">
-			<sources>examples/resetdb.cpp</sources>
-		</exe>
-		<exe id="simple1" template="libexcommon-user,programs">
-			<sources>examples/simple1.cpp</sources>
-		</exe>
-		<exe id="simple2" template="libexcommon-user,programs">
-			<sources>examples/simple2.cpp</sources>
-		</exe>
-		<exe id="simple3" template="libexcommon-user,programs">
-			<sources>examples/simple3.cpp</sources>
-		</exe>
-		<exe id="deadlock" template="libexcommon-user,programs">
-			<sources>examples/deadlock.cpp</sources>
-		</exe>
-		<exe id="multiquery" template="libexcommon-user,programs">
-			<sources>examples/multiquery.cpp</sources>
-		</exe>
-		<exe id="tquery1" template="libexcommon-user,programs">
-			<sources>examples/tquery1.cpp</sources>
-		</exe>
-		<exe id="tquery2" template="libexcommon-user,programs">
-			<sources>examples/tquery2.cpp</sources>
-		</exe>
-		<exe id="usequery" template="libexcommon-user,programs">
-			<sources>examples/usequery.cpp</sources>
+		<exe id="cgi_jpeg" template="libexcommon-user,programs">
+			<sources>examples/cgi_jpeg.cpp</sources>
 		</exe>
 		<exe id="custom1" template="libexcommon-user,programs">
 			<sources>examples/custom1.cpp</sources>
@@ -262,23 +238,47 @@
 		<exe id="dbinfo" template="libexcommon-user,programs">
 			<sources>examples/dbinfo.cpp</sources>
 		</exe>
+		<exe id="deadlock" template="libexcommon-user,programs">
+			<sources>examples/deadlock.cpp</sources>
+		</exe>
 		<exe id="fieldinf" template="libexcommon-user,programs">
 			<sources>examples/fieldinf.cpp</sources>
-		</exe>
-		<exe id="load_jpeg" template="libexcommon-user,programs">
-			<sources>examples/load_jpeg.cpp</sources>
-		</exe>
-		<exe id="xaction" template="libexcommon-user,programs">
-			<sources>examples/xaction.cpp</sources>
-		</exe>
-		<exe id="store_if" template="libexcommon-user,programs">
-			<sources>examples/store_if.cpp</sources>
 		</exe>
 		<exe id="for_each" template="libexcommon-user,programs">
 			<sources>examples/for_each.cpp</sources>
 		</exe>
-		<exe id="cgi_jpeg" template="libexcommon-user,programs">
-			<sources>examples/cgi_jpeg.cpp</sources>
+		<exe id="load_jpeg" template="libexcommon-user,programs">
+			<sources>examples/load_jpeg.cpp</sources>
+		</exe>
+		<exe id="multiquery" template="libexcommon-user,programs">
+			<sources>examples/multiquery.cpp</sources>
+		</exe>
+		<exe id="resetdb" template="libexcommon-user,programs">
+			<sources>examples/resetdb.cpp</sources>
+		</exe>
+		<exe id="simple1" template="libexcommon-user,programs">
+			<sources>examples/simple1.cpp</sources>
+		</exe>
+		<exe id="simple2" template="libexcommon-user,programs">
+			<sources>examples/simple2.cpp</sources>
+		</exe>
+		<exe id="simple3" template="libexcommon-user,programs">
+			<sources>examples/simple3.cpp</sources>
+		</exe>
+		<exe id="store_if" template="libexcommon-user,programs">
+			<sources>examples/store_if.cpp</sources>
+		</exe>
+		<exe id="tquery1" template="libexcommon-user,programs">
+			<sources>examples/tquery1.cpp</sources>
+		</exe>
+		<exe id="tquery2" template="libexcommon-user,programs">
+			<sources>examples/tquery2.cpp</sources>
+		</exe>
+		<exe id="transaction" template="libexcommon-user,programs">
+			<sources>examples/transaction.cpp</sources>
+		</exe>
+		<exe id="usequery" template="libexcommon-user,programs">
+			<sources>examples/usequery.cpp</sources>
 		</exe>
 	</if>	<!-- build examples -->
 

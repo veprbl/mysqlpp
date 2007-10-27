@@ -1,5 +1,5 @@
 /***********************************************************************
- xaction.cpp - Example showing how to use the transaction support in
+ transaction.cpp - Example showing how to use the transaction support in
  	MySQL++ v2.1 and up.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and

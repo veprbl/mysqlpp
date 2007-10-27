@@ -92,7 +92,7 @@ Running the Other Command Line Examples
         tquery: A simple example showing how to use the template query
             facility.
 
-        xaction: Shows how to use the Transaction class to create
+        transaction: Shows how to use the Transaction class to create
             transaction sets which automatically roll back if not
             explicitly committed.
 
@@ -102,8 +102,9 @@ Running the Other Command Line Examples
 
         store_if: Demonstrates the Query::store_if() method, which
             allows you to store the results of a query in an STL
-            container conditionally.  Think of it as a more powerful
-            alternative to the SQL WHERE clause.
+            container conditionally.  Think of it as a way to express
+            rules for selecting records in C++, to be used when SQL's
+            WHERE clause isn't powerful enough.
 
         for_each: Demonstrates the Query::for_each() method, which
             allows you to execute a query and call a functor on each
@@ -111,16 +112,17 @@ Running the Other Command Line Examples
             on the sample table's contents.
 
         load_jpeg: Inserts a JPEG file into the sample database,
-            for use by the cgi_jpeg example.  (See below.)  Unlike
-            the other examples, this one takes the last command
-            line argument to be a JPEG file name.  We've included
-            examples/logo.jpg as a sample, if you want to use that.
+            for use by the cgi_jpeg example.  (See below.)  Unlike the
+            other examples, this one takes anything given on the
+            command line that isn't a switch to be a JPEG file name.
+            We've included examples/logo.jpg as a sample, if you want
+            to use that.
 
         fieldinf: Shows how to get information about the fields in
             a result set.  (Types, etc.)
 
         dbinfo: Dumps a bunch of information about the database
-            server and the tables in its 'mysql' database.
+            server and some of the data it's managing.
     
     If you run the load_jpeg example, you should consider also
     playing with the other half of the demonstration, cgi_jpeg.
