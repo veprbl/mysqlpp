@@ -1685,11 +1685,9 @@ stock::table() = "MyStockData";</programlisting>
     <sect2>
         <title>Harnessing SSQLS Internals</title>
 
-        <para>Continuing the discussion in the previous section,
-        there is a further set of methods that the non-"basic"
-        versions of the <symbol>sql_create</symbol> macros define
-        for each SSQLS. These methods are mostly for use within the
-        library, but some of them are useful enough that you might
+        <para>The <symbol>sql_create</symbol> macros define several
+        methods for each SSQLS. These methods are mostly for use within
+        the library, but some of them are useful enough that you might
         want to harness them for your own ends. Here is some pseudocode
         showing how the most useful of these methods would be defined
         for the <structname>stock</structname> structure used in all
