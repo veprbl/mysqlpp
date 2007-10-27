@@ -56,7 +56,6 @@ main(int argc, char *argv[])
 		if (res.size() > 0) {
 			// Build a select query using the data from the first row
 			// returned by our previous query.
-			query.reset();
 			query << "select * from stock where " <<
 					res[0].equal_list(" and ", stock_weight, stock_price);
 

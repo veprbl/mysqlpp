@@ -177,7 +177,6 @@ main(int argc, char *argv[])
 #if MYSQL_VERSION_ID >= 50000
 		// If it's MySQL v5.0 or higher, also test stored procedures, which
 		// return their results the same way multi-queries do.
-		query.reset();
 		query << "DROP PROCEDURE IF EXISTS get_stock;" << endl <<
 				"CREATE PROCEDURE get_stock" << endl <<
 				"( i_item varchar(20) )" << endl <<
@@ -192,7 +191,6 @@ main(int argc, char *argv[])
 		print_multiple_results(query);
 
 		// Call the stored procedure and display its results.
-		query.reset();
 		query << "CALL get_stock('relish')";
 		cout << "Query: " << query.preview() << endl;
 		print_multiple_results(query);

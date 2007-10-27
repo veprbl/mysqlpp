@@ -58,12 +58,10 @@ main(int argc, char *argv[])
 			stock row1("Sauerkraut", 42, 1.2, 0.75, "2006-03-06");
 			query.insert(row1);
 			query.execute();
-			query.reset();
 
 			stock row2("Bratwurst", 24, 3.0, 4.99, "2006-03-06");
 			query.insert(row2);
 			query.execute();
-			query.reset();
 
 			cout << "\nRows are inserted, but not committed." << endl;
 			cout << "Verify this with another program (e.g. simple1), "
@@ -83,7 +81,6 @@ main(int argc, char *argv[])
 			stock row("Catsup", 3, 3.9, 2.99, "2006-03-06");
 			query.insert(row);
 			query.execute();
-			query.reset();
 		}
 		cout << "\nNo, yuck! We don't like catsup. Rolling it back:" <<
 				endl;

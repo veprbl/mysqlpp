@@ -134,7 +134,6 @@ main(int argc, char *argv[])
 		// Set up the template query to insert the data.  The parse()
 		// call tells the query object that this is a template and
 		// not a literal query string.
-		query.reset();
 		query << "insert into %5:table values (%0q, %1q, %2, %3, %4q)";
 		query.parse();
 
@@ -155,7 +154,7 @@ main(int argc, char *argv[])
 		// Now create empty images table, for testing BLOB and auto-
 		// increment column features.
 		cout << "Creating empty images table..." << endl;
-		query.reset();
+		query.reset();		// forget template query info
 		query << 
 				"CREATE TABLE images (" <<
 				"  id INT UNSIGNED NOT NULL AUTO_INCREMENT, " <<
@@ -166,13 +165,9 @@ main(int argc, char *argv[])
 
 		// Create the tables used by examples/deadlock.cpp
 		cout << "Creating deadlock testing tables..." << endl;
-		query.reset();
 		query.execute("CREATE TABLE deadlock_test1 (x INT) ENGINE=innodb");
-		query.reset();
 		query.execute("CREATE TABLE deadlock_test2 (x INT) ENGINE=innodb");
-		query.reset();
 		query.execute("INSERT INTO deadlock_test1 VALUES (1);");
-		query.reset();
 		query.execute("INSERT INTO deadlock_test2 VALUES (2);");
 
 		// Report success

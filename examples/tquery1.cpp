@@ -61,7 +61,7 @@ main(int argc, char *argv[])
 
 		// Replace the proper German name with a 7-bit ASCII
 		// approximation using a different template query.
-		query.reset();
+		query.reset();		// forget previous template query data
 		query << "update stock set item = %0q where item = %1q";
 		query.parse();
 		mysqlpp::ResNSel res2 = query.execute("Nuerenberger Bratwurst",

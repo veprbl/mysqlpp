@@ -85,7 +85,6 @@ main(int argc, char *argv[])
 			int lock = run_mode + (run_mode == 1 ? i : -i);
 			cout << "Trying lock " << lock << "..." << endl;
 
-			query.reset();
 			query << "select * from deadlock_test" << lock << 
 					" where x = " << lock << " for update";
 			query.store();

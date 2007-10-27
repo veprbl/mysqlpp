@@ -104,7 +104,7 @@ void
 print_stock_table(mysqlpp::Query& query)
 {
 	// Reset query object to its pristine state in case it's been used
-	// before by our caller.
+	// before by our caller for template queries.
 	query.reset();
 
 	// Build the query itself, and show it to the user
