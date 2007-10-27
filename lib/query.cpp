@@ -89,6 +89,12 @@ Query::exec(const std::string& str)
 {
 	copacetic_ = !mysql_real_query(&conn_->mysql_, str.data(),
 			static_cast<unsigned long>(str.length()));
+
+	if (parse_elems_.size() == 0) {
+		// not a template query, so auto-reset
+		reset();
+	}
+
 	if (!copacetic_ && throw_exceptions()) {
 		throw BadQuery(error(), errnum());
 	}
@@ -127,7 +133,14 @@ Query::execute(const SQLString& s)
 ResNSel
 Query::execute(const char* str, size_t len)
 {
-	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
+	copacetic_ = !mysql_real_query(&conn_->mysql_, str, len);
+
+	if (parse_elems_.size() == 0) {
+		// Not a template query, so auto-reset
+		reset();
+	}
+
+	if (copacetic_) {
 		return ResNSel(conn_);
 	}
 	else if (throw_exceptions()) {
@@ -354,6 +367,7 @@ Query::proc(SQLQueryParms& p)
 	}
 }
 
+
 void
 Query::reset()
 {
@@ -395,8 +409,15 @@ Query::store(const SQLString& s)
 Result
 Query::store(const char* str, size_t len)
 {
+	copacetic_ = !mysql_real_query(&conn_->mysql_, str, len);
+
+	if (parse_elems_.size() == 0) {
+		// Not a template query, so auto-reset
+		reset();
+	}
+
 	MYSQL_RES* res = 0;
-	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
+	if (copacetic_) {
 		res = mysql_store_result(&conn_->mysql_);
 	}
 
@@ -501,8 +522,15 @@ Query::use(const SQLString& s)
 ResUse
 Query::use(const char* str, size_t len)
 {
+	copacetic_ = !mysql_real_query(&conn_->mysql_, str, len);
+
+	if (parse_elems_.size() == 0) {
+		// Not a template query, so auto-reset
+		reset();
+	}
+
 	MYSQL_RES* res = 0;
-	if (copacetic_ = !mysql_real_query(&conn_->mysql_, str, len)) {
+	if (copacetic_) {
 		res = mysql_use_result(&conn_->mysql_);
 	}
 

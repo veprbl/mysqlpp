@@ -197,8 +197,13 @@ public:
 
 	/// \brief Reset the query object so that it can be reused.
 	///
-	/// This erases the query string and the contents of the parameterized
-	/// query element list.
+	/// As of v3.0, Query objects auto-reset upon query execution unless
+	/// you've set it up for making template queries.  (It can't auto-reset
+	/// in that situation, because it would forget the template info.)
+	/// Therefore, the only time you must call this is if you have a Query
+	/// object set up for making template queries, then want to build
+	/// queries using one of the other methods.  (Static strings, SSQLS,
+	/// or the stream interface.)
 	void reset();
 
 	/// \brief Return the query string currently in the buffer.

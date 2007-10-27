@@ -181,10 +181,6 @@ v3.0 "Maybe" Stuff
       If one really wants a std::string, they can still call str(),
       which is currently the same thing.
 
-    o Does Query::reset() provide any benefit?  Why doesn't it reset
-      automatically for all queries?  I guess if you were to re-run
-      the same query multiple times, but who does that?
-
     o Define operator<< for Fields, Row, ResUse, etc.  In other
       words, there should be a way to get a user-readable version
       of received data without a lot of code.  Perhaps use a CSV
