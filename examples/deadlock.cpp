@@ -96,9 +96,14 @@ main(int argc, char *argv[])
 		}
 	}
 	catch (mysqlpp::BadQuery e) {
-		cerr << "Query error: " << e.what() << endl;
-		cerr << "Connection::errnum = " << con.errnum() <<
-				", BadQuery::errnum = " << e.errnum() << endl;
+        if (e.errnum() == ER_LOCK_DEADLOCK) {
+            cerr << "Transaction deadlock detected!" << endl;
+    		cerr << "Connection::errnum = " << con.errnum() <<
+	    			", BadQuery::errnum = " << e.errnum() << endl;
+        }
+        else {
+    		cerr << "Unexpected query error: " << e.what() << endl;
+        }
 		return 1;
 	}
 	catch (mysqlpp::Exception e) {
