@@ -792,16 +792,16 @@ myfield = mysqlpp::null;</programlisting>
         you don't like this behavior, you can change it, by
         passing a different value for the second parameter to
         template <classname>Null</classname>. By default, this
-        parameter is <ulink type="structref" url="NullisNull"/>,
+        parameter is <ulink type="structref" url="NullIsNull"/>,
         meaning that we should enforce the uniqueness of the null
         type. To relax this distinction, you can instantiate the
         <classname>Null</classname> template with a different
-        behavior type: <ulink type="structref" url="NullisZero"/>
-        or <ulink type="structref" url="NullisBlank"/>. Consider
+        behavior type: <ulink type="structref" url="NullIsZero"/>
+        or <ulink type="structref" url="NullIsBlank"/>. Consider
         this code:</para>
 
         <programlisting>
-mysqlpp::Null&lt;unsigned char, mysqlpp::NullisZero&gt; myfield;
+mysqlpp::Null&lt;unsigned char, mysqlpp::NullIsZero&gt; myfield;
 
 myfield = mysqlpp::null;
 cout &lt;&lt; myfield &lt;&lt; endl;

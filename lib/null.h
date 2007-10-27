@@ -6,10 +6,10 @@
 /// the same as SQL nulls.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -68,7 +68,7 @@ const null_type null = null_type();
 /// "(NULL)" when you insert it into a C++ stream.
 ///
 /// Used for the behavior parameter for template Null
-struct NullisNull
+struct NullIsNull
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
@@ -89,7 +89,7 @@ struct NullisNull
 /// into a C++ stream.
 ///
 /// Used for the behavior parameter for template Null
-struct NullisZero
+struct NullIsZero
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
@@ -109,7 +109,7 @@ struct NullisZero
 /// it into a C++ stream.
 ///
 /// Used for the behavior parameter for template Null
-struct NullisBlank
+struct NullIsBlank
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
@@ -143,7 +143,7 @@ struct NullisBlank
 /// for a null \c int is different than for a null \c string, to pick
 /// two random examples.  See type_info.cpp for the table SQL types that
 /// can be null.
-template <class Type, class Behavior = NullisNull> class Null
+template <class Type, class Behavior = NullIsNull> class Null
 {
 public:
 	/// \brief The object's value, when it is not SQL null
@@ -197,7 +197,7 @@ public:
 	///
 	/// If is_null is set, returns whatever we consider that null "is",
 	/// according to the Behavior parameter you used when instantiating
-	/// this template.  See NullisNull, NullisZero and NullisBlank.
+	/// this template.  See NullIsNull, NullIsZero and NullIsBlank.
 	///
 	/// Otherwise, just returns the 'data' member.
 	operator Type&()
