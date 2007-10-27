@@ -431,11 +431,17 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         the example table, and prints those values out.</para>
 
         <para>Notice that MySQL++'s <ulink type="classref"
-        url="Result"/> objects work similarly to the STL
-        <classname>std::vector</classname> container. The only trick
-        is that you can't use subscripting notation if the argument
-        is ever 0, because of the way we do overloading, so it's
-        safer to call <function>at()</function> instead.</para>
+        url="Result"/> and <ulink type="classref"
+        url="Row"/> objects work like an array or the STL
+        <classname>std::vector</classname> container. The only trick is
+        that if you use a variable to subscript one of these objects,
+        it must be of type <type>int</type>, or your C++ compiler
+        isn't likely to know which overload for <methodname>operator
+        []()</methodname> to call. You can avoid this trap by using
+        the <methodname>at()</methodname> instead of using the
+        subscript operator if you don't mind losing the syntactic
+        convenience. It does the same thing, but it isn't overloaded
+        like <methodname>operator []()</methodname>.</para>
 
         <para>The only thing that isn't explicit in the code above is
         that we delegate command line argument parsing and connection
@@ -476,9 +482,9 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         <classname>std::exception</classname> class. Since the library
         can indirectly cause exceptions to come from the Standard C++
         Library, it's possible to catch all exceptions from MySQL++
-        by just catching <classname>std::exception</classname> by
-        reference. However, it's better to have individual catch blocks
-        for each of the concrete exception types that you expect, and
+        by just catching <classname>std::exception</classname>.
+        However, it's better to have individual catch blocks for
+        each of the concrete exception types that you expect, and
         add a handler for either <classname>Exception</classname> or
         <classname>std::exception</classname> to act as a "catch-all"
         for unexpected exceptions.</para>
@@ -622,6 +628,10 @@ q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </prog
 
         <para>The <type>quote</type> manipulator both quotes strings,
         and escapes any characters that are special in SQL.</para>
+
+        <para>MySQL++ provides other manipulators as
+        well. See the reference manual documentation for
+        <filename>manip.h</filename>.</para>
     </sect2>
 
 
