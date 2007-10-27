@@ -59,10 +59,6 @@ v3.0 Plan, For-Sure Stuff
     o More robust fix for the Query stream base class init problem:
       http://www.boost.org/libs/utility/base_from_member.html
 
-    o Apply Richard Forrest's iterator patch:
-
-          http://lists.mysql.com/plusplus/5338
-
     o The quote manipulator (and presumably the others as well) don't
       work properly with char*.  See this for details:
 

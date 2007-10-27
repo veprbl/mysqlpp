@@ -41,7 +41,8 @@ namespace mysqlpp {
 /// container-like classes.
 
 template <class OnType, class ReturnType, class SizeType, class DiffType>
-class subscript_iterator : public std::iterator<ReturnType, SizeType>
+class subscript_iterator :
+public std::iterator<std::random_access_iterator_tag, ReturnType, SizeType>
 {
 public:
 	/// \brief Default constructor
