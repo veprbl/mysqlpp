@@ -843,44 +843,44 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         <para>One of the downsides of transactions is that the locking
         it requires in the database server is prone to deadlocks. The
         classic case where this happens is when two programs both want
-        access to the same two records within a single transaction
-        each, but they modify them in opposite orders. If the timing
-        is such that the programs interleave their lock acquisitions,
+        access to the same two rows within a single transaction each,
+        but they modify them in opposite orders. If the timing is
+        such that the programs interleave their lock acquisitions,
         the two come to an impasse: neither can get access to the
-        other record they want to modify until the other program
-        commits its transaction and thus release the record locks,
-        but neither can finish the transaction because they're waiting
-        on row locks the database server is holding on behalf of the
-        other program.</para>
-        
-        <para>Fortunately, the MySQL server is smart enough to
-        detect this condition. The best it can do is abort the second
-        transaction. This breaks the impasse, so the first program
-        can complete its transaction.</para>
+        other row they want to modify until the other program commits
+        its transaction and thus release the row locks, but neither
+        can finish the transaction because they're waiting on row
+        locks the database server is holding on behalf of the other
+        program.</para>
+
+        <para>The MySQL server is smart enough to detect this
+        condition, but the best it can do is abort the second
+        transaction. This breaks the impasse, allowing the first
+        program to complete its transaction.</para>
 
         <para>The second program now has to deal with the fact that its
         transaction just got aborted. There's a subtlety in detecting
         this situation when using MySQL++. By default, MySQL++ signals
         errors like these with exceptions. In the exception handler,
         you might expect to get <constant>ER_LOCK_DEADLOCK</constant>
-        from <methodname>Connection::errnum()</methodname>, but
-        what you'll almost certainly get instead is 0, meaning
+        from <methodname>Query::errnum()</methodname> (or
+        <methodname>Connection::errnum()</methodname>, same thing),
+        but what you'll almost certainly get instead is 0, meaning
         "no error." Why? It's because you're probably using a
         <classname>Transaction</classname> object to get automatic
         roll-backs in the face of exceptions. In this case, the
         roll-back happens before your exception handler is called by
         issuing a <command>ROLLBACK</command> query to the database
-        server. Thus, <methodname>Connection::errnum()</methodname>
-        returns the error code associated with this roll-back
-        query, not the deadlocked transaction that caused the
-        exception.</para>
+        server. Thus, <methodname>Query::errnum()</methodname> returns
+        the error code associated with this roll-back query, not the
+        deadlocked transaction that caused the exception.</para>
 
         <para>To avoid this problem, a few of the exception objects
         as of MySQL++ v3.0 include this last error number in the
         exception object itself. It's populated at the point of the
         exception, so it can differ from the value you would get from
-        <methodname>Connection::errnum()</methodname> later on when
-        the exception handler runs.</para>
+        <methodname>Query::errnum()</methodname> later on when the
+        exception handler runs.</para>
 
         <para>The example <filename>examples/deadlock.cpp</filename>
         demonstrates the problem:</para>
@@ -921,13 +921,14 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         success status, there's <methodname>Query::exec()</methodname>,
         which just returns bool.</para>
 
-        <para>If your query does pull data from the database,
-        the simplest option is <methodname>store()</methodname>.
+        <para>If your query does pull data from the database, the
+        simplest option is <methodname>store()</methodname>. (All
+        of the examples up to this point have used this method.)
         This returns a <ulink type="classref" url="Result"/> object,
-        which contains an in-memory copy of the result set. The nice
-        thing about this is that <classname>Result</classname> is a
-        sequential container, like <classname>std::vector</classname>,
-        so you can iterate through it forwards and backwards, access
+        which contains the entire result set. The nice thing about
+        this is that <classname>Result</classname> is a random-access
+        container, like <classname>std::vector</classname>, so
+        you can iterate through it forwards and backwards, access
         elements with subscript notation, etc. There are also the
         <methodname>storein()</methodname> methods, which actually
         put the result set into an STL container of your choice. The
@@ -974,8 +975,8 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
         <para>I doubt anyone really needs to select rows from
         a table that have a prime number in a given field. This
-        example is meant to be just barely more complex than SQL
-        can manage, to avoid obscuring the point. Point being, the
+        example is meant to be just barely more complex than SQL can
+        manage, to avoid obscuring the point. That point being, the
         <methodname>Query::store_if()</methodname> call here gives
         you a container full of results meeting a criterion that you
         probably can't express in SQL. You will no doubt have much
