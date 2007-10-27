@@ -322,10 +322,10 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         <filename>/usr/share/doc/mysql++-devel-*</filename>, but it
         can vary on different Linuxes.)</para>
 
-        <para>Before you get started, please read through any of
-        the README* files included with the MySQL++ distribution
-        that are relevant to your platform. We won't repeat all of
-        that here.</para>
+        <para>Before you get started, please read through any of the
+        <filename>README*</filename> files included with the MySQL++
+        distribution that are relevant to your platform. We won't
+        repeat all of that here.</para>
 
         <para>Most of the examples require a test database, created
         by <filename>resetdb</filename>. You run it like so:</para>
