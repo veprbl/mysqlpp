@@ -1,4 +1,4 @@
-The user manual is written in XML DocBook format, version 4.2.
+The user manual is written in XML DocBook format, version 4.3.
 It uses the official DocBook XSL stylesheets, and will build with
 versions as old as 1.58.1.  (Why these versions?  They're what comes
 with Red Hat Linux 9, the oldest system I still use.)

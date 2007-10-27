@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.2//EN"
-        "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.3//EN"
+        "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 
 <article>
 <articleinfo>
@@ -197,7 +197,7 @@
         automatically convert these objects to any of the basic C
         data types.  Additionally, MySQL++ defines classes like <ulink
         type="structref" url="DateTime"/>, which you can initialize
-        from a MySQL <userinput>DATETIME</userinput> string. These
+        from a MySQL <command>DATETIME</command> string. These
         automatic conversions are protected against bad conversions,
         and can either set a warning flag or throw an exception,
         depending on how you set the library up.</para>
@@ -208,8 +208,8 @@
         <sect3>
             <title>Queries That Do Not Return Data</title>
 
-            <para>Not all SQL queries return data. An example is
-            <userinput>CREATE TABLE</userinput>. For these types
+            <para>Not all SQL queries return data. An example
+            is <command>CREATE TABLE</command>. For these types
             of queries, there is a special result type (<ulink
             type="classref" url="ResNSel"/>) that simply reports the
             state resulting from the query: whether the query was
@@ -901,7 +901,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
         <para><methodname>execute()</methodname> is for queries
         that do not return data <emphasis>per se</emphasis>. For
-        instance, <userinput>CREATE INDEX</userinput>. You do
+        instance, <command>CREATE INDEX</command>. You do
         get back some information from the MySQL server, which
         <methodname>execute()</methodname> returns to its caller in a
         <ulink type="classref" url="ResNSel"/> object. In addition to
@@ -1074,10 +1074,9 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
             <programlisting><xi:include href="cgi_jpeg.txt" parse="text"
             xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-            <para>You install this in a web server's
-            CGI program directory (usually called
-            <filename>cgi-bin</filename>), then call it with a URL like
-            <userinput>http://my.server.com/cgi-bin/cgi_jpeg?id=1</userinput>.
+            <para>You install this in a web server's CGI
+            program directory, then call it with a URL like
+            <uri>http://my.server.com/cgi-bin/cgi_jpeg?id=1</uri>.
             That retrieves the JPEG with ID 1 from the table and
             returns it to the web server, which will send it on to
             the browser.</para>
@@ -1584,7 +1583,7 @@ stock foo("Hotdog", 52);</programlisting>
         program will crash when the code tries to access fields
         beyond those that exist in the <classname>Row</classname>
         object. The converse is not true, however: if you change
-        the <userinput>SELECT</userinput> statement above so that
+        the <command>SELECT</command> statement above so that
         it retrieves more than one column, the code will still
         work, because the extra fields in each row will simply be
         ignored.</para>
