@@ -56,10 +56,10 @@ class MYSQLPP_EXPORT Connection : public OptionalExceptions
 public:
 	/// \brief Legal types of option arguments
 	enum OptionArgType {
-		opt_type_none,
-		opt_type_string,
-		opt_type_integer,
-		opt_type_boolean
+		opt_type_none,      ///< option takes no argument
+		opt_type_string,    ///< option takes a string type argument
+		opt_type_integer,   ///< option takes an integral argument
+		opt_type_boolean    ///< option takes a Boolean argument
 	};
 
 	/// \brief Per-connection options you can set with set_option()
@@ -69,62 +69,38 @@ public:
 	/// be extended in the future.
 	enum Option 
 	{
-		// Symbolic "first" option, before real options.  Never send
-		// this to set_option()!
-		opt_FIRST = -1,
-		
-		opt_connect_timeout = 0,
-		opt_compress,
-		opt_named_pipe,
-		opt_init_command,
-		opt_read_default_file,
-		opt_read_default_group,
-		opt_set_charset_dir,
-		opt_set_charset_name,
-		opt_local_infile,
-		opt_protocol,
-		opt_shared_memory_base_name,
-		opt_read_timeout,
-		opt_write_timeout,
-		opt_use_result,
-		opt_use_remote_connection,
-		opt_use_embedded_connection,
-		opt_guess_connection,
-		opt_set_client_ip,
-		opt_secure_auth,
+		opt_FIRST = -1,              ///< INTERNAL USE ONLY
+	
+		opt_connect_timeout = 0,     ///< change connect() timeout
+		opt_compress,                ///< enable data compression
+		opt_named_pipe,              ///< suggest use of named pipes
+		opt_init_command,            ///< give SQL executed on connect
+		opt_read_default_file,       ///< override use of my.cnf
+		opt_read_default_group,      ///< override one group in my.cnf
+		opt_set_charset_dir,         ///< give path to charset definition files
+		opt_set_charset_name,        ///< give name of default charset
+		opt_local_infile,            ///< enable LOAD LOCAL INFILE statement
+		opt_protocol,                ///< set type of protocol to use
+		opt_shared_memory_base_name, ///< set name of shmem segment for IPC
+		opt_read_timeout,            ///< set timeout for IPC data reads
+		opt_write_timeout,           ///< set timeout for IPC data writes
+		opt_use_result,              ///< unused from MySQL v4.1.1 on
+		opt_use_remote_connection,   ///< connect to remote server in preference to embedded one
+		opt_use_embedded_connection, ///< use embedded server in preference to remote server
+		opt_guess_connection,        ///< default, overriding opt_use_remote_connection and opt_use_embedded_connection
+		opt_set_client_ip,           ///< fake client IP address when connecting to embedded server
+		opt_secure_auth,             ///< enforce use of secure authentication, refusing connection if not available
+		opt_multi_results,           ///< enable multiple result sets in a reply
+		opt_multi_statements,        ///< enable multiple queries in a request
+		opt_report_data_truncation,  ///< set reporting of data truncation errors
+		opt_reconnect,               ///< enable automatic reconnection to server
+		opt_found_rows,              ///< return # of matched rows in results, not changed row count
+		opt_ignore_space,            ///< allow spaces after function names in queries
+		opt_interactive,             ///< mark program as interactive; affects connection timeout
+		opt_local_files,             ///< enable LOAD DATA LOCAL statement
+		opt_no_schema,               ///< disable db.tbl.col syntax in queries
 
-		// Set multi-query statement support, and multiple result sets.
-		// These may be set at run time, in which case the C API turns
-		// on both flags automatically.
-		opt_multi_results,
-		opt_multi_statements,
-
-		// Set reporting of data truncation errors
-		opt_report_data_truncation,
-
-		// Enable or disable automatic reconnection to the server if
-		// the connection is found to have been lost.
-		opt_reconnect,
-
-		// Return the number of matched rows in result sets, not the
-		// number of changed rows.
-		opt_found_rows,
-
-		// Allow spaces after function names in queries.
-		opt_ignore_space,
-
-		// Mark program as interactive; affects connection timeout
-		opt_interactive,
-
-		// Enable LOAD DATA LOCAL statement
-		opt_local_files,
-
-		// Disable db.tbl.col syntax in queries
-		opt_no_schema,
-
-		// Number of options supported.  Never send this to
-		// set_option()!
-		opt_COUNT
+		opt_COUNT                    ///< INTERNAL USE ONLY (# of options supported)
 	};
 
 	/// \brief Create object without connecting it to the MySQL server.
@@ -505,9 +481,9 @@ public:
 protected:
 	/// \brief Types of option setting errors we can diagnose
 	enum OptionError {
-		opt_err_type,
-		opt_err_value,
-		opt_err_conn
+		opt_err_type,   ///< incorrect argument type for this option
+		opt_err_value,  ///< C API returned an error when setting this option
+		opt_err_conn,   ///< option can't be set after connection is up
 	};
 	
 	/// \brief Drop the connection to the database server

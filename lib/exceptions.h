@@ -317,7 +317,7 @@ public:
 	/// \brief Create exception object
 	///
 	/// \param w explanation for why the exception was thrown
-	/// \param err the error number from the underlying database API
+	/// \param e the error number from the underlying database API
 	explicit ConnectionFailed(const char* w = "", int e = 0) :
 	Exception(w),
 	errnum_(e)
@@ -348,7 +348,7 @@ public:
 	/// \brief Create exception object
 	///
 	/// \param w explanation for why the exception was thrown
-	/// \param err the error number from the underlying database API
+	/// \param e the error number from the underlying database API
 	explicit DBSelectionFailed(const char* w = "", int e = 0) :
 	Exception(w),
 	errnum_(e)

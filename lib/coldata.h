@@ -234,7 +234,7 @@ public:
 
 	/// \brief Lexically compare this string to another.
 	///
-	/// \param str string to compare against this one
+	/// \param other string to compare against this one
 	///
 	/// \retval <0 if str1 is lexically "less than" str2
 	/// \retval 0 if str1 is equal to str2
