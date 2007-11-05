@@ -1,14 +1,15 @@
 /// \file convert.h
-/// \brief Declares various string-to-integer type conversion templates.
+/// \brief Declares various mechanisms MySQL++ uses internally to
+/// convert data from one type to another.
 ///
-/// These templates are the mechanism used within mysqlpp::ColData_Tmpl
-/// for its string-to-\e something conversions.
+/// This is the mechanism behind much of the mysqlpp::ColData::conv()
+/// stuff.  This stuff should not be used by end-user code.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -40,13 +41,13 @@ namespace mysqlpp {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
-template <class Type> class mysql_convert;
+template <class Type> class internal_string_to_int_proxy;
 
-#define mysql__convert(TYPE, FUNC) \
+#define internal_convert_string_to_int(TYPE, FUNC) \
   template <> \
-  class mysql_convert<TYPE> {\
+  class internal_string_to_int_proxy<TYPE> {\
   public:\
-    mysql_convert(const char* str, const char *& end) { \
+    internal_string_to_int_proxy(const char* str, const char *& end) { \
       num_ = FUNC(str, const_cast<char **>(&end));}\
     operator TYPE () {return num_;}\
   private:\
@@ -57,19 +58,19 @@ template <class Type> class mysql_convert;
 #	pragma warning(disable: 4244)
 #endif
 
-	mysql__convert(float, strtod)
-	mysql__convert(double, strtod)
+	internal_convert_string_to_int(float, strtod)
+	internal_convert_string_to_int(double, strtod)
 
 #if defined(_MSC_VER)
 #	pragma warning(default: 4244)
 #endif
 
-#undef mysql__convert
-#define mysql__convert(TYPE, FUNC) \
+#undef internal_convert_string_to_int
+#define internal_convert_string_to_int(TYPE, FUNC) \
   template <> \
-  class mysql_convert<TYPE> {\
+  class internal_string_to_int_proxy<TYPE> {\
   public:\
-    mysql_convert(const char* str, const char *& end) { \
+    internal_string_to_int_proxy(const char* str, const char *& end) { \
       num_ = FUNC(str, const_cast<char **>(&end),10);}\
     operator TYPE () {return num_;}\
   private:\
@@ -80,16 +81,16 @@ template <class Type> class mysql_convert;
 #	pragma warning(disable: 4244)
 #endif
 
-	mysql__convert(char, strtol)
-	mysql__convert(signed char, strtol)
-	mysql__convert(int, strtol)
-	mysql__convert(short int, strtol)
-	mysql__convert(long int, strtol)
+	internal_convert_string_to_int(char, strtol)
+	internal_convert_string_to_int(signed char, strtol)
+	internal_convert_string_to_int(int, strtol)
+	internal_convert_string_to_int(short int, strtol)
+	internal_convert_string_to_int(long int, strtol)
 
-	mysql__convert(unsigned char, strtoul)
-	mysql__convert(unsigned int, strtoul)
-	mysql__convert(unsigned short int, strtoul)
-	mysql__convert(unsigned long int, strtoul)
+	internal_convert_string_to_int(unsigned char, strtoul)
+	internal_convert_string_to_int(unsigned int, strtoul)
+	internal_convert_string_to_int(unsigned short int, strtoul)
+	internal_convert_string_to_int(unsigned long int, strtoul)
 
 #if defined(_MSC_VER)
 #	pragma warning(default: 4244)
@@ -98,14 +99,14 @@ template <class Type> class mysql_convert;
 #if !defined(NO_LONG_LONGS)
 #if defined(_MSC_VER)
 // Handle 64-bit ints the VC++ way
-mysql__convert(longlong, _strtoi64)
-mysql__convert(ulonglong, _strtoui64)
+internal_convert_string_to_int(longlong, _strtoi64)
+internal_convert_string_to_int(ulonglong, _strtoui64)
 #else
 // No better idea, so assume the C99 way.  If your compiler doesn't
 // support this, please provide a patch to extend this ifdef, or define
 // NO_LONG_LONGS.
-mysql__convert(longlong, strtoll)
-mysql__convert(ulonglong, strtoull)
+internal_convert_string_to_int(longlong, strtoll)
+internal_convert_string_to_int(ulonglong, strtoull)
 #endif
 #endif // !defined(NO_LONG_LONGS)
 

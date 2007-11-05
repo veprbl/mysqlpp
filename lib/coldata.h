@@ -547,7 +547,7 @@ Type ColData::conv(Type /* dummy */) const
 	std::string::size_type len = strbuf.size();
 	const char* str = strbuf.data();
 	const char* end = str;
-	Type num = mysql_convert<Type>(str, end);
+	Type num = internal_string_to_int_proxy<Type>(str, end);
 
 	if (*end == '.') {
 		++end;
