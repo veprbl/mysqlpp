@@ -13,6 +13,8 @@ v3.0 Plan, For-Sure Stuff
     get done in v3.0.  Most of them break the ABI, so they can't wait
     for a future version, because v4 could be years out.
 
+    o Add ColData::compare(const char*, int).  Ditto for SQLString?
+
     o Audit use of headers in lib/*.h, to reduce dependencies.
 
     o Go back over mailing list thread to fold in any other changes
