@@ -59,7 +59,7 @@ main(int argc, char *argv[])
 	if (res) {
 		// Display header
 		cout.setf(ios::left);
-		cout << setw(21) << "Item" <<
+		cout << setw(31) << "Item" <<
 				setw(10) << "Num" <<
 				setw(10) << "Weight" <<
 				setw(10) << "Price" <<
@@ -68,7 +68,7 @@ main(int argc, char *argv[])
 		// Get each row in result set, and print its contents
 		mysqlpp::Row row;
 		while (row = res.fetch_row()) {
-			cout << setw(20) << row["item"] << ' ' <<
+			cout << setw(30) << row["item"] << ' ' <<
 					setw(9) << row["num"] << ' ' <<
 					setw(9) << row["weight"] << ' ' <<
 					setw(9) << row["price"] << ' ' <<
