@@ -81,11 +81,11 @@ Result set 0 is empty.
 Result set 1 is empty.
 Query: CALL get_stock('relish')
 Result set 0 has 1 row:
-  +---------------+-----+--------+-------+------------+
-  |          item | num | weight | price |      sdate |
-  +---------------+-----+--------+-------+------------+
-  | Pickle Relish            | 87  | 1.5     | 1.75    | 1998-09-04         |
-  +---------------+-----+--------+-------+------------+
+  +---------------+-----+--------+-------+------------+-------------+
+  |          item | num | weight | price |      sdate | description |
+  +---------------+-----+--------+-------+------------+-------------+
+  | Pickle Relish            | 87  | 1.5     | 1.75    | 1998-09-04         | NULL          |
+  +---------------+-----+--------+-------+------------+-------------+
 Result set 1 is empty.
 ================ END multiquery OUTPUT ================
 
@@ -152,23 +152,25 @@ Tables found: 4
 ================================ describe stock ================================
 |field                 ||type                ||null||key||default        |
  item                    char(30)              NO                         
- num                     bigint(20)            YES        NULL            
- weight                  double                YES        NULL            
- price                   double                YES        NULL            
- sdate                   date                  YES        NULL            
+ num                     bigint(20)            NO                         
+ weight                  double                NO                         
+ price                   double                NO                         
+ sdate                   date                  NO                         
+ description             mediumtext            YES        NULL            
 ================ END dbinfo OUTPUT ================
 
 ---------------- BEGIN fieldinf OUTPUT ----------------
 Field   SQL Type       Equivalent C++ Type                                      
 ======= ============== ======================================================== 
 item    CHAR NOT NULL  n/a                                                      
-num     BIGINT NULL    n/a                                                      
-weight  DOUBLE NULL    n/a                                                      
-price   DOUBLE NULL    n/a                                                      
-sdate   DATE NULL      n/a                                                      
+num     BIGINT NOT NULLn/a                                                      
+weight  DOUBLE NOT NULLn/a                                                      
+price   DOUBLE NOT NULLn/a                                                      
+sdate   DATE NOT NULL  n/a                                                      
+descriptionBLOB NULL      n/a                                                      
 
 SQL type of 'item' field most closely resembles the C++ string type.
-SQL type of 'num' field most closely resembles MySQL++'s longlong type.
+SQL type of 'description' field resembles a nullable variant of the C++ string type.
 ================ END fieldinf OUTPUT ================
 
 ---------------- BEGIN resetdb OUTPUT ----------------
@@ -200,7 +202,7 @@ Hotdog Buns                    65        1.1       1.1       1998-04-23
 ================ END custom1 OUTPUT ================
 
 ---------------- BEGIN custom2 OUTPUT ----------------
-Query: INSERT INTO stock (item,num,weight,price,sdate) VALUES ('Hot Dogs',100,1.5,1.75,'1998-09-25')
+Query: INSERT INTO stock (item,num,weight,price,sdate,description) VALUES ('Hot Dogs',100,1.5,1.75,'1998-09-25',(NULL))
 Query: select * from stock
 Records found: 5
 
@@ -214,7 +216,7 @@ Hot Dogs                       100       1.5       1.75      1998-09-25
 ================ END custom2 OUTPUT ================
 
 ---------------- BEGIN custom3 OUTPUT ----------------
-Query: UPDATE stock SET item = 'Nuerenberger Bratwurst',num = 97,weight = 1.5,price = 8.789999999999999,sdate = '2005-03-10' WHERE item = 'Nürnberger Brats'
+Query: UPDATE stock SET item = 'Nuerenberger Bratwurst',num = 97,weight = 1.5,price = 8.789999999999999,sdate = '2005-03-10',description = NULL WHERE item = 'Nürnberger Brats'
 Query: select * from stock
 Records found: 5
 

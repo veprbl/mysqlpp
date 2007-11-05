@@ -55,15 +55,12 @@ main(int argc, char *argv[])
 		{
 			mysqlpp::Transaction trans(con);
 
-			stock row1("Sauerkraut", 42, 1.2, 0.75, "2006-03-06");
-			query.insert(row1);
+			stock row("Sauerkraut", 42, 1.2, 0.75,
+					mysqlpp::sql_date("2006-03-06"), mysqlpp::null);
+			query.insert(row);
 			query.execute();
 
-			stock row2("Bratwurst", 24, 3.0, 4.99, "2006-03-06");
-			query.insert(row2);
-			query.execute();
-
-			cout << "\nRows are inserted, but not committed." << endl;
+			cout << "\nRow inserted, but not committed." << endl;
 			cout << "Verify this with another program (e.g. simple1), "
 					"then hit Enter." << endl;
 			getchar();
@@ -78,7 +75,8 @@ main(int argc, char *argv[])
 			mysqlpp::Transaction trans(con);
 			cout << "\nNow adding catsup to the database..." << endl;
 
-			stock row("Catsup", 3, 3.9, 2.99, "2006-03-06");
+			stock row("Catsup", 3, 3.9, 2.99,
+					mysqlpp::sql_date("2006-03-06"), mysqlpp::null);
 			query.insert(row);
 			query.execute();
 		}

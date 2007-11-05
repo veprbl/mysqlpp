@@ -86,14 +86,19 @@ main(int argc, char *argv[])
 		}
 
 		// Tricky type check: the 'if' path shouldn't happen because the
-		// num field has the NULL attribute.  We need to dig a little
-		// deeper if we want to ignore this in our type checks.
-		if (res.types(1) == typeid(mysqlpp::longlong)) {
+		// description field has the NULL attribute.  We need to dig a
+		// little deeper if we want to ignore this in our type checks.
+		if (res.types(5) == typeid(string)) {
 			cout << "Should not happen! Type check failure." << endl;
 		}
+		else if (res.types(5) == typeid(mysqlpp::Null<mysqlpp::ColData>)) {
+			cout << "SQL type of 'description' field resembles "
+					"a nullable variant of the C++ string type." << endl;
+		}
 		else {
-			cout << "SQL type of 'num' field most closely resembles "
-					"MySQL++'s longlong type." << endl;
+			cout << "Weird: fifth field's type is now " <<
+					res.types(5).name() << endl;
+			cout << "Did something recently change in resetdb?" << endl;
 		}
 	}
 	catch (const mysqlpp::BadQuery& er) {

@@ -3,10 +3,10 @@
 /// types to C++'s type system.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -31,7 +31,6 @@
 
 #include "common.h"
 
-#include "coldata.h"
 #include "stream2string.h"
 #include "tiny_int.h"
 
@@ -155,30 +154,25 @@ struct DateTime : public DTbase<DateTime>
 	{
 	}
 
-	/// \brief Initialize object from a MySQL date-and-time string
+	/// \brief Initialize object from a C string containing a MySQL
+	/// date-and-time string
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
 	/// zero-padded.
-	DateTime(cchar* str) { convert(str); }
+	explicit DateTime(cchar* str) { convert(str); }
 	
-	/// \brief Initialize object from a MySQL date-and-time string
+	/// \brief Initialize object from a C++ type of string containing
+	/// a MySQL date-and-time string
 	///
 	/// \sa DateTime(cchar*)
-	DateTime(const ColData& str)
-	{
-		convert(str.c_str());
-	}
-
-	/// \brief Initialize object from a MySQL date-and-time string
-	///
-	/// \sa DateTime(cchar*)
-	DateTime(const std::string& str)
+	template <class Str>
+	explicit DateTime(const Str& str)
 	{
 		convert(str.c_str());
 	}
 
 	/// \brief Initialize object from a time_t
-	DateTime(time_t t);
+	explicit DateTime(time_t t);
 
 	/// \brief Compare this datetime to another.
 	///
@@ -256,24 +250,17 @@ struct Date : public DTbase<Date>
 	{
 	}
 
-	/// \brief Initialize object from a MySQL date string
+	/// \brief Initialize object from a C string containing a date
 	///
 	/// String must be in the YYYY-MM-DD format.  It doesn't have to be
 	/// zero-padded.
-	Date(cchar* str) { convert(str); }
+	explicit Date(cchar* str) { convert(str); }
 	
-	/// \brief Initialize object from a MySQL date string
+	/// \brief Initialize object from a C++ style string containing a date
 	///
 	/// \sa Date(cchar*)
-	Date(const ColData& str) { convert(str.c_str()); }
-
-	/// \brief Initialize object from a MySQL date string
-	///
-	/// \sa Date(cchar*)
-	Date(const std::string& str)
-	{
-		convert(str.c_str());
-	}
+	template <class Str>
+	explicit Date(const Str& str) { convert(str.c_str()); }
 
 	/// \brief Compare this date to another.
 	///
@@ -339,24 +326,19 @@ struct Time : public DTbase<Time>
 	{
 	}
 
-	/// \brief Initialize object from a MySQL time string
+	/// \brief Initialize object from a C string containing a MySQL
+	/// time string
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
 	/// zero-padded.
-	Time(cchar* str) { convert(str); }
+	explicit Time(cchar* str) { convert(str); }
 
-	/// \brief Initialize object from a MySQL time string
+	/// \brief Initialize object from a C++ type string containing a
+	/// MySQL time string
 	///
 	/// \sa Time(cchar*)
-	Time(const ColData& str) { convert(str.c_str()); }
-
-	/// \brief Initialize object from a MySQL time string
-	///
-	/// \sa Time(cchar*)
-	Time(const std::string& str)
-	{
-		convert(str.c_str());
-	}
+	template <class Str>
+	explicit Time(const Str& str) { convert(str.c_str()); }
 
 	/// \brief Parse a MySQL time string into this object.
 	MYSQLPP_EXPORT cchar* convert(cchar*);

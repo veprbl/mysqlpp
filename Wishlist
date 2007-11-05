@@ -64,10 +64,6 @@ v3.0 Plan, For-Sure Stuff
 
           http://lists.mysql.com/plusplus/5617
 
-    o Apply Waba's patch allowing Null<T> fields in SSQLSes:
-      
-          http://lists.mysql.com/plusplus/5433
-
     o Refactor option mechanism in Connection, in several steps:
     
       - Create new optionlist module, initially empty.  Each step below

@@ -123,10 +123,11 @@ main(int argc, char *argv[])
 		query << 
 				"CREATE TABLE stock (" <<
 				"  item CHAR(30) NOT NULL, " <<
-				"  num BIGINT, " <<
-				"  weight DOUBLE, " <<
-				"  price DOUBLE, " <<
-				"  sdate DATE) " <<
+				"  num BIGINT NOT NULL, " <<
+				"  weight DOUBLE NOT NULL, " <<
+				"  price DOUBLE NOT NULL, " <<
+				"  sdate DATE NOT NULL, " <<
+				"  description MEDIUMTEXT NULL) " <<
 				"ENGINE = InnoDB " <<
 				"CHARACTER SET utf8 COLLATE utf8_general_ci";
 		query.execute();
@@ -134,11 +135,13 @@ main(int argc, char *argv[])
 		// Set up the template query to insert the data.  The parse()
 		// call tells the query object that this is a template and
 		// not a literal query string.
-		query << "insert into %5:table values (%0q, %1q, %2, %3, %4q)";
+		query << "insert into %6:table values " <<
+                "(%0q, %1q, %2, %3, %4q, %5q:desc)";
 		query.parse();
 
-		// Set a default for template query parameter "table".
+		// Set a default for template query parameters "table" and "desc".
 		query.template_defaults["table"] = "stock";
+		query.template_defaults["desc"] = "NULL";
 
 		// Notice that we don't give a sixth parameter in these calls,
 		// so the default value of "stock" is used.  Also notice that
@@ -148,7 +151,8 @@ main(int argc, char *argv[])
 		cout << "Populating stock table..." << endl;
 		query.execute("Nürnberger Brats", 97, 1.5, 8.79, "2005-03-10");
 		query.execute("Pickle Relish", 87, 1.5, 1.75, "1998-09-04");
-		query.execute("Hot Mustard", 73, .95, .97, "1998-05-25");
+		query.execute("Hot Mustard", 73, .95, .97, "1998-05-25",
+                "good American yellow mustard, not that European stuff");
 		query.execute("Hotdog Buns", 65, 1.1, 1.1, "1998-04-23");
 
 		// Now create empty images table, for testing BLOB and auto-

@@ -35,6 +35,7 @@
 #include "common.h"
 
 #include "convert.h"
+#include "datetime.h"
 #include "exceptions.h"
 #include "null.h"
 #include "string_util.h"
@@ -229,8 +230,26 @@ public:
 	/// \brief Return a const pointer to the string data.
 	const char* c_str() const { return data(); }
 	
-	/// \brief Template for converting data from one type to another.
+	/// \brief Template for converting the column data to most any
+	/// integral data type.
 	template <class Type> Type conv(Type dummy) const;
+
+	/// \brief Overload of conv() for types wrapped with Null<>
+	///
+	/// If the ColData object was initialized with some string we
+	/// recognize as a SQL null, we just return a copy of the global
+	/// 'null' object converted to the requested type.  Otherwise, we
+	/// return the ColData's value wrapped in the Null<> template.
+	template <class T, class B>
+	Null<T, B> conv(Null<T, B> dummy) const
+	{
+		if (is_null()) {
+			return Null<T, B>(null);
+		}
+		else {
+			return Null<T, B>(conv(T()));
+		}
+	}
 
 	/// \brief Lexically compare this string to another.
 	///
@@ -394,7 +413,20 @@ public:
 	/// \brief Converts this object's string data to a bool
 	operator bool() const { return conv(0); }
 
-	template <class T, class B> operator Null<T, B>() const;
+	/// \brief Converts this object's string data to a mysqlpp::Date
+	operator Date() const { return Date(*this); }
+
+	/// \brief Converts this object's string data to a mysqlpp::DateTime
+	operator DateTime() const { return DateTime(*this); }
+
+	/// \brief Converts this object's string data to a mysqlpp::Time
+	operator Time() const { return Time(*this); }
+
+	/// \brief Converts the ColData to a nullable data type
+	///
+	/// This is just an implicit version of conv(Null<T, B>)
+	template <class T, class B>
+	operator Null<T, B>() const { return conv(Null<T, B>()); }
 
 private:
 	/// \brief Decrement the buffer's reference count
@@ -506,26 +538,7 @@ operator_binary_int(ulonglong, ulonglong)
 #endif
 #endif // MYSQLPP_NO_BINARY_OPERS
 
-/// \brief Converts this object to a SQL null
-///
-/// Returns a copy of the global null object if the string data held by
-/// the object is exactly equal to "NULL".  Else, it constructs an empty
-/// object of type T and tries to convert it to Null<T, B>.
-template<class T, class B>
-ColData::operator Null<T, B>() const
-{
-	if ((size() == 4) &&
-			(*this)[0] == 'N' &&
-			(*this)[1] == 'U' &&
-			(*this)[2] == 'L' &&
-			(*this)[3] == 'L') {
-		return Null<T, B>(null);
-	}
-	else {
-		return Null<T, B>(conv(T()));
-	}
-}
-
+// The generic conv() implementation for integral types.
 template <class Type>
 Type ColData::conv(Type /* dummy */) const
 {
@@ -548,6 +561,45 @@ Type ColData::conv(Type /* dummy */) const
 
 	return num;
 }
+
+
+/// \brief Specialization of ColData::conv<Type>() for ColData
+///
+/// Yes, I hear you crying, "WTF?"  Why does ColData need to be able to
+/// convert itself to ColData?  SSQLSes with BLOB columns, that's why.
+///
+/// SSQLSes populate their data members from the raw field data by
+/// calling row[field].conv().  The raw field data is stored in a
+/// ColData, and the MySQL++ native BLOB type is ColData.  Since we're
+/// dealing with generated code, we need this specialization which hand-
+/// written code wouldn't need.  Prove the truth of this to yourself by
+/// removing this and counting how many pieces examples/cgi_jpeg.cpp
+/// breaks into.
+template <> ColData ColData::conv(ColData dummy) const;
+
+/// \brief Specialization of ColData::conv<Type>() for C++ strings
+template <> std::string ColData::conv(std::string dummy) const;
+
+/// \brief Specialization of ColData::conv<Type>() for mysqlpp::Date
+///
+/// This is necessary because as of MySQL++ v3, Date no longer has an
+/// implicit conversion ctor from ColData, and SSQLS uses conv() instead
+/// of the C++ type conversion system anyway.
+template <> Date ColData::conv(Date dummy) const;
+
+/// \brief Specialization of ColData::conv<Type>() for mysqlpp::DateTime
+///
+/// This is necessary because as of MySQL++ v3, DateTime no longer has
+/// an implicit conversion ctor from ColData, and SSQLS uses conv()
+/// instead of the C++ type conversion system anyway.
+template <> DateTime ColData::conv(DateTime dummy) const;
+
+/// \brief Specialization of ColData::conv<Type>() for mysqlpp::Time
+///
+/// This is necessary because as of MySQL++ v3, Time no longer has an
+/// implicit conversion ctor from ColData, and SSQLS uses conv() instead
+/// of the C++ type conversion system anyway.
+template <> Time ColData::conv(Time dummy) const;
 
 } // end namespace mysqlpp
 

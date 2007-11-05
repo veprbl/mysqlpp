@@ -82,6 +82,32 @@ ColData::compare(const ColData& other) const
 }
 
 
+template <>
+ColData
+ColData::conv(ColData dummy) const { return *this; }
+
+
+template <>
+std::string
+ColData::conv(std::string dummy) const
+		{ return std::string(data(), length()); }
+
+
+template <>
+Date
+ColData::conv(Date dummy) const { return Date(c_str()); }
+
+
+template <>
+DateTime
+ColData::conv(DateTime dummy) const { return DateTime(c_str()); }
+
+
+template <>
+Time
+ColData::conv(Time dummy) const { return Time(c_str()); }
+
+
 const char*
 ColData::data() const
 {
