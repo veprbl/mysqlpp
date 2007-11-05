@@ -13,6 +13,10 @@ v3.0 Plan, For-Sure Stuff
     get done in v3.0.  Most of them break the ABI, so they can't wait
     for a future version, because v4 could be years out.
 
+    o The manipulator changes sometime during 2.3 broke the column
+      formatting of the examples that dump tables.  A setw(x) call
+      results in x spaces, not x - strlen(whatevercamebefore).
+
     o Add ColData::compare(const char*, int).  Ditto for SQLString?
 
     o Audit use of headers in lib/*.h, to reduce dependencies.
