@@ -39,10 +39,6 @@
 #include "row.h"
 #include "subiter.h"
 
-#include <map>
-#include <set>
-#include <string>
-
 namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)

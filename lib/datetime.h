@@ -35,7 +35,6 @@
 #include "tiny_int.h"
 
 #include <string>
-#include <sstream>
 #include <iostream>
 
 namespace mysqlpp {

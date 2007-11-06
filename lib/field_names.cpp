@@ -1,10 +1,10 @@
 /***********************************************************************
  field_names.cpp - Implements the FieldNames class.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -28,12 +28,14 @@
 #include "common.h"
 
 #include "field_names.h"
+#include "string_util.h"
 
 #include "result.h"
 
 namespace mysqlpp {
 
-void FieldNames::init(const ResUse * res)
+void 
+FieldNames::init(const ResUse * res)
 {
 	int num = res->num_fields();
 	reserve(num);
@@ -43,6 +45,15 @@ void FieldNames::init(const ResUse * res)
 		str_to_lwr(p);
 		push_back(p);
 	}
+}
+
+
+uint
+FieldNames::operator [](const std::string& s) const
+{
+	std::string temp(s);
+	str_to_lwr(temp);
+	return uint(std::find(begin(), end(), temp) - begin());
 }
 
 } // end namespace mysqlpp

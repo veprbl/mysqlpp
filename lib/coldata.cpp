@@ -26,6 +26,7 @@
 
 #include "coldata.h"
 
+#include <stdexcept>
 #include <string>
 
 namespace mysqlpp {

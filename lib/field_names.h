@@ -2,10 +2,10 @@
 /// \brief Declares a class to hold a list of field names.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -28,10 +28,7 @@
 #ifndef MYSQLPP_FIELD_NAMES_H
 #define MYSQLPP_FIELD_NAMES_H
 
-#include "coldata.h"
-#include "string_util.h"
-
-#include <algorithm>
+#include <string>
 #include <vector>
 
 namespace mysqlpp {
@@ -95,12 +92,7 @@ public:
 	}
 
 	/// \brief Get the index number of a field given its name
-	uint operator [](const std::string& s) const
-	{
-		std::string temp(s);
-		str_to_lwr(temp);
-		return uint(std::find(begin(), end(), temp) - begin());
-	}
+	uint operator [](const std::string& s) const;
 
 private:
 	void init(const ResUse* res);

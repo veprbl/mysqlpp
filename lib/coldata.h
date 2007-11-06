@@ -41,12 +41,7 @@
 #include "string_util.h"
 #include "type_info.h"
 
-#include <sstream>
-#include <stdexcept>
 #include <string>
-#include <typeinfo>
-
-#include <stdlib.h>
 
 namespace mysqlpp {
 

@@ -2,9 +2,9 @@
 /// \brief Declares the closest C++ equivalent of each MySQL column type
 
 /***********************************************************************
- Copyright (c) 2006 by Educational Technology Resources, Inc.  Others
- may also hold copyrights on code in this file.  See the CREDITS file in
- the top directory of the distribution for details.
+ Copyright (c) 2006-2007 by Educational Technology Resources, Inc.
+ Others may also hold copyrights on code in this file.  See the
+ CREDITS file in the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -26,8 +26,6 @@
 
 #if !defined(MYSQLPP_SQL_TYPES_H)
 #define MYSQLPP_SQL_TYPES_H
-
-#include "common.h"
 
 #include <string>
 

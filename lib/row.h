@@ -28,6 +28,8 @@
 #ifndef MYSQLPP_ROW_H
 #define MYSQLPP_ROW_H
 
+#include "common.h"
+
 #include "coldata.h"
 #include "noexceptions.h"
 #include "refcounted.h"
@@ -36,8 +38,6 @@
 
 #include <vector>
 #include <string>
-
-#include <string.h>
 
 namespace mysqlpp {
 
