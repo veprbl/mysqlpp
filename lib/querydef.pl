@@ -58,7 +58,7 @@ print OUT "#define mysql_query_define0(RETURN, FUNC) \\\n";
 for (my $i = 1; $i < $max_parameters; ++$i) {
 	print OUT "\tRETURN FUNC(";
 	for (my $j = 0; $j < $i + 1; ++$j) {
-		print OUT 'const SQLString& arg', $j;
+		print OUT 'const SQLTypeAdapter& arg', $j;
 		print OUT ', ' unless $j == $i;
 	}
 	print OUT ") \\\n";
@@ -74,12 +74,12 @@ for (my $i = 1; $i < $max_parameters; ++$i) {
 print OUT << "---";
 
 #define mysql_query_define1(FUNC) \\
-	template <class T> void FUNC(T& container, const SQLString& arg0); \\
+	template <class T> void FUNC(T& container, const SQLTypeAdapter& arg0); \\
 ---
 for (my $i = 1; $i < $max_parameters; ++$i) {
 	print OUT "\ttemplate <class T> void FUNC(T& container";
 	for (my $j = 0; $j < $i + 1; ++$j) {
-		print OUT ', const SQLString& arg', $j;
+		print OUT ', const SQLTypeAdapter& arg', $j;
 	}
 	print OUT ") \\\n";
 	print OUT "\t\t{ FUNC(container, SQLQueryParms()";

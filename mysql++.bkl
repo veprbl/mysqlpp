@@ -56,7 +56,7 @@
 				lib/query.cpp
 				lib/result.cpp
 				lib/row.cpp
-				lib/sql_string.cpp
+				lib/stadapter.cpp
 				lib/string_util.cpp 
 				lib/tcp_connection.cpp
 				lib/transaction.cpp

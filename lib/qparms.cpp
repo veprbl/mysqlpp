@@ -32,7 +32,7 @@ using namespace std;
 
 namespace mysqlpp {
 
-SQLString&
+SQLTypeAdapter&
 SQLQueryParms::operator [](const char* str)
 {
 	if (parent_) {
@@ -41,7 +41,7 @@ SQLQueryParms::operator [](const char* str)
 	throw ObjectNotInitialized("SQLQueryParms object has no parent!");
 }
 
-const SQLString&
+const SQLTypeAdapter&
 SQLQueryParms::operator[] (const char* str) const
 {
 	if (parent_) {

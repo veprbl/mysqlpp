@@ -18,21 +18,21 @@ We have:
 ================ END simple1 OUTPUT ================
 
 ---------------- BEGIN simple2 OUTPUT ----------------
-Item                 Num       Weight    Price     Date
+Item                           Num       Weight    Price     Date
 
-Nürnberger Brats                    97         1.5         8.79         2005-03-10
-Pickle Relish                    87         1.5         1.75         1998-09-04
-Hot Mustard                    73         0.95         0.97         1998-05-25
-Hotdog Buns                    65         1.1         1.1         1998-04-23
+Nürnberger Brats                              97         1.5         8.79         2005-03-10
+Pickle Relish                              87         1.5         1.75         1998-09-04
+Hot Mustard                              73         0.95         0.97         1998-05-25
+Hotdog Buns                              65         1.1         1.1         1998-04-23
 ================ END simple2 OUTPUT ================
 
 ---------------- BEGIN simple3 OUTPUT ----------------
-Item                 Num       Weight    Price     Date
+Item                           Num       Weight    Price     Date
 
-Nürnberger Brats                    97         1.5         8.79         2005-03-10
-Pickle Relish                    87         1.5         1.75         1998-09-04
-Hot Mustard                    73         0.95         0.97         1998-05-25
-Hotdog Buns                    65         1.1         1.1         1998-04-23
+Nürnberger Brats                              97         1.5         8.79         2005-03-10
+Pickle Relish                              87         1.5         1.75         1998-09-04
+Hot Mustard                              73         0.95         0.97         1998-05-25
+Hotdog Buns                              65         1.1         1.1         1998-04-23
 ================ END simple3 OUTPUT ================
 
 ---------------- BEGIN store_if OUTPUT ----------------
@@ -202,7 +202,7 @@ Hotdog Buns                    65        1.1       1.1       1998-04-23
 ================ END custom1 OUTPUT ================
 
 ---------------- BEGIN custom2 OUTPUT ----------------
-Query: INSERT INTO stock (item,num,weight,price,sdate,description) VALUES ('Hot Dogs',100,1.5,1.75,'1998-09-25',(NULL))
+Query: INSERT INTO stock (item,num,weight,price,sdate,description) VALUES ('Hot Dogs',100,1.5,1.75,'1998-09-25',NULL)
 Query: select * from stock
 Records found: 5
 
@@ -216,7 +216,7 @@ Hot Dogs                       100       1.5       1.75      1998-09-25
 ================ END custom2 OUTPUT ================
 
 ---------------- BEGIN custom3 OUTPUT ----------------
-Query: UPDATE stock SET item = 'Nuerenberger Bratwurst',num = 97,weight = 1.5,price = 8.789999999999999,sdate = '2005-03-10',description = NULL WHERE item = 'Nürnberger Brats'
+Query: UPDATE stock SET item = 'Nuerenberger Bratwurst',num = 97,weight = 1.5,price = 8.789999999999999,sdate = '2005-03-10',description = 'NULL' WHERE item = 'Nürnberger Brats'
 Query: select * from stock
 Records found: 5
 
@@ -245,7 +245,7 @@ Currently 65 hotdog buns in stock.
 
 ---------------- BEGIN custom5 OUTPUT ----------------
 Custom query:
-select * from stock where weight = 1.5 and price = 8.79
+select * from stock where weight = 1.5 and price = 8.789999999999999
 ================ END custom5 OUTPUT ================
 
 ---------------- BEGIN custom6 OUTPUT ----------------

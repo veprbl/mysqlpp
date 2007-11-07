@@ -35,7 +35,7 @@
 #include "querydef.h"
 #include "result.h"
 #include "row.h"
-#include "sql_string.h"
+#include "stadapter.h"
 
 #include <deque>
 #include <iomanip>
@@ -113,8 +113,8 @@ class MYSQLPP_EXPORT Connection;
 /// query string into the object which contains placeholders for data.
 /// You call the parse() method to tell the Query object that the query
 /// string contains placeholders. Once that's done, you can call any of
-/// the many overloaded methods that take a number of SQLStrings (up to
-/// 25 by default) or any type that can be converted to SQLString, and
+/// the many overloaded methods that take a number of SQLTypeAdapters (up to
+/// 25 by default) or any type that can be converted to SQLTypeAdapter, and
 /// those parameters will be inserted into the placeholders. When you
 /// call one of the parameterless functions the execute the query, the
 /// final query string is assembled and sent to the server.
@@ -213,7 +213,7 @@ public:
 	///
 	/// \param arg0 the value to substitute for the first template query
 	/// parameter
-	std::string preview(const SQLString& arg0) { return str(arg0); }
+	std::string preview(const SQLTypeAdapter& arg0) { return str(arg0); }
 
 	/// \brief Return the query string currently in the buffer.
 	std::string preview(SQLQueryParms& p) { return str(p); }
@@ -226,7 +226,7 @@ public:
 	///
 	/// \param arg0 the value to substitute for the first template query
 	/// parameter
-	std::string str(const SQLString& arg0)
+	std::string str(const SQLTypeAdapter& arg0)
 			{ return str(SQLQueryParms() << arg0); }
 
 	/// \brief Get built query as a null-terminated C++ string
@@ -282,7 +282,7 @@ public:
 	/// \param str If the object represents a compiled template query,
 	/// substitutes this string in for the first parameter.  Otherwise,
 	/// takes the string as a complete SQL query and executes it.
-	ResNSel execute(const SQLString& str);
+	ResNSel execute(const SQLTypeAdapter& str);
 
 	/// \brief Execute query in a known-length string of characters.
 	/// This can include null characters.
@@ -331,7 +331,7 @@ public:
 	/// Executes the query immediately, and returns an object that
 	/// lets you walk through the result set one row at a time, in
 	/// sequence.  This is more memory-efficient than store().
-	ResUse use(const SQLString& str);
+	ResUse use(const SQLTypeAdapter& str);
 
 	/// \brief Execute query in a known-length C string
 	///
@@ -378,7 +378,7 @@ public:
 	/// Executes the query immediately, and returns an object that
 	/// contains the entire result set.  This is less memory-efficient
 	/// than use(), but it lets you have random access to the results.
-	Result store(const SQLString& str);
+	Result store(const SQLTypeAdapter& str);
 
 	/// \brief Execute query in a known-length C string
 	///
@@ -398,7 +398,7 @@ public:
 	/// \param fn the functor called for each row
 	/// \return a copy of the passed functor
 	template <typename Function>
-	Function for_each(const SQLString& query, Function fn)
+	Function for_each(const SQLTypeAdapter& query, Function fn)
 	{	
 		mysqlpp::ResUse res = use(query);
 		if (res) {
@@ -413,7 +413,7 @@ public:
 
 	/// \brief Execute the query, and call a functor for each returned row
 	///
-	/// Just like for_each(const SQLString&, Function), but it uses
+	/// Just like for_each(const SQLTypeAdapter&, Function), but it uses
 	/// the query string held by the Query object already
 	///
 	/// \param fn the functor called for each row
@@ -445,7 +445,7 @@ public:
 	template <class SSQLS, typename Function>
 	Function for_each(const SSQLS& ssqls, Function fn)
 	{	
-		SQLString query("select * from ");
+		SQLTypeAdapter query("select * from ");
 		query += ssqls._table;
 		mysqlpp::ResUse res = use(query);
 		if (res) {
@@ -478,7 +478,7 @@ public:
 	/// \param fn the functor called for each row
 	/// \return a copy of the passed functor
 	template <class Sequence, typename Function>
-	Function store_if(Sequence& con, const SQLString& query, Function fn)
+	Function store_if(Sequence& con, const SQLTypeAdapter& query, Function fn)
 	{	
 		mysqlpp::ResUse res = use(query);
 		if (res) {
@@ -496,7 +496,7 @@ public:
 	/// \brief Pulls every row in a table, conditionally storing each
 	/// one in a container
 	///
-	/// Just like store_if(Sequence&, const SQLString&, Function), but
+	/// Just like store_if(Sequence&, const SQLTypeAdapter&, Function), but
 	/// it uses the SSQLS instance to construct a "select * from TABLE"
 	/// query, using the table name field in the SSQLS.
 	///
@@ -507,7 +507,7 @@ public:
 	template <class Sequence, class SSQLS, typename Function>
 	Function store_if(Sequence& con, const SSQLS& ssqls, Function fn)
 	{	
-		SQLString query("select * from ");
+		SQLTypeAdapter query("select * from ");
 		query += ssqls._table;
 		mysqlpp::ResUse res = use(query);
 		if (res) {
@@ -525,7 +525,7 @@ public:
 	/// \brief Execute the query, conditionally storing each row in a
 	/// container
 	///
-	/// Just like store_if(Sequence&, const SQLString&, Function), but
+	/// Just like store_if(Sequence&, const SQLTypeAdapter&, Function), but
 	/// it uses the query string held by the Query object already
 	///
 	/// \param con the destination container; needs a push_back() method
@@ -681,21 +681,21 @@ public:
 
 	/// \brief Specialization of storein_sequence() for \c std::vector
 	template <class T>
-	void storein(std::vector<T>& con, const SQLString& s)
+	void storein(std::vector<T>& con, const SQLTypeAdapter& s)
 	{
 		storein_sequence(con, s);
 	}
 
 	/// \brief Specialization of storein_sequence() for \c std::deque
 	template <class T>
-	void storein(std::deque<T>& con, const SQLString& s)
+	void storein(std::deque<T>& con, const SQLTypeAdapter& s)
 	{
 		storein_sequence(con, s);
 	}
 
 	/// \brief Specialization of storein_sequence() for \c std::list
 	template <class T>
-	void storein(std::list<T>& con, const SQLString& s)
+	void storein(std::list<T>& con, const SQLTypeAdapter& s)
 	{
 		storein_sequence(con, s);
 	}
@@ -704,7 +704,7 @@ public:
 	/// \brief Specialization of storein_sequence() for g++ STL
 	/// extension \c slist
 	template <class T>
-	void storein(__gnu_cxx::slist<T>& con, const SQLString& s)
+	void storein(__gnu_cxx::slist<T>& con, const SQLTypeAdapter& s)
 	{
 		storein_sequence(con, s);
 	}
@@ -716,7 +716,7 @@ public:
 	/// in the global namespace.  This is a common language extension,
 	/// so this may also work for other compilers.
 	template <class T>
-	void storein(slist<T>& con, const SQLString& s)
+	void storein(slist<T>& con, const SQLTypeAdapter& s)
 	{
 		storein_sequence(con, s);
 	}
@@ -727,7 +727,7 @@ public:
 	/// This is for those benighted compilers that include an \c slist
 	/// implementation, but erroneously put it in the \c std namespace!
 	template <class T>
-	void storein(std::slist<T>& con, const SQLString& s)
+	void storein(std::slist<T>& con, const SQLTypeAdapter& s)
 	{
 		storein_sequence(con, s);
 	}
@@ -735,14 +735,14 @@ public:
 
 	/// \brief Specialization of storein_set() for \c std::set
 	template <class T>
-	void storein(std::set<T>& con, const SQLString& s)
+	void storein(std::set<T>& con, const SQLTypeAdapter& s)
 	{
 		storein_set(con, s);
 	}
 
 	/// \brief Specialization of storein_set() for \c std::multiset
 	template <class T>
-	void storein(std::multiset<T>& con, const SQLString& s)
+	void storein(std::multiset<T>& con, const SQLTypeAdapter& s)
 	{
 		storein_set(con, s);
 	}
@@ -897,7 +897,7 @@ private:
 	/// \brief Process a parameterized query list.
 	void proc(SQLQueryParms& p);
 
-	SQLString* pprepare(char option, SQLString& S, bool replace = true);
+	SQLTypeAdapter* pprepare(char option, SQLTypeAdapter& S, bool replace = true);
 };
 
 
@@ -905,7 +905,7 @@ private:
 // Doxygen will not generate documentation for this section.
 
 template <class Sequence>
-void Query::storein_sequence(Sequence& con, const SQLString& s)
+void Query::storein_sequence(Sequence& con, const SQLTypeAdapter& s)
 {
 	ResUse result = use(s);
 	while (1) {
@@ -922,7 +922,7 @@ void Query::storein_sequence(Sequence& con, const SQLString& s)
 
 
 template <class Set>
-void Query::storein_set(Set& con, const SQLString& s)
+void Query::storein_set(Set& con, const SQLTypeAdapter& s)
 {
 	ResUse result = use(s);
 	while (1) {

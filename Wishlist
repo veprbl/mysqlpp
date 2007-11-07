@@ -17,7 +17,37 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Add ColData::compare(const char*, int).  Ditto for SQLString?
+    o Add Null<T> support to SQLQueryParms, and test by changing
+      resetdb to assign mysqlpp::null to the second default instead
+      of "NULL".  The lack of this is why we aren't preserving the
+      null attribute when popupating the stock table.
+
+    o Change SQLTypeAdapter(char) and friends to be single-character
+      string conversions, and add SQLTypeAdapter(tiny_int) to take
+      up old functionality.
+
+    o Replace 'char'-based typedefs in sql_types.h with tiny_int.
+
+    o Templatize class tiny_int to allow for unsigned storage.
+
+    o Rename ColData to String, reflecting its general-purpose nature.
+
+    o Add String::compare(const char*, int), and anything else that
+      looks useful from the std::string interface.
+
+    o Remove String specializations for manipulators, instead adding
+      SQLTypeAdapter(const String&).  Can probably also remove
+      String::escape_q() and such.  SQLTypeAdapter doesn't have these,
+      and might not need to: is_string() might be sufficient.
+
+    o Change SQLTypeAdapter to no longer derive from std::string, but
+      instead manage its own internal data buffer.  Maybe reuse
+      String::Buffer?  That would allow refcounted buffer sharing in
+      implementation of previous item.  Should not have to implement
+      the entire std::string interface, given the class's clarified
+      usage scope constraints.
+
+    o Add a userman section on String and SQLTypeAdapter.
 
     o Go back over mailing list thread to fold in any other changes
       suggested for RefCountedPointer.  Most especially, use
@@ -38,7 +68,7 @@ v3.0 Plan, For-Sure Stuff
 
     o Rework elment access in subscript_iterator derivatives:
 
-      - Change data management to work like ColData's new reference-
+      - Change data management to work like String's new reference-
         counted buffer mechanism where possible to avoid copying
         large data blocks when returning things by value.
 
@@ -48,17 +78,6 @@ v3.0 Plan, For-Sure Stuff
       - If we can get reference semantics everywhere, we can add
         operator->() to subscript_iterator.  It can't work with
         value semantics.
-
-    o ColData and SQLString are inverses.  ColData is initialized
-      with string data from SQL results and can convert it to typical
-      C++ data types.  SQLString is initialized with any of several
-      typical C++ data types, which it converts internally into a
-      string form suitable for use in SQL statements.  At minimum,
-      rename these classes to make this duality obvious; DataToSQL
-      and SQLToData?  Better would be to merge them.  "SQLString"
-      would be an appropriate name, as both hold a string, plus type
-      data necessary for conversions.  Best counterargument is weak:
-      it allows silly things like "int m = 1, n = SQLString(m);"
 
     o More robust fix for the Query stream base class init problem:
       http://www.boost.org/libs/utility/base_from_member.html

@@ -1,20 +1,19 @@
 /// \file manip.h
-/// \brief Declares \c std::ostream manipulators useful with SQL syntax.
+/// \brief Declares C++ stream manipulators and operators used with
+/// class Query's stream interface for building SQL queries.
 ///
 /// These manipulators let you automatically quote elements or escape
-/// characters that are special in SQL when inserting them into an
-/// \c std::ostream.  Since mysqlpp::Query is an ostream, these
-/// manipulators make it easier to build syntactically-correct SQL
-/// queries.
+/// characters that are special in SQL when inserting them into a
+/// Query stream.  They make it easier to build syntactically-correct
+/// SQL queries.
 ///
-/// This file also includes special \c operator<< definitions for class
-/// \c ColData.  When inserting these objects into a Query using its
-/// stream interface, they are automatically quoted and escaped as
-/// necessary depending on data type unless the global variable
-/// dont_quote_auto is set to true.   Automatic quoting and escaping
-/// does not happen when inserting ColData objects into other stream
-/// types, but you can use the explicit quote and escape manipulators.
-/// See test/test_manip.cpp to see the expected behavior.
+/// This file also includes special \c operator<< definitions for
+/// MySQL++ data types, since we know when to do automatic quoting and
+/// escaping for these types.  This only works with Query streams, not
+/// regular std::ostreams, since we're only concerned with making
+/// correct SQL.
+///
+/// test/test_manip.cpp exercises the mechanisms defined here.
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
@@ -45,9 +44,8 @@
 
 #include "common.h"
 
-#include "datetime.h"
 #include "myset.h"
-#include "sql_string.h"
+#include "stadapter.h"
 
 #include <iostream>
 
@@ -116,14 +114,7 @@ inline quote_type2 operator <<(SQLQueryParms& p,
 
 
 MYSQLPP_EXPORT SQLQueryParms& operator <<(quote_type2 p,
-		SQLString& in);
-
-
-template <class T>
-inline std::ostream& operator <<(quote_type1 o, const T & in)
-{
-	return *o.ostr << in;
-}
+		SQLTypeAdapter& in);
 
 
 MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
@@ -133,63 +124,12 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 MYSQLPP_EXPORT Query& operator <<(Query& o,
 		const ColData& in);
 
-template <>
 MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
-		const std::string& in);
+		const SQLTypeAdapter& in);
 
 
-template <>
-MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
-		const char* const& in);
-
-
-template <>
 MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
 		const ColData& in);
-
-
-template <>
-inline std::ostream& operator <<(quote_type1 o,
-		char* const& in)
-{
-	return operator <<(o, const_cast<const char* const&>(in));
-}
-
-inline std::ostream& operator <<(quote_type1 o,
-		char in[])
-{
-	return operator <<(o, static_cast<const char* const&>(in));
-}
-
-inline std::ostream& operator <<(quote_type1 o,
-		const char in[])
-{
-	return operator <<(o, const_cast<char* const&>(in));
-}
-
-
-template <>
-inline std::ostream& operator <<(quote_type1 o,
-		const Date& in)
-{
-	return *o.ostr << '\'' << in << '\'';
-}
-
-
-template <>
-inline std::ostream& operator <<(quote_type1 o,
-		const Time& in)
-{
-	return *o.ostr << '\'' << in << '\'';
-}
-
-
-template <>
-inline std::ostream& operator <<(quote_type1 o,
-		const DateTime& in)
-{
-	return *o.ostr << '\'' << in << '\'';
-}
 
 
 template <class ST>
@@ -252,51 +192,23 @@ inline quote_only_type2 operator <<(SQLQueryParms& p,
 }
 
 MYSQLPP_EXPORT SQLQueryParms& operator <<(quote_only_type2 p,
-		SQLString& in);
+		SQLTypeAdapter& in);
 
 
-template <class T>
-inline std::ostream& operator <<(quote_only_type1 o, const T& in)
-{
-	return *o.ostr << in;
-}
-
-
-template <>
 inline std::ostream& operator <<(quote_only_type1 o,
-		const std::string& in)
+		const SQLTypeAdapter& in)
 {
-	return *o.ostr << '\'' << in << '\'';
+	if (in.is_string()) {
+		return *o.ostr << '\'' << in << '\'';
+	}
+	else {
+		return *o.ostr << in;
+	}
 }
 
 
-template <>
 MYSQLPP_EXPORT std::ostream& operator <<(quote_only_type1 o,
 		const ColData& in);
-
-
-template <>
-inline std::ostream& operator <<(quote_only_type1 o,
-		const Date& in)
-{
-	return *o.ostr << '\'' << in << '\'';
-}
-
-
-template <>
-inline std::ostream& operator <<(quote_only_type1 o,
-		const Time& in)
-{
-	return *o.ostr << '\'' << in << '\'';
-}
-
-
-template <>
-inline std::ostream& operator <<(quote_only_type1 o,
-		const DateTime& in)
-{
-	return *o.ostr << '\'' << in << '\'';
-}
 
 
 template <class ST>
@@ -360,51 +272,23 @@ inline quote_double_only_type2 operator <<(
 
 
 MYSQLPP_EXPORT SQLQueryParms& operator <<(quote_double_only_type2 p,
-		SQLString& in);
+		SQLTypeAdapter& in);
 
 
-template <class T>
-inline std::ostream& operator <<(quote_double_only_type1 o, const T& in)
-{
-	return *o.ostr << in;
-}
-
-
-template <>
 inline std::ostream& operator <<(
-		quote_double_only_type1 o, const std::string& in)
+		quote_double_only_type1 o, const SQLTypeAdapter& in)
 {
-	return *o.ostr << '"' << in << '"';
+	if (in.is_string()) {
+		return *o.ostr << '"' << in << '"';
+	}
+	else {
+		return *o.ostr << in;
+	}
 }
 
 
-template <>
 MYSQLPP_EXPORT std::ostream & operator <<(quote_double_only_type1 o,
 		const ColData& in);
-
-
-template <>
-inline std::ostream& operator <<(
-		quote_double_only_type1 o, const Date& in)
-{
-	return *o.ostr << '"' << in << '"';
-}
-
-
-template <>
-inline std::ostream& operator <<(
-		quote_double_only_type1 o, const Time& in)
-{
-	return *o.ostr << '"' << in << '"';
-}
-
-
-template <>
-inline std::ostream& operator <<(
-		quote_double_only_type1 o, const DateTime& in)
-{
-	return *o.ostr << '"' << in << '"';
-}
 
 
 template <class ST>
@@ -466,7 +350,7 @@ inline escape_type2 operator <<(SQLQueryParms& p,
 #endif // !defined(DOXYGEN_IGNORE)
 
 
-/// \brief Inserts a SQLString into a stream, escaping special SQL
+/// \brief Inserts a SQLTypeAdapter into a stream, escaping special SQL
 /// characters
 ///
 /// We actually only do the escaping if in.is_string is set but
@@ -474,69 +358,15 @@ inline escape_type2 operator <<(SQLQueryParms& p,
 /// string data directly.
 
 MYSQLPP_EXPORT SQLQueryParms& operator <<(escape_type2 p,
-		SQLString& in);
+		SQLTypeAdapter& in);
 
 
-/// \brief Inserts any type T into a stream that has an operator<<
-/// defined for it.
-///
-/// Does not actually escape that data!  Use one of the other forms of
-/// operator<< for the escape manipulator if you need escaping.  This
-/// template exists to catch cases like inserting an \c int after the
-/// escape manipulator: you don't actually want escaping in this
-/// instance.
-
-template <class T>
-inline std::ostream& operator <<(escape_type1 o, const T& in)
-{
-	return *o.ostr << in;
-}
-
-
-template <>
 MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
-		const std::string& in);
+		const SQLTypeAdapter& in);
 
 
-template <>
-MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
-		const char* const& in);
-
-
-template <>
 MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
 		const ColData& in);
-
-
-/// \brief Inserts a C string into a stream, escaping special SQL
-/// characters.
-///
-/// This version exists solely to handle constness problems.  We force
-/// everything to the completely-const version: operator<<(escape_type1,
-/// const char* const&).
-
-template <>
-inline std::ostream& operator <<(escape_type1 o,
-		char* const& in)
-{
-	return operator <<(o, const_cast<const char* const&>(in));
-}
-
-
-/// \brief Inserts an array of char into a stream, escaping special SQL
-/// characters.
-
-inline std::ostream& operator <<(escape_type1 o,
-		char in[])
-{
-	return operator <<(o, static_cast<const char* const&>(in));
-}
-
-inline std::ostream& operator <<(escape_type1 o,
-		const char in[])
-{
-	return operator <<(o, const_cast<char* const&>(in));
-}
 
 
 /// \enum do_nothing_type0
@@ -601,7 +431,7 @@ inline do_nothing_type2 operator <<(SQLQueryParms& p,
 
 
 MYSQLPP_EXPORT SQLQueryParms& operator <<(do_nothing_type2 p,
-		SQLString& in);
+		SQLTypeAdapter& in);
 
 #endif // !defined(DOXYGEN_IGNORE)
 
@@ -643,7 +473,7 @@ inline ignore_type2 operator <<(SQLQueryParms& p,
 
 
 MYSQLPP_EXPORT SQLQueryParms& operator <<(ignore_type2 p,
-		SQLString& in);
+		SQLTypeAdapter& in);
 
 #endif // !defined(DOXYGEN_IGNORE)
 

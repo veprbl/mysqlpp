@@ -113,7 +113,7 @@ Query::execute(SQLQueryParms& p)
 
 
 ResNSel
-Query::execute(const SQLString& s)
+Query::execute(const SQLTypeAdapter& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
 		// We're a template query and this isn't a recursive call, so
@@ -273,25 +273,25 @@ Query::parse()
 }
 
 
-SQLString*
-Query::pprepare(char option, SQLString& S, bool replace)
+SQLTypeAdapter*
+Query::pprepare(char option, SQLTypeAdapter& S, bool replace)
 {
-	if (S.processed) {
+	if (S.is_processed()) {
 		return &S;
 	}
 
-	if (option == 'r' || (option == 'q' && S.is_string)) {
+	if (option == 'r' || (option == 'q' && S.is_string())) {
 		char *s = new char[S.size() * 2 + 1];
 		mysql_real_escape_string(&conn_->mysql_, s, S.data(),
 				static_cast<unsigned long>(S.size()));
-		SQLString *ss = new SQLString("'");
+		SQLTypeAdapter *ss = new SQLTypeAdapter("'");
 		*ss += s;
 		*ss += "'";
 		delete[] s;
 
 		if (replace) {
 			S = *ss;
-			S.processed = true;
+			S.set_processed();
 			delete ss;
 			return &S;
 		}
@@ -299,12 +299,12 @@ Query::pprepare(char option, SQLString& S, bool replace)
 			return ss;
 		}
 	}
-	else if (option == 'R' || (option == 'Q' && S.is_string)) {
-		SQLString *ss = new SQLString("'" + S + "'");
+	else if (option == 'R' || (option == 'Q' && S.is_string())) {
+		SQLTypeAdapter *ss = new SQLTypeAdapter("'" + S + "'");
 
 		if (replace) {
 			S = *ss;
-			S.processed = true;
+			S.set_processed();
 			delete ss;
 			return &S;
 		}
@@ -314,7 +314,7 @@ Query::pprepare(char option, SQLString& S, bool replace)
 	}
 	else {
 		if (replace) {
-			S.processed = true;
+			S.set_processed();
 		}
 		return &S;
 	}
@@ -355,8 +355,8 @@ Query::proc(SQLQueryParms& p)
 						"Not enough parameters to fill the template.");
 			}
 
-			SQLString& param = (*c)[num];
-			SQLString* ss = pprepare(i->option, param, c->bound());
+			SQLTypeAdapter& param = (*c)[num];
+			SQLTypeAdapter* ss = pprepare(i->option, param, c->bound());
 			MYSQLPP_QUERY_THISPTR << *ss;
 			if (ss != &param) {
 				// pprepare() returned a new string object instead of
@@ -389,7 +389,7 @@ Query::store(SQLQueryParms& p)
 
 
 Result 
-Query::store(const SQLString& s)
+Query::store(const SQLTypeAdapter& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
 		// We're a template query and this isn't a recursive call, so
@@ -502,7 +502,7 @@ Query::use(SQLQueryParms& p)
 
 
 ResUse
-Query::use(const SQLString& s)
+Query::use(const SQLTypeAdapter& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
 		// We're a template query and this isn't a recursive call, so
