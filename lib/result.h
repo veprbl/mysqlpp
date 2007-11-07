@@ -144,26 +144,6 @@ public:
 		return mysql_num_fields(result_);
 	}
 	
-	/// \brief Free all resources held by the object.
-	///
-	/// This class's destructor is little more than a call to purge(),
-	/// so you can think of this as a way to re-use a ResUse object,
-	/// to avoid having to completely re-create it.
-	void purge()
-	{
-		if (result_) {
-			mysql_free_result(result_);
-			result_ = 0;
-		}
-
-		names_ = 0;
-
-		delete types_;
-		types_ = 0;
-
-		table_.erase();
-	}
-
 	/// \brief Return true if we have a valid result set
 	///
 	/// This operator is primarily used to determine if a query was
@@ -313,6 +293,12 @@ protected:
 	///
 	/// Self-copy is not allowed.
 	void copy(const ResUse& other);
+
+	/// \brief Free all resources held by the object.
+	///
+	/// This exists just to do things common to both copy() and the
+	/// dtor, both of which need to free allocated resources.
+	void purge();
 };
 
 

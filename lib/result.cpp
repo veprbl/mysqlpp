@@ -200,6 +200,23 @@ ResUse::field_types() const
 
 
 void
+ResUse::purge()
+{
+	if (result_) {
+		mysql_free_result(result_);
+		result_ = 0;
+	}
+
+	names_ = 0;
+
+	delete types_;
+	types_ = 0;
+
+	table_.erase();
+}
+
+
+void
 ResUse::reset_field_types()
 {
 	delete types_;
