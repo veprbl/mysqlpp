@@ -163,12 +163,12 @@ main(int argc, char *argv[])
 
 		// Set up query with multiple queries.
 		Query query = con.query();
-		query << "DROP TABLE IF EXISTS test_table;" << endl <<
-				"CREATE TABLE test_table(id INT);" << endl <<
-				"INSERT INTO test_table VALUES(10);" << endl <<
-				"UPDATE test_table SET id=20 WHERE id=10;" << endl <<
-				"SELECT * FROM test_table;" << endl <<
-				"DROP TABLE test_table" << endl;
+		query << "DROP TABLE IF EXISTS test_table; " <<
+				"CREATE TABLE test_table(id INT); " <<
+				"INSERT INTO test_table VALUES(10); " <<
+				"UPDATE test_table SET id=20 WHERE id=10; " <<
+				"SELECT * FROM test_table; " <<
+				"DROP TABLE test_table";
 		cout << "Multi-query: " << endl << query.preview() << endl;
 
 		// Execute statement and display all result sets.
@@ -177,14 +177,13 @@ main(int argc, char *argv[])
 #if MYSQL_VERSION_ID >= 50000
 		// If it's MySQL v5.0 or higher, also test stored procedures, which
 		// return their results the same way multi-queries do.
-		query << "DROP PROCEDURE IF EXISTS get_stock;" << endl <<
-				"CREATE PROCEDURE get_stock" << endl <<
-				"( i_item varchar(20) )" << endl <<
-				"BEGIN" << endl <<
-				"SET i_item = concat('%', i_item, '%');" << endl <<
-				"SELECT * FROM stock WHERE lower(item) like lower(i_item);" <<
-				endl << "END" << endl <<
-				";";
+		query << "DROP PROCEDURE IF EXISTS get_stock; " <<
+				"CREATE PROCEDURE get_stock" <<
+				"( i_item varchar(20) ) " <<
+				"BEGIN " <<
+				"SET i_item = concat('%', i_item, '%'); " <<
+				"SELECT * FROM stock WHERE lower(item) like lower(i_item); " <<
+				"END;";
 		cout << "Stored procedure query: " << endl << query.preview() << endl;
 
 		// Create the stored procedure.

@@ -50,13 +50,7 @@ There are 322 items weighing 416.85 stone and costing 1147.19 cowrie shells.
 
 ---------------- BEGIN multiquery OUTPUT ----------------
 Multi-query: 
-DROP TABLE IF EXISTS test_table;
-CREATE TABLE test_table(id INT);
-INSERT INTO test_table VALUES(10);
-UPDATE test_table SET id=20 WHERE id=10;
-SELECT * FROM test_table;
-DROP TABLE test_table
-
+DROP TABLE IF EXISTS test_table; CREATE TABLE test_table(id INT); INSERT INTO test_table VALUES(10); UPDATE test_table SET id=20 WHERE id=10; SELECT * FROM test_table; DROP TABLE test_table
 Result set 0 is empty.
 Result set 1 is empty.
 Result set 2 is empty.
@@ -69,14 +63,7 @@ Result set 4 has 1 row:
   +----+
 Result set 5 is empty.
 Stored procedure query: 
-DROP PROCEDURE IF EXISTS get_stock;
-CREATE PROCEDURE get_stock
-( i_item varchar(20) )
-BEGIN
-SET i_item = concat('%', i_item, '%');
-SELECT * FROM stock WHERE lower(item) like lower(i_item);
-END
-;
+DROP PROCEDURE IF EXISTS get_stock; CREATE PROCEDURE get_stock( i_item varchar(20) ) BEGIN SET i_item = concat('%', i_item, '%'); SELECT * FROM stock WHERE lower(item) like lower(i_item); END;
 Result set 0 is empty.
 Result set 1 is empty.
 Query: CALL get_stock('relish')
