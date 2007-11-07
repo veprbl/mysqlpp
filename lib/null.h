@@ -35,8 +35,11 @@
 #include "exceptions.h"
 
 #include <iostream>
+#include <string>
 
 namespace mysqlpp {
+
+extern const std::string null_str;
 
 
 /// \brief The type of the global mysqlpp::null object.
