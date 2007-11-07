@@ -112,7 +112,7 @@ public:
 
 	/// \brief Convert this set's data to a string containing
 	/// comma-separated items.
-	operator std::string() { return stream2string<std::string>(*this); }
+	operator std::string() { return stream2string(*this); }
 };
 
 

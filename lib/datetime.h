@@ -56,7 +56,7 @@ template <class T> struct DTbase
 	/// \brief Return a copy of the item in C++ string form
 	operator std::string() const
 	{
-		return stream2string<std::string>(*this);
+		return stream2string(*this);
 	}
 
 	/// \brief Compare this object to another of the same type
