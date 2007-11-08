@@ -2,10 +2,10 @@
  datetime.cpp - Implements date and time classes compatible with MySQL's
 	various date and time column types.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004, 2005 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -29,6 +29,7 @@
 #include "common.h"
 
 #include "datetime.h"
+#include "stream2string.h"
 
 #include <iomanip>
 
@@ -37,6 +38,13 @@
 using namespace std;
 
 namespace mysqlpp {
+
+template <class T>
+DTbase<T>::operator std::string() const
+{
+	return stream2string(*this);
+}
+
 
 std::ostream& operator <<(std::ostream& os, const Date& d)
 {
@@ -81,19 +89,19 @@ cchar* Date::convert(cchar* str)
 	num[2] = *str++;
 	num[3] = *str++;
 	num[4] = 0;
-	year = short(strtol(num, 0, 10));
+	year = static_cast<unsigned short>(strtol(num, 0, 10));
 	if (*str == '-') str++;
 
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	month = short(strtol(num, 0, 10));
+	month = static_cast<unsigned char>(strtol(num, 0, 10));
 	if (*str == '-') str++;
 
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	day = short(strtol(num, 0, 10));
+	day = static_cast<unsigned char>(strtol(num, 0, 10));
 
 	return str;
 }
@@ -106,19 +114,19 @@ cchar* Time::convert(cchar* str)
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	hour = short(strtol(num,0,10));
+	hour = static_cast<unsigned char>(strtol(num,0,10));
 	if (*str == ':') str++;
 
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	minute = short(strtol(num,0,10));
+	minute = static_cast<unsigned char>(strtol(num,0,10));
 	if (*str == ':') str++;
 
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	second = short(strtol(num,0,10));
+	second = static_cast<unsigned char>(strtol(num,0,10));
 
 	return str;
 }
@@ -144,7 +152,7 @@ cchar* DateTime::convert(cchar* str)
 }
 
 
-short int Date::compare(const Date& other) const
+int Date::compare(const Date& other) const
 {
 	if (year != other.year) return year - other.year;
 	if (month != other.month) return month - other.month;
@@ -152,7 +160,7 @@ short int Date::compare(const Date& other) const
 }
 
 
-short int Time::compare(const Time& other) const
+int Time::compare(const Time& other) const
 {
 	if (hour != other.hour) return hour - other.hour;
 	if (minute != other.minute) return minute - other.minute;
@@ -160,7 +168,7 @@ short int Time::compare(const Time& other) const
 }
 
 
-short int DateTime::compare(const DateTime& other) const
+int DateTime::compare(const DateTime& other) const
 {
 	Date d(*this), od(other);
 	Time t(*this), ot(other);
@@ -180,7 +188,7 @@ DateTime::operator time_t() const
 	tm.tm_min = minute;
 	tm.tm_hour = hour;
 	tm.tm_mday = day;
-	tm.tm_mon = month - (tiny_int)1;
+	tm.tm_mon = month - 1;
 	tm.tm_year = year - 1900;
 	tm.tm_isdst = -1;
 

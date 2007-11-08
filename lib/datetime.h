@@ -31,9 +31,6 @@
 
 #include "common.h"
 
-#include "stream2string.h"
-#include "tiny_int.h"
-
 #include <string>
 #include <iostream>
 
@@ -48,22 +45,20 @@ namespace mysqlpp {
 ///
 /// This template also defines interfaces for converting the object to
 /// a string form, which a subclass must define.
-template <class T> struct DTbase
+template <class T>
+struct DTbase
 {
 	/// \brief Destroy object
 	virtual ~DTbase() { }
 
 	/// \brief Return a copy of the item in C++ string form
-	operator std::string() const
-	{
-		return stream2string(*this);
-	}
+	MYSQLPP_EXPORT operator std::string() const;
 
 	/// \brief Compare this object to another of the same type
 	///
 	/// Returns < 0 if this object is "before" the other, 0 of they are
 	/// equal, and > 0 if this object is "after" the other.
-	MYSQLPP_EXPORT virtual short compare(const T& other) const = 0;
+	MYSQLPP_EXPORT virtual int compare(const T& other) const = 0;
 
 	/// \brief Returns true if "other" is equal to this object
 	bool operator ==(const T& other) const
@@ -109,25 +104,12 @@ template <class T> struct DTbase
 /// initialized from MySQL DATETIME strings.
 struct DateTime : public DTbase<DateTime>
 {
-	/// \brief the year
-	///
-	/// No surprises; the year 2005 is stored as the integer 2005.
-	short int year;
-
-	/// \brief the month, 1-12
-	tiny_int month;
-
-	/// \brief the day, 1-31
-	tiny_int day;
-
-	/// \brief hour, 0-23
-	tiny_int hour;
-
-	/// \brief minute, 0-59
-	tiny_int minute;
-	
-	/// \brief second, 0-59
-	tiny_int second;
+	unsigned short year;	///< the year, as a simple integer
+	unsigned char month;	///< the month, 1-12
+	unsigned char day;		///< the day, 1-31
+	unsigned char hour;		///< the hour, 0-23
+	unsigned char minute;	///< the minute, 0-59
+	unsigned char second;	///< the second, 0-59
 
 	/// \brief Default constructor
 	DateTime() :
@@ -180,7 +162,7 @@ struct DateTime : public DTbase<DateTime>
 	///
 	/// This method is protected because it is merely the engine used
 	/// by the various operators in DTbase.
-	MYSQLPP_EXPORT short compare(const DateTime& other) const;
+	MYSQLPP_EXPORT int compare(const DateTime& other) const;
 
 	/// \brief Parse a MySQL date and time string into this object.
 	MYSQLPP_EXPORT cchar* convert(cchar*);
@@ -208,22 +190,15 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& os,
 /// initialized from MySQL DATE strings.
 struct Date : public DTbase<Date>
 {
-	/// \brief the year
-	///
-	/// No surprises; the year 2005 is stored as the integer 2005.
-	short int year;
-
-	/// \brief the month, 1-12
-	tiny_int month;
-
-	/// \brief the day, 1-31
-	tiny_int day;
+	unsigned short year;	///< the year, as a simple integer
+	unsigned char month;	///< the month, 1-12
+	unsigned char day;		///< the day, 1-31
 
 	/// \brief Default constructor
 	Date() : year(0), month(0), day(0) { }
 
 	/// \brief Initialize object
-	Date(short int y, tiny_int m, tiny_int d) :
+	Date(unsigned short y, unsigned char m, unsigned char d) :
 	DTbase<Date>(),
 	year(y),
 	month(m),
@@ -265,7 +240,7 @@ struct Date : public DTbase<Date>
 	///
 	/// Returns < 0 if this date is before the other, 0 of they are
 	/// equal, and > 0 if this date is after the other.
-	MYSQLPP_EXPORT short int compare(const Date& other) const;
+	MYSQLPP_EXPORT int compare(const Date& other) const;
 
 	/// \brief Parse a MySQL date string into this object.
 	MYSQLPP_EXPORT cchar* convert(cchar*);
@@ -287,20 +262,15 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& os,
 /// initialized from MySQL TIME strings.
 struct Time : public DTbase<Time>
 {
-	/// \brief hour, 0-23
-	tiny_int hour;
-
-	/// \brief minute, 0-59
-	tiny_int minute;
-	
-	/// \brief second, 0-59
-	tiny_int second;
+	unsigned char hour;		///< the hour, 0-23
+	unsigned char minute;	///< the minute, 0-59
+	unsigned char second;	///< the second, 0-59
 
 	/// \brief Default constructor
 	Time() : hour(0), minute(0), second(0) { }
 
 	/// \brief Initialize object
-	Time(tiny_int h, tiny_int m, tiny_int s) :
+	Time(unsigned char h, unsigned char m, unsigned char s) :
 	hour(h),
 	minute(m),
 	second(s)
@@ -346,7 +316,7 @@ struct Time : public DTbase<Time>
 	///
 	/// Returns < 0 if this time is before the other, 0 of they are
 	/// equal, and > 0 if this time is after the other.
-	MYSQLPP_EXPORT short int compare(const Time& other) const;
+	MYSQLPP_EXPORT int compare(const Time& other) const;
 };
 
 /// \brief Inserts a Time object into a C++ stream in a MySQL-compatible
