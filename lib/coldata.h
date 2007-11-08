@@ -38,8 +38,8 @@
 #include "datetime.h"
 #include "exceptions.h"
 #include "null.h"
+#include "refcounted.h"
 #include "string_util.h"
-#include "type_info.h"
 
 #include <string>
 
@@ -117,7 +117,7 @@ public:
 	ColData(const ColData& cd) :
 	buffer_(cd.buffer_)
 	{
-		++buffer_->refs_;
+		buffer_->attach();
 	}
 
 	/// \brief Full constructor.
@@ -135,7 +135,7 @@ public:
 	explicit ColData(const char* str, size_type len,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
-	buffer_(new Buffer(str, len, type, is_null))
+	buffer_(new RefCountedBuffer(str, len, type, is_null))
 	{
 	}
 
@@ -149,7 +149,7 @@ public:
 	explicit ColData(const std::string& str,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
-	buffer_(new Buffer(str.data(), str.length(), type, is_null))
+	buffer_(new RefCountedBuffer(str.data(), str.length(), type, is_null))
 	{
 	}
 
@@ -163,7 +163,7 @@ public:
 	explicit ColData(const char* str,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
-	buffer_(new Buffer(str, strlen(str), type, is_null))
+	buffer_(new RefCountedBuffer(str, strlen(str), type, is_null))
 	{
 	}
 
@@ -181,7 +181,7 @@ public:
 			bool is_null = false)
 	{
 		dec_ref_count();
-		buffer_ = new Buffer(str, len, type, is_null);
+		buffer_ = new RefCountedBuffer(str, len, type, is_null);
 	}
 
 	/// \brief Assign a C++ string to this object
@@ -195,7 +195,7 @@ public:
 			bool is_null = false)
 	{
 		dec_ref_count();
-		buffer_ = new Buffer(str.data(), str.length(), type, is_null);
+		buffer_ = new RefCountedBuffer(str.data(), str.length(), type, is_null);
 	}
 
 	/// \brief Assign a C string to this object
@@ -209,7 +209,7 @@ public:
 			bool is_null = false)
 	{
 		dec_ref_count();
-		buffer_ = new Buffer(str, strlen(str), type, is_null);
+		buffer_ = new RefCountedBuffer(str, strlen(str), type, is_null);
 	}
 
 	/// \brief Return a character within the string.
@@ -307,7 +307,7 @@ public:
 	{
 		dec_ref_count();
 
-		buffer_ = new Buffer(rhs.data(), rhs.length(),
+		buffer_ = new RefCountedBuffer(rhs.data(), rhs.length(),
 				mysql_type_info::string_type, false);
 
 		return *this;
@@ -321,7 +321,7 @@ public:
 	{
 		dec_ref_count();
 
-		buffer_ = new Buffer(str, strlen(str),
+		buffer_ = new RefCountedBuffer(str, strlen(str),
 				mysql_type_info::string_type, false);
 
 		return *this;
@@ -337,7 +337,7 @@ public:
 		dec_ref_count();
 
 		buffer_ = cd.buffer_;
-		++buffer_->refs_;
+		buffer_->attach();
 
 		return *this;
 	}
@@ -430,59 +430,13 @@ private:
 	/// contents.  If ref count falls to 0, deallocates the buffer.
 	void dec_ref_count()
 	{
-		if (buffer_ && (--buffer_->refs_ == 0)) {
+		if (buffer_ && !buffer_->detach()) {
 			delete buffer_;
+			buffer_ = 0;
 		}
 	}
-	
-	/// \brief Holds a ColData object's internal reference-counted
-	/// string buffer.
-	class Buffer {
-	public:
-		/// \brief Standard constructor
-		///
-		/// Copies the string into a new buffer one byte longer than
-		/// the length value given, using that to hold a C string null
-		/// terminator, just for safety.  The length value we keep does
-		/// not include this extra byte, allowing this same mechanism
-		/// to work for both C strings and binary data.
-		Buffer(const char* data, size_type length, mysql_type_info type,
-				bool is_null);
 
-		/// \brief Destructor
-		~Buffer();
-
-		/// \brief Return pointer to raw data buffer
-		const char* data() const { return data_; }
-
-		/// \brief Return number of bytes in data buffer
-		///
-		/// Count does not include the trailing null we tack on to our
-		/// copy of the buffer for ease of use in C string contexts.
-		/// We do this because we can be holding binary data just as
-		/// easily as a C string.
-		size_type length() const { return length_; }
-
-		/// \brief Return the SQL type of the data held in the buffer
-		const mysql_type_info& type() const { return type_; }
-
-		/// \brief Return true if buffer's contents represent a SQL
-		/// null.
-		///
-		/// The buffer's actual content will probably be "NULL" or
-		/// something like it, but in the SQL data type system, a SQL
-		/// null is distinct from a plain string with value "NULL".
-		bool is_null() const { return is_null_; }
-
-	private:
-		const char* data_;		///< pointer to the raw data buffer
-		size_type length_;		///< bytes in buffer, without trailing null
-		mysql_type_info type_;	///< SQL type of data in the buffer
-		bool is_null_;			///< if true, string represents a SQL null
-		unsigned int refs_;		///< reference count for this object
-
-		friend class ColData;	// allow our parent to modify us
-	} *buffer_;
+	RefCountedBuffer* buffer_;	///< pointer to data buffer manager object
 };
 
 

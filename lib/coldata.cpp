@@ -141,10 +141,10 @@ void
 ColData::it_is_null()
 {
 	if (buffer_) {
-		buffer_->is_null_ = true;
+		buffer_->set_null();
 	}
 	else {
-		buffer_ = new Buffer(0, 0, mysql_type_info::string_type, true);
+		buffer_ = new RefCountedBuffer(0, 0, mysql_type_info::string_type, true);
 	}
 }
 
@@ -179,33 +179,6 @@ char
 ColData::operator [](size_type pos) const
 {
 	return buffer_ ? buffer_->data()[pos] : 0;
-}
-
-
-ColData::Buffer::Buffer(const char* pd, ColData::size_type length,
-		mysql_type_info type, bool is_null) :
-data_(pd ? new char[length + 1] : 0),
-length_(pd ? length : 0),
-type_(type),
-is_null_(is_null),
-refs_(1)
-{
-	if (data_) {
-		// The casts for the data member are because the C type system
-		// can't distinguish initialization from modification.  We don't
-		// care to enforce constness on this buffer until after this
-		// ctor returns.  The cast for pd is just because memcpy()
-		// doesn't declare its second parameter const for historical
-		// reasons, not because it actually does modify it.
-		memcpy(const_cast<char*>(data_), const_cast<char*>(pd), length_);
-		const_cast<char*>(data_)[length_] = '\0';
-	}
-}
-
-
-ColData::Buffer::~Buffer()
-{
-	delete[] data_;
 }
 
 

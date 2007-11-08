@@ -1,5 +1,6 @@
 /// \file refcounted.h
-/// \brief Declares the RefCountedPointer template
+/// \brief Declares the RefCountedPointer template and RefCountedBuffer
+/// class
 
 /***********************************************************************
  Copyright (c) 2007 by Educational Technology Resources, Inc.
@@ -26,6 +27,10 @@
 
 #if !defined(MYSQLPP_REFCOUNTED_H)
 #define MYSQLPP_REFCOUNTED_H
+
+#include "type_info.h"
+
+namespace mysqlpp {
 
 /// \brief Creates an object that acts as a reference-counted pointer
 /// to another object.
@@ -195,6 +200,70 @@ private:
 	/// reference count, not just the pointer to the counted object.
 	size_t* refs_;
 };
+
+
+/// \brief Holds a reference-counted data buffer, like a primitive
+/// sort of std::string.
+class RefCountedBuffer
+{
+public:
+	/// \brief Type of length values
+	typedef unsigned int size_type;
+
+	/// \brief Standard constructor
+	///
+	/// Copies the string into a new buffer one byte longer than
+	/// the length value given, using that to hold a C string null
+	/// terminator, just for safety.  The length value we keep does
+	/// not include this extra byte, allowing this same mechanism
+	/// to work for both C strings and binary data.
+	RefCountedBuffer(const char* data, size_type length,
+			mysql_type_info type, bool is_null);
+
+	/// \brief Destructor
+	~RefCountedBuffer() { delete[] data_; }
+
+	/// \brief Return pointer to raw data buffer
+	const char* data() const { return data_; }
+
+	/// \brief Return number of bytes in data buffer
+	///
+	/// Count does not include the trailing null we tack on to our
+	/// copy of the buffer for ease of use in C string contexts.
+	/// We do this because we can be holding binary data just as
+	/// easily as a C string.
+	size_type length() const { return length_; }
+
+	/// \brief Return the SQL type of the data held in the buffer
+	const mysql_type_info& type() const { return type_; }
+
+	/// \brief Return true if buffer's contents represent a SQL
+	/// null.
+	///
+	/// The buffer's actual content will probably be "NULL" or
+	/// something like it, but in the SQL data type system, a SQL
+	/// null is distinct from a plain string with value "NULL".
+	bool is_null() const { return is_null_; }
+
+	/// \brief Sets the internal SQL null flag
+	void set_null() { is_null_ = true; }
+
+	/// \brief Increment reference count
+	void attach() { ++refs_; }
+
+	/// \brief Decrement reference count
+	/// \return True if reference count has not yet fallen to zero
+	bool detach() { return --refs_ > 0; }
+
+private:
+	const char* data_;		///< pointer to the raw data buffer
+	size_type length_;		///< bytes in buffer, without trailing null
+	mysql_type_info type_;	///< SQL type of data in the buffer
+	bool is_null_;			///< if true, string represents a SQL null
+	unsigned int refs_;		///< reference count for this object
+};
+
+} // end namespace mysqlpp
 
 #endif // !defined(MYSQLPP_REFCOUNTED_H)
 
