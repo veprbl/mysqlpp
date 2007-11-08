@@ -51,8 +51,8 @@ std::ostream& operator <<(std::ostream& os, const Date& d)
 	char fill = os.fill('0');
 	ios::fmtflags flags = os.setf(ios::right);
 	os		<< setw(4) << d.year << '-' 
-			<< setw(2) << d.month << '-'
-			<< setw(2) << d.day;
+			<< setw(2) << static_cast<int>(d.month) << '-'
+			<< setw(2) << static_cast<int>(d.day);
 	os.flags(flags);
 	os.fill(fill);
 	return os;
@@ -63,9 +63,9 @@ std::ostream& operator <<(std::ostream& os, const Time& t)
 {
 	char fill = os.fill('0');
 	ios::fmtflags flags = os.setf(ios::right);
-	os		<< setw(2) << t.hour << ':' 
-			<< setw(2) << t.minute << ':'
-			<< setw(2) << t.second;
+	os		<< setw(2) << static_cast<int>(t.hour) << ':' 
+			<< setw(2) << static_cast<int>(t.minute) << ':'
+			<< setw(2) << static_cast<int>(t.second);
 	os.flags(flags);
 	os.fill(fill);
 	return os;
