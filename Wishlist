@@ -17,11 +17,6 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Add Null<T> support to SQLQueryParms, and test by changing
-      resetdb to assign mysqlpp::null to the second default instead
-      of "NULL".  The lack of this is why we aren't preserving the
-      null attribute when popupating the stock table.
-
     o Change SQLTypeAdapter(char) and friends to be single-character
       string conversions, and add SQLTypeAdapter(tiny_int) to take
       up old functionality.
