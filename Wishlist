@@ -17,22 +17,21 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
+    o Change SQLTypeAdapter to no longer derive from std::string, but
+      instead have a RefCountedBuffer data member like ColData.
+	  Shouldn't have to reimplement the entire std::string interface,
+	  due to SQLTypeAdapter's limited use.
+
     o Rename ColData to String, reflecting its general-purpose nature.
 
     o Add String::compare(const char*, int), and anything else that
       looks useful from the std::string interface.
 
     o Remove String specializations for manipulators, instead adding
-      SQLTypeAdapter(const String&).  Can probably also remove
+      SQLTypeAdapter(const String&), which just copies the internal
+	  buffer pointer and bumps its refcount.  Can probably also remove
       String::escape_q() and such.  SQLTypeAdapter doesn't have these,
       and might not need to: is_string() might be sufficient.
-
-    o Change SQLTypeAdapter to no longer derive from std::string, but
-      instead manage its own internal data buffer.  Maybe reuse
-      String::Buffer?  That would allow refcounted buffer sharing in
-      implementation of previous item.  Should not have to implement
-      the entire std::string interface, given the class's clarified
-      usage scope constraints.
 
     o Add a userman section on String and SQLTypeAdapter.
 
