@@ -182,6 +182,12 @@ public:
 	SQLTypeAdapter(const Null<Time>& t);
 	SQLTypeAdapter& operator =(const Null<std::string>& str)
 			{ return operator =(str.data); }
+	SQLTypeAdapter& operator =(const null_type& n)
+	{ 
+		assign(null_str);
+		is_string_ = false;
+		is_processed_ = false;
+	}
 #endif // !defined(DOXYGEN_IGNORE)
 
 private:

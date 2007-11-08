@@ -141,7 +141,7 @@ main(int argc, char *argv[])
 
 		// Set a default for template query parameters "table" and "desc".
 		query.template_defaults["table"] = "stock";
-		query.template_defaults["desc"] = "NULL";
+		query.template_defaults["desc"] = mysqlpp::null;
 
 		// Notice that we don't give a sixth parameter in these calls,
 		// so the default value of "stock" is used.  Also notice that
