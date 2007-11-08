@@ -17,14 +17,6 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Change SQLTypeAdapter(char) and friends to be single-character
-      string conversions, and add SQLTypeAdapter(tiny_int) to take
-      up old functionality.
-
-    o Replace 'char'-based typedefs in sql_types.h with tiny_int.
-
-    o Templatize class tiny_int to allow for unsigned storage.
-
     o Rename ColData to String, reflecting its general-purpose nature.
 
     o Add String::compare(const char*, int), and anything else that

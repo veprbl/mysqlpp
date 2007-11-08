@@ -57,7 +57,7 @@ print OUT0 << "---";
 #ifndef MYSQLPP_CUSTOM_H
 #define MYSQLPP_CUSTOM_H
 
-#include "tiny_int.h"
+#include "sql_types.h"
 
 #include <string>
 ---
@@ -91,7 +91,7 @@ inline int sql_cmp(const std::string &a, const std::string &b) {
 }
 ---
 
-my @types = ("char", "unsigned char", "tiny_int", "int", "unsigned int",
+my @types = ("char", "unsigned char", "sql_tinyint", "int", "unsigned int",
 	  "short int", "unsigned short int", "unsigned long", "long");
 foreach my $type (@types) {
     print OUT0 << "---";

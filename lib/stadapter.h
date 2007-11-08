@@ -55,6 +55,7 @@
 
 #include "datetime.h"
 #include "null.h"
+#include "sql_types.h"
 
 #include <string>
 
@@ -78,13 +79,20 @@ public:
 	/// \brief Create a copy of an arbitrary block of data
 	SQLTypeAdapter(const char* str, size_t len);
 
-	/// \brief Create a string representation of a \c char treated as a
-	/// small integer (not a character!)
-	SQLTypeAdapter(signed char i);
+	/// \brief Create a single-character string
+	///
+	/// If you mean for \c c to be treated as a small integer, you
+	/// should be using mysqlpp::tiny_int instead.  It avoids the
+	/// confusion in C++ between integer and character.  See the
+	/// documentation for tiny_int.h for details.
+	SQLTypeAdapter(char c);
 
-	/// \brief Create a string representation of an \c unsigned \c char
-	/// treated as a small unsigned integer (not a character!)
-	SQLTypeAdapter(unsigned char i);
+	/// \brief Create a string representation of SQL \c TINYINT
+	SQLTypeAdapter(sql_tinyint i);
+
+	/// \brief Create a string representation of SQL \c TINYINT
+	/// \c UNSIGNED
+	SQLTypeAdapter(sql_tinyint_unsigned i);
 
 	/// \brief Create a string representation of a \c short \c int value
 	SQLTypeAdapter(short int i);
@@ -167,8 +175,9 @@ public:
 	// Parallel interface for Null<>-wrapped versions of types we
 	// support above.  No need for parallel documentation.
 	SQLTypeAdapter(const Null<std::string>& str);
-	SQLTypeAdapter(Null<char> i);
-	SQLTypeAdapter(Null<unsigned char> i);
+	SQLTypeAdapter(Null<char> c);
+	SQLTypeAdapter(Null<sql_tinyint> i);
+	SQLTypeAdapter(Null<sql_tinyint_unsigned> i);
 	SQLTypeAdapter(Null<short int> i);
 	SQLTypeAdapter(Null<unsigned short int> i);
 	SQLTypeAdapter(Null<int> i);

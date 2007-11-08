@@ -69,29 +69,43 @@ is_processed_(false)
 {
 }
 
-SQLTypeAdapter::SQLTypeAdapter(signed char i) :
-string(stream2string<int>(i)),
+SQLTypeAdapter::SQLTypeAdapter(char c) :
+string(stream2string(c)),
+is_string_(true),
+is_processed_(false)
+{
+}
+
+SQLTypeAdapter::SQLTypeAdapter(Null<char> c) :
+string(c.is_null ? null_str : stream2string(c)),
+is_string_(true),
+is_processed_(false)
+{
+}
+
+SQLTypeAdapter::SQLTypeAdapter(sql_tinyint i) :
+string(stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
 
-SQLTypeAdapter::SQLTypeAdapter(Null<char> i) :
-string(i.is_null ? null_str : stream2string<int>(i)),
+SQLTypeAdapter::SQLTypeAdapter(Null<sql_tinyint> i) :
+string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
 
-SQLTypeAdapter::SQLTypeAdapter(unsigned char i) :
-string(stream2string<unsigned>(i)),
+SQLTypeAdapter::SQLTypeAdapter(sql_tinyint_unsigned i) :
+string(stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
 
-SQLTypeAdapter::SQLTypeAdapter(Null<unsigned char> i) :
-string(i.is_null ? null_str : stream2string<unsigned>(i)),
+SQLTypeAdapter::SQLTypeAdapter(Null<sql_tinyint_unsigned> i) :
+string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
