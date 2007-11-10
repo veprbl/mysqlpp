@@ -41,33 +41,33 @@ is_processed_(false)
 {
 }
 
-SQLTypeAdapter::SQLTypeAdapter(const string& str) :
+SQLTypeAdapter::SQLTypeAdapter(const string& str, bool processed) :
 string(str),
 is_string_(true),
-is_processed_(false)
+is_processed_(processed)
 {
 }
 
 #if !defined(DOXYGEN_IGNORE)
-SQLTypeAdapter::SQLTypeAdapter(const Null<string>& str) :
+SQLTypeAdapter::SQLTypeAdapter(const Null<string>& str, bool processed) :
 string(str.is_null ? null_str : str.data),
 is_string_(!str.is_null),
-is_processed_(false)
+is_processed_(processed)
 {
 }
 #endif
 
-SQLTypeAdapter::SQLTypeAdapter(const char* str) : 
+SQLTypeAdapter::SQLTypeAdapter(const char* str, bool processed) : 
 string(str),
 is_string_(true),
-is_processed_(false)
+is_processed_(processed)
 {
 }
 
-SQLTypeAdapter::SQLTypeAdapter(const char* str, size_t len) : 
+SQLTypeAdapter::SQLTypeAdapter(const char* str, int len, bool processed) : 
 string(str, len),
 is_string_(true),
-is_processed_(false)
+is_processed_(processed)
 {
 }
 

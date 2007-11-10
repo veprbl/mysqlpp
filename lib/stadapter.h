@@ -71,13 +71,13 @@ public:
 	SQLTypeAdapter();
 
 	/// \brief Create a copy of a C++ string
-	SQLTypeAdapter(const std::string& str);
+	SQLTypeAdapter(const std::string& str, bool processed = false);
 
 	/// \brief Create a copy of a null-terminated C string
-	SQLTypeAdapter(const char* str);
+	SQLTypeAdapter(const char* str, bool processed = false);
 
 	/// \brief Create a copy of an arbitrary block of data
-	SQLTypeAdapter(const char* str, size_t len);
+	SQLTypeAdapter(const char* str, int len, bool processed = false);
 
 	/// \brief Create a single-character string
 	///
@@ -174,7 +174,7 @@ public:
 #if !defined(DOXYGEN_IGNORE)
 	// Parallel interface for Null<>-wrapped versions of types we
 	// support above.  No need for parallel documentation.
-	SQLTypeAdapter(const Null<std::string>& str);
+	SQLTypeAdapter(const Null<std::string>& str, bool processed = false);
 	SQLTypeAdapter(Null<char> c);
 	SQLTypeAdapter(Null<sql_tinyint> i);
 	SQLTypeAdapter(Null<sql_tinyint_unsigned> i);

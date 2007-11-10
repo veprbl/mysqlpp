@@ -53,9 +53,7 @@ SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 		temp.append(escaped, len);
 		delete[] escaped;
 		temp.append("'", 1);
-		SQLTypeAdapter in2(temp);
-		in2.set_processed();
-		*p.qparms << in2;
+		*p.qparms << SQLTypeAdapter(temp, true);
 		return *p.qparms;
 	}
 	else {
@@ -195,9 +193,7 @@ SQLQueryParms& operator <<(quote_only_type2 p, SQLTypeAdapter& in)
 		string temp("'", 1);
 		temp.append(in.data(), in.length());
 		temp.append("'", 1);
-		SQLTypeAdapter in2(temp);
-		in2.set_processed();
-		return *p.qparms << in2;
+		return *p.qparms << SQLTypeAdapter(temp, true);
 	}
 	else {
 		in.set_processed();
@@ -234,9 +230,7 @@ SQLQueryParms& operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
 		string temp("\"", 1);
 		temp.append(in.data(), in.length());
 		temp.append("\"", 1);
-		SQLTypeAdapter in2(temp);
-		in2.set_processed();
-		return *p.qparms << in2;
+		return *p.qparms << SQLTypeAdapter(temp, true);
 	}
 	else {
 		in.set_processed();
@@ -266,9 +260,7 @@ SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
 		char* escaped = new char[in.length() * 2 + 1];
 		size_t len = mysql_escape_string(escaped, in.data(), in.length());
 
-		SQLTypeAdapter in2(escaped, len);
-		in2.set_processed();
-		*p.qparms << in2;
+		*p.qparms << SQLTypeAdapter(escaped, len, true);
 
 		delete[] escaped;
 		return *p.qparms;
