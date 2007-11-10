@@ -74,11 +74,6 @@ class MYSQLPP_EXPORT Connection;
 
 /// \brief A class for building and executing SQL queries.
 ///
-/// This class is derived from SQLQuery. It adds to that a tie between
-/// the query object and a MySQL++
-/// \link mysqlpp::Connection Connection \endlink object, so that
-/// the query can be sent to the MySQL server we're connected to.
-///
 /// One does not generally create Query objects directly. Instead, call
 /// mysqlpp::Connection::query() to get one tied to that connection.
 ///
