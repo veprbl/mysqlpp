@@ -118,6 +118,10 @@ MYSQLPP_EXPORT SQLQueryParms& operator <<(quote_type2 p,
 
 
 MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
+		const SQLTypeAdapter& in);
+
+
+MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 		const ColData& in);
 
 
