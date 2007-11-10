@@ -26,6 +26,7 @@
 #include "null.h"
 
 namespace mysqlpp {
+	/// \brief "NULL" string constant used in many places within MySQL++
 	const std::string null_str("NULL");
 }
 

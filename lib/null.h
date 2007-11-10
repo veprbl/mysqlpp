@@ -39,7 +39,7 @@
 
 namespace mysqlpp {
 
-extern const std::string null_str;
+extern const std::string null_str;	///< "NULL" string constant
 
 
 /// \brief The type of the global mysqlpp::null object.

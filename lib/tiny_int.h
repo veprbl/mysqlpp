@@ -1,4 +1,4 @@
-/// \file this_type.h
+/// \file tiny_int.h
 /// \brief Declares class for holding a SQL TINYINT
 
 /***********************************************************************
@@ -56,8 +56,8 @@ class MYSQLPP_EXPORT tiny_int
 {
 public:
 	//// Type aliases
-	typedef tiny_int<VT> this_type;
-	typedef VT value_type;
+	typedef tiny_int<VT> this_type;	///< alias for this object's type
+	typedef VT value_type;			///< alias for type of internal value
 
 	/// \brief Default constructor
 	///
@@ -256,6 +256,7 @@ private:
 	value_type value_;
 };
 
+/// \brief Insert a \c tiny_int into a C++ stream
 template <typename VT>
 std::ostream& operator <<(std::ostream& os, tiny_int<VT> i)
 {

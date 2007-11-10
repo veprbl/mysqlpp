@@ -48,12 +48,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(const Null<string>& str) :
 string(str.is_null ? null_str : str.data),
 is_string_(!str.is_null),
 is_processed_(false)
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(const char* str) : 
 string(str),
@@ -76,12 +78,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<char> c) :
 string(c.is_null ? null_str : stream2string(c)),
 is_string_(true),
 is_processed_(false)
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(sql_tinyint i) :
 string(stream2string(i)),
@@ -90,12 +94,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<sql_tinyint> i) :
 string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(sql_tinyint_unsigned i) :
 string(stream2string(i)),
@@ -104,12 +110,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<sql_tinyint_unsigned> i) :
 string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(short i) :
 string(stream2string(i)),
@@ -121,12 +129,14 @@ is_processed_(false)
 	assign(outs.str());
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<short> i) :
 string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(unsigned short i) :
 string(stream2string(i)),
@@ -135,12 +145,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<unsigned short> i) :
 string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(int i) :
 string(stream2string(i)),
@@ -149,12 +161,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<int> i) :
 string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(unsigned int i) :
 string(stream2string(i)),
@@ -163,12 +177,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<unsigned int> i) :
 string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(longlong i) :
 string(stream2string(i)),
@@ -177,12 +193,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<longlong> i) :
 string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(ulonglong i) :
 string(stream2string(i)),
@@ -191,12 +209,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<ulonglong> i) :
 string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false) 
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(float f) :
 is_string_(false),
@@ -208,6 +228,7 @@ is_processed_(false)
 	assign(outs.str());
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<float> f) :
 is_string_(false),
 is_processed_(false)
@@ -222,6 +243,7 @@ is_processed_(false)
 		assign(outs.str());
 	}
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(double f) :
 is_string_(false),
@@ -233,6 +255,7 @@ is_processed_(false)
 	assign(outs.str());
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<double> f) :
 is_string_(false),
 is_processed_(false)
@@ -247,6 +270,7 @@ is_processed_(false)
 		assign(outs.str());
 	}
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(const Date& d) :
 string(stream2string(d)),
@@ -255,12 +279,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(const Null<Date>& d) :
 string(d.is_null ? null_str : stream2string(d)),
 is_string_(true),
 is_processed_(false) 
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(const DateTime& dt) :
 string(stream2string(dt)),
@@ -269,12 +295,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(const Null<DateTime>& dt) :
 string(dt.is_null ? null_str : stream2string(dt)),
 is_string_(true),
 is_processed_(false) 
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(const Time& t) :
 string(stream2string(t)),
@@ -283,12 +311,14 @@ is_processed_(false)
 {
 }
 
+#if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(const Null<Time>& t) :
 string(t.is_null ? null_str : stream2string(t)),
 is_string_(true),
 is_processed_(false) 
 {
 }
+#endif
 
 SQLTypeAdapter::SQLTypeAdapter(const null_type& i) :
 string(null_str),

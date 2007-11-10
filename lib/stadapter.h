@@ -95,18 +95,18 @@ public:
 	SQLTypeAdapter(sql_tinyint_unsigned i);
 
 	/// \brief Create a string representation of a \c short \c int value
-	SQLTypeAdapter(short int i);
+	SQLTypeAdapter(short i);
 
 	/// \brief Create a string representation of an \c unsigned
 	/// \c short \c int value
-	SQLTypeAdapter(unsigned short int i);
+	SQLTypeAdapter(unsigned short i);
 
 	/// \brief Create a string representation of an \c int value
 	SQLTypeAdapter(int i);
 
 	/// \brief Create a string representation of an \c unsigned \c int
 	/// value
-	SQLTypeAdapter(unsigned int i);
+	SQLTypeAdapter(unsigned i);
 
 	/// \brief Create a string representation of a \c longlong value
 	SQLTypeAdapter(longlong i);
@@ -178,10 +178,10 @@ public:
 	SQLTypeAdapter(Null<char> c);
 	SQLTypeAdapter(Null<sql_tinyint> i);
 	SQLTypeAdapter(Null<sql_tinyint_unsigned> i);
-	SQLTypeAdapter(Null<short int> i);
+	SQLTypeAdapter(Null<short> i);
 	SQLTypeAdapter(Null<unsigned short int> i);
 	SQLTypeAdapter(Null<int> i);
-	SQLTypeAdapter(Null<unsigned int> i);
+	SQLTypeAdapter(Null<unsigned> i);
 	SQLTypeAdapter(Null<longlong> i);
 	SQLTypeAdapter(Null<ulonglong> i);
 	SQLTypeAdapter(Null<float> i);
