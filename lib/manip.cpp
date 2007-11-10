@@ -115,6 +115,21 @@ ostream& operator <<(quote_type1 o, const ColData& in)
 }
 
 
+/// \brief Inserts a SQLTypeAdapter into a non-Query stream.
+///
+/// Although we know how to quote and escape SQLTypeAdapter objects, we
+/// only do that when inserting them into Query streams or when given an
+/// explicit manipulator because this feature is only intended to make
+/// it easier to build syntactically-correct SQL queries.
+
+ostream&
+operator <<(ostream& o, const SQLTypeAdapter& in)
+{
+	o.write(in.data(), in.length());
+	return o;
+}
+
+
 /// \brief Inserts a ColData into a non-Query stream.
 ///
 /// Although we know how to automatically quote and escape ColData
