@@ -47,12 +47,13 @@ bool dont_quote_auto = false;
 SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 {
 	if (in.is_string()) {
-		SQLTypeAdapter in2("'", 1);
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
-		in2.append(s, len);
-		delete[] s;
-		in2.append("'", 1);
+		string temp("'", 1);
+		char* escaped = new char[in.length() * 2 + 1];
+		size_t len = mysql_escape_string(escaped, in.data(), in.length());
+		temp.append(escaped, len);
+		delete[] escaped;
+		temp.append("'", 1);
+		SQLTypeAdapter in2(temp);
 		in2.set_processed();
 		*p.qparms << in2;
 		return *p.qparms;
@@ -70,14 +71,14 @@ SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
 {
 	if (in.is_string()) {
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
+		char* escaped = new char[in.length() * 2 + 1];
+		size_t len = mysql_escape_string(escaped, in.data(), in.length());
 
 		o.ostr->write("'", 1);
-		o.ostr->write(s, len);
+		o.ostr->write(escaped, len);
 		o.ostr->write("'", 1);
 
-		delete[] s;
+		delete[] escaped;
 	}
 	else {
 		o.ostr->write(in.data(), in.length());
@@ -96,14 +97,14 @@ ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
 ostream& operator <<(quote_type1 o, const ColData& in)
 {
 	if (in.escape_q()) {
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
+		char* escaped = new char[in.length() * 2 + 1];
+		size_t len = mysql_escape_string(escaped, in.data(), in.length());
 
 		if (in.quote_q()) o.ostr->write("'", 1);
-		o.ostr->write(s, len);
+		o.ostr->write(escaped, len);
 		if (in.quote_q()) o.ostr->write("'", 1);
 
-		delete[] s;
+		delete[] escaped;
 	}
 	else {
 		if (in.quote_q()) o.ostr->write("'", 1);
@@ -162,14 +163,14 @@ Query& operator <<(Query& o, const ColData& in)
 		o.write(in.data(), in.length());
 	}
 	else if (in.escape_q()) {
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
+		char* escaped = new char[in.length() * 2 + 1];
+		size_t len = mysql_escape_string(escaped, in.data(), in.length());
 
 		if (in.quote_q()) o.write("'", 1);
-		o.write(s, len);
+		o.write(escaped, len);
 		if (in.quote_q()) o.write("'", 1);
 
-		delete[] s;
+		delete[] escaped;
 	}
 	else {
 		if (in.quote_q()) o.write("'", 1);
@@ -191,9 +192,10 @@ Query& operator <<(Query& o, const ColData& in)
 SQLQueryParms& operator <<(quote_only_type2 p, SQLTypeAdapter& in)
 {
 	if (in.is_string()) {
-		SQLTypeAdapter in2("'", 1);
-		in2.append(in.data(), in.length());
-		in2.append("'", 1);
+		string temp("'", 1);
+		temp.append(in.data(), in.length());
+		temp.append("'", 1);
+		SQLTypeAdapter in2(temp);
 		in2.set_processed();
 		return *p.qparms << in2;
 	}
@@ -229,9 +231,10 @@ ostream& operator <<(quote_only_type1 o, const ColData& in)
 SQLQueryParms& operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
 {
 	if (in.is_string()) {
-		SQLTypeAdapter in2("\"", 1);
-		in2.append(in.data(), in.length());
-		in2.append("\"", 1);
+		string temp("\"", 1);
+		temp.append(in.data(), in.length());
+		temp.append("\"", 1);
+		SQLTypeAdapter in2(temp);
 		in2.set_processed();
 		return *p.qparms << in2;
 	}
@@ -260,14 +263,14 @@ ostream& operator <<(quote_double_only_type1 o, const ColData& in)
 SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
 {
 	if (in.is_string()) {
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
+		char* escaped = new char[in.length() * 2 + 1];
+		size_t len = mysql_escape_string(escaped, in.data(), in.length());
 
-		SQLTypeAdapter in2(s, len);
+		SQLTypeAdapter in2(escaped, len);
 		in2.set_processed();
 		*p.qparms << in2;
 
-		delete[] s;
+		delete[] escaped;
 		return *p.qparms;
 	}
 	else {
@@ -283,10 +286,10 @@ SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
 std::ostream& operator <<(escape_type1 o, const SQLTypeAdapter& in)
 {
 	if (in.is_string()) {
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
-		o.ostr->write(s, len);
-		delete[] s;
+		char* escaped = new char[in.length() * 2 + 1];
+		size_t len = mysql_escape_string(escaped, in.data(), in.length());
+		o.ostr->write(escaped, len);
+		delete[] escaped;
 	}
 	else {
 		o.ostr->write(in.data(), in.length());
@@ -304,10 +307,10 @@ std::ostream& operator <<(escape_type1 o, const SQLTypeAdapter& in)
 std::ostream& operator <<(escape_type1 o, const ColData& in)
 {
 	if (in.escape_q()) {
-		char* s = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(s, in.data(), in.length());
-		o.ostr->write(s, len);
-		delete[] s;
+		char* escaped = new char[in.length() * 2 + 1];
+		size_t len = mysql_escape_string(escaped, in.data(), in.length());
+		o.ostr->write(escaped, len);
+		delete[] escaped;
 	}
 	else {
 		o.ostr->write(in.data(), in.length());
