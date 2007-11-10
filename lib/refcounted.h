@@ -30,6 +30,8 @@
 
 #include "type_info.h"
 
+#include <string>
+
 namespace mysqlpp {
 
 /// \brief Creates an object that acts as a reference-counted pointer
@@ -210,7 +212,7 @@ public:
 	/// \brief Type of length values
 	typedef unsigned int size_type;
 
-	/// \brief Standard constructor
+	/// \brief Initialize object as a copy of a raw data buffer
 	///
 	/// Copies the string into a new buffer one byte longer than
 	/// the length value given, using that to hold a C string null
@@ -218,7 +220,12 @@ public:
 	/// not include this extra byte, allowing this same mechanism
 	/// to work for both C strings and binary data.
 	RefCountedBuffer(const char* data, size_type length,
-			mysql_type_info type, bool is_null);
+			mysql_type_info type, bool is_null)
+			{ init(data, length, type, is_null); }
+ 
+	/// \brief Initialize object as a copy of a C++ string object
+	RefCountedBuffer(const std::string& s, mysql_type_info type,
+			bool is_null) { init(s.data(), s.length(), type, is_null); }
 
 	/// \brief Destructor
 	~RefCountedBuffer() { delete[] data_; }
@@ -236,6 +243,9 @@ public:
 
 	/// \brief Return the SQL type of the data held in the buffer
 	const mysql_type_info& type() const { return type_; }
+
+	/// \brief Returns true if type of buffer's contents is string
+	bool is_string() { return type_ == mysql_type_info::string_type; }
 
 	/// \brief Return true if buffer's contents represent a SQL
 	/// null.
@@ -256,6 +266,9 @@ public:
 	bool detach() { return --refs_ > 0; }
 
 private:
+	void init(const char* pd, size_type len, mysql_type_info type,
+			bool is_null);	///< common initialization for ctors
+
 	const char* data_;		///< pointer to the raw data buffer
 	size_type length_;		///< bytes in buffer, without trailing null
 	mysql_type_info type_;	///< SQL type of data in the buffer
