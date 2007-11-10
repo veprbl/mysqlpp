@@ -81,18 +81,19 @@ class MYSQLPP_EXPORT Connection;
 /// class.
 ///
 /// The way most like other database libraries is to pass a SQL
-/// statement to one of the
+/// statement in either the form of a C or C++ string to one of the
 /// \link mysqlpp::Query::execute() exec*(), \endlink
-/// \link mysqlpp::Query::store() store*(), \endlink or use() methods
-/// taking a C or C++ string.  The query is executed immediately, and
-/// any results returned.
+/// \link mysqlpp::Query::store() store*(), \endlink or use() methods.
+/// The query is executed immediately, and any results returned.
 ///
-/// For more complicated queries, you can use Query's stream interface.
-/// You simply build up a query using the Query instance as you would
-/// any other C++ stream object. When the query string is complete, you
-/// call the overloaded version of \c exec*(), \c store*() or \c use()
-/// that takes no parameters, which executes the built query and returns
-/// any results.
+/// For more complicated queries, it's often more convenient to build up
+/// the query string over several C++ statements using Query's stream
+/// interface. It works like any other C++ stream (\c std::cout,
+/// \c std::ostringstream, etc.) in that you can just insert things
+/// into the stream, building the query up piece by piece. When the
+/// query string is complete, you  call the overloaded version of
+/// \c exec*(), \c store*() or \c use() that takes no parameters, which
+/// executes the built query and returns any results.
 ///
 /// If you are using the library's Specialized SQL Structures feature,
 /// Query has several special functions for generating common SQL
