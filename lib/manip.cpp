@@ -47,14 +47,14 @@ bool dont_quote_auto = false;
 SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 {
 	if (in.is_string()) {
-		SQLTypeAdapter in2('\'');
+		SQLTypeAdapter in2("'", 1);
 		char* s = new char[in.length() * 2 + 1];
 		size_t len = mysql_escape_string(s, in.data(), in.length());
 		in2.append(s, len);
-		in2 += '\'';
+		delete[] s;
+		in2.append("'", 1);
 		in2.set_processed();
 		*p.qparms << in2;
-		delete[] s;
 		return *p.qparms;
 	}
 	else {
@@ -73,16 +73,14 @@ ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
 		char* s = new char[in.length() * 2 + 1];
 		size_t len = mysql_escape_string(s, in.data(), in.length());
 
-		if (in.is_string()) o.ostr->write("'", 1);
+		o.ostr->write("'", 1);
 		o.ostr->write(s, len);
-		if (in.is_string()) o.ostr->write("'", 1);
+		o.ostr->write("'", 1);
 
 		delete[] s;
 	}
 	else {
-		if (in.is_string()) o.ostr->write("'", 1);
 		o.ostr->write(in.data(), in.length());
-		if (in.is_string()) o.ostr->write("'", 1);
 	}
 
 	return *o.ostr;
@@ -178,8 +176,9 @@ Query& operator <<(Query& o, const ColData& in)
 SQLQueryParms& operator <<(quote_only_type2 p, SQLTypeAdapter& in)
 {
 	if (in.is_string()) {
-		SQLTypeAdapter in2;
-		in2 = '\'' + in + '\'';
+		SQLTypeAdapter in2("'", 1);
+		in2.append(in.data(), in.length());
+		in2.append("'", 1);
 		in2.set_processed();
 		return *p.qparms << in2;
 	}
@@ -215,8 +214,9 @@ ostream& operator <<(quote_only_type1 o, const ColData& in)
 SQLQueryParms& operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
 {
 	if (in.is_string()) {
-		SQLTypeAdapter in2;
-		in2 = "\"" + in + "\"";
+		SQLTypeAdapter in2("\"", 1);
+		in2.append(in.data(), in.length());
+		in2.append("\"", 1);
 		in2.set_processed();
 		return *p.qparms << in2;
 	}
