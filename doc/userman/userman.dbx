@@ -927,23 +927,37 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         This returns a <ulink type="classref" url="Result"/> object,
         which contains the entire result set. The nice thing about
         this is that <classname>Result</classname> is a random-access
-        container, like <classname>std::vector</classname>, so
-        you can iterate through it forwards and backwards, access
-        elements with subscript notation, etc. There are also the
-        <methodname>storein()</methodname> methods, which actually
-        put the result set into an STL container of your choice. The
-        downside of these methods is that a sufficiently large result
-        set will give your program memory problems.</para>
+        container, like <classname>std::vector</classname>, so you can
+        iterate through it forwards and backwards, access elements with
+        subscript notation, etc. If you'd rather store the result set
+        in an STL container instead of a <classname>Result</classname>
+        object, you can use <methodname>storein()</methodname>
+        instead.</para>
 
-        <para>For these large result sets, the superior option is a
-        <methodname>use()</methodname> query. This returns a <ulink
-        type="classref" url="ResUse"/> object, which is similar to
-        Result, but without all of the random-access features. This
-        is because a "use" query tells the database server to
-        send the results back one row at a time, to be processed
-        linearly. It's analogous to a C++ stream's input iterator,
-        as opposed to a random-access iterator that a container like
-        vector offers. By accepting this limitation, you can process
+        <para><methodname>store*()</methodname> queries are convenient,
+        but the cost of keeping the entire result set in main memory
+        can sometimes be too high. It can be surprisingly costly,
+        in fact. A MySQL database server stores data compactly on
+        disk, but it returns query data to the client in a textual
+        form. This results in a kind of data bloat that affects
+        numeric and BLOB types the most. MySQL++ and the underlying C
+        API library also have their own memory overheads in addition
+        to this. So, if you happen to know that the database server
+        stores every record of a particular table in 1 KB, pulling
+        a million records from that table could easily take several
+        GB of memory with a <methodname>store()</methodname> query,
+        depending on what's actually stored in that table.</para>
+
+        <para>For these large result sets, the superior option
+        is a <methodname>use()</methodname> query. This returns
+        a <ulink type="classref" url="ResUse"/> object, which is
+        similar to <classname>Result</classname>, but without
+        all of the random-access features. This is because a
+        "use" query tells the database server to send the results
+        back one row at a time, to be processed linearly. It's
+        analogous to a C++ stream's input iterator, as opposed
+        to a random-access iterator that a container like vector
+        offers. By accepting this limitation, you can process
         arbitrarily large result sets. This technique is demonstrated
         in <filename>examples/simple3.cpp</filename>:</para>
 
@@ -956,18 +970,33 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         instead look at <filename>examples/usequery.cpp</filename>,
         which does the same thing as <filename>simple3</filename>,
         but with exception-awareness.</para>
+
+        <para>Valuable as <methodname>use()</methodname> queries are,
+        they should not be the first resort in solving problems of
+        excessive memory use. It's better if you can find a way to
+        simply not pull as much data from the database in the first
+        place. Maybe you're saying <command>SELECT *</command> even
+        though you don't immedidately need all the columns from the
+        table. Or, maybe you're filtering the result set with C++ code
+        after you get it from the database server. If you can do that
+        filtering with a more restrictive <command>WHERE</command>
+        clause on the <command>SELECT</command>, it'll not only save
+        memory, it'll save bandwidth between the database server
+        and client, and can even save CPU time. If the filtering
+        criteria can't be expressed in a <command>WHERE</command>
+        clause, however, read on to the next section.</para>
     </sect2>
 
 
-    <sect2>
+    <sect2 id="store_if">
         <title>Conditional Result Row Handling</title>
 
-        <para><methodname>Query::store()</methodname> is fine if
-        you really need all the rows the query returns. It sometimes
-        happens that you can't express the full selection criteria
-        in a SQL query. Instead of storing the full result set,
+        <para>Sometimes you must pull more data from the database
+        server than you actually need and filter it in memory. SQL's
+        <command>WHERE</command> clause is powerful, but not as
+        powerful as C++. Instead of storing the full result set and
         then picking over it to find the rows you want to keep,
-        use <methodname>Query::store_if()</methodname>.  This is
+        use <methodname>Query::store_if()</methodname>. This is
         <filename>examples/store_if.cpp</filename>:</para>
 
         <programlisting><xi:include href="store_if.txt" parse="text"
