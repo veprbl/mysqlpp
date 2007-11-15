@@ -38,6 +38,10 @@
 
 namespace mysqlpp {
 
+#if !defined(DOXYGEN_IGNORE)
+class RefCountedBuffer;
+#endif
+
 /// \brief Converts many different data types to strings suitable for
 /// use in SQL queries.
 ///
@@ -71,6 +75,15 @@ public:
 
 	/// \brief Default constructor; empty string
 	SQLTypeAdapter();
+
+	/// \brief Copy ctor
+	///
+	/// \param other the other SQLTypeAdapter object
+	///
+	/// This ctor only copies the pointer to the other SQLTypeAdapter's
+	/// data buffer and increments its reference counter.  If you need a
+	/// deep copy, use one of the ctors that takes a string.
+	SQLTypeAdapter(const SQLTypeAdapter& other);
 
 	/// \brief Create a copy of a C++ string
 	SQLTypeAdapter(const std::string& str, bool processed = false);
@@ -135,44 +148,46 @@ public:
 	/// \brief Create object representing SQL NULL
 	SQLTypeAdapter(const null_type& i);
 
+	/// \brief Standard assignment operator
+	///
+	/// Detaches this object from its internal buffer and attaches
+	/// itself to the other object's buffer, with reference counting
+	/// on each side.  If you need a deep copy, assign a string instead.
+	SQLTypeAdapter& operator =(const SQLTypeAdapter& rhs);
+
 	/// \brief Copy a C string into this object
-	SQLTypeAdapter& operator =(const char* str)
-	{
-		buffer_.assign(str);
-		is_string_ = true;
-		is_processed_ = false;
-		return *this;
-	}
+	SQLTypeAdapter& operator =(const char* str);
 
 	/// \brief Copy a C++ \c string into this object
-	SQLTypeAdapter& operator =(const std::string& str)
-	{
-		buffer_.assign(str);
-		is_string_ = true;
-		is_processed_ = false;
-		return *this;
-	}
+	SQLTypeAdapter& operator =(const std::string& str);
 
 	/// \brief Return pointer to raw data buffer
-	const char* data() const { return buffer_.data(); }
+	const char* data() const;
 
-	/// \brief Return number of bytes in data buffer
-	size_type length() const { return buffer_.length(); }
-	size_type size() const { return length(); } ///< alias for length()
-
-	/// \brief Returns true if the object was initialized with a
-	/// stringish type
-	///
-	/// By contrast, this returns false if we were initialized with,
-	/// say, a floating point number.  This is used for deciding whether
-	/// to do quoting and/or escaping when building query strings.
-	bool is_string() const { return is_string_; }
+	/// \brief Returns true if we were initialized with a data type
+	/// that must be escaped when used in a SQL query
+	bool escape_q() const;
 
 	/// \brief Returns true if the internal 'processed' flag is set.
 	///
 	/// This is an implementation detail of template queries, used to
 	/// prevent repeated processing of values.
 	bool is_processed() const { return is_processed_; }
+
+	/// \brief Return number of bytes in data buffer
+	size_type length() const;
+	size_type size() const { return length(); } ///< alias for length()
+
+	/// \brief Returns true if we were initialized with a data type
+	/// that must be quoted when used in a SQL query
+	bool quote_q() const;
+
+	/// \brief Returns the type ID of the buffer's data
+	///
+	/// Values from type_info.h.  At the moment, these are the same as
+	/// the underlying MySQL C API type IDs, but it's not a good idea
+	/// to count on this remaining the case.
+	int type_id() const;
 
 	/// \brief Turns on the internal 'is_processed_' flag.
 	///
@@ -198,23 +213,19 @@ public:
 	SQLTypeAdapter(const Null<Date>& d);
 	SQLTypeAdapter(const Null<DateTime>& dt);
 	SQLTypeAdapter(const Null<Time>& t);
-	SQLTypeAdapter& operator =(const Null<std::string>& str)
-			{ return operator =(str.data); }
-	SQLTypeAdapter& operator =(const null_type& n)
-	{ 
-		buffer_.assign(null_str);
-		is_string_ = false;
-		is_processed_ = false;
-	}
+	SQLTypeAdapter& operator =(const Null<std::string>& str);
+	SQLTypeAdapter& operator =(const null_type& n);
 #endif // !defined(DOXYGEN_IGNORE)
 
 private:
+	/// \brief Decrement the buffer's reference count
+	///
+	/// Called by dtor and by operator=()s before replacing the buffer's
+	/// contents.  If ref count falls to 0, deallocates the buffer.
+	void dec_ref_count();
+ 
 	/// \brief Our internal string buffer
-	std::string buffer_;
-
-	/// \brief If true, buffer_ holds a copy of another string, as
-	/// opposed to a string representation of a numeric value.
-	bool is_string_;
+	RefCountedBuffer* buffer_;
 
 	/// \brief If true, one of the MySQL++ manipulators has processed
 	/// the string data.

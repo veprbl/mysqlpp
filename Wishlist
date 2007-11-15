@@ -17,15 +17,12 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Change SQLTypeAdapter::buffer_'s type from std::string to
-      RefCountedBuffer, and add a copy ctor for String that can do
-      buffer sharing.  Can then remove String specializations for 
+    o Add conversion ctor to SQLTypeAdapter for String that can do
+      buffer sharing, then remove String specializations for
       manipulators.
 
     o Add String::compare(const char*, int), and anything else that
       looks useful from the std::string interface.
-
-    o Add a userman section on String and SQLTypeAdapter.
 
     o Try removing explicit quoting and escaping manipulators, doing it
       all implicitly upon building query strings, now that all data
@@ -38,6 +35,8 @@ v3.0 Plan, For-Sure Stuff
 
     o Factor out quoting and escaping logic into a common function.
       Near-identical code in too many places right now.
+
+    o Add a userman section on String and SQLTypeAdapter.
 
     o Replace ostream& in operator<< for STA with Query&.  At that
       point, there should be nowhere in the query string building

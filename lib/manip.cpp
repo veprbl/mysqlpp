@@ -46,7 +46,7 @@ bool dont_quote_auto = false;
 
 SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 {
-	if (in.is_string()) {
+	if (in.quote_q()) {
 		string temp("'", 1);
 		char* escaped = new char[in.length() * 2 + 1];
 		size_t len = mysql_escape_string(escaped, in.data(), in.length());
@@ -68,7 +68,7 @@ SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 
 ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
 {
-	if (in.is_string()) {
+	if (in.quote_q()) {
 		char* escaped = new char[in.length() * 2 + 1];
 		size_t len = mysql_escape_string(escaped, in.data(), in.length());
 
@@ -183,13 +183,13 @@ Query& operator <<(Query& o, const String& in)
 /// \brief Inserts a SQLTypeAdapter into a stream, quoting it unless it's
 /// data that needs no quoting.
 ///
-/// We make the decision to quote the data based on the in.is_string()
+/// We make the decision to quote the data based on the in.quote_q()
 /// flag.  You can set it yourself, but SQLTypeAdapter's ctors should set
 /// it correctly for you.
 
 SQLQueryParms& operator <<(quote_only_type2 p, SQLTypeAdapter& in)
 {
-	if (in.is_string()) {
+	if (in.quote_q()) {
 		string temp("'", 1);
 		temp.append(in.data(), in.length());
 		temp.append("'", 1);
@@ -220,13 +220,13 @@ ostream& operator <<(quote_only_type1 o, const String& in)
 /// \brief Inserts a SQLTypeAdapter into a stream, double-quoting it (")
 /// unless it's data that needs no quoting.
 ///
-/// We make the decision to quote the data based on the in.is_string()
+/// We make the decision to quote the data based on the in.quote_q()
 /// flag.  You can set it yourself, but SQLTypeAdapter's ctors should set
 /// it correctly for you.
 
 SQLQueryParms& operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
 {
-	if (in.is_string()) {
+	if (in.quote_q()) {
 		string temp("\"", 1);
 		temp.append(in.data(), in.length());
 		temp.append("\"", 1);
@@ -256,7 +256,7 @@ ostream& operator <<(quote_double_only_type1 o, const String& in)
 
 SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
 {
-	if (in.is_string()) {
+	if (in.escape_q()) {
 		char* escaped = new char[in.length() * 2 + 1];
 		size_t len = mysql_escape_string(escaped, in.data(), in.length());
 
@@ -277,7 +277,7 @@ SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
 
 std::ostream& operator <<(escape_type1 o, const SQLTypeAdapter& in)
 {
-	if (in.is_string()) {
+	if (in.escape_q()) {
 		char* escaped = new char[in.length() * 2 + 1];
 		size_t len = mysql_escape_string(escaped, in.data(), in.length());
 		o.ostr->write(escaped, len);

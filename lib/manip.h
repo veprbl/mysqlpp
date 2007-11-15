@@ -205,7 +205,7 @@ MYSQLPP_EXPORT SQLQueryParms& operator <<(quote_only_type2 p,
 inline std::ostream&
 operator <<(quote_only_type1 o, const SQLTypeAdapter& in)
 {
-	if (in.is_string()) {
+	if (in.quote_q()) {
 		return *o.ostr << '\'' << in << '\'';
 	}
 	else {
@@ -286,7 +286,7 @@ operator <<(quote_double_only_type2 p, SQLTypeAdapter& in);
 inline std::ostream&
 operator <<(quote_double_only_type1 o, const SQLTypeAdapter& in)
 {
-	if (in.is_string()) {
+	if (in.quote_q()) {
 		return *o.ostr << '"' << in << '"';
 	}
 	else {
@@ -361,7 +361,7 @@ operator <<(SQLQueryParms& p, escape_type0 /* esc */)
 /// \brief Inserts a SQLTypeAdapter into a stream, escaping special SQL
 /// characters
 ///
-/// We actually only do the escaping if in.is_string is set but
+/// We actually only do the escaping if in.escape_q() returns true but
 /// in.dont_escape is not.  If that is not the case, we insert the
 /// string data directly.
 
