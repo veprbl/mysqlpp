@@ -281,13 +281,14 @@ Query::pprepare(char option, SQLTypeAdapter& S, bool replace)
 	}
 
 	if (option == 'r' || (option == 'q' && S.is_string())) {
-		char *s = new char[S.size() * 2 + 1];
-		mysql_real_escape_string(&conn_->mysql_, s, S.data(),
-				static_cast<unsigned long>(S.size()));
-		SQLTypeAdapter *ss = new SQLTypeAdapter("'");
-		*ss += s;
-		*ss += "'";
-		delete[] s;
+		char *escaped = new char[S.size() * 2 + 1];
+		size_t len = mysql_real_escape_string(&conn_->mysql_, escaped,
+				S.data(), static_cast<unsigned long>(S.size()));
+		std::string temp("'", 1);
+		temp.append(escaped, len);
+		temp.append("'", 1);
+		delete[] escaped;
+		SQLTypeAdapter* ss = new SQLTypeAdapter(temp);
 
 		if (replace) {
 			S = *ss;
@@ -300,7 +301,10 @@ Query::pprepare(char option, SQLTypeAdapter& S, bool replace)
 		}
 	}
 	else if (option == 'R' || (option == 'Q' && S.is_string())) {
-		SQLTypeAdapter *ss = new SQLTypeAdapter("'" + S + "'");
+		std::string temp("'", 1);
+		temp.append(S.data(), S.length());
+		temp.append("'", 1);
+		SQLTypeAdapter *ss = new SQLTypeAdapter(temp);
 
 		if (replace) {
 			S = *ss;
