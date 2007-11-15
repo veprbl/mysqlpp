@@ -31,7 +31,6 @@
 
 #include "common.h"
 
-#include "convert.h"
 #include "datetime.h"
 #include "exceptions.h"
 #include "null.h"
@@ -39,6 +38,7 @@
 #include "string_util.h"
 
 #include <string>
+#include <stdlib.h>
 
 namespace mysqlpp {
 
@@ -227,7 +227,7 @@ public:
 	
 	/// \brief Template for converting the column data to most any
 	/// integral data type.
-	template <class Type> Type conv(Type dummy) const;
+	template <class Type> Type conv(Type) const;
 
 	/// \brief Overload of conv() for types wrapped with Null<>
 	///
@@ -236,7 +236,7 @@ public:
 	/// 'null' object converted to the requested type.  Otherwise, we
 	/// return the String's value wrapped in the Null<> template.
 	template <class T, class B>
-	Null<T, B> conv(Null<T, B> dummy) const
+	Null<T, B> conv(Null<T, B>) const
 	{
 		if (is_null()) {
 			return Null<T, B>(null);
@@ -440,6 +440,78 @@ private:
 };
 
 
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen will not generate documentation for this section.
+
+template <class Type> class internal_string_to_int_proxy;
+
+#define internal_convert_string_to_int(TYPE, FUNC) \
+  template <> \
+  class internal_string_to_int_proxy<TYPE> {\
+  public:\
+    internal_string_to_int_proxy(const char* str, const char *& end) { \
+      num_ = FUNC(str, const_cast<char **>(&end));}\
+    operator TYPE () {return num_;}\
+  private:\
+    TYPE num_;\
+  };\
+
+#if defined(_MSC_VER)
+#	pragma warning(disable: 4244)
+#endif
+
+	internal_convert_string_to_int(float, strtod)
+	internal_convert_string_to_int(double, strtod)
+
+#if defined(_MSC_VER)
+#	pragma warning(default: 4244)
+#endif
+
+#undef internal_convert_string_to_int
+#define internal_convert_string_to_int(TYPE, FUNC) \
+  template <> \
+  class internal_string_to_int_proxy<TYPE> {\
+  public:\
+    internal_string_to_int_proxy(const char* str, const char *& end) { \
+      num_ = FUNC(str, const_cast<char **>(&end),10);}\
+    operator TYPE () {return num_;}\
+  private:\
+    TYPE num_;\
+  };\
+
+#if defined(_MSC_VER)
+#	pragma warning(disable: 4244)
+#endif
+
+	internal_convert_string_to_int(char, strtol)
+	internal_convert_string_to_int(signed char, strtol)
+	internal_convert_string_to_int(int, strtol)
+	internal_convert_string_to_int(short int, strtol)
+	internal_convert_string_to_int(long int, strtol)
+
+	internal_convert_string_to_int(unsigned char, strtoul)
+	internal_convert_string_to_int(unsigned int, strtoul)
+	internal_convert_string_to_int(unsigned short int, strtoul)
+	internal_convert_string_to_int(unsigned long int, strtoul)
+
+#if defined(_MSC_VER)
+#	pragma warning(default: 4244)
+#endif
+
+#if !defined(NO_LONG_LONGS)
+#if defined(_MSC_VER)
+// Handle 64-bit ints the VC++ way
+internal_convert_string_to_int(longlong, _strtoi64)
+internal_convert_string_to_int(ulonglong, _strtoui64)
+#else
+// No better idea, so assume the C99 way.  If your compiler doesn't
+// support this, please provide a patch to extend this ifdef, or define
+// NO_LONG_LONGS.
+internal_convert_string_to_int(longlong, strtoll)
+internal_convert_string_to_int(ulonglong, strtoull)
+#endif
+#endif // !defined(NO_LONG_LONGS)
+
 
 #if !defined(MYSQLPP_NO_BINARY_OPERS) && !defined(DOXYGEN_IGNORE)
 // Ignore this section is MYSQLPP_NO_BINARY_OPERS is defined, or if this
@@ -486,10 +558,13 @@ operator_binary_int(longlong, longlong)
 operator_binary_int(ulonglong, ulonglong)
 #endif
 #endif // MYSQLPP_NO_BINARY_OPERS
+#endif // DOXYGEN_IGNORE
+
 
 // The generic conv() implementation for integral types.
 template <class Type>
-Type String::conv(Type /* dummy */) const
+Type
+String::conv(Type) const
 {
 	std::string strbuf(data(), length());
 	strip_all_blanks(strbuf);
@@ -514,8 +589,8 @@ Type String::conv(Type /* dummy */) const
 
 /// \brief Specialization of String::conv<Type>() for String
 ///
-/// Yes, I hear you crying, "WTF?"  Why does String need to be able to
-/// convert itself to String?  SSQLSes with BLOB columns, that's why.
+/// Yes, I hear you crying, "WTF!?  Why does String need to be able to
+/// convert itself to String?"  SSQLSes with BLOB columns, that's why.
 ///
 /// SSQLSes populate their data members from the raw field data by
 /// calling row[field].conv().  The raw field data is stored in a
@@ -524,31 +599,31 @@ Type String::conv(Type /* dummy */) const
 /// written code wouldn't need.  Prove the truth of this to yourself by
 /// removing this and counting how many pieces examples/cgi_jpeg.cpp
 /// breaks into.
-template <> String String::conv(String dummy) const;
+template <> String String::conv(String) const;
 
 /// \brief Specialization of String::conv<Type>() for C++ strings
-template <> std::string String::conv(std::string dummy) const;
+template <> std::string String::conv(std::string) const;
 
 /// \brief Specialization of String::conv<Type>() for mysqlpp::Date
 ///
 /// This is necessary because as of MySQL++ v3, Date no longer has an
 /// implicit conversion ctor from String, and SSQLS uses conv() instead
 /// of the C++ type conversion system anyway.
-template <> Date String::conv(Date dummy) const;
+template <> Date String::conv(Date) const;
 
 /// \brief Specialization of String::conv<Type>() for mysqlpp::DateTime
 ///
 /// This is necessary because as of MySQL++ v3, DateTime no longer has
 /// an implicit conversion ctor from String, and SSQLS uses conv()
 /// instead of the C++ type conversion system anyway.
-template <> DateTime String::conv(DateTime dummy) const;
+template <> DateTime String::conv(DateTime) const;
 
 /// \brief Specialization of String::conv<Type>() for mysqlpp::Time
 ///
 /// This is necessary because as of MySQL++ v3, Time no longer has an
 /// implicit conversion ctor from String, and SSQLS uses conv() instead
 /// of the C++ type conversion system anyway.
-template <> Time String::conv(Time dummy) const;
+template <> Time String::conv(Time) const;
 
 } // end namespace mysqlpp
 

@@ -17,8 +17,6 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Merge convert.h into mystring.h.
-
     o Change SQLTypeAdapter::buffer_'s type from std::string to
       RefCountedBuffer, and add a copy ctor for String that can do
       buffer sharing.  Can then remove String specializations for 
