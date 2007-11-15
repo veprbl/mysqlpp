@@ -52,6 +52,7 @@ void
 RefCountedBuffer::init(const char* pd, size_type length,
 		mysql_type_info type, bool is_null)
 {
+	data_ = 0;
 	refs_ = 1;
 	type_ = type;
 	is_null_ = is_null;
