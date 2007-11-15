@@ -240,8 +240,19 @@ public:
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false);
 
+	/// \brief Increment reference count
+	void attach() { ++refs_; }
+
 	/// \brief Return pointer to raw data buffer
 	const char* data() const { return data_; }
+
+	/// \brief Decrement reference count
+	/// \return True if reference count has not yet fallen to zero
+	bool detach() { return --refs_ > 0; }
+
+	/// \brief Returns true if we were initialized with a data type
+	/// that must be escaped when used in a SQL query
+	bool escape_q() const { return type_.escape_q(); }
 
 	/// \brief Return number of bytes in data buffer
 	///
@@ -250,9 +261,6 @@ public:
 	/// We do this because we can be holding binary data just as
 	/// easily as a C string.
 	size_type length() const { return length_; }
-
-	/// \brief Return the SQL type of the data held in the buffer
-	const mysql_type_info& type() const { return type_; }
 
 	/// \brief Returns true if type of buffer's contents is string
 	bool is_string() { return type_ == mysql_type_info::string_type; }
@@ -265,15 +273,15 @@ public:
 	/// null is distinct from a plain string with value "NULL".
 	bool is_null() const { return is_null_; }
 
+	/// \brief Returns true if we were initialized with a data type
+	/// that must be quoted when used in a SQL query
+	bool quote_q() const { return type_.quote_q(); }
+
 	/// \brief Sets the internal SQL null flag
 	void set_null() { is_null_ = true; }
 
-	/// \brief Increment reference count
-	void attach() { ++refs_; }
-
-	/// \brief Decrement reference count
-	/// \return True if reference count has not yet fallen to zero
-	bool detach() { return --refs_ > 0; }
+	/// \brief Return the SQL type of the data held in the buffer
+	const mysql_type_info& type() const { return type_; }
 
 private:
 	/// \brief Common initialization for ctors
