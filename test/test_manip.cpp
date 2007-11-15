@@ -148,7 +148,7 @@ main()
 	failures += test(q, (char*)s, len) == false;
 	failures += test(q, (const char*)s, len) == false;
 	failures += test(q, std::string(s), len) == false;
-	failures += test(q, mysqlpp::String(s), len) == false;
+	failures += test(q, mysqlpp::SQLTypeAdapter(s), len) == false;
 	return failures;
 }
 

@@ -162,6 +162,9 @@ public:
 	/// \brief Copy a C++ \c string into this object
 	SQLTypeAdapter& operator =(const std::string& str);
 
+	/// \brief Returns a const char pointer to the object's raw data
+	operator cchar*() const { return data(); }
+	
 	/// \brief Returns the character at a given position within the
 	/// string buffer.
 	///
