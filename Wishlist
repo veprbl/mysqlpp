@@ -29,6 +29,26 @@ v3.0 Plan, For-Sure Stuff
 
     o Add a userman section on String and SQLTypeAdapter.
 
+    o Try removing explicit quoting and escaping manipulators, doing it
+      all implicitly upon building query strings, now that all data
+      should be in STA form.  Add methods to STA to make it possible
+      if at first it does not work.
+
+    o If that works, all that should be left are the operator<<()'s,
+      which can be moved into stadapter module.  Do that, and remove
+      manip module and relevant userman sections.
+
+    o Factor out quoting and escaping logic into a common function.
+      Near-identical code in too many places right now.
+
+    o Replace ostream& in operator<< for STA with Query&.  At that
+      point, there should be nowhere in the query string building
+      process where we can't get access to the Connection object,
+      so we can switch to mysql_real_escape_string() everywhere.
+      This solves a longstanding problem with manipulators, which had
+      to use mysql_escape_string() frequently because it didn't know
+      which connection the query would be executed on.
+
     o Go back over mailing list thread to fold in any other changes
       suggested for RefCountedPointer.  Most especially, use
       atomic increment/decrement.  Until we do this, we don't
@@ -140,33 +160,6 @@ v3.0 "Maybe" Stuff
         made into a base class that all SSQLSes derive from.  Some
         template functions like Query::insert<T> might become regular
         member functions, taking a reference to the SSQLS base class.
-
-    o manip.cpp uses mysql_escape_string(), which doesn't take the
-      selected database's character set into account.  To do that, you
-      must use mysql_real_escape_string(), which differs by taking
-      a MYSQL instance as an additional parameter.  The problem
-      is, Connection owns the relevant MYSQL instance, and the
-      manipulator functionality is implemented in global functions
-      (operator<<() and such) so they have no direct access to the
-      relevant Connection object.
-
-      The key question for all operator<<'s for manipulators
-      to ask is, "which Query object am I being inserted into?"
-      From there, you can look up the associated Connection object.
-
-      In some cases, this answer to the question is easy, because
-      the operator takes an ostream parameter, which can be
-      dynamically cast to Query.  From there, it's just a lookup
-      table problem.
-      
-      Other operator<<'s don't take an ostream, but they do take
-      a manipulator.  Right now, manipulators are just enum values,
-      but they could in fact be classes.  Classes can carry data,
-      so there may be a way to "bind" them to the appropriate
-      Connection object.  If not, then perhaps some other method
-      will pop out of the database driver class idea.  The driver
-      object may be able to look up a suitable Connection object
-      for the manipulators.
 
     o Replace Query::preview() with operator<<, for easy debugging?
       If one really wants a std::string, they can still call str(),
