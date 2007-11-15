@@ -1,28 +1,5 @@
 /// \file stadapter.h
 /// \brief Declares the SQLTypeAdapter class
-///
-/// This class provides implicit conversion between many C++ types and
-/// SQL-formatted string representations of that data while preserving
-/// some type information.  End-users of MySQL++ are not expected to
-/// use this class directly.  Rather, it exists for those interfaces in
-/// MySQL++ that need to accept any of several reasonable data types,
-/// particularly those involved in building query strings.
-///
-/// There are two main uses for this.  One is in the Query class
-/// interfaces for building template queries: they have to be generic
-/// with respect to argument type, but because we know we want the data
-/// in some kind of string form eventually, we don't need to templatize
-/// it.  The interface can just accept a SQLTypeAdapter, which lets it
-/// accept any reasonable data type.
-///
-/// The other major use for this type is the quoting and escaping logic
-/// in Query's stream interface: rather than overload the << operators
-/// and the manipulators for every single type we know the rules for \e a 
-/// \e priori, we just specialize the manipulators for SQLTypeAdapter.
-/// The conversion to SQLTypeAdapter stringizes the data, which we needed
-/// anyway for stream insertion, and holds enough type information so
-/// that the manipulator can decide whether to do automatic quoting
-/// and/or escaping.
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
@@ -61,12 +38,37 @@
 
 namespace mysqlpp {
 
-/// \brief A specialized \c std::string that will convert from any
-/// valid MySQL type.
+/// \brief Converts many different data types to strings suitable for
+/// use in SQL queries.
+///
+/// This class provides implicit conversion between many C++ types and
+/// SQL-formatted string representations of that data without losing
+/// important type information.  This class is not for direct use
+/// outside MySQL++ itself.  It exists for those interfaces in MySQL++
+/// that need to accept a value of any reasonable data type which it
+/// will use in building a query string.
+///
+/// One major use for this is in the Query class interfaces for building
+/// template queries: they have to be generic with respect to argument
+/// type, but because we know we want the data in some kind of string
+/// form eventually, we don't need to templatize it. The interface can 
+/// just use SQLTypeAdapter, which lets callers pass any reasonable data
+/// type. The adapter converts the passed value implicitly.
+///
+/// The other major use for this type is the quoting and escaping logic
+/// in Query's stream interface: rather than overload the << operators
+/// and the manipulators for every single type we know the rules for \e a 
+/// \e priori, we just specialize the manipulators for SQLTypeAdapter.
+/// The conversion to SQLTypeAdapter stringizes the data, which we needed
+/// anyway for stream insertion, and holds enough type information so
+/// that the manipulator can decide whether to do automatic quoting
+/// and/or escaping.
 
-class MYSQLPP_EXPORT SQLTypeAdapter : public std::string
+class MYSQLPP_EXPORT SQLTypeAdapter
 {
 public:
+	typedef size_t size_type;	///< size of length values
+
 	/// \brief Default constructor; empty string
 	SQLTypeAdapter();
 
@@ -136,7 +138,7 @@ public:
 	/// \brief Copy a C string into this object
 	SQLTypeAdapter& operator =(const char* str)
 	{
-		std::string::operator =(str);
+		buffer_.assign(str);
 		is_string_ = true;
 		is_processed_ = false;
 		return *this;
@@ -145,11 +147,18 @@ public:
 	/// \brief Copy a C++ \c string into this object
 	SQLTypeAdapter& operator =(const std::string& str)
 	{
-		std::string::operator =(str);
+		buffer_.assign(str);
 		is_string_ = true;
 		is_processed_ = false;
 		return *this;
 	}
+
+	/// \brief Return pointer to raw data buffer
+	const char* data() const { return buffer_.data(); }
+
+	/// \brief Return number of bytes in data buffer
+	size_type length() const { return buffer_.length(); }
+	size_type size() const { return length(); } ///< alias for length()
 
 	/// \brief Returns true if the object was initialized with a
 	/// stringish type
@@ -193,15 +202,18 @@ public:
 			{ return operator =(str.data); }
 	SQLTypeAdapter& operator =(const null_type& n)
 	{ 
-		assign(null_str);
+		buffer_.assign(null_str);
 		is_string_ = false;
 		is_processed_ = false;
 	}
 #endif // !defined(DOXYGEN_IGNORE)
 
 private:
-	/// \brief If true, the object's string data is a copy of another
-	/// string.  Otherwise, it's the string form of an integral type.
+	/// \brief Our internal string buffer
+	std::string buffer_;
+
+	/// \brief If true, buffer_ holds a copy of another string, as
+	/// opposed to a string representation of a numeric value.
 	bool is_string_;
 
 	/// \brief If true, one of the MySQL++ manipulators has processed
