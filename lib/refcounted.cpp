@@ -30,7 +30,7 @@ namespace mysqlpp {
 
 RefCountedBuffer&
 RefCountedBuffer::assign(const char* data, size_type length,
-		unsigned char type, bool is_null)
+		mysql_type_info type, bool is_null)
 {
 	replace_buffer(data, length);
 	type_ = type;
@@ -39,7 +39,7 @@ RefCountedBuffer::assign(const char* data, size_type length,
 }
 
 RefCountedBuffer& 
-RefCountedBuffer::assign(const std::string& s, unsigned char type,
+RefCountedBuffer::assign(const std::string& s, mysql_type_info type,
 		bool is_null)
 {
 	replace_buffer(s.data(), s.length());

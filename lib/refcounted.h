@@ -232,12 +232,12 @@ public:
 
 	/// \brief Replace contents of buffer with copy of given C string
 	RefCountedBuffer& assign(const char* data, size_type length,
-			unsigned char type = mysql_type_info::string_type,
+			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false);
 
 	/// \brief Replace contents of buffer with copy of given C++ string
 	RefCountedBuffer& assign(const std::string& s,
-			unsigned char type = mysql_type_info::string_type,
+			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false);
 
 	/// \brief Return pointer to raw data buffer
