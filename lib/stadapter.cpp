@@ -170,7 +170,7 @@ is_processed_(false)
 }
 #endif
 
-SQLTypeAdapter::SQLTypeAdapter(unsigned int i) :
+SQLTypeAdapter::SQLTypeAdapter(unsigned i) :
 string(stream2string(i)),
 is_string_(false),
 is_processed_(false)
@@ -178,7 +178,7 @@ is_processed_(false)
 }
 
 #if !defined(DOXYGEN_IGNORE)
-SQLTypeAdapter::SQLTypeAdapter(Null<unsigned int> i) :
+SQLTypeAdapter::SQLTypeAdapter(Null<unsigned> i) :
 string(i.is_null ? null_str : stream2string(i)),
 is_string_(false),
 is_processed_(false)

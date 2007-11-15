@@ -179,7 +179,7 @@ public:
 	SQLTypeAdapter(Null<sql_tinyint> i);
 	SQLTypeAdapter(Null<sql_tinyint_unsigned> i);
 	SQLTypeAdapter(Null<short> i);
-	SQLTypeAdapter(Null<unsigned short int> i);
+	SQLTypeAdapter(Null<unsigned short> i);
 	SQLTypeAdapter(Null<int> i);
 	SQLTypeAdapter(Null<unsigned> i);
 	SQLTypeAdapter(Null<longlong> i);
