@@ -230,6 +230,16 @@ public:
 	/// \brief Destructor
 	~RefCountedBuffer() { delete[] data_; }
 
+	/// \brief Replace contents of buffer with copy of given C string
+	RefCountedBuffer& assign(const char* data, size_type length,
+			unsigned char type = mysql_type_info::string_type,
+			bool is_null = false);
+
+	/// \brief Replace contents of buffer with copy of given C++ string
+	RefCountedBuffer& assign(const std::string& s,
+			unsigned char type = mysql_type_info::string_type,
+			bool is_null = false);
+
 	/// \brief Return pointer to raw data buffer
 	const char* data() const { return data_; }
 
@@ -266,8 +276,11 @@ public:
 	bool detach() { return --refs_ > 0; }
 
 private:
+	/// \brief Common initialization for ctors
 	void init(const char* pd, size_type len, mysql_type_info type,
-			bool is_null);	///< common initialization for ctors
+			bool is_null);
+	/// \brief Implementation detail of assign() and init()
+	void replace_buffer(const char* pd, size_type length);
 
 	const char* data_;		///< pointer to the raw data buffer
 	size_type length_;		///< bytes in buffer, without trailing null

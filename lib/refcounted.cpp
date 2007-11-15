@@ -28,29 +28,57 @@
 namespace mysqlpp {
 
 
+RefCountedBuffer&
+RefCountedBuffer::assign(const char* data, size_type length,
+		unsigned char type, bool is_null)
+{
+	replace_buffer(data, length);
+	type_ = type;
+	is_null_ = is_null;
+	return *this;
+}
+
+RefCountedBuffer& 
+RefCountedBuffer::assign(const std::string& s, unsigned char type,
+		bool is_null)
+{
+	replace_buffer(s.data(), s.length());
+	type_ = type;
+	is_null_ = is_null;
+	return *this;
+}
+
 void
 RefCountedBuffer::init(const char* pd, size_type length,
 		mysql_type_info type, bool is_null)
 {
+	refs_ = 1;
 	type_ = type;
 	is_null_ = is_null;
-	refs_ = 1;
+
+	replace_buffer(pd, length);
+}
+
+void
+RefCountedBuffer::replace_buffer(const char* pd, size_type length)
+{
+	if (data_ || !pd) {
+		delete[] data_;
+		data_ = 0;
+		length_ = 0;
+	}
 
 	if (pd) {
 		// The casts for the data member are because the C type system
-		// can't distinguish initialization from modification.  We don't
-		// care to enforce constness on this buffer until after this
-		// function returns.  The cast for pd is just because memcpy()
-		// doesn't declare its second parameter const for historical
-		// reasons, not because it actually does modify it.
+		// can't distinguish initialization from modification when it
+		// happens in 2 steps like this.
+		// 
+		// We cast away const for pd in case we're on a system that uses
+		// the old definition of memcpy() with non-const 2nd parameter.
 		data_ = new char[length + 1];
 		length_ = length;
 		memcpy(const_cast<char*>(data_), const_cast<char*>(pd), length_);
 		const_cast<char*>(data_)[length_] = '\0';
-	}
-	else {
-		data_ = 0;
-		length_ = 0;
 	}
 }
 
