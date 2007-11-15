@@ -36,7 +36,7 @@ namespace mysqlpp {
 
 /// \brief Set to true if you want to suppress automatic quoting
 ///
-/// Works only for ColData inserted into C++ streams.
+/// Works only for String inserted into C++ streams.
 
 bool dont_quote_auto = false;
 
@@ -86,13 +86,13 @@ ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
 }
 
 
-/// \brief Inserts a ColData into a stream, quoted and escaped as needed
+/// \brief Inserts a String into a stream, quoted and escaped as needed
 ///
-/// Because ColData was designed to contain MySQL type data, we may
+/// Because String was designed to contain MySQL type data, we may
 /// choose not to actually quote or escape the data, if it is not
 /// needed.
 
-ostream& operator <<(quote_type1 o, const ColData& in)
+ostream& operator <<(quote_type1 o, const String& in)
 {
 	if (in.escape_q()) {
 		char* escaped = new char[in.length() * 2 + 1];
@@ -129,33 +129,33 @@ operator <<(ostream& o, const SQLTypeAdapter& in)
 }
 
 
-/// \brief Inserts a ColData into a non-Query stream.
+/// \brief Inserts a String into a non-Query stream.
 ///
-/// Although we know how to automatically quote and escape ColData
+/// Although we know how to automatically quote and escape String
 /// objects, we only do that when inserting them into Query streams
 /// because this feature is only intended to make it easier to build
 /// syntactically-correct SQL queries.  You can force the library to
 /// give you quoting and escaping with the quote manipulator:
 ///
 /// \code
-/// mysqlpp::ColData cd("...");
+/// mysqlpp::String cd("...");
 /// cout << mysqlpp::quote << cd << endl;
 /// \endcode
 
-ostream& operator <<(ostream& o, const ColData& in)
+ostream& operator <<(ostream& o, const String& in)
 {
 	o.write(in.data(), in.length());
 	return o;
 }
 
 
-/// \brief Insert a ColData into a Query stream
+/// \brief Insert a String into a Query stream
 ///
 /// This operator appears to be a workaround for a weakness in one
 /// compiler's implementation of the C++ type system.  See Wishlist for
 /// current plan on what to do about this.
 
-Query& operator <<(Query& o, const ColData& in)
+Query& operator <<(Query& o, const String& in)
 {
 	if (dont_quote_auto) {
 		o.write(in.data(), in.length());
@@ -202,12 +202,12 @@ SQLQueryParms& operator <<(quote_only_type2 p, SQLTypeAdapter& in)
 }
 
 
-/// \brief Inserts a ColData into a stream, quoted as needed
+/// \brief Inserts a String into a stream, quoted as needed
 ///
-/// Because ColData was designed to contain MySQL type data, we may
+/// Because String was designed to contain MySQL type data, we may
 /// choose not to actually quote the data, if it is not needed.
 
-ostream& operator <<(quote_only_type1 o, const ColData& in)
+ostream& operator <<(quote_only_type1 o, const String& in)
 {
 	if (in.quote_q()) o.ostr->write("'", 1);
 	o.ostr->write(in.data(), in.length());
@@ -239,12 +239,12 @@ SQLQueryParms& operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
 }
 
 
-/// \brief Inserts a ColData into a stream, double-quoted (") as needed
+/// \brief Inserts a String into a stream, double-quoted (") as needed
 ///
-/// Because ColData was designed to contain MySQL type data, we may
+/// Because String was designed to contain MySQL type data, we may
 /// choose not to actually quote the data, if it is not needed.
 
-ostream& operator <<(quote_double_only_type1 o, const ColData& in)
+ostream& operator <<(quote_double_only_type1 o, const String& in)
 {
 	if (in.quote_q()) o.ostr->write("\"", 1);
 	o.ostr->write(in.data(), in.length());
@@ -291,12 +291,12 @@ std::ostream& operator <<(escape_type1 o, const SQLTypeAdapter& in)
 }
 
 
-/// \brief Inserts a ColData into a stream, escaping special SQL characters
+/// \brief Inserts a String into a stream, escaping special SQL characters
 ///
-/// Because ColData was designed to contain MySQL type data, we may
+/// Because String was designed to contain MySQL type data, we may
 /// choose not to escape the data, if it is not needed.
 
-std::ostream& operator <<(escape_type1 o, const ColData& in)
+std::ostream& operator <<(escape_type1 o, const String& in)
 {
 	if (in.escape_q()) {
 		char* escaped = new char[in.length() * 2 + 1];

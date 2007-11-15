@@ -1,9 +1,6 @@
-/// \file coldata.h
-/// \brief Declares classes for converting string data to any of 
-/// the basic C types.
-///
-/// Roughly speaking, this defines classes that are the inverse of
-/// mysqlpp::SQLString.
+/// \file mystring.h
+/// \brief Declares String class, MySQL++'s generic std::string-like
+/// class, used for holding data received from the database server.
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
@@ -29,8 +26,8 @@
  USA
 ***********************************************************************/
 
-#ifndef MYSQLPP_COLDATA_H
-#define MYSQLPP_COLDATA_H
+#if !defined(MYSQLPP_MYSTRING_H)
+#define MYSQLPP_MYSTRING_H
 
 #include "common.h"
 
@@ -49,23 +46,26 @@ namespace mysqlpp {
 /// text data formats to C++ data types.
 ///
 /// This class is an intermediate form for a SQL field, normally
-/// converted to a more useful native C++ type.  It is not normally
-/// used directly by MySQL++ programs, but instead is the return type
-/// from several Row class members.
+/// converted to a more useful native C++ type, not used directly.
+/// The only exception is in dealing with BLOB data, which stays in
+/// String form for efficiency and to avoid corrupting the data with
+/// facile conversions.  Even then, it's best to use it through the 
+/// typedef aliases like sql_blob in sql_types.h, in case we later
+/// change this underlying representation.
 ///
-/// ColData's implicit conversion operators let you can use these
+/// String's implicit conversion operators let you can use these
 /// objects naturally:
 ///
-/// \code ColData("12.86") + 2.0 \endcode
+/// \code String("12.86") + 2.0 \endcode
 ///
 /// That will give you 14.86 (approximately) as you expect, but be
 /// careful not to get tripped up by C++'s type conversion rules.  If
 /// you had said this instead:
 /// 
-/// \code ColData("12.86") + 2 \endcode
+/// \code String("12.86") + 2 \endcode
 /// 
 /// the result would be 14 because 2 is an integer, and C++'s type
-/// conversion rules put the ColData object in an integer context.
+/// conversion rules put the String object in an integer context.
 ///
 /// You can disable the operator overloads that allow these things by
 /// defining MYSQLPP_NO_BINARY_OPERS.
@@ -74,7 +74,7 @@ namespace mysqlpp {
 /// stored in it, to allow it to do the conversions more intelligently
 /// than a trivial implementation would allow.
 
-class MYSQLPP_EXPORT ColData
+class MYSQLPP_EXPORT String
 {
 public:
 	/// \brief Type of the data stored in this object, when it is not
@@ -102,20 +102,20 @@ public:
 	///
 	/// An object constructed this way is essentially useless, but
 	/// sometimes you just need to construct a default object.
-	ColData() :
+	String() :
 	buffer_(0)
 	{
 	}
 
 	/// \brief Copy ctor
 	///
-	/// \param cd the other ColData object
+	/// \param other the other String object
 	///
-	/// This ctor only copies the pointer to the other ColData's data
+	/// This ctor only copies the pointer to the other String's data
 	/// buffer and increments its reference counter.  If you need a
 	/// deep copy, use one of the ctors that takes a string.
-	ColData(const ColData& cd) :
-	buffer_(cd.buffer_)
+	String(const String& other) :
+	buffer_(other.buffer_)
 	{
 		buffer_->attach();
 	}
@@ -132,7 +132,7 @@ public:
 	/// for \c len, to hold a null terminator for safety.  We do this
 	/// because this ctor may be used for things other than
 	/// null-terminated C strings.  (e.g. BLOB data)
-	explicit ColData(const char* str, size_type len,
+	explicit String(const char* str, size_type len,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
 	buffer_(new RefCountedBuffer(str, len, type, is_null))
@@ -146,7 +146,7 @@ public:
 	/// \param is_null string represents a SQL null, not literal data
 	///
 	/// The resulting object will contain a copy of the string buffer.
-	explicit ColData(const std::string& str,
+	explicit String(const std::string& str,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
 	buffer_(new RefCountedBuffer(str.data(), str.length(), type, is_null))
@@ -160,7 +160,7 @@ public:
 	/// \param is_null string represents a SQL null, not literal data
 	///
 	/// The resulting object will contain a copy of the string buffer.
-	explicit ColData(const char* str,
+	explicit String(const char* str,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
 	buffer_(new RefCountedBuffer(str, strlen(str), type, is_null))
@@ -168,13 +168,13 @@ public:
 	}
 
 	/// \brief Destroy string
-	~ColData();
+	~String();
 
 	/// \brief Assign raw data to this object
 	///
 	/// This parallels the ctor with the same parameters, for when you
 	/// must do a 2-step create, or when you want to reassign the data 
-	/// without creating a ColData temporary to get around the fact
+	/// without creating a String temporary to get around the fact
 	/// that operator=() can only take one parameter.
 	void assign(const char* str, size_type len,
 			mysql_type_info type = mysql_type_info::string_type,
@@ -188,7 +188,7 @@ public:
 	///
 	/// This parallels the ctor with the same parameters, for when you
 	/// must do a 2-step create, or when you want to reassign the data 
-	/// without creating a ColData temporary to get around the fact
+	/// without creating a String temporary to get around the fact
 	/// that operator=() can only take one parameter.
 	void assign(const std::string& str,
 			mysql_type_info type = mysql_type_info::string_type,
@@ -202,7 +202,7 @@ public:
 	///
 	/// This parallels the ctor with the same parameters, for when you
 	/// must do a 2-step create, or when you want to reassign the data 
-	/// without creating a ColData temporary to get around the fact
+	/// without creating a String temporary to get around the fact
 	/// that operator=() can only take one parameter.
 	void assign(const char* str,
 			mysql_type_info type = mysql_type_info::string_type,
@@ -231,10 +231,10 @@ public:
 
 	/// \brief Overload of conv() for types wrapped with Null<>
 	///
-	/// If the ColData object was initialized with some string we
+	/// If the String object was initialized with some string we
 	/// recognize as a SQL null, we just return a copy of the global
 	/// 'null' object converted to the requested type.  Otherwise, we
-	/// return the ColData's value wrapped in the Null<> template.
+	/// return the String's value wrapped in the Null<> template.
 	template <class T, class B>
 	Null<T, B> conv(Null<T, B> dummy) const
 	{
@@ -253,7 +253,7 @@ public:
 	/// \retval <0 if str1 is lexically "less than" str2
 	/// \retval 0 if str1 is equal to str2
 	/// \retval >0 if str1 is lexically "greater than" str2
-	int compare(const ColData& other) const;
+	int compare(const String& other) const;
 
 	/// \brief Raw access to the underlying buffer, with no C string
 	/// interpretation.
@@ -303,7 +303,7 @@ public:
 	mysql_type_info type() const { return buffer_->type(); }
 
 	/// \brief Assignment operator, from C++ string
-	ColData& operator =(const std::string& rhs)
+	String& operator =(const std::string& rhs)
 	{
 		dec_ref_count();
 
@@ -317,7 +317,7 @@ public:
 	///
 	/// This creates a copy of the entire string, not just a copy of
 	/// the pointer.
-	ColData& operator =(const char* str)
+	String& operator =(const char* str)
 	{
 		dec_ref_count();
 
@@ -327,16 +327,16 @@ public:
 		return *this;
 	}
 
-	/// \brief Assignment operator, from other ColData
+	/// \brief Assignment operator, from other String
 	///
-	/// This only copies the pointer to the other ColData's data
+	/// This only copies the pointer to the other String's data
 	/// buffer and increments its reference counter.  If you need a
 	/// deep copy, assign a string to this object instead.
-	ColData& operator =(const ColData& cd)
+	String& operator =(const String& other)
 	{
 		dec_ref_count();
 
-		buffer_ = cd.buffer_;
+		buffer_ = other.buffer_;
 		buffer_->attach();
 
 		return *this;
@@ -417,7 +417,7 @@ public:
 	/// \brief Converts this object's string data to a mysqlpp::Time
 	operator Time() const { return Time(*this); }
 
-	/// \brief Converts the ColData to a nullable data type
+	/// \brief Converts the String to a nullable data type
 	///
 	/// This is just an implicit version of conv(Null<T, B>)
 	template <class T, class B>
@@ -448,9 +448,9 @@ private:
 // bothered to explain it to Doxygen.
 
 #define oprsw(opr, other, conv) \
-	inline other operator opr (ColData x, other y) \
+	inline other operator opr (String x, other y) \
 			{ return static_cast<conv>(x) opr y; } \
-	inline other operator opr (other x, ColData y) \
+	inline other operator opr (other x, String y) \
 			{ return x opr static_cast<conv>(y); }
 
 #define operator_binary(other, conv) \
@@ -489,7 +489,7 @@ operator_binary_int(ulonglong, ulonglong)
 
 // The generic conv() implementation for integral types.
 template <class Type>
-Type ColData::conv(Type /* dummy */) const
+Type String::conv(Type /* dummy */) const
 {
 	std::string strbuf(data(), length());
 	strip_all_blanks(strbuf);
@@ -512,44 +512,44 @@ Type ColData::conv(Type /* dummy */) const
 }
 
 
-/// \brief Specialization of ColData::conv<Type>() for ColData
+/// \brief Specialization of String::conv<Type>() for String
 ///
-/// Yes, I hear you crying, "WTF?"  Why does ColData need to be able to
-/// convert itself to ColData?  SSQLSes with BLOB columns, that's why.
+/// Yes, I hear you crying, "WTF?"  Why does String need to be able to
+/// convert itself to String?  SSQLSes with BLOB columns, that's why.
 ///
 /// SSQLSes populate their data members from the raw field data by
 /// calling row[field].conv().  The raw field data is stored in a
-/// ColData, and the MySQL++ native BLOB type is ColData.  Since we're
+/// String, and the MySQL++ native BLOB type is String.  Since we're
 /// dealing with generated code, we need this specialization which hand-
 /// written code wouldn't need.  Prove the truth of this to yourself by
 /// removing this and counting how many pieces examples/cgi_jpeg.cpp
 /// breaks into.
-template <> ColData ColData::conv(ColData dummy) const;
+template <> String String::conv(String dummy) const;
 
-/// \brief Specialization of ColData::conv<Type>() for C++ strings
-template <> std::string ColData::conv(std::string dummy) const;
+/// \brief Specialization of String::conv<Type>() for C++ strings
+template <> std::string String::conv(std::string dummy) const;
 
-/// \brief Specialization of ColData::conv<Type>() for mysqlpp::Date
+/// \brief Specialization of String::conv<Type>() for mysqlpp::Date
 ///
 /// This is necessary because as of MySQL++ v3, Date no longer has an
-/// implicit conversion ctor from ColData, and SSQLS uses conv() instead
+/// implicit conversion ctor from String, and SSQLS uses conv() instead
 /// of the C++ type conversion system anyway.
-template <> Date ColData::conv(Date dummy) const;
+template <> Date String::conv(Date dummy) const;
 
-/// \brief Specialization of ColData::conv<Type>() for mysqlpp::DateTime
+/// \brief Specialization of String::conv<Type>() for mysqlpp::DateTime
 ///
 /// This is necessary because as of MySQL++ v3, DateTime no longer has
-/// an implicit conversion ctor from ColData, and SSQLS uses conv()
+/// an implicit conversion ctor from String, and SSQLS uses conv()
 /// instead of the C++ type conversion system anyway.
-template <> DateTime ColData::conv(DateTime dummy) const;
+template <> DateTime String::conv(DateTime dummy) const;
 
-/// \brief Specialization of ColData::conv<Type>() for mysqlpp::Time
+/// \brief Specialization of String::conv<Type>() for mysqlpp::Time
 ///
 /// This is necessary because as of MySQL++ v3, Time no longer has an
-/// implicit conversion ctor from ColData, and SSQLS uses conv() instead
+/// implicit conversion ctor from String, and SSQLS uses conv() instead
 /// of the C++ type conversion system anyway.
-template <> Time ColData::conv(Time dummy) const;
+template <> Time String::conv(Time dummy) const;
 
 } // end namespace mysqlpp
 
-#endif
+#endif // !defined(MYSQLPP_MYSTRING_H)

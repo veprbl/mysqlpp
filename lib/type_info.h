@@ -111,9 +111,10 @@ private:
 #endif // !defined(DOXYGEN_IGNORE)
 
 
-/// \brief Holds basic type information for ColData.
+/// \brief SQL field type information
 ///
-/// Class to hold basic type information for mysqlpp::ColData.
+/// \internal Used within MySQL++ for mapping SQL types to C++ types
+/// and vice versa.
 class MYSQLPP_EXPORT mysql_type_info
 {
 public:

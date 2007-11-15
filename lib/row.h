@@ -30,7 +30,7 @@
 
 #include "common.h"
 
-#include "coldata.h"
+#include "mystring.h"
 #include "noexceptions.h"
 #include "refcounted.h"
 #include "subiter.h"
@@ -53,7 +53,7 @@ class MYSQLPP_EXPORT Row : public OptionalExceptions
 public:
 	typedef int difference_type;			///< type for index differences
 	typedef unsigned int size_type;			///< type of returned sizes
-	typedef ColData value_type;				///< type of data in container
+	typedef String value_type;				///< type of data in container
 
 	/// \brief regular iterator type
 	///

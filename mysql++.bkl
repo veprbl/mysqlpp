@@ -41,7 +41,6 @@
 
 			<sources>
 				lib/beemutex.cpp
-				lib/coldata.cpp
 				lib/connection.cpp
 				lib/cpool.cpp
 				lib/datetime.cpp
@@ -51,6 +50,7 @@
 				lib/manip.cpp
 				lib/myset.cpp
 				lib/mysql++.cpp
+				lib/mystring.cpp
 				lib/null.cpp
 				lib/qparms.cpp
 				lib/query.cpp

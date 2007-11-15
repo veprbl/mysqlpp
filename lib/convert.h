@@ -2,7 +2,7 @@
 /// \brief Declares various mechanisms MySQL++ uses internally to
 /// convert data from one type to another.
 ///
-/// This is the mechanism behind much of the mysqlpp::ColData::conv()
+/// This is the mechanism behind much of the mysqlpp::String::conv()
 /// stuff.  This stuff should not be used by end-user code.
 
 /***********************************************************************

@@ -31,7 +31,7 @@
 
 #include "common.h"
 
-#include "coldata.h"
+#include "mystring.h"
 #include "stream2string.h"
 
 #include <iostream>
@@ -87,7 +87,7 @@ public:
 	}
 	
 	/// \brief Create object from a comma-separated list of values
-	Set(const ColData& str)
+	Set(const String& str)
 	{
 		set2container(str.c_str(), set_insert(this));
 	}

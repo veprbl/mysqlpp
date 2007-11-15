@@ -80,7 +80,7 @@ explicit_ostream_quote(T test, size_t len)
 
 
 // The only stringish type that should be implicitly quoted when
-// inserted into Query is ColData, and not always then; we don't know
+// inserted into Query is String, and not always then; we don't know
 // enough about anything else to make good automated choices.
 template <class T>
 static bool
@@ -89,7 +89,7 @@ implicit_query_quote(mysqlpp::Query& q, T test, size_t len)
 	q.reset();
 	q << test;
 	if (is_quoted(q.str(), test, len) || 
-			(typeid(test) != typeid(mysqlpp::ColData))) {
+			(typeid(test) != typeid(mysqlpp::String))) {
 		return true;
 	}
 	else {
@@ -101,7 +101,7 @@ implicit_query_quote(mysqlpp::Query& q, T test, size_t len)
 
 
 // No stringish type should be implicitly quoted when inserted into
-// non-Query ostreams, not even ColData carrying data that would be
+// non-Query ostreams, not even String carrying data that would be
 // quoted when inserted into Query.  Implicit quoting is only for
 // building SQL queries.
 template <class T>
@@ -148,7 +148,7 @@ main()
 	failures += test(q, (char*)s, len) == false;
 	failures += test(q, (const char*)s, len) == false;
 	failures += test(q, std::string(s), len) == false;
-	failures += test(q, mysqlpp::ColData(s), len) == false;
+	failures += test(q, mysqlpp::String(s), len) == false;
 	return failures;
 }
 

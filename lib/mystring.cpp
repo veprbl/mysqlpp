@@ -1,5 +1,5 @@
 /***********************************************************************
- coldata.cpp - Implements the ColData class.
+ mystring.cpp - Implements the String class.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
  (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
@@ -24,7 +24,7 @@
  USA
 ***********************************************************************/
 
-#include "coldata.h"
+#include "mystring.h"
 
 #include <stdexcept>
 #include <string>
@@ -32,17 +32,17 @@
 namespace mysqlpp {
 
 
-ColData::~ColData()
+String::~String()
 {
 	dec_ref_count();
 }
 
 
 char
-ColData::at(size_type pos) const
+String::at(size_type pos) const
 {
 	if (pos >= size()) {
-		throw std::out_of_range("ColData");
+		throw std::out_of_range("String");
 	}
 	else {
 		return buffer_->data()[pos];
@@ -51,7 +51,7 @@ ColData::at(size_type pos) const
 
 
 int
-ColData::compare(const ColData& other) const
+String::compare(const String& other) const
 {
 	if (buffer_) {
 		if (other.buffer_) {
@@ -67,7 +67,7 @@ ColData::compare(const ColData& other) const
 			return length() - other.length();
 		}
 		else {
-			// Arbitrarily consider a ColData that has a buffer to be
+			// Arbitrarily consider a String that has a buffer to be
 			// "greater than" one that is default-constructed.
 			return 1;
 		}
@@ -77,68 +77,68 @@ ColData::compare(const ColData& other) const
 		return -1;
 	}
 	else {
-		// Neither ColData has a buffer, so consider them to be equal.
+		// Neither String has a buffer, so consider them to be equal.
 		return 0;
 	}
 }
 
 
 template <>
-ColData
-ColData::conv(ColData dummy) const { return *this; }
+String
+String::conv(String dummy) const { return *this; }
 
 
 template <>
 std::string
-ColData::conv(std::string dummy) const
+String::conv(std::string dummy) const
 		{ return std::string(data(), length()); }
 
 
 template <>
 Date
-ColData::conv(Date dummy) const { return Date(c_str()); }
+String::conv(Date dummy) const { return Date(c_str()); }
 
 
 template <>
 DateTime
-ColData::conv(DateTime dummy) const { return DateTime(c_str()); }
+String::conv(DateTime dummy) const { return DateTime(c_str()); }
 
 
 template <>
 Time
-ColData::conv(Time dummy) const { return Time(c_str()); }
+String::conv(Time dummy) const { return Time(c_str()); }
 
 
 const char*
-ColData::data() const
+String::data() const
 {
 	return buffer_ ? buffer_->data() : 0;
 }
 
 
-ColData::const_iterator
-ColData::end() const
+String::const_iterator
+String::end() const
 {
 	return buffer_ ? buffer_->data() + buffer_->length() : 0;
 }
 
 
 bool
-ColData::escape_q() const
+String::escape_q() const
 {
 	return buffer_ ? buffer_->type().escape_q() : false;
 }
 
 
 bool
-ColData::is_null() const
+String::is_null() const
 {
 	return buffer_ ? buffer_->is_null() : false;
 }
 
 
 void
-ColData::it_is_null()
+String::it_is_null()
 {
 	if (buffer_) {
 		buffer_->set_null();
@@ -149,22 +149,22 @@ ColData::it_is_null()
 }
 
 
-ColData::size_type
-ColData::length() const
+String::size_type
+String::length() const
 {
 	return buffer_ ? buffer_->length() : 0;
 }
 
 
 bool
-ColData::quote_q() const
+String::quote_q() const
 {
 	return buffer_ ? buffer_->type().quote_q() : false;
 }
 
 
 void
-ColData::to_string(std::string& s) const
+String::to_string(std::string& s) const
 {
 	if (buffer_) {
 		s.assign(buffer_->data(), buffer_->length());
@@ -176,7 +176,7 @@ ColData::to_string(std::string& s) const
 
 
 char
-ColData::operator [](size_type pos) const
+String::operator [](size_type pos) const
 {
 	return buffer_ ? buffer_->data()[pos] : 0;
 }

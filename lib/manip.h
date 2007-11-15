@@ -122,11 +122,11 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 
 
 MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
-		const ColData& in);
+		const String& in);
 
 
 MYSQLPP_EXPORT Query& operator <<(Query& o,
-		const ColData& in);
+		const String& in);
 
 
 MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
@@ -134,7 +134,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
 
 
 MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
-		const ColData& in);
+		const String& in);
 
 
 template <class ST>
@@ -215,7 +215,7 @@ operator <<(quote_only_type1 o, const SQLTypeAdapter& in)
 
 
 MYSQLPP_EXPORT std::ostream& operator <<(quote_only_type1 o,
-		const ColData& in);
+		const String& in);
 
 
 template <class ST>
@@ -296,7 +296,7 @@ operator <<(quote_double_only_type1 o, const SQLTypeAdapter& in)
 
 
 MYSQLPP_EXPORT std::ostream&
-operator <<(quote_double_only_type1 o, const ColData& in);
+operator <<(quote_double_only_type1 o, const String& in);
 
 
 template <class ST>
@@ -374,7 +374,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
 
 
 MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
-		const ColData& in);
+		const String& in);
 
 
 /// \enum do_nothing_type0

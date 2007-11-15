@@ -70,21 +70,21 @@ typedef std::string				sql_longtext;
 
 
 // The following sections are treated separately to avoid making the
-// #include tree too dense: if coldata.h (for example) is not yet
+// #include tree too dense: if mystring.h (for example) is not yet
 // #included, no sense pulling it in to define all the typedefs based
-// on ColData.  The separate #include guards for each section allow
+// on String.  The separate #include guards for each section allow
 // this file to be #included as many times as necessary to build up the
 // full typedef set.  This trickery is necessary because sql_types.h
 // is needed in a few places within MySQL++, but we can't (and don't)
 // depend on having the full set of typedefs.  mysql++.h #includes this
 // at a late stage, ensuring that end-user code does see the full set.
-#if defined(MYSQLPP_COLDATA_H) && !defined(MYSQLPP_SQL_TYPES_H_COLDATA) && !defined(DOXYGEN_IGNORE)
-#	define MYSQLPP_SQL_TYPES_H_COLDATA
+#if defined(MYSQLPP_MYSTRING_H) && !defined(MYSQLPP_SQL_TYPES_H_MYSTRING) && !defined(DOXYGEN_IGNORE)
+#	define MYSQLPP_SQL_TYPES_H_MYSTRING
 	namespace mysqlpp {
-		typedef ColData			sql_blob;
-		typedef ColData			sql_tinyblob;
-		typedef ColData			sql_mediumblob;
-		typedef ColData			sql_longblob;
+		typedef String			sql_blob;
+		typedef String			sql_tinyblob;
+		typedef String			sql_mediumblob;
+		typedef String			sql_longblob;
 	} // end namespace mysqlpp
 #endif
 
