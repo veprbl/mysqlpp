@@ -441,7 +441,7 @@ public:
 	template <class SSQLS, typename Function>
 	Function for_each(const SSQLS& ssqls, Function fn)
 	{	
-		SQLTypeAdapter query("select * from ");
+		std::string query("select * from ");
 		query += ssqls._table;
 		mysqlpp::ResUse res = use(query);
 		if (res) {
@@ -503,7 +503,7 @@ public:
 	template <class Sequence, class SSQLS, typename Function>
 	Function store_if(Sequence& con, const SSQLS& ssqls, Function fn)
 	{	
-		SQLTypeAdapter query("select * from ");
+		std::string query("select * from ");
 		query += ssqls._table;
 		mysqlpp::ResUse res = use(query);
 		if (res) {
