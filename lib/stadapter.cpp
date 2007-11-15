@@ -313,6 +313,66 @@ is_processed_(false)
 {
 }
 
+char
+SQLTypeAdapter::at(size_type i) const throw(std::out_of_range)
+{
+	if (buffer_) {
+		if (i <= length()) {
+			return *(buffer_->data() + i);
+		}
+		else {
+			throw out_of_range("Not enough chars in SQLTypeAdapter");
+		}
+	}
+	else {
+		throw out_of_range("SQLTypeAdapter buffer not initialized");
+	}
+}
+
+int
+SQLTypeAdapter::compare(const SQLTypeAdapter& other) const
+{
+	if (other.buffer_) {
+		return compare(0, length(), other.buffer_->data());
+	}
+	else {
+		return buffer_ ? 1 : 0;
+	}
+}
+
+int
+SQLTypeAdapter::compare(const string& other) const
+{
+	return compare(0, length(), other.data());
+}
+
+int
+SQLTypeAdapter::compare(size_type pos, size_type num, string& other) const
+{
+	return compare(pos, num, other.data());
+}
+
+int
+SQLTypeAdapter::compare(const char* other) const
+{
+	return compare(0, length(), other);
+}
+
+int
+SQLTypeAdapter::compare(size_type pos, size_type num,
+		const char* other) const
+{
+	if (buffer_ && other) {
+		return strncmp(data() + pos, other, num);
+	}
+	else if (!other) {
+		return 1;				// initted is "greater than" uninitted
+	}
+	else {
+		return other ? -1 : 0;	// "less than" unless other also unitted
+	}
+}
+
 const char*
 SQLTypeAdapter::data() const
 {

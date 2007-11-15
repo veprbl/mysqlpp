@@ -34,6 +34,7 @@
 #include "null.h"
 #include "sql_types.h"
 
+#include <stdexcept>
 #include <string>
 
 namespace mysqlpp {
@@ -160,6 +161,41 @@ public:
 
 	/// \brief Copy a C++ \c string into this object
 	SQLTypeAdapter& operator =(const std::string& str);
+
+	/// \brief Returns the character at a given position within the
+	/// string buffer.
+	///
+	/// \throw out_of_range if the internal buffer is not initialized
+	/// (default ctor called, and no assignment operator subsequently)
+	/// or if there are not at least i + 1 characters in the buffer
+	char at(size_type i) const throw(std::out_of_range);
+
+	/// \brief Compare the internal buffer to the given string
+	///
+	/// Works just like string::compare(const std::string&).
+	int compare(const SQLTypeAdapter& other) const;
+
+	/// \brief Compare the internal buffer to the given string
+	///
+	/// Works just like string::compare(const std::string&).
+	int compare(const std::string& other) const;
+
+	/// \brief Compare the internal buffer to the given string
+	///
+	/// Works just like string::compare(size_type, size_type, 
+	/// std::string&).
+	int compare(size_type pos, size_type num, std::string& other) const;
+
+	/// \brief Compare the internal buffer to the given string
+	///
+	/// Works just like string::compare(const char*).
+	int compare(const char* other) const;
+
+	/// \brief Compare the internal buffer to the given string
+	///
+	/// Works just like string::compare(size_type, size_type, 
+	/// const char*).
+	int compare(size_type pos, size_type num, const char* other) const;
 
 	/// \brief Return pointer to raw data buffer
 	const char* data() const;

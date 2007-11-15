@@ -250,10 +250,44 @@ public:
 	///
 	/// \param other string to compare against this one
 	///
-	/// \retval <0 if str1 is lexically "less than" str2
-	/// \retval 0 if str1 is equal to str2
-	/// \retval >0 if str1 is lexically "greater than" str2
+	/// \see compare(size_type, size_type, const char*)
 	int compare(const String& other) const;
+
+	/// \brief Lexically compare this string to another.
+	///
+	/// \param other string to compare against this one
+	///
+	/// \see compare(size_type, size_type, const char*)
+	int compare(const std::string& other) const;
+
+	/// \brief Lexically compare this string to another.
+	///
+	/// \param pos position within this string to begin comparison
+	/// \param num maximum number of characters within this string to
+	/// use in comparison
+	/// \param other string to compare against this one
+	///
+	/// \see compare(size_type, size_type, const char*)
+	int compare(size_type pos, size_type num, std::string& other) const;
+
+	/// \brief Lexically compare this string to another.
+	///
+	/// \param other string to compare against this one
+	///
+	/// \see compare(size_type, size_type, const char*)
+	int compare(const char* other) const;
+
+	/// \brief Lexically compare this string to another.
+	///
+	/// \param pos position within this string to begin comparison
+	/// \param num maximum number of characters within this string to
+	/// use in comparison
+	/// \param other string to compare against this one
+	///
+	/// \retval < 0 if this string is lexically "less than" other
+	/// \retval 0 if this string is equal to other
+	/// \retval > 0 if this string is lexically "greater than" other
+	int compare(size_type pos, size_type num, const char* other) const;
 
 	/// \brief Raw access to the underlying buffer, with no C string
 	/// interpretation.

@@ -53,35 +53,48 @@ String::at(size_type pos) const
 int
 String::compare(const String& other) const
 {
-	if (buffer_) {
-		if (other.buffer_) {
-			const char* ptb = buffer_->data();			// ptr to this buffer
-			const char* pob = other.buffer_->data();	// ptr to other buffer
-			const size_type short_len = std::min(length(), other.length());
-			for (size_type i = 0; i < short_len; ++i) {
-				if (ptb[i] != pob[i]) {
-					return ptb[i] - pob[i];
-				}
-			}
-			
-			return length() - other.length();
-		}
-		else {
-			// Arbitrarily consider a String that has a buffer to be
-			// "greater than" one that is default-constructed.
-			return 1;
-		}
-	}
-	else if (other.buffer_) {
-		// Reverse of above rule
-		return -1;
+	if (other.buffer_) {
+		return compare(0, length(), other.buffer_->data());
 	}
 	else {
-		// Neither String has a buffer, so consider them to be equal.
-		return 0;
+		// Consider ourselves equal to other if our buffer is also
+		// uninitted, else we are greater because we are initted.
+		return buffer_ ? 1 : 0;	
 	}
 }
 
+int
+String::compare(const std::string& other) const
+{
+	return compare(0, length(), other.data());
+}
+
+int
+String::compare(size_type pos, size_type num, std::string& other) const
+{
+	return compare(pos, num, other.data());
+}
+
+int
+String::compare(const char* other) const
+{
+	return compare(0, length(), other);
+}
+
+int
+String::compare(size_type pos, size_type num,
+		const char* other) const
+{
+	if (buffer_ && other) {
+		return strncmp(data() + pos, other, num);
+	}
+	else if (!other) {
+		return 1;				// initted is "greater than" uninitted
+	}
+	else {
+		return other ? -1 : 0;	// "less than" unless other also unitted
+	}
+}
 
 template <>
 String
