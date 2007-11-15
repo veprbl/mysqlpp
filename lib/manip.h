@@ -54,10 +54,7 @@
 /// so there is a serious danger of conflicts.
 namespace mysqlpp {
 
-class Query;
 class SQLQueryParms;
-
-extern bool dont_quote_auto;
 
 
 /// \enum quote_type0
@@ -121,20 +118,8 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 		const SQLTypeAdapter& in);
 
 
-MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
-		const String& in);
-
-
-MYSQLPP_EXPORT Query& operator <<(Query& o,
-		const String& in);
-
-
 MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
 		const SQLTypeAdapter& in);
-
-
-MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
-		const String& in);
 
 
 template <class ST>
@@ -214,10 +199,6 @@ operator <<(quote_only_type1 o, const SQLTypeAdapter& in)
 }
 
 
-MYSQLPP_EXPORT std::ostream& operator <<(quote_only_type1 o,
-		const String& in);
-
-
 template <class ST>
 inline std::ostream& 
 operator <<(quote_only_type1 o, const Set<ST>& in)
@@ -295,10 +276,6 @@ operator <<(quote_double_only_type1 o, const SQLTypeAdapter& in)
 }
 
 
-MYSQLPP_EXPORT std::ostream&
-operator <<(quote_double_only_type1 o, const String& in);
-
-
 template <class ST>
 inline std::ostream&
 operator <<(quote_double_only_type1 o, const Set<ST>& in)
@@ -371,10 +348,6 @@ MYSQLPP_EXPORT SQLQueryParms& operator <<(escape_type2 p,
 
 MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
 		const SQLTypeAdapter& in);
-
-
-MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
-		const String& in);
 
 
 /// \enum do_nothing_type0

@@ -17,10 +17,6 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Add conversion ctor to SQLTypeAdapter for String that can do
-      buffer sharing, then remove String specializations for
-      manipulators.
-
     o Add String::compare(const char*, int), and anything else that
       looks useful from the std::string interface.
 

@@ -26,6 +26,7 @@
 
 #include "stadapter.h"
 
+#include "mystring.h"
 #include "refcounted.h"
 #include "stream2string.h"
 
@@ -44,6 +45,13 @@ is_processed_(false)
 SQLTypeAdapter::SQLTypeAdapter(const SQLTypeAdapter& other) :
 buffer_(other.buffer_),
 is_processed_(false)
+{
+	buffer_->attach();
+}
+
+SQLTypeAdapter::SQLTypeAdapter(const String& other, bool processed) :
+buffer_(other.buffer_),
+is_processed_(processed)
 {
 	buffer_->attach();
 }
@@ -402,6 +410,16 @@ SQLTypeAdapter::escape_q() const
 
 SQLTypeAdapter&
 SQLTypeAdapter::operator =(const SQLTypeAdapter& rhs)
+{
+	dec_ref_count();
+	buffer_ = rhs.buffer_;
+	buffer_->attach();
+	is_processed_ = false;
+	return *this;
+}
+
+SQLTypeAdapter&
+SQLTypeAdapter::operator =(const String& rhs)
 {
 	dec_ref_count();
 	buffer_ = rhs.buffer_;

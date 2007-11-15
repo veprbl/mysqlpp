@@ -194,5 +194,25 @@ String::operator [](size_type pos) const
 	return buffer_ ? buffer_->data()[pos] : 0;
 }
 
+/// \brief Stream insertion operator for String objects
+///
+/// This doesn't have anything to do with the automatic quoting and
+/// escaping you get when using SQLTypeAdapter with Query.  The need to
+/// use String with Query should be rare, since String generally comes
+/// in result sets; it should only go back out as queries when using
+/// result data in a new query.  Since SQLTypeAdapter has a conversion
+/// ctor for String, this shouldn't be a problem.  It's just trading
+/// simplicity for a tiny bit of inefficiency in a rare case.  And 
+/// since String and SQLTypeAdapter can share a buffer, it's not all
+/// that inefficient anyway.
+
+std::ostream&
+operator <<(std::ostream& o, const String& in)
+{
+	o.write(in.data(), in.length());
+	return o;
+}
+
+
 
 } // end namespace mysqlpp

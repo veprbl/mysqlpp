@@ -42,6 +42,10 @@
 
 namespace mysqlpp {
 
+#if !defined(DOXYGEN_IGNORE)
+class SQLTypeAdapter;
+#endif
+
 /// \brief A std::string work-alike that can convert itself from SQL
 /// text data formats to C++ data types.
 ///
@@ -471,7 +475,13 @@ private:
 	}
 
 	RefCountedBuffer* buffer_;	///< pointer to data buffer manager object
+
+	friend class SQLTypeAdapter;
 };
+
+MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
+		const String& in);
+
 
 
 #if !defined(DOXYGEN_IGNORE)

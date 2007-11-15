@@ -41,6 +41,7 @@ namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)
 class RefCountedBuffer;
+class String;
 #endif
 
 /// \brief Converts many different data types to strings suitable for
@@ -85,6 +86,14 @@ public:
 	/// data buffer and increments its reference counter.  If you need a
 	/// deep copy, use one of the ctors that takes a string.
 	SQLTypeAdapter(const SQLTypeAdapter& other);
+
+	/// \brief Create a copy of a MySQL++ string
+	///
+	/// This does reference-counted buffer sharing with the other 
+	/// object.  If you need a deep copy, pass the result of 
+	/// either String::c_str() or String::conv() instead, which will 
+	/// call one of the other string ctors.
+	SQLTypeAdapter(const String& str, bool processed = false);
 
 	/// \brief Create a copy of a C++ string
 	SQLTypeAdapter(const std::string& str, bool processed = false);
@@ -155,6 +164,13 @@ public:
 	/// itself to the other object's buffer, with reference counting
 	/// on each side.  If you need a deep copy, assign a string instead.
 	SQLTypeAdapter& operator =(const SQLTypeAdapter& rhs);
+
+	/// \brief Share a buffer with a String object
+	///
+	/// Detaches this object from its internal buffer and attaches
+	/// itself to the other object's buffer, with reference counting
+	/// on each side.  If you need a deep copy, assign a string instead.
+	SQLTypeAdapter& operator =(const String& rhs);
 
 	/// \brief Copy a C string into this object
 	SQLTypeAdapter& operator =(const char* str);
