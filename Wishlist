@@ -13,31 +13,39 @@ v3.0 Plan, For-Sure Stuff
     get done in v3.0.  Most of them break the ABI, so they can't wait
     for a future version, because v4 could be years out.
 
-    o Try removing explicit quoting and escaping manipulators, doing it
-      all implicitly upon building query strings, now that all data
-      should be in STA form.  Add methods to STA to make it possible
-      if at first it does not work.
+    o Add a userman section on String and SQLTypeAdapter.
 
-    o If that works, all that should be left are the operator<<()'s,
-      which can be moved into stadapter module.  Do that, and remove
-      manip module and relevant userman sections.
+    o field_list should use backticks to quote its items to handle
+      spaces and other special characters.  Probably also remove all
+      the manipulator stuff associated with these: no reason to make
+      it user-settable, as there's only one right way to do it.  See:
+
+         http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
 
     o Factor out quoting and escaping logic into a common function.
       Near-identical code in too many places right now.
 
-    o Add a userman section on String and SQLTypeAdapter.
+    o The quote manipulator (and presumably the others as well) don't
+      work properly with char*.  See this for details:
 
-    o Replace ostream& in operator<< for STA with Query&.  At that
-      point, there should be nowhere in the query string building
-      process where we can't get access to the Connection object,
-      so we can switch to mysql_real_escape_string() everywhere.
-      This solves a longstanding problem with manipulators, which had
-      to use mysql_escape_string() frequently because it didn't know
-      which connection the query would be executed on.
+          http://lists.mysql.com/plusplus/5617
 
     o The manipulator changes sometime during 2.3 broke the column
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
+
+    o Extend the manipulators to handle nullable versions of the
+      types we already support.  Should just be a matter of duplicating
+      the existing type-specific manipulator functions, and wrapping
+      the types in Null<>.
+
+    o Replace all operator<<(Manip&, T&) templates with concrete
+      versions taking STA instead of T.  If the manipulated
+      stream is Query and STA::escape_q() is true, do escaping with
+      mysql_real_escape() using the Query object's Connection instance.
+      Exception: Query::conn_ is 0 in test_manip.cpp, because we don't
+      count on having a real Connection.  Have to be smart enough to
+      fall back to mysql_escape() to cover this corner case.
 
     o Go back over mailing list thread to fold in any other changes
       suggested for RefCountedPointer.  Most especially, use
@@ -72,11 +80,6 @@ v3.0 Plan, For-Sure Stuff
     o More robust fix for the Query stream base class init problem:
       http://www.boost.org/libs/utility/base_from_member.html
 
-    o The quote manipulator (and presumably the others as well) don't
-      work properly with char*.  See this for details:
-
-          http://lists.mysql.com/plusplus/5617
-
     o Refactor option mechanism in Connection, in several steps:
     
       - Create new optionlist module, initially empty.  Each step below
@@ -102,16 +105,6 @@ v3.0 Plan, For-Sure Stuff
         Connection::enable_ssl() in terms of it.  The success of this
         will prove the value of an extensible option type system.
 
-    o Some field_list() functions use the do_nothing manipulator,
-      while others use the quote manipulator.  Need to pick one.
-      In the vast majority of cases, quoting won't be necessary, so
-      make that the default.  But, it should be possible to turn it
-      on, if needed.  If all uses of quoting are in template code,
-      this can be a #define, allowing different programs built on
-      the same system to get different quoting rules.  Otherwise,
-      it will probably have to be a configure script flag, which will
-      "burn" the choice into the built binary.
-
     o Query::preview(void) should not crash when query string is
       a parsed template.  It's probably running off the end of the
       default argument list, or trying to dereference a null pointer.
@@ -119,6 +112,10 @@ v3.0 Plan, For-Sure Stuff
     o Add user-settable floating-point comparison precisions:
 
         http://lists.mysql.com/plusplus/3984
+
+    o Is MYSQLPP_QUERY_THISPTR still needed with VC++2003?  The recent
+      manipulator changes and the removal of all operator<<(Query&,
+      const T&) may make it unnecessary.
 
 
 v3.0 "Maybe" Stuff
@@ -159,11 +156,6 @@ v3.0 "Maybe" Stuff
       words, there should be a way to get a user-readable version
       of received data without a lot of code.  Perhaps use a CSV
       output format, or a mysql(1) one (ASCII grid).
-
-    o Extend the manipulators to handle nullable versions of the
-      types we already support.  Should just be a matter of duplicating
-      the existing type-specific manipulator functions, and wrapping
-      the types in Null<>.
 
     o Add syntactic sugar to the Date and Time classes.  A way to
       represent SQL's NOW() function would be especially helpful.
