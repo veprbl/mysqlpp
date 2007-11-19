@@ -160,27 +160,50 @@ public:
 
 	/// \brief Standard assignment operator
 	///
-	/// Detaches this object from its internal buffer and attaches
-	/// itself to the other object's buffer, with reference counting
-	/// on each side.  If you need a deep copy, assign a string instead.
+	/// \see assign(const SQLTypeAdapter&) for details
 	SQLTypeAdapter& operator =(const SQLTypeAdapter& rhs);
 
-	/// \brief Share a buffer with a String object
+	/// \brief Replace contents of object with a SQL null
 	///
-	/// Detaches this object from its internal buffer and attaches
-	/// itself to the other object's buffer, with reference counting
-	/// on each side.  If you need a deep copy, assign a string instead.
-	SQLTypeAdapter& operator =(const String& rhs);
-
-	/// \brief Copy a C string into this object
-	SQLTypeAdapter& operator =(const char* str);
-
-	/// \brief Copy a C++ \c string into this object
-	SQLTypeAdapter& operator =(const std::string& str);
+	/// \see assign(const null_type&) for details
+	SQLTypeAdapter& operator =(const null_type& n);
 
 	/// \brief Returns a const char pointer to the object's raw data
 	operator cchar*() const { return data(); }
+
+	/// \brief Copies another SQLTypeAdapter's data buffer into this
+	/// object.
+	///
+	/// \param sta Other object to copy
+	///
+	/// \retval *this
+	///
+	/// Detaches this object from its internal buffer and attaches
+	/// itself to the other object's buffer, with reference counting
+	/// on each side.  If you need a deep copy, call one of the
+	/// assign() overloads taking a C or C++ string instead.
+	SQLTypeAdapter& assign(const SQLTypeAdapter& sta);
 	
+	/// \brief Copies a C string or a raw buffer into this object.
+	///
+	/// \param pc Pointer to char buffer to copy
+	/// \param len Number of characters to copy; default tells function
+	/// to use the return value of strlen() instead.
+	///
+	/// \retval *this
+	///
+	/// If you give the len parameter, this function will treat pc as a
+	/// pointer to an array of char, not as a C string.  It only treats
+	/// null characters as special when you leave len at its default.
+	SQLTypeAdapter& assign(const char* pc, int len = -1);
+
+	/// \brief Replaces contents of object with a SQL null
+	///
+	/// \param n typically, the MySQL++ global object mysqlpp::null
+	///
+	/// \retval *this
+	SQLTypeAdapter& assign(const null_type& n);
+
 	/// \brief Returns the character at a given position within the
 	/// string buffer.
 	///
@@ -269,7 +292,6 @@ public:
 	SQLTypeAdapter(const Null<DateTime>& dt);
 	SQLTypeAdapter(const Null<Time>& t);
 	SQLTypeAdapter& operator =(const Null<std::string>& str);
-	SQLTypeAdapter& operator =(const null_type& n);
 #endif // !defined(DOXYGEN_IGNORE)
 
 private:

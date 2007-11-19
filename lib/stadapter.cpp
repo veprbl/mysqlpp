@@ -321,6 +321,39 @@ is_processed_(false)
 {
 }
 
+SQLTypeAdapter&
+SQLTypeAdapter::assign(const SQLTypeAdapter& sta)
+{
+	dec_ref_count();
+	buffer_ = sta.buffer_;
+	buffer_->attach();
+	is_processed_ = false;
+	return *this;
+}
+
+SQLTypeAdapter&
+SQLTypeAdapter::assign(const char* pc, int len)
+{
+	if (len < 0) {
+		len = strlen(pc);
+	}
+
+	dec_ref_count();
+	buffer_ = new RefCountedBuffer(pc, len,
+			mysql_type_info::string_type, false);
+	is_processed_ = false;
+	return *this;
+}
+
+SQLTypeAdapter&
+SQLTypeAdapter::assign(const null_type& n)
+{ 
+	dec_ref_count();
+	buffer_ = new RefCountedBuffer(null_str, typeid(void), true);
+	is_processed_ = false;
+	return *this;
+}
+
 char
 SQLTypeAdapter::at(size_type i) const throw(std::out_of_range)
 {
@@ -411,62 +444,13 @@ SQLTypeAdapter::escape_q() const
 SQLTypeAdapter&
 SQLTypeAdapter::operator =(const SQLTypeAdapter& rhs)
 {
-	dec_ref_count();
-	buffer_ = rhs.buffer_;
-	buffer_->attach();
-	is_processed_ = false;
-	return *this;
-}
-
-SQLTypeAdapter&
-SQLTypeAdapter::operator =(const String& rhs)
-{
-	dec_ref_count();
-	buffer_ = rhs.buffer_;
-	buffer_->attach();
-	is_processed_ = false;
-	return *this;
-}
-
-SQLTypeAdapter&
-SQLTypeAdapter::operator =(const char* str)
-{
-	dec_ref_count();
-	buffer_ = new RefCountedBuffer(str, strlen(str),
-			mysql_type_info::string_type, false);
-	is_processed_ = false;
-	return *this;
-}
-
-SQLTypeAdapter&
-SQLTypeAdapter::operator =(const std::string& str)
-{
-	dec_ref_count();
-	buffer_ = new RefCountedBuffer(str,
-			mysql_type_info::string_type, false);
-	is_processed_ = false;
-	return *this;
-}
-
-SQLTypeAdapter&
-SQLTypeAdapter::operator =(const Null<std::string>& str)
-{
-	dec_ref_count();
-	buffer_ = new RefCountedBuffer(
-			str.is_null ? null_str : str.data,
-			str.is_null ? typeid(void) : typeid(str.data),
-			str.is_null);
-	is_processed_ = false;
-	return *this;
+	return assign(rhs);
 }
 
 SQLTypeAdapter&
 SQLTypeAdapter::operator =(const null_type& n)
 { 
-	dec_ref_count();
-	buffer_ = new RefCountedBuffer(null_str, typeid(void), true);
-	is_processed_ = false;
-	return *this;
+	return assign(n);
 }
 
 bool
