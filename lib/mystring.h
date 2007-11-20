@@ -35,7 +35,6 @@
 #include "exceptions.h"
 #include "null.h"
 #include "refcounted.h"
-#include "string_util.h"
 
 #include <string>
 #include <stdlib.h>
@@ -328,6 +327,25 @@ public:
 	/// \brief Return number of characters in string
 	size_type size() const { return length(); }
 	
+    /// \brief Returns a copy of our internal string without leading
+    /// blanks.
+    void strip_leading_blanks(std::string& s) const
+    {
+        const char* pc = data();
+        if (pc) {
+            size_type n = length();
+            while (n && (*pc == ' ')) {
+                ++pc;
+                --n;
+            }
+
+            s.assign(pc, n);
+        }
+        else {
+            s.clear();
+        }
+    }
+
 	/// \brief Copies this object's data into a C++ string.
 	///
 	/// If you know the data doesn't contain null characters (i.e. it's
@@ -610,8 +628,8 @@ template <class Type>
 Type
 String::conv(Type) const
 {
-	std::string strbuf(data(), length());
-	strip_all_blanks(strbuf);
+	std::string strbuf;
+	strip_leading_blanks(strbuf);
 	std::string::size_type len = strbuf.size();
 	const char* str = strbuf.data();
 	const char* end = str;

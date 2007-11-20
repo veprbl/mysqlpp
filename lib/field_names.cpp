@@ -28,8 +28,6 @@
 #include "common.h"
 
 #include "field_names.h"
-#include "string_util.h"
-
 #include "result.h"
 
 namespace mysqlpp {

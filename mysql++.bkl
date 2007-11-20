@@ -58,7 +58,6 @@
 				lib/result.cpp
 				lib/row.cpp
 				lib/stadapter.cpp
-				lib/string_util.cpp 
 				lib/tcp_connection.cpp
 				lib/transaction.cpp
 				lib/type_info.cpp
