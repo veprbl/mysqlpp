@@ -303,27 +303,27 @@ foreach my $i (1..$max_data_members) {
         $enums .= "    NAME##_##I$j";
 	$enums .= ",\n" unless $j == $i;
         $field_list .= "    s << obj.manip << obj.obj->names[".($j-1)."]";
-	$field_list .= " << obj.delem;\n" unless $j == $i;
+	$field_list .= " << obj.delim;\n" unless $j == $i;
 	$value_list .= "    s << obj.manip << obj.obj->I$j";
-	$value_list .= " << obj.delem;\n" unless $j == $i;
+	$value_list .= " << obj.delim;\n" unless $j == $i;
         $create_bool .= "    if (i$j) (*include)[".($j-1)."]=true;\n";
         $create_list .= "    if (i$j == NAME##_NULL) return;\n" unless $i == 1;
         $create_list .= "    (*include)[i$j]=true;\n";
 
         $value_list_cus .= "    if ((*obj.include)[".($j-1)."]) { \n";
-	$value_list_cus .= "      if (before) s << obj.delem;\n" unless $j == 1;
+	$value_list_cus .= "      if (before) s << obj.delim;\n" unless $j == 1;
         $value_list_cus .= "      s << obj.manip << obj.obj->I$j;\n";
 	$value_list_cus .= "      before = true; \n" unless $j == $i;
 	$value_list_cus .= "     } \n";
 
         $cus_field_list .= "    if ((*obj.include)[".($j-1)."]) { \n";
-	$cus_field_list .= "      if (before) s << obj.delem;\n" unless $j == 1;
+	$cus_field_list .= "      if (before) s << obj.delim;\n" unless $j == 1;
         $cus_field_list .= "      s << obj.manip << obj.obj->names[".($j-1)."];\n";
 	$cus_field_list .= "      before = true; \n" unless $j == $i;
 	$cus_field_list .= "     } \n";
 
         $cus_equal_list .= "    if ((*obj.include)[".($j-1)."]) { \n";
-	$cus_equal_list .= "      if (before) s << obj.delem;\n" unless $j == 1;
+	$cus_equal_list .= "      if (before) s << obj.delim;\n" unless $j == 1;
         $cus_equal_list .= "      s << obj.obj->names[".($j-1)."] << obj.comp";
         $cus_equal_list .=        " << obj.manip << obj.obj->I$j;\n";
 	$cus_equal_list .= "      before = true; \n" unless $j == $i;
@@ -331,7 +331,7 @@ foreach my $i (1..$max_data_members) {
 
         $equal_list .= "    s << obj.obj->names[".($j-1)."] << obj.comp";
         $equal_list .= " << obj.manip << obj.obj->I$j";
-	$equal_list .= " << obj.delem;\n" unless $j == $i;
+	$equal_list .= " << obj.delim;\n" unless $j == $i;
         $cusparms1  .= "bool i$j"         if     $j == 1;
 	$cusparms1  .= "bool i$j = false" unless $j == 1;
 	$cusparms1  .= ", " unless $j == $i;
@@ -401,11 +401,11 @@ $enums
   /*friend std::ostream& operator << <> (std::ostream&, const NAME##_value_list&); */
   public: 
     const NAME *obj;
-    mysqlpp::cchar *delem;
+    mysqlpp::cchar *delim;
     Manip manip;
   public: 
     NAME##_value_list (const NAME *o, mysqlpp::cchar *d, Manip m) 
-      : obj(o), delem(d), manip(m) {} 
+      : obj(o), delim(d), manip(m) {} 
   };
 
   template <class Manip>
@@ -413,11 +413,11 @@ $enums
   /* friend std::ostream& operator << <> (std::ostream&, const NAME##_field_list&); */
   public: 
     const NAME *obj; 
-    mysqlpp::cchar *delem;
+    mysqlpp::cchar *delim;
     Manip manip;
   public: 
     NAME##_field_list (const NAME *o, mysqlpp::cchar *d, Manip m) 
-      : obj(o), delem(d), manip(m) {} 
+      : obj(o), delim(d), manip(m) {} 
   };
 
   template <class Manip>
@@ -425,12 +425,12 @@ $enums
   /* friend std::ostream& operator << <> (std::ostream&, const NAME##_equal_list&); */
   public: 
     const NAME *obj;
-    mysqlpp::cchar *delem;
+    mysqlpp::cchar *delim;
     mysqlpp::cchar *comp;
     Manip manip;
   public: 
     NAME##_equal_list (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m) 
-      : obj(o), delem(d), comp(c), manip(m) {}
+      : obj(o), delim(d), comp(c), manip(m) {}
   };
 
   template <class Manip>
@@ -441,14 +441,14 @@ $enums
     const NAME *obj;
     std::vector<bool> *include;
     bool del_vector;
-    mysqlpp::cchar *delem;
+    mysqlpp::cchar *delim;
     Manip manip;
   public: 
     ~NAME##_cus_value_list () {if (del_vector) delete include;} 
     NAME##_cus_value_list (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms11);
     NAME##_cus_value_list (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms22); 
     NAME##_cus_value_list (const NAME *o, mysqlpp::cchar *d, Manip m ,std::vector<bool>* i)
-      : obj(o), include(i), del_vector(false), delem(d), manip(m) {}
+      : obj(o), include(i), del_vector(false), delim(d), manip(m) {}
   };
 
   template <class Manip>
@@ -459,14 +459,14 @@ $enums
     const NAME *obj; 
     std::vector<bool> *include; 
     bool del_vector; 
-    mysqlpp::cchar *delem;
+    mysqlpp::cchar *delim;
     Manip manip;
   public: 
     ~NAME##_cus_field_list () {if (del_vector) delete include;} 
     NAME##_cus_field_list (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms11); 
     NAME##_cus_field_list (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms22); 
     NAME##_cus_field_list (const NAME *o, mysqlpp::cchar *d, Manip m, std::vector<bool> *i) 
-      : obj(o), include(i), del_vector(false), delem(d), manip(m) {}
+      : obj(o), include(i), del_vector(false), delim(d), manip(m) {}
   };
 
  template <class Manip>
@@ -477,7 +477,7 @@ $enums
     const NAME *obj;
     std::vector<bool> *include;
     bool del_vector;
-    mysqlpp::cchar *delem;
+    mysqlpp::cchar *delim;
     mysqlpp::cchar *comp;
     Manip manip;
   public:
@@ -485,7 +485,7 @@ $enums
     NAME##_##cus_equal_list (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, $cusparms11); 
     NAME##_##cus_equal_list (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, $cusparms22); 
     NAME##_##cus_equal_list (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, std::vector<bool> *i) 
-      : obj(o), include(i), del_vector(false), delem(d), comp(c), manip(m) {}
+      : obj(o), include(i), del_vector(false), delim(d), comp(c), manip(m) {}
   };
 
   template <mysqlpp::sql_dummy_type dummy> int sql_compare_##NAME (const NAME &, const NAME &);
@@ -680,7 +680,7 @@ $names
   NAME##_cus_value_list<Manip>::NAME##_cus_value_list
   (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms11) 
   { 
-    delem = d;
+    delim = d;
     manip = m;
     del_vector = true;
     obj = o; 
@@ -691,7 +691,7 @@ $create_bool
   template <class Manip>
   NAME##_cus_value_list<Manip>::NAME##_cus_value_list
   (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms22) { 
-    delem = d;
+    delim = d;
     manip = m;
     del_vector = true; 
     obj = o; 
@@ -702,7 +702,7 @@ $create_list
   template <class Manip>
   NAME##_cus_field_list<Manip>::NAME##_cus_field_list
   (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms11) {
-    delem = d;
+    delim = d;
     manip = m;
     del_vector = true; 
     obj = o; 
@@ -713,7 +713,7 @@ $create_bool
   template <class Manip>
   NAME##_cus_field_list<Manip>::NAME##_cus_field_list
   (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms22) { 
-    delem = d;
+    delim = d;
     manip = m;
     del_vector = true; 
     obj = o; 
@@ -724,7 +724,7 @@ $create_list
   template <class Manip>
   NAME##_cus_equal_list<Manip>::NAME##_cus_equal_list
   (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, $cusparms11) { 
-    delem = d;
+    delim = d;
     comp = c;
     manip = m;
     del_vector = true; 
@@ -736,7 +736,7 @@ $create_bool
   template <class Manip>
   NAME##_cus_equal_list<Manip>::NAME##_cus_equal_list
   (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, $cusparms22) { 
-    delem = d;
+    delim = d;
     comp = c;
     manip = m;
     del_vector = true; 
