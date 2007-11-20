@@ -22,11 +22,6 @@ v3.0 Plan, For-Sure Stuff
 
          http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
 
-    o The quote manipulator (and presumably the others as well) don't
-      work properly with char*.  See this for details:
-
-          http://lists.mysql.com/plusplus/5617
-
     o The manipulator changes sometime during 2.3 broke the column
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
