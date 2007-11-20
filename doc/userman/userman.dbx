@@ -572,7 +572,7 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     </sect2>
 
 
-    <sect2>
+    <sect2 id="qescape" xreflabel="quoting and escaping">
         <title>Quoting and Escaping</title>
 
         <para>SQL syntax often requires certain data to be
@@ -1117,6 +1117,177 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
         <programlisting><xi:include href="fieldinf.txt" parse="text"
         xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+    </sect2>
+
+
+    <sect2>
+        <title>MySQL++'s Special String Types</title>
+
+        <para>MySQL++ has two classes that work like
+        <classname>std::string</classname> to some degree: <ulink
+        type="classref" url="String"/> and <ulink type="classref"
+        url="SQLTypeAdapter"/>. These classes exist to provide
+        functionality that <classname>std::string</classname>
+        doesn't provide, but they are neither derivatives of nor
+        complete supersets of <classname>std::string</classname>.
+        As a result, end-user code generally doesn't deal with these
+        classes directly, because <classname>std::string</classname>
+        is a better general-purpose string type. In fact, MySQL++
+        itself uses <classname>std::string</classname> most of the
+        time, too. But, the places these specialized stringish types
+        do get used are so important to the way MySQL++ works that
+        it's well worth taking the time to understand them.</para>
+
+
+        <sect3>
+            <title>SQLTypeAdapter</title>
+
+            <para>The simpler of the two is
+            <classname>SQLTypeAdapter</classname>,
+            or <classname>STA</classname> for
+            short.<footnote><para>In version 2 of MySQL++ and
+            earlier, <classname>SQLTypeAdapter</classname> was
+            called <classname>SQLString</classname>, but it was
+            confusing because its name and the fact that it derived
+            from <classname>std::string</classname> suggested that
+            it was a general-purpose string type. MySQL++ even used
+            it this way in a few places internally. In v3, we made it
+            a simple base class and renamed it to reflect its proper
+            limited function.</para></footnote></para>
+
+            <para>As its name suggests, its only purpose is to
+            adapt other data types to be used with SQL. It has a
+            whole bunch of conversion constructors, one for all data
+            types we expect to be used with MySQL++ for values in
+            queries. SQL queries are strings, so constructors that take
+            stringish types just make a copy of that string, and all
+            the others "stringize" the value in the format needed by
+            SQL.<footnote><para><classname>SQLTypeAdapter</classname>
+            doesn't do <xref linkend="qescape"/> itself. That
+            happens elsewhere, right at the point that the
+            <classname>STA</classname> gets used to build a
+            query.</para></footnote> The conversion constructors
+            preserve type information, so this stringization process
+            doesn't throw away any essential information.</para>
+
+            <para><classname>STA</classname> is used anywhere
+            MySQL++ needs to be able to accept any of several
+            data types for use in a SQL query. Major users
+            are <classname>Query</classname>'s template query
+            mechanism and the <classname>Query</classname>
+            stream quoting and escaping mechanism. You
+            care about <classname>STA</classname> because
+            any time you pass a data value to MySQL++ to
+            be used in building a SQL query, it goes through
+            <classname>STA</classname>. <classname>STA</classname>
+            is one of the key pieces in MySQL++ that makes it easy
+            to generate syntactically-correct SQL queries.</para>
+        </sect3>
+
+
+        <sect3>
+            <title>String</title>
+
+            <para>If MySQL++ can be said to have its own generic
+            string type, it's <classname>String</classname>,
+            but it's not really functional enough for general
+            use. It's possible that in future versions of MySQL++
+            we'll expand its interface to include everything
+            <classname>std::string</classname> does, so that's why
+            it's called that.<footnote><para>If you used MySQL++
+            before v3, <classname>String</classname> used to be
+            called <classname>ColData</classname>. It was renamed
+            because starting in v2.3, we began using it for holding
+            more than just column data. I considered renaming it
+            <classname>SQLString</classname> instead, but that would
+            have confused old MySQL++ users to no end. Instead,
+            I followed the example of <classname>Set</classname>,
+            MySQL++'s specialized <classname>std::set</classname>
+            variant.</para></footnote></para>
+
+            <para>The key thing <classname>String</classname>
+            provides over <classname>std::string</classname>
+            is conversion of strings in SQL value formats to
+            their native C++ data types. For example, if you
+            initialize it with the string "2007-11-19", you can
+            assign the <classname>String</classname> to a <ulink
+            type="structref" url="Date">Date</ulink>, not because
+            <classname>Date</classname> knows how to initialize
+            itself from <classname>String</classname>, but the
+            reverse: <classname>String</classname> has a bunch of
+            implicit conversion operators defined for it, so you
+            can use it in any type context that makes sense in your
+            application.</para>
+
+            <para>Because <methodname>Row::operator[]</methodname>
+            returns <classname>String</classname>, you can say things
+            like this:</para>
+
+            <programlisting>int x = row["x"];</programlisting>
+
+            <para>In a very real sense, <classname>String</classname>
+            is the inverse of <classname>STA</classname>:
+            <classname>String</classname> converts SQL value strings
+            to C++ data types, and <classname>STA</classname> converts
+            C++ data types to SQL value strings.<footnote><para>For a
+            time during the development of MySQL++ v3.0, I considered
+            merging <classname>SQLTypeAdapter</classname> and
+            <classname>String</classname> to take advantage of the fact
+            that they're two sides of the same coin. Unfortunately,
+            C++'s type conversion rules got in the way, because
+            such a combined class lets you convert almost anything
+            to anything, which gives the C++ compiler plenty of rope
+            to hang itself.</para></footnote></para>
+
+            <para><classname>String</classname> has two main
+            uses.</para>
+
+            <para>By far the most common use is as the
+            field value type of <classname>Row</classname>,
+            as exemplified above. It's not just the return
+            type of <methodname>Row::operator[]</methodname>,
+            though: it's actually the value type used within
+            <classname>Row</classname>'s internal array. As a result,
+            any time MySQL++ pulls data from the database, it goes
+            through <classname>String</classname> when converting
+            it from the string form used in SQL result sets to the
+            C++ data type you actually want the data in. It's the
+            core of the structure population mechanism in <xref
+            linkend="ssqls"/>, for example.</para>
+
+            <para>Because <classname>String</classname> is the
+            last pristine form of data in a result set before
+            it gets out of MySQL++'s internals where end-user
+            code can see it, MySQL++'s <type>sql_blob</type>
+            and related <type>typedef</type>s are aliases for
+            <classname>String</classname>. Using anything else would
+            require copies; while the whole "networked database server"
+            thing means most of MySQL++ can be quite inefficient and
+            still not affect benchmark results meaningfully, BLOBs
+            tend to be big, so making unnecessary copies can really
+            make a difference. Which brings us to...</para>
+        </sect3>
+
+
+        <sect3>
+            <title>Reference Counting</title>
+
+            <para>To avoid unnecessary buffer
+            copies, both <classname>STA</classname> and
+            <classname>String</classname> are implemented in terms
+            of a reference-counted copy-on-write buffer scheme. Both
+            classes share the same underlying mechanism, and so are
+            interoperable. This means that if you construct one of
+            these objects from another, it doesn't actually copy the
+            string data, it only copies a pointer to the data buffer,
+            and increments its reference count. If the object has
+            new data assigned to it or it's otherwise modified, it
+            decrements its reference count and creates its own copy
+            of the buffer. This has a lot of practical import, such
+            as the fact that <methodname>Row::operator[]</methodname>
+            can return <classname>String</classname> by value, and
+            it's still efficient.</para>
+        </sect3>
     </sect2>
 
 

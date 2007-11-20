@@ -13,8 +13,6 @@ v3.0 Plan, For-Sure Stuff
     get done in v3.0.  Most of them break the ABI, so they can't wait
     for a future version, because v4 could be years out.
 
-    o Add a userman section on String and SQLTypeAdapter.
-
     o field_list should use backticks to quote its items to handle
       spaces and other special characters.  Probably also remove all
       the manipulator stuff associated with these: no reason to make
@@ -102,6 +100,10 @@ v3.0 "Maybe" Stuff
     This is stuff that would be nice to have, but it wouldn't be a
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
+
+    o Can String replace RefCountedPointer?  More broadly, can it be
+      the generic "hold big chunks of data efficiently even in the
+      face of copying" class?
 
     o Either add quote_force and similar manipulators, or remove the
       'r' and 'R' modifiers in template queries.  As it stands, you
