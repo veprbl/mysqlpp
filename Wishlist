@@ -31,11 +31,6 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Extend the manipulators to handle nullable versions of the
-      types we already support.  Should just be a matter of duplicating
-      the existing type-specific manipulator functions, and wrapping
-      the types in Null<>.
-
     o Go back over mailing list thread to fold in any other changes
       suggested for RefCountedPointer.  Most especially, use
       atomic increment/decrement.  Until we do this, we don't

@@ -41,6 +41,14 @@ is_quoted(const std::string& s, T orig_str, size_t orig_len)
 }
 
 
+template <class T>
+static bool
+is_quoted(const std::string& s, mysqlpp::Null<T> orig_str, size_t orig_len)
+{
+	return is_quoted(s, orig_str.data, orig_len);
+}
+
+
 // Stringish types should be quoted when inserted into Query when an
 // explicit quote manipulator is used.
 template <class T>
@@ -139,6 +147,7 @@ main()
 	failures += test((const char*)s, len) == false;
 	failures += test(std::string(s), len) == false;
 	failures += test(mysqlpp::SQLTypeAdapter(s), len) == false;
+	failures += test(mysqlpp::Null<std::string>(s), len) == false;
 	return failures;
 }
 
