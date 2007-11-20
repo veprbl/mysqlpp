@@ -22,9 +22,6 @@ v3.0 Plan, For-Sure Stuff
 
          http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
 
-    o Factor out quoting and escaping logic into a common function.
-      Near-identical code in too many places right now.
-
     o The quote manipulator (and presumably the others as well) don't
       work properly with char*.  See this for details:
 
