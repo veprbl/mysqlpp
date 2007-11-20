@@ -191,15 +191,14 @@
 
         <para>The field data in a result set are stored in a special
         <classname>std::string</classname>-like class called <ulink
-        type="classref" url="ColData__Tmpl">ColData</ulink>.
-        This class has conversion operators that let you
-        automatically convert these objects to any of the basic C
-        data types.  Additionally, MySQL++ defines classes like <ulink
-        type="structref" url="DateTime"/>, which you can initialize
-        from a MySQL <command>DATETIME</command> string. These
-        automatic conversions are protected against bad conversions,
-        and can either set a warning flag or throw an exception,
-        depending on how you set the library up.</para>
+        type="classref" url="String"/>. This class has conversion
+        operators that let you automatically convert these objects to
+        any of the basic C data types. Additionally, MySQL++ defines
+        classes like <ulink type="structref" url="DateTime"/>, which
+        you can initialize from a MySQL <command>DATETIME</command>
+        string. These automatic conversions are protected against
+        bad conversions, and can either set a warning flag or throw
+        an exception, depending on how you set the library up.</para>
 
         <para>As for the result sets as a whole, MySQL++ has a number
         of different ways of representing them:</para>
@@ -543,13 +542,12 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
             <classname>std::exception</classname>s, just in case you
             trigger one of these exceptions.</para></listitem>
 
-            <listitem><para><ulink type="classref"
-            url="ColData__Tmpl">ColData</ulink> will always throw
-            <ulink type="classref" url="BadConversion"/> when you
-            ask it to do an improper type conversion. For example,
-            you'll get an exception if you try to convert "1.25"
-            to <type>int</type>, but not when you convert "1.00"
-            to <type>int</type>. In the latter case, MySQL++
+            <listitem><para><ulink type="classref" url="String"/> will
+            always throw <ulink type="classref" url="BadConversion"/>
+            when you ask it to do an improper type conversion. For
+            example, you'll get an exception if you try to convert
+            "1.25" to <type>int</type>, but not when you convert
+            "1.00" to <type>int</type>. In the latter case, MySQL++
             knows that it can safely throw away the fractional
             part.</para></listitem>
 
@@ -568,7 +566,7 @@ for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         <para>It's educational to modify the examples to force
         exceptions. For instance, misspell a field name, use
         an out-of-range index, or change a type to force a
-        <classname>ColData</classname> conversion error.</para>
+        <classname>String</classname> conversion error.</para>
     </sect2>
 
 
@@ -2166,34 +2164,32 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
         columns. It's safest to declare the SSQLS field as of
         type <classname>mysqlpp::sql_blob</classname>. This
         is currently a typedef alias for <ulink type="classref"
-        url="ColData__Tmpl">ColData</ulink>, which is the form the
-        data is in just before the SSQLS mechanism populates the
-        structure. Thus, when the data is copied from the internal
-        MySQL++ data structures into your SSQLS, you get a direct
-        copy of the <classname>ColData</classname> object's contents,
-        without interference.</para>
+        url="String">String</ulink>, which is the form the data is in
+        just before the SSQLS mechanism populates the structure. Thus,
+        when the data is copied from the internal MySQL++ data
+        structures into your SSQLS, you get a direct copy of the
+        <classname>String</classname> object's contents, without
+        interference.</para>
 
-        <para>Because <classname>ColData</classname> derives
-        from <classname>std::string</classname> and C++
-        strings handle binary data just fine, you might think
-        you can use <classname>std::string</classname> instead
-        of <classname>sql_blob</classname>, but the current
-        design of <classname>ColData</classname> converts to
-        <classname>std::string</classname> via a C string. As a
+        <para>Because C++ strings handle binary data just fine, you
+        might think you can use <classname>std::string</classname>
+        instead of <classname>sql_blob</classname>, but the
+        current design of <classname>String</classname> converts
+        to <classname>std::string</classname> via a C string. As a
         result, the BLOB data is truncated at the first embedded
         null character during population of the SSQLS. There's
         no way to fix that without completely redesigning either
-        <classname>ColData</classname> or the SSQLS mechanism.</para>
+        <classname>String</classname> or the SSQLS mechanism.</para>
 
         <para>The <classname>sql_blob</classname> typedef may be
         changed to alias a different type in the future, so using it
-        instead of <classname>ColData</classname> ensures that your
+        instead of <classname>String</classname> ensures that your
         code tracks these library changes automatically. Besides,
-        <classname>ColData</classname> is only intended to be an
-        internal mechanism within MySQL++. The only reason the layering
-        is so thin here is because it's the only way to prevent BLOB
-        data from being corrupted while staying within the current
-        library interface design.</para>
+        <classname>String</classname> is only intended to be an
+        internal mechanism within MySQL++. The only reason the
+        layering is so thin here is because it's the only way to
+        prevent BLOB data from being corrupted while avoiding that
+        looming redesign effort.</para>
 
         <para>You can see this technique in action in the
         <filename>cgi_jpeg</filename> example:</para>
