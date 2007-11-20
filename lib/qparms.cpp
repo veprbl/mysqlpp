@@ -32,6 +32,20 @@ using namespace std;
 
 namespace mysqlpp {
 
+size_t
+SQLQueryParms::escape_string(std::string* ps, const char* original,
+		size_t length) const
+{
+	return parent_ ? parent_->escape_string(ps, original, length) : 0;
+}
+
+size_t
+SQLQueryParms::escape_string(char* escaped, const char* original,
+		size_t length) const
+{
+	return parent_ ? parent_->escape_string(escaped, original, length) : 0;
+}
+
 SQLTypeAdapter&
 SQLQueryParms::operator [](const char* str)
 {

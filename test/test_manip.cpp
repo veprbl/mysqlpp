@@ -45,9 +45,9 @@ is_quoted(const std::string& s, T orig_str, size_t orig_len)
 // explicit quote manipulator is used.
 template <class T>
 static bool
-explicit_query_quote(mysqlpp::Query& q, T test, size_t len)
+explicit_query_quote(T test, size_t len)
 {
-	q.reset();
+	mysqlpp::Query q(0);
 	q << mysqlpp::quote << test;
 	if (is_quoted(q.str(), test, len)) {
 		return true;
@@ -60,62 +60,56 @@ explicit_query_quote(mysqlpp::Query& q, T test, size_t len)
 }
 
 
-// Stringish types should be quoted when inserted into an ostream when
-// an explicit quote manipulator is used.
+// Nothing should be quoted when inserted into an ostream, even when an
+// explicit quote manipulator is used.  The manipulators are only for
+// use with Query streams.
 template <class T>
 static bool
-explicit_ostream_quote(T test, size_t len)
+no_explicit_ostream_quote(T test, size_t len)
 {
 	std::ostringstream outs;
 	outs << mysqlpp::quote << test;
-	if (is_quoted(outs.str(), test, len)) {
-		return true;
-	}
-	else {
-		std::cerr << "Explicit quote of " << typeid(test).name() <<
-				" in ostream failed: " << outs.str() << std::endl;
-		return false;
-	}
-}
-
-
-// The only stringish type that should be implicitly quoted when
-// inserted into Query is String, and not always then; we don't know
-// enough about anything else to make good automated choices.
-template <class T>
-static bool
-implicit_query_quote(mysqlpp::Query& q, T test, size_t len)
-{
-	q.reset();
-	q << test;
-	if (is_quoted(q.str(), test, len) || 
-			(typeid(test) != typeid(mysqlpp::String))) {
-		return true;
-	}
-	else {
-		std::cerr << "Implicit quote of " << typeid(test).name() <<
-				" in Query failed: " << q.str() << std::endl;
-		return false;
-	}
-}
-
-
-// No stringish type should be implicitly quoted when inserted into
-// non-Query ostreams, not even String carrying data that would be
-// quoted when inserted into Query.  Implicit quoting is only for
-// building SQL queries.
-template <class T>
-static bool
-implicit_ostream_quote(T test, size_t len)
-{
-	std::ostringstream outs;
-	outs << test;
 	if (!is_quoted(outs.str(), test, len)) {
 		return true;
 	}
 	else {
+		std::cerr << "Explicit quote of " << typeid(test).name() <<
+				" in ostream erroneously honored!" << std::endl;
+		return false;
+	}
+}
+
+
+// Nothing should be implicitly quoted as of v3.  We used to do it for
+// mysqlpp::String (formerly ColData) when inserted into Query, but
+// that's a silly edge case.  The only time end-user code should be
+// using Strings to build queries via the Query stream interface is when
+// using BLOBs or when turning result set data back around in a new
+// query.  In each case, there's no reason for String to behave
+// differently from std::string, which has always had to be explicitly
+// quoted.
+template <class T>
+static bool
+no_implicit_quote(T test, size_t len)
+{
+	std::ostringstream outs;
+	outs << test;
+	if (!is_quoted(outs.str(), test, len)) {
+		mysqlpp::Query q(0);
+		q << test;
+		if (!is_quoted(q.str(), test, len)) {
+			return true;
+		}
+		else {
+			std::cerr << typeid(test).name() << " erroneously implicitly "
+					"quoted in Query: " << outs.str() <<
+					std::endl;
+			return false;
+		}
+	}
+	else {
 		std::cerr << typeid(test).name() << " erroneously implicitly "
-				"quoted in non-Query ostream: " << outs.str() <<
+				"quoted in ostringstream: " << outs.str() <<
 				std::endl;
 		return false;
 	}
@@ -125,30 +119,26 @@ implicit_ostream_quote(T test, size_t len)
 // Run all tests above for the given type
 template <class T>
 static bool
-test(mysqlpp::Query& q, T test, size_t len)
+test(T test, size_t len)
 {
-	return explicit_query_quote(q, test, len) &&
-			explicit_ostream_quote(test, len) &&
-			implicit_query_quote(q, test, len) &&
-			implicit_ostream_quote(test, len);
+	return explicit_query_quote(test, len) &&
+			no_explicit_ostream_quote(test, len) &&
+			no_implicit_quote(test, len);
 }
 
 
 int
 main()
 {
-	mysqlpp::Connection c;
-	mysqlpp::Query q(&c);
-
 	char s[] = "Doodle me, James, doodle me!";
 	const size_t len = strlen(s);
 
 	int failures = 0;
-	failures += test(q, s, len) == false;
-	failures += test(q, (char*)s, len) == false;
-	failures += test(q, (const char*)s, len) == false;
-	failures += test(q, std::string(s), len) == false;
-	failures += test(q, mysqlpp::SQLTypeAdapter(s), len) == false;
+	failures += test(s, len) == false;
+	failures += test((char*)s, len) == false;
+	failures += test((const char*)s, len) == false;
+	failures += test(std::string(s), len) == false;
+	failures += test(mysqlpp::SQLTypeAdapter(s), len) == false;
 	return failures;
 }
 

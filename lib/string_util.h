@@ -38,9 +38,6 @@ namespace mysqlpp {
 /// \brief Strips blanks at left and right ends
 MYSQLPP_EXPORT extern void strip(std::string& s);
 
-/// \brief C++ equivalent of mysql_escape_string()
-MYSQLPP_EXPORT extern void escape_string(std::string& s);
-
 /// \brief Changes case of string to upper
 MYSQLPP_EXPORT extern void str_to_upr(std::string& s);
 

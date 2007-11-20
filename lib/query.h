@@ -169,6 +169,65 @@ public:
 	/// \brief Return true if the object has experienced an error
 	bool operator !() { return !copacetic_; }
 
+	/// \brief Return a SQL-escaped version of a character buffer
+	///
+	/// \param ps pointer to C++ string to hold escaped version; if
+	/// original is 0, also holds the original data to be escaped
+	/// \param original if given, pointer to the character buffer to
+	/// escape instead of contents of *ps
+	/// \param length if both this and original are given, number of
+	/// characters to escape instead of ps->length()
+	///
+	/// \retval number of characters placed in *ps
+	///
+	/// This method has three basic operation modes:
+	///
+	/// - Pass just a pointer to a C++ string containing the original
+	///   data to escape, plus act as receptacle for escaped version
+	/// - Pass a pointer to a C++ string to receive escaped string plus
+	///   a pointer to a C string to be escaped
+	/// - Pass nonzero for all parameters, taking original to be a
+	///   pointer to an array of char with given length; does not treat
+	///   null characters as special
+	///
+	/// There's a degenerate fourth mode, where ps is zero: simply
+	/// returns 0, because there is nowhere to store the result.
+	///
+	/// Note that if original is 0, we always ignore the length
+	/// parameter even if it is nonzero.  Length always comes from
+	/// ps->length() in this case.
+	///
+	/// ps is a pointer because if it were a reference, the other
+	/// overload would be impossible to call: the compiler would
+	/// complain that the two overloads are ambiguous because
+	/// std::string has a char* conversion ctor. A nice bonus is that
+	/// pointer syntax makes it clearer that the first parameter is an
+	/// "out" parameter.
+	///
+	/// \see comments for escape_string(char*, const char*, size_t)
+	/// for further details.
+	size_t escape_string(std::string* ps, const char* original = 0,
+			size_t length = 0) const;
+
+	/// \brief Return a SQL-escaped version of the given character
+	/// buffer
+	///
+	/// \param escaped character buffer to hold escaped version; must
+	/// point to at least (length * 2 + 1) bytes
+	/// \param original pointer to the character buffer to escape
+	/// \param length number of characters to escape
+	///
+	/// \retval number of characters placed in escaped
+	///
+	/// This is part of Query because proper SQL escaping takes the
+	/// database's current character set into account, which requires
+	/// access to the Connection object the query will go out on.  Also,
+	/// this function is very important to MySQL++'s Query stream
+	/// manipulator mechanism, so it's more convenient for this method
+	/// to live in Query rather than Connection.
+	size_t escape_string(char* escaped, const char* original,
+			size_t length) const;
+
 	/// \brief Get the last error number that was set.
 	///
 	/// This just delegates to Connection::errnum().  Query has nothing

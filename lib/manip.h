@@ -60,12 +60,12 @@ class SQLQueryParms;
 /// \enum quote_type0
 /// \anchor quote_manip
 ///
-/// The standard 'quote' manipulator.
+/// The standard 'quote' manipulator.  It is the most widely useful
+/// manipulator in MySQL++.
 ///
-/// Insert this into a stream to put single quotes around the next item
-/// in the stream, and escape characters within it that are 'special'
-/// in SQL.  This is the most generally useful of the manipulators.
-
+/// Insert this manipulator into a Query or SQLQueryParms stream to put
+/// single quotes around the next item in the stream, and escape any
+/// characters within it that are special in SQL.
 
 enum quote_type0
 {
@@ -289,9 +289,9 @@ operator <<(quote_double_only_type1 o, const Set<ST>& in)
 /// \enum escape_type0
 /// The 'escape' manipulator.
 ///
-/// Calls mysql_escape_string() in the MySQL C API on the following
-/// argument to prevent any special SQL characters from being
-/// interpreted.
+/// SQL-escapes following argument if it is inserted into a Query
+/// or SQLQueryParms stream to prevent any special SQL characters from
+/// being interpreted.
 
 enum escape_type0 { escape };
 

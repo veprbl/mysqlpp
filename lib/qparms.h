@@ -72,30 +72,41 @@ public:
 	/// \brief Returns true if we are bound to a query object.
 	///
 	/// Basically, this tells you which of the two ctors were called.
-	bool bound()
-	{
-		return parent_ != 0;
-	}
+	bool bound() { return parent_ != 0; }
 
 	/// \brief Clears the list
-	void clear()
-	{
-		erase(begin(), end());
-	}
+	void clear() { erase(begin(), end()); }
+
+	/// \brief Indirect access to Query::escape_string()
+	///
+	/// \internal Needed by \c operator<<(Manip&, \c const \c T&) where
+	/// \c Manip is used on a SQLQueryParms object.  We'd have to make
+	/// all these operators friends to give access to our internal Query
+	/// object otherwise.
+	///
+	/// \see Query::escape_string(std::string*, const char*, size_t)
+	size_t escape_string(std::string* ps, const char* original = 0,
+			size_t length = 0) const;
+
+	/// \brief Indirect access to Query::escape_string()
+	///
+	/// \see escape_string(std::string*, const char*, size_t)
+	/// \see Query::escape_string(const char*, const char*, size_t)
+	size_t escape_string(char* escaped, const char* original,
+			size_t length) const;
 
 	/// \brief Access element number n
 	SQLTypeAdapter& operator [](size_type n)
 	{
-		if (n >= size())
+		if (n >= size()) {
 			insert(end(), (n + 1) - size(), "");
+		}
 		return std::vector<SQLTypeAdapter>::operator [](n);
 	}
 
 	/// \brief Access element number n
 	const SQLTypeAdapter& operator [](size_type n) const
-	{
-		return std::vector<SQLTypeAdapter>::operator [](n);
-	}
+			{ return std::vector<SQLTypeAdapter>::operator [](n); }
 	
 	/// \brief Access the value of the element with a key of str.
 	SQLTypeAdapter& operator [](const char *str);

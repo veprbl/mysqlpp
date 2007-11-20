@@ -50,55 +50,6 @@ void strip(std::string& s)
 	}
 }
 
-void escape_string(std::string & s)
-{
-	if (!s.size()) {
-		return;
-	}
-
-	for (unsigned int i = 0; i < s.size(); i++) {
-		switch (s[i]) {
-			case '\0':		// Must be escaped for "mysql"
-				s[i] = '\\';
-				s.insert(i, "0", 1);
-				i++;
-				break;
-			case '\n':		// Must be escaped for logs
-				s[i] = '\\';
-				s.insert(i, "n", 1);
-				i++;
-				break;
-			case '\r':
-				s[i] = '\\';
-				s.insert(i, "r", 1);
-				i++;
-				break;
-			case '\\':
-				s[i] = '\\';
-				s.insert(i, "\\", 1);
-				i++;
-				break;
-			case '\"':
-				s[i] = '\\';
-				s.insert(i, "\"", 1);
-				i++;
-				break;
-			case '\'':		// Better safe than sorry
-				s[i] = '\\';
-				s.insert(i, "\'", 1);
-				i++;
-				break;
-			case '\032':	// This gives problems on Win32
-				s[i] = '\\';
-				s.insert(i, "Z", 1);
-				i++;
-				break;
-			default:
-				break;
-		}
-	}
-}
-
 
 void
 str_to_upr(std::string& s)

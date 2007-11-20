@@ -40,11 +40,9 @@ namespace mysqlpp {
 SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 {
 	if (in.quote_q()) {
-		string temp("'", 1);
-		char* escaped = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(escaped, in.data(), in.length());
-		temp.append(escaped, len);
-		delete[] escaped;
+		string temp("'", 1), escaped;
+		p.qparms->escape_string(&escaped, in.data(), in.length());
+		temp.append(escaped);
 		temp.append("'", 1);
 		*p.qparms << SQLTypeAdapter(temp, true);
 		return *p.qparms;
@@ -57,23 +55,24 @@ SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 
 
 /// \brief Inserts a anything that can be converted to SQLTypeAdapter
-/// into a stream, quoted and escaped as needed
+/// into a stream, quoted and escaped as needed if it's a Query stream
 
 ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
 {
-	if (in.quote_q()) {
-		char* escaped = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(escaped, in.data(), in.length());
+	Query* pq = dynamic_cast<Query*>(o.ostr);
 
-		o.ostr->write("'", 1);
-		o.ostr->write(escaped, len);
-		o.ostr->write("'", 1);
+	if (pq && in.quote_q()) o.ostr->write("'", 1);
 
-		delete[] escaped;
+	if (pq && in.escape_q()) {
+		string escaped;
+		pq->escape_string(&escaped, in.data(), in.length());
+		o.ostr->write(escaped.data(), escaped.length());
 	}
 	else {
 		o.ostr->write(in.data(), in.length());
 	}
+
+	if (pq && in.quote_q()) o.ostr->write("'", 1);
 
 	return *o.ostr;
 }
@@ -141,12 +140,9 @@ SQLQueryParms& operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
 SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
 {
 	if (in.escape_q()) {
-		char* escaped = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(escaped, in.data(), in.length());
-
-		*p.qparms << SQLTypeAdapter(escaped, len, true);
-
-		delete[] escaped;
+		string escaped;
+		p.qparms->escape_string(&escaped, in.data(), in.length());
+		*p.qparms << SQLTypeAdapter(escaped, true);
 		return *p.qparms;
 	}
 	else {
@@ -161,11 +157,12 @@ SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
 
 std::ostream& operator <<(escape_type1 o, const SQLTypeAdapter& in)
 {
-	if (in.escape_q()) {
-		char* escaped = new char[in.length() * 2 + 1];
-		size_t len = mysql_escape_string(escaped, in.data(), in.length());
-		o.ostr->write(escaped, len);
-		delete[] escaped;
+	Query* pq = dynamic_cast<Query*>(o.ostr);
+
+	if (pq && in.escape_q()) {
+		string escaped;
+		pq->escape_string(&escaped, in.data(), in.length());
+		o.ostr->write(escaped.data(), escaped.length());
 	}
 	else {
 		o.ostr->write(in.data(), in.length());

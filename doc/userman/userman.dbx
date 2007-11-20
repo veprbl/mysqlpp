@@ -162,11 +162,10 @@
         type="classref" url="Query"/> object created by the
         <classname>Connection</classname> object.</para>
 
-        <para><classname>Query</classname> is subclassed
-        from <classname>std::stringstream</classname>
-        which means you can write to it like any other
-        C++ stream to form a query. The library includes
-        <ulink url="../../refman/html/manip_8h.html">stream
+        <para><classname>Query</classname> is subclassed from
+        <classname>std::stringstream</classname> which means you can
+        write to it like any other C++ stream to form a query. The
+        library includes <ulink url="../refman/manip_8h.html">stream
         manipulators</ulink> that make it easy to generate
         syntactically-correct SQL.</para>
 
@@ -270,9 +269,8 @@
 
             <programlisting>
 vector&lt;mystruct&gt; v;
-Query q = connection.query();
-q &lt;&lt; "SELECT * FROM mytable";
-q.storein(v);
+query &lt;&lt; "SELECT * FROM mytable";
+query.storein(v);
 for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     cout &lt;&lt; "Price: " &lt;&lt; it-&gt;price &lt;&lt; endl;
 }</programlisting>
@@ -589,8 +587,7 @@ SELECT * FROM stock WHERE item = 'Hotdog Buns' </programlisting>
 
         <programlisting>
 string s = "Hotdog Buns";
-Query q = conn.query();
-q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; s; </programlisting>
+query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; s; </programlisting>
 
         <para>That code produces the same query string as in the
         previous example. We used the MySQL++ <type>quote_only</type>
@@ -598,7 +595,7 @@ q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; s; <
         around the next item inserted into the stream. This
         works for various string types, for any type of data
         that can be converted to MySQL++'s <ulink type="classref"
-        url="ColData__Tmpl">ColData</ulink> type, and for <xref
+        url="SQLTypeAdapter">SQLTypeAdapter</ulink> type, and for <xref
         linkend="ssqls"/>. (The next section introduces the SSQLS
         feature.)</para>
 
@@ -623,15 +620,71 @@ SELECT * FROM stock WHERE item = 'Frank''s Brand Hotdog Buns' </programlisting>
 
         <programlisting>
 string s = "Frank's Brand Hotdog Buns";
-Query q = conn.query();
-q &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </programlisting>
+query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </programlisting>
 
-        <para>The <type>quote</type> manipulator both quotes strings,
+        <para>The <type>quote</type> manipulator both quotes strings
         and escapes any characters that are special in SQL.</para>
 
-        <para>MySQL++ provides other manipulators as
-        well. See the reference manual documentation for
-        <filename>manip.h</filename>.</para>
+        <para>MySQL++ provides other manipulators as well. See
+        the <ulink url="../refman/manip_8h.html">manip.h</ulink>
+        page in the <ulink url="../refman/index.html">reference
+        manual</ulink>.</para>
+
+        <para>It's important to realize that MySQL++'s
+        quoting and escaping mechanism is type-aware. It has
+        no effect unless you insert the manipulator into a
+        <classname>Query</classname> or <ulink type="classref"
+        url="SQLQueryParms">SQLQueryParms</ulink> stream.
+        <footnote><para><classname>SQLQueryParms</classname>
+        is used as a stream only as an implementation
+        detail within the library. End user code simply
+        sees it as a <classname>std::vector</classname>
+        derivative.</para></footnote> Also, values are only quoted
+        and/or escaped if they are of a data type that may need it. For
+        example, <ulink type="structref" url="Date">Date</ulink>
+        must be quoted but never needs to be escaped, and integer
+        types need neither quoting nor escaping. Manipulators are
+        suggestions to the library, not commands: MySQL++ will
+        ignore these suggestions if it knows it won't result in
+        syntactically-incorrect SQL.</para>
+
+        <para>It's also important to realize that as of MySQL++ v3,
+        quoting and escaping in <classname>Query</classname> streams
+        is never implicit.<footnote><para>The rule that quoting and
+        escaping is always explicit with <classname>Query</classname>
+        streams isn't true for the other methods for generating
+        SQL in MySQL++. Like <classname>Query</classname> streams,
+        <xref linkend="tquery"/> require you to explicitly ask for
+        quoting and escaping if you want it for a given parameter,
+        but it also has a way to force quoting and/or escaping even
+        if it's of a data type that MySQL++ knows never requires
+        it. There is no <classname>Query</classname> stream
+        manipulator to do the same thing. <xref linkend="ssqls"/>
+        do all quoting and escaping automatically, so you could say
+        it's purely implicit. It can do this because SSQLS knows
+        all the SQL code and data types, so it never has to guess
+        whether quoting or escaping is appropriate.</para></footnote>
+        You must use the proper manipulators wherever necessary. It
+        would be nice if MySQL++ could do quoting and escaping
+        implicitly based on data type, but this isn't possible in
+        all cases.<footnote id="whyexpmanip"><para>Unless you're
+        smarter than I am, you don't immediately see why explicit
+        manipulators are necessary. We can tell when quoting and
+        escaping is <emphasis>not</emphasis> appropriate based on type,
+        so doesn't that mean we know when it <emphasis>is</emphasis>
+        appropriate?  Alas, no. For most data types, it is possible
+        to know, or at least make an awfully good guess, but it's a
+        complete toss-up for C strings, <type>const char*</type>. A
+        C string could be either a literal string of SQL code, or it
+        can be a value used in a query. Since there's no easy way to
+        know and it would damage the library's usability to mandate
+        that C strings only be used for one purpose or the other, the
+        library requires you to be explicit. It can't guess reliably,
+        so you have to tell it.</para></footnote> Since MySQL++ can't
+        reliably guess when quoting and escaping is appropriate, and
+        the programmer doesn't need to<footnote><para>One hopes the
+        programmer <emphasis>knows</emphasis>.</para></footnote>,
+        MySQL++ makes you tell it.</para>
     </sect2>
 
 
@@ -1165,10 +1218,8 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         the same problem. The simplest recipie for disaster is:</para>
 
         <programlisting>
-Connection c(...);
-Query q = c.query();
-Result r1 = q.use("select garbage from plink where foobie='tamagotchi'");
-Result r2 = q.use("select blah from bonk where bletch='smurf'");</programlisting>
+Result r1 = query.use("select garbage from plink where foobie='tamagotchi'");
+Result r2 = query.use("select blah from bonk where bletch='smurf'");</programlisting>
 
         <para>The second <methodname>use()</methodname> call fails
         because the first result set hasn't been consumed yet.</para>
@@ -2665,19 +2716,17 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
             <para>Code like this will have to change:</para>
 
             <programlisting>
-Query q = con.query();
-q &lt;&lt; "delete from mytable where myfield=%0:myvalue";
-q.parse();
-q.def["myvalue"] = some_value;
-q.execute();</programlisting>
+query &lt;&lt; "delete from mytable where myfield=%0:myvalue";
+query.parse();
+query.def["myvalue"] = some_value;
+query.execute();</programlisting>
 
             <para>...to something more like this:</para>
 
             <programlisting>
-Query q = con.query();
-q &lt;&lt; "delete from mytable where myfield=%0";
-q.parse();
-q.execute(some_value);</programlisting>
+query &lt;&lt; "delete from mytable where myfield=%0";
+query.parse();
+query.execute(some_value);</programlisting>
 
             <para>The first code snippet abuses the default template
             query parameter mechanism (<varname>Query::def</varname>)

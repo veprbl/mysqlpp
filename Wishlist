@@ -39,14 +39,6 @@ v3.0 Plan, For-Sure Stuff
       the existing type-specific manipulator functions, and wrapping
       the types in Null<>.
 
-    o Replace all operator<<(Manip&, T&) templates with concrete
-      versions taking STA instead of T.  If the manipulated
-      stream is Query and STA::escape_q() is true, do escaping with
-      mysql_real_escape() using the Query object's Connection instance.
-      Exception: Query::conn_ is 0 in test_manip.cpp, because we don't
-      count on having a real Connection.  Have to be smart enough to
-      fall back to mysql_escape() to cover this corner case.
-
     o Go back over mailing list thread to fold in any other changes
       suggested for RefCountedPointer.  Most especially, use
       atomic increment/decrement.  Until we do this, we don't
@@ -123,6 +115,14 @@ v3.0 "Maybe" Stuff
     This is stuff that would be nice to have, but it wouldn't be a
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
+
+    o Either add quote_force and similar manipulators, or remove the
+      'r' and 'R' modifiers in template queries.  As it stands, you
+      can't force Query streams to quote or escape something if MySQL++
+      knows it's never required in SQL, but these modifiers let you
+      do it for parameters in template queries.  Pick one behavior,
+      and change the footnote about this from the quoting and escaping
+      section of the userman.
 
     o SSQLS v2:
 
