@@ -1,17 +1,16 @@
 /// \file manip.h
-/// \brief Declares C++ stream manipulators and operators used with
-/// class Query's stream interface for building SQL queries.
+/// \brief Declares the Query stream manipulators and operators.
 ///
 /// These manipulators let you automatically quote elements or escape
 /// characters that are special in SQL when inserting them into a
 /// Query stream.  They make it easier to build syntactically-correct
 /// SQL queries.
 ///
-/// This file also includes special \c operator<< definitions for
-/// MySQL++ data types, since we know when to do automatic quoting and
-/// escaping for these types.  This only works with Query streams, not
-/// regular std::ostreams, since we're only concerned with making
-/// correct SQL.
+/// This file also includes special \c operator<< definitions for a few
+/// key MySQL++ data types, since we know when to do automatic quoting
+/// and escaping for these types.  This only works with Query streams,
+/// not regular std::ostreams, since we're only concerned with making
+/// correct SQL, not with presentation matters.
 ///
 /// test/test_manip.cpp exercises the mechanisms defined here.
 
@@ -49,9 +48,6 @@
 
 #include <iostream>
 
-/// All global symbols in MySQL++ are in namespace mysqlpp.  This is
-/// needed because many symbols are rather generic (e.g. Row, Query...),
-/// so there is a serious danger of conflicts.
 namespace mysqlpp {
 
 class SQLQueryParms;
@@ -65,11 +61,15 @@ class SQLQueryParms;
 ///
 /// Insert this manipulator into a Query or SQLQueryParms stream to put
 /// single quotes around the next item in the stream, and escape any
-/// characters within it that are special in SQL.
+/// characters within it that are special in SQL, if the data type of
+/// the next item in the stream may require it.  By contrast, Date
+/// objects only require escaping, not quoting, and integers never
+/// require either.  The manipulators won't do work they know is not
+/// necessary to ensure syntactially-correct SQL.
 
 enum quote_type0
 {
-	quote					///< insert into a std::ostream to single-quote and escape next item
+	quote ///< insert into a Query stream to single-quote and escape next item
 };
 
 
@@ -110,15 +110,28 @@ operator <<(SQLQueryParms& p, quote_type0 /* esc */)
 }
 
 
+/// \brief Inserts a SQLTypeAdapter into a stream, quoted and escaped
+/// as appropriate to the data type the object was initialized from.
+
 MYSQLPP_EXPORT SQLQueryParms& operator <<(quote_type2 p,
 		SQLTypeAdapter& in);
 
 
-MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
+/// \brief Inserts a anything that can be converted to SQLTypeAdapter
+/// into a stream, quoted and escaped as needed if it's a Query stream
+
+MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
 		const SQLTypeAdapter& in);
 
 
-MYSQLPP_EXPORT std::ostream& operator <<(quote_type1 o,
+/// \brief Inserts a SQLTypeAdapter into a non-Query stream.
+///
+/// Although we know how to quote and escape SQLTypeAdapter objects, we
+/// only do that when inserting them into Query streams or when given an
+/// explicit manipulator because this feature is only intended to make
+/// it easier to build syntactically-correct SQL queries.
+
+MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 		const SQLTypeAdapter& in);
 
 
@@ -183,6 +196,13 @@ operator <<(SQLQueryParms& p, quote_only_type0 /* esc */)
 }
 
 
+/// \brief Inserts a SQLTypeAdapter into a stream, quoting it unless it's
+/// data that needs no quoting.
+///
+/// We make the decision to quote the data based on the in.quote_q()
+/// flag.  You can set it yourself, but SQLTypeAdapter's ctors should set
+/// it correctly for you.
+
 MYSQLPP_EXPORT SQLQueryParms& operator <<(quote_only_type2 p,
 		SQLTypeAdapter& in);
 
@@ -216,10 +236,15 @@ operator <<(quote_only_type1 o, const Set<ST>& in)
 ///
 /// Similar to <a href="#quote_only_manip">quote_only manipulator</a>,
 /// except that it uses double quotes instead of single quotes.
+///
+/// You might care to use it when you have MySQL's \c ANSI_QUOTES mode
+/// enabled.  In that mode, single quotes are used only for string
+/// literals, and double quotes for identifiers.  Otherwise,
+/// \c quote_only and \c quote are quite sufficient.
 
 enum quote_double_only_type0
 {
-	quote_double_only		///< insert into a std::ostream to double-quote next item
+	quote_double_only ///< insert into a std::ostream to double-quote next item
 };
 
 
@@ -260,6 +285,13 @@ operator <<(SQLQueryParms& p, quote_double_only_type0 /* esc */)
 }
 
 
+/// \brief Inserts a SQLTypeAdapter into a stream, double-quoting it (")
+/// unless it's data that needs no quoting.
+///
+/// We make the decision to quote the data based on the in.quote_q()
+/// flag.  You can set it yourself, but SQLTypeAdapter's ctors should set
+/// it correctly for you.
+
 MYSQLPP_EXPORT SQLQueryParms&
 operator <<(quote_double_only_type2 p, SQLTypeAdapter& in);
 
@@ -289,9 +321,13 @@ operator <<(quote_double_only_type1 o, const Set<ST>& in)
 /// \enum escape_type0
 /// The 'escape' manipulator.
 ///
-/// SQL-escapes following argument if it is inserted into a Query
-/// or SQLQueryParms stream to prevent any special SQL characters from
-/// being interpreted.
+/// SQL-escapes following argument if it is of a data type that
+/// may require escaping when inserted into a Query or SQLQueryParms
+/// stream.  This is useful with string types, for example, to avoid
+/// bad SQL when they contain special characters like single quotes,
+/// nulls, and newlines.  Data types like integers which never benefit
+/// from escaping don't get run through the escaping routine even if
+/// you ask for it.
 
 enum escape_type0 { escape };
 
@@ -345,6 +381,9 @@ operator <<(SQLQueryParms& p, escape_type0 /* esc */)
 MYSQLPP_EXPORT SQLQueryParms& operator <<(escape_type2 p,
 		SQLTypeAdapter& in);
 
+
+/// \brief Inserts anything that can be converted to SQLTypeAdapter into
+/// a stream, escaping special SQL characters as needed.
 
 MYSQLPP_EXPORT std::ostream& operator <<(escape_type1 o,
 		const SQLTypeAdapter& in);
@@ -412,6 +451,9 @@ operator <<(SQLQueryParms& p, do_nothing_type0 /* esc */)
 }
 
 
+/// \brief Inserts a SQLTypeAdapter into a stream, with no escaping or
+/// quoting.
+
 MYSQLPP_EXPORT SQLQueryParms& operator <<(do_nothing_type2 p,
 		SQLTypeAdapter& in);
 
@@ -453,6 +495,9 @@ operator <<(SQLQueryParms& p, ignore_type0 /* esc */)
 	return ignore_type2(&p);
 }
 
+
+/// \brief Inserts a SQLTypeAdapter into a stream, with no escaping or
+/// quoting, and without marking the string as having been "processed".
 
 MYSQLPP_EXPORT SQLQueryParms& operator <<(ignore_type2 p,
 		SQLTypeAdapter& in);

@@ -31,11 +31,7 @@
 
 using namespace std;
 
-// Manipulator stuff is _always_ in namespace mysqlpp.
 namespace mysqlpp {
-
-/// \brief Inserts a SQLTypeAdapter into a stream, quoted and escaped
-/// as appropriate to the data type the object was initialized from.
 
 SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 {
@@ -53,9 +49,6 @@ SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 	}
 }
 
-
-/// \brief Inserts a anything that can be converted to SQLTypeAdapter
-/// into a stream, quoted and escaped as needed if it's a Query stream
 
 ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
 {
@@ -78,13 +71,6 @@ ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
 }
 
 
-/// \brief Inserts a SQLTypeAdapter into a non-Query stream.
-///
-/// Although we know how to quote and escape SQLTypeAdapter objects, we
-/// only do that when inserting them into Query streams or when given an
-/// explicit manipulator because this feature is only intended to make
-/// it easier to build syntactically-correct SQL queries.
-
 ostream&
 operator <<(ostream& o, const SQLTypeAdapter& in)
 {
@@ -92,13 +78,6 @@ operator <<(ostream& o, const SQLTypeAdapter& in)
 	return o;
 }
 
-
-/// \brief Inserts a SQLTypeAdapter into a stream, quoting it unless it's
-/// data that needs no quoting.
-///
-/// We make the decision to quote the data based on the in.quote_q()
-/// flag.  You can set it yourself, but SQLTypeAdapter's ctors should set
-/// it correctly for you.
 
 SQLQueryParms& operator <<(quote_only_type2 p, SQLTypeAdapter& in)
 {
@@ -114,13 +93,6 @@ SQLQueryParms& operator <<(quote_only_type2 p, SQLTypeAdapter& in)
 	}
 }
 
-
-/// \brief Inserts a SQLTypeAdapter into a stream, double-quoting it (")
-/// unless it's data that needs no quoting.
-///
-/// We make the decision to quote the data based on the in.quote_q()
-/// flag.  You can set it yourself, but SQLTypeAdapter's ctors should set
-/// it correctly for you.
 
 SQLQueryParms& operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
 {
@@ -152,9 +124,6 @@ SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
 }
 
 
-/// \brief Inserts anything that can be converted to SQLTypeAdapter into
-/// a stream, escaping special SQL characters as needed.
-
 std::ostream& operator <<(escape_type1 o, const SQLTypeAdapter& in)
 {
 	Query* pq = dynamic_cast<Query*>(o.ostr);
@@ -172,18 +141,12 @@ std::ostream& operator <<(escape_type1 o, const SQLTypeAdapter& in)
 }
 
 
-/// \brief Inserts a SQLTypeAdapter into a stream, with no escaping or
-/// quoting.
-
 SQLQueryParms& operator <<(do_nothing_type2 p, SQLTypeAdapter& in)
 {
 	in.set_processed();
 	return *p.qparms << in;
 }
 
-
-/// \brief Inserts a SQLTypeAdapter into a stream, with no escaping or
-/// quoting, and without marking the string as having been "processed".
 
 SQLQueryParms& operator <<(ignore_type2 p, SQLTypeAdapter& in)
 {
