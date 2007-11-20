@@ -24,10 +24,15 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
+    o Can String replace RefCountedPointer?  More broadly, can it be
+      the generic "hold big chunks of data efficiently even in the
+      face of copying" class?
+
     o Go back over mailing list thread to fold in any other changes
-      suggested for RefCountedPointer.  Most especially, use
-      atomic increment/decrement.  Until we do this, we don't
-      yet have thread-safety.
+      suggested for RefCountedPointer, and apply to RefCountedBuffer
+      as well.  Most especially, use atomic increment/decrement.
+      Until we do this, we don't yet have thread-safety.  Where atomic
+      operations aren't sufficient, use BeecryptMutex.
 
     o Add Connection::thread_start() and thread_end(), wrapping C API.
       Mention in userman threads chapter that these only need to
@@ -100,10 +105,6 @@ v3.0 "Maybe" Stuff
     This is stuff that would be nice to have, but it wouldn't be a
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
-
-    o Can String replace RefCountedPointer?  More broadly, can it be
-      the generic "hold big chunks of data efficiently even in the
-      face of copying" class?
 
     o Either add quote_force and similar manipulators, or remove the
       'r' and 'R' modifiers in template queries.  As it stands, you
