@@ -24,10 +24,6 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Can String replace RefCountedPointer?  More broadly, can it be
-      the generic "hold big chunks of data efficiently even in the
-      face of copying" class?
-
     o Go back over mailing list thread to fold in any other changes
       suggested for RefCountedPointer, and apply to RefCountedBuffer
       as well.  Most especially, use atomic increment/decrement.
@@ -45,6 +41,8 @@ v3.0 Plan, For-Sure Stuff
 
     o Add multithreaded examples to test above features and the new
       ConnectionPool class?  They'd have to be platform-specific...
+      If we decide not to do it, pull reference to the example from
+      section 7.2 of userman.
 
     o Rework elment access in subscript_iterator derivatives:
 
