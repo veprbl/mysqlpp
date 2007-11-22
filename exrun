@@ -37,14 +37,12 @@ then
 	elif [ `uname -o` == 'Cygwin' ]
 	then
 		cmd.exe /c exrun.bat $PROG $*
+	elif [ -e /usr/bin/ldd ]
+	then
+		ln -sf libmysqlpp.so libmysqlpp.so.2
+		LD_LIBRARY_PATH=. $TOOL ./$PROG $*
 	else
-		if [ -e /usr/bin/ldd ]
-		then
-			ln -sf libmysqlpp.so libmysqlpp.so.2
-			LD_LIBRARY_PATH=. $TOOL ./$PROG $*
-		else
-			echo "ERROR: I don't grok this system's dynamic linkage system."
-		fi
+		echo "ERROR: I don't grok this system's dynamic linkage system."
 	fi
 else
 	echo "usage: $0 $TOOL <example> [args...]"
