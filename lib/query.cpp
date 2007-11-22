@@ -188,7 +188,8 @@ Query::execute(const char* str, size_t len)
 	}
 
 	if (copacetic_) {
-		return ResNSel(conn_);
+		return ResNSel(conn_, conn_->insert_id(),
+				conn_->affected_rows(), conn_->info());
 	}
 	else if (throw_exceptions()) {
 		throw BadQuery(error(), errnum());
@@ -597,7 +598,7 @@ Query::use(const char* str, size_t len)
 	}
 
 	if (res) {
-		return ResUse(res, conn_, throw_exceptions());
+		return ResUse(res, throw_exceptions());
 	}
 	else {
 		// Either result set is empty (which is copacetic), or there

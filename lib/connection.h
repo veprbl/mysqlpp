@@ -542,8 +542,6 @@ protected:
 	std::string error_message_;		///< MySQL++ specific error, if any
 
 private:
-	friend class ResNSel;
-	friend class ResUse;
 	friend class Query;
 
 	struct OptionInfo {

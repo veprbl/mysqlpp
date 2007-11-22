@@ -41,11 +41,6 @@
 
 namespace mysqlpp {
 
-#if !defined(DOXYGEN_IGNORE)
-// Make Doxygen ignore this
-class MYSQLPP_EXPORT Connection;
-#endif
-
 /// \brief A basic result set class, for use with "use" queries.
 ///
 /// A "use" query is one where you make the query and then process just
@@ -70,7 +65,7 @@ public:
 	}
 	
 	/// \brief Create the object, fully initialized
-	ResUse(MYSQL_RES* result, Connection* c = 0, bool te = true);
+	ResUse(MYSQL_RES* result, bool te = true);
 	
 	/// \brief Create a copy of another ResUse object
 	ResUse(const ResUse& other) :
@@ -370,7 +365,7 @@ public:
 	
 	/// \brief Fully initialize object
 	Result(MYSQL_RES* result, bool te = true) :
-	ResUse(result, 0, te)
+	ResUse(result, te)
 	{
 	}
 
@@ -453,7 +448,14 @@ public:
 	}
 
 	/// \brief Initialize object
-	ResNSel(Connection* c);
+	ResNSel::ResNSel(bool copacetic, my_ulonglong insert_id,
+			my_ulonglong rows, const std::string& info) :
+	copacetic_(copacetic),
+	insert_id_(insert_id),
+	rows_(rows),
+	info_(info)
+	{
+	}
 
 	/// \brief Test whether the query was successful
 	operator bool() const { return copacetic_; }

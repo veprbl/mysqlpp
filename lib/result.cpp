@@ -26,20 +26,9 @@
 
 #include "result.h"
 
-#include "connection.h"
-
 namespace mysqlpp {
 
-ResNSel::ResNSel(Connection* c) :
-copacetic_(c->copacetic_),
-insert_id_(c->insert_id()),
-rows_(c->affected_rows()),
-info_(c->info())
-{
-}
-
-
-ResUse::ResUse(MYSQL_RES* result, Connection* c, bool te) :
+ResUse::ResUse(MYSQL_RES* result, bool te) :
 OptionalExceptions(te),
 initialized_(false),
 types_(0),
