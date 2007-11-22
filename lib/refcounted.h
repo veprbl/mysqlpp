@@ -51,6 +51,15 @@ namespace mysqlpp {
 /// be "owned" by disparate parties: you can allocate the object just
 /// once, then pass around the reference counted pointer, knowing that
 /// the last user will "turn out the lights".
+///
+/// \b Implementation \b detail: You may notice that this class manages
+/// two pointers, one to the data we're managing, and one to the
+/// reference count.  You might wonder why we don't wrap these up into a
+/// structure and keep just a pointer to an instance of it to simplify
+/// the memory management.  It would indeed do that, but then every
+/// access to the data we manage would be a triple indirection instead
+/// of just double.  It's a tradeoff, and we've chosen to take a minor
+/// complexity hit to avoid the performance hit.
 
 template <class T>
 class RefCountedPointer
