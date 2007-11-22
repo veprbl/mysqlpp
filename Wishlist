@@ -13,13 +13,6 @@ v3.0 Plan, For-Sure Stuff
     get done in v3.0.  Most of them break the ABI, so they can't wait
     for a future version, because v4 could be years out.
 
-    o field_list should use backticks to quote its items to handle
-      spaces and other special characters.  Probably also remove all
-      the manipulator stuff associated with these: no reason to make
-      it user-settable, as there's only one right way to do it.  See:
-
-         http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
-
     o The manipulator changes sometime during 2.3 broke the column
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
@@ -89,10 +82,6 @@ v3.0 Plan, For-Sure Stuff
       a parsed template.  It's probably running off the end of the
       default argument list, or trying to dereference a null pointer.
 
-    o Add user-settable floating-point comparison precisions:
-
-        http://lists.mysql.com/plusplus/3984
-
     o Is MYSQLPP_QUERY_THISPTR still needed with VC++2003?  The recent
       manipulator changes and the removal of all operator<<(Query&,
       const T&) may make it unnecessary.
@@ -104,18 +93,36 @@ v3.0 "Maybe" Stuff
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
 
-    o Either add quote_force and similar manipulators, or remove the
-      'r' and 'R' modifiers in template queries.  As it stands, you
-      can't force Query streams to quote or escape something if MySQL++
-      knows it's never required in SQL, but these modifiers let you
-      do it for parameters in template queries.  Pick one behavior,
-      and change the footnote about this from the quoting and escaping
-      section of the userman.
+    o Replace Query::preview() with operator<<, for easy debugging?
+      If one really wants a std::string, they can still call str(),
+      which is currently the same thing.
 
+    o Define operator<< for Fields, Row, ResUse, etc.  In other
+      words, there should be a way to get a user-readable version
+      of received data without a lot of code.  Perhaps use a CSV
+      output format, or a mysql(1) one (ASCII grid).
+
+    o Add syntactic sugar to the Date and Time classes.  A way to
+      represent SQL's NOW() function would be especially helpful.
+
+    o Figure out some way to name debug DLL and library under VC++
+      differently (trailing 'd'?) to prevent some problems due
+      to mixing debug and release programs and MySQL++ DLLs.
+      This appears to require changes to Bakefile, or some sort of
+      post-build hackery.
+
+    o Try using MySQL C API enum constants in mysql_type_info::types
+      instead of hard-coded values.
+
+
+v3.1 Tentative Plan
+-------------------
     o SSQLS v2:
 
       - Switch from C macros to a DSL that is translated to .cpp and
-        .h files by a tool built along with MySQL++ library.
+        .h files by a tool built along with MySQL++ library.  Design:
+
+        http://lists.mysql.com/plusplus/6929
 
       - Add features to that tool to write SSQLSv2 declaration files
         from existing schemas extracted from CREATE TABLE statements,
@@ -136,51 +143,7 @@ v3.0 "Maybe" Stuff
         template functions like Query::insert<T> might become regular
         member functions, taking a reference to the SSQLS base class.
 
-    o Replace Query::preview() with operator<<, for easy debugging?
-      If one really wants a std::string, they can still call str(),
-      which is currently the same thing.
-
-    o Define operator<< for Fields, Row, ResUse, etc.  In other
-      words, there should be a way to get a user-readable version
-      of received data without a lot of code.  Perhaps use a CSV
-      output format, or a mysql(1) one (ASCII grid).
-
-    o Add syntactic sugar to the Date and Time classes.  A way to
-      represent SQL's NOW() function would be especially helpful.
-
-    o Abstract all uses of MySQL C API functions into a database
-      driver class with a generic interface.  This is a step towards
-      database-independence, without the parallel class hierarchy
-      required by the MySQL++ 1.7 design.  Also, it will make it easier
-      to make class Connection completely friend-less.  Right now,
-      the main reason it needs friends is because these other classes
-      make C API calls using its private MYSQL data member.  The other
-      reasons for it having friends aren't nearly as compelling,
-      so it wouldn't be hard to justify redesigning Connection to
-      eliminate these final reasons.
-
-      While it would be easy to have just one global database
-      driver object, it's probably going to be necessary to have
-      one per Connection.  Consider what happens when you have one
-      program connected to two very different MySQL databases, and
-      you indirectly call C API functions that take MYSQL parameters.
-      It's likely that those calls are supposed to behave different,
-      depending on the data in that MYSQL object; for instance,
-      different character encodings in the selected databases.  So,
-      there must somehow be a way to pass the database driver's
-      instance pointer down to all objects that will need to use
-      the driver.  A side benefit is that a single program could talk
-      to multiple different database server types.  Imagine a program
-      for importing data from PostgreSQL and loading it into a MySQL
-      table, for instance.
-
     o Chris Frey's packarray class
-
-    o Figure out some way to name debug DLL and library under VC++
-      differently (trailing 'd'?) to prevent some problems due
-      to mixing debug and release programs and MySQL++ DLLs.
-      This appears to require changes to Bakefile, or some sort of
-      post-build hackery.
 
     o Create adaptors for std::bitset, for storing binary data in a
       MySQL table.  Make two options available, one for storing the
@@ -188,11 +151,45 @@ v3.0 "Maybe" Stuff
       and another for storing a larger set of bits in a more flexible
       way, perhaps as a BLOB.
 
-    o Consider using MySQL C API enum constants in
-      mysql_type_info::types definition instead of hard-coded values.
-      This could potentially break a lot of infrastructure, though,
-      so do it only with care.
+    o field_list should use backticks to quote its items to handle
+      spaces and other special characters.  Probably also remove all
+      the manipulator stuff associated with these: no reason to make
+      it user-settable, as there's only one right way to do it.  See:
+
+         http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
+
+    o Define custom template for sql_double et al., with the comparison
+      precision being the parameter:
+
+        http://lists.mysql.com/plusplus/3984
+
+    o Either add quote_force and similar manipulators, or remove the
+      'r' and 'R' modifiers in template queries.  As it stands, you
+      can't force Query streams to quote or escape something if MySQL++
+      knows it's never required in SQL, but these modifiers let you
+      do it for parameters in template queries.  Pick one behavior,
+      and change the footnote about this from the quoting and escaping
+      section of the userman.
+
+
+
+v4.0 or Later
+-------------
+    o Abstract all uses of MySQL C API functions into a database
+      driver class with a generic interface.  This is a step towards
+      database-independence, without the parallel class hierarchy
+      required by the MySQL++ 1.7 design.
+
+      A bonus is that it'll let us remove Connection's last friend,
+      Query, which only needs to be a friend to make C API calls
+      using Connection::mysql_.
+
+      Abstract base class DBDriver declares the generic interface;
+      it's subclassed for every database server type we support.
+      Connection object creates leaf class, passes it generically
+      as a DBDriver* to Query, which passes it to Result.  At the
+      moment, that's all the classes that access the C API themselves.
+      Everything else goes through either Query or Connection.
 
     o Some sort of support for prepared statements.  Can we hijack
       the template query mechanism?
-
