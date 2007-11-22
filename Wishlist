@@ -17,11 +17,22 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Go back over mailing list thread to fold in any other changes
-      suggested for RefCountedPointer, and apply to RefCountedBuffer
-      as well.  Most especially, use atomic increment/decrement.
-      Until we do this, we don't yet have thread-safety.  Where atomic
-      operations aren't sufficient, use BeecryptMutex.
+    o Derive RefCountedPointer from SafeBool<T>, and try to drop
+      operator!().
+
+    o Classes Connection, Query, String, Result and Row all have
+      operator bool() as well.  Use "safe bool" here too, as needed.
+
+    o Allocation of RefCountedPointers in places like ResUse::field_*()
+      isn't thread safe.  If possible, just allocate these things on
+      ResUse/Result object creation.  If they really do need delayed
+      creation, put this test-and-allocate stuff in an accessor,
+      and guard this function with a mutex.  Otherwise, there's a
+      risk of double-allocation.
+
+    o Apply Jonathan Wakely's patch to RefCountedPointer.
+
+    o Atomic inc/dec of reference counts in RefCounted*?
 
     o Add Connection::thread_start() and thread_end(), wrapping C API.
       Mention in userman threads chapter that these only need to
