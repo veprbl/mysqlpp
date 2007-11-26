@@ -43,6 +43,8 @@ v3.0 Plan, For-Sure Stuff
       maybe also a #defined value set at MySQL++ library build time
       if thread awareness is enabled.
 
+    o Add Connection::thread_id()
+
     o Add multithreaded examples to test above features and the new
       ConnectionPool class?  They'd have to be platform-specific...
       If we decide not to do it, pull reference to the example from
