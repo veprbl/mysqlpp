@@ -845,5 +845,19 @@ Connection::shutdown()
 }
 
 
+bool
+Connection::thread_aware()
+{
+#if defined(MYSQLPP_PLATFORM_WINDOWS) || defined(HAVE_PTHREAD) || defined(HAVE_SYNCH_H)
+	// Okay, good, MySQL++ itself is thread-aware, but only return true
+	// if the underlying C API library is also thread-aware.
+	return mysql_thread_safe();
+#else
+	// MySQL++ itself isn't thread-aware, so we don't need to do any
+	// further tests.  All pieces must be thread-aware to return true.
+	return false;	
+#endif
+}
+
 } // end namespace mysqlpp
 

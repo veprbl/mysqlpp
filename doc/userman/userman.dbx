@@ -2410,27 +2410,50 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
 
         <orderedlist>
             <listitem>
-                <para>Build MySQL++ itself with thread awareness turned
-                on. The way you do this depends on your platform,
-                so see the <filename>README</filename> file specific
-                to your platform for further details.</para>
+                <para><emphasis>Build MySQL++ itself with thread
+                awareness turned on.</emphasis></para>
+
+                <para>On platforms that use the
+                <filename>configure</filename> script (Linux, Mac OS X,
+                *BSD, Solaris, Cygwin...) you need to explicitly ask
+                for thread support. And beware, this is only a request
+                to the <filename>configure</filename> script to look
+                for thread support on your system, not a requirement
+                to do or die: if the script doesn't find what it needs
+                to do threading, MySQL++ will just get built without
+                thread support. See <filename>README.unix</filename>
+                for more details.</para>
+
+                <para>When building MySQL++ with the Visual C++
+                project files or the MinGW Makefile that comes with
+                the MySQL++ distribution, threading is always turned
+                on, due to the nature of Windows.</para>
+
+                <para>If you build MySQL++ in some unsupported way,
+                such as with Dev-Cpp (based on MinGW) you're on your
+                own to enable this.</para>
             </listitem>
 
             <listitem>
-                <para>Link your program to a thread-aware build of
-                the MySQL C API library. Depending on your platform,
-                you might have to build this yourself (e.g. Cygwin),
-                or you might get only one library which is always
+                <para><emphasis>Link your program to a thread-aware
+                build of the MySQL C API library.</emphasis></para>
+
+                <para>Depending on your platform, you might
+                have to build this yourself (e.g. Cygwin), or
+                you might get only one library which is always
                 thread-aware (e.g. Visual C++), or there might be
-                two different MySQL C API libraries, one of which is
-                thread-aware and the other not (e.g. Linux). Again,
-                see the <filename>README</filename>s, and also the
-                MySQL developer documentation.</para>
+                two different MySQL C API libraries, one of which
+                is thread-aware and the other not (e.g. Linux). See
+                the <filename>README</filename>.* file for your
+                particular platform, and also the MySQL developer
+                documentation.</para>
             </listitem>
 
             <listitem>
-                <para>Enable thread safety in your program's build
-                options. This is different for every platform, but
+                <para><emphasis>Enable threading in your program's
+                build options.</emphasis></para>
+
+                <para>This is different for every platform, but
                 it's usually the case that you don't get thread-aware
                 builds by default. You might have to turn on a compiler
                 option, or link your program to a different library,
@@ -2514,6 +2537,57 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
         in MySQL++. The whole point of the library is to make using
         the database easier. We added the pool option for those that
         really need it, but an option it must remain.</para>
+    </sect2>
+
+
+    <sect2>
+        <title>Helper Functions</title>
+
+        <para><classname>Connection</classname> has several
+        thread-related methods you might care about when using MySQL++
+        with threads.</para>
+
+        <para>You can call
+        <methodname>Connection::thread_aware()</methodname> to
+        determine whether MySQL++ and the underlying C API library
+        were both built to be thread-aware. Again, I stress that
+        thread <emphasis>awareness</emphasis> is not the same thing
+        as thread <emphasis>safety</emphasis>: it's still up to you
+        to make your code thread-safe. If this method returns true,
+        it just means it's <emphasis>possible</emphasis> to achieve
+        thread-safety.</para>
+
+        <para>If your program's connection-management strategy
+        allows a thread to use a <classname>Connection</classname>
+        object that another thread created, you must call
+        <methodname>Connection::thread_start()</methodname> from these
+        threads before they do anything with MySQL++. It's safe for
+        the thread that created the <classname>Connection</classname>
+        object to call it, too, but unnecessary. This is because the
+        underlying C API library takes care of it for you when you try
+        to establish your first connection from that thread. So, if you
+        use the simple <classname>Connection</classname>-per-thread
+        strategy lined out above, you never need to call this
+        method, but if you use something more complex like
+        <classname>ConnectionPool</classname>, you do.</para>
+
+        <para>Finally, there's the complementary method,
+        <methodname>Connection::thread_end()</methodname>. Strictly
+        speaking, it's not <emphasis>necessary</emphasis> to
+        call this. However, as alluded above, the underlying C API
+        library allocates some per-thread memory for each thread that
+        calls <methodname>Connection::thread_start()</methodname>
+        or establishes connections. It's not very much memory,
+        it doesn't grow over time, and a typical program is going
+        to need this memory for its entire run time anyway. Memory
+        debuggers aren't smart enough to know all this, though, so
+        they will gripe about a memory leak unless you call this from
+        each thread that uses MySQL++ before that thread exits.</para>
+
+        <para>It's not relevant to this chapter's
+        topic, so to be clear I want to point out that
+        <methodname>Connection::thread_id()</methodname> has to do with
+        threads in the database server, not client-side threads.</para>
     </sect2>
 
 

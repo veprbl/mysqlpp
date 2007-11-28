@@ -298,12 +298,14 @@ public:
 
 	/// \brief Kill a MySQL server thread
 	///
-	/// \param pid ID of thread to kill
+	/// \param tid ID of thread to kill
 	///
 	/// Simply wraps \c mysql_kill() in the C API.
-	int kill(unsigned long pid)
+    ///
+    /// \see thread_id()
+	int kill(unsigned long tid)
 	{
-		return mysql_kill(&mysql_, pid);
+		return mysql_kill(&mysql_, tid);
 	}
 
 	/// \brief Test whether the connection has experienced an error
@@ -474,6 +476,51 @@ public:
 	/// in seconds, and the number of running threads, questions
 	/// and open tables.
 	const char* status() { return mysql_stat(&mysql_); }
+
+	/// \brief Returns true if MySQL++ and the underlying MySQL C API
+	/// library were both compiled with thread awareness.
+	///
+	/// This is based in part on a MySQL C API function
+	/// mysql_thread_safe().  We deliberately don't call this wrapper
+	/// thread_safe() because it's a misleading name: linking to
+	/// thread-aware versions of the MySQL++ and C API libraries doesn't
+	/// automatically make your program "thread-safe".  See the
+	/// <a href="../userman/threads.html">chapter on threads</a> in the
+	/// user manual for more information and guidance.
+	static bool thread_aware();
+
+	/// \brief Tells the underlying MySQL C API library that this thread
+	/// is done using the library.
+	///
+	/// This exists because the C API library allocates some per-thread
+	/// memory which it doesn't release until you call this.
+	static void thread_end() { mysql_thread_end(); }
+
+	/// \brief Returns the MySQL server thread ID for this connection
+	///
+	/// This has nothing to do with threading on the client side. It's
+	/// a server-side thread ID, to be used with kill().
+	unsigned long thread_id() { return mysql_thread_id(&mysql_); }
+
+	/// \brief Tells the underlying C API library that the current
+	/// thread will be using the library's services.
+	///
+	/// \retval True if there was no problem
+	///
+	/// The MySQL++ user manual's <a href="../userman/threads.html">chapter
+	/// on threads</a> details two major strategies for dealing with
+	/// connections in the face of threads.  If you take the simpler
+	/// path, creating one Connection object per thread, it is never
+	/// necessary to call this function; the underlying C API will call it
+	/// for you when you establish the first database server connection
+	/// from that thread.  If you use a more complex connection
+	/// management strategy where it's possible for one thread to
+	/// establish a connection that another thread uses, you must call
+	/// this from each thread that can use the database before it creates
+	/// any MySQL++ objects.  If you use a ConnectionPool object, this
+	/// applies; ConnectionPool isn't smart enough to call this for you,
+	/// and the C API won't do it, either.
+	static bool thread_start() { return !mysql_thread_init(); }
 
 protected:
 	/// \brief Types of option setting errors we can diagnose

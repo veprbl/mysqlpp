@@ -24,17 +24,6 @@ v3.0 Plan, For-Sure Stuff
 
     o Atomic inc/dec of reference counts in RefCounted*?
 
-    o Add Connection::thread_start() and thread_end(), wrapping C API.
-      Mention in userman threads chapter that these only need to
-      be called when doing something tricky or linking statically
-      on Windows.  Automatic otherwise.
-
-    o Add Connection::thread_safe(), wrapping mysql_thread_safe() plus
-      maybe also a #defined value set at MySQL++ library build time
-      if thread awareness is enabled.
-
-    o Add Connection::thread_id()
-
     o Add multithreaded examples to test above features and the new
       ConnectionPool class?  They'd have to be platform-specific...
       If we decide not to do it, pull reference to the example from
