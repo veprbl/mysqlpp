@@ -392,7 +392,7 @@ public:
 	}
 
 	/// \brief Initialize object
-	ResNSel::ResNSel(bool copacetic, my_ulonglong insert_id,
+	ResNSel(bool copacetic, my_ulonglong insert_id,
 			my_ulonglong rows, const std::string& info) :
 	copacetic_(copacetic),
 	insert_id_(insert_id),
