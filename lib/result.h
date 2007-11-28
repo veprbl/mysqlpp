@@ -103,8 +103,11 @@ public:
 			}
 		}
 		MYSQL_ROW row = fetch_raw_row();
-		unsigned long* length = fetch_lengths();
-		if (!row || !length) {
+		const unsigned long* lengths = fetch_lengths();
+		if (row && lengths) {
+			return Row(row, this, lengths, throw_exceptions());
+		}
+		else {
 			if (throw_exceptions()) {
 				throw EndOfResults();
 			}
@@ -112,7 +115,6 @@ public:
 				return Row();
 			}
 		}
-		return Row(row, this, length, throw_exceptions());
 	}
 
 	/// \brief Wraps mysql_fetch_row() in MySQL C API.
@@ -124,7 +126,7 @@ public:
 	MYSQL_ROW fetch_raw_row() const { return mysql_fetch_row(result_); }
 
 	/// \brief Wraps mysql_fetch_lengths() in MySQL C API.
-	unsigned long* fetch_lengths() const
+	const unsigned long* fetch_lengths() const
 			{ return mysql_fetch_lengths(result_); }
 
 	/// \brief Wraps mysql_fetch_field() in MySQL C API.
