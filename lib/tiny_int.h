@@ -195,61 +195,61 @@ public:
 	/// \brief Return this value minus \c i
 	this_type operator -(const this_type& i) const
 	{
-		return value_ - i;
+		return value_ - i.value_;
 	}
 	
 	/// \brief Return this value plus \c i
 	this_type operator +(const this_type& i) const
 	{
-		return value_ + i;
+		return value_ + i.value_;
 	}
 	
 	/// \brief Return this value multiplied by \c i
 	this_type operator *(const this_type& i) const
 	{
-		return value_ * i;
+		return value_ * i.value_;
 	}
 	
 	/// \brief Return this value divided by \c i
 	this_type operator /(const this_type& i) const
 	{
-		return value_ / i;
+		return value_ / i.value_;
 	}
 	
 	/// \brief Return the modulus of this value divided by \c i
 	this_type operator %(const this_type& i) const
 	{
-		return value_ % i;
+		return value_ % i.value_;
 	}
 	
 	/// \brief Return this value bitwise OR'd by \c i
 	this_type operator |(const this_type& i) const
 	{
-		return value_ | i;
+		return value_ | i.value_;
 	}
 	
 	/// \brief Return this value bitwise AND'd by \c i
 	this_type operator &(const this_type& i) const
 	{
-		return value_ & i;
+		return value_ & i.value_;
 	}
 	
 	/// \brief Return this value bitwise XOR'd by \c i
 	this_type operator ^(const this_type& i) const
 	{
-		return value_ ^ i;
+		return value_ ^ i.value_;
 	}
 	
 	/// \brief Return this value bitwise shifted left by \c i
 	this_type operator <<(const this_type& i) const
 	{
-		return value_ << i;
+		return value_ << i.value_;
 	}
 	
 	/// \brief Return this value bitwise shifted right by \c i
 	this_type operator >>(const this_type& i) const
 	{
-		return value_ >> i;
+		return value_ >> i.value_;
 	}
 
 private:
