@@ -25,6 +25,11 @@ then
 	TOOL='gdb --args'
 	shift
 	PROG=$1
+elif [ "$PROG" == 'ldd' ]
+then
+	TOOL='ldd'
+	shift
+	PROG=$1
 fi
 
 if [ -n "$1" ]
@@ -39,7 +44,6 @@ then
 		cmd.exe /c exrun.bat $PROG $*
 	elif [ -e /usr/bin/ldd ]
 	then
-		ln -sf libmysqlpp.so libmysqlpp.so.2
 		LD_LIBRARY_PATH=. $TOOL ./$PROG $*
 	else
 		echo "ERROR: I don't grok this system's dynamic linkage system."
