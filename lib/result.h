@@ -179,19 +179,12 @@ public:
 	/// \brief Get the names of the fields within this result set.
 	const RefCountedPointer<FieldNames> field_names() const;
 
-	/// \brief Reset the names in the field list to their original
-	/// values.
-	void reset_field_names();
-
 	/// \brief Get the MySQL type for a field given its index.
 	const mysql_type_info& field_type(int) const;
 
 	/// \brief Get a list of the types of the fields within this
 	/// result set.
 	const FieldTypes& field_types() const;
-
-	/// \brief Reset the field types to their original values.
-	void reset_field_types();
 
 	/// \brief Alias for field_num()
 	int names(const std::string & s) const { return field_num(s); }
@@ -203,17 +196,11 @@ public:
 	const RefCountedPointer<FieldNames> names() const
 			{ return field_names(); }
 
-	/// \brief Alias for reset_field_names()
-	void reset_names() { reset_field_names(); }
-
 	/// \brief Alias for field_type()
 	const mysql_type_info& types(int i) const { return field_type(i); }
 
 	/// \brief Alias for field_types()
 	const FieldTypes& types() const { return field_types(); }
-
-	/// \brief Alias for reset_field_types()
-	void reset_types() { reset_field_types(); }
 
 	/// \brief Get the underlying Fields structure.
 	const Fields& fields() const { return fields_; }

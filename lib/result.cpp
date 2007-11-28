@@ -121,13 +121,6 @@ ResUse::field_names() const
 }
 
 
-void
-ResUse::reset_field_names()
-{
-	names_ = new FieldNames(this);
-}
-
-
 const mysql_type_info&
 ResUse::field_type(int i) const
 {
@@ -162,15 +155,6 @@ ResUse::purge()
 	types_ = 0;
 
 	table_.erase();
-}
-
-
-void
-ResUse::reset_field_types()
-{
-	delete types_;
-	types_ = 0;
-	types_ = new FieldTypes(this);
 }
 
 
