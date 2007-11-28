@@ -101,16 +101,6 @@ ResUse::field_num(const std::string& i) const
 }
 
 
-std::string&
-ResUse::field_name(int i)
-{
-	if (!names_) {
-		names_ = new FieldNames(this);
-	}
-	return names_->at(i);
-}
-
-
 const std::string&
 ResUse::field_name(int i) const
 {
@@ -118,16 +108,6 @@ ResUse::field_name(int i) const
 		names_ = new FieldNames(this);
 	}
 	return names_->at(i);
-}
-
-
-RefCountedPointer<FieldNames>
-ResUse::field_names()
-{
-	if (!names_) {
-		names_ = new FieldNames(this);
-	}
-	return names_;
 }
 
 
@@ -148,16 +128,6 @@ ResUse::reset_field_names()
 }
 
 
-mysql_type_info&
-ResUse::field_type(int i)
-{
-	if (!types_) {
-		types_ = new FieldTypes(this);
-	}
-	return (*types_)[i];
-}
-
-
 const mysql_type_info&
 ResUse::field_type(int i) const
 {
@@ -165,16 +135,6 @@ ResUse::field_type(int i) const
 		types_ = new FieldTypes(this);
 	}
 	return (*types_)[i];
-}
-
-
-FieldTypes&
-ResUse::field_types()
-{
-	if (!types_) {
-		types_ = new FieldTypes(this);
-	}
-	return *types_;
 }
 
 

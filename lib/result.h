@@ -157,19 +157,8 @@ public:
 		return result_;
 	}
 	
-	/// \brief Get the name of table that the result set comes from.
-	std::string& table()
-	{
-		return table_;
-	}
-
-	/// \brief Return the name of the table
-	///
-	/// This is only valid 
-	const std::string& table() const
-	{
-		return table_;
-	}
+	/// \brief Return the name of the table the result set comes from
+	const std::string& table() const { return table_; }
 
 	/// \brief Get the index of the named field.
 	///
@@ -177,15 +166,7 @@ public:
 	int field_num(const std::string&) const;
 
 	/// \brief Get the name of the field at the given index.
-	///
-	/// This is the inverse of field_num().
-	std::string& field_name(int);
-
-	/// \brief Get the name of the field at the given index.
 	const std::string& field_name(int) const;
-
-	/// \brief Get the names of the fields within this result set.
-	RefCountedPointer<FieldNames> field_names();
 
 	/// \brief Get the names of the fields within this result set.
 	const RefCountedPointer<FieldNames> field_names() const;
@@ -195,14 +176,7 @@ public:
 	void reset_field_names();
 
 	/// \brief Get the MySQL type for a field given its index.
-	mysql_type_info& field_type(int i);
-
-	/// \brief Get the MySQL type for a field given its index.
 	const mysql_type_info& field_type(int) const;
-
-	/// \brief Get a list of the types of the fields within this
-	/// result set.
-	FieldTypes& field_types();
 
 	/// \brief Get a list of the types of the fields within this
 	/// result set.
@@ -215,13 +189,7 @@ public:
 	int names(const std::string & s) const { return field_num(s); }
 
 	/// \brief Alias for field_name()
-	std::string& names(int i) { return field_name(i); }
-
-	/// \brief Alias for field_name()
 	const std::string& names(int i) const { return field_name(i); }
-
-	/// \brief Alias for field_names()
-	RefCountedPointer<FieldNames> names() { return field_names(); }
 
 	/// \brief Alias for field_names()
 	const RefCountedPointer<FieldNames> names() const
@@ -231,13 +199,7 @@ public:
 	void reset_names() { reset_field_names(); }
 
 	/// \brief Alias for field_type()
-	mysql_type_info& types(int i) { return field_type(i); }
-
-	/// \brief Alias for field_type()
 	const mysql_type_info& types(int i) const { return field_type(i); }
-
-	/// \brief Alias for field_types()
-	FieldTypes& types() { return field_types(); }
 
 	/// \brief Alias for field_types()
 	const FieldTypes& types() const { return field_types(); }
