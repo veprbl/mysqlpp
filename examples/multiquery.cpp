@@ -94,7 +94,7 @@ print_result(Result& res, int index)
 
 	// Figure out the widths of the result set's columns
 	IntVectorType widths;
-	int size = res.columns();
+	int size = res.num_fields();
 	for (int i = 0; i < size; i++) {
 		mysql_type_info mti(res.fields(i));
 		widths.push_back((res.names(i).size() > mti.max_length()) ?

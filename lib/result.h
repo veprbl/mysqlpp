@@ -157,12 +157,6 @@ public:
 		return result_;
 	}
 	
-	/// \brief Return the number of columns in the result set.
-	unsigned int columns() const
-	{
-		return num_fields();
-	}
-
 	/// \brief Get the name of table that the result set comes from.
 	std::string& table()
 	{
