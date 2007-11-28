@@ -350,12 +350,6 @@ public:
 		return size_type(num_rows());
 	}
 
-	/// \brief Alias for num_rows(), only with different return type.
-	size_type rows() const
-	{
-		return size_type(num_rows());
-	}
-
 	/// \brief Get the row with an offset of i.
 	const value_type at(int i) const
 	{
