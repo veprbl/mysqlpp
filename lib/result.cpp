@@ -30,9 +30,7 @@ namespace mysqlpp {
 
 ResUse::ResUse(MYSQL_RES* result, bool te) :
 OptionalExceptions(te),
-result_(0),
 initialized_(false),
-types_(0),
 fields_(this)
 {
 	if (result) {
@@ -46,37 +44,25 @@ fields_(this)
 
 ResUse::~ResUse()
 {
-	purge();
 }
 
 
 void
 ResUse::copy(const ResUse& other)
 {
-	if (initialized_) {
-		purge();
-	}
-
 	set_exceptions(other.throw_exceptions());
 
 	if (other.result_) {
 		result_ = other.result_;
 		fields_ = Fields(this);
 		names_ = other.names_;
-		
-		if (other.types_) {
-			types_ = new FieldTypes(*other.types_);
-		}
-		else {
-			types_ = 0;
-		}
-
+		types_ = other.types_;
 		initialized_ = true;
 	}
 	else {
 		result_ = 0;
-		types_ = 0;
 		names_ = 0;
+		types_ = 0;
 		initialized_ = other.initialized_;
 	}
 }
@@ -94,29 +80,12 @@ ResUse::field_num(const std::string& i) const
 }
 
 
-void
-ResUse::purge()
-{
-	if (result_) {
-		mysql_free_result(result_);
-		result_ = 0;
-	}
-
-	names_ = 0;
-
-	delete types_;
-	types_ = 0;
-}
-
-
 ResUse&
 ResUse::operator =(const ResUse& other)
 {
-	if (this == &other) {
-		return *this;
+	if (this != &other) {
+		copy(other);
 	}
-	copy(other);
-	other.result_ = 0;
 	return *this;
 }
 

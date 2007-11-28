@@ -41,6 +41,25 @@
 
 namespace mysqlpp {
 
+/// \brief Functor to call mysql_free_result() on the pointer you pass
+/// to it.
+///
+/// This overrides RefCountedPointer's default destroyer, which uses
+/// operator delete; it annoys the C API when you nuke its data
+/// structures this way. :)
+template <>
+struct RefCountedPointerDestroyer<MYSQL_RES>
+{
+	/// \brief Functor implementation
+	void operator()(MYSQL_RES* doomed)
+	{
+		if (doomed) {
+			mysql_free_result(doomed);
+		}
+	}
+};
+
+
 /// \brief A basic result set class, for use with "use" queries.
 ///
 /// A "use" query is one where you make the query and then process just
@@ -57,9 +76,7 @@ public:
 	/// \brief Default constructor
 	ResUse() :
 	OptionalExceptions(),
-	result_(0),
 	initialized_(false),
-	types_(0),
 	fields_(this)
 	{
 	}
@@ -73,7 +90,6 @@ public:
 	initialized_(false)
 	{
 		copy(other);
-		other.result_ = 0;
 	}
 	
 	/// \brief Destroy object
@@ -123,20 +139,24 @@ public:
 	/// It is anticipated that this is only useful within the library,
 	/// to implement higher-level query types on top of raw "use"
 	/// queries. Query::storein() uses it, for example.
-	MYSQL_ROW fetch_raw_row() const { return mysql_fetch_row(result_); }
+	MYSQL_ROW fetch_raw_row() const
+			{ return mysql_fetch_row(result_.raw()); }
 
 	/// \brief Wraps mysql_fetch_lengths() in MySQL C API.
 	const unsigned long* fetch_lengths() const
-			{ return mysql_fetch_lengths(result_); }
+			{ return mysql_fetch_lengths(result_.raw()); }
 
 	/// \brief Wraps mysql_fetch_field() in MySQL C API.
-	const Field& fetch_field() const { return *mysql_fetch_field(result_); }
+	const Field& fetch_field() const
+			{ return *mysql_fetch_field(result_.raw()); }
 
 	/// \brief Wraps mysql_field_seek() in MySQL C API.
-	void field_seek(int field) { mysql_field_seek(result_, field); }
+	void field_seek(int field) const
+			{ mysql_field_seek(result_.raw(), field); }
 
 	/// \brief Wraps mysql_num_fields() in MySQL C API.
-	int num_fields() const { return mysql_num_fields(result_); }
+	int num_fields() const
+			{ return mysql_num_fields(result_.raw()); }
 	
 	/// \brief Return true if we have a valid result set
 	///
@@ -167,16 +187,17 @@ public:
 			{ return names_->at(i); }
 
 	/// \brief Get the names of the fields within this result set.
-	const RefCountedPointer<FieldNames> field_names() const
+	const RefCountedPointer<FieldNames>& field_names() const
 			{ return names_; }
 
 	/// \brief Get the MySQL type for a field given its index.
 	const mysql_type_info& field_type(int i) const
-			{ return (*types_)[i]; }
+			{ return types_->at(i); }
 
 	/// \brief Get a list of the types of the fields within this
 	/// result set.
-	const FieldTypes& field_types() const { return *types_; }
+	const RefCountedPointer<FieldTypes>& field_types() const
+			{ return types_; }
 
 	/// \brief Get the underlying Fields structure.
 	const Fields& fields() const { return fields_; }
@@ -198,24 +219,37 @@ public:
 			{ return result_ != other.result_; }
 
 protected:
-	mutable MYSQL_RES* result_;	///< underlying C API result set
 	bool initialized_;			///< if true, object is fully initted
-	FieldTypes* types_;			///< list of field types in result
 	Fields fields_;				///< list of fields in result
+
+	/// \brief underlying C API result set
+	///
+	/// This is mutable because so many methods in this class and in
+	/// Result are justifiably const, but they call C API methods that
+	/// take non-const MYSQL_RES*.  It's possible (likely even, in many
+	/// cases) that these functions do modify the MYSQL_RES object
+	/// which is part of this object, so strict constness says this
+	/// object changed, too, but this has always been mutable and the
+	/// resulting behavior hasn't confused anyone yet.  I think this is
+	/// because people the methods likely to change the C API object are
+	/// those used in "use" queries, but MySQL++ users tend to treat
+	/// ResUse objects the same as Result objects: it's a convenient
+	/// fiction that the entire result set is present in both cases, so
+	/// the act of fetching new rows is an implementation detail that
+	/// doesn't modify the function of the object.  Thus, it is
+	/// effectively still const.
+	mutable RefCountedPointer<MYSQL_RES> result_;
 
 	/// \brief list of field names in result
 	RefCountedPointer<FieldNames> names_;
+
+	/// \brief list of field types in result
+	RefCountedPointer<FieldTypes> types_;
 
 	/// \brief Copy another ResUse object's contents into this one.
 	///
 	/// Self-copy is not allowed.
 	void copy(const ResUse& other);
-
-	/// \brief Free all resources held by the object.
-	///
-	/// This exists just to do things common to both copy() and the
-	/// dtor, both of which need to free allocated resources.
-	void purge();
 };
 
 
@@ -303,23 +337,17 @@ public:
 	/// \brief Wraps mysql_num_rows() in MySQL C API.
 	my_ulonglong num_rows() const
 	{
-		if (initialized_)
-			return mysql_num_rows(result_);
-		else
-			return 0;
+		return initialized_ ? mysql_num_rows(result_.raw()) : 0;
 	}
 
 	/// \brief Wraps mysql_data_seek() in MySQL C API.
 	void data_seek(uint offset) const
 	{
-		mysql_data_seek(result_, offset);
+		mysql_data_seek(result_.raw(), offset);
 	}
 
 	/// \brief Alias for num_rows(), only with different return type.
-	size_type size() const
-	{
-		return size_type(num_rows());
-	}
+	size_type size() const { return static_cast<size_type>(num_rows()); }
 
 	/// \brief Get the row with an offset of i.
 	const value_type at(int i) const
