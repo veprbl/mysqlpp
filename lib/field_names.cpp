@@ -30,6 +30,8 @@
 #include "field_names.h"
 #include "result.h"
 
+#include <algorithm>
+
 namespace mysqlpp {
 
 void 
@@ -51,7 +53,7 @@ FieldNames::operator [](const std::string& s) const
 {
 	std::string temp(s);
 	str_to_lwr(temp);
-	return uint(std::find(begin(), end(), temp) - begin());
+	return static_cast<uint>(std::find(begin(), end(), temp) - begin());
 }
 
 } // end namespace mysqlpp
