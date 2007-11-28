@@ -39,7 +39,7 @@ fields_(this)
 		if (names_) {
 			types_ = new FieldTypes(this);
 		}
-		table_ = fields(0).table;
+		table_ = field(0).table;
 		initialized_ = true;
 	}
 }

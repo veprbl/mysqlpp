@@ -190,7 +190,7 @@ public:
 	const Fields& fields() const { return fields_; }
 
 	/// \brief Get the underlying Field structure given its index.
-	const Field& fields(unsigned int i) const { return fields_.at(i); }
+	const Field& field(unsigned int i) const { return fields_.at(i); }
 	
 	/// \brief Returns true if the other ResUse object shares the same
 	/// underlying C API result set as this one.

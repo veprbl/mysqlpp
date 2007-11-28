@@ -96,7 +96,7 @@ print_result(Result& res, int index)
 	IntVectorType widths;
 	int size = res.num_fields();
 	for (int i = 0; i < size; i++) {
-		mysql_type_info mti(res.fields(i));
+		mysql_type_info mti(res.field(i));
 		widths.push_back((res.field_name(i).size() > mti.max_length()) ?
 				res.field_name(i).size() : mti.max_length());
 	}
