@@ -17,11 +17,11 @@ v3.0 Plan, For-Sure Stuff
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Derive RefCountedPointer from SafeBool<T>, and try to drop
-      operator!().
+    o Do the full-on SafeBool<T> thing in RefCountedPointer?  Or is
+	  the new operator void*() stuff sufficient?
 
     o Classes Connection, Query, String, Result and Row all have
-      operator bool() as well.  Use "safe bool" here too, as needed.
+      operator bool() as well.  Use "safe bool" here too?
 
     o Apply Jonathan Wakely's patch to RefCountedPointer.
 
