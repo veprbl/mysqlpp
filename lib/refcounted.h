@@ -34,6 +34,21 @@
 
 namespace mysqlpp {
 
+/// \brief Functor to call delete on the pointer you pass to it
+///
+/// The default "destroyer" for RefCountedPointer.  You won't use this
+/// directly, you'll pass a functor of your own devising for the second
+/// parameter to the RefCountedPointer template to override this.  Or
+/// simpler, just specialize this template for your type if possible:
+/// see ResUse::result_.
+template <class T>
+struct RefCountedPointerDestroyer
+{
+	/// \brief Functor implementation
+	void operator()(T* doomed) { delete doomed; }
+};
+
+
 /// \brief Creates an object that acts as a reference-counted pointer
 /// to another object.
 ///
@@ -61,7 +76,7 @@ namespace mysqlpp {
 /// of just double.  It's a tradeoff, and we've chosen to take a minor
 /// complexity hit to avoid the performance hit.
 
-template <class T>
+template <class T, class Destroyer = RefCountedPointerDestroyer<T> >
 class RefCountedPointer
 {
 public:
@@ -222,7 +237,7 @@ private:
 	void detach()
 	{
 		if (refs_ && (--(*refs_) == 0)) {
-			delete counted_;
+			Destroyer()(counted_);
 			delete refs_;
 			counted_ = 0;
 			refs_ = 0;
