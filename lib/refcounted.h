@@ -66,13 +66,23 @@ class RefCountedPointer
 {
 public:
 	typedef RefCountedPointer<T> ThisType;	///< alias for this object's type
+
+	/// \brief Default constructor
+	///
+	/// An object constructed this way is useless until you vivify it
+	/// with operator =() or assign().
+	RefCountedPointer() :
+	counted_(0),
+	refs_(0)
+	{
+	}
 	
 	/// \brief Standard constructor
 	///
-	/// \param c A pointer to the managed object.  If you leave it at
-	/// its default (or pass 0 explicitly) this object is useless until
-	/// you vivify it with operator =() or assign().
-	explicit RefCountedPointer(T* c = 0) :
+	/// \param c A pointer to the object to be managed.  If you pass 0,
+	/// it's like calling the default ctor instead, only more work: the
+	/// object's useless until you vivify it with operator =() or assign().
+	explicit RefCountedPointer(T* c) :
 	counted_(c),
 	refs_(c ? new size_t(1) : 0)
 	{
