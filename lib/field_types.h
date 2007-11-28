@@ -75,19 +75,6 @@ public:
 		return *this;
 	}
 
-	/// \brief Returns a field type within the list given its index.
-	mysql_type_info& operator [](int i)
-	{
-		return std::vector<mysql_type_info>::operator [](i);
-	}
-
-	/// \brief Returns a field type within the list given its index,
-	/// in const context.
-	const mysql_type_info& operator [](int i) const
-	{
-		return std::vector<mysql_type_info>::operator [](i);
-	}
-
 private:
 	void init(const ResUse* res);
 };
