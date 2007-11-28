@@ -49,8 +49,8 @@ static void
 print_header(IntVectorType& widths, Result& res)
 {
 	cout << "  |" << setfill(' ');
-	for (size_t i = 0; i < res.names()->size(); i++) {
-		cout << " " << setw(widths.at(i)) << res.names(i) << " |";
+	for (size_t i = 0; i < res.field_names()->size(); i++) {
+		cout << " " << setw(widths.at(i)) << res.field_name(i) << " |";
 	}
 	cout << endl;
 }
@@ -97,8 +97,8 @@ print_result(Result& res, int index)
 	int size = res.num_fields();
 	for (int i = 0; i < size; i++) {
 		mysql_type_info mti(res.fields(i));
-		widths.push_back((res.names(i).size() > mti.max_length()) ?
-				res.names(i).size() : mti.max_length());
+		widths.push_back((res.field_name(i).size() > mti.max_length()) ?
+				res.field_name(i).size() : mti.max_length());
 	}
 
 	// Print result set header

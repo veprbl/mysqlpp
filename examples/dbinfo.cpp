@@ -100,7 +100,7 @@ show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
 		unsigned int columns = res.num_fields();
 		vector<int> widths;
 		for (int i = 0; i < columns; ++i) {
-			string s = res.names(i);
+			string s = res.field_name(i);
 			if (s.compare("field") == 0) {
 				widths.push_back(22);
 			}
@@ -121,7 +121,7 @@ show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
 			}
 
 			if (widths[i]) {
-				cout << '|' << setw(widths[i]) << res.names(i) << '|';
+				cout << '|' << setw(widths[i]) << res.field_name(i) << '|';
 			}
 		}
 		cout << endl;

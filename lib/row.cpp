@@ -37,7 +37,7 @@ initialized_(false),
 size_(r ? r->num_fields() : 0)
 {
 	if (r) {
-		field_names_ = r->names();
+		field_names_ = r->field_names();
 	}
 	
 	if (d && r) {
@@ -47,7 +47,7 @@ size_(r ? r->num_fields() : 0)
 			data_.push_back(value_type(
 					is_null ? "NULL" : d[i],
 					is_null ? 4 : lengths[i],
-					r->types(i),
+					r->field_type(i),
 					is_null));
 		}
 

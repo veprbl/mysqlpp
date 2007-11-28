@@ -186,22 +186,6 @@ public:
 	/// result set.
 	const FieldTypes& field_types() const;
 
-	/// \brief Alias for field_num()
-	int names(const std::string & s) const { return field_num(s); }
-
-	/// \brief Alias for field_name()
-	const std::string& names(int i) const { return field_name(i); }
-
-	/// \brief Alias for field_names()
-	const RefCountedPointer<FieldNames> names() const
-			{ return field_names(); }
-
-	/// \brief Alias for field_type()
-	const mysql_type_info& types(int i) const { return field_type(i); }
-
-	/// \brief Alias for field_types()
-	const FieldTypes& types() const { return field_types(); }
-
 	/// \brief Get the underlying Fields structure.
 	const Fields& fields() const { return fields_; }
 

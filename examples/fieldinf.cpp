@@ -68,19 +68,19 @@ main(int argc, char *argv[])
 		}
 		cout << endl;
 		
-		for (size_t i = 0; i < res.names()->size(); i++) {
+		for (size_t i = 0; i < res.field_names()->size(); i++) {
 			// Suppress C++ type name outputs when run under dtest,
 			// as they're system-specific.
-			const char* cname = dtest_mode ? "n/a" : res.types(i).name();
-			cout << setw(widths[0]) << res.names(i).c_str() <<
-					setw(widths[1]) << res.types(i).sql_name() <<
+			const char* cname = dtest_mode ? "n/a" : res.field_type(i).name();
+			cout << setw(widths[0]) << res.field_name(i).c_str() <<
+					setw(widths[1]) << res.field_type(i).sql_name() <<
 					setw(widths[2]) << cname <<
 					endl;
 		}
 		cout << endl;
 
 		// Simple type check
-		if (res.types(0) == typeid(string)) {
+		if (res.field_type(0) == typeid(string)) {
 			cout << "SQL type of 'item' field most closely resembles "
 					"the C++ string type." << endl;
 		}
@@ -88,16 +88,16 @@ main(int argc, char *argv[])
 		// Tricky type check: the 'if' path shouldn't happen because the
 		// description field has the NULL attribute.  We need to dig a
 		// little deeper if we want to ignore this in our type checks.
-		if (res.types(5) == typeid(string)) {
+		if (res.field_type(5) == typeid(string)) {
 			cout << "Should not happen! Type check failure." << endl;
 		}
-		else if (res.types(5) == typeid(mysqlpp::Null<mysqlpp::String>)) {
+		else if (res.field_type(5) == typeid(mysqlpp::Null<mysqlpp::String>)) {
 			cout << "SQL type of 'description' field resembles "
 					"a nullable variant of the C++ string type." << endl;
 		}
 		else {
 			cout << "Weird: fifth field's type is now " <<
-					res.types(5).name() << endl;
+					res.field_type(5).name() << endl;
 			cout << "Did something recently change in resetdb?" << endl;
 		}
 	}
