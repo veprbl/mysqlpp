@@ -964,11 +964,10 @@ void Query::storein_sequence(Sequence& con, const SQLTypeAdapter& s)
 {
 	ResUse result = use(s);
 	while (1) {
-		MYSQL_ROW d = mysql_fetch_row(result.raw_result());
+		MYSQL_ROW d = result.fetch_raw_row();
 		if (!d)
 			break;
-		Row row(d, &result, mysql_fetch_lengths(result.raw_result()),
-				true);
+		Row row(d, &result, result.fetch_lengths(), true);
 		if (!row)
 			break;
 		con.push_back(typename Sequence::value_type(row));
@@ -981,11 +980,10 @@ void Query::storein_set(Set& con, const SQLTypeAdapter& s)
 {
 	ResUse result = use(s);
 	while (1) {
-		MYSQL_ROW d = mysql_fetch_row(result.raw_result());
+		MYSQL_ROW d = result.fetch_raw_row();
 		if (!d)
 			return;
-		Row row(d, &result, mysql_fetch_lengths(result.raw_result()),
-				true);
+		Row row(d, &result, result.fetch_lengths(), true);
 		if (!row)
 			break;
 		con.insert(typename Set::value_type(row));

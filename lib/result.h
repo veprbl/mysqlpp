@@ -82,16 +82,16 @@ public:
 	/// \brief Copy another ResUse object's data into this object
 	ResUse& operator =(const ResUse& other);
 
-	/// \brief Return raw MySQL C API result set
-	MYSQL_RES* raw_result()
-	{
-		return result_;
-	}
-
-	/// \brief Wraps mysql_fetch_row() in MySQL C API.
+	/// \brief Returns the next row in a "use" query's result set
 	///
-	/// This is not a thin wrapper. It does a lot of error checking before
-	/// returning the mysqlpp::Row object containing the row data.
+	/// <b>Design weakness warning:</b> Although Result (returned from
+	/// "store" queries) contains this method, it is of no use with such
+	/// result sets.
+	///
+	/// This is a thick wrapper around mysql_fetch_row() in the MySQL
+	/// C API.  It does a lot of error checking before returning the Row
+	/// object containing the row data.  If you need the underlying C
+	/// API row data, call fetch_raw_row() instead.
 	Row fetch_row() const
 	{
 		if (!result_) {
@@ -102,8 +102,8 @@ public:
 				return Row();
 			}
 		}
-		MYSQL_ROW row = mysql_fetch_row(result_);
-		unsigned long* length = mysql_fetch_lengths(result_);
+		MYSQL_ROW row = fetch_raw_row();
+		unsigned long* length = fetch_lengths();
 		if (!row || !length) {
 			if (throw_exceptions()) {
 				throw EndOfResults();
@@ -114,6 +114,14 @@ public:
 		}
 		return Row(row, this, length, throw_exceptions());
 	}
+
+	/// \brief Wraps mysql_fetch_row() in MySQL C API.
+	///
+	/// \internal You almost certainly want to call fetch_row() instead.
+	/// It is anticipated that this is only useful within the library,
+	/// to implement higher-level query types on top of raw "use"
+	/// queries. Query::storein() uses it, for example.
+	MYSQL_ROW fetch_raw_row() const { return mysql_fetch_row(result_); }
 
 	/// \brief Wraps mysql_fetch_lengths() in MySQL C API.
 	unsigned long *fetch_lengths() const
