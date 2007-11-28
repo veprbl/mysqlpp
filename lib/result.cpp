@@ -39,7 +39,6 @@ fields_(this)
 		if (names_) {
 			types_ = new FieldTypes(this);
 		}
-		table_ = field(0).table;
 		initialized_ = true;
 	}
 }
@@ -71,8 +70,6 @@ ResUse::copy(const ResUse& other)
 		else {
 			types_ = 0;
 		}
-
-		table_ = other.table_;
 
 		initialized_ = true;
 	}
@@ -153,8 +150,6 @@ ResUse::purge()
 
 	delete types_;
 	types_ = 0;
-
-	table_.erase();
 }
 
 

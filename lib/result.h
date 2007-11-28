@@ -152,7 +152,8 @@ public:
 	operator bool() const { return result_; }
 	
 	/// \brief Return the name of the table the result set comes from
-	const std::string& table() const { return table_; }
+	const char* table() const
+			{ return fields_.size() > 0 ? fields_[0].table : ""; }
 
 	/// \brief Get the index of the named field.
 	///
@@ -196,7 +197,6 @@ protected:
 	bool initialized_;			///< if true, object is fully initted
 	mutable FieldTypes* types_;	///< list of field types in result
 	Fields fields_;				///< list of fields in result
-	std::string table_;			///< table result set comes from
 
 	/// \brief list of field names in result
 	mutable RefCountedPointer<FieldNames> names_;
