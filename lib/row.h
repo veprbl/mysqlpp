@@ -114,7 +114,8 @@ public:
 	/// \param r result set that the row comes from
 	/// \param lengths length of each item in d
 	/// \param te if true, throw exceptions on errors
-	Row(MYSQL_ROW d, const ResUse* r, unsigned long* lengths, bool te = true);
+	Row(MYSQL_ROW d, const ResUse* r, const unsigned long* lengths,
+			bool te = true);
 
 	/// \brief Destroy object
 	~Row() { }
