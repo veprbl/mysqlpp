@@ -23,13 +23,6 @@ v3.0 Plan, For-Sure Stuff
     o Classes Connection, Query, String, Result and Row all have
       operator bool() as well.  Use "safe bool" here too, as needed.
 
-    o Allocation of RefCountedPointers in places like ResUse::field_*()
-      isn't thread safe.  If possible, just allocate these things on
-      ResUse/Result object creation.  If they really do need delayed
-      creation, put this test-and-allocate stuff in an accessor,
-      and guard this function with a mutex.  Otherwise, there's a
-      risk of double-allocation.
-
     o Apply Jonathan Wakely's patch to RefCountedPointer.
 
     o Atomic inc/dec of reference counts in RefCounted*?

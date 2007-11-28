@@ -161,17 +161,20 @@ public:
 	int field_num(const std::string&) const;
 
 	/// \brief Get the name of the field at the given index.
-	const std::string& field_name(int) const;
+	const std::string& field_name(int i) const
+			{ return names_->at(i); }
 
 	/// \brief Get the names of the fields within this result set.
-	const RefCountedPointer<FieldNames> field_names() const;
+	const RefCountedPointer<FieldNames> field_names() const
+			{ return names_; }
 
 	/// \brief Get the MySQL type for a field given its index.
-	const mysql_type_info& field_type(int) const;
+	const mysql_type_info& field_type(int i) const
+			{ return (*types_)[i]; }
 
 	/// \brief Get a list of the types of the fields within this
 	/// result set.
-	const FieldTypes& field_types() const;
+	const FieldTypes& field_types() const { return *types_; }
 
 	/// \brief Get the underlying Fields structure.
 	const Fields& fields() const { return fields_; }
@@ -195,11 +198,11 @@ public:
 protected:
 	mutable MYSQL_RES* result_;	///< underlying C API result set
 	bool initialized_;			///< if true, object is fully initted
-	mutable FieldTypes* types_;	///< list of field types in result
+	FieldTypes* types_;			///< list of field types in result
 	Fields fields_;				///< list of fields in result
 
 	/// \brief list of field names in result
-	mutable RefCountedPointer<FieldNames> names_;
+	RefCountedPointer<FieldNames> names_;
 
 	/// \brief Copy another ResUse object's contents into this one.
 	///

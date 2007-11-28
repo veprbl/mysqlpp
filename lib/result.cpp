@@ -30,15 +30,15 @@ namespace mysqlpp {
 
 ResUse::ResUse(MYSQL_RES* result, bool te) :
 OptionalExceptions(te),
+result_(0),
 initialized_(false),
 types_(0),
 fields_(this)
 {
-	if ((result_ = result) != 0) {
+	if (result) {
+		result_ = result;
 		names_ = new FieldNames(this);
-		if (names_) {
-			types_ = new FieldTypes(this);
-		}
+		types_ = new FieldTypes(this);
 		initialized_ = true;
 	}
 }
@@ -85,56 +85,12 @@ ResUse::copy(const ResUse& other)
 int
 ResUse::field_num(const std::string& i) const
 {
-	if (!names_) {
-		names_ = new FieldNames(this);
-	}
-
 	size_t index = (*names_)[i];
 	if ((index >= names_->size()) && throw_exceptions()) {
 		throw BadFieldName(i.c_str());
 	}
 	
 	return int(index);
-}
-
-
-const std::string&
-ResUse::field_name(int i) const
-{
-	if (!names_) {
-		names_ = new FieldNames(this);
-	}
-	return names_->at(i);
-}
-
-
-const RefCountedPointer<FieldNames>
-ResUse::field_names() const
-{
-	if (!names_) {
-		names_ = new FieldNames(this);
-	}
-	return names_;
-}
-
-
-const mysql_type_info&
-ResUse::field_type(int i) const
-{
-	if (!types_) {
-		types_ = new FieldTypes(this);
-	}
-	return (*types_)[i];
-}
-
-
-const FieldTypes&
-ResUse::field_types() const
-{
-	if (!types_) {
-		types_ = new FieldTypes(this);
-	}
-	return *types_;
 }
 
 
