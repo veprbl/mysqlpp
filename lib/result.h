@@ -128,7 +128,7 @@ public:
 			{ return mysql_fetch_lengths(result_); }
 
 	/// \brief Wraps mysql_fetch_field() in MySQL C API.
-	Field& fetch_field() const { return *mysql_fetch_field(result_); }
+	const Field& fetch_field() const { return *mysql_fetch_field(result_); }
 
 	/// \brief Wraps mysql_field_seek() in MySQL C API.
 	void field_seek(int field) { mysql_field_seek(result_, field); }
