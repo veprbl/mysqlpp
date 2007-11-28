@@ -162,6 +162,13 @@ public:
 		return *this;
 	}
 
+	/// \brief Returns true if other refcounted pointer's internal
+	/// data pointer is the same as this one's.
+	bool operator ==(const ThisType& rhs)
+	{
+		return rhs->counted_ == counted_;
+	}
+
 	/// \brief Access the object through the smart pointer
 	T* operator ->() const
 	{
