@@ -204,6 +204,20 @@ public:
 	/// This isn't intended to be used directly; if you need the
 	/// pointer, call raw() instead.  It's used internally by the
 	/// compiler to implement operators bool, ==, and !=
+	///
+	/// \b WARNING: This makes it possible to say
+	/// \code
+	/// RefCountedPointer<Foo> bar(new Foo);
+	/// delete bar;
+	/// \endcode
+	///
+	/// This will almost kinda sorta do the right thing: the Foo
+	/// object held by the refcounted pointer will be destroyed as
+	/// you wanted, but then when the refcounted pointer goes out of
+	/// scope, the memory is deleted a second time, which will probably
+	/// crash your program.  This is easy to accidentally do when
+	/// converting a good ol' unmanaged pointer to a refcounted pointer
+	/// and forgetting to remove the delete calls needed previously.
 	operator void*()
 	{
 		return counted_;
