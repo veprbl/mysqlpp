@@ -124,28 +124,17 @@ public:
 	MYSQL_ROW fetch_raw_row() const { return mysql_fetch_row(result_); }
 
 	/// \brief Wraps mysql_fetch_lengths() in MySQL C API.
-	unsigned long *fetch_lengths() const
-	{
-		return mysql_fetch_lengths(result_);
-	}
+	unsigned long* fetch_lengths() const
+			{ return mysql_fetch_lengths(result_); }
 
 	/// \brief Wraps mysql_fetch_field() in MySQL C API.
-	Field& fetch_field() const
-	{
-		return *mysql_fetch_field(result_);
-	}
+	Field& fetch_field() const { return *mysql_fetch_field(result_); }
 
 	/// \brief Wraps mysql_field_seek() in MySQL C API.
-	void field_seek(int field)
-	{
-		mysql_field_seek(result_, field);
-	}
+	void field_seek(int field) { mysql_field_seek(result_, field); }
 
 	/// \brief Wraps mysql_num_fields() in MySQL C API.
-	int num_fields() const
-	{
-		return mysql_num_fields(result_);
-	}
+	int num_fields() const { return mysql_num_fields(result_); }
 	
 	/// \brief Return true if we have a valid result set
 	///
@@ -160,10 +149,7 @@ public:
 	///
 	/// Query::use() returns a ResUse object, and it won't contain a
 	/// valid result set if the query failed.
-	operator bool() const
-	{
-		return result_;
-	}
+	operator bool() const { return result_; }
 	
 	/// \brief Return the name of the table the result set comes from
 	const std::string& table() const { return table_; }
@@ -198,16 +184,12 @@ public:
 	/// This works because the underlying result set is stored as a
 	/// pointer, and thus can be copied and then compared.
 	bool operator ==(const ResUse& other) const
-	{
-		return result_ == other.result_;
-	}
-	
+			{ return result_ == other.result_; } 
+
 	/// \brief Returns true if the other ResUse object has a different
 	/// underlying C API result set from this one.
 	bool operator !=(const ResUse& other) const
-	{
-		return result_ != other.result_;
-	}
+			{ return result_ != other.result_; }
 
 protected:
 	mutable MYSQL_RES* result_;	///< underlying C API result set
