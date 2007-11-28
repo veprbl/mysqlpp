@@ -141,11 +141,60 @@ Connection::~Connection()
 }
 
 
-Connection&
-Connection::operator=(const Connection& rhs)
+ostream&
+Connection::api_version(ostream& os)
 {
-	copy(rhs);
-	return *this;
+	const int major = MYSQL_VERSION_ID / 10000;
+	const int minor = (MYSQL_VERSION_ID - (major * 10000)) / 100;
+	const int bug = MYSQL_VERSION_ID - (major * 10000) - (minor * 100);
+
+	os << major << '.' << minor << '.' << bug;
+
+	return os;
+}
+
+
+bool
+Connection::bad_option(Option option, OptionError error)
+{
+	ostringstream os;
+
+	switch (error) {
+		case opt_err_type: {
+			// Option was set using wrong argument type
+			OptionArgType type = option_arg_type(option);
+			os << "option " << option;
+			if (type == opt_type_none) {
+				os << " does not take an argument";
+			}
+			else {
+				os << " requires an argument of type " << type;
+			}
+			break;
+		}
+
+		case opt_err_value:
+			// C API rejected option, which probably indicates that
+			// you passed a option that it doesn't understand.
+			os << "option " << option << " not supported in MySQL C "
+					"API v";
+			api_version(os);
+			break;
+
+		case opt_err_conn:
+			os << "option " << option << " can only be set before "
+					"connection is established";
+			break;
+	}
+
+	if (throw_exceptions()) {
+		throw BadOption(os.str(), option);
+	}
+	else {
+		error_message_ = os.str();
+	}
+
+	return false;
 }
 
 
@@ -263,20 +312,20 @@ Connection::copy(const Connection& other)
 }
 
 
+bool
+Connection::create_db(const std::string& db)
+{
+	Query q(this, throw_exceptions());
+	return q.exec("CREATE DATABASE " + db);
+}
+
+
 void
 Connection::disconnect()
 {
 	error_message_.clear();
 	mysql_close(&mysql_);
 	is_connected_ = false;
-}
-
-
-bool
-Connection::create_db(const std::string& db)
-{
-	Query q(this, throw_exceptions());
-	return q.exec("CREATE DATABASE " + db);
 }
 
 
@@ -288,28 +337,122 @@ Connection::drop_db(const std::string& db)
 }
 
 
-bool
-Connection::select_db(const char *db)
+void
+Connection::enable_ssl(const char* key, const char* cert,
+		const char* ca, const char* capath, const char* cipher)
+{
+#if defined(HAVE_MYSQL_SSL_SET)
+	error_message_.clear();
+	mysql_ssl_set(&mysql_, key, cert, ca, capath, cipher);
+#else
+	error_message_ = "SSL not enabled in MySQL++";
+#endif
+}
+
+
+string
+Connection::info()
 {
 	error_message_.clear();
-	if (connected()) {
-		bool suc = !(mysql_select_db(&mysql_, db));
-		if (throw_exceptions() && !suc) {
-			throw DBSelectionFailed(error(), errnum());
-		}
-		else {
-			return suc;
-		}
+	const char* i = mysql_info(&mysql_);
+	if (!i) {
+		return string();
 	}
 	else {
-		if (throw_exceptions()) {
-			throw DBSelectionFailed("MySQL++ connection not established");
-		}
-		else {
-			build_error_message("select a database");
-			return false;
+		return string(i);
+	}
+}
+
+
+Connection&
+Connection::operator=(const Connection& rhs)
+{
+	copy(rhs);
+	return *this;
+}
+
+
+Connection::OptionArgType
+Connection::option_arg_type(Option option)
+{
+	if ((option > opt_FIRST) && (option < opt_COUNT)) {
+		return legal_opt_arg_types_[option];
+	}
+	else {
+		// Non-optional exception.  Something is wrong with the library
+		// internals if this one is thrown.
+		throw BadOption("bad value given to option_arg_type()", option);
+	}
+}
+
+
+bool
+Connection::option_set(Option option)
+{
+	for (OptionListIt it = applied_options_.begin();
+			it != applied_options_.end(); 
+			++it) {
+		if (it->option == option) {
+			return true;
 		}
 	}
+
+	return false;
+}
+
+
+bool
+Connection::parse_ipc_method(const char* server, string& host,
+		unsigned int& port, string& socket_name)
+{
+	// NOTE: This routine has no connection type knowledge.  It can only
+	// recognize a 0 value for the server parameter.  All substantial
+	// tests are delegated to our specialized subclasses, which figure
+	// out what kind of connection the server address denotes.  We do
+	// the platform-specific tests first as they're the most reliable.
+	
+	if (server == 0) {
+		// Just take all the defaults
+		return true;
+	}
+	else if (WindowsNamedPipeConnection::is_wnp(server)) {
+		// Use Windows named pipes
+		host = server;
+		return true;
+	}
+	else if (UnixDomainSocketConnection::is_socket(server)) {
+		// Use Unix domain sockets
+		socket_name = server;
+		return true;
+	}
+	else {
+		// Failing above, it can only be some kind of TCP/IP address.
+		host = server;
+		return TCPConnection::parse_address(host, port, error_message_);
+	}
+}
+
+
+bool
+Connection::ping()
+{
+	if (connected()) {
+		error_message_.clear();
+		return !mysql_ping(&mysql_);
+	}
+	else {
+		// Not connected, and we've forgotten everything we need in
+		// order to re-connect, if we once were connected.
+		build_error_message("ping database server");
+		return false;
+	}
+}
+
+
+Query
+Connection::query(const char* qstr)
+{
+	return Query(this, throw_exceptions(), qstr);
 }
 
 
@@ -343,13 +486,13 @@ Connection::reload()
 
 
 bool
-Connection::shutdown()
+Connection::select_db(const char *db)
 {
 	error_message_.clear();
 	if (connected()) {
-		bool suc = !(mysql_shutdown(&mysql_ SHUTDOWN_ARG));
+		bool suc = !(mysql_select_db(&mysql_, db));
 		if (throw_exceptions() && !suc) {
-			throw ConnectionFailed(error(), errnum());
+			throw DBSelectionFailed(error(), errnum());
 		}
 		else {
 			return suc;
@@ -357,34 +500,13 @@ Connection::shutdown()
 	}
 	else {
 		if (throw_exceptions()) {
-			throw ConnectionFailed("MySQL++ connection not established");
+			throw DBSelectionFailed("MySQL++ connection not established");
 		}
 		else {
-			build_error_message("shutdown database server");
+			build_error_message("select a database");
 			return false;
 		}
 	}
-}
-
-
-string
-Connection::info()
-{
-	error_message_.clear();
-	const char* i = mysql_info(&mysql_);
-	if (!i) {
-		return string();
-	}
-	else {
-		return string(i);
-	}
-}
-
-
-Query
-Connection::query(const char* qstr)
-{
-	return Query(this, throw_exceptions(), qstr);
 }
 
 
@@ -699,148 +821,26 @@ Connection::set_option_impl(int option, bool arg)
 
 
 bool
-Connection::bad_option(Option option, OptionError error)
+Connection::shutdown()
 {
-	ostringstream os;
-
-	switch (error) {
-		case opt_err_type: {
-			// Option was set using wrong argument type
-			OptionArgType type = option_arg_type(option);
-			os << "option " << option;
-			if (type == opt_type_none) {
-				os << " does not take an argument";
-			}
-			else {
-				os << " requires an argument of type " << type;
-			}
-			break;
-		}
-
-		case opt_err_value:
-			// C API rejected option, which probably indicates that
-			// you passed a option that it doesn't understand.
-			os << "option " << option << " not supported in MySQL C "
-					"API v";
-			api_version(os);
-			break;
-
-		case opt_err_conn:
-			os << "option " << option << " can only be set before "
-					"connection is established";
-			break;
-	}
-
-	if (throw_exceptions()) {
-		throw BadOption(os.str(), option);
-	}
-	else {
-		error_message_ = os.str();
-	}
-
-	return false;
-}
-
-
-Connection::OptionArgType
-Connection::option_arg_type(Option option)
-{
-	if ((option > opt_FIRST) && (option < opt_COUNT)) {
-		return legal_opt_arg_types_[option];
-	}
-	else {
-		// Non-optional exception.  Something is wrong with the library
-		// internals if this one is thrown.
-		throw BadOption("bad value given to option_arg_type()", option);
-	}
-}
-
-
-bool
-Connection::option_set(Option option)
-{
-	for (OptionListIt it = applied_options_.begin();
-			it != applied_options_.end(); 
-			++it) {
-		if (it->option == option) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-void
-Connection::enable_ssl(const char* key, const char* cert,
-		const char* ca, const char* capath, const char* cipher)
-{
-#if defined(HAVE_MYSQL_SSL_SET)
 	error_message_.clear();
-	mysql_ssl_set(&mysql_, key, cert, ca, capath, cipher);
-#else
-	error_message_ = "SSL not enabled in MySQL++";
-#endif
-}
-
-
-ostream&
-Connection::api_version(ostream& os)
-{
-	const int major = MYSQL_VERSION_ID / 10000;
-	const int minor = (MYSQL_VERSION_ID - (major * 10000)) / 100;
-	const int bug = MYSQL_VERSION_ID - (major * 10000) - (minor * 100);
-
-	os << major << '.' << minor << '.' << bug;
-
-	return os;
-}
-
-
-bool
-Connection::ping()
-{
 	if (connected()) {
-		error_message_.clear();
-		return !mysql_ping(&mysql_);
+		bool suc = !(mysql_shutdown(&mysql_ SHUTDOWN_ARG));
+		if (throw_exceptions() && !suc) {
+			throw ConnectionFailed(error(), errnum());
+		}
+		else {
+			return suc;
+		}
 	}
 	else {
-		// Not connected, and we've forgotten everything we need in
-		// order to re-connect, if we once were connected.
-		build_error_message("ping database server");
-		return false;
-	}
-}
-
-
-bool
-Connection::parse_ipc_method(const char* server, string& host,
-		unsigned int& port, string& socket_name)
-{
-	// NOTE: This routine has no connection type knowledge.  It can only
-	// recognize a 0 value for the server parameter.  All substantial
-	// tests are delegated to our specialized subclasses, which figure
-	// out what kind of connection the server address denotes.  We do
-	// the platform-specific tests first as they're the most reliable.
-	
-	if (server == 0) {
-		// Just take all the defaults
-		return true;
-	}
-	else if (WindowsNamedPipeConnection::is_wnp(server)) {
-		// Use Windows named pipes
-		host = server;
-		return true;
-	}
-	else if (UnixDomainSocketConnection::is_socket(server)) {
-		// Use Unix domain sockets
-		socket_name = server;
-		return true;
-	}
-	else {
-		// Failing above, it can only be some kind of TCP/IP address.
-		host = server;
-		return TCPConnection::parse_address(host, port, error_message_);
+		if (throw_exceptions()) {
+			throw ConnectionFailed("MySQL++ connection not established");
+		}
+		else {
+			build_error_message("shutdown database server");
+			return false;
+		}
 	}
 }
 
