@@ -162,13 +162,6 @@ public:
 		return *this;
 	}
 
-	/// \brief Returns true if other refcounted pointer's internal
-	/// data pointer is the same as this one's.
-	bool operator ==(const ThisType& rhs)
-	{
-		return rhs->counted_ == counted_;
-	}
-
 	/// \brief Access the object through the smart pointer
 	T* operator ->() const
 	{
@@ -181,16 +174,34 @@ public:
 		return *counted_;
 	}	
 
-	/// \brief Returns true if this object can be dereferenced.
-	operator bool() const
+	/// \brief Returns the internal raw pointer converted to void*
+	///
+	/// This isn't intended to be used directly; if you need the
+	/// pointer, call raw() instead.  It's used internally by the
+	/// compiler to implement operators bool, ==, and !=
+	operator void*()
 	{
-		return counted_ != 0;
+		return counted_;
 	}
 
-	/// \brief Returns true if this object cannot be safely dereferenced
-	bool operator !() const
+	/// \brief Returns the internal raw pointer converted to const void*
+	///
+	/// \see comments for operator void*()
+	operator const void*() const
 	{
-		return counted_ == 0;
+		return counted_;
+	}
+
+	/// \brief Return the raw pointer in T* context
+	T* raw()
+	{
+		return counted_;
+	}
+
+	/// \brief Return the raw pointer when used in const T* context
+	const T* raw() const
+	{
+		return counted_;
 	}
 
 private:
