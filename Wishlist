@@ -18,18 +18,18 @@ v3.0 Plan, For-Sure Stuff
       results in x spaces, not x - strlen(whatevercamebefore).
 
     o Classes Connection, Query, String, Result and Row all have
-      operator bool() as well.  Use "safe bool" here too?
+      operator bool() as well.  Use "safe bool" here?
 
     o Apply Jonathan Wakely's patch to RefCountedPointer.
 
     o Atomic inc/dec of reference counts in RefCounted*?
 
-    o Add multithreaded examples to test above features and the new
-      ConnectionPool class?  They'd have to be platform-specific...
-      If we decide not to do it, pull reference to the example from
-      section 7.2 of userman.
+    o Add examples/vstudio/threads to test new thread-related features.
+      Only VC++ since every other platform has the possibility of
+      building without thread support.  Then work it into userman's
+      threads chapter, which already has a stub for this.
 
-    o Rework elment access in subscript_iterator derivatives:
+    o Rework element access in subscript_iterator derivatives:
 
       - Change data management to work like String's new reference-
         counted buffer mechanism where possible to avoid copying
