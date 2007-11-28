@@ -661,31 +661,31 @@ String::conv(Type) const
 /// written code wouldn't need.  Prove the truth of this to yourself by
 /// removing this and counting how many pieces examples/cgi_jpeg.cpp
 /// breaks into.
-template <> String String::conv(String) const;
+template <> MYSQLPP_EXPORT String String::conv(String) const;
 
 /// \brief Specialization of String::conv<Type>() for C++ strings
-template <> std::string String::conv(std::string) const;
+template <> MYSQLPP_EXPORT std::string String::conv(std::string) const;
 
 /// \brief Specialization of String::conv<Type>() for mysqlpp::Date
 ///
 /// This is necessary because as of MySQL++ v3, Date no longer has an
 /// implicit conversion ctor from String, and SSQLS uses conv() instead
 /// of the C++ type conversion system anyway.
-template <> Date String::conv(Date) const;
+template <> MYSQLPP_EXPORT Date String::conv(Date) const;
 
 /// \brief Specialization of String::conv<Type>() for mysqlpp::DateTime
 ///
 /// This is necessary because as of MySQL++ v3, DateTime no longer has
 /// an implicit conversion ctor from String, and SSQLS uses conv()
 /// instead of the C++ type conversion system anyway.
-template <> DateTime String::conv(DateTime) const;
+template <> MYSQLPP_EXPORT DateTime String::conv(DateTime) const;
 
 /// \brief Specialization of String::conv<Type>() for mysqlpp::Time
 ///
 /// This is necessary because as of MySQL++ v3, Time no longer has an
 /// implicit conversion ctor from String, and SSQLS uses conv() instead
 /// of the C++ type conversion system anyway.
-template <> Time String::conv(Time) const;
+template <> MYSQLPP_EXPORT Time String::conv(Time) const;
 
 } // end namespace mysqlpp
 
