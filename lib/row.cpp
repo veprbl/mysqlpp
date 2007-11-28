@@ -34,13 +34,12 @@ Row::Row(MYSQL_ROW d, const ResUse* r, unsigned long* lengths,
 		bool throw_exceptions) :
 OptionalExceptions(throw_exceptions),
 initialized_(false),
-size_(r ? r->num_fields() : 0)
+size_(0)
 {
-	if (r) {
-		field_names_ = r->field_names();
-	}
-	
 	if (d && r) {
+		size_ = r->num_fields();
+		field_names_ = r->field_names();
+
 		data_.reserve(size_);
 		for (size_type i = 0; i < size_; ++i) {
 			bool is_null = d[i] == 0;
