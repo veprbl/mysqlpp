@@ -32,9 +32,6 @@ v3.0 Plan
         operator->() to subscript_iterator.  It can't work with
         value semantics.
 
-    o More robust fix for the Query stream base class init problem:
-      http://www.boost.org/libs/utility/base_from_member.html
-
     o Refactor option mechanism in Connection, in several steps:
     
       - Create new optionlist module, initially empty.  Each step below
