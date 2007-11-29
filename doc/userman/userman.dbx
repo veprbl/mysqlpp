@@ -119,26 +119,24 @@
 <sect1 id="overview">
     <title>Overview</title>
 
-    <para>MySQL++ has developed into a very complex and powerful
-    library, with many different ways to accomplish the same
-    task. Unfortunately, this means that figuring out how to perform
-    a simple task can be frustrating for new users. In this section
-    we will provide an overview of the most important user-facing
-    components of the library.</para>
-
-    <para>The overall process for using MySQL++ is similar to that
-    of most other database access APIs:</para>
+    <para>MySQL++ has a lot of complexity and power to cope with the
+    variety of ways people use databases, but at bottom it doesn't
+    work all that differently than other database access APIs. The
+    usage pattern looks like this:</para>
 
     <orderedlist>
         <listitem><para>Open the connection</para></listitem>
+
         <listitem><para>Form and execute the query</para></listitem>
-        <listitem><para>Iterate through the result
-        set</para></listitem> <listitem><para>Go to 2
-        :)</para></listitem>
+
+        <listitem><para>If successful, iterate through the result
+        set</para></listitem>
+
+        <listitem><para>Else, deal with errors</para></listitem>
     </orderedlist>
 
-    <para>There is, however, a lot of extra functionality along each
-    step of the way.</para>
+    <para>Each of these steps corresponds to a MySQL++ class or class
+    hierarchy. An overview of each follows.</para>
 
 
     <sect2>
@@ -152,6 +150,18 @@
         instance, the <classname>Connection</classname> object needs
         to live at least as long as all other MySQL++ objects in
         your program.</para>
+
+        <para>MySQL supports many different types of data
+        connection between the client and the server: TCP/IP,
+        Unix domain sockets, and Windows named pipes. The generic
+        <classname>Connection</classname> class supports all of these,
+        figuring out which one you mean based on the parameters you
+        pass to <methodname>Connection::connect()</methodname>. But
+        if you know in advance that your program only needs one
+        particular connection type, there are subclasses with simpler
+        interfaces. For example, there's <ulink type="classref"
+        url="TCPConnection"/> if you know your program will always
+        use a networked database server.</para>
     </sect2>
 
 
@@ -162,15 +172,18 @@
         type="classref" url="Query"/> object created by the
         <classname>Connection</classname> object.</para>
 
-        <para><classname>Query</classname> is subclassed from
-        <classname>std::stringstream</classname> which means you can
-        write to it like any other C++ stream to form a query. The
-        library includes <ulink url="../refman/manip_8h.html">stream
-        manipulators</ulink> that make it easy to generate
-        syntactically-correct SQL.</para>
+        <para><classname>Query</classname> acts as a standard
+        C++ output stream, so you can write data to it like
+        you would to <classname>std::cout</classname> or
+        <classname>std::ostringstream</classname>. This is
+        the most C++ish way MySQL++ provides for building
+        up a query string.  The library includes <ulink
+        url="../refman/manip_8h.html">stream manipulators</ulink> that
+        are type-aware so it's easy to build up syntactically-correct
+        SQL.</para>
 
-        <para>You can also set up <xref linkend="tquery"/> with
-        this class. Template queries work something like C's
+        <para><classname>Query</classname> also has a feature called
+        <xref linkend="tquery"/> which work something like C's
         <function>printf()</function> function: you set up a fixed
         query string with tags inside that indicate where to insert
         the variable parts. If you have multiple queries that are
@@ -179,10 +192,15 @@
 
         <para>A third method for building queries is to use
         <classname>Query</classname> with <xref linkend="ssqls"/>
-        (SSQLS). This feature presents your results as a C++ data
-        structure, instead of making you access the data through
-        MySQL++ intermediary classes. It also reduces the amount of
-        embedded SQL code your program needs.</para>
+        (SSQLS). This feature lets you create C++ structures
+        that mirror your database schemas. These in turn
+        give <classname>Query</classname> the information it
+        needs to build many common SQL queries for you. It can
+        <command>INSERT</command>, <command>REPLACE</command> and
+        <command>UPDATE</command> rows in a table given the data
+        in SSQLS form. It can also generate <command>SELECT * FROM
+        SomeTable</command> queries and store the results as an STL
+        collection of SSQLSes.</para>
     </sect2>
 
 
@@ -218,34 +236,38 @@
             <title>Queries That Return Data: Dynamic Method</title>
 
             <para>The easiest way to retrieve data from MySQL
-            uses a <ulink type="classref" url="Result"/> object,
-            which includes one or more <ulink type="classref"
-            url="Row"/> objects. Because these classes are
+            uses a <ulink type="classref" url="Result"/>
+            object, which includes one or more <ulink
+            type="classref" url="Row"/> objects, which each
+            include one or more <classname>String</classname>
+            objects. Because <classname>Result</classname>
+            and <classname>Row</classname> are
             <classname>std::vector</classname>-like containers, you
             can treat the result set as a two-dimensional array. For
-            example, you can get the 5th item on the 2nd row by simply
-            saying <methodname>result.at(1).at(4)</methodname>. You
+            example, you can get the 5th field on the 2nd row by
+            simply saying <methodname>result[1][4]</methodname>. You
             can also access row elements by field name, like this:
-            <methodname>result.at(2)["price"]</methodname>.</para>
+            <methodname>result[2]["price"]</methodname>.</para>
 
             <para>An alternate way of accessing your query results
             is through a <ulink type="classref" url="ResUse"/>
             object. This class acts more like an STL input iterator
-            than a container: you walk through your result set one item
-            at a time, always going forward. You can't seek around in
-            the result set, and you can't know how many results are
-            in the set until you find the end. This method is more
-            efficient when there can be arbitrarily many results,
-            which could pose a memory allocation problem with the
-            previous technique.</para>
+            than a container: you walk through your result set one
+            item at a time, always going forward. You can't seek
+            around in the result set, and you can't know how many
+            results are in the set until you find the end. In payment
+            for that inconvenience, you get higher memory efficiency,
+            because the entire result set doesn't need to be stored
+            in RAM. This is very useful when you need large result
+            sets.</para>
         </sect3>
 
         <sect3>
             <title>Queries That Return Data: Static Method</title>
 
-            <para>The <xref linkend="ssqls"/> (SSQLS) feature
-            method above defines C++ structures that match the table
-            structures in your database schema.</para>
+            <para>The <xref linkend="ssqls"/> (SSQLS) feature defines
+            C++ structures that match the table structures in your
+            database schema.</para>
 
             <para>We call it the "static" method because the table
             structure is fixed at compile time. Indeed, some schema
