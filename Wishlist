@@ -18,9 +18,8 @@ v3.0 Plan, For-Sure Stuff
       results in x spaces, not x - strlen(whatevercamebefore).
 
     o Classes Connection, Query, String, Result and Row all have
-      operator bool() as well.  Use "safe bool" here?
-
-    o Apply Jonathan Wakely's patch to RefCountedPointer.
+      operator bool() as well.  Use Jonathan Wakely's "safe bool"
+      instead?
 
     o Atomic inc/dec of reference counts in RefCounted*?
 
