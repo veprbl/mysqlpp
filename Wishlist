@@ -83,6 +83,10 @@ v3.0 Plan, For-Sure Stuff
       manipulator changes and the removal of all operator<<(Query&,
       const T&) may make it unnecessary.
 
+    o Document that Query::storein() now works with raw Row objects.
+      It used to fail because of the Result/Row lifetime issue,
+      which didn't apply to SSQLS because of the data copy.
+
 
 v3.0 "Maybe" Stuff
 ------------------
