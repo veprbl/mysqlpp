@@ -1,22 +1,24 @@
 Prerequisites
 ~~~~~~~~~~~~~
-    MySQL++ requires Visual Studio 2003 or later.  Earlier versions
-    did not support a sufficiently broad subset of Standard C++.
+    We currently have full support only for Visual Studio 2005.  It may
+    work with the "Orca" beta of the next version of Visual Studio,
+    but it hasn't been tested.  With a little work you can make it
+    work on Visual Studio 2003 as well; see below.  Older versions
+    are basically hopeless when it comes to having sufficient support
+    for Standard C++ to build MySQL++.
 
-    You also need to have MySQL installed.  The installer may have
-    given you the option of whether to install the development files
-    or not; if you didn't let it install them, you need to reinstall.
+    You also need to have the MySQL server installed, even if you
+    will be using a MySQL server on another machine.  This is because
+    in addition to installing the server itself, it also installs
+    the client-side development files that MySQL++ needs in order to
+    communicate with a MySQL server.  The MySQL server installer hasn't
+    always installed the development files by default, so you might
+    need to do some kind of custom install so you can enable them.
 
 
 Building the Library and Example Programs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    As of MySQL++ v2.2, there is only one set of project files
-    in the top level directory for MySQL++.  We ship VC++6 style
-    project files (.dsw and .dsp instead of .sln and .vcproj) due to
-    a limitation of the tool we use to generate the project files.
-    Just let Visual Studio convert these to the new format.
-
-    If you installed MySQL somewhere other than 
+    If you installed the MySQL server somewhere other than 
     
         C:\Program Files\MySQL\MySQL Server 5.0\
         
@@ -28,20 +30,22 @@ Building the Library and Example Programs
     is harmless.  See below if you want to change the actual source
     files that create the project files.
 
-    Be sure to build both the Debug and Release versions of the
-    library.  You will need them both because when you build your
-    program in Release mode, it won't work with a MySQL++ DLL built
-    in Debug mode.  The simplest way to ensure that you're running
-    your program against the correct DLL is to copy the debug version
-    of the MySQL++ DLL into your program's Debug build directory,
-    and the same for the Release directory.
+    You must build both the Debug and Release versions of the library.
+    You will need them both because when you build your program in
+    Release mode, it won't work with a MySQL++ DLL built in Debug mode.
+    The simplest way to ensure that you're running your program against
+    the correct DLL is to copy the debug version of the MySQL++ DLL
+    into your program's Debug build directory, and the same for the
+    Release directory.
 
     With the library built, run at least the resetdb and simple1
     examples to ensure that the library is working correctly.
-    See README.examples for further details.
+    In addition to the other generic examples, there are a few
+    Visual C++ specific examples that you might want to look at in
+    examples\vstudio.  See README.examples for further details.
 
-    Once you're sure the library is working correctly, run the
-    install.bat file at the project root to automatically install
+    Once you're sure the library is working correctly, you can run
+    the install.bat file at the project root to automatically install
     the library files and headers in subdirectories under c:\mysql++.
 
 
@@ -89,10 +93,10 @@ Using MySQL++ in an MFC Project
 Using MySQL++ in a Windows Forms C++/CLI Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Before you start work on getting MySQL++ working with your own
-    program, you need to make some changes to the MySQL++ build settings.
-    Open mysqlpp.sln, then right-click on the mysqlpp target and select
-    Properties.  Make the following changes for both the Debug and
-    Release configurations:
+    program, you need to make some changes to the MySQL++ build
+    settings.  Open mysqlpp.sln, then right-click on the mysqlpp
+    target and select Properties.  Make the following changes for
+    both the Debug and Release configurations:
 
         o Under Configuration Properties::General, change "Common
           Language Runtime support" to the /clr setting.
@@ -101,18 +105,19 @@ Using MySQL++ in a Windows Forms C++/CLI Project
           Additional Options section.
 
     If you have already built MySQL++, be sure to perform a complete
-    rebuild after changing these options.  The compiler will emit several
-    C4835 warnings after making those changes, which are harmless when
-    using the DLL with a C++/CLI program, but which warn of real problems
-    when using it with unmanaged C++.  As a result, it's probably best
-    if you don't install the resulting DLL in a system level directory.
-    I'd recommend copying it only into the same directory as the EXE.
+    rebuild after changing these options.  The compiler will emit
+    several C4835 warnings after making those changes, which are
+    harmless when using the DLL with a C++/CLI program, but which warn
+    of real problems when using it with unmanaged C++.  As a result,
+    it's probably best if you don't install the resulting DLL in a
+    system level directory.  I'd recommend copying it only into the
+    same directory as the EXE.
 
-    Once you have MySQL++ built with CLR support, open your program's
-    project.  If you don't already have a project set up, open Visual
-    Studio, say File::New::Project, then choose Visual C++::CLR::Windows
-    Forms Application.  Go through the wizard setting up the project as
-    you see fit.
+    Once you have MySQL++ built with CLR support, open your
+    program's project.  If you don't already have a project set up,
+    open Visual Studio, say File::New::Project, then choose Visual
+    C++::CLR::Windows Forms Application.  Go through the wizard
+    setting up the project as you see fit.
 
     The configuration process isn't much different from that for an
     MFC project, so go through the list above first.  Then, make the
@@ -120,8 +125,8 @@ Using MySQL++ in a Windows Forms C++/CLI Project
 
         o Under Configuration Properties::General change the setting
           from /clr:pure to /clr.  (You need mixed assembly support
-          to allow a C++/CLI program to use a plain C++ library like
-          MySQL++.)
+          to allow a C++/CLI program to use a plain C++ library
+          like MySQL++.)
 
         o For the Linker::Input settings, you don't need wsock32.lib.
           The mere fact that you're using .NET takes care of that
@@ -142,17 +147,16 @@ Using MySQL++ in a Windows Forms C++/CLI Project
 Working With Bakefile
 ~~~~~~~~~~~~~~~~~~~~~
     MySQL++'s Visual Studio project files aren't maintained directly.
-    Instead, they're generated from mysql++.bkl using a tool called
-    Bakefile, from http://bakefile.sourceforge.net/  We do it this
-    way so we can support multiple platforms and build systems in a
-    common way.
+    Instead, we use a tool called Bakefile (http://bakefile.org/)
+    to generate many different project file and Makefile types from
+    a single set of source files.  There is a native Win32 version of
+    Bakefile up on that web site.  Download that and put the directory
+    containing bakefile.exe in your Windows PATH.
 
     Therefore, if you need to make changes to the project files
     and want to submit those changes back to the MySQL++ project,
     you need to do your changes to mysql++.bkl instead of directly to
-    the project files.  There is a native Win32 version of Bakefile up
-    on that web site.  Download that and put the directory containing
-    bakefile.exe in your Windows PATH.
+    the project files.
 
     The documentation on the Bakefile web site isn't wonderful, but
     is adequate for most things.  If you can't find documentation
@@ -161,10 +165,52 @@ Working With Bakefile
     settings in Visual Studio that you can't do in Bakefile, since
     it's a cross-platform tool.
 
-    Once you've made your changes, generate the Visual C++ project
-    files with this command:
+    Once you've made your changes, you can generate the Visual C++
+    project files by running rebake.bat, which you can find in the
+    same directory as this README file.
+
+
+Making It Work With Visual Studio 2003
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    There are only two minor issues preventing us from supporting
+    Visual Studio 2003 directly.  If there were elegant workarounds
+    for these, we'd do them, but there aren't, so we leave the work
+    of making the changes up to those users that need them.
+
+    The first is that the current version of Bakefile (0.2.2, see
+    previous section) doesn't support Visual Studio 2003 project
+    files.  This feature is coming in the next version, but since
+    you're reading this, it wasn't available at the time of this
+    release of MySQL++.  If Bakefile 0.2.3 (guessing) is out, you
+    can make it generate Visual Studio 2003 project files by opening
+    mysql++.bkl in a text editor and changing all the '2005's to
+    '2003's.  Then drop down to a command prompt and say:
+
+        bakefile -f msvs2003prj mysql++.bkl
+
+    If 0.2.2 is still the most current version as you read this, you
+    can get around it with a little more work by changing all of the
+    'msvs2005prj' references in mysql++.bkl to 'msvc6prj' instead.
+    Then the command is:
 
         bakefile -f msvc6prj mysql++.bkl
+
+    Having done that, you can open the mysql++.dsw file this produces
+    and let Visual Studio convert it to the 2003 format for you.
+
+    The other issue is that MySQL++'s SSQLS feature depends on a
+    feature of newer C++ compilers called variadic macro argument
+    lists, which Visual C++ 2003 doesn't support.  You can disable the
+    use of this C++ feature at the expense of not being able to use
+    a given SSQLS macro in more than one module within your program.
+    If you can live with that and you have a Perl interpreter on your
+    system, you need to go into the lib subdirectory of the MySQL++
+    distribution and say:
+
+        perl custom.pl -v
+
+    This will regenerate custom.h and custom-macros.h without the
+    multi-module support so it will work with Visual C++ 2003.
 
 
 If You Run Into Problems...

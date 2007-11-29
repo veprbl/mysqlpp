@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <makefile>
-	<requires version="0.1.9"/>
+	<requires version="0.2.2"/>
 	<using module="datafiles"/>
 	<include file="presets/simple.bkl"/>
 
@@ -10,7 +10,7 @@
 	<set var="ZLIB">yes</set>
 
 	<set var="THREAD_TYPE">single</set>
-	<if cond="FORMAT in ['msvc6prj', 'mingw']">
+	<if cond="FORMAT in ['msvs2005prj', 'mingw']">
 		<set var="THREAD_TYPE">multi</set>
 	</if>
 		
@@ -74,7 +74,7 @@
 			
 			<install-to>$(LIBDIR)</install-to>
 			
-			<if cond="FORMAT=='msvc6prj'">
+			<if cond="FORMAT=='msvs2005prj'">
 				<define>_UNICODE</define>
 				<define>MYSQLPP_MAKING_DLL</define>
 				<define>HAVE_MYSQL_SSL_SET</define>
@@ -141,7 +141,7 @@
 			<lib-path>.</lib-path>
 		</if>
 
-		<if cond="FORMAT=='msvc6prj'">
+		<if cond="FORMAT=='msvs2005prj'">
 			<define>_UNICODE</define>
 			<lib-path>$(BUILD)</lib-path>
 			<lib-path>C:\Program Files\MySQL\MySQL Server 5.0\lib\opt</lib-path>

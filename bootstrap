@@ -47,11 +47,18 @@ set -x
 bakefilize &&
 	bakefile_gen $BF_OPTIONS &&
 	mv autoconf_inc.m4 config ;
-	unix2dos *.ds? > /dev/null 2>&1 ;
 	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&
 	aclocal -I config -I /usr/local/share/aclocal &&
 	autoheader &&
 	autoconf &&
 	./reconf --enable-maintainer-mode $* &&
-	make lib/custom.h lib/querydef.h
+	make lib/custom.h lib/querydef.h &&
+    set +x ; success=awyeah
+
+if [ -z "$success" ]
+then
+    echo BOOTSTRAP FAILED!
+    echo
+    exit 1
+fi
 

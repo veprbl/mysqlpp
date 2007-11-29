@@ -6,7 +6,7 @@
 
     <!-- List of output formats to generate: -->
     <add-formats>
-        autoconf,msvc6prj,mingw
+        autoconf,msvs2005prj,mingw
     </add-formats>
 
     <add-flags formats="mingw">

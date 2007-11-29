@@ -74,6 +74,12 @@ v3.0 Plan, For-Sure Stuff
       a parsed template.  It's probably running off the end of the
       default argument list, or trying to dereference a null pointer.
 
+    o If Bakefile 0.2.3 (guessing) comes out before we release, change
+      all the msvs2005prj references in mysql++.bkl, Bakefiles.bkgen
+      and rebake.bat to msvs2003prj and remove the section on doing
+      this by hand from README.vc.  If not, we might need to update
+      some of the FAQ items on the MySQL++ home page.
+
     o Is MYSQLPP_QUERY_THISPTR still needed with VC++2003?  The recent
       manipulator changes and the removal of all operator<<(Query&,
       const T&) may make it unnecessary.
