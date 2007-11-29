@@ -25,6 +25,7 @@
 ***********************************************************************/
 
 #include "mystring.h"
+#include "query.h"
 
 #include <stdexcept>
 #include <string>
@@ -209,7 +210,20 @@ String::operator [](size_type pos) const
 std::ostream&
 operator <<(std::ostream& o, const String& in)
 {
-	o.write(in.data(), in.length());
+	if (dynamic_cast<Query*>(&o)) {
+		// We can just insert the raw data into the stream
+		o.write(in.data(), in.length());
+	}
+	else {
+		// Can't guess what sort of stream it is, so convert the String
+		// to a std::string so we can use the formatted output method.
+		// To see why this is necessary, change it to use write() only
+		// (unformatted output) and then run simple2: notice that the
+		// columnar output formatting is wrecked.
+		std::string temp;
+		in.to_string(temp);
+		o << temp;
+	}
 	return o;
 }
 

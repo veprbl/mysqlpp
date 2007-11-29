@@ -20,19 +20,19 @@ We have:
 ---------------- BEGIN simple2 OUTPUT ----------------
 Item                           Num       Weight    Price     Date
 
-Nürnberger Brats                              97         1.5         8.79         2005-03-10
-Pickle Relish                              87         1.5         1.75         1998-09-04
-Hot Mustard                              73         0.95         0.97         1998-05-25
-Hotdog Buns                              65         1.1         1.1         1998-04-23
+Nürnberger Brats              97        1.5       8.79      2005-03-10
+Pickle Relish                  87        1.5       1.75      1998-09-04
+Hot Mustard                    73        0.95      0.97      1998-05-25
+Hotdog Buns                    65        1.1       1.1       1998-04-23
 ================ END simple2 OUTPUT ================
 
 ---------------- BEGIN simple3 OUTPUT ----------------
 Item                           Num       Weight    Price     Date
 
-Nürnberger Brats                              97         1.5         8.79         2005-03-10
-Pickle Relish                              87         1.5         1.75         1998-09-04
-Hot Mustard                              73         0.95         0.97         1998-05-25
-Hotdog Buns                              65         1.1         1.1         1998-04-23
+Nürnberger Brats              97        1.5       8.79      2005-03-10
+Pickle Relish                  87        1.5       1.75      1998-09-04
+Hot Mustard                    73        0.95      0.97      1998-05-25
+Hotdog Buns                    65        1.1       1.1       1998-04-23
 ================ END simple3 OUTPUT ================
 
 ---------------- BEGIN store_if OUTPUT ----------------
@@ -71,7 +71,7 @@ Result set 0 has 1 row:
   +---------------+-----+--------+-------+------------+-------------+
   |          item | num | weight | price |      sdate | description |
   +---------------+-----+--------+-------+------------+-------------+
-  | Pickle Relish            | 87  | 1.5     | 1.75    | 1998-09-04         | NULL          |
+  | Pickle Relish |  87 |    1.5 |  1.75 | 1998-09-04 |        NULL |
   +---------------+-----+--------+-------+------------+-------------+
 Result set 1 is empty.
 ================ END multiquery OUTPUT ================

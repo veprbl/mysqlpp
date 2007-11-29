@@ -13,10 +13,6 @@ v3.0 Plan
     to get done for v3.0.  Most of them break the ABI, so they can't
     wait for a future version, because v4 could be years out.
 
-    o The manipulator changes sometime during 2.3 broke the column
-      formatting of the examples that dump tables.  A setw(x) call
-      results in x spaces, not x - strlen(whatevercamebefore).
-
     o Create examples/vstudio/threads to test new thread-related
       features.  Only VC++ since every other platform has the
       possibility of building without thread support.  Then work

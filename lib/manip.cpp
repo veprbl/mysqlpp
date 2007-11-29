@@ -33,7 +33,8 @@ using namespace std;
 
 namespace mysqlpp {
 
-SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
+SQLQueryParms&
+operator <<(quote_type2 p, SQLTypeAdapter& in)
 {
 	if (in.quote_q()) {
 		string temp("'", 1), escaped;
@@ -50,22 +51,57 @@ SQLQueryParms& operator <<(quote_type2 p, SQLTypeAdapter& in)
 }
 
 
-ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
+ostream&
+operator <<(quote_type1 o, const SQLTypeAdapter& in)
 {
 	Query* pq = dynamic_cast<Query*>(o.ostr);
 
-	if (pq && in.quote_q()) o.ostr->write("'", 1);
+	if (pq && in.quote_q()) o.ostr->put('\'');
 
-	if (pq && in.escape_q()) {
-		string escaped;
-		pq->escape_string(&escaped, in.data(), in.length());
-		o.ostr->write(escaped.data(), escaped.length());
+	if (pq) {
+		// It's a Query stream, so we'll be using unformatted output.
+		// Now, is escaping appropriate for source data type of 'in'?
+		if (in.escape_q()) {
+			string escaped;
+			pq->escape_string(&escaped, in.data(), in.length());
+			o.ostr->write(escaped.data(), escaped.length());
+		}
+		else {
+			o.ostr->write(in.data(), in.length());
+		}
 	}
 	else {
-		o.ostr->write(in.data(), in.length());
+		// Some other stream type, so use formatted output.  User
+		// shouldn't be trying to use the quote manipulator, but
+		// that's no reason to break their formatting.
+		*o.ostr << string(in.data(), in.length());
 	}
 
-	if (pq && in.quote_q()) o.ostr->write("'", 1);
+	if (pq && in.quote_q()) o.ostr->put('\'');
+
+	return *o.ostr;
+}
+
+
+ostream&
+operator <<(quote_only_type1 o, const SQLTypeAdapter& in)
+{
+	Query* pq = dynamic_cast<Query*>(o.ostr);
+
+	if (pq && in.quote_q()) o.ostr->put('\'');
+
+	if (pq) {
+		// It's a Query stream, so use unformatted output
+		o.ostr->write(in.data(), in.length());
+	}
+	else {
+		// Some other stream type, so use formatted output.  User
+		// shouldn't be trying to use this manipulator on a non-Query
+		// stream, but that's no reason to break their formatting.
+		*o.ostr << '\'' << in << '\'';
+	}
+
+	if (pq && in.quote_q()) o.ostr->put('\'');
 
 	return *o.ostr;
 }
@@ -74,12 +110,20 @@ ostream& operator <<(quote_type1 o, const SQLTypeAdapter& in)
 ostream&
 operator <<(ostream& o, const SQLTypeAdapter& in)
 {
-	o.write(in.data(), in.length());
-	return o;
+	if (dynamic_cast<Query*>(&o)) {
+		// It's a Query stream, so use unformatted output.
+		return o.write(in.data(), in.length());
+	}
+	else {
+		// Some other stream type, so use formatted output.  We do this
+		// through the temporary so we remain null-friendly.
+		return o << string(in.data(), in.length());
+	}
 }
 
 
-SQLQueryParms& operator <<(quote_only_type2 p, SQLTypeAdapter& in)
+SQLQueryParms&
+operator <<(quote_only_type2 p, SQLTypeAdapter& in)
 {
 	if (in.quote_q()) {
 		string temp("'", 1);
@@ -94,7 +138,8 @@ SQLQueryParms& operator <<(quote_only_type2 p, SQLTypeAdapter& in)
 }
 
 
-SQLQueryParms& operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
+SQLQueryParms&
+operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
 {
 	if (in.quote_q()) {
 		string temp("\"", 1);
@@ -109,7 +154,32 @@ SQLQueryParms& operator <<(quote_double_only_type2 p, SQLTypeAdapter& in)
 }
 
 
-SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
+ostream&
+operator <<(quote_double_only_type1 o, const SQLTypeAdapter& in)
+{
+	Query* pq = dynamic_cast<Query*>(o.ostr);
+
+	if (pq && in.quote_q()) o.ostr->put('"');
+
+	if (pq) {
+		// It's a Query stream, so use unformatted output
+		o.ostr->write(in.data(), in.length());
+	}
+	else {
+		// Some other stream type, so use formatted output.  User
+		// shouldn't be trying to use this manipulator on a non-Query
+		// stream, but that's no reason to break their formatting.
+		*o.ostr << '"' << in << '"';
+	}
+
+	if (pq && in.quote_q()) o.ostr->put('"');
+
+	return *o.ostr;
+}
+
+
+SQLQueryParms&
+operator <<(escape_type2 p, SQLTypeAdapter& in)
 {
 	if (in.escape_q()) {
 		string escaped;
@@ -124,31 +194,57 @@ SQLQueryParms& operator <<(escape_type2 p, SQLTypeAdapter& in)
 }
 
 
-std::ostream& operator <<(escape_type1 o, const SQLTypeAdapter& in)
+ostream&
+operator <<(escape_type1 o, const SQLTypeAdapter& in)
 {
 	Query* pq = dynamic_cast<Query*>(o.ostr);
-
-	if (pq && in.escape_q()) {
-		string escaped;
-		pq->escape_string(&escaped, in.data(), in.length());
-		o.ostr->write(escaped.data(), escaped.length());
+	if (pq) {
+		// It's a Query stream, so we'll be using unformatted output.
+		// Now, is escaping appropriate for source data type of 'in'?
+		if (in.escape_q()) {
+			string escaped;
+			pq->escape_string(&escaped, in.data(), in.length());
+			return o.ostr->write(escaped.data(), escaped.length());
+		}
+		else {
+			return o.ostr->write(in.data(), in.length());
+		}
 	}
 	else {
-		o.ostr->write(in.data(), in.length());
+		// Some other stream type, so use formatted output.  User
+		// shouldn't be trying to use the escape manipulator, but
+		// that's no reason to break their formatting.
+		return *o.ostr << string(in.data(), in.length());
 	}
-
-	return *o.ostr;
 }
 
 
-SQLQueryParms& operator <<(do_nothing_type2 p, SQLTypeAdapter& in)
+SQLQueryParms&
+operator <<(do_nothing_type2 p, SQLTypeAdapter& in)
 {
 	in.set_processed();
 	return *p.qparms << in;
 }
 
 
-SQLQueryParms& operator <<(ignore_type2 p, SQLTypeAdapter& in)
+ostream&
+operator <<(do_nothing_type1 o, const SQLTypeAdapter& in)
+{
+	if (dynamic_cast<Query*>(o.ostr)) {
+		// It's a Query stream, so use unformatted output
+		return o.ostr->write(in.data(), in.length());
+	}
+	else {
+		// Some other stream type, so use formatted output.  User
+		// shouldn't be trying to use this manipulator on a non-Query
+		// stream, but that's no reason to break their formatting.
+		return *o.ostr << in;
+	}
+}
+
+
+SQLQueryParms&
+operator <<(ignore_type2 p, SQLTypeAdapter& in)
 {
 	return *p.qparms << in;
 }

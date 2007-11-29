@@ -207,16 +207,7 @@ MYSQLPP_EXPORT SQLQueryParms& operator <<(quote_only_type2 p,
 		SQLTypeAdapter& in);
 
 
-inline std::ostream&
-operator <<(quote_only_type1 o, const SQLTypeAdapter& in)
-{
-	if (in.quote_q()) {
-		return *o.ostr << '\'' << in << '\'';
-	}
-	else {
-		return *o.ostr << in;
-	}
-}
+std::ostream& operator <<(quote_only_type1 o, const SQLTypeAdapter& in);
 
 
 template <class ST>
@@ -296,16 +287,8 @@ MYSQLPP_EXPORT SQLQueryParms&
 operator <<(quote_double_only_type2 p, SQLTypeAdapter& in);
 
 
-inline std::ostream&
-operator <<(quote_double_only_type1 o, const SQLTypeAdapter& in)
-{
-	if (in.quote_q()) {
-		return *o.ostr << '"' << in << '"';
-	}
-	else {
-		return *o.ostr << in;
-	}
-}
+std::ostream&
+operator <<(quote_double_only_type1 o, const SQLTypeAdapter& in);
 
 
 template <class ST>
@@ -426,12 +409,8 @@ operator <<(std::ostream& o, do_nothing_type0 /* esc */)
 }
 
 
-template <class T>
-inline std::ostream&
-operator <<(do_nothing_type1 o, const T& in)
-{
-	return *o.ostr << in;
-}
+std::ostream&
+operator <<(do_nothing_type1 o, const SQLTypeAdapter& in);
 
 
 struct do_nothing_type2
