@@ -3,9 +3,10 @@
 /// class
 
 /***********************************************************************
- Copyright (c) 2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the
- CREDITS file in the top directory of the distribution for details.
+ Copyright (c) 2007 by Educational Technology Resources, Inc. and
+ (c) 2007 by Jonathan Wakely.  Others may also hold copyrights on
+ code in this file.  See the CREDITS file in the top directory of
+ the distribution for details.
 
  This file is part of MySQL++.
 
@@ -30,6 +31,8 @@
 
 #include "type_info.h"
 
+#include <algorithm>
+#include <memory>
 #include <string>
 
 namespace mysqlpp {
@@ -99,16 +102,23 @@ public:
 	/// object's useless until you vivify it with operator =() or assign().
 	explicit RefCountedPointer(T* c) :
 	counted_(c),
-	refs_(c ? new size_t(1) : 0)
+	refs_(0)
 	{
+		std::auto_ptr<T> exception_guard(counted_);
+		if (counted_) {
+			refs_ = new size_t(1);
+		}
+		exception_guard.release();	// previous new didn't throw
 	}
 
 	/// \brief Copy constructor
 	RefCountedPointer(const ThisType& other) :
-	counted_(0),		// yes, this is required! see assign()
-	refs_(0)
+	counted_(other.counted_),
+	refs_(other.counted_ ? other.refs_ : 0)
 	{
-		assign(other);
+		if (counted_) {
+			++(*refs_);
+		}
 	}
 
 	/// \brief Destructor
@@ -117,63 +127,56 @@ public:
 	/// drops to 0.
 	~RefCountedPointer()
 	{
-		detach();
+		if (refs_ && (--(*refs_) == 0)) {
+			Destroyer()(counted_);
+			delete refs_;
+		}
 	}
 
 	/// \brief Sets (or resets) the pointer to the counted object.
 	///
-	/// Before we do the actual assignment, we decrement the previous
-	/// managed object's refcount.  If it falls to 0, it's destroyed.
+	/// If we are managing a pointer, this decrements the refcount for
+	/// it and destroys the managed object if the refcount falls to 0.
 	///
-	/// If the refcount is >= 2 when we are called, the other users of
-	/// the managed memory will see no difference; the internal refcount
-	/// will just be 1 lower, which is imperceptible from the outside.
-	/// Only this object sees a change in what's being pointed to.
-	void assign(T* c)
+	/// This is a no-op if you pass the same pointer we're already
+	/// managing.
+	ThisType& assign(T* c)
 	{
-		detach();
-
-		if (c) {
-			counted_ = c;
-			refs_ = new size_t(1);
+		if (c != counted_) {
+			// The create-temporary-and-swap idiom lets us keep memory
+			// allocation in the ctor and deallocation in the dtor so
+			// we don't leak in the face of an exception.
+			ThisType(c).swap(*this);
 		}
-		else {
-			counted_ = 0;
-			refs_ = 0;
-		}
+		return *this;
 	}
 
 	/// \brief Copy an existing refcounted pointer
 	///
-	/// This just copies the pointer to the underlying counted pointer
-	/// and increases the reference count.
+	/// If we are managing a pointer, this decrements the refcount for
+	/// it and destroys the managed object if the refcount falls to 0.
+	/// Then we increment the other object's reference count and copy
+	/// that refcount and the managed pointer into this object.
 	///
-	/// If this object already pointed to managed memory, we decrement
-	/// the refcount for it first, and destroy the managed memory block
-	/// if the refcount falls to 0.
-	void assign(const ThisType& other)
+	/// This is a no-op if you pass a reference to this same object.
+	ThisType& assign(const ThisType& other)
 	{
-		detach();
-		
-		if (other.counted_ && other.refs_) {
-			counted_ = other.counted_;
-			refs_ = other.refs_;
-			++(*refs_);
+		if (&other != this) {
+			// The create-temporary-and-swap idiom lets us keep memory
+			// allocation in the ctor and deallocation in the dtor so
+			// we don't leak in the face of an exception.
+			ThisType(other).swap(*this);
 		}
-		else {
-			counted_ = 0;
-			refs_ = 0;
-		}
+		return *this;
 	}
 
 	/// \brief Set (or reset) the pointer to the counted object
 	///
-	/// This is essentially the same thing as assign(T*).  The
-	/// choice between the two is just a matter of syntactic preference.
+	/// This is essentially the same thing as assign(T*).  The choice
+	/// between the two is just a matter of syntactic preference.
 	ThisType& operator =(T* c)
 	{
-		assign(c);
-		return *this;
+		return assign(c);
 	}
 
 	/// \brief Copy an existing refcounted pointer
@@ -183,8 +186,7 @@ public:
 	/// preference.
 	ThisType& operator =(const ThisType& rhs)
 	{
-		assign(rhs);
-		return *this;
+		return assign(rhs);
 	}
 
 	/// \brief Access the object through the smart pointer
@@ -243,21 +245,17 @@ public:
 		return counted_;
 	}
 
-private:
-	/// \brief Detach ourselves from the managed memory block.
+	/// \brief Exchange our managed memory with another pointer.
 	///
-	/// If we are managing memory, decreases the reference count and
-	/// destroys the memory if the counter falls to 0.
-	void detach()
+	/// \internal This exists primarily to implement assign() in an
+	/// exception-safe manner.
+	void swap(ThisType& other)
 	{
-		if (refs_ && (--(*refs_) == 0)) {
-			Destroyer()(counted_);
-			delete refs_;
-			counted_ = 0;
-			refs_ = 0;
-		}
-	}
-	
+		std::swap(counted_, other.counted_);
+		std::swap(refs_, other.refs_);
+	}	
+
+private:
 	/// \brief Pointer to the reference-counted object
 	T* counted_;
 
