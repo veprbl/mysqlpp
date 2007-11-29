@@ -76,14 +76,6 @@ v3.0 Plan
       allow template functions like Query::insert<T> to become regular
       member functions, taking a reference to the SSQLS base class.
 
-    o Either add quote_force and similar manipulators, or remove the
-      'r' and 'R' modifiers in template queries.  As it stands, you
-      can't force Query streams to quote or escape something if MySQL++
-      knows it's never required in SQL, but these modifiers let you
-      do it for parameters in template queries.  Pick one behavior,
-      and change the footnote about this from the quoting and escaping
-      section of the userman.
-
     o Fold Query::preview(void) into str(), and rename all of the
       multiple-argument forms of preview() to str().
 

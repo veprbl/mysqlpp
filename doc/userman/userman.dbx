@@ -1455,37 +1455,26 @@ query.parse();</programlisting>
                 <entry><emphasis role="bold">%</emphasis></entry>
                 <entry>Print an actual "%"</entry>
             </row>
+
             <row>
                 <entry><emphasis role="bold">""</emphasis></entry>
                 <entry>Don't quote or escape no matter what.</entry>
             </row>
+
             <row>
                 <entry><emphasis role="bold">q</emphasis></entry>
-                <entry>This will quote and escape
-                the item using the MySQL C API
-                function <ulink url="mysql-escape-string"
-                type="mysqlapi"/> if it is a string or char *,
-                or another MySQL-specific type
-                that needs to be quoted.</entry>
+                <entry>This will escape the item using the MySQL
+                C API function <ulink url="mysql-escape-string"
+                type="mysqlapi"/> and add single quotes around it
+                as necessary, depending on the type of the value
+                you use.</entry>
             </row>
+
             <row>
                 <entry><emphasis role="bold">Q</emphasis></entry>
-                <entry>Quote but don't escape
-                based on the same rules as for 'q'. This
-                can save a bit of processing time if you
-                know the strings will never need
-                quoting</entry>
-            </row>
-            <row>
-                <entry><emphasis role="bold">r</emphasis></entry>
-                <entry>Always quote and escape
-                even if it is a number.</entry>
-            </row>
-            <row>
-                <entry><emphasis role="bold">R</emphasis></entry>
-                <entry>Always quote but
-                don't escape even if it is
-                a number.</entry>
+                <entry>Quote but don't escape based on the same rules
+                as for 'q'. This can save a bit of processing time
+                if you know the strings will never need quoting</entry>
             </row>
         </tbody>
         </tgroup>
@@ -1582,8 +1571,8 @@ query.storein(my_vector, SQLString(1));</programlisting>
         refer to the parameters either by position or by name:</para>
 
         <programlisting>
-query.def[1] = "item";
-query.def["wheref"] = "item";</programlisting>
+query.template_defaults[1] = "item";
+query.template_defaults["wheref"] = "item";</programlisting>
 
         <para>Both do the same thing.</para>
 
@@ -1604,8 +1593,8 @@ query.def["wheref"] = "item";</programlisting>
         less often than other parameters. For example:</para>
 
         <programlisting>
-query.def["field1"] = "item"; 
-query.def["field2"] = "price"; 
+query.template_defaults["field1"] = "item"; 
+query.template_defaults["field2"] = "price"; 
 Result res1 = query.store("Hamburger Buns", "item"); 
 Result res2 = query.store(1.25, "price"); </programlisting>
 
@@ -1625,10 +1614,10 @@ select (item, price) from stock where price = 1.25</programlisting>
         way to set all of the template parameters in a query:</para>
 
         <programlisting>
-query.def["what"] = "Hamburger Buns";
-query.def["wheref"] = "item";
-query.def["field1"] = "item"; 
-query.def["field2"] = "price"; 
+query.template_defaults["what"] = "Hamburger Buns";
+query.template_defaults["wheref"] = "item";
+query.template_defaults["field1"] = "item"; 
+query.template_defaults["field2"] = "price"; 
 Result res1 = query.store();</programlisting>
 
         <para>This can work, but it is <emphasis>not designed
@@ -1654,8 +1643,8 @@ Result res1 = query.store();</programlisting>
         <methodname>BadParamCount::what()</methodname>, like so:</para>
 
         <programlisting>
-query.def["field1"] = "item"; 
-query.def["field2"] = "price"; 
+query.template_defaults["field1"] = "item"; 
+query.template_defaults["field2"] = "price"; 
 Result res = query.store(1.25); </programlisting>
 
         <para>This would throw <classname>BadParamCount</classname>

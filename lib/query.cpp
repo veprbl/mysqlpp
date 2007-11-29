@@ -267,7 +267,7 @@ Query::parse()
 
 				// Look for option character following position value.
 				char option = ' ';
-				if (*s == 'q' || *s == 'Q' || *s == 'r' || *s == 'R') {
+				if (*s == 'q' || *s == 'Q') {
 					option = *s++;
 				}
 
@@ -328,13 +328,10 @@ Query::pprepare(char option, SQLTypeAdapter& S, bool replace)
 		return &S;
 	}
 
-	if (option == 'r' || option == 'q') {
-		bool escape_q = (option == 'r') || (option == 'q' && S.escape_q());
-		bool quote_q = (option == 'r') || (option == 'q' && S.quote_q());
+	if (option == 'q') {
+		std::string temp(S.quote_q() ? "'" : "", S.quote_q() ? 1 : 0);
 
-		std::string temp(quote_q ? "'" : "", quote_q ? 1 : 0);
-
-		if (escape_q) {
+		if (S.escape_q()) {
 			char *escaped = new char[S.size() * 2 + 1];
 			size_t len = mysql_real_escape_string(&conn_->mysql_, escaped,
 					S.data(), static_cast<unsigned long>(S.size()));
@@ -345,7 +342,7 @@ Query::pprepare(char option, SQLTypeAdapter& S, bool replace)
 			temp.append(S.data(), S.length());
 		}
 
-		if (quote_q) temp.append("'", 1);
+		if (S.quote_q()) temp.append("'", 1);
 
 		SQLTypeAdapter* ss = new SQLTypeAdapter(temp);
 
@@ -359,7 +356,7 @@ Query::pprepare(char option, SQLTypeAdapter& S, bool replace)
 			return ss;
 		}
 	}
-	else if (option == 'R' || (option == 'Q' && S.quote_q())) {
+	else if (option == 'Q' && S.quote_q()) {
 		std::string temp("'", 1);
 		temp.append(S.data(), S.length());
 		temp.append("'", 1);
