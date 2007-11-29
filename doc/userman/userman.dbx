@@ -1217,17 +1217,18 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
             <para>In a very real sense, <classname>String</classname>
             is the inverse of <classname>STA</classname>:
-            <classname>String</classname> converts SQL value strings
-            to C++ data types, and <classname>STA</classname> converts
-            C++ data types to SQL value strings.<footnote><para>For a
-            time during the development of MySQL++ v3.0, I considered
+            <classname>String</classname> converts SQL value strings to
+            C++ data types, and <classname>STA</classname> converts C++
+            data types to SQL value strings.<footnote><para>During
+            the development of MySQL++ v3.0, I tried
             merging <classname>SQLTypeAdapter</classname> and
-            <classname>String</classname> to take advantage of the fact
-            that they're two sides of the same coin. Unfortunately,
-            C++'s type conversion rules got in the way, because
-            such a combined class lets you convert almost anything
-            to anything, which gives the C++ compiler plenty of rope
-            to hang itself.</para></footnote></para>
+            <classname>String</classname> into a single class to
+            take advantage of this. The resulting class gave the C++
+            compiler the freedom to tie itself up in knots, because
+            it was then allowed to convert almost any data type
+            to almost any other. You'd get a tangle of ambiguous
+            data type conversion errors from the most innocent
+            code.</para></footnote></para>
 
             <para><classname>String</classname> has two main
             uses.</para>
