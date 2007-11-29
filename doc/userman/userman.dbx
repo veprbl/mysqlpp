@@ -648,21 +648,14 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
 
         <para>It's also important to realize that as of MySQL++ v3,
         quoting and escaping in <classname>Query</classname> streams
-        is never implicit.<footnote><para>The rule that quoting and
-        escaping is always explicit with <classname>Query</classname>
-        streams isn't true for the other methods for generating
-        SQL in MySQL++. Like <classname>Query</classname> streams,
-        <xref linkend="tquery"/> require you to explicitly ask for
-        quoting and escaping if you want it for a given parameter,
-        but it also has a way to force quoting and/or escaping even
-        if it's of a data type that MySQL++ knows never requires
-        it. There is no <classname>Query</classname> stream
-        manipulator to do the same thing. <xref linkend="ssqls"/>
-        do all quoting and escaping automatically, so you could say
-        it's purely implicit. It can do this because SSQLS knows
-        all the SQL code and data types, so it never has to guess
+        and template queries is never implicit.<footnote><para>By
+        contrast, the <classname>Query</classname> methods that take
+        <xref linkend="ssqls"/> <emphasis>do</emphasis> add quotes
+        and escape strings implicitly. It can do this because SSQLS
+        knows all the SQL code and data types, so it never has to guess
         whether quoting or escaping is appropriate.</para></footnote>
-        You must use the proper manipulators wherever necessary. It
+        You must use manipulators and template query flags as necessary
+        to tell MySQL++ where quoting and escaping is necessary. It
         would be nice if MySQL++ could do quoting and escaping
         implicitly based on data type, but this isn't possible in
         all cases.<footnote id="whyexpmanip"><para>Unless you're
@@ -672,16 +665,15 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
         so doesn't that mean we know when it <emphasis>is</emphasis>
         appropriate?  Alas, no. For most data types, it is possible
         to know, or at least make an awfully good guess, but it's a
-        complete toss-up for C strings, <type>const char*</type>. A
-        C string could be either a literal string of SQL code, or it
-        can be a value used in a query. Since there's no easy way to
-        know and it would damage the library's usability to mandate
-        that C strings only be used for one purpose or the other, the
-        library requires you to be explicit. It can't guess reliably,
-        so you have to tell it.</para></footnote> Since MySQL++ can't
-        reliably guess when quoting and escaping is appropriate, and
-        the programmer doesn't need to<footnote><para>One hopes the
-        programmer <emphasis>knows</emphasis>.</para></footnote>,
+        complete toss-up for C strings, <type>const char*</type>. A C
+        string could be either a literal string of SQL code, or it can
+        be a value used in a query. Since there's no easy way to know
+        and it would damage the library's usability to mandate that C
+        strings only be used for one purpose or the other, the library
+        requires you to be explicit.</para></footnote> Since MySQL++
+        can't reliably guess when quoting and escaping is appropriate,
+        and the programmer doesn't need to<footnote><para>One hopes
+        the programmer <emphasis>knows</emphasis>.</para></footnote>,
         MySQL++ makes you tell it.</para>
     </sect2>
 
