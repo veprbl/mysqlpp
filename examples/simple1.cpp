@@ -45,27 +45,26 @@ main(int argc, char *argv[])
 	}
 
 	// Connect to the sample database.
-	mysqlpp::Connection con(false);
-	if (!con.connect(db, server, user, pass)) {
-		return 1;
-	}
-
-	// Retrieve a subset of the sample stock table set up by resetdb
-	mysqlpp::Query query = con.query("select item from stock");
-	mysqlpp::Result res = query.store();
-
-	// Display the result set
-	cout << "We have:" << endl;
-	if (res) {
-		mysqlpp::Row row;
-		for (int i = 0; row = res[i]; ++i) {
-			cout << '\t' << row[0] << endl;
+	mysqlpp::Connection conn(false);
+	if (conn.connect(db, server, user, pass)) {
+		// Retrieve a subset of the sample stock table set up by resetdb
+		// and display it.
+		mysqlpp::Query query = conn.query("select item from stock");
+		if (mysqlpp::Result res = query.store()) {
+			cout << "We have:" << endl;
+			for (int i = 0; mysqlpp::Row row = res[i]; ++i) {
+				cout << '\t' << row[0] << endl;
+			}
 		}
+		else {
+			cerr << "Failed to get item list: " << query.error() << endl;
+			return 1;
+		}
+
+		return 0;
 	}
 	else {
-		cerr << "Failed to get item list: " << query.error() << endl;
+		cerr << "DB connection failed: " << conn.error() << endl;
 		return 1;
 	}
-
-	return 0;
 }

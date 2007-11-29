@@ -158,20 +158,32 @@ public:
 	int num_fields() const
 			{ return mysql_num_fields(result_.raw()); }
 	
-	/// \brief Return true if we have a valid result set
+	/// \brief Return the pointer to the underlying MySQL C API
+	/// result set object.
 	///
-	/// This operator is primarily used to determine if a query was
+	/// While this has obvious inherent value for those times you need
+	/// to dig beneath the MySQL++ interface, it has subtler value.
+	/// It effectively stands in for operator bool(), operator !(),
+	/// operator ==(), and operator !=(), because the C++ compiler can
+	/// implement all of these with a MYSQL_RES*.
+	///
+	/// Of these uses, the most valuable is using the ResUse object in
+	/// bool context to determine if the query that created it was
 	/// successful:
 	///
 	/// \code
 	///   Query q("....");
-	///   if (q.use()) {
-	///       ...
+	///   if (ResUse res = q.use()) {
+	///       // Can use 'res', query succeeded
+	///   }
+	///   else {
+	///       // Query failed, call Query::error() or ::errnum() for why
+	///   }
 	/// \endcode
-	///
-	/// Query::use() returns a ResUse object, and it won't contain a
-	/// valid result set if the query failed.
-	operator bool() const { return result_; }
+	operator MYSQL_RES*() const
+	{
+		return result_.raw();
+	}
 	
 	/// \brief Return the name of the table the result set comes from
 	const char* table() const
@@ -204,19 +216,6 @@ public:
 
 	/// \brief Get the underlying Field structure given its index.
 	const Field& field(unsigned int i) const { return fields_.at(i); }
-	
-	/// \brief Returns true if the other ResUse object shares the same
-	/// underlying C API result set as this one.
-	///
-	/// This works because the underlying result set is stored as a
-	/// pointer, and thus can be copied and then compared.
-	bool operator ==(const ResUse& other) const
-			{ return result_ == other.result_; } 
-
-	/// \brief Returns true if the other ResUse object has a different
-	/// underlying C API result set from this one.
-	bool operator !=(const ResUse& other) const
-			{ return result_ != other.result_; }
 
 protected:
 	bool initialized_;			///< if true, object is fully initted
@@ -382,6 +381,13 @@ inline void swap(Result& x, Result& y)
 /// \brief Holds information on queries that don't return data.
 class MYSQLPP_EXPORT ResNSel
 {
+private:
+	/// \brief Pointer to bool data member, for use by safe bool
+	/// conversion operator.
+	///
+	/// \see http://www.artima.com/cppsource/safebool.html
+    typedef bool ResNSel::*private_bool_type;
+
 public:
 	/// \brief Default ctor
 	ResNSel() :
@@ -401,8 +407,16 @@ public:
 	{
 	}
 
-	/// \brief Test whether the query was successful
-	operator bool() const { return copacetic_; }
+	/// \brief Test whether the query that created this result succeeded
+	///
+	/// If you test this object in bool context and it's false, it's a
+	/// signal that the query this was created from failed in some way.
+	/// Call Query::error() or Query::errnum() to find out what exactly
+	/// happened.
+	operator private_bool_type() const
+	{
+		return copacetic_ ? &ResNSel::copacetic_ : 0;
+	}
 
 	/// \brief Get the last value used for an AUTO_INCREMENT field
 	my_ulonglong insert_id() const { return insert_id_; }

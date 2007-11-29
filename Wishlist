@@ -17,10 +17,6 @@ v3.0 Plan
       formatting of the examples that dump tables.  A setw(x) call
       results in x spaces, not x - strlen(whatevercamebefore).
 
-    o Classes Connection, Query, String, Result and Row all have
-      operator bool() as well.  Use Jonathan Wakely's "safe bool"
-      instead?
-
     o Atomic inc/dec of reference counts in RefCounted*?
 
     o Add examples/vstudio/threads to test new thread-related features.
@@ -110,6 +106,8 @@ v3.0 Plan
       first parameter would be useful.
 
     o Add operator<< for Query, syntactic sugar for str(ostream&).
+
+    o Is Row::size_ not redundant w.r.t. Row::data_.size()?
 
 
 v3.0 "Maybe" Stuff

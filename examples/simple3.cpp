@@ -45,41 +45,41 @@ main(int argc, char *argv[])
 	}
 
 	// Connect to the sample database.
-	mysqlpp::Connection con(false);
-	if (!con.connect(db, server, user, pass)) {
-		return 1;
-	}
+	mysqlpp::Connection conn(false);
+	if (conn.connect(db, server, user, pass)) {
+		// Ask for all rows from the sample stock table and display
+		// them.  Unlike simple2 example, we retreive each row one at
+		// a time instead of storing the entire result set in memory
+		// and then iterating over it.
+		mysqlpp::Query query = conn.query("select * from stock");
+		if (mysqlpp::ResUse res = query.use()) {
+			// Display header
+			cout.setf(ios::left);
+			cout << setw(31) << "Item" <<
+					setw(10) << "Num" <<
+					setw(10) << "Weight" <<
+					setw(10) << "Price" <<
+					"Date" << endl << endl;
 
-	// Ask for all rows from the sample stock table set up by resetdb.
-	// Unlike simple2 example, we don't store result set in memory.
-	mysqlpp::Query query = con.query("select * from stock");
-	mysqlpp::ResUse res = query.use();
+			// Get each row in result set, and print its contents
+			while (mysqlpp::Row row = res.fetch_row()) {
+				cout << setw(30) << row["item"] << ' ' <<
+						setw(9) << row["num"] << ' ' <<
+						setw(9) << row["weight"] << ' ' <<
+						setw(9) << row["price"] << ' ' <<
+						setw(9) << row["sdate"] <<
+						endl;
+			}
 
-	// Retreive result rows one by one, and display them.
-	if (res) {
-		// Display header
-		cout.setf(ios::left);
-		cout << setw(31) << "Item" <<
-				setw(10) << "Num" <<
-				setw(10) << "Weight" <<
-				setw(10) << "Price" <<
-				"Date" << endl << endl;
-
-		// Get each row in result set, and print its contents
-		mysqlpp::Row row;
-		while (row = res.fetch_row()) {
-			cout << setw(30) << row["item"] << ' ' <<
-					setw(9) << row["num"] << ' ' <<
-					setw(9) << row["weight"] << ' ' <<
-					setw(9) << row["price"] << ' ' <<
-					setw(9) << row["sdate"] <<
-					endl;
+			return 0;
 		}
-
-		return 0;
+		else {
+			cerr << "Failed to get stock item: " << query.error() << endl;
+			return 1;
+		}
 	}
 	else {
-		cerr << "Failed to get stock item: " << query.error() << endl;
+		cerr << "DB connection failed: " << conn.error() << endl;
 		return 1;
 	}
 }

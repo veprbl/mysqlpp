@@ -50,6 +50,13 @@ class MYSQLPP_EXPORT ResUse;
 /// \brief Manages rows from a result set.
 class MYSQLPP_EXPORT Row : public OptionalExceptions
 {
+private:
+	/// \brief Pointer to bool data member, for use by safe bool
+	/// conversion operator.
+	///
+	/// \see http://www.artima.com/cppsource/safebool.html
+    typedef bool Row::*private_bool_type;
+
 public:
 	typedef int difference_type;			///< type for index differences
 	typedef unsigned int size_type;			///< type of returned sizes
@@ -152,8 +159,27 @@ public:
 	/// supposed to throw an exception, according to the Standard.
 	const value_type& at(int i) const { return data_.at(i); }
 
-	/// \brief Returns true if there is data in the row.
-	operator bool() const { return data_.size(); }
+	/// \brief Returns true if row object was fully initialized and
+	/// has data.
+	///
+	/// This operator lets you use Row in bool context, which lets you
+	/// do things like tell when you've run off the end of a "use"
+	/// query's result set:
+	///
+	/// \code
+	///   Query q("....");
+	///   if (ResUse res = q.use()) {
+	///       // Can use 'res', query succeeded
+	///       while (Row row = res.fetch_row()) {
+	///           // Retreived another row in the result set, can use 'row'
+	///       }
+	///   }
+	/// \endcode
+	///
+	operator private_bool_type() const
+	{
+		return data_.size() && initialized_ ? &Row::initialized_ : 0;
+	}
 
 	/// \brief Returns a field's index given its name
 	size_type field_num(const char* name) const;

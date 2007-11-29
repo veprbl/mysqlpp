@@ -53,6 +53,13 @@ class MYSQLPP_EXPORT Query;
 
 class MYSQLPP_EXPORT Connection : public OptionalExceptions
 {
+private:
+	/// \brief Pointer to bool data member, for use by safe bool
+	/// conversion operator.
+	///
+	/// \see http://www.artima.com/cppsource/safebool.html
+    typedef bool Connection::*private_bool_type;
+
 public:
 	/// \brief Legal types of option arguments
 	enum OptionArgType {
@@ -308,27 +315,29 @@ public:
 		return mysql_kill(&mysql_, tid);
 	}
 
-	/// \brief Test whether the connection has experienced an error
-	/// condition.
+	/// \brief Test whether any error has occurred within the object.
 	///
-	/// Allows for code constructs like this:
+	/// Allows the object to be used in bool context, like this:
 	///
 	/// \code
 	///	Connection conn;
 	///	.... use conn
 	///	if (conn) {
-	///	    ... last SQL query was successful
+	///	    ... nothing bad has happened since last successful use
 	///	}
 	///	else {
-	///	    ... error occurred in SQL query
+	///	    ... some error has occurred
 	///	}
 	/// \endcode
 	///
-	/// Prior to version 3, this function could never return true if
-	/// we weren't connected.  As of version 3, a true return simply
-	/// indicates a lack of errors; call connected() to test whether
-	/// the connection is established.
-	operator bool() const { return copacetic_; }
+	/// Prior to MySQL++ v3, the object was always falsy when we
+	/// weren't connected.  Now a true return simply indicates a lack of
+	/// errors.  If you've been using this to test for whether the
+	/// connection is still up, you need to call connected() instead.
+	operator private_bool_type() const
+	{
+		return copacetic_ ? &Connection::copacetic_ : 0;
+	}
 
 	/// \brief Copy an existing Connection object's state into this
 	/// object.
