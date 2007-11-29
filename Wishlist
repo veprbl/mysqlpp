@@ -57,10 +57,6 @@ v3.0 Plan
         Connection::enable_ssl() in terms of it.  The success of this
         will prove the value of an extensible option type system.
 
-    o Query::preview(void) should not crash when query string is
-      a parsed template.  It's probably running off the end of the
-      default argument list, or trying to dereference a null pointer.
-
     o If Bakefile 0.2.3 (guessing) comes out before we release, change
       all the msvs2005prj references in mysql++.bkl, Bakefiles.bkgen
       and rebake.bat to msvs2003prj and remove the section on doing
