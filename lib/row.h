@@ -101,8 +101,7 @@ public:
 
 	/// \brief Default constructor
 	Row() :
-	initialized_(false),
-	size_(0)
+	initialized_(false)
 	{
 	}
 	
@@ -110,8 +109,7 @@ public:
 	Row(const Row& r) :
 	data_(r.data_.begin(), r.data_.end()),
 	field_names_(r.field_names_),
-	initialized_(r.initialized_),
-	size_(r.size_)
+	initialized_(r.initialized_)
 	{
 	}
 
@@ -128,7 +126,7 @@ public:
 	~Row() { }
 
 	/// \brief Get the number of fields in the row.
-	size_type size() const { return size_; }
+	size_type size() const { return data_.size(); }
 
 	/// \brief Assignment operator
 	Row& operator=(const Row& rhs)
@@ -136,7 +134,6 @@ public:
 		data_.assign(rhs.data_.begin(), rhs.data_.end());
 		field_names_.assign(rhs.field_names_);
 		initialized_ = rhs.initialized_;
-		size_ = rhs.size_;
 		return *this;
 	}
 
@@ -473,7 +470,6 @@ private:
 	std::vector<value_type> data_;
 	RefCountedPointer<FieldNames> field_names_;
 	bool initialized_;
-	size_type size_;
 };
 
 } // end namespace mysqlpp

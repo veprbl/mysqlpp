@@ -107,8 +107,6 @@ v3.0 Plan
 
     o Add operator<< for Query, syntactic sugar for str(ostream&).
 
-    o Is Row::size_ not redundant w.r.t. Row::data_.size()?
-
 
 v3.0 "Maybe" Stuff
 ------------------

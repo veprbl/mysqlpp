@@ -33,15 +33,12 @@ namespace mysqlpp {
 Row::Row(MYSQL_ROW d, const ResUse* r, const unsigned long* lengths,
 		bool throw_exceptions) :
 OptionalExceptions(throw_exceptions),
-initialized_(false),
-size_(0)
+initialized_(false)
 {
 	if (d && r) {
-		size_ = r->num_fields();
-		field_names_ = r->field_names();
-
-		data_.reserve(size_);
-		for (size_type i = 0; i < size_; ++i) {
+		size_type size = r->num_fields();
+		data_.reserve(size);
+		for (size_type i = 0; i < size; ++i) {
 			bool is_null = d[i] == 0;
 			data_.push_back(value_type(
 					is_null ? "NULL" : d[i],
@@ -50,6 +47,7 @@ size_(0)
 					is_null));
 		}
 
+		field_names_ = r->field_names();
 		initialized_ = true;
 	}
 	else if (throw_exceptions) {
