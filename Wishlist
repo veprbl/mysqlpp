@@ -76,9 +76,6 @@ v3.0 Plan
       allow template functions like Query::insert<T> to become regular
       member functions, taking a reference to the SSQLS base class.
 
-    o Remove "basic" variants of SSQLS creation macros, and remove
-      userman sections covering them.
-
     o Either add quote_force and similar manipulators, or remove the
       'r' and 'R' modifiers in template queries.  As it stands, you
       can't force Query streams to quote or escape something if MySQL++

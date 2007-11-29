@@ -362,32 +362,6 @@ foreach my $i (1..$max_data_members) {
 // ---------------------------------------------------
 ---
     my $out = <<"---";
-#define sql_create_basic_c_order_$i(NAME, CMP, CONTR, $parm_order)
-
-  struct NAME; 
-
-  template <mysqlpp::sql_dummy_type dummy> int sql_compare_##NAME (const NAME &, const NAME &);
-
-  struct NAME { 
-$defs 
-    NAME () {} 
-    NAME (const mysqlpp::Row &row);
-    sql_compare_define_##CMP(NAME, $parmC)
-  }; 
-
-  template <mysqlpp::sql_dummy_type dummy> 
-    void populate_##NAME (NAME *s, const mysqlpp::Row &row) { 
-$popul 
-  } 
-
-  inline NAME::NAME (const mysqlpp::Row &row) 
-    {populate_##NAME<mysqlpp::sql_dummy>(this, row);} 
-
-  sql_COMPARE__##CMP(NAME, $parmc )
----
-    print OUT &prepare($out);
-
-    $out = <<"---";
 #define sql_create_complete_$i(NAME, CMP, CONTR, $parm_complete) 
   struct NAME; 
 
@@ -891,9 +865,6 @@ print OUT &prepare($out);
 #
 
 print OUT << "---";
-#define sql_create_basic_$i(NAME, CMP, CONTR, $parm_simple_b) \\
-  sql_create_basic_c_order_$i(NAME, CMP, CONTR, $parm_simple2c_b)
-
 #define sql_create_$i(NAME, CMP, CONTR, $parm_simple) \\
   sql_create_complete_$i(NAME, CMP, CONTR, $parm_simple2c) \\
 

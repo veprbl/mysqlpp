@@ -1863,32 +1863,28 @@ stock foo("Hotdog", 52);</programlisting>
         Structures</title>
 
         <para>Up to this point, we haven't been using all of the
-        features in the SSQLS structures we've been generating. We
-        could have used the <symbol>sql_create_basic_*</symbol>
-        macros instead, which would have worked just as well for
-        what we've seen so far, and the generated code would have
-        been smaller.</para>
-
-        <para>Why is it worth ignoring the "basic" variants of these
-        macros, then? Consider this:</para>
+        features in the SSQLS structures we've been generating.
+        What else can we do with SSQLSes? Consider this:</para>
 
         <programlisting>
 query.insert(s);</programlisting>
 
-        <para>This does exactly what you think it does: it inserts
-        's' into the database. This is possible because a standard
-        SSQLS has functions that the query object can call to get
-        the list of fields and such, which it uses to build an
-        insert query.  <methodname>query::update()</methodname> and
-        <methodname>query::replace()</methodname> also rely on this
-        SSQLS feature. A basic SSQLS lacks these functions.</para>
+        <para>This does exactly what you think it does: it builds
+        an <command>INSERT</command> query to insert the contents
+        of <varname>s</varname> into the database. You have only to
+        call <methodname>query::execute()</methodname> to actually
+        insert it. This is possible because SSQLSes have functions that
+        <classname>Query</classname> can call to get the list of fields
+        and such, which it uses to build the <command>INSERT</command>
+        query. <methodname>query::update()</methodname> and
+        <methodname>query::replace()</methodname> also rely on these
+        features.</para>
 
-        <para>Another feature of standard SSQLSes you might find a use
-        for is changing the table name used in queries. By default,
-        the table in the MySQL database is assumed to have the same
-        name as the SSQLS structure type. But if this is inconvenient,
-        you can globally change the table name used in queries like
-        this:</para>
+        <para>Another feature you might find a use for is changing
+        the table name used in queries. By default, the table in the
+        MySQL database is assumed to have the same name as the SSQLS
+        structure type. But if this is inconvenient, you can globally
+        change the table name used in queries like this:</para>
 
         <programlisting>
 stock::table() = "MyStockData";</programlisting>
@@ -1898,21 +1894,18 @@ stock::table() = "MyStockData";</programlisting>
     <sect2>
         <title>Using an SSQLS in Multiple Modules</title>
 
-        <para>Unless you use one of the emasculated forms of SSQLS
-        described below, you'll run into a problem when trying to
-        use it in more than one module. The more advanced forms of
-        SSQLS include a few static data members to hold information
-        common to all structures of that type. (The table name and
-        the list of field names.) A typical way to run into this
-        is to put the SSQLS definition in a header file and then
-        <userinput>#include</userinput> that in all the modules that
-        need to use SSQLSes of that type. This results in each module
-        defining its own copy of the static data members, which causes
-        a multiply-defined symbol error at link time.</para>
+        <para>It's convenient to define an SSQLS in a header file
+        so you can use it in multiple modules. You run into a bit of
+        a problem, though, because each SSQLS includes a few static
+        data members to hold information common to all structures of
+        that type. (The table name and the list of field names.) When
+        you <command>#include</command> that header in more than
+        one module, you get a multiply-defined symbol error at link
+        time.</para>
 
-        <para>The way around this is to add this before all but one
-        of the places where you pull in the header definining the
-        SSQLS:</para>
+        <para>The way around this is to add this before <emphasis>all
+        but one</emphasis> of the places where you pull in the header
+        definining the SSQLS:</para>
 
         <programlisting>
 #define MYSQLPP_SSQLS_NO_STATICS</programlisting>
@@ -1928,6 +1921,15 @@ stock::table() = "MyStockData";</programlisting>
         program that logically "owns" each SSQLS, and it can pull in
         the header definining the SSQLS directly, without suppressing
         the static data members.</para>
+
+        <para>Note that due to a compiler limitation, you can't
+        use this feature with Visual C++ 2003. As instructed
+        in <filename>README.vc</filename>, you have to disable
+        this feature in order to get the SSQLS header files to
+        compile. Having done that, the SSQLS feature works fine as
+        long as you can live with using each structure type in a
+        single module. Visual C++ 2005 and newer don't suffer from
+        this limitation.</para>
     </sect2>
 
 
@@ -2098,11 +2100,6 @@ sql_create_complete_5(stock, 2, 5,
     string, item, "item", 1,
     int, num, "quantity", 2,
     double, weight, "weight", 3)</programlisting>
-
-        <para>All three of these macro types have "basic" variants
-        that work the same way. Again, basic SSQLSes lack the features
-        necessary for automatic insert, update and replace query
-        creation.</para>
     </sect2>
 
 
