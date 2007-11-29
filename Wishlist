@@ -7,11 +7,11 @@ consider whether it could be reduced to an API feature that would be
 widely useful.  Patches or proposals of this sort are always welcome.
 
 
-v3.0 Plan, For-Sure Stuff
--------------------------
-    The items in this section are those things we definitely want to
-    get done in v3.0.  Most of them break the ABI, so they can't wait
-    for a future version, because v4 could be years out.
+v3.0 Plan
+---------
+    The items in this section are those things we currently expect
+    to get done for v3.0.  Most of them break the ABI, so they can't
+    wait for a future version, because v4 could be years out.
 
     o The manipulator changes sometime during 2.3 broke the column
       formatting of the examples that dump tables.  A setw(x) call
@@ -87,21 +87,36 @@ v3.0 Plan, For-Sure Stuff
       It used to fail because of the Result/Row lifetime issue,
       which didn't apply to SSQLS because of the data copy.
 
+    o Create an SSQLS base class containing all of the common
+      boilerplate, which leaf SSQLSes derive from.  This should in turn
+      allow template functions like Query::insert<T> to become regular
+      member functions, taking a reference to the SSQLS base class.
+
+    o Remove "basic" variants of SSQLS creation macros, and remove
+      userman sections covering them.
+
+    o Either add quote_force and similar manipulators, or remove the
+      'r' and 'R' modifiers in template queries.  As it stands, you
+      can't force Query streams to quote or escape something if MySQL++
+      knows it's never required in SQL, but these modifiers let you
+      do it for parameters in template queries.  Pick one behavior,
+      and change the footnote about this from the quoting and escaping
+      section of the userman.
+
+    o Fold Query::preview(void) into str(), and rename all of the
+      multiple-argument forms of preview() to str().
+
+    o A set of Query::str() overloads that take an ostream for the
+      first parameter would be useful.
+
+    o Add operator<< for Query, syntactic sugar for str(ostream&).
+
 
 v3.0 "Maybe" Stuff
 ------------------
     This is stuff that would be nice to have, but it wouldn't be a
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
-
-    o Replace Query::preview() with operator<<, for easy debugging?
-      If one really wants a std::string, they can still call str(),
-      which is currently the same thing.
-
-    o Define operator<< for Fields, Row, ResUse, etc.  In other
-      words, there should be a way to get a user-readable version
-      of received data without a lot of code.  Perhaps use a CSV
-      output format, or a mysql(1) one (ASCII grid).
 
     o Add syntactic sugar to the Date and Time classes.  A way to
       represent SQL's NOW() function would be especially helpful.
@@ -139,11 +154,6 @@ v3.1 Tentative Plan
         current method, but SSQLS (and MySQL++ in general for that
         matter) isn't about speed.
 
-      - Consider whether some of the current boilerplate can be
-        made into a base class that all SSQLSes derive from.  Some
-        template functions like Query::insert<T> might become regular
-        member functions, taking a reference to the SSQLS base class.
-
     o Chris Frey's packarray class
 
     o Create adaptors for std::bitset, for storing binary data in a
@@ -164,13 +174,13 @@ v3.1 Tentative Plan
 
         http://lists.mysql.com/plusplus/3984
 
-    o Either add quote_force and similar manipulators, or remove the
-      'r' and 'R' modifiers in template queries.  As it stands, you
-      can't force Query streams to quote or escape something if MySQL++
-      knows it's never required in SQL, but these modifiers let you
-      do it for parameters in template queries.  Pick one behavior,
-      and change the footnote about this from the quoting and escaping
-      section of the userman.
+    o Define operator<< for Fields, Row, ResUse, etc.  In other
+      words, there should be a way to get a user-readable version of
+      received data without a lot of code.  CSV format by default, and
+      mysql(1)-like ASCII grid optionally, perhaps with a manipulator?
+      There is grid code in examples/multiquery.cpp which we can use
+      and then make multiquery.cpp a demonstration platform for it.
+      Maybe dbinfo and fieldinf, too?
 
 
 
