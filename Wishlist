@@ -113,7 +113,17 @@ v3.0 "Maybe" Stuff
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
 
-    o Atomic inc/dec of reference counts in RefCounted*?
+    o Make RefCountedPointer::swap() private?  Could be a good reason
+      for it to be public, but no one's given such a reason yet.
+
+    o Atomic inc/dec of reference counts in RefCounted*?  To justify
+      it, one has to justify using two threads to process data,
+      such as one thread doing queries, and another processing the
+      results, resulting in a possibility of the two threads trying to
+      do things in such an order as to risk a race on the refcount.
+      Without such a justification, it means adding complexity and
+      slowing the individual threads down for no counterbalancing
+      gain in multithread performance.
 
     o Add syntactic sugar to the Date and Time classes.  A way to
       represent SQL's NOW() function would be especially helpful.
