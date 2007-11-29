@@ -91,6 +91,10 @@ v3.0 "Maybe" Stuff
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
 
+    o Query::storein() variants taking SSQLS like store_if()?  If we
+      do this, use it to tighten up the example at the end of userman
+      section 2.3.
+
     o Make RefCountedPointer::swap() private?  Could be a good reason
       for it to be public, but no one's given such a reason yet.
 
