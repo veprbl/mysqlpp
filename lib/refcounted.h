@@ -142,12 +142,10 @@ public:
 	/// managing.
 	ThisType& assign(T* c)
 	{
-		if (c != counted_) {
-			// The create-temporary-and-swap idiom lets us keep memory
-			// allocation in the ctor and deallocation in the dtor so
-			// we don't leak in the face of an exception.
-			ThisType(c).swap(*this);
-		}
+		// The create-temporary-and-swap idiom lets us keep memory
+		// allocation in the ctor and deallocation in the dtor so
+		// we don't leak in the face of an exception.
+		ThisType(c).swap(*this);
 		return *this;
 	}
 
@@ -161,12 +159,10 @@ public:
 	/// This is a no-op if you pass a reference to this same object.
 	ThisType& assign(const ThisType& other)
 	{
-		if (&other != this) {
-			// The create-temporary-and-swap idiom lets us keep memory
-			// allocation in the ctor and deallocation in the dtor so
-			// we don't leak in the face of an exception.
-			ThisType(other).swap(*this);
-		}
+		// The create-temporary-and-swap idiom lets us keep memory
+		// allocation in the ctor and deallocation in the dtor so
+		// we don't leak in the face of an exception.
+		ThisType(other).swap(*this);
 		return *this;
 	}
 
