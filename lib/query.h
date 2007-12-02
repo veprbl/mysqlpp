@@ -297,6 +297,18 @@ public:
 	/// this object holds, if any
 	std::string str(SQLQueryParms& p);
 
+	/// \brief Execute a built-up query
+	///
+	/// Same as exec(), except that it uses the query string built up
+	/// within the query object already instead of accepting a query
+	/// string from the caller.
+	///
+	/// \return true if query was executed successfully
+	///
+	/// \sa exec(const std::string& str), execute(), store(),
+	/// storein(), and use()
+	bool exec() { return exec(str(template_defaults)); }
+
 	/// \brief Execute a query
 	///
 	/// Same as execute(), except that it only returns a flag indicating
