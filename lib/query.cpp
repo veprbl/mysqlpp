@@ -76,11 +76,30 @@ Query::operator=(const Query& rhs)
 	return *this;
 }
 
+Query::operator private_bool_type() const
+{
+	return *conn_ && copacetic_ ? &Query::copacetic_ : 0;
+}
+
 
 my_ulonglong
 Query::affected_rows() const
 {
 	return conn_->affected_rows();
+}
+
+
+int
+Query::errnum() const
+{
+	return conn_->errnum();
+}
+
+
+const char* 
+Query::error() const
+{
+	return conn_->error();
 }
 
 

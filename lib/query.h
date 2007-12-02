@@ -171,10 +171,7 @@ public:
 	/// This method returns false if either the Query object or its
 	/// associated Connection object has seen an error condition since
 	/// the last operation.
-	operator private_bool_type() const
-	{
-		return *conn_ && copacetic_ ? &Query::copacetic_ : 0;
-	}
+	operator private_bool_type() const;
 
 	/// \brief Return true if the object has experienced an error
 	bool operator !() { return !copacetic_; }
@@ -242,13 +239,13 @@ public:
 	///
 	/// This just delegates to Connection::errnum().  Query has nothing
 	/// extra to say, so use either, as makes sense in your program.
-	int errnum() const { return conn_->errnum(); }
+	int errnum() const;
 
 	/// \brief Get the last error message that was set.
 	///
 	/// This just delegates to Connection::error().  Query has nothing
 	/// extra to say, so use either, as makes sense in your program.
-	const char* error() const { return conn_->error(); }
+	const char* error() const;
 
 	/// \brief Treat the contents of the query string as a template
 	/// query.
