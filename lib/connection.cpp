@@ -49,7 +49,7 @@ OptionalExceptions(),
 driver_(new DBDriver()),
 copacetic_(true)
 {
-	connect(db, server, user, password);
+	connect(db, server, user, password, port);
 }
 
 
