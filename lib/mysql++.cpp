@@ -28,19 +28,6 @@
 
 namespace mysqlpp {
 
-std::ostream&
-api_version(std::ostream& os)
-{
-	const int major = MYSQL_VERSION_ID / 10000;
-	const int minor = (MYSQL_VERSION_ID - (major * 10000)) / 100;
-	const int bug = MYSQL_VERSION_ID - (major * 10000) - (minor * 100);
-
-	os << major << '.' << minor << '.' << bug;
-
-	return os;
-}
-
-
 unsigned int 
 get_library_version()
 {

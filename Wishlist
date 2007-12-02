@@ -77,19 +77,15 @@ v3.0 Plan
 
     o Add operator<< for Query, syntactic sugar for str(ostream&).
 
-	o Do we need both DBDriver::client_version() and ::api_version()?
-	  If so, move api_version() into DBDriver.  If not, nuke
-	  api_version().
-
-	o Return false from Query::store_next() instead of throwing
-	  EndOfResultSets?
-
 
 v3.0 "Maybe" Stuff
 ------------------
     This is stuff that would be nice to have, but it wouldn't be a
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
+
+	o Return false from Query::store_next() instead of throwing
+	  EndOfResultSets?
 
     o Query::storein() variants taking SSQLS like store_if()?  If we
       do this, use it to tighten up the example at the end of userman
