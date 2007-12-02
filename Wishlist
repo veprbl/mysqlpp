@@ -56,6 +56,8 @@ v3.0 Plan
       It used to fail because of the Result/Row lifetime issue,
       which didn't apply to SSQLS because of the data copy.
 
+	o Add userman chapter on connection options
+
     o Create an SSQLS base class containing all of the common
       boilerplate, which leaf SSQLSes derive from.  This should in turn
       allow template functions like Query::insert<T> to become regular
