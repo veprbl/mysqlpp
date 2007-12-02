@@ -232,9 +232,6 @@ public:
 	/// object.
 	Connection& operator=(const Connection& rhs);
 
-	/// \brief Returns true if the given option has been set already
-	bool option_set(option::Type o) const;
-
 	/// \brief "Pings" the database server
 	///
 	/// \retval true if server is responding
@@ -275,47 +272,28 @@ public:
 	/// \brief Get the database server's version string
 	std::string server_version() const;
 
-	/// \brief Sets a connection option, with no argument
+	/// \brief Sets a connection option
 	///
-	/// \param option any of the option::Type enum constants
+	/// \param option pointer to any derivative of Option allocated on
+	/// the heap
 	///
-	/// There are several overloaded versions of this function.  The
-	/// others take an additional argument for the option and differ
-	/// only by the type of the option.  This set of overloads abstracts
-	/// away the details of how different types of options are set
-	/// within the database driver.  If you use the wrong argument type
-	/// or pass an argument where one is not expected (or vice versa),
-	/// the call will either throw an exception or return false,
-	/// depending on whether exceptions are enabled on this
-	/// Connection object.
+	/// Objects passed to this method will be released when this
+	/// Connection object is destroyed.
+	///
+	/// Because there are so many Option subclasses, the actual effect
+	/// of this function has a wide range.  This mechanism abstracts
+	/// away many things that are unrelated down at the database driver
+	/// level, hiding them behind a coherent, type-safe interface.
 	///
 	/// The rules about which options can be set, when, are up to the
 	/// underlying database driver.  Some must be set before the
 	/// connection is established because they can only be used during
 	/// that connection setup process.  Others can be set at any time
-	/// after the connection comes up.
+	/// after the connection comes up.  If you get it wrong, you'll get
+	/// a BadOption exception.
 	///
-	/// \retval true if option was successfully set, or at least queued
-	/// for setting during connection establishment sequence
-	bool set_option(option::Type option);
-
-	/// \brief Sets a connection option, with string argument
-	///
-	/// \see set_option(option::Type) for commentary common to all
-	/// \c set_option overloads.
-	bool set_option(option::Type option, const char* arg);
-
-	/// \brief Sets a connection option, with integer argument
-	///
-	/// \see set_option(option::Type) for commentary common to all
-	/// \c set_option overloads.
-	bool set_option(option::Type option, unsigned int arg);
-
-	/// \brief Sets a connection option, with Boolean argument
-	///
-	/// \see set_option(option::Type) for commentary common to all
-	/// \c set_option overloads.
-	bool set_option(option::Type option, bool arg);
+	/// \retval true if option was successfully set
+	bool set_option(Option* o);
 
 	/// \brief Ask database server to shut down.
 	bool shutdown();
@@ -368,9 +346,6 @@ protected:
 	///
 	/// \param other the connection to copy
 	void copy(const Connection& other);
-
-	/// \brief Do common error checking and handling for set_option*()
-	bool option_error_check(option::Type o) const;
 
 	/// \brief Extract elements from the server parameter in formats
 	/// suitable for passing to DBDriver::connect().

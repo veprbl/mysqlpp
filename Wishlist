@@ -34,21 +34,13 @@ v3.0 Plan
 
     o Refactor option mechanism:
     
-      - Replace OptionInfo struct, OptionArgType enum, and Option
-        enum with a class hierarchy: totally abstract Option interface
-        at the top level, BoolOption, IntOption, and StringOption at
-        second level.  Each second-level class is subclassed once
-        for each of the options currently defined in Options enum.
-        This binds the legal option argument types with the options
-        themselves, instead of requiring a lookup table to match enum
-        values to types.  OptionList then becomes a list of Option*.
-
       - Add new Option subclass SSLOption, and reimplement
         Connection::enable_ssl() in terms of it.  The success of this
         will prove the value of an extensible option type system.
 
 	  - Wrap option::List deque up into a higher-level List class, and
-	    move DBDriver::option_set() into it as is_set()
+	    move DBDriver::option_set() into it as is_set().  ~List() can
+		destroy allocated Option objects.
 
     o If Bakefile 0.2.3 (guessing) comes out before we release, change
       all the msvs2005prj references in mysql++.bkl, Bakefiles.bkgen

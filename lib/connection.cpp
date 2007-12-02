@@ -197,28 +197,6 @@ Connection::operator=(const Connection& rhs)
 
 
 bool
-Connection::option_error_check(option::Type o) const
-{
-	if (error_message_.empty()) {
-		return true;
-	}
-	else {
-		if (throw_exceptions()) {
-			throw BadOption(error_message_, o);
-		}
-		return false;
-	}
-}
-
-
-bool
-Connection::option_set(option::Type o) const
-{
-	return driver_->option_set(o);
-}
-
-
-bool
 Connection::parse_ipc_method(const char* server, string& host,
 		unsigned int& port, string& socket_name)
 {
@@ -327,34 +305,18 @@ Connection::server_version() const
 
 
 bool
-Connection::set_option(option::Type o)
+Connection::set_option(Option* o)
 {
 	error_message_ = driver_->set_option(o);
-	return option_error_check(o);
-}
-
-
-bool
-Connection::set_option(option::Type o, const char* arg)
-{
-	error_message_ = driver_->set_option(o, arg);
-	return option_error_check(o);
-}
-
-
-bool
-Connection::set_option(option::Type o, unsigned int arg)
-{
-	error_message_ = driver_->set_option(o, arg);
-	return option_error_check(o);
-}
-
-
-bool
-Connection::set_option(option::Type o, bool arg)
-{
-	error_message_ = driver_->set_option(o, arg);
-	return option_error_check(o);
+	if (error_message_.empty()) {
+		return true;
+	}
+	else {
+		if (throw_exceptions()) {
+			throw BadOption(error_message_, o);
+		}
+		return false;
+	}
 }
 
 

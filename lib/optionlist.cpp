@@ -2,10 +2,9 @@
  optionlist.cpp - Implements the Type class hierarchy and related
  	things.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
- also hold copyrights on code in this file.  See the CREDITS file in
- the top directory of the distribution for details.
+ Copyright (c) 2007 by Educational Technology Resources, Inc.  Others
+ may also hold copyrights on code in this file.  See the CREDITS
+ file in the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -28,97 +27,312 @@
 #define MYSQLPP_NOT_HEADER
 #include "optionlist.h"
 
-#include "exceptions.h"
+#include "dbdriver.h"
 
-#include <sstream>
 
 namespace mysqlpp {
-namespace option {
 
-// Initialize table of legal option argument types.
-static ArgType legal_opt_arg_types[OPTION_COUNT] =
+Option::Error
+CompressOption::set(DBDriver* dbd)
 {
-	type_integer,	// connect_timeout
-	type_none,		// compress
-	type_none,		// named_pipe
-	type_string,	// init_command
-	type_string,	// read_default_file
-	type_string,	// read_default_group
-	type_string,	// set_charset_dir
-	type_string,	// set_charset_name
-	type_integer,	// local_infile
-	type_integer,	// protocol
-	type_string,	// shared_memory_base_name
-	type_integer,	// read_timeout
-	type_integer,	// write_timeout
-	type_none,		// use_result
-	type_none,		// use_remote_connection
-	type_none,		// use_embedded_connection
-	type_none,		// guess_connection
-	type_string,	// set_client_ip
-	type_boolean,	// secure_auth
-	type_boolean,	// multi_results
-	type_boolean,	// multi_statements
-	type_boolean,	// report_data_truncation
-	type_boolean,   // reconnect
-	type_boolean,   // found_rows
-	type_boolean,   // ignore_space
-	type_boolean,   // interactive
-	type_boolean,   // local_files
-	type_boolean,   // no_schema
-};
-
-
-
-
-std::string
-error_message(Type o, Error error)
-{
-	std::ostringstream os;
-
-	switch (error) {
-		case err_type: {
-			// Type was set using wrong argument type
-			ArgType type = legal_arg_type(o);
-			os << "option " << o;
-			if (type == type_none) {
-				os << " does not take an argument";
-			}
-			else {
-				os << " requires an argument of type " << type;
-			}
-			break;
-		}
-
-		case err_value:
-			// C API rejected o, which probably indicates that
-			// you passed a o that it doesn't understand.
-			os << "option " << o << " not supported by database driver";
-			break;
-
-		case err_conn:
-			os << "option " << o << " can only be set before "
-					"connection is established";
-			break;
-	}
-
-	return os.str();
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_COMPRESS) ?
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
-ArgType
-legal_arg_type(Type o) // Yes, there are known type o's in MySQL++.
+Option::Error
+ConnectTimeoutOption::set(DBDriver* dbd)
 {
-	if ((o > FIRST_OPTION) && (o < OPTION_COUNT)) {
-		return legal_opt_arg_types[o];
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_CONNECT_TIMEOUT, &arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+FoundRowsOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(CLIENT_FOUND_ROWS, arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+GuessConnectionOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40101
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_GUESS_CONNECTION) ?
+				Option::err_NONE : Option::err_api_reject;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+IgnoreSpaceOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(CLIENT_IGNORE_SPACE, arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+InitCommandOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_INIT_COMMAND, arg_.c_str()) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+InteractiveOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(CLIENT_INTERACTIVE, arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+LocalFilesOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(CLIENT_LOCAL_FILES, arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+LocalInfileOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_LOCAL_INFILE, &arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+MultiResultsOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40101
+	if (dbd->connected()) {
+		return dbd->set_option(arg_ ? MYSQL_OPTION_MULTI_STATEMENTS_ON :
+				MYSQL_OPTION_MULTI_STATEMENTS_OFF) ?
+				Option::err_NONE : Option::err_bad_arg;
 	}
 	else {
-		// Non-optional exception.  Something is wrong with the library
-		// internals if this one is thrown.
-		throw BadOption("bad value given to legal_arg_type()", o);
+		return dbd->set_option(CLIENT_MULTI_RESULTS, arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
 	}
+#else
+	return Option::err_api_limit;
+#endif
 }
 
 
-} // end namespace option
+Option::Error
+MultiStatementsOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40101
+	if (dbd->connected()) {
+		return dbd->set_option(arg_ ? MYSQL_OPTION_MULTI_STATEMENTS_ON :
+				MYSQL_OPTION_MULTI_STATEMENTS_OFF) ?
+				Option::err_NONE : Option::err_bad_arg;
+	}
+	else {
+		return dbd->set_option(CLIENT_MULTI_STATEMENTS, arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+	}
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+NamedPipeOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_NAMED_PIPE) ?
+				Option::err_NONE : Option::err_api_reject;
+}
+
+
+Option::Error
+NoSchemaOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(CLIENT_NO_SCHEMA, arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+ProtocolOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_PROTOCOL, &arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+ReadDefaultFileOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_READ_DEFAULT_FILE, arg_.c_str()) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+ReadDefaultGroupOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_READ_DEFAULT_GROUP, arg_.c_str()) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+ReadTimeoutOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40101
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_READ_TIMEOUT, &arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+ReconnectOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 50013
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_RECONNECT, &arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+ReportDataTruncationOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 50003
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_REPORT_DATA_TRUNCATION, &arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+SecureAuthOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40101
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_SECURE_AUTH, &arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+SetCharsetDirOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_SET_CHARSET_DIR, arg_.c_str()) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+SetCharsetNameOption::set(DBDriver* dbd)
+{
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_SET_CHARSET_NAME, arg_.c_str()) ?
+				Option::err_NONE : Option::err_bad_arg;
+}
+
+
+Option::Error
+SetClientIpOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40101
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_SET_CLIENT_IP, arg_.c_str()) ?
+				Option::err_NONE : Option::err_bad_arg;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+SharedMemoryBaseNameOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40100
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_SHARED_MEMORY_BASE_NAME, arg_.c_str()) ?
+				Option::err_NONE : Option::err_bad_arg;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+UseEmbeddedConnectionOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40101
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_USE_EMBEDDED_CONNECTION) ?
+				Option::err_NONE : Option::err_api_reject;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+UseRemoteConnectionOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40101
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_USE_REMOTE_CONNECTION) ?
+				Option::err_NONE : Option::err_api_reject;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
+WriteTimeoutOption::set(DBDriver* dbd)
+{
+#if MYSQL_VERSION_ID >= 40101
+	return dbd->connected() ? Option::err_connected :
+			dbd->set_option(MYSQL_OPT_WRITE_TIMEOUT, &arg_) ?
+				Option::err_NONE : Option::err_bad_arg;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
 } // end namespace mysqlpp

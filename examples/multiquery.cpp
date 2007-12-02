@@ -154,7 +154,7 @@ main(int argc, char *argv[])
 		// you know that there is poor consistency on these matters;
 		// MySQL++ abstracts these differences away.
 		Connection con;
-		con.set_option(option::multi_statements, true);
+		con.set_option(new MultiStatementsOption(true));
 
 		// Connect to the database
 		if (!con.connect(db, server, user, pass)) {
@@ -198,14 +198,8 @@ main(int argc, char *argv[])
 		return 0;
 	}
 	catch (const BadOption& err) {
-		if (err.what_option() == option::multi_statements) {
-			cerr << "This example only works when MySQL++ is built "
-					"against MySQL C API" << endl;
-			cerr << "version 4.1.01 or later." << endl;
-		}
-		else {
-			cerr << "Unexpected option failure: " << err.what() << endl;
-		}
+		cerr << err.what() << endl;
+		cerr << "This example requires MySQL 4.1.1 or later." << endl;
 		return 1;
 	}
 	catch (const ConnectionFailed& err) {

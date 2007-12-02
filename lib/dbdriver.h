@@ -32,6 +32,8 @@
 
 #include "optionlist.h"
 
+#include <typeinfo>
+
 namespace mysqlpp {
 
 /// \brief Provides a thin abstraction layer over the underlying database 
@@ -237,9 +239,6 @@ public:
 		}
 	}
 
-	/// \brief Returns true if the given option has been set already
-	bool option_set(option::Type option) const;
-
 	/// \brief "Pings" the MySQL database
 	///
 	/// This function will try to reconnect to the server if the 
@@ -287,52 +286,56 @@ public:
 	/// Wraps \c mysql_get_server_info() in the MySQL C API.
 	std::string server_version() { return mysql_get_server_info(&mysql_); }
 
-	/// \brief Sets a connection option, with no argument
+	/// \brief Sets a connection option
 	///
-	/// \param option any of the option::Type enum constants
+	/// This is the database-independent high-level option setting
+	/// interface that Connection::set_option() calls.  There are
+	/// several private overloads that actually implement the option
+	/// setting.
 	///
-	/// \see Connection::set_option(option::Type) for commentary
-	std::string set_option(option::Type option);
+	/// \see Connection::set_option(Option*) for commentary
+	std::string set_option(Option* o);
 
-	/// \brief Sets a connection option, with string argument
+	/// \brief Set MySQL C API connection option
 	///
-	/// \see Connection::set_option(option::Type) for commentary
-	std::string set_option(option::Type option, const char* arg);
-
-	/// \brief Sets a connection option, with integer argument
-	///
-	/// \see Connection::set_option(option::Type) for commentary
-	std::string set_option(option::Type option, unsigned int arg);
-
-	/// \brief Sets a connection option, with Boolean argument
-	///
-	/// \see Connection::set_option(option::Type) for commentary
-	std::string set_option(option::Type option, bool arg);
-
-	/// \brief Same as set_option(), except that it won't override
-	/// a previously-set option.
-	std::string set_option_default(option::Type option)
+	/// \internal Wraps \c mysql_options() in C API.
+	bool set_option(mysql_option moption, const void* arg = 0)
 	{
-		if (option_set(option)) {
-			return "";
-		}
-		else {
-			return set_option(option);
-		}
+		return !mysql_options(&mysql_, moption,
+				static_cast<const char*>(arg));
 	}
 
+	#if MYSQL_VERSION_ID >= 40101
+	/// \brief Set MySQL C API connection option
+	///
+	/// \internal Wraps \c mysql_set_server_option() in C API.
+	bool set_option(enum_mysql_set_option msoption)
+	{
+		return !mysql_set_server_option(&mysql_, msoption);
+	}
+	#endif
+
+	/// \brief Set MySQL C API connection option
+	///
+	/// Manipulates the MYSQL.client_flag bit mask.  This allows these
+	/// flags to be treated the same way as any other connection option,
+	/// even though the C API handles them differently.
+	bool set_option(int option, bool arg);
+
 	/// \brief Same as set_option(), except that it won't override
 	/// a previously-set option.
-	template <typename ArgT>
-	std::string
-	set_option_default(option::Type o, ArgT arg)
+	std::string set_option_default(Option* o)
 	{
-		if (option_set(o)) {
-			return "";
+		const std::type_info& ti = typeid(o);
+		for (OptionListIt it = applied_options_.begin();
+				it != applied_options_.end(); 
+				++it) {
+			if (typeid(*it) == ti) {
+				return "";		// option of this type already set
+			}
 		}
-		else {
-			return set_option(o, arg);
-		}
+
+		return set_option(o);
 	}
 
 	/// \brief Ask database server to shut down.
@@ -415,39 +418,12 @@ public:
 	/// Wraps \c mysql_use_result() in the MySQL C API.
 	MYSQL_RES* use_result() { return mysql_use_result(&mysql_); }
 
-protected:
-	/// \brief Set MySQL C API connection option
-	///
-	/// \internal Wraps \c mysql_options() in C API.
-	bool set_option(mysql_option moption, const void* arg = 0)
-	{
-		return !mysql_options(&mysql_, moption,
-				static_cast<const char*>(arg));
-	}
-
-	#if MYSQL_VERSION_ID >= 40101
-	/// \brief Set MySQL C API connection option
-	///
-	/// \internal Wraps \c mysql_set_server_option() in C API.
-	bool set_option(enum_mysql_set_option msoption)
-	{
-		return !mysql_set_server_option(&mysql_, msoption);
-	}
-	#endif
-
-	/// \brief Set MySQL C API connection option
-	///
-	/// Manipulates the MYSQL.client_flag bit mask.  This allows these
-	/// flags to be treated the same way as any other connection option,
-	/// even though the C API handles them differently.
-	bool set_option(int option, bool arg);
-
 private:
 	DBDriver& operator=(const DBDriver&);
 
 	MYSQL mysql_;
 	bool is_connected_;
-	option::List applied_options_;
+	OptionList applied_options_;
 };
 
 

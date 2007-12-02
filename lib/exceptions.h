@@ -193,24 +193,24 @@ class MYSQLPP_EXPORT BadOption : public Exception
 {
 public:
 	/// \brief Create exception object, taking C string
-	explicit BadOption(const char* w, option::Type o) :
+	explicit BadOption(const char* w, Option* po) :
 	Exception(w),
-	option_(o)
+	option_(po)
 	{
 	}
 
 	/// \brief Create exception object, taking C++ string
-	explicit BadOption(const std::string& w, option::Type o) :
+	explicit BadOption(const std::string& w, Option* po) :
 	Exception(w),
-	option_(o)
+	option_(po)
 	{
 	}
 
 	/// \brief Return the option that failed
-	option::Type what_option() const { return option_; }
+	const Option& what_option() const { return *option_; }
 
 private:
-	option::Type option_;
+	Option* option_;
 };
 
 
