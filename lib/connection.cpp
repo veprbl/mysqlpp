@@ -44,6 +44,10 @@ using namespace std;
 
 namespace mysqlpp {
 
+// We could get this by #including mysql++.h but it does too many things
+// for our purposes within the MySQL++ internals.
+extern std::ostream& api_version(std::ostream& os);
+
 /// \brief Sets a variable to a given value temporarily.
 ///
 /// Saves existing value, sets new value, and restores old value when
@@ -138,19 +142,6 @@ is_connected_(false)
 Connection::~Connection()
 {
 	disconnect();
-}
-
-
-ostream&
-Connection::api_version(ostream& os)
-{
-	const int major = MYSQL_VERSION_ID / 10000;
-	const int minor = (MYSQL_VERSION_ID - (major * 10000)) / 100;
-	const int bug = MYSQL_VERSION_ID - (major * 10000) - (minor * 100);
-
-	os << major << '.' << minor << '.' << bug;
-
-	return os;
 }
 
 

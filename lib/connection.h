@@ -174,12 +174,6 @@ public:
 		return mysql_affected_rows(&mysql_);
 	}
 
-	/// \brief Insert C API version we're linked against into C++ stream
-	///
-	/// Version will be of the form X.Y.Z, where X is the major version
-	/// number, Y the minor version, and Z the bug fix number.
-	std::ostream& api_version(std::ostream& os);
-
 	/// \brief Get MySQL client library version
 	///
 	/// Simply wraps \c mysql_get_client_info() in the C API.

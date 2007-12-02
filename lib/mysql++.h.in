@@ -60,6 +60,12 @@
 
 namespace mysqlpp {
 
+/// \brief Insert C API version we're linked against into C++ stream
+///
+/// Version will be of the form X.Y.Z, where X is the major version
+/// number, Y the minor version, and Z the bug fix number.
+std::ostream& api_version(std::ostream& os);
+
 /// \brief Get the current MySQL++ library version number
 ///
 /// MySQL++ version number that the program is actually linked to,
