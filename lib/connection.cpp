@@ -68,13 +68,6 @@ Connection::~Connection()
 }
 
 
-ulonglong
-Connection::affected_rows()
-{
-	return driver()->affected_rows();
-}
-
-
 void
 Connection::build_error_message(const char* core)
 {
@@ -177,20 +170,6 @@ const char*
 Connection::error() const
 {
 	return error_message_.size() ? error_message_.c_str() : driver_->error();
-}
-
-
-std::string
-Connection::info()
-{
-	return driver()->query_info();
-}
-
-
-ulonglong
-Connection::insert_id()
-{
-	return driver()->insert_id();
 }
 
 

@@ -69,7 +69,7 @@ copacetic_(q.copacetic_)
 ulonglong
 Query::affected_rows()
 {
-	return conn_->affected_rows();
+	return conn_->driver()->affected_rows();
 }
 
 
@@ -204,14 +204,14 @@ Query::execute(const char* str, size_t len)
 std::string
 Query::info()
 {
-	return conn_->info();
+	return conn_->driver()->query_info();
 }
 
 
 ulonglong
 Query::insert_id()
 {
-	return conn_->insert_id();
+	return conn_->driver()->insert_id();
 }
 
 
