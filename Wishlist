@@ -32,11 +32,8 @@ v3.0 Plan
         operator->() to subscript_iterator.  It can't work with
         value semantics.
 
-    o Refactor option mechanism in Connection, in several steps:
+    o Refactor option mechanism:
     
-      - Create new optionlist module, initially empty.  Each step below
-        moves code and declarations into this module.
-
       - Replace OptionInfo struct, OptionArgType enum, and Option
         enum with a class hierarchy: totally abstract Option interface
         at the top level, BoolOption, IntOption, and StringOption at
@@ -46,16 +43,12 @@ v3.0 Plan
         themselves, instead of requiring a lookup table to match enum
         values to types.  OptionList then becomes a list of Option*.
 
-      - Create OptionSetter class as a base class for Connection.  It
-        contains the actual option list object, provides the public
-        interface to that list, and possibly a callback mechanism for
-        Connection to override to give the Option objects the access
-        they need to actually implement the option setting operation.
-        (They need access to Connection::mysql_, for example.)
-
       - Add new Option subclass SSLOption, and reimplement
         Connection::enable_ssl() in terms of it.  The success of this
         will prove the value of an extensible option type system.
+
+	  - Wrap option::List deque up into a higher-level List class, and
+	    move DBDriver::option_set() into it as is_set()
 
     o If Bakefile 0.2.3 (guessing) comes out before we release, change
       all the msvs2005prj references in mysql++.bkl, Bakefiles.bkgen
@@ -83,6 +76,13 @@ v3.0 Plan
       first parameter would be useful.
 
     o Add operator<< for Query, syntactic sugar for str(ostream&).
+
+	o Do we need both DBDriver::client_version() and ::api_version()?
+	  If so, move api_version() into DBDriver.  If not, nuke
+	  api_version().
+
+	o Return false from Query::store_next() instead of throwing
+	  EndOfResultSets?
 
 
 v3.0 "Maybe" Stuff

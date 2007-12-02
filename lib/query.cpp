@@ -27,6 +27,7 @@
 #include "query.h"
 
 #include "autoflag.h"
+#include "dbdriver.h"
 #include "connection.h"
 
 namespace mysqlpp {
@@ -82,8 +83,8 @@ Query::operator private_bool_type() const
 }
 
 
-my_ulonglong
-Query::affected_rows() const
+ulonglong
+Query::affected_rows()
 {
 	return conn_->affected_rows();
 }
@@ -139,8 +140,7 @@ Query::escape_string(char* escaped, const char* original,
 {
 	if (conn_ && *conn_) {
 		// Normal case
-		return mysql_real_escape_string(&conn_->mysql_, escaped,
-				original, length);
+		return conn_->driver()->escape_string(escaped, original, length);
 	}
 	else {
 		// Should only happen in test/test_manip.cpp, since it doesn't
@@ -153,7 +153,7 @@ Query::escape_string(char* escaped, const char* original,
 bool
 Query::exec(const std::string& str)
 {
-	copacetic_ = !mysql_real_query(&conn_->mysql_, str.data(),
+	copacetic_ = conn_->driver()->execute(str.data(),
 			static_cast<unsigned long>(str.length()));
 
 	if (parse_elems_.size() == 0) {
@@ -199,7 +199,7 @@ Query::execute(const SQLTypeAdapter& s)
 ResNSel
 Query::execute(const char* str, size_t len)
 {
-	copacetic_ = !mysql_real_query(&conn_->mysql_, str, len);
+	copacetic_ = conn_->driver()->execute(str, len);
 
 	if (parse_elems_.size() == 0) {
 		// Not a template query, so auto-reset
@@ -207,8 +207,7 @@ Query::execute(const char* str, size_t len)
 	}
 
 	if (copacetic_) {
-		return ResNSel(conn_, conn_->insert_id(),
-				conn_->affected_rows(), conn_->info());
+		return ResNSel(conn_, insert_id(), affected_rows(), info());
 	}
 	else if (throw_exceptions()) {
 		throw BadQuery(error(), errnum());
@@ -222,11 +221,11 @@ Query::execute(const char* str, size_t len)
 std::string
 Query::info()
 {
-	return conn_->info();
+	return conn_->query_info();
 }
 
 
-my_ulonglong
+ulonglong
 Query::insert_id()
 {
 	return conn_->insert_id();
@@ -236,11 +235,7 @@ Query::insert_id()
 bool 
 Query::more_results()
 {
-#if MYSQL_VERSION_ID > 41000		// only in MySQL v4.1 +
-	return mysql_more_results(&conn_->mysql_);
-#else
-	return false;
-#endif
+	return conn_->driver()->more_results();
 }
 
 
@@ -352,7 +347,7 @@ Query::pprepare(char option, SQLTypeAdapter& S, bool replace)
 
 		if (S.escape_q()) {
 			char *escaped = new char[S.size() * 2 + 1];
-			size_t len = mysql_real_escape_string(&conn_->mysql_, escaped,
+			size_t len = conn_->driver()->escape_string(escaped,
 					S.data(), static_cast<unsigned long>(S.size()));
 			temp.append(escaped, len);
 			delete[] escaped;
@@ -488,7 +483,7 @@ Query::store(const SQLTypeAdapter& s)
 Result
 Query::store(const char* str, size_t len)
 {
-	copacetic_ = !mysql_real_query(&conn_->mysql_, str, len);
+	copacetic_ = conn_->driver()->execute(str, len);
 
 	if (parse_elems_.size() == 0) {
 		// Not a template query, so auto-reset
@@ -497,7 +492,7 @@ Query::store(const char* str, size_t len)
 
 	MYSQL_RES* res = 0;
 	if (copacetic_) {
-		res = mysql_store_result(&conn_->mysql_);
+		res = conn_->driver()->store_result();
 	}
 
 	if (res) {
@@ -509,7 +504,7 @@ Query::store(const char* str, size_t len)
 		// caller knows the result set will be empty (e.g. query is
 		// INSERT, DELETE...) it should call exec{ute}() instead, but
 		// there are good reasons for it to be unable to predict this.
-		copacetic_ = mysql_field_count(&conn_->mysql_) == 0;
+		copacetic_ = conn_->driver()->result_empty();
 		if (copacetic_ || !throw_exceptions()) {
 			return Result();
 		}
@@ -524,10 +519,10 @@ Result
 Query::store_next()
 {
 #if MYSQL_VERSION_ID > 41000		// only in MySQL v4.1 +
-	int ret;
-	if ((ret = mysql_next_result(&conn_->mysql_)) == 0) {
+	DBDriver::nr_code rc = conn_->driver()->next_result();
+	if (rc == DBDriver::nr_more_results) {
 		// There are more results, so return next result set.
-		MYSQL_RES* res = mysql_store_result(&conn_->mysql_);
+		MYSQL_RES* res = conn_->driver()->store_result();
 		if (res) {
 			return Result(res, throw_exceptions());
 		} 
@@ -545,7 +540,7 @@ Query::store_next()
 		}
 	}
 	else if (throw_exceptions()) {
-        if (ret > 0) {
+        if (rc == DBDriver::nr_error) {
             throw BadQuery(error(), errnum());
         }
         else {
@@ -601,7 +596,7 @@ Query::use(const SQLTypeAdapter& s)
 ResUse
 Query::use(const char* str, size_t len)
 {
-	copacetic_ = !mysql_real_query(&conn_->mysql_, str, len);
+	copacetic_ = conn_->driver()->execute(str, len);
 
 	if (parse_elems_.size() == 0) {
 		// Not a template query, so auto-reset
@@ -610,7 +605,7 @@ Query::use(const char* str, size_t len)
 
 	MYSQL_RES* res = 0;
 	if (copacetic_) {
-		res = mysql_use_result(&conn_->mysql_);
+		res = conn_->driver()->use_result();
 	}
 
 	if (res) {
@@ -622,7 +617,7 @@ Query::use(const char* str, size_t len)
 		// caller knows the result set will be empty (e.g. query is
 		// INSERT, DELETE...) it should call exec{ute}() instead, but
 		// there are good reasons for it to be unable to predict this.
-		copacetic_ = mysql_field_count(&conn_->mysql_) == 0;
+		copacetic_ = conn_->driver()->result_empty();
 		if (copacetic_ || !throw_exceptions()) {
 			return ResUse();
 		}

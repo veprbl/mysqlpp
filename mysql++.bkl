@@ -44,6 +44,7 @@
 				lib/connection.cpp
 				lib/cpool.cpp
 				lib/datetime.cpp
+				lib/dbdriver.cpp
 				lib/field_names.cpp
 				lib/fields.cpp
 				lib/field_types.cpp
@@ -52,6 +53,7 @@
 				lib/mysql++.cpp
 				lib/mystring.cpp
 				lib/null.cpp
+				lib/optionlist.cpp
 				lib/qparms.cpp
 				lib/query.cpp
 				lib/refcounted.cpp
