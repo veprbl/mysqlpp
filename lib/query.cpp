@@ -221,7 +221,7 @@ Query::execute(const char* str, size_t len)
 std::string
 Query::info()
 {
-	return conn_->query_info();
+	return conn_->info();
 }
 
 

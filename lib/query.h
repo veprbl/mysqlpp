@@ -960,8 +960,8 @@ private:
 	std::stringbuf sbuffer_;
 
 	//// Internal support functions
-	my_ulonglong affected_rows() const;
-	my_ulonglong insert_id();
+	ulonglong affected_rows();
+	ulonglong insert_id();
 	std::string info();
 	char* preview_char();
 
