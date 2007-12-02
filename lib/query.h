@@ -173,9 +173,6 @@ public:
 	/// the last operation.
 	operator private_bool_type() const;
 
-	/// \brief Return true if the object has experienced an error
-	bool operator !() { return !copacetic_; }
-
 	/// \brief Return a SQL-escaped version of a character buffer
 	///
 	/// \param ps pointer to C++ string to hold escaped version; if
