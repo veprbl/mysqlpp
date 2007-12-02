@@ -66,23 +66,6 @@ copacetic_(q.copacetic_)
 }
 
 
-Query&
-Query::operator=(const Query& rhs)
-{
-	set_exceptions(rhs.throw_exceptions());
-	template_defaults = rhs.template_defaults;
-	conn_ = rhs.conn_;
-	copacetic_ = rhs.copacetic_;
-
-	return *this;
-}
-
-Query::operator private_bool_type() const
-{
-	return *conn_ && copacetic_ ? &Query::copacetic_ : 0;
-}
-
-
 ulonglong
 Query::affected_rows()
 {
@@ -236,6 +219,23 @@ bool
 Query::more_results()
 {
 	return conn_->driver()->more_results();
+}
+
+
+Query&
+Query::operator=(const Query& rhs)
+{
+	set_exceptions(rhs.throw_exceptions());
+	template_defaults = rhs.template_defaults;
+	conn_ = rhs.conn_;
+	copacetic_ = rhs.copacetic_;
+
+	return *this;
+}
+
+Query::operator private_bool_type() const
+{
+	return *conn_ && copacetic_ ? &Query::copacetic_ : 0;
 }
 
 

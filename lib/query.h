@@ -147,32 +147,6 @@ public:
 	/// what values they have in the original.
 	Query(const Query& q);
 
-	/// \brief Assign another query's state to this object
-	///
-	/// The same caveats apply to this operator as apply to the copy
-	/// ctor.
-	Query& operator=(const Query& rhs);
-
-	/// \brief Test whether the object has experienced an error condition
-	///
-	/// Allows for code constructs like this:
-	///
-	/// \code
-	///	Query q = conn.query();
-	///	.... use query object
-	///	if (q) {
-	///	    ... no problems in using query object
-	///	}
-	///	else {
-	///	    ... an error has occurred
-	///	}
-	/// \endcode
-	///
-	/// This method returns false if either the Query object or its
-	/// associated Connection object has seen an error condition since
-	/// the last operation.
-	operator private_bool_type() const;
-
 	/// \brief Return a SQL-escaped version of a character buffer
 	///
 	/// \param ps pointer to C++ string to hold escaped version; if
@@ -244,6 +218,32 @@ public:
 	/// extra to say, so use either, as makes sense in your program.
 	const char* error() const;
 
+	/// \brief Assign another query's state to this object
+	///
+	/// The same caveats apply to this operator as apply to the copy
+	/// ctor.
+	Query& operator=(const Query& rhs);
+
+	/// \brief Test whether the object has experienced an error condition
+	///
+	/// Allows for code constructs like this:
+	///
+	/// \code
+	///	Query q = conn.query();
+	///	.... use query object
+	///	if (q) {
+	///	    ... no problems in using query object
+	///	}
+	///	else {
+	///	    ... an error has occurred
+	///	}
+	/// \endcode
+	///
+	/// This method returns false if either the Query object or its
+	/// associated Connection object has seen an error condition since
+	/// the last operation.
+	operator private_bool_type() const;
+
 	/// \brief Treat the contents of the query string as a template
 	/// query.
 	///
@@ -252,17 +252,6 @@ public:
 	/// "Template Queries" chapter in the user manual for more
 	/// information.
 	void parse();
-
-	/// \brief Reset the query object so that it can be reused.
-	///
-	/// As of v3.0, Query objects auto-reset upon query execution unless
-	/// you've set it up for making template queries.  (It can't auto-reset
-	/// in that situation, because it would forget the template info.)
-	/// Therefore, the only time you must call this is if you have a Query
-	/// object set up for making template queries, then want to build
-	/// queries using one of the other methods.  (Static strings, SSQLS,
-	/// or the stream interface.)
-	void reset();
 
 	/// \brief Return the query string currently in the buffer.
 	std::string preview() { return str(template_defaults); }
@@ -276,6 +265,17 @@ public:
 
 	/// \brief Return the query string currently in the buffer.
 	std::string preview(SQLQueryParms& p) { return str(p); }
+
+	/// \brief Reset the query object so that it can be reused.
+	///
+	/// As of v3.0, Query objects auto-reset upon query execution unless
+	/// you've set it up for making template queries.  (It can't auto-reset
+	/// in that situation, because it would forget the template info.)
+	/// Therefore, the only time you must call this is if you have a Query
+	/// object set up for making template queries, then want to build
+	/// queries using one of the other methods.  (Static strings, SSQLS,
+	/// or the stream interface.)
+	void reset();
 
 	/// \brief Get built query as a null-terminated C++ string
 	std::string str() { return str(template_defaults); }
