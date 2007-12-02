@@ -78,9 +78,9 @@ Connection::build_error_message(const char* core)
 
 
 std::string
-Connection::client_info() const
+Connection::client_version() const
 {
-	return driver_->client_info();
+	return driver_->client_version();
 }
 
 
@@ -267,9 +267,9 @@ Connection::ping()
 
 
 int
-Connection::protocol_info() const
+Connection::protocol_version() const
 {
-	return driver_->protocol_info();
+	return driver_->protocol_version();
 }
 
 
@@ -320,9 +320,9 @@ Connection::server_status() const
 
 
 std::string
-Connection::server_info() const
+Connection::server_version() const
 {
-	return driver_->server_info();
+	return driver_->server_version();
 }
 
 

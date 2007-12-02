@@ -82,7 +82,7 @@ public:
 	/// \brief Get database client library version
 	///
 	/// Wraps \c mysql_get_client_info() in the MySQL C API.
-	std::string client_info() const { return mysql_get_client_info(); }
+	std::string client_version() const { return mysql_get_client_info(); }
 
 	/// \brief Establish a new connection using the same parameters as
 	/// an existing connection.
@@ -256,7 +256,7 @@ public:
 	/// is using
 	///
 	/// Wraps \c mysql_get_proto_info() in the MySQL C API.
-	int protocol_info() { return mysql_get_proto_info(&mysql_); }
+	int protocol_version() { return mysql_get_proto_info(&mysql_); }
 
 	/// \brief Returns information about the last executed query
 	///
@@ -285,7 +285,7 @@ public:
 	/// \brief Get the database server's version number
 	///
 	/// Wraps \c mysql_get_server_info() in the MySQL C API.
-	std::string server_info() { return mysql_get_server_info(&mysql_); }
+	std::string server_version() { return mysql_get_server_info(&mysql_); }
 
 	/// \brief Sets a connection option, with no argument
 	///

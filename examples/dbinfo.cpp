@@ -65,7 +65,7 @@ static void
 show_mysql_version(mysqlpp::Connection& con)
 {
 	separator(cout, "");
-    cout << "MySQL version: " << con.client_info();
+    cout << "MySQL version: " << con.client_version();
 }
 
 

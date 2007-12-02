@@ -118,7 +118,7 @@ public:
 
 	/// \brief Get version of library underpinning the current database
 	/// driver.
-	std::string client_info() const;
+	std::string client_version() const;
 
 	/// \brief Connect to database after object is created.
 	///
@@ -245,7 +245,7 @@ public:
 
 	/// \brief Returns version number of the protocol the database
 	/// driver uses to communicate with the server.
-	int protocol_info() const;
+	int protocol_version() const;
 
 	/// \brief Return a new query object.
 	///
@@ -273,7 +273,7 @@ public:
 	bool select_db(const std::string& db);
 
 	/// \brief Get the database server's version string
-	std::string server_info() const;
+	std::string server_version() const;
 
 	/// \brief Sets a connection option, with no argument
 	///
