@@ -19,18 +19,21 @@ v3.0 Plan
       it into userman's threads chapter, which already has a stub
       for this.
 
-    o Rework element access in subscript_iterator derivatives:
+    o Redesign Result to be a real container of Rows:
 
-      - Change data management to work like String's new reference-
-        counted buffer mechanism where possible to avoid copying
-        large data blocks when returning things by value.
+      - Either copy everything appropriate from ResUse into Result and
+        drop inheritance between them, or move everything common
+        between them into a new ResultBase from which they both derive.
+        Result is-not-a ResUse.
 
-      - Change operator[] from value to reference semantics every
-        place this is possible.
+      - Instead of keeping the MYSQL_RES object passed to the ctor
+        as a data member, Result should keep a vector<Row>, which it
+        populates as soon as it is passed the MYSQL_RES.  It can then
+        immediately free the result set.
 
-      - If we can get reference semantics everywhere, we can add
-        operator->() to subscript_iterator.  It can't work with
-        value semantics.
+      - Can then make operator[] return by reference, removing the
+        last reason subscript_iterator::operator ->() had to be
+        removed.  Restore it for Result, as well as Fields and Row.
 
     o Add userman chapter on connection options
 
