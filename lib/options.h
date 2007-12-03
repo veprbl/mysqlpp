@@ -62,7 +62,6 @@ public:
 		err_NONE,
 		err_api_limit,
 		err_api_reject,
-		err_bad_arg,
 		err_connected
 	};
 	

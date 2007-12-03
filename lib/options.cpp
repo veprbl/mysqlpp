@@ -51,7 +51,7 @@ ConnectTimeoutOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_OPT_CONNECT_TIMEOUT, &arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -60,7 +60,7 @@ FoundRowsOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(CLIENT_FOUND_ROWS, arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -82,7 +82,7 @@ IgnoreSpaceOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(CLIENT_IGNORE_SPACE, arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -91,7 +91,7 @@ InitCommandOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_INIT_COMMAND, arg_.c_str()) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -100,7 +100,7 @@ InteractiveOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(CLIENT_INTERACTIVE, arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -109,7 +109,7 @@ LocalFilesOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(CLIENT_LOCAL_FILES, arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -118,7 +118,7 @@ LocalInfileOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_OPT_LOCAL_INFILE, &arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -129,11 +129,11 @@ MultiResultsOption::set(DBDriver* dbd)
 	if (dbd->connected()) {
 		return dbd->set_option(arg_ ? MYSQL_OPTION_MULTI_STATEMENTS_ON :
 				MYSQL_OPTION_MULTI_STATEMENTS_OFF) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 	}
 	else {
 		return dbd->set_option(CLIENT_MULTI_RESULTS, arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 	}
 #else
 	return Option::err_api_limit;
@@ -148,11 +148,11 @@ MultiStatementsOption::set(DBDriver* dbd)
 	if (dbd->connected()) {
 		return dbd->set_option(arg_ ? MYSQL_OPTION_MULTI_STATEMENTS_ON :
 				MYSQL_OPTION_MULTI_STATEMENTS_OFF) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 	}
 	else {
 		return dbd->set_option(CLIENT_MULTI_STATEMENTS, arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 	}
 #else
 	return Option::err_api_limit;
@@ -174,7 +174,7 @@ NoSchemaOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(CLIENT_NO_SCHEMA, arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -183,7 +183,7 @@ ProtocolOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_OPT_PROTOCOL, &arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -192,7 +192,7 @@ ReadDefaultFileOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_READ_DEFAULT_FILE, arg_.c_str()) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -201,7 +201,7 @@ ReadDefaultGroupOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_READ_DEFAULT_GROUP, arg_.c_str()) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -211,7 +211,7 @@ ReadTimeoutOption::set(DBDriver* dbd)
 #if MYSQL_VERSION_ID >= 40101
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_OPT_READ_TIMEOUT, &arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 #else
 	return Option::err_api_limit;
 #endif
@@ -224,7 +224,7 @@ ReconnectOption::set(DBDriver* dbd)
 #if MYSQL_VERSION_ID >= 50013
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_OPT_RECONNECT, &arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 #else
 	return Option::err_api_limit;
 #endif
@@ -237,7 +237,7 @@ ReportDataTruncationOption::set(DBDriver* dbd)
 #if MYSQL_VERSION_ID >= 50003
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_REPORT_DATA_TRUNCATION, &arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 #else
 	return Option::err_api_limit;
 #endif
@@ -250,7 +250,7 @@ SecureAuthOption::set(DBDriver* dbd)
 #if MYSQL_VERSION_ID >= 40101
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_SECURE_AUTH, &arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 #else
 	return Option::err_api_limit;
 #endif
@@ -262,7 +262,7 @@ SetCharsetDirOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_SET_CHARSET_DIR, arg_.c_str()) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -271,7 +271,7 @@ SetCharsetNameOption::set(DBDriver* dbd)
 {
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_SET_CHARSET_NAME, arg_.c_str()) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 }
 
 
@@ -281,7 +281,7 @@ SetClientIpOption::set(DBDriver* dbd)
 #if MYSQL_VERSION_ID >= 40101
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_SET_CLIENT_IP, arg_.c_str()) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 #else
 	return Option::err_api_limit;
 #endif
@@ -294,7 +294,7 @@ SharedMemoryBaseNameOption::set(DBDriver* dbd)
 #if MYSQL_VERSION_ID >= 40100
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_SHARED_MEMORY_BASE_NAME, arg_.c_str()) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 #else
 	return Option::err_api_limit;
 #endif
@@ -308,7 +308,7 @@ SslOption::set(DBDriver* dbd)
 	return dbd->connected() ? Option::err_connected :
 			dbd->enable_ssl(key_.c_str(), cert_.c_str(), ca_.c_str(),
 				capath_.c_str(), cipher_.c_str()) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 #else
 	return Option::err_api_limit;
 #endif
@@ -347,7 +347,7 @@ WriteTimeoutOption::set(DBDriver* dbd)
 #if MYSQL_VERSION_ID >= 40101
 	return dbd->connected() ? Option::err_connected :
 			dbd->set_option(MYSQL_OPT_WRITE_TIMEOUT, &arg_) ?
-				Option::err_NONE : Option::err_bad_arg;
+				Option::err_NONE : Option::err_api_reject;
 #else
 	return Option::err_api_limit;
 #endif

@@ -207,11 +207,6 @@ DBDriver::set_option(Option* o)
 					"option '" << typeid(o).name() << "'";
 			break;
 
-		case Option::err_bad_arg:
-			os << "Failed to set option '" << typeid(o).name() <<
-					"'; bad argument value?";
-			break;
-
 		case Option::err_connected:
 			os << "Option '" << typeid(o).name() <<
 					"' can only be set before connection is established.";
