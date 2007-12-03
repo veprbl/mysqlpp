@@ -71,9 +71,14 @@ main(int argc, char *argv[])
 						endl;
 			}
 
-			// Check for error: can't distinguish error return or normal
-			// "end of results" return from fetch_row() otherwise.
-			return con.errnum();
+			// Check for error: can't distinguish "end of results" and
+			// error cases in return from fetch_row() otherwise.
+			if (conn.errnum()) {
+				cerr << "Error received in fetching a row: " <<
+						conn.error() << endl;
+				return 1;
+			}
+			return 0;
 		}
 		else {
 			cerr << "Failed to get stock item: " << query.error() << endl;
