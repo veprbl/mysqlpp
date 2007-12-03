@@ -66,8 +66,7 @@ struct RefCountedPointerDestroyer<MYSQL_RES>
 /// one row at a time in the result instead of dealing with them all as
 /// a single large chunk.  (The name comes from the MySQL C API function
 /// that initiates this action, \c mysql_use_result().)  By calling
-/// fetch_row() until it throws a mysqlpp::BadQuery exception (or an
-/// empty row if exceptions are disabled), you can process the result
+/// fetch_row() until it returns an empty row, you can process the result
 /// set one row at a time.
 
 class MYSQLPP_EXPORT ResUse : public OptionalExceptions
