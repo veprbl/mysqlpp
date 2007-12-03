@@ -492,7 +492,7 @@ Query::store(const char* str, size_t len)
 	}
 
 	if (res) {
-		return Result(res, throw_exceptions());
+		return Result(res, conn_->driver(), throw_exceptions());
 	}
 	else {
 		// Either result set is empty (which is copacetic), or there
@@ -520,7 +520,7 @@ Query::store_next()
 		// There are more results, so return next result set.
 		MYSQL_RES* res = conn_->driver()->store_result();
 		if (res) {
-			return Result(res, throw_exceptions());
+			return Result(res, conn_->driver(), throw_exceptions());
 		} 
 		else {
 			// Result set is null, but throw an exception only i it is
@@ -608,7 +608,7 @@ Query::use(const char* str, size_t len)
 	}
 
 	if (res) {
-		return ResUse(res, throw_exceptions());
+		return ResUse(res, conn_->driver(), throw_exceptions());
 	}
 	else {
 		// Either result set is empty (which is copacetic), or there

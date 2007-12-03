@@ -75,18 +75,18 @@ public:
 	/// \brief Default constructor
 	ResUse() :
 	OptionalExceptions(),
-	initialized_(false),
+	driver_(0),
 	fields_(this)
 	{
 	}
 	
 	/// \brief Create the object, fully initialized
-	ResUse(MYSQL_RES* result, bool te = true);
+	ResUse(MYSQL_RES* result, DBDriver* dbd, bool te = true);
 	
 	/// \brief Create a copy of another ResUse object
 	ResUse(const ResUse& other) :
 	OptionalExceptions(),
-	initialized_(false)
+	driver_(0)
 	{
 		copy(other);
 	}
@@ -97,35 +97,25 @@ public:
 	/// \brief Copy another ResUse object's data into this object
 	ResUse& operator =(const ResUse& other);
 
+	/// \brief Returns the lengths of the fields in the current row of
+	/// the result set.
+	///
+	/// \internal This should not be terribly useful to end-user code.
+	/// The Row object returned by fetch_row() contains these lengths.
+	const unsigned long* fetch_lengths() const;
+
 	/// \brief Returns the next row in a "use" query's result set
 	///
 	/// <b>Design weakness warning:</b> Although Result (returned from
 	/// "store" queries) contains this method, it is of no use with such
 	/// result sets.
 	///
-	/// This is a thick wrapper around mysql_fetch_row() in the MySQL
-	/// C API.  It does a lot of error checking before returning the Row
-	/// object containing the row data.  If you need the underlying C
-	/// API row data, call fetch_raw_row() instead.
-	Row fetch_row() const
-	{
-		if (!result_) {
-			if (throw_exceptions()) {
-				throw UseQueryError("Results not fetched");
-			}
-			else {
-				return Row();
-			}
-		}
-		MYSQL_ROW row = fetch_raw_row();
-		const unsigned long* lengths = fetch_lengths();
-		if (row && lengths) {
-			return Row(row, this, lengths, throw_exceptions());
-		}
-		else {
-			return Row();
-		}
-	}
+	/// This is a thick wrapper around DBDriver::fetch_row().  It does a
+	/// lot of error checking before returning the Row object containing
+	/// the row data.
+	///
+	/// \sa fetch_raw_row()
+	Row fetch_row() const;
 
 	/// \brief Wraps mysql_fetch_row() in MySQL C API.
 	///
@@ -133,25 +123,11 @@ public:
 	/// It is anticipated that this is only useful within the library,
 	/// to implement higher-level query types on top of raw "use"
 	/// queries. Query::storein() uses it, for example.
-	MYSQL_ROW fetch_raw_row() const
-			{ return mysql_fetch_row(result_.raw()); }
+	MYSQL_ROW fetch_raw_row() const;
 
-	/// \brief Wraps mysql_fetch_lengths() in MySQL C API.
-	const unsigned long* fetch_lengths() const
-			{ return mysql_fetch_lengths(result_.raw()); }
+	/// \brief Returns the number of fields in this result set
+	int num_fields() const;
 
-	/// \brief Wraps mysql_fetch_field() in MySQL C API.
-	const Field& fetch_field() const
-			{ return *mysql_fetch_field(result_.raw()); }
-
-	/// \brief Wraps mysql_field_seek() in MySQL C API.
-	void field_seek(int field) const
-			{ mysql_field_seek(result_.raw(), field); }
-
-	/// \brief Wraps mysql_num_fields() in MySQL C API.
-	int num_fields() const
-			{ return mysql_num_fields(result_.raw()); }
-	
 	/// \brief Return the pointer to the underlying MySQL C API
 	/// result set object.
 	///
@@ -196,8 +172,8 @@ public:
 	const RefCountedPointer<FieldNames>& field_names() const
 			{ return names_; }
 
-	/// \brief Get the MySQL type for a field given its index.
-	const mysql_type_info& field_type(int i) const
+	/// \brief Get the type of a particular field within this result set.
+	const FieldTypes::value_type& field_type(int i) const
 			{ return types_->at(i); }
 
 	/// \brief Get a list of the types of the fields within this
@@ -212,8 +188,8 @@ public:
 	const Field& field(unsigned int i) const { return fields_.at(i); }
 
 protected:
-	bool initialized_;			///< if true, object is fully initted
-	Fields fields_;				///< list of fields in result
+	DBDriver* driver_;	///< Access to DB driver; fully initted if nonzero
+	Fields fields_;		///< list of fields in result
 
 	/// \brief underlying C API result set
 	///
@@ -308,13 +284,14 @@ public:
 	reverse_iterator rend() const { return reverse_iterator(begin()); }
 
 	/// \brief Default constructor
-	Result()
+	Result() :
+	ResUse()
 	{
 	}
 	
 	/// \brief Fully initialize object
-	Result(MYSQL_RES* result, bool te = true) :
-	ResUse(result, te)
+	Result(MYSQL_RES* result, DBDriver* dbd, bool te = true) :
+	ResUse(result, dbd, te)
 	{
 	}
 
@@ -327,17 +304,11 @@ public:
 	/// \brief Destroy result set
 	virtual ~Result() { }
 
-	/// \brief Wraps mysql_num_rows() in MySQL C API.
-	ulonglong num_rows() const
-	{
-		return initialized_ ? mysql_num_rows(result_.raw()) : 0;
-	}
+	/// \brief Returns the number of rows in this result set
+	ulonglong num_rows() const;
 
-	/// \brief Wraps mysql_data_seek() in MySQL C API.
-	void data_seek(uint offset) const
-	{
-		mysql_data_seek(result_.raw(), offset);
-	}
+	/// \brief Seeks to a particualr row within the result set
+	void data_seek(ulonglong offset) const;
 
 	/// \brief Alias for num_rows(), only with different return type.
 	size_type size() const { return static_cast<size_type>(num_rows()); }

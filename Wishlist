@@ -34,8 +34,6 @@ v3.0 Plan
 
 	o Add userman chapter on connection options
 
-	o Still mysql_*() stuff in Row at least.  Check result module too.
-
     o Create an SSQLS base class containing all of the common
       boilerplate, which leaf SSQLSes derive from.  This should in turn
       allow template functions like Query::insert<T> to become regular

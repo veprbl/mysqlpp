@@ -122,6 +122,12 @@ public:
 	/// \return true if database was created successfully
 	bool create_db(const char* db) const;
 
+	/// \brief Seeks to a particualr row within the result set
+	///
+	/// Wraps mysql_data_seek() in MySQL C API.
+	void data_seek(MYSQL_RES* res, ulonglong offset) const
+			{ mysql_data_seek(res, offset); }
+
 	/// \brief Drop the connection to the database server
 	///
 	/// This method is protected because it should only be used within
@@ -179,6 +185,36 @@ public:
 	/// Wraps \c mysql_real_query() in the MySQL C API.
 	bool execute(const char* qstr, size_t length)
 			{ return !mysql_real_query(&mysql_, qstr, length); }
+
+	/// \brief Returns the next raw C API row structure from the given
+	/// result set.
+	///
+	/// This is for "use" query result sets only.  "store" queries have
+	/// all the rows already.
+	///
+	/// Wraps \c mysql_fetch_row() in MySQL C API.
+	MYSQL_ROW fetch_row(MYSQL_RES* res) const
+			{ return mysql_fetch_row(res); }
+
+	/// \brief Returns the lengths of the fields in the current row
+	/// from a "use" query.
+	///
+	/// Wraps \c mysql_fetch_lengths() in MySQL C API.
+	const unsigned long* fetch_lengths(MYSQL_RES* res) const
+			{ return mysql_fetch_lengths(res); }
+
+	/// \brief Returns information about a particular field in a result
+	/// set
+	///
+	/// Wraps \c mysql_fetch_field() in MySQL C API.
+	MYSQL_FIELD* fetch_field(MYSQL_RES* res) const
+			{ return mysql_fetch_field(res); }
+
+	/// \brief Jumps to the given field within the result set
+	///
+	/// Wraps \c mysql_field_seek() in MySQL C API.
+	void field_seek(MYSQL_RES* res, int field) const
+			{ mysql_field_seek(res, field); }
 
 	/// \brief Return the connection options object
 	st_mysql_options get_options() const { return mysql_.options; }
@@ -239,6 +275,18 @@ public:
 			default: return nr_error;
 		}
 	}
+
+	/// \brief Returns the number of fields in the given result set
+	///
+	/// Wraps \c mysql_num_fields() in MySQL C API.
+	int num_fields(MYSQL_RES* res) const
+			{ return mysql_num_fields(res); }
+	
+	/// \brief Returns the number of rows in the given result set
+	///
+	/// Wraps \c mysql_num_rows() in MySQL C API.
+	ulonglong num_rows(MYSQL_RES* res) const
+			{ return mysql_num_rows(res); }
 
 	/// \brief "Pings" the MySQL database
 	///

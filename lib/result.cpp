@@ -26,18 +26,19 @@
 
 #include "result.h"
 
+#include "dbdriver.h"
+
 namespace mysqlpp {
 
-ResUse::ResUse(MYSQL_RES* result, bool te) :
+ResUse::ResUse(MYSQL_RES* result, DBDriver* dbd, bool te) :
 OptionalExceptions(te),
-initialized_(false),
+driver_(result ? dbd : 0),
 fields_(this)
 {
 	if (result) {
 		result_ = result;
 		names_ = new FieldNames(this);
 		types_ = new FieldTypes(this);
-		initialized_ = true;
 	}
 }
 
@@ -57,14 +58,57 @@ ResUse::copy(const ResUse& other)
 		fields_ = Fields(this);
 		names_ = other.names_;
 		types_ = other.types_;
-		initialized_ = true;
+		driver_ = other.driver_;
 	}
 	else {
 		result_ = 0;
 		names_ = 0;
 		types_ = 0;
-		initialized_ = other.initialized_;
+		driver_ = 0;
 	}
+}
+
+
+void
+Result::data_seek(ulonglong offset) const
+{
+	driver_->data_seek(result_.raw(), offset);
+}
+
+
+const unsigned long*
+ResUse::fetch_lengths() const
+{
+	return driver_->fetch_lengths(result_.raw());
+}
+
+
+Row
+ResUse::fetch_row() const
+{
+	if (!result_) {
+		if (throw_exceptions()) {
+			throw UseQueryError("Results not fetched");
+		}
+		else {
+			return Row();
+		}
+	}
+	MYSQL_ROW row = driver_->fetch_row(result_.raw());
+	const unsigned long* lengths = fetch_lengths();
+	if (row && lengths) {
+		return Row(row, this, lengths, throw_exceptions());
+	}
+	else {
+		return Row();
+	}
+}
+
+
+MYSQL_ROW
+ResUse::fetch_raw_row() const
+{
+	return driver_->fetch_row(result_.raw());
 }
 
 
@@ -77,6 +121,20 @@ ResUse::field_num(const std::string& i) const
 	}
 	
 	return int(index);
+}
+
+
+int
+ResUse::num_fields() const
+{
+	return driver_->num_fields(result_.raw());
+}
+
+
+ulonglong
+Result::num_rows() const
+{
+	return driver_ ? driver_->num_rows(result_.raw()) : 0;
 }
 
 
