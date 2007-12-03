@@ -286,7 +286,7 @@
             any other structure. The results can be accessed through
             the Row object, or you can ask the library to dump the
             results into an STL container &mdash; sequential or
-			set-associative, it doesn't matter &mdash;
+            set-associative, it doesn't matter &mdash;
             for you. Consider this:</para>
 
             <programlisting>
@@ -299,9 +299,9 @@ for (vector&lt;stock&gt;::iterator it = v.begin(); it != v.end(); ++it) {
 
             <para>Isn't that slick?</para>
 
-			<para>If you don't want to create SSQLSes to match your
-			table structures, as of MySQL++ v3 you can now use
-			<classname>Row</classname> here instead:</para>
+            <para>If you don't want to create SSQLSes to match your
+            table structures, as of MySQL++ v3 you can now use
+            <classname>Row</classname> here instead:</para>
 
             <programlisting>
 vector&lt;mysqlpp::Row&gt; v;
@@ -311,8 +311,8 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     cout &lt;&lt; "Price: " &lt;&lt; it->at("price") &lt;&lt; endl;
 }</programlisting>
 
-			<para>It lacks a certain syntactic elegance, but it has its
-			uses.</para>
+            <para>It lacks a certain syntactic elegance, but it has its
+            uses.</para>
         </sect3>
     </sect2>
 
@@ -1920,33 +1920,59 @@ stock::table() = "MyStockData";</programlisting>
         one module, you get a multiply-defined symbol error at link
         time.</para>
 
-        <para>The way around this is to add this before <emphasis>all
-        but one</emphasis> of the places where you pull in the header
-        definining the SSQLS:</para>
+        <para>The way around this is to define the preprocessor macro
+        <varname>MYSQLPP_SSQLS_NO_STATICS</varname> in <emphasis>all
+        but one</emphasis> of the modules that use the header
+        definining the SSQLS. When this macro is defined, it suppresses
+        the static data members in any SSQLS defined thereaftear.</para>
+        
+        <para>Imagine we have a file <filename>my_ssqls.h</filename>
+        which includes a <function>sql_create_N</function> macro call
+        to define an SSQLS, and that that SSQLS is used in at least
+        two modules. One we'll call <filename>foo.cpp</filename>,
+        and we'll say it's just a user of the SSQLS; it doesn't "own"
+        it. Another of the modules, <filename>my_ssqls.cpp</filename>
+        uses the SSQLS more heavily, so we've called it the owner
+        of the SSQLS. If there aren't very many modules, this works
+        nicely:</para>
 
         <programlisting>
-#define MYSQLPP_SSQLS_NO_STATICS</programlisting>
+// File foo.cpp, which just uses the SSQLS, but doesn't "own" it:
+#define MYSQLPP_SSQLS_NO_STATICS
+#include "my_ssqls.h"</programlisting>
 
-        <para>This suppresses the static data members in any SSQLS
-        defined thereafter.</para>
+        <programlisting>
+// File my_ssqls.cpp, which owns the SSQLS, so we just #include it directly
+#include "my_ssqls.h"</programlisting>
+        
+        <para>If there are many modules that need the SSQLS, adding all
+        those <command>#defines</command> can be a pain. In that case,
+        it's easier if you flip the above pattern on its head:</para>
 
-        <para>These data members must exist, so one (and only
-        one!) module must bring in the SSQLS definition without
-        this being defined. Thus, you don't want to put this
-        <userinput>#define</userinput> in the header file with the
-        SSQLS definition. It's usually easy to find one module in a
-        program that logically "owns" each SSQLS, and it can pull in
-        the header definining the SSQLS directly, without suppressing
-        the static data members.</para>
+        <programlisting>
+// File my_ssqls.h:
+#if !defined(EXPAND_MY_SSQLS_STATICS)
+#   define MYSQLPP_SSQLS_NO_STATICS
+#endif
+sql_create_X(Y, Z....) // the SSQLS definition</programlisting>
 
-        <para>Note that due to a compiler limitation, you can't
-        use this feature with Visual C++ 2003. As instructed
-        in <filename>README.vc</filename>, you have to disable
-        this feature in order to get the SSQLS header files to
-        compile. Having done that, the SSQLS feature works fine as
-        long as you can live with using each structure type in a
-        single module. Visual C++ 2005 and newer don't suffer from
-        this limitation.</para>
+        <programlisting>
+// File foo.cpp, a mere user of the SSQLS:
+#include "my_ssqls.h"</programlisting>
+
+        <programlisting>
+// File my_ssqls.cpp, which owns the SSQLS:
+#define EXPAND_MY_SSQLS_STATICS
+#include "my_ssqls.h"</programlisting>
+
+        <para>Note that due to a compiler limitation, you can't use the
+        <varname>MYSQLPP_SSQLS_NO_STATICS</varname> feature with Visual
+        C++ 2003. As instructed in <filename>README.vc</filename>,
+        you have to disable this feature in order to get the SSQLS
+        header files to compile. Having done that, the SSQLS feature
+        works fine as long as you can live with using each structure
+        type in a single module. Visual C++ 2005 and newer don't
+        suffer from this limitation.</para>
     </sect2>
 
 
