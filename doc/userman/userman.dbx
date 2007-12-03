@@ -308,7 +308,7 @@ vector&lt;mysqlpp::Row&gt; v;
 query &lt;&lt; "SELECT * FROM stock";
 query.storein(v);
 for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
-    cout &lt;&lt; "Price: " &lt;&lt; it->at(3) &lt;&lt; endl;
+    cout &lt;&lt; "Price: " &lt;&lt; it->at("price") &lt;&lt; endl;
 }</programlisting>
 
 			<para>It lacks a certain syntactic elegance, but it has its
