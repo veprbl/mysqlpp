@@ -329,7 +329,7 @@ public:
 	virtual ~Result() { }
 
 	/// \brief Wraps mysql_num_rows() in MySQL C API.
-	my_ulonglong num_rows() const
+	ulonglong num_rows() const
 	{
 		return initialized_ ? mysql_num_rows(result_.raw()) : 0;
 	}
@@ -393,8 +393,8 @@ public:
 	}
 
 	/// \brief Initialize object
-	ResNSel(bool copacetic, my_ulonglong insert_id,
-			my_ulonglong rows, const std::string& info) :
+	ResNSel(bool copacetic, ulonglong insert_id,
+			ulonglong rows, const std::string& info) :
 	copacetic_(copacetic),
 	insert_id_(insert_id),
 	rows_(rows),
@@ -414,10 +414,10 @@ public:
 	}
 
 	/// \brief Get the last value used for an AUTO_INCREMENT field
-	my_ulonglong insert_id() const { return insert_id_; }
+	ulonglong insert_id() const { return insert_id_; }
 
 	/// \brief Get the number of rows affected by the query
-	my_ulonglong rows() const { return rows_; }
+	ulonglong rows() const { return rows_; }
 
 	/// \brief Get any additional information about the query returned
 	/// by the server.
@@ -425,8 +425,8 @@ public:
 
 private:
 	bool copacetic_;
-	my_ulonglong insert_id_;
-	my_ulonglong rows_;
+	ulonglong insert_id_;
+	ulonglong rows_;
 	std::string info_;
 };
 
