@@ -58,6 +58,7 @@ print OUT0 << "---";
 #define MYSQLPP_CUSTOM_H
 
 #include "sql_types.h"
+#include "sssqls.h"
 
 #include <string>
 ---
@@ -84,9 +85,10 @@ unless ($opt_v) {
 print OUT0 << "---";
 namespace mysqlpp {
 
-enum sql_dummy_type {sql_dummy};
+enum sql_dummy_type { sql_dummy };
 
-inline int sql_cmp(const std::string &a, const std::string &b) {
+inline int sql_cmp(const std::string &a, const std::string &b)
+{
   return a.compare(b);
 }
 ---
@@ -96,29 +98,19 @@ my @types = ("char", "unsigned char", "sql_tinyint", "int", "unsigned int",
 foreach my $type (@types) {
     print OUT0 << "---";
 
-inline int sql_cmp($type a,$type b) {
-  return a-b;
+inline int sql_cmp($type a, $type b)
+{
+  return a - b;
 }
 ---
 }
 
-@types = ("double", "float");
+@types = ("double", "float", "longlong", "ulonglong");
 foreach my $type (@types) {
     print OUT0 << "---";
 
-inline int sql_cmp($type a,$type b) {
-  if (a == b) return 0;
-  if (a <  b) return -1;
-  return 1;
-}
----
-}	
-
-@types = ("longlong", "ulonglong");
-foreach my $type (@types) {
-    print OUT0 << "---";
-
-inline int sql_cmp($type a,$type b) {
+inline int sql_cmp($type a, $type b) 
+{
   if (a == b) return 0;
   if (a <  b) return -1;
   return 1;
