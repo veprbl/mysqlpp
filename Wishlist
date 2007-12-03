@@ -32,12 +32,7 @@ v3.0 Plan
         operator->() to subscript_iterator.  It can't work with
         value semantics.
 
-	o Add userman chapter on connection options
-
-    o Create an SSQLS base class containing all of the common
-      boilerplate, which leaf SSQLSes derive from.  This should in turn
-      allow template functions like Query::insert<T> to become regular
-      member functions, taking a reference to the SSQLS base class.
+    o Add userman chapter on connection options
 
     o Is MYSQLPP_QUERY_THISPTR still needed with VC++2003?  The recent
       manipulator changes and the removal of all operator<<(Query&,
@@ -89,6 +84,18 @@ v3.1 Tentative Plan
         .h files by a tool built along with MySQL++ library.  Design:
 
         http://lists.mysql.com/plusplus/6929
+
+      - Tricky bit: It would be good if as much code as is possible
+        resided in a base class (SsqlsBase) that all SSQLSes derived
+        from, allowing Query::insert() and such to take an SsqlsBase&
+        instead of being templates.  This isn't currently possible
+        because virtually everything in an SSQLS is specific to the
+        structure's type.  Study equal_list(), for example.
+
+        Possible way around this: turn equal_list() into
+        equal_list(Query&), so the knowledge of how to turn the field
+        names and values into an equal-list resides in the SSQLS,
+        not in Query.
 
       - Add features to that tool to write SSQLSv2 declaration files
         from existing schemas extracted from CREATE TABLE statements,
