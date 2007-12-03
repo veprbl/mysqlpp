@@ -120,19 +120,12 @@ print_result(Result& res, int index)
 static void
 print_multiple_results(Query& query)
 {
-	try {
-		// Execute query and print all result sets
-		Result res = query.store();
-		print_result(res, 0);
-		for (int i = 1; query.more_results(); ++i) {
-			res = query.store_next();
-			print_result(res, i);
-		}
-	}
-	catch (Exception& err) {
-		// Something bad happened....
-		cerr << "Multi-query failure: " << err.what() << endl;
-		exit(1);
+	// Execute query and print all result sets
+	Result res = query.store();
+	print_result(res, 0);
+	for (int i = 1; query.more_results(); ++i) {
+		res = query.store_next();
+		print_result(res, i);
 	}
 }
 

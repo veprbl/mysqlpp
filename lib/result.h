@@ -124,12 +124,7 @@ public:
 			return Row(row, this, lengths, throw_exceptions());
 		}
 		else {
-			if (throw_exceptions()) {
-				throw EndOfResults();
-			}
-			else {
-				return Row();
-			}
+			return Row();
 		}
 	}
 

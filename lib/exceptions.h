@@ -368,34 +368,6 @@ private:
 };
 
 
-/// \brief Exception thrown when ResUse::fetch_row() walks off the end
-/// of a use-query's result set.
-
-class MYSQLPP_EXPORT EndOfResults : public Exception
-{
-public:
-	/// \brief Create exception object
-	explicit EndOfResults(const char* w = "end of results") :
-	Exception(w)
-	{
-	}
-};
-
-
-/// \brief Exception thrown when Query::store_next() walks off the end
-/// of a use-query's multi result sets.
-
-class MYSQLPP_EXPORT EndOfResultSets : public Exception
-{
-public:
-	/// \brief Create exception object
-	explicit EndOfResultSets(const char* w = "end of result sets") :
-	Exception(w)
-	{
-	}
-};
-
-
 /// \brief Exception thrown when a BeecryptMutex object fails.
 
 class MYSQLPP_EXPORT MutexFailed : public Exception

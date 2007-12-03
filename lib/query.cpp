@@ -539,9 +539,12 @@ Query::store_next()
         if (rc == DBDriver::nr_error) {
             throw BadQuery(error(), errnum());
         }
-        else {
-            throw EndOfResultSets();
+		else if (conn_->errnum()) {
+			throw BadQuery(error(), errnum());
         }
+		else {
+			return Result();	// normal end-of-result-sets case
+		}
     }
     else {
         return Result();

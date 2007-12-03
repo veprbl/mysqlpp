@@ -34,6 +34,10 @@ v3.0 Plan
 
 	o Add userman chapter on connection options
 
+	o Still mysql_*() stuff in Row at least.  Check result module too.
+
+	o Replace all my_ulonglong with ulonglong.
+
     o Create an SSQLS base class containing all of the common
       boilerplate, which leaf SSQLSes derive from.  This should in turn
       allow template functions like Query::insert<T> to become regular
@@ -55,16 +59,6 @@ v3.0 "Maybe" Stuff
     This is stuff that would be nice to have, but it wouldn't be a
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
-
-	o Return false from Query::store_next() instead of throwing
-	  EndOfResultSets?
-
-    o Query::storein() variants taking SSQLS like store_if()?  If we
-      do this, use it to tighten up the example at the end of userman
-      section 2.3.
-
-    o Make RefCountedPointer::swap() private?  Could be a good reason
-      for it to be public, but no one's given such a reason yet.
 
     o Atomic inc/dec of reference counts in RefCounted*?  To justify
       it, one has to justify using two threads to process data,

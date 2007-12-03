@@ -71,7 +71,9 @@ main(int argc, char *argv[])
 						endl;
 			}
 
-			return 0;
+			// Check for error: can't distinguish error return or normal
+			// "end of results" return from fetch_row() otherwise.
+			return con.errnum();
 		}
 		else {
 			cerr << "Failed to get stock item: " << query.error() << endl;

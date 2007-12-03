@@ -77,13 +77,6 @@ Running the Other Command Line Examples
         custom1-6: Demonstrates the SSQLS features.  These examples
             are explained in the user manual.
 
-        usequery: Demonstrates Query::use().  Unlike simple3, which
-            also showcases this function, this one shows how use
-            queries interact with exception handling: when you walk
-            past the end of a "use" query set with exceptions enabled,
-            MySQL++ throws an exception to indicate end of results,
-            which you must catch.
-
         multiquery: MySQL++ allows you to issue multiple queries at
             once, and get the results as separate sets.  This shows
             that, and also how to use stored procedures, which return

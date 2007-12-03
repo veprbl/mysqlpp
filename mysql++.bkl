@@ -280,9 +280,6 @@
 		<exe id="transaction" template="libexcommon-user,programs">
 			<sources>examples/transaction.cpp</sources>
 		</exe>
-		<exe id="usequery" template="libexcommon-user,programs">
-			<sources>examples/usequery.cpp</sources>
-		</exe>
 	</if>	<!-- build examples -->
 
 	<if cond="FORMAT=='autoconf'">

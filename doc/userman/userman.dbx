@@ -1047,10 +1047,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
         <para>This example does the same thing as
         <filename>simple2</filename>, only with a "use" query instead
-        of a "store" query. If your program uses exceptions, you should
-        instead look at <filename>examples/usequery.cpp</filename>,
-        which does the same thing as <filename>simple3</filename>,
-        but with exception-awareness.</para>
+        of a "store" query.</para>
 
         <para>Valuable as <methodname>use()</methodname> queries are,
         they should not be the first resort in solving problems of

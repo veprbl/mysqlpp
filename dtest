@@ -35,7 +35,7 @@ echo -n 'Running examples:'
 for t in \
 	resetdb simple[0-9] store_if for_each multiquery tquery1 \
 	resetdb tquery2 dbinfo fieldinf \
-	resetdb usequery custom[0-9]
+	resetdb custom[0-9]
 do
 	if [ -x $t ]
 	then
