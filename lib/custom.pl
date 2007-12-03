@@ -58,7 +58,6 @@ print OUT0 << "---";
 #define MYSQLPP_CUSTOM_H
 
 #include "sql_types.h"
-#include "sssqls.h"
 
 #include <string>
 ---
