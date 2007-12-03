@@ -354,5 +354,5 @@ private:
 #include "uds_connection.h"
 #include "wnp_connection.h"
 
-#endif !defined(MYSQLPP_CONNECTION_H)
+#endif // !defined(MYSQLPP_CONNECTION_H)
 

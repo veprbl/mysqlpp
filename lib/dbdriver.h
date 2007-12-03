@@ -483,5 +483,5 @@ private:
 
 } // end namespace mysqlpp
 
-#endif !defined(MYSQLPP_DBDRIVER_H)
+#endif // !defined(MYSQLPP_DBDRIVER_H)
 
