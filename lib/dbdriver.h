@@ -57,9 +57,9 @@ class DBDriver
 public:
 	/// \brief Result code returned by next_result()
 	enum nr_code {
-		nr_more_results,
-		nr_last_result,
-		nr_error
+		nr_more_results,	///< success, with more results to come
+		nr_last_result,		///< success, last result recieved
+		nr_error			///< problem retrieving next result
 	};
 
 	/// \brief Create object

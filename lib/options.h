@@ -59,10 +59,10 @@ class Option
 public:
 	/// \brief Types of option setting errors we can diagnose
 	enum Error {
-		err_NONE,
-		err_api_limit,
-		err_api_reject,
-		err_connected
+		err_NONE,		///< option was set successfully
+		err_api_limit,	///< option not supported by underlying C API
+		err_api_reject,	///< underlying C API returned error when setting option
+		err_connected	///< can't set the given option while connected
 	};
 	
 	virtual ~Option() { }					///< Destroy object
