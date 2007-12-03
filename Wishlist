@@ -38,10 +38,6 @@ v3.0 Plan
         Connection::enable_ssl() in terms of it.  The success of this
         will prove the value of an extensible option type system.
 
-	  - Wrap option::List deque up into a higher-level List class, and
-	    move DBDriver::option_set() into it as is_set().  ~List() can
-		destroy allocated Option objects.
-
     o If Bakefile 0.2.3 (guessing) comes out before we release, change
       all the msvs2005prj references in mysql++.bkl, Bakefiles.bkgen
       and rebake.bat to msvs2003prj and remove the section on doing

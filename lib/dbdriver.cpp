@@ -60,6 +60,11 @@ DBDriver::~DBDriver()
 	if (connected()) {
 		disconnect();
 	}
+
+	OptionList::const_iterator it;
+	for (it = applied_options_.begin(); it != applied_options_.end(); ++it) {
+		delete *it;
+	}
 }
 
 
