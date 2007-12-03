@@ -62,6 +62,9 @@ template_defaults(q.template_defaults),
 conn_(q.conn_),
 copacetic_(q.copacetic_)
 {
+	// We don't copy stream buffer or template query stuff from the other
+	// Query on purpose.  This isn't a copy ctor so much as a way to
+	// ensure that "Query q(conn.query());" works correctly.
 	init(&sbuffer_);
 }
 
