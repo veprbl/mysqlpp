@@ -53,7 +53,7 @@
 				lib/mysql++.cpp
 				lib/mystring.cpp
 				lib/null.cpp
-				lib/optionlist.cpp
+				lib/options.cpp
 				lib/qparms.cpp
 				lib/query.cpp
 				lib/refcounted.cpp

@@ -31,7 +31,7 @@
 #if !defined(MYSQLPP_EXCEPTIONS_H)
 #define MYSQLPP_EXCEPTIONS_H
 
-#include "optionlist.h"
+#include "options.h"
 
 #include <exception>
 #include <string>

@@ -1,6 +1,5 @@
 /***********************************************************************
- optionlist.cpp - Implements the Type class hierarchy and related
- 	things.
+ options.cpp - Implements the Option class hierarchy.
 
  Copyright (c) 2007 by Educational Technology Resources, Inc.  Others
  may also hold copyrights on code in this file.  See the CREDITS
@@ -25,7 +24,7 @@
 ***********************************************************************/
 
 #define MYSQLPP_NOT_HEADER
-#include "optionlist.h"
+#include "options.h"
 
 #include "dbdriver.h"
 

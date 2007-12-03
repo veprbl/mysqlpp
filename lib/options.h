@@ -1,9 +1,12 @@
-/// \file optionlist.h
-/// \brief Declares connection option mechanisms used by Connection
+/// \file options.h
+/// \brief Declares the Option class hierarchy, used to implement
+/// connection options in Connection and DBDriver classes.
 ///
-/// These used to be part of the definition of class Connection, but
-/// option setting is complex enough that it was worth extracting as
-/// much of it out into a separate module as possible.
+/// This is tied closely enough to DBDriver that there's a pure-OO
+/// argument that it should be declared as protected or private members
+/// within DBDriver.  We do it outside DBDriver because there's so much
+/// of it.  It'd overwhelm everything else that's going on in that class
+/// totally out of proprortion to the importance of options.
 
 /***********************************************************************
  Copyright (c) 2007 by Educational Technology Resources, Inc.  Others
@@ -28,8 +31,8 @@
  USA
 ***********************************************************************/
 
-#if !defined(MYSQLPP_OPTIONLIST_H)
-#define MYSQLPP_OPTIONLIST_H
+#if !defined(MYSQLPP_OPTIONS_H)
+#define MYSQLPP_OPTIONS_H
 
 #include "common.h"
 
@@ -456,4 +459,4 @@ typedef OptionList::const_iterator OptionListIt;
 
 } // end namespace mysqlpp
 
-#endif // !defined(MYSQLPP_OPTIONLIST_H)
+#endif // !defined(MYSQLPP_OPTIONS_H)

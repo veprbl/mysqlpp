@@ -30,7 +30,7 @@
 
 #include "common.h"
 
-#include "optionlist.h"
+#include "options.h"
 
 #include <typeinfo>
 
@@ -327,7 +327,7 @@ public:
 	std::string set_option_default(Option* o)
 	{
 		const std::type_info& ti = typeid(o);
-		for (OptionListIt it = applied_options_.begin();
+		for (OptionList::const_iterator it = applied_options_.begin();
 				it != applied_options_.end(); 
 				++it) {
 			if (typeid(*it) == ti) {
@@ -419,6 +419,11 @@ public:
 	MYSQL_RES* use_result() { return mysql_use_result(&mysql_); }
 
 private:
+	/// \brief Data type of the list of applied connection options
+	typedef std::deque<Option*> OptionList;
+
+	/// \brief Hidden assignment operator; we don't want to be copied
+	/// that way.  What would it mean?
 	DBDriver& operator=(const DBDriver&);
 
 	MYSQL mysql_;
