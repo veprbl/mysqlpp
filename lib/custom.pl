@@ -88,7 +88,7 @@ enum sql_dummy_type { sql_dummy };
 
 inline int sql_cmp(const std::string &a, const std::string &b)
 {
-  return a.compare(b);
+	return a.compare(b);
 }
 ---
 
@@ -99,7 +99,7 @@ foreach my $type (@types) {
 
 inline int sql_cmp($type a, $type b)
 {
-  return a - b;
+	return a - b;
 }
 ---
 }
@@ -110,9 +110,9 @@ foreach my $type (@types) {
 
 inline int sql_cmp($type a, $type b) 
 {
-  if (a == b) return 0;
-  if (a <  b) return -1;
-  return 1;
+	if (a == b) return 0;
+	if (a <  b) return -1;
+	return 1;
 }
 ---
 }	
@@ -462,9 +462,9 @@ $defs
     void set (const mysqlpp::Row &row);
     sql_compare_define_##CMP(NAME, $parmC)
     sql_construct_define_##CONTR(NAME, $parmC)
-    static const char *names[];
-    static const char *_table;
-    static const char *& table() {return _table;}
+    static const char* names[];
+    static const char* _table;
+    static const char*& table() { return _table; }
 
     NAME##_value_list<mysqlpp::quote_type0> value_list() const {
       return value_list(",", mysqlpp::quote);}
