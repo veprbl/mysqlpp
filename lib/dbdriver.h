@@ -213,7 +213,7 @@ public:
 	/// \brief Jumps to the given field within the result set
 	///
 	/// Wraps \c mysql_field_seek() in MySQL C API.
-	void field_seek(MYSQL_RES* res, int field) const
+	void field_seek(MYSQL_RES* res, size_t field) const
 			{ mysql_field_seek(res, field); }
 
 	/// \brief Return the connection options object

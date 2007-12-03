@@ -76,6 +76,13 @@ Result::data_seek(ulonglong offset) const
 }
 
 
+const Field&
+ResUse::fetch_field() const
+{
+	return *driver_->fetch_field(result_.raw());
+}
+
+
 const unsigned long*
 ResUse::fetch_lengths() const
 {
@@ -121,6 +128,13 @@ ResUse::field_num(const std::string& i) const
 	}
 	
 	return int(index);
+}
+
+
+void
+ResUse::field_seek(size_t field) const
+{
+	driver_->field_seek(result_.raw(), field);
 }
 
 

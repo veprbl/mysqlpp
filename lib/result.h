@@ -97,6 +97,9 @@ public:
 	/// \brief Copy another ResUse object's data into this object
 	ResUse& operator =(const ResUse& other);
 
+	/// \brief Returns the next field in this result set
+	const Field& fetch_field() const;
+
 	/// \brief Returns the lengths of the fields in the current row of
 	/// the result set.
 	///
@@ -124,6 +127,11 @@ public:
 	/// to implement higher-level query types on top of raw "use"
 	/// queries. Query::storein() uses it, for example.
 	MYSQL_ROW fetch_raw_row() const;
+
+	/// \brief Jumps to the given field within the result set
+	///
+	/// Wraps \c mysql_field_seek() in MySQL C API.
+	void field_seek(size_t field) const;
 
 	/// \brief Returns the number of fields in this result set
 	int num_fields() const;
