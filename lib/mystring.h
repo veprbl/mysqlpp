@@ -649,6 +649,10 @@ String::conv(Type) const
 }
 
 
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen isn't smart enough to recognize these template
+// specializations.  Maybe it's the MYSQLPP_EXPORT tags?
+
 /// \brief Specialization of String::conv<Type>() for String
 ///
 /// Yes, I hear you crying, "WTF!?  Why does String need to be able to
@@ -686,6 +690,8 @@ template <> MYSQLPP_EXPORT DateTime String::conv(DateTime) const;
 /// implicit conversion ctor from String, and SSQLS uses conv() instead
 /// of the C++ type conversion system anyway.
 template <> MYSQLPP_EXPORT Time String::conv(Time) const;
+
+#endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp
 

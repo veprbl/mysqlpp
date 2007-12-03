@@ -97,6 +97,11 @@ String::compare(size_type pos, size_type num,
 	}
 }
 
+
+#if !defined(DOXYGEN_IGNORE)
+// Doxygen isn't smart enough to recognize these template
+// specializations.  Maybe it's the MYSQLPP_EXPORT tags?
+
 template <>
 String
 String::conv(String dummy) const { return *this; }
@@ -121,6 +126,8 @@ String::conv(DateTime dummy) const { return DateTime(c_str()); }
 template <>
 Time
 String::conv(Time dummy) const { return Time(c_str()); }
+
+#endif // !defined(DOXYGEN_IGNORE)
 
 
 const char*

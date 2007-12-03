@@ -32,6 +32,12 @@
 
 namespace mysqlpp {
 
+#if !defined(DOXYGEN_IGNORE)
+// We're hiding all the Option subclass internals from Doxygen.  All the
+// upper-level classes are documented fully, and each leaf class itself
+// is documented.  It's just the ctors and set() methods we're refusing
+// to document over and over again.
+
 Option::Error
 CompressOption::set(DBDriver* dbd)
 {
@@ -334,5 +340,6 @@ WriteTimeoutOption::set(DBDriver* dbd)
 #endif
 }
 
+#endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp

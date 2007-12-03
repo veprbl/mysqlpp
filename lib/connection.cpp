@@ -43,8 +43,8 @@ copacetic_(true)
 }
 
 
-Connection::Connection(cchar* db, cchar* server, cchar* user,
-		cchar* password, unsigned int port) :
+Connection::Connection(const char* db, const char* server,
+		const char* user, const char* password, unsigned int port) :
 OptionalExceptions(),
 driver_(new DBDriver()),
 copacetic_(true)
@@ -85,8 +85,8 @@ Connection::client_version() const
 
 
 bool
-Connection::connect(cchar* db, cchar* server, cchar* user,
-		cchar* password, unsigned int port)
+Connection::connect(const char* db, const char* server,
+		const char* user, const char* password, unsigned int port)
 {
 	// Figure out what the server parameter means, then try to establish
 	// the connection.

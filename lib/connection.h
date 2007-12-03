@@ -274,7 +274,7 @@ public:
 
 	/// \brief Sets a connection option
 	///
-	/// \param option pointer to any derivative of Option allocated on
+	/// \param o pointer to any derivative of Option allocated on
 	/// the heap
 	///
 	/// Objects passed to this method will be released when this

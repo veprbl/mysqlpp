@@ -63,7 +63,7 @@ public:
 		err_connected
 	};
 	
-	virtual ~Option() { }						///< Destroy object
+	virtual ~Option() { }					///< Destroy object
 	virtual Error set(DBDriver* dbd) = 0;	///< Apply option
 };
 
@@ -74,7 +74,7 @@ template <typename T>
 class DataOption : public Option
 {
 public:
-	typedef T ArgType;
+	typedef T ArgType;						///< Alias for template param
 
 protected:
 	DataOption(const T& arg) : arg_(arg) { }///< Construct object
