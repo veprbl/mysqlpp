@@ -32,12 +32,6 @@ v3.0 Plan
         operator->() to subscript_iterator.  It can't work with
         value semantics.
 
-    o Refactor option mechanism:
-    
-      - Add new Option subclass SSLOption, and reimplement
-        Connection::enable_ssl() in terms of it.  The success of this
-        will prove the value of an extensible option type system.
-
     o If Bakefile 0.2.3 (guessing) comes out before we release, change
       all the msvs2005prj references in mysql++.bkl, Bakefiles.bkgen
       and rebake.bat to msvs2003prj and remove the section on doing

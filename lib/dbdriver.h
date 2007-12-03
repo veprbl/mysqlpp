@@ -145,12 +145,13 @@ public:
 	///        certificates in pem format.
     /// \param cipher list of allowable ciphers to use
 	///
-	/// \return Error message if it fails, or a blank string otherwise
+	/// \return False if call fails or the C API library wasn't compiled
+	/// with SSL support enabled.
 	///
 	/// Must be called before connection is established.
 	///
 	/// Wraps \c mysql_ssl_set() in MySQL C API.
-	const char* enable_ssl(const char* key = 0, const char* cert = 0,
+	bool enable_ssl(const char* key = 0, const char* cert = 0,
 			const char* ca = 0, const char* capath = 0,
 			const char* cipher = 0);
 

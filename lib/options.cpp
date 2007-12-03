@@ -302,6 +302,20 @@ SharedMemoryBaseNameOption::set(DBDriver* dbd)
 
 
 Option::Error
+SslOption::set(DBDriver* dbd)
+{
+#if defined(HAVE_MYSQL_SSL_SET)
+	return dbd->connected() ? Option::err_connected :
+			dbd->enable_ssl(key_.c_str(), cert_.c_str(), ca_.c_str(),
+				capath_.c_str(), cipher_.c_str()) ?
+				Option::err_NONE : Option::err_bad_arg;
+#else
+	return Option::err_api_limit;
+#endif
+}
+
+
+Option::Error
 UseEmbeddedConnectionOption::set(DBDriver* dbd)
 {
 #if MYSQL_VERSION_ID >= 40101

@@ -71,8 +71,8 @@ public:
 };
 
 
-/// \brief Define abstract interface for all *Options that take an
-/// argument.
+/// \brief Define abstract interface for all *Options that take a
+/// lone scalar as an argument.
 template <typename T>
 class DataOption : public Option
 {
@@ -406,6 +406,39 @@ public:
 private:
 	Error set(DBDriver* dbd);
 #endif
+};
+
+
+/// \brief Specialized option for handling SSL parameters.
+class SslOption : public Option
+{
+public:
+	/// \brief Create a set of SSL connection option parameters
+	///
+	/// \param key the pathname to the key file
+	/// \param cert the pathname to the certificate file
+	/// \param ca the pathname to the certificate authority file
+	/// \param capath directory that contains trusted SSL CA
+	///        certificates in pem format.
+    /// \param cipher list of allowable ciphers to use
+	///
+	/// This option replaces \c Connection::enable_ssl() from MySQL++
+	/// version 2.  Now you can set this connection option just like any
+	/// other.
+ 	SslOption(const char* key = 0, const char* cert = 0,
+			const char* ca = 0, const char* capath = 0,
+			const char* cipher = 0)
+	{
+		if (key)	key_.assign(key);
+		if (cert)	cert_.assign(key);
+		if (ca)		ca_.assign(key);
+		if (capath)	capath_.assign(key);
+		if (cipher)	cipher_.assign(key);
+	}
+
+private:
+	std::string key_, cert_, ca_, capath_, cipher_;
+	Error set(DBDriver* dbd);
 };
 
 

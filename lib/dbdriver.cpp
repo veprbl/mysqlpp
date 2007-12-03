@@ -129,15 +129,14 @@ DBDriver::disconnect()
 }
 
 
-const char*
+bool
 DBDriver::enable_ssl(const char* key, const char* cert,
 		const char* ca, const char* capath, const char* cipher)
 {
 #if defined(HAVE_MYSQL_SSL_SET)
-	mysql_ssl_set(&mysql_, key, cert, ca, capath, cipher);
-	return "";
+	return mysql_ssl_set(&mysql_, key, cert, ca, capath, cipher) == 0;
 #else
-	return "SSL not enabled in MySQL++";
+	return false;
 #endif
 }
 

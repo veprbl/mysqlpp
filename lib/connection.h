@@ -165,20 +165,6 @@ public:
 	/// \return true if database was dropped successfully
 	bool drop_db(const std::string& db);
 
-	/// \brief Enable SSL-encrypted connection.
-	///
-	/// \param key the pathname to the key file
-	/// \param cert the pathname to the certificate file
-	/// \param ca the pathname to the certificate authority file
-	/// \param capath directory that contains trusted SSL CA
-	///        certificates in pem format.
-    /// \param cipher list of allowable ciphers to use
-	///
-	/// Must be called before connection is established.
-	void enable_ssl(const char* key = 0,
-			const char* cert = 0, const char* ca = 0,
-			const char* capath = 0, const char* cipher = 0) const;
-
 	/// \brief Return last error number associated with this
 	/// connection
 	int errnum();

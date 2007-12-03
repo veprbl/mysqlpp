@@ -151,14 +151,6 @@ Connection::drop_db(const std::string& db)
 }
 
 
-void
-Connection::enable_ssl(const char* key, const char* cert,
-		const char* ca, const char* capath, const char* cipher) const
-{
-	error_message_ = driver_->enable_ssl(key, cert, ca, capath, cipher);
-}
-
-
 int
 Connection::errnum()
 {
