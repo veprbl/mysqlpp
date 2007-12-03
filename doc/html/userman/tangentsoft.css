@@ -1,5 +1,9 @@
 BODY {
   background-color: #FFFFEE;
+  font-family: "Georgia", "New Century Schoolbook", "Times New Roman",
+      "Times", serif;
+  margin-left: 30pt; 
+  margin-right: 30pt; 
 }
 
 a:link { 

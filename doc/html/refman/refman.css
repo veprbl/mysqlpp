@@ -30,42 +30,51 @@ div.nav { background-color: #DDDDAA; border: 1px solid #CCBBAA; }
 
 
 /* Standard markup styles, borrowed from tangentsoft.net */
-body { background-color: #FFFFEE; }
+body {
+  background-color: #FFFFEE;
+  font-family: "Georgia", "New Century Schoolbook", "Times New Roman",
+      "Times", serif;
+  margin-left: 30pt; 
+  margin-right: 30pt; 
+}
 
 a:link { color: #491E00; }
 a:visited { color: #7D2E01; }
 a:hover { color: #CC5500; background-color: transparent; text-decoration: none; }
 a:active { color: #DA7417; } 
 
-p { line-height: 140%; margin-left: 20pt; }
+p { line-height: 140%; }
 
 h1 {
   font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 20pt;
   color: #501000;
+  margin-left: 0pt;
 }
 h2 {
   font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 16pt;
   font-weight: bold;
   color: #501000;
+  margin-left: -10pt;
 }
 h3 {
   font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 14pt;
   font-weight: bold;
   color: #501000;
+  margin-left: -10pt;
 }
 h4 {
   font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 10pt;
   font-weight: bold;
   color: #501000;
+  margin-left: -10pt;
 }
 h5 {
   font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 10pt;
   font-weight: bold;
   color: #501000;
-  margin-left: 20pt;
 }
