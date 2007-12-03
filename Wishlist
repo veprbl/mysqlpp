@@ -49,6 +49,9 @@ v3.0 Plan
       this by hand from README.vc.  If not, we might need to update
       some of the FAQ items on the MySQL++ home page.
 
+    o Test with Visual Studio 2008 Professional and Express.  If it
+      works, update FAQ.
+
 
 v3.0 "Maybe" Stuff
 ------------------
