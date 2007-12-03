@@ -109,7 +109,7 @@ print_stock_table(mysqlpp::Query& query)
 
 	// Build the query itself, and show it to the user
 	query << "select * from stock";
-	cout << "Query: " << query.preview() << endl;
+	cout << "Query: " << query << endl;
 
 	// Execute it, and display the results
 	mysqlpp::Result res = query.store();

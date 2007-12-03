@@ -74,7 +74,7 @@ static void
 show_databases(mysqlpp::Connection& con)
 {
     mysqlpp::Query query = con.query("show databases");
-	separator(cout, query.preview());
+	separator(cout, query.str());
     mysqlpp::Result res = query.store();
 
     cout << "Databases found: " << res.size();
@@ -94,7 +94,7 @@ show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
 	for (it = tables.begin(); it != tables.end(); ++it) {
 		mysqlpp::Query query = con.query();
 		query << "describe " << *it;
-		separator(cout, query.preview());
+		separator(cout, query.str());
 		mysqlpp::Result res = query.store();
 
 		unsigned int columns = res.num_fields();
@@ -146,7 +146,7 @@ static void
 show_tables(mysqlpp::Connection& con)
 {
     mysqlpp::Query query = con.query("show tables");
-	separator(cout, query.preview());
+	separator(cout, query.str());
 	mysqlpp::Result res = query.store();
 
 	cout << "Tables found: " << res.size();

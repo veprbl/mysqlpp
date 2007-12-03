@@ -248,8 +248,12 @@ Query::parse()
 	std::string str = "";
 	char num[4];
 	std::string name;
-	char *s, *s0;
-	s0 = s = preview_char();
+
+	char* s = new char[sbuffer_.str().size() + 1];
+	memcpy(s, sbuffer_.str().data(), sbuffer_.str().size()); 
+	s[sbuffer_.str().size()] = '\0';
+	const char* s0 = s;
+
 	while (*s) {
 		if (*s == '%') {
 			// Following might be a template parameter declaration...
@@ -395,17 +399,6 @@ Query::pprepare(char option, SQLTypeAdapter& S, bool replace)
 		}
 		return &S;
 	}
-}
-
-
-char*
-Query::preview_char()
-{
-	const std::string& str(sbuffer_.str());
-	char* s = new char[str.size() + 1];
-	memcpy(s, str.data(), str.size()); 
-	s[str.size()] = '\0';
-	return s;
 }
 
 

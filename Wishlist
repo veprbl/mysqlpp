@@ -32,16 +32,6 @@ v3.0 Plan
         operator->() to subscript_iterator.  It can't work with
         value semantics.
 
-    o If Bakefile 0.2.3 (guessing) comes out before we release, change
-      all the msvs2005prj references in mysql++.bkl, Bakefiles.bkgen
-      and rebake.bat to msvs2003prj and remove the section on doing
-      this by hand from README.vc.  If not, we might need to update
-      some of the FAQ items on the MySQL++ home page.
-
-    o Is MYSQLPP_QUERY_THISPTR still needed with VC++2003?  The recent
-      manipulator changes and the removal of all operator<<(Query&,
-      const T&) may make it unnecessary.
-
     o Document that Query::storein() now works with raw Row objects.
       It used to fail because of the Result/Row lifetime issue,
       which didn't apply to SSQLS because of the data copy.
@@ -53,13 +43,15 @@ v3.0 Plan
       allow template functions like Query::insert<T> to become regular
       member functions, taking a reference to the SSQLS base class.
 
-    o Fold Query::preview(void) into str(), and rename all of the
-      multiple-argument forms of preview() to str().
+    o Is MYSQLPP_QUERY_THISPTR still needed with VC++2003?  The recent
+      manipulator changes and the removal of all operator<<(Query&,
+      const T&) may make it unnecessary.
 
-    o A set of Query::str() overloads that take an ostream for the
-      first parameter would be useful.
-
-    o Add operator<< for Query, syntactic sugar for str(ostream&).
+    o If Bakefile 0.2.3 (guessing) comes out before we release, change
+      all the msvs2005prj references in mysql++.bkl, Bakefiles.bkgen
+      and rebake.bat to msvs2003prj and remove the section on doing
+      this by hand from README.vc.  If not, we might need to update
+      some of the FAQ items on the MySQL++ home page.
 
 
 v3.0 "Maybe" Stuff

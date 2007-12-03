@@ -77,7 +77,7 @@ main(int argc, char *argv[])
 		query.update(orig_row, row);
 
 		// Show the query about to be executed.
-		cout << "Query: " << query.preview() << endl;
+		cout << "Query: " << query << endl;
 
 		// Run the query with execute(), since UPDATE doesn't return a
 		// result set.

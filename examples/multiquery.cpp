@@ -169,7 +169,7 @@ main(int argc, char *argv[])
 				"UPDATE test_table SET id=20 WHERE id=10; " <<
 				"SELECT * FROM test_table; " <<
 				"DROP TABLE test_table";
-		cout << "Multi-query: " << endl << query.preview() << endl;
+		cout << "Multi-query: " << endl << query << endl;
 
 		// Execute statement and display all result sets.
 		print_multiple_results(query);
@@ -184,14 +184,14 @@ main(int argc, char *argv[])
 				"SET i_item = concat('%', i_item, '%'); " <<
 				"SELECT * FROM stock WHERE lower(item) like lower(i_item); " <<
 				"END;";
-		cout << "Stored procedure query: " << endl << query.preview() << endl;
+		cout << "Stored procedure query: " << endl << query << endl;
 
 		// Create the stored procedure.
 		print_multiple_results(query);
 
 		// Call the stored procedure and display its results.
 		query << "CALL get_stock('relish')";
-		cout << "Query: " << query.preview() << endl;
+		cout << "Query: " << query << endl;
 		print_multiple_results(query);
 #endif
 

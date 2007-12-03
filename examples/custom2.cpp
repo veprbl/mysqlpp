@@ -57,7 +57,7 @@ main(int argc, char *argv[])
 		query.insert(row);
 
 		// Show the query about to be executed.
-		cout << "Query: " << query.preview() << endl;
+		cout << "Query: " << query << endl;
 
 		// Execute the query.  We use execute() because INSERT doesn't
 		// return a result set.

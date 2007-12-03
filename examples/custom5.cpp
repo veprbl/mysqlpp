@@ -60,7 +60,7 @@ main(int argc, char *argv[])
 					res[0].equal_list(" and ", stock_weight, stock_price);
 
 			// Display the finished query.
-			cout << "Custom query:\n" << query.preview() << endl;
+			cout << "Custom query:\n" << query << endl;
 		}
 	}
 	catch (const mysqlpp::BadQuery& er) {

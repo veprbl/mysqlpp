@@ -268,19 +268,6 @@ public:
 	/// information.
 	void parse();
 
-	/// \brief Return the query string currently in the buffer.
-	std::string preview() { return str(template_defaults); }
-
-	/// \brief Return the query string currently in the buffer with
-	/// template query parameter substitution.
-	///
-	/// \param arg0 the value to substitute for the first template query
-	/// parameter
-	std::string preview(const SQLTypeAdapter& arg0) { return str(arg0); }
-
-	/// \brief Return the query string currently in the buffer.
-	std::string preview(SQLQueryParms& p) { return str(p); }
-
 	/// \brief Reset the query object so that it can be reused.
 	///
 	/// As of v3.0, Query objects auto-reset upon query execution unless
@@ -937,7 +924,6 @@ public:
 	// to keep the above code clear, but also so that we may hide them
 	// from Doxygen, which gets confused by macro instantiations that look
 	// like method declarations.
-	mysql_query_define0(std::string, preview)
 	mysql_query_define0(std::string, str)
 	mysql_query_define0(ResNSel, execute)
 	mysql_query_define0(Result, store)
@@ -974,14 +960,20 @@ private:
 	/// \brief String buffer for storing assembled query
 	std::stringbuf sbuffer_;
 
-	//// Internal support functions
-	char* preview_char();
-
 	/// \brief Process a parameterized query list.
 	void proc(SQLQueryParms& p);
 
 	SQLTypeAdapter* pprepare(char option, SQLTypeAdapter& S, bool replace = true);
 };
+
+
+/// \brief Insert raw query string into the given stream.
+///
+/// This is just syntactic sugar for Query::str(void)
+inline std::ostream& operator <<(std::ostream& os, Query& q)
+{
+	return os << q.str();
+}
 
 
 #if !defined(DOXYGEN_IGNORE)
