@@ -32,10 +32,6 @@ v3.0 Plan
         operator->() to subscript_iterator.  It can't work with
         value semantics.
 
-    o Document that Query::storein() now works with raw Row objects.
-      It used to fail because of the Result/Row lifetime issue,
-      which didn't apply to SSQLS because of the data copy.
-
 	o Add userman chapter on connection options
 
     o Create an SSQLS base class containing all of the common

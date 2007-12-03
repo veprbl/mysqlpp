@@ -285,18 +285,34 @@
             data structures, which can be accessed just as you would
             any other structure. The results can be accessed through
             the Row object, or you can ask the library to dump the
-            results into a sequential or set-associative STL container
+            results into an STL container &mdash; sequential or
+			set-associative, it doesn't matter &mdash;
             for you. Consider this:</para>
 
             <programlisting>
-vector&lt;mystruct&gt; v;
-query &lt;&lt; "SELECT * FROM mytable";
+vector&lt;stock&gt; v;
+query &lt;&lt; "SELECT * FROM stock";
 query.storein(v);
-for (vector&lt;mystruct&gt;::iterator it = v.begin(); it != v.end(); ++it) {
+for (vector&lt;stock&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     cout &lt;&lt; "Price: " &lt;&lt; it-&gt;price &lt;&lt; endl;
 }</programlisting>
 
             <para>Isn't that slick?</para>
+
+			<para>If you don't want to create SSQLSes to match your
+			table structures, as of MySQL++ v3 you can now use
+			<classname>Row</classname> here instead:</para>
+
+            <programlisting>
+vector&lt;mysqlpp::Row&gt; v;
+query &lt;&lt; "SELECT * FROM stock";
+query.storein(v);
+for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
+    cout &lt;&lt; "Price: " &lt;&lt; it->at(3) &lt;&lt; endl;
+}</programlisting>
+
+			<para>It lacks a certain syntactic elegance, but it has its
+			uses.</para>
         </sect3>
     </sect2>
 
