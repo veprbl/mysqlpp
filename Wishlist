@@ -57,6 +57,9 @@ v3.0 "Maybe" Stuff
     good idea to bet on seeing it in v3.0.  If you really want some
     of this, best to just get coding and provide a patch!
 
+    o Per-instance table name overrides in SSQLS?  See "linking mysql++
+      2.3.2" thread by Joe Hudson, 2007.11.30.
+
     o Atomic inc/dec of reference counts in RefCounted*?  To justify
       it, one has to justify using two threads to process data,
       such as one thread doing queries, and another processing the
