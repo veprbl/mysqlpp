@@ -67,31 +67,40 @@ v3.1 Tentative Plan
 
         http://lists.mysql.com/plusplus/6929
 
-      - Tricky bit: It would be good if as much code as is possible
-        resided in a base class (SsqlsBase) that all SSQLSes derived
-        from, allowing Query::insert() and such to take an SsqlsBase&
-        instead of being templates.  This isn't currently possible
-        because virtually everything in an SSQLS is specific to the
-        structure's type.  Study equal_list(), for example.
+      - Try to design it so as much code as possible resides in
+        a common base class (SsqlsBase) that all SSQLSes derive from.
+        Can't do it in v1 because virtually everything is specific
+        to the structure's type.  Study equal_list(), for example.
+        Do it with an eye toward replacing Query's template methods
+        taking SSQLSes with concrete methods taking SsqlsBase&.
 
-        Possible way around this: turn equal_list() into
-        equal_list(Query&), so the knowledge of how to turn the field
-        names and values into an equal-list resides in the SSQLS,
-        not in Query.
+      - Populate fields by name, not by position in the Row.  Benefits:
 
-      - Add features to that tool to write SSQLSv2 declaration files
+        - Decouples SSQLS definition order from query field order.
+
+        - Makes SSQLS more resilient in the face of DB schema
+          extensions: you can say "select * from Table" and stuff the
+          result into an SSQLS with fewer fields, and the extras will
+          just be ignored.  Currently, you must change the SSQLS and
+          recompile whenever this happens.
+
+        - Allows an SSQLS defined for the complete table to accept
+          rows from a subset query.  Can fold custom6 example's
+          demonstration into one of the others as a side issue.
+
+      - Use NoExceptions(row) within the SSQLS's populate method in
+        order to suppress BadFieldName exception when populating from
+        a subset row.
+
+      - Add truthiness operator to SSQLS to detect an incomplete
+        object.
+
+      - Add features to ssqlsxlat to write SSQLSv2 declaration files
         from existing schemas extracted from CREATE TABLE statements,
         from running databases, and from C++ files containing old
         SSQLS v1 declarations.
 
       - Add table creation ability to SSQLS.  It has the schema...
-
-      - Decouple SSQLS field order from MYSQL_ROW field order.  We can
-        use field names to match up assigments, allowing you to have
-        just one SSQLS definition, and have it cope no matter what
-        subset of the table you query.  This will be slower than the
-        current method, but SSQLS (and MySQL++ in general for that
-        matter) isn't about speed.
 
       - Support per-instance table name overrides, instead of just
         per SSQLS?  Needed if you're going to use a single SSQLS for
@@ -150,3 +159,6 @@ v4.0 or Later
 
     o Some sort of support for prepared statements.  Can we hijack
       the template query mechanism?
+
+    o If SSQLSv2 does use a common base class, change Query template
+      methods taking SSQLS into concrete methods taking SsqlsBase&.
