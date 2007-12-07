@@ -64,7 +64,13 @@ Row::operator [](const char* field) const
 		return at(si);
 	}
 	else {
-		throw BadFieldName(field);
+		if (throw_exceptions()) {
+			throw BadFieldName(field);
+		}
+		else {
+			static value_type empty;
+			return empty;
+		}
 	}
 }
 
