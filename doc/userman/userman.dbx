@@ -594,11 +594,6 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
             template, <classname>Query</classname> will throw
             a <ulink type="classref" url="BadParamCount"/>
             exception.</para></listitem>
-
-            <listitem><para>If you pass a bad option value to
-            <methodname>Connection::set_option</methodname>, it will
-            throw a <classname>BadOption</classname>
-            exception.</para></listitem>
         </itemizedlist>
 
         <para>It's educational to modify the examples to force
