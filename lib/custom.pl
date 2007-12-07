@@ -61,6 +61,8 @@ print OUT0 << "---";
 
 #include <string>
 
+namespace mysqlpp {
+
 enum sql_dummy_type { sql_dummy };
 ---
 
@@ -83,8 +85,7 @@ unless ($opt_v) {
 	$suppress_statics_end = ')';
 }
 
-my @types = ("mysqlpp::Date", "mysqlpp::DateTime",
-		"mysqlpp::Time", "mysqlpp::String", "std::string");
+my @types = ("Date", "DateTime", "Time", "String", "std::string");
 foreach my $type (@types) {
     print OUT0 << "---";
 
@@ -95,8 +96,12 @@ inline int sql_cmp(const $type& a, const $type& b)
 ---
 }
 
-@types = ("char", "unsigned char", "sql_tinyint", "int", "unsigned int",
-	  "short int", "unsigned short int", "unsigned long", "long");
+@types = (
+		"char", "unsigned char",
+		"sql_tinyint", "sql_tinyint_unsigned",
+		"int", "unsigned",
+		"short", "unsigned short",
+		"long", "unsigned long");
 foreach my $type (@types) {
     print OUT0 << "---";
 
