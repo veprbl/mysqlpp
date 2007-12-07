@@ -22,13 +22,12 @@ Building the Library and Example Programs
     
         C:\Program Files\MySQL\MySQL Server 5.0\
         
-    you need to change the project file settings.  The simplest way
-    to do this is to change the link and include file directories in
-    the project settings directly.  Although these are technically
-    generated files and it's generally bad practice to change generated
-    files, if that's all the only change to MySQL++ you need, this
-    is harmless.  See below if you want to change the actual source
-    files that create the project files.
+    you need to change the project file settings.  If you're willing to
+    install Bakefile (see below), you can do this quickly by changing
+    the variable MYSQL_WIN_DIR at the top of the file mysql++.bkl,
+    then regenerating the project files by running rebake.bat.
+    Otherwise, you'll need to change the include and library paths
+    in all of the project files by hand.
 
     You must build both the Debug and Release versions of the library.
     You will need them both because when you build your program in
@@ -153,17 +152,19 @@ Working With Bakefile
     Bakefile up on that web site.  Download that and put the directory
     containing bakefile.exe in your Windows PATH.
 
-    Therefore, if you need to make changes to the project files
-    and want to submit those changes back to the MySQL++ project,
-    you need to do your changes to mysql++.bkl instead of directly to
-    the project files.
+    Bakefile generates the various project files and Makefiles from
+    a single source file, mysql++.bkl.  This is usually the file you
+    need to change when you want to submit some change to the MySQL++
+    build system.  You might also look into the files Bakefiles.bkgen,
+    rebake.bat and bootstrap; they're also involved in building the
+    Visual C++ project files.
 
-    The documentation on the Bakefile web site isn't wonderful, but
-    is adequate for most things.  If you can't find documentation
-    for the feature you need, it's quite likely that Bakefile just
-    doesn't support it.  There are things you can do to the project
-    settings in Visual Studio that you can't do in Bakefile, since
-    it's a cross-platform tool.
+    Although Bakefile's documentation is lacking, it does at least
+    list all the supported features.  So, if you can't see a way
+    to make Bakefile do something, it's likely it just can't do it.
+    Bakefile is a high-level abstraction of build systems in general,
+    so it'll never support all the particulars of every odd build
+    system out there.
 
     Once you've made your changes, you can generate the Visual C++
     project files by running rebake.bat, which you can find in the
