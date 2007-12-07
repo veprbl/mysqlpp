@@ -1,3 +1,2 @@
 @echo on
-bakefile -f msvs2005prj %* mysql++.bkl
-start mysql++.sln
+bakefile_gen -f msvs2005prj %* && start mysql++.sln
