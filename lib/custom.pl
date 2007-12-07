@@ -60,6 +60,8 @@ print OUT0 << "---";
 #include "sql_types.h"
 
 #include <string>
+
+enum sql_dummy_type { sql_dummy };
 ---
 
 my ($suppress_statics_start, $suppress_statics_end) = ('', '');
