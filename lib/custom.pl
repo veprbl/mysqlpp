@@ -81,18 +81,19 @@ unless ($opt_v) {
 	$suppress_statics_end = ')';
 }
 
-print OUT0 << "---";
-namespace mysqlpp {
+my @types = ("mysqlpp::Date", "mysqlpp::DateTime",
+		"mysqlpp::Time", "mysqlpp::String", "std::string");
+foreach my $type (@types) {
+    print OUT0 << "---";
 
-enum sql_dummy_type { sql_dummy };
-
-inline int sql_cmp(const std::string &a, const std::string &b)
+inline int sql_cmp(const $type& a, const $type& b)
 {
 	return a.compare(b);
 }
 ---
+}
 
-my @types = ("char", "unsigned char", "sql_tinyint", "int", "unsigned int",
+@types = ("char", "unsigned char", "sql_tinyint", "int", "unsigned int",
 	  "short int", "unsigned short int", "unsigned long", "long");
 foreach my $type (@types) {
     print OUT0 << "---";
