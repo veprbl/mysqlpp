@@ -124,7 +124,12 @@ ResUse::field_num(const std::string& i) const
 {
 	size_t index = (*names_)[i];
 	if ((index >= names_->size()) && throw_exceptions()) {
-		throw BadFieldName(i.c_str());
+		if (throw_exceptions()) {
+            throw BadFieldName(i.c_str());
+        }
+        else {
+            return -1;
+        }
 	}
 	
 	return int(index);
