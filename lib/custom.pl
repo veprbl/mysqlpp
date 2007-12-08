@@ -97,11 +97,11 @@ inline int sql_cmp(const $type& a, const $type& b)
 }
 
 @types = (
-		"char", "unsigned char",
+		"signed char", "unsigned char",
 		"sql_tinyint", "sql_tinyint_unsigned",
-		"int", "unsigned",
-		"short", "unsigned short",
-		"long", "unsigned long");
+		"signed int", "unsigned",
+		"signed short", "unsigned short",
+		"signed long", "unsigned long");
 foreach my $type (@types) {
     print OUT0 << "---";
 
