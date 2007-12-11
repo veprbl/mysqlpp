@@ -67,26 +67,18 @@ v3.1 Tentative Plan
 
         http://lists.mysql.com/plusplus/6929
 
+      - Switch per SSQLS that makes it throw an exception when it sees
+        a mismatch between DB schema and SSQLS definition.  Harkens
+        back to pre v3.0 SSQLS behavior, where you'd get a crash as
+        it tried to fill out fields by position, and fail.  For the
+        B&D folk who don't like the new "just cope" behavior.
+
       - Try to design it so as much code as possible resides in
         a common base class (SsqlsBase) that all SSQLSes derive from.
         Can't do it in v1 because virtually everything is specific
         to the structure's type.  Study equal_list(), for example.
         Do it with an eye toward replacing Query's template methods
         taking SSQLSes with concrete methods taking SsqlsBase&.
-
-      - Populate fields by name, not by position in the Row.  Benefits:
-
-        - Decouples SSQLS definition order from query field order.
-
-        - Makes SSQLS more resilient in the face of DB schema
-          extensions: you can say "select * from Table" and stuff the
-          result into an SSQLS with fewer fields, and the extras will
-          just be ignored.  Currently, you must change the SSQLS and
-          recompile whenever this happens.
-
-        - Allows an SSQLS defined for the complete table to accept
-          rows from a subset query.  Can fold custom6 example's
-          demonstration into one of the others as a side issue.
 
       - Use NoExceptions(row) within the SSQLS's populate method in
         order to suppress BadFieldName exception when populating from

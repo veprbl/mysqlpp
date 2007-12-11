@@ -3,10 +3,10 @@
  	uses a Specialized SQL Structure to store the results instead of a
 	MySQL++ Result object.
  
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -48,18 +48,19 @@ main(int argc, char *argv[])
 		// Establish the connection to the database server.
 		mysqlpp::Connection con(db, server, user, pass);
 
-		// Retrieve the entire contents of the stock table, and store
-		// the data in a vector of 'stock' SSQLS structures.
-		mysqlpp::Query query = con.query("select * from stock");
+		// Retrieve just the item column from the stock table, and store
+		// the data in a vector of 'stock' SSQLS structures.  See the
+		// user manual for the consequences arising from this quiet
+		// ability to store a subset of the table in the stock SSQLS.
+		mysqlpp::Query query = con.query("select item from stock");
 		vector<stock> res;
 		query.storein(res);
 
-		// Display the result set
-		print_stock_header(res.size());
+		// Display the items
+		cout << "We have:" << endl;
 		vector<stock>::iterator it;
 		for (it = res.begin(); it != res.end(); ++it) {
-			print_stock_row(it->item, it->num, it->weight, it->price,
-					it->sdate);
+			cout << '\t' << it->item << endl;
 		}
 	}
 	catch (const mysqlpp::BadQuery& er) {

@@ -171,14 +171,11 @@ Reinitialized sample database successfully.
 ================ END resetdb OUTPUT ================
 
 ---------------- BEGIN custom1 OUTPUT ----------------
-Records found: 4
-
-Item                           Num       Weight    Price     Date
-
-Nürnberger Brats              97        1.5       8.79      2005-03-10
-Pickle Relish                  87        1.5       1.75      1998-09-04
-Hot Mustard                    73        0.95      0.97      1998-05-25
-Hotdog Buns                    65        1.1       1.1       1998-04-23
+We have:
+	Nürnberger Brats
+	Pickle Relish
+	Hot Mustard
+	Hotdog Buns
 ================ END custom1 OUTPUT ================
 
 ---------------- BEGIN custom2 OUTPUT ----------------
@@ -227,13 +224,4 @@ Currently 65 hotdog buns in stock.
 Custom query:
 select * from stock where weight = 1.5 and price = 8.789999999999999
 ================ END custom5 OUTPUT ================
-
----------------- BEGIN custom6 OUTPUT ----------------
-We have:
-	Nuerenberger Bratwurst
-	Pickle Relish
-	Hot Mustard
-	Hotdog Buns
-	Hot Dogs
-================ END custom6 OUTPUT ================
 

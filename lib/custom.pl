@@ -57,6 +57,7 @@ print OUT0 << "---";
 #ifndef MYSQLPP_CUSTOM_H
 #define MYSQLPP_CUSTOM_H
 
+#include "noexceptions.h"
 #include "sql_types.h"
 
 #include <string>
@@ -295,7 +296,7 @@ foreach my $i (1..$max_data_members) {
 	$parm_simple2c_b .= ", " unless $j == $i;
 	$defs  .= "    T$j I$j;";
 	$defs  .= "\n" unless $j == $i;
-	$popul .= "    s->I$j = row.at(O$j).conv(T$j());";
+	$popul .= "    s->I$j = row[N$j].conv(T$j());";
 	$popul .= "\n" unless $j == $i;
         $names .= "    N$j ";
 	$names .= ",\n" unless $j == $i;
@@ -846,6 +847,7 @@ $cus_equal_list
 
   template <mysqlpp::sql_dummy_type dummy> 
   void populate_##NAME (NAME *s, const mysqlpp::Row &row) { 
+  	mysqlpp::NoExceptions ignore_schema_mismatches(row);
 $popul
   } 
 

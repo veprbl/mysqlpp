@@ -241,9 +241,6 @@
 		<exe id="custom5" template="libexcommon-user,programs">
 			<sources>examples/custom5.cpp</sources>
 		</exe>
-		<exe id="custom6" template="libexcommon-user,programs">
-			<sources>examples/custom6.cpp</sources>
-		</exe>
 		<exe id="dbinfo" template="libexcommon-user,programs">
 			<sources>examples/dbinfo.cpp</sources>
 		</exe>
