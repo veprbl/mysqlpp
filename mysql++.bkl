@@ -193,6 +193,9 @@
 		<exe id="test_manip" template="programs">
 			<sources>test/test_manip.cpp</sources>
 		</exe>
+		<exe id="test_string" template="programs">
+			<sources>test/test_string.cpp</sources>
+		</exe>
 		<exe id="test_tcp" template="programs">
 			<sources>test/test_tcp.cpp</sources>
 		</exe>

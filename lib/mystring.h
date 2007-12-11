@@ -462,16 +462,17 @@ public:
 			{ return conv(static_cast<double>(0)); }
 	
 	/// \brief Converts this object's string data to a bool
-	operator bool() const { return conv(0); }
+	operator bool() const { return buffer_ ? atoi(c_str()) : false; }
 
 	/// \brief Converts this object's string data to a mysqlpp::Date
-	operator Date() const { return Date(*this); }
+	operator Date() const { return buffer_ ? Date(*this) : Date(); }
 
 	/// \brief Converts this object's string data to a mysqlpp::DateTime
-	operator DateTime() const { return DateTime(*this); }
+	operator DateTime() const
+			{ return buffer_ ? DateTime(*this) : DateTime(); }
 
 	/// \brief Converts this object's string data to a mysqlpp::Time
-	operator Time() const { return Time(*this); }
+	operator Time() const { return buffer_ ? Time(*this) : Time(); }
 
 	/// \brief Converts the String to a nullable data type
 	///
@@ -628,24 +629,29 @@ template <class Type>
 Type
 String::conv(Type) const
 {
-	std::string strbuf;
-	strip_leading_blanks(strbuf);
-	std::string::size_type len = strbuf.size();
-	const char* str = strbuf.data();
-	const char* end = str;
-	Type num = internal_string_to_int_proxy<Type>(str, end);
+	if (buffer_) {
+		std::string strbuf;
+		strip_leading_blanks(strbuf);
+		std::string::size_type len = strbuf.size();
+		const char* str = strbuf.data();
+		const char* end = str;
+		Type num = internal_string_to_int_proxy<Type>(str, end);
 
-	if (*end == '.') {
-		++end;
-		for (; *end == '0'; ++end) ;
-	}
-	
-	if (*end != '\0' && end != 0) {
-		throw BadConversion(typeid(Type).name(), data(),
-				end - str, len);
-	}
+		if (*end == '.') {
+			++end;
+			for (; *end == '0'; ++end) ;
+		}
+		
+		if (*end != '\0' && end != 0) {
+			throw BadConversion(typeid(Type).name(), data(),
+					end - str, len);
+		}
 
-	return num;
+		return num;
+	}
+	else {
+		return 0;
+	}
 }
 
 
@@ -653,13 +659,20 @@ String::conv(Type) const
 // Doxygen isn't smart enough to recognize these template
 // specializations.  Maybe it's the MYSQLPP_EXPORT tags?
 
+/// \brief Specialization of String::conv<Type>() for bool
+///
+/// We can either do it this way, or define "\c strtob()" (string to
+/// bool, like \c strtol(), \c strtod()...) so we can use
+/// internal_string_to_int_proxy.
+template <> MYSQLPP_EXPORT bool String::conv(bool) const;
+
 /// \brief Specialization of String::conv<Type>() for String
 ///
 /// Yes, I hear you crying, "WTF!?  Why does String need to be able to
 /// convert itself to String?"  SSQLSes with BLOB columns, that's why.
 ///
 /// SSQLSes populate their data members from the raw field data by
-/// calling row[field].conv().  The raw field data is stored in a
+/// calling row["fieldname"].conv().  The raw field data is stored in a
 /// String, and the MySQL++ native BLOB type is String.  Since we're
 /// dealing with generated code, we need this specialization which hand-
 /// written code wouldn't need.  Prove the truth of this to yourself by

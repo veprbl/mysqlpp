@@ -108,24 +108,43 @@ String::conv(String dummy) const { return *this; }
 
 
 template <>
+bool
+String::conv(bool dummy) const
+{
+	return *this;	// delegate to operator bool
+}
+
+
+template <>
 std::string
 String::conv(std::string dummy) const
-		{ return std::string(data(), length()); }
+{
+	return buffer_ ? std::string(data(), length()) : std::string();
+}
 
 
 template <>
 Date
-String::conv(Date dummy) const { return Date(c_str()); }
+String::conv(Date dummy) const
+{
+	return buffer_ ? Date(c_str()) : Date();
+}
 
 
 template <>
 DateTime
-String::conv(DateTime dummy) const { return DateTime(c_str()); }
+String::conv(DateTime dummy) const
+{
+	return buffer_ ? DateTime(c_str()) : DateTime();
+}
 
 
 template <>
 Time
-String::conv(Time dummy) const { return Time(c_str()); }
+String::conv(Time dummy) const
+{
+	return buffer_ ? Time(c_str()) : Time(); 
+}
 
 #endif // !defined(DOXYGEN_IGNORE)
 
