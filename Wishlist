@@ -12,8 +12,6 @@ v3.0 Plan
     o Can we move the position enum inside the SSQLS?  E.g., in
       custom5, stock_price becomes stock::price_pos or similar?
 
-    o Why are _length and _max_length public in type_info.h?
-
     o Redesign Result to be a real container of Rows:
 
       - Either copy everything appropriate from ResUse into Result and

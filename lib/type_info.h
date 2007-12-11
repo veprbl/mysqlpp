@@ -137,8 +137,8 @@ public:
 	/// If you don't, we have arranged a pretty spectacular crash for
 	/// your program.  So there.
 	mysql_type_info() :
-	_length(0),
-	_max_length(0),
+	length_(0),
+	max_length_(0),
 	num_(static_cast<unsigned char>(-1))
 	{
 	}
@@ -150,8 +150,8 @@ public:
 	/// \param _null if true, this type can hold a SQL null
 	mysql_type_info(enum_field_types t, bool _unsigned = false,
 			bool _null = false) :
-	_length(0),
-	_max_length(0),
+	length_(0),
+	max_length_(0),
 	num_(type(t, _unsigned, _null))
 	{
 	}
@@ -160,8 +160,8 @@ public:
 	///
 	/// \param f field from which we extract the type info
 	mysql_type_info(const MYSQL_FIELD& f) :
-	_length(f.length),
-	_max_length(f.max_length),
+	length_(f.length),
+	max_length_(f.max_length),
 	num_(type(f.type, (f.flags & UNSIGNED_FLAG) != 0,
 			(f.flags & NOT_NULL_FLAG) == 0))
 	{
@@ -169,8 +169,8 @@ public:
 
 	/// \brief Create object as a copy of another
 	mysql_type_info(const mysql_type_info& t) :
-	_length(t._length),
-	_max_length(t._max_length),
+	length_(t.length_),
+	max_length_(t.max_length_),
 	num_(t.num_)
 	{
 	}
@@ -188,8 +188,8 @@ public:
 	mysql_type_info& operator =(const mysql_type_info& t)
 	{
 		num_ = t.num_;
-		_length = t._length;
-		_max_length = t._max_length;
+		length_ = t.length_;
+		max_length_ = t.max_length_;
 		return *this;
 	}
 
@@ -224,13 +224,13 @@ public:
 	///
 	/// This only works if you initialized this object from a
 	/// MYSQL_FIELD object.
-	const unsigned int length() const { return _length; }
+	const unsigned int length() const { return length_; }
 
 	/// \brief Return maximum length of data in this field
 	///
 	/// This only works if you initialized this object from a
 	/// MYSQL_FIELD object.
-	const unsigned int max_length() const { return _max_length; }
+	const unsigned int max_length() const { return max_length_; }
 
 	/// \brief Returns the type_info for the C++ type inside of the
 	/// mysqlpp::Null type.
@@ -281,9 +281,6 @@ public:
 	/// what the string constant is at the moment.
 	static const enum_field_types string_type = MYSQL_TYPE_STRING;
 
-	unsigned int _length;		///< field length, from MYSQL_FIELD
-	unsigned int _max_length;	///< max data length, from MYSQL_FIELD
-
 private:
 	typedef mysql_ti_sql_type_info sql_type_info;
 	typedef mysql_ti_sql_type_info_lookup sql_type_info_lookup;
@@ -320,6 +317,8 @@ private:
 	}
 
 	unsigned char num_;
+	unsigned int length_;
+	unsigned int max_length_;
 };
 
 /// \brief Returns true if two mysql_type_info objects are equal.
