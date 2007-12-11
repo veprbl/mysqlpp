@@ -40,12 +40,6 @@ v3.0 Plan
       manipulator changes and the removal of all operator<<(Query&,
       const T&) may make it unnecessary.
 
-    o If Bakefile 0.2.3 (guessing) comes out before we release, change
-      all the msvs2005prj references in mysql++.bkl, Bakefiles.bkgen
-      and rebake.bat to msvs2003prj and remove the section on doing
-      this by hand from README.vc.  If not, we might need to update
-      some of the FAQ items on the MySQL++ home page.
-
     o Test with Visual Studio 2008 Professional and Express.  If it
       works, update FAQ.
 

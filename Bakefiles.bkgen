@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
-<bakefile-gen>
+<bakefile-gen xmlns="http://www.bakefile.org/schema/bakefile-gen">
     <input>
         ./mysql++.bkl
     </input>
 
     <!-- List of output formats to generate: -->
     <add-formats>
-        autoconf,msvs2005prj,mingw
+        autoconf,msvs2003prj,mingw
     </add-formats>
 
     <add-flags formats="mingw">

@@ -173,40 +173,13 @@ Working With Bakefile
 
 Making It Work With Visual Studio 2003
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    There are only two minor issues preventing us from supporting
-    Visual Studio 2003 directly.  If there were elegant workarounds
-    for these, we'd do them, but there aren't, so we leave the work
-    of making the changes up to those users that need them.
-
-    The first is that the current version of Bakefile (0.2.2, see
-    previous section) doesn't support Visual Studio 2003 project
-    files.  This feature is coming in the next version, but since
-    you're reading this, it wasn't available at the time of this
-    release of MySQL++.  If Bakefile 0.2.3 (guessing) is out, you
-    can make it generate Visual Studio 2003 project files by opening
-    mysql++.bkl in a text editor and changing all the '2005's to
-    '2003's.  Then drop down to a command prompt and say:
-
-        bakefile -f msvs2003prj mysql++.bkl
-
-    If 0.2.2 is still the most current version as you read this, you
-    can get around it with a little more work by changing all of the
-    'msvs2005prj' references in mysql++.bkl to 'msvc6prj' instead.
-    Then the command is:
-
-        bakefile -f msvc6prj mysql++.bkl
-
-    Having done that, you can open the mysql++.dsw file this produces
-    and let Visual Studio convert it to the 2003 format for you.
-
-    The other issue is that MySQL++'s SSQLS feature depends on a
-    feature of newer C++ compilers called variadic macro argument
-    lists, which Visual C++ 2003 doesn't support.  You can disable the
-    use of this C++ feature at the expense of not being able to use
-    a given SSQLS macro in more than one module within your program.
-    If you can live with that and you have a Perl interpreter on your
-    system, you need to go into the lib subdirectory of the MySQL++
-    distribution and say:
+    MySQL++'s SSQLS feature depends on a feature of newer C++
+    compilers called variadic macro argument lists, which Visual
+    C++ 2003 doesn't support.  You can disable the use of this C++
+    feature at the expense of not being able to use a given SSQLS
+    macro in more than one module within your program.  If you can
+    live with that and you have a Perl interpreter on your system,
+    go into the lib subdirectory of the MySQL++ distribution and say:
 
         perl custom.pl -v
 

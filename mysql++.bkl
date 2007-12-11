@@ -10,7 +10,7 @@
 	<set var="ZLIB">yes</set>
 
 	<set var="THREAD_TYPE">single</set>
-	<if cond="FORMAT in ['msvs2005prj', 'mingw']">
+	<if cond="FORMAT in ['msvs2003prj', 'mingw']">
 		<set var="THREAD_TYPE">multi</set>
 	</if>
 		
@@ -80,7 +80,7 @@
 			
 			<install-to>$(LIBDIR)</install-to>
 			
-			<if cond="FORMAT=='msvs2005prj'">
+			<if cond="FORMAT=='msvs2003prj'">
 				<define>_UNICODE</define>
 				<define>MYSQLPP_MAKING_DLL</define>
 				<define>HAVE_MYSQL_SSL_SET</define>
@@ -147,7 +147,7 @@
 			<lib-path>.</lib-path>
 		</if>
 
-		<if cond="FORMAT=='msvs2005prj'">
+		<if cond="FORMAT=='msvs2003prj'">
 			<define>_UNICODE</define>
 			<lib-path>$(BUILD)</lib-path>
 			<include>$(MYSQL_WIN_DIR)\include</include>
