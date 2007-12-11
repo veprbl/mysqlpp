@@ -40,9 +40,6 @@ v3.0 Plan
       manipulator changes and the removal of all operator<<(Query&,
       const T&) may make it unnecessary.
 
-    o Test with Visual Studio 2008 Professional and Express.  If it
-      works, update FAQ.
-
     o Figure out how to name debug DLL and library under VC++ and
       Xcode differently (trailing '_d'?) to avoid trouble when mixing
       build options among translation units.  With VC++, we can do

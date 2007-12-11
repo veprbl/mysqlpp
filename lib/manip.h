@@ -409,7 +409,7 @@ operator <<(std::ostream& o, do_nothing_type0 /* esc */)
 }
 
 
-std::ostream&
+MYSQLPP_EXPORT std::ostream&
 operator <<(do_nothing_type1 o, const SQLTypeAdapter& in);
 
 

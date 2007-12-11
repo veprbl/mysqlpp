@@ -52,7 +52,8 @@ main(int argc, char *argv[])
 		mysqlpp::Query query = conn.query("select item from stock");
 		if (mysqlpp::Result res = query.store()) {
 			cout << "We have:" << endl;
-			for (int i = 0; mysqlpp::Row row = res[i]; ++i) {
+			mysqlpp::Row row;
+			for (int i = 0; row = res[i]; ++i) {
 				cout << '\t' << row[0] << endl;
 			}
 		}

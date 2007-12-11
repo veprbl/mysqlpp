@@ -62,7 +62,8 @@ main(int argc, char *argv[])
 					"Date" << endl << endl;
 
 			// Get each row in result set, and print its contents
-			for (int i = 0; mysqlpp::Row row = res[i]; ++i) {
+			mysqlpp::Row row;
+			for (int i = 0; row = res[i]; ++i) {
 				cout << setw(30) << row["item"] << ' ' <<
 						setw(9) << row["num"] << ' ' <<
 						setw(9) << row["weight"] << ' ' <<

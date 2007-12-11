@@ -152,8 +152,8 @@
 			<lib-path>$(BUILD)</lib-path>
 			<include>$(MYSQL_WIN_DIR)\include</include>
 			<lib-path>$(MYSQL_WIN_DIR)\lib\opt</lib-path>
-			<sys-lib>libmysql</sys-lib>
 			<sys-lib>mysqlpp</sys-lib>
+			<sys-lib>libmysql</sys-lib>
 		</if>
 
 		<if cond="FORMAT=='mingw'">

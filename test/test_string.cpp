@@ -42,6 +42,7 @@ test_equality(const mysqlpp::String& s, T value)
 		std::cerr << "Type conversion to " << typeid(T).name() <<
 				" failed: \"" << s << "\" != \"" << value << "\"." <<
 				std::endl;
+		return false;
 	}
 }
 

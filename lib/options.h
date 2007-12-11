@@ -54,7 +54,7 @@ class DBDriver;
 ///
 /// This is the base class for the mid-level interface classes that take
 /// arguments, plus the direct base for options that take no arguments.
-class Option
+class MYSQLPP_EXPORT Option
 {
 public:
 	/// \brief Types of option setting errors we can diagnose
@@ -73,7 +73,7 @@ public:
 /// \brief Define abstract interface for all *Options that take a
 /// lone scalar as an argument.
 template <typename T>
-class DataOption : public Option
+class MYSQLPP_EXPORT DataOption : public Option
 {
 public:
 	typedef T ArgType;						///< Alias for template param
@@ -89,7 +89,7 @@ typedef DataOption<std::string> StringOption;	///< Option w/ string argument
 
 
 /// \brief Enable data compression on the connection
-class CompressOption : public Option
+class MYSQLPP_EXPORT CompressOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -102,7 +102,7 @@ private:
 
 
 /// \brief Change Connection::connect() default timeout
-class ConnectTimeoutOption : public IntegerOption
+class MYSQLPP_EXPORT ConnectTimeoutOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -117,7 +117,7 @@ private:
 /// \brief Make Query::affected_rows() return number of matched rows
 ///
 /// Default is to return number of \b changed rows.
-class FoundRowsOption : public BooleanOption
+class MYSQLPP_EXPORT FoundRowsOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -133,7 +133,7 @@ private:
 ///
 /// This is the default.  The option exists to override
 /// UseEmbeddedConnectionOption and UseEmbeddedConnectionOption.
-class GuessConnectionOption : public Option
+class MYSQLPP_EXPORT GuessConnectionOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -146,7 +146,7 @@ private:
 
 
 /// \brief Allow spaces after function names in queries
-class IgnoreSpaceOption : public BooleanOption
+class MYSQLPP_EXPORT IgnoreSpaceOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -159,7 +159,7 @@ private:
 
 
 /// \brief Give SQL executed on connect
-class InitCommandOption : public StringOption
+class MYSQLPP_EXPORT InitCommandOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -174,7 +174,7 @@ private:
 /// \brief Assert that this is an interactive program
 ///
 /// Affects connection timeouts.
-class InteractiveOption : public BooleanOption
+class MYSQLPP_EXPORT InteractiveOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -187,7 +187,7 @@ private:
 
 
 /// \brief Enable LOAD DATA LOCAL statement
-class LocalFilesOption : public BooleanOption
+class MYSQLPP_EXPORT LocalFilesOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -200,7 +200,7 @@ private:
 
 
 /// \brief Enable LOAD LOCAL INFILE statement
-class LocalInfileOption : public IntegerOption
+class MYSQLPP_EXPORT LocalInfileOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -213,7 +213,7 @@ private:
 
 
 /// \brief Enable multiple result sets in a reply
-class MultiResultsOption : public BooleanOption
+class MYSQLPP_EXPORT MultiResultsOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -226,7 +226,7 @@ private:
 
 
 /// \brief Enable multiple queries in a request to the server
-class MultiStatementsOption : public BooleanOption
+class MYSQLPP_EXPORT MultiStatementsOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -239,7 +239,7 @@ private:
 
 
 /// \brief Suggest use of named pipes
-class NamedPipeOption : public Option
+class MYSQLPP_EXPORT NamedPipeOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -252,7 +252,7 @@ private:
 
 
 /// \brief Disable db.tbl.col syntax in queries
-class NoSchemaOption : public BooleanOption
+class MYSQLPP_EXPORT NoSchemaOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -265,7 +265,7 @@ private:
 
 
 /// \brief Set type of protocol to use
-class ProtocolOption : public IntegerOption
+class MYSQLPP_EXPORT ProtocolOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -278,7 +278,7 @@ private:
 
 
 /// \brief Override use of my.cnf
-class ReadDefaultFileOption : public StringOption
+class MYSQLPP_EXPORT ReadDefaultFileOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -291,7 +291,7 @@ private:
 
 
 /// \brief Override use of my.cnf
-class ReadDefaultGroupOption : public StringOption
+class MYSQLPP_EXPORT ReadDefaultGroupOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -304,7 +304,7 @@ private:
 
 
 /// \brief Set timeout for IPC data reads
-class ReadTimeoutOption : public IntegerOption
+class MYSQLPP_EXPORT ReadTimeoutOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -317,7 +317,7 @@ private:
 
 
 /// \brief Enable automatic reconnection to server
-class ReconnectOption : public BooleanOption
+class MYSQLPP_EXPORT ReconnectOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -330,7 +330,7 @@ private:
 
 
 /// \brief Set reporting of data truncation errors
-class ReportDataTruncationOption : public BooleanOption
+class MYSQLPP_EXPORT ReportDataTruncationOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -344,7 +344,7 @@ private:
 
 /// \brief Enforce use of secure authentication, refusing connection if
 /// not available
-class SecureAuthOption : public BooleanOption
+class MYSQLPP_EXPORT SecureAuthOption : public BooleanOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -357,7 +357,7 @@ private:
 
 
 /// \brief Give path to charset definition files
-class SetCharsetDirOption : public StringOption
+class MYSQLPP_EXPORT SetCharsetDirOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -370,7 +370,7 @@ private:
 
 
 /// \brief Give name of default charset
-class SetCharsetNameOption : public StringOption
+class MYSQLPP_EXPORT SetCharsetNameOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -383,7 +383,7 @@ private:
 
 
 /// \brief Fake client IP address when connecting to embedded server
-class SetClientIpOption : public StringOption
+class MYSQLPP_EXPORT SetClientIpOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -396,7 +396,7 @@ private:
 
 
 /// \brief Set name of shmem segment for IPC
-class SharedMemoryBaseNameOption : public StringOption
+class MYSQLPP_EXPORT SharedMemoryBaseNameOption : public StringOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -409,7 +409,7 @@ private:
 
 
 /// \brief Specialized option for handling SSL parameters.
-class SslOption : public Option
+class MYSQLPP_EXPORT SslOption : public Option
 {
 public:
 	/// \brief Create a set of SSL connection option parameters
@@ -442,7 +442,7 @@ private:
 
 
 /// \brief Connect to embedded  server in preference to remote server
-class UseEmbeddedConnectionOption : public Option
+class MYSQLPP_EXPORT UseEmbeddedConnectionOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -455,7 +455,7 @@ private:
 
 
 /// \brief Connect to remote server in preference to embedded server
-class UseRemoteConnectionOption : public Option
+class MYSQLPP_EXPORT UseRemoteConnectionOption : public Option
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
@@ -468,7 +468,7 @@ private:
 
 
 /// \brief Set timeout for IPC data reads
-class WriteTimeoutOption : public IntegerOption
+class MYSQLPP_EXPORT WriteTimeoutOption : public IntegerOption
 {
 #if !defined(DOXYGEN_IGNORE)
 public:
