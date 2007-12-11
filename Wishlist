@@ -9,9 +9,6 @@ widely useful.  Patches or proposals of this sort are always welcome.
 
 v3.0 Plan
 ---------
-    o Can we move the position enum inside the SSQLS?  E.g., in
-      custom5, stock_price becomes stock::price_pos or similar?
-
     o Redesign Result to be a real container of Rows:
 
       - Either copy everything appropriate from ResUse into Result and
