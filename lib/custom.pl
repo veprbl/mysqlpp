@@ -196,27 +196,29 @@ print OUT << "---";
 
 
 foreach my $i (1..$max_data_members) {
-  my ($compr, $define, $compp, $set, $parm2);
-  $compr = ""; $parm2 = ""; $define = "";
-  $compr = "    int cmp; \\\n" unless $i == 1;
-  $compp = "";
-  $set = "";
-  foreach my $j (1..$i) {
-	  if ($j != $i) {
-		  $compr .= "    cmp = mysqlpp::sql_cmp(x.C$j , y.C$j ); \\\n";
-		  $compr .= "    if (cmp) return cmp; \\\n";
-      }
+	my ($compr, $define, $compp, $set, $parm2);
 
-      $compr .= "    return mysqlpp::sql_cmp(x.C$j , y.C$j );"   if $j == $i;
-      $parm2 .= "const T$j &p$j";
-      $parm2 .= ", "  unless $j == $i;
-      $define.= "C$j (p$j)";
-      $define.= ", "  unless $j == $i;
-      $set   .= "    C$j = p$j;\\\n";
-      $compp .= "true";
-      $compp .= ", " unless $j == $i;
-  }
-  print OUT << "---";
+	$compr = ""; $parm2 = ""; $define = "";
+	$compr = "    int cmp; \\\n" unless $i == 1;
+	$compp = "";
+	$set = "";
+
+	foreach my $j (1..$i) {
+		if ($j != $i) {
+			$compr .= "    cmp = mysqlpp::sql_cmp(x.C$j , y.C$j ); \\\n";
+			$compr .= "    if (cmp) return cmp; \\\n";
+		}
+
+		$compr .= "    return mysqlpp::sql_cmp(x.C$j , y.C$j );" if $j == $i;
+		$parm2 .= "const T$j &p$j";
+		$parm2 .= ", " unless $j == $i;
+		$define.= "C$j (p$j)";
+		$define.= ", " unless $j == $i;
+		$set   .= "    C$j = p$j;\\\n";
+		$compp .= "true";
+		$compp .= ", " unless $j == $i;
+	}
+	print OUT << "---";
 
 // ---------------------------------------------------
 //                   Begin Compare $i
@@ -263,97 +265,124 @@ print OUT << "---";
 
 
 foreach my $i (1..$max_data_members) {
+    my $create_bool = "";
+	my $create_list = "";
+	my $cus_equal_list = "";
+	my $cus_field_list = "";
+    my $cusparms1 = "";
+    my $cusparms11 = "";
+	my $cusparms2 = "";
+	my $cusparms22 = "";
+	my $cusparmsv = "";    
+    my $defs = "";
+	my $enums = "";
+	my $equal_list = "";
+	my $field_list = "";
+    my $names = "";
+	my $parmc = "";
+	my $parmC = "";
     my $parm_complete = ""; 
-    my $parm_order = ""; my $parm_order2c = "";
-    my $parm_simple = ""; my $parm_simple2c = "";
-    my $parm_simple_b = ""; my $parm_simple2c_b = "";
-    my $parm_names = ""; my $parm_names2c = "";
-    my $defs = ""; my $popul = ""; my $parmc = ""; my $parmC = "";
-    my $value_list = ""; my $field_list = ""; my $equal_list = "";
-    my $value_list_cus = ""; my $cus_field_list = ""; my $cus_equal_list = "";
-    my $create_bool = ""; my $create_list = "";
-    my $cusparms1 = ""; my $cusparms2 = ""; my $cusparmsv = "";    
-    my $cusparms11 = ""; my $cusparms22 = "";
-    my $names = "";my $enums = "";
+    my $parm_names = "";
+	my $parm_names2c = "";
+    my $parm_order = "";
+	my $parm_order2c = "";
+    my $parm_simple = "";
+	my $parm_simple2c = "";
+	my $parm_simple2c_b = "";
+    my $parm_simple_b = "";
+	my $popul = "";
+    my $value_list = "";
+    my $value_list_cus = "";
+
     foreach my $j (1 .. $i) {
-        $parm_complete .= "T$j, I$j, N$j, O$j";
-	$parm_complete .= ", " unless $j == $i;
-	$parm_order    .= "T$j, I$j, O$j";
-	$parm_order    .= ", " unless $j == $i;
-        $parm_order2c  .= "T$j, I$j, #I$j, O$j";
-	$parm_order2c  .= ", " unless $j == $i;
-        $parm_names    .= "T$j, I$j, N$j";
-	$parm_names    .= ", " unless $j == $i;
-	$parm_names2c  .= "T$j, I$j, N$j, ". ($j-1);
-	$parm_names2c  .= ", " unless $j == $i;
-	$parm_simple   .= "T$j, I$j";
-	$parm_simple   .= ", " unless $j == $i;
-	$parm_simple2c .= "T$j, I$j, #I$j, ". ($j-1);
-	$parm_simple2c .= ", " unless $j == $i;
-	$parm_simple_b   .= "T$j, I$j";
-	$parm_simple_b   .= ", " unless $j == $i;
-	$parm_simple2c_b .= "T$j, I$j, ". ($j-1);
-	$parm_simple2c_b .= ", " unless $j == $i;
-	$defs  .= "    T$j I$j;";
-	$defs  .= "\n" unless $j == $i;
-	$popul .= "    s->I$j = row[N$j].conv(T$j());";
-	$popul .= "\n" unless $j == $i;
-        $names .= "    N$j ";
-	$names .= ",\n" unless $j == $i;
-        $enums .= "    NAME##_##I$j";
-	$enums .= ",\n" unless $j == $i;
-        $field_list .= "    s << obj.manip << obj.obj->names[".($j-1)."]";
-	$field_list .= " << obj.delim;\n" unless $j == $i;
-	$value_list .= "    s << obj.manip << obj.obj->I$j";
-	$value_list .= " << obj.delim;\n" unless $j == $i;
-        $create_bool .= "    if (i$j) (*include)[".($j-1)."]=true;\n";
-        $create_list .= "    if (i$j == NAME##_NULL) return;\n" unless $i == 1;
-        $create_list .= "    (*include)[i$j]=true;\n";
+		$parm_complete .= "T$j, I$j, N$j, O$j";
+		$parm_complete .= ", " unless $j == $i;
+		$parm_order    .= "T$j, I$j, O$j";
+		$parm_order    .= ", " unless $j == $i;
+		$parm_order2c  .= "T$j, I$j, #I$j, O$j";
+		$parm_order2c  .= ", " unless $j == $i;
+		$parm_names    .= "T$j, I$j, N$j";
+		$parm_names    .= ", " unless $j == $i;
+		$parm_names2c  .= "T$j, I$j, N$j, ". ($j-1);
+		$parm_names2c  .= ", " unless $j == $i;
+		$parm_simple   .= "T$j, I$j";
+		$parm_simple   .= ", " unless $j == $i;
+		$parm_simple2c .= "T$j, I$j, #I$j, ". ($j-1);
+		$parm_simple2c .= ", " unless $j == $i;
+		$parm_simple_b   .= "T$j, I$j";
+		$parm_simple_b   .= ", " unless $j == $i;
+		$parm_simple2c_b .= "T$j, I$j, ". ($j-1);
+		$parm_simple2c_b .= ", " unless $j == $i;
 
-        $value_list_cus .= "    if ((*obj.include)[".($j-1)."]) { \n";
-	$value_list_cus .= "      if (before) s << obj.delim;\n" unless $j == 1;
-        $value_list_cus .= "      s << obj.manip << obj.obj->I$j;\n";
-	$value_list_cus .= "      before = true; \n" unless $j == $i;
-	$value_list_cus .= "     } \n";
+		$defs  .= "    T$j I$j;";
+		$defs  .= "\n" unless $j == $i;
 
-        $cus_field_list .= "    if ((*obj.include)[".($j-1)."]) { \n";
-	$cus_field_list .= "      if (before) s << obj.delim;\n" unless $j == 1;
-        $cus_field_list .= "      s << obj.manip << obj.obj->names[".($j-1)."];\n";
-	$cus_field_list .= "      before = true; \n" unless $j == $i;
-	$cus_field_list .= "     } \n";
+		$popul .= "    s->I$j = row[N$j].conv(T$j());";
+		$popul .= "\n" unless $j == $i;
 
-        $cus_equal_list .= "    if ((*obj.include)[".($j-1)."]) { \n";
-	$cus_equal_list .= "      if (before) s << obj.delim;\n" unless $j == 1;
-        $cus_equal_list .= "      s << obj.obj->names[".($j-1)."] << obj.comp";
-        $cus_equal_list .=        " << obj.manip << obj.obj->I$j;\n";
-	$cus_equal_list .= "      before = true; \n" unless $j == $i;
-	$cus_equal_list .= "     } \n";
+		$names .= "    N$j ";
+		$names .= ",\n" unless $j == $i;
+		$enums .= "    NAME##_##I$j";
+		$enums .= ",\n" unless $j == $i;
 
-        $equal_list .= "    s << obj.obj->names[".($j-1)."] << obj.comp";
-        $equal_list .= " << obj.manip << obj.obj->I$j";
-	$equal_list .= " << obj.delim;\n" unless $j == $i;
-        $cusparms1  .= "bool i$j"         if     $j == 1;
-	$cusparms1  .= "bool i$j = false" unless $j == 1;
-	$cusparms1  .= ", " unless $j == $i;
-        $cusparms11  .= "bool i$j" ;
-	$cusparms11  .= ", " unless $j == $i;
-	$cusparms2  .= "NAME##_enum i$j" if $j == 1;
-	$cusparms2  .= "NAME##_enum i$j = NAME##_NULL" unless $j == 1;
-	$cusparms2  .= ", " unless $j == $i;
-	$cusparms22  .= "NAME##_enum i$j";
-	$cusparms22  .= ", " unless $j == $i;
-        $cusparmsv  .= "i$j";
-	$cusparmsv  .= ", " unless $j == $i;
-	$parmC .= "T$j, I$j";
-	$parmC .= ", " unless $j == $max_data_members;
-        $parmc .= "I$j";
-	$parmc .= ", " unless $j == $max_data_members;
+		$field_list .= "    s << obj.manip << obj.obj->names[".($j-1)."]";
+		$field_list .= " << obj.delim;\n" unless $j == $i;
+
+		$value_list .= "    s << obj.manip << obj.obj->I$j";
+		$value_list .= " << obj.delim;\n" unless $j == $i;
+
+		$create_bool .= "    if (i$j) (*include)[".($j-1)."]=true;\n";
+
+		$create_list .= "    if (i$j == NAME##_NULL) return;\n" unless $i == 1;
+		$create_list .= "    (*include)[i$j]=true;\n";
+
+		$value_list_cus .= "    if ((*obj.include)[".($j-1)."]) { \n";
+		$value_list_cus .= "      if (before) s << obj.delim;\n" unless $j == 1;
+		$value_list_cus .= "      s << obj.manip << obj.obj->I$j;\n";
+		$value_list_cus .= "      before = true; \n" unless $j == $i;
+		$value_list_cus .= "     } \n";
+
+		$cus_field_list .= "    if ((*obj.include)[".($j-1)."]) { \n";
+		$cus_field_list .= "      if (before) s << obj.delim;\n" unless $j == 1;
+		$cus_field_list .= "      s << obj.manip << obj.obj->names[".($j-1)."];\n";
+		$cus_field_list .= "      before = true; \n" unless $j == $i;
+		$cus_field_list .= "     } \n";
+
+		$cus_equal_list .= "    if ((*obj.include)[".($j-1)."]) { \n";
+		$cus_equal_list .= "      if (before) s << obj.delim;\n" unless $j == 1;
+		$cus_equal_list .= "      s << obj.obj->names[".($j-1)."] << obj.comp";
+		$cus_equal_list .=        " << obj.manip << obj.obj->I$j;\n";
+		$cus_equal_list .= "      before = true; \n" unless $j == $i;
+		$cus_equal_list .= "     } \n";
+
+		$equal_list .= "    s << obj.obj->names[".($j-1)."] << obj.comp";
+		$equal_list .= " << obj.manip << obj.obj->I$j";
+		$equal_list .= " << obj.delim;\n" unless $j == $i;
+
+		$cusparms1  .= "bool i$j"         if     $j == 1;
+		$cusparms1  .= "bool i$j = false" unless $j == 1;
+		$cusparms1  .= ", " unless $j == $i;
+		$cusparms11  .= "bool i$j" ;
+		$cusparms11  .= ", " unless $j == $i;
+		$cusparms2  .= "NAME##_enum i$j" if $j == 1;
+		$cusparms2  .= "NAME##_enum i$j = NAME##_NULL" unless $j == 1;
+		$cusparms2  .= ", " unless $j == $i;
+		$cusparms22  .= "NAME##_enum i$j";
+		$cusparms22  .= ", " unless $j == $i;
+		$cusparmsv  .= "i$j";
+		$cusparmsv  .= ", " unless $j == $i;
+
+		$parmC .= "T$j, I$j";
+		$parmC .= ", " unless $j == $max_data_members;
+		$parmc .= "I$j";
+		$parmc .= ", " unless $j == $max_data_members;
     }
-    foreach my $j ($i+1 .. $max_data_members) {
-	$parmC .= "0, 0";
-	$parmC .= ", " unless $j == $max_data_members;
-        $parmc .= "0";
-	$parmc .= ", " unless $j == $max_data_members;
+
+    foreach my $j ($i + 1 .. $max_data_members) {
+		$parmC .= "0, 0";
+		$parmC .= ", " unless $j == $max_data_members;
+		$parmc .= "0";
+		$parmc .= ", " unless $j == $max_data_members;
     }
 
     print OUT << "---";
@@ -410,7 +439,7 @@ $enums
   template <class Manip>
   class NAME##_cus_value_list {
   /* friend std::ostream& operator << <> (std::ostream&, 
-  				  const NAME##_cus_value_list<Manip>&); */
+				  const NAME##_cus_value_list<Manip>&); */
   public:
     const NAME *obj;
     std::vector<bool> *include;
@@ -428,7 +457,7 @@ $enums
   template <class Manip>
   class NAME##_cus_field_list { 
   /* friend std::ostream& operator << <> (std::ostream&, 
-     				  const NAME##_cus_field_list<Manip>&); */
+					  const NAME##_cus_field_list<Manip>&); */
   public:
     const NAME *obj; 
     std::vector<bool> *include; 
@@ -554,11 +583,11 @@ $defs
     }
 
     NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(mysqlpp::cchar *d, 
-						       $cusparms1) const {
+							   $cusparms1) const {
       return field_list(d, mysqlpp::do_nothing, $cusparmsv);
     }
     NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(mysqlpp::cchar *d,
-						       $cusparms2) const {
+							   $cusparms2) const {
       return field_list(d, mysqlpp::do_nothing, $cusparmsv);
     }
     NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(mysqlpp::cchar *d, 
@@ -572,16 +601,16 @@ $defs
 
     template <class Manip>
     NAME##_cus_field_list<Manip> field_list(mysqlpp::cchar *d, Manip m,
-					    $cusparms1) const; 
+						$cusparms1) const; 
     template <class Manip>
     NAME##_cus_field_list<Manip> field_list(mysqlpp::cchar *d, Manip m,
-					    $cusparms2) const; 
+						$cusparms2) const; 
     template <class Manip>
     NAME##_cus_field_list<Manip> field_list(mysqlpp::cchar *d, Manip m,
-					    std::vector<bool> *i) const;
+						std::vector<bool> *i) const;
     template <class Manip>
     NAME##_cus_field_list<Manip> field_list(mysqlpp::cchar *d, Manip m, 
-					    mysqlpp::sql_cmp_type sc) const;
+						mysqlpp::sql_cmp_type sc) const;
 
     /* cus equal */
 
@@ -632,16 +661,16 @@ $defs
 
     template <class Manip>
     NAME##_cus_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
-					    $cusparms1) const; 
+						$cusparms1) const; 
     template <class Manip>
     NAME##_cus_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
-					    $cusparms2) const; 
+						$cusparms2) const; 
     template <class Manip>
     NAME##_cus_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
-					    std::vector<bool> *i) const;
+						std::vector<bool> *i) const;
     template <class Manip>
     NAME##_cus_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
-					    mysqlpp::sql_cmp_type sc) const;
+						mysqlpp::sql_cmp_type sc) const;
   }; 
   $suppress_statics_start
   const char *NAME::names[] = { 
@@ -775,7 +804,7 @@ $cus_equal_list
  
   template <class Manip>
   inline NAME##_cus_value_list<Manip> NAME::value_list(mysqlpp::cchar *d, Manip m,
-						       $cusparms11) const {
+							   $cusparms11) const {
     return NAME##_cus_value_list<Manip> (this, d, m, $cusparmsv); 
   } 
 
@@ -793,7 +822,7 @@ $cus_equal_list
 
   template <class Manip>
   inline NAME##_cus_value_list<Manip> NAME::value_list(mysqlpp::cchar *d, Manip m,
-						       $cusparms22) const { 
+							   $cusparms22) const { 
     return NAME##_cus_value_list<Manip> (this, d, m, $cusparmsv); 
   } 
 
@@ -847,7 +876,7 @@ $cus_equal_list
 
   template <mysqlpp::sql_dummy_type dummy> 
   void populate_##NAME (NAME *s, const mysqlpp::Row &row) { 
-  	mysqlpp::NoExceptions ignore_schema_mismatches(row);
+	mysqlpp::NoExceptions ignore_schema_mismatches(row);
 $popul
   } 
 
