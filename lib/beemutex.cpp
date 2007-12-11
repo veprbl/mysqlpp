@@ -64,7 +64,7 @@ BeecryptMutex::BeecryptMutex() throw (MutexFailed)
 {
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
 	*impl_ptr(pmutex_) = CreateMutex((LPSECURITY_ATTRIBUTES) 0, FALSE,
-			(LPCWSTR) 0);
+			(LPCTSTR) 0);
 	if (!impl_val(pmutex_))
 		throw MutexFailed("CreateMutex failed");
 #else
