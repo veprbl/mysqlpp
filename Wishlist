@@ -9,8 +9,10 @@ widely useful.  Patches or proposals of this sort are always welcome.
 
 v3.0 Plan
 ---------
-	o Can we move the position enum inside the SSQLS?  E.g., in
-	  custom5, stock_price becomes stock::price_pos or similar?
+    o Can we move the position enum inside the SSQLS?  E.g., in
+      custom5, stock_price becomes stock::price_pos or similar?
+
+    o Why are _length and _max_length public in type_info.h?
 
     o Redesign Result to be a real container of Rows:
 
@@ -136,21 +138,26 @@ v3.1 Tentative Plan
 
 v4.0 or Later
 -------------
-    o Abstract all uses of MySQL C API functions into a database
-      driver class with a generic interface.  This is a step towards
-      database-independence, without the parallel class hierarchy
-      required by the MySQL++ 1.7 design.
+    o Database independence:
 
-      A bonus is that it'll let us remove Connection's last friend,
-      Query, which only needs to be a friend to make C API calls
-      using Connection::mysql_.
+      - Make DBDriver class purely abstract; move its entire functional
+        contents to new MysqlDriver.
 
-      Abstract base class DBDriver declares the generic interface;
-      it's subclassed for every database server type we support.
-      Connection object creates leaf class, passes it generically
-      as a DBDriver* to Query, which passes it to Result.  At the
-      moment, that's all the classes that access the C API themselves.
-      Everything else goes through either Query or Connection.
+      - Create at least two other DBDriver subclasses to ensure base
+        class is reusable.  PostgresDriver and SqlLiteDriver?
+
+      - Give Connection ctor a parameter to let it know what kind of
+        driver to create.
+
+      - Tricky bit: type_info module.  Extremely closely tied to
+        MySQL C API right now.  Will probably have to turn it into a
+        parallel class hierarchy to DBDriver, or fold it in with same.
+
+      - Tricky bit: building MySQL++ on systems without autoconf.  How
+        to specify what DB engines are available?  Probably default to
+        supporting MySQL only, and let people turn things on manually
+        as they need them.  Or, maybe make them use Bakefile so they
+        can fiddle with the options if they want something atypical.
 
     o Some sort of support for prepared statements.  Can we hijack
       the template query mechanism?
