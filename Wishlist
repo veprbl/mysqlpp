@@ -68,12 +68,8 @@ v3.1 Tentative Plan
         Do it with an eye toward replacing Query's template methods
         taking SSQLSes with concrete methods taking SsqlsBase&.
 
-      - Use NoExceptions(row) within the SSQLS's populate method in
-        order to suppress BadFieldName exception when populating from
-        a subset row.
-
-      - Add truthiness operator to SSQLS to detect an incomplete
-        object.
+      - Add truthiness operator to SSQLS to detect an incompletely-
+        populated object?  Or maybe an incomplete() method?
 
       - Add features to ssqlsxlat to write SSQLSv2 declaration files
         from existing schemas extracted from CREATE TABLE statements,
