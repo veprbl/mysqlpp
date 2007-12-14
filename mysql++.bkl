@@ -80,8 +80,12 @@
 			
 			<install-to>$(LIBDIR)</install-to>
 			
-			<if cond="FORMAT=='msvs2003prj'">
+			<if cond="FORMAT in ['msvs2003prj', 'mingw']">
+				<define>UNICODE</define>
 				<define>_UNICODE</define>
+			</if>
+
+			<if cond="FORMAT=='msvs2003prj'">
 				<define>MYSQLPP_MAKING_DLL</define>
 				<define>HAVE_MYSQL_SSL_SET</define>
 				<include>$(MYSQL_WIN_DIR)\include</include>
@@ -91,7 +95,6 @@
 			</if>
 
 			<if cond="FORMAT=='mingw'">
-				<define>_UNICODE</define>
 				<define>MYSQLPP_NO_DLL</define>
 				<define>HAVE_MYSQL_SSL_SET</define>
 				<include>"$(MYSQL_WIN_DIR)\include"</include>
@@ -147,8 +150,12 @@
 			<lib-path>.</lib-path>
 		</if>
 
-		<if cond="FORMAT=='msvs2003prj'">
+		<if cond="FORMAT in ['msvs2003prj', 'mingw']">
+			<define>UNICODE</define>
 			<define>_UNICODE</define>
+		</if>
+
+		<if cond="FORMAT=='msvs2003prj'">
 			<lib-path>$(BUILD)</lib-path>
 			<include>$(MYSQL_WIN_DIR)\include</include>
 			<lib-path>$(MYSQL_WIN_DIR)\lib\opt</lib-path>
@@ -157,7 +164,6 @@
 		</if>
 
 		<if cond="FORMAT=='mingw'">
-			<define>_UNICODE</define>
 			<define>MYSQLPP_NO_DLL</define>
 			<ldflags>
 				-Wl,--enable-auto-import -Wl,--enable-runtime-pseudo-reloc
