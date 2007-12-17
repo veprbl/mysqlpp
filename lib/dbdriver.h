@@ -380,6 +380,7 @@ public:
 				it != applied_options_.end(); 
 				++it) {
 			if (typeid(*it) == ti) {
+				delete o;
 				return "";		// option of this type already set
 			}
 		}

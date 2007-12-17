@@ -305,7 +305,7 @@ Connection::set_option(Option* o)
 	}
 	else {
 		if (throw_exceptions()) {
-			throw BadOption(error_message_, o);
+			throw BadOption(error_message_, typeid(*o));
 		}
 		return false;
 	}

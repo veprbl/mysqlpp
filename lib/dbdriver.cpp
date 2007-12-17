@@ -29,6 +29,7 @@
 #include "exceptions.h"
 
 #include <sstream>
+#include <memory>
 
 // An argument was added to mysql_shutdown() in MySQL 4.1.3 and 5.0.1.
 #if ((MYSQL_VERSION_ID >= 40103) && (MYSQL_VERSION_ID <= 49999)) || (MYSQL_VERSION_ID >= 50001)
@@ -192,26 +193,28 @@ std::string
 DBDriver::set_option(Option* o)
 {
 	std::ostringstream os;
+	std::auto_ptr<Option> cleanup(o);
+
 	switch (o->set(this)) {
 		case Option::err_NONE:
 			applied_options_.push_back(o);
+			cleanup.release();
 			break;
 
 		case Option::err_api_limit:
-			os << "Database driver version " << client_version() <<
-					"doesn't support option '" << typeid(o).name() << "'";
-			throw BadOption(os.str(), o); // mandatory throw!
+			os << "Option not supported by database driver v" <<
+					client_version();
+			throw BadOption(os.str(), typeid(*o)); // mandatory throw!
 
 		case Option::err_api_reject:
-			os << "Database driver returned an error when setting "
-					"option '" << typeid(o).name() << "'";
+			os << "Database driver failed to set option";
 			break;
 
 		case Option::err_connected:
-			os << "Option '" << typeid(o).name() <<
-					"' can only be set before connection is established.";
+			os << "Option can only be set before connection is established";
 			break;
 	}
+
 	return os.str();
 }
 

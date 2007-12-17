@@ -263,8 +263,10 @@ public:
 	/// \param o pointer to any derivative of Option allocated on
 	/// the heap
 	///
-	/// Objects passed to this method will be released when this
-	/// Connection object is destroyed.
+	/// Objects passed to this method and successfully set will be
+	/// released when this Connection object is destroyed.  If an error
+	/// occurs while setting the option the object will be deleted
+	/// immediately.
 	///
 	/// Because there are so many Option subclasses, the actual effect
 	/// of this function has a wide range.  This mechanism abstracts
