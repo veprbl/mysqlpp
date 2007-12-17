@@ -42,19 +42,31 @@ do
 done
 
 rm -f config.cache
-set -x
 
-bakefilize &&
+# Do Bakefile stuff first
+set -x &&
+	bakefilize &&
 	bakefile_gen $BF_OPTIONS &&
-	mv autoconf_inc.m4 config ;
 	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&
-	aclocal -I config -I /usr/local/share/aclocal &&
-	autoheader &&
-	autoconf &&
-	./reconf --enable-maintainer-mode $* &&
-	make lib/custom.h lib/querydef.h &&
-    set +x ; success=awyeah
+	set +x &&
+	success=shonuff
 
+# If that succeeded, move on to autotools stuff, etc.
+if [ -n "$success" ]
+then
+	mv autoconf_inc.m4 config > /dev/null 2>&1	# don't care if it fails
+
+	success=
+	aclocal -I config -I /usr/local/share/aclocal &&
+		autoheader &&
+		autoconf &&
+		./configure --cache-file=config.cache --enable-maintainer-mode $* &&
+		make lib/custom.h lib/querydef.h &&
+		set +x &&
+		success=awyeah
+fi
+
+# Detect failure in any part of above
 if [ -z "$success" ]
 then
     echo BOOTSTRAP FAILED!

@@ -364,7 +364,7 @@
 					COPYING CREDITS exrun* HACKERS INSTALL install.bat \
 					install-sh libmysqlclient.def LICENSE Makefile.* \
 					mysql++.* mysql++_*.ds? osver README* rebake.bat \
-					reconf Wishlist $(PKGNAME)
+					Wishlist $(PKGNAME)
 			</command>
 
 			<!-- config subdir -->
