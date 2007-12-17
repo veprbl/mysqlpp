@@ -45,8 +45,8 @@ Other contributors of note since 1.7.10:
     examples/deadlock.cpp to test that this feature does what it is
     supposed to.
 
-    Jonathan Wakely <jonathan.wakely@gmail.com> redesigned the
-    internals of RefCountedPointer for greater exception safety.
+    Jonathan Wakely <mysql@kayari.org> redesigned the internals of
+    RefCountedPointer for greater exception safety.
 
 
 Here are the personal credits from the old 1.7.9 documentation,
