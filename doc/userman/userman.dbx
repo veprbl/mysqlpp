@@ -227,7 +227,7 @@
             <para>Not all SQL queries return data. An example
             is <command>CREATE TABLE</command>. For these types
             of queries, there is a special result type (<ulink
-            type="classref" url="ResNSel"/>) that simply reports the
+            type="classref" url="SimpleResult"/>) that simply reports the
             state resulting from the query: whether the query was
             successful, how many rows it impacted (if any), etc.</para>
         </sect3>
@@ -236,31 +236,34 @@
             <title>Queries That Return Data: MySQL++ Data
             Structures</title>
 
-            <para>The most direct way to retrieve a result set is
-            to use <methodname>Query::store()</methodname>. This
-            returns a <ulink type="classref" url="Result"/> object
-            which acts much like a <classname>std::vector</classname>
-            containing one or more <ulink type="classref" url="Row"/>
-            objects. In turn, each <classname>Row</classname>
-            object is like a <classname>std::vector</classname>
-            of <classname>String</classname> objects, one for
-            each field in the result set. Therefore, you can treat
-            <classname>Result</classname> as a two-dimensional array:
-            you can get the 5th field on the 2nd row by simply
-            saying <methodname>result[1][4]</methodname>. You can
+            <para>The most direct way to retrieve a result set is to
+            use <methodname>Query::store()</methodname>. This
+            returns a <ulink type="classref"
+            url="StoreQueryResult"/> object, which derives from
+            <classname>std::vector&lt;mysqlpp::Row&gt;</classname>,
+            making it a random-access container of <ulink
+            type="classref" url="Row"/>s. In turn,
+            each <classname>Row</classname> object is
+            like a <classname>std::vector</classname> of
+            <classname>String</classname> objects, one for
+            each field in the result set. Therefore, you can
+            treat <classname>StoreQueryResult</classname>
+            as a two-dimensional array: you can get the
+            5th field on the 2nd row by simply saying
+            <methodname>result[1][4]</methodname>. You can
             also access row elements by field name, like this:
             <methodname>result[2]["price"]</methodname>.</para>
 
-            <para>A less direct way of working with query results is to
-            use <methodname>Query::use()</methodname>, which returns
-            a <ulink type="classref" url="ResUse"/> object. This
-            class acts like an STL input iterator rather than a
-            <classname>std::vector</classname>-like container: you
-            walk through your result set one item at a time, always
-            going forward. You can't seek around in the result set,
-            and you can't know how many results are in the set until
-            you find the end. In payment for that inconvenience, you
-            get higher memory efficiency, because the entire result
+            <para>A less direct way of working with query results
+            is to use <methodname>Query::use()</methodname>, which
+            returns a <ulink type="classref" url="UseQueryResult"/>
+            object. This class acts like an STL input iterator rather
+            than a <classname>std::vector</classname>: you walk
+            through your result set processing one row at a time,
+            always going forward. You can't seek around in the result
+            set, and you can't know how many results are in the set
+            until you find the end. In payment for that inconvenience,
+            you get better memory efficiency, because the entire result
             set doesn't need to be stored in RAM. This is very useful
             when you need large result sets.</para>
         </sect3>
@@ -466,18 +469,17 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         <para>This example simply gets the entire "item" column from
         the example table, and prints those values out.</para>
 
-        <para>Notice that MySQL++'s <ulink type="classref"
-        url="Result"/> and <ulink type="classref"
-        url="Row"/> objects work like an array or the STL
-        <classname>std::vector</classname> container. The only trick is
-        that if you use a variable to subscript one of these objects,
-        it must be of type <type>int</type>, or your C++ compiler
-        isn't likely to know which overload for <methodname>operator
-        []()</methodname> to call. You can avoid this trap by using
-        the <methodname>at()</methodname> instead of using the
-        subscript operator if you don't mind losing the syntactic
-        convenience. It does the same thing, but it isn't overloaded
-        like <methodname>operator []()</methodname>.</para>
+        <para>Notice that MySQL++'s <ulink
+        type="classref" url="StoreQueryResult"/> derives
+        from <classname>std::vector</classname>, and <ulink
+        type="classref" url="Row"/> provides an interface that makes
+        it a <classname>vector</classname> work-alike. This means
+        you can access elements with subscript notation, walk through
+        them with iterators, run STL algorithms on them, etc.</para>
+
+        <para><classname>Row</classname> provides a little more in
+        this area than a plain old <classname>vector</classname>: you
+        can also access fields by name using subscript notation.</para>
 
         <para>The only thing that isn't explicit in the code above is
         that we delegate command line argument parsing and connection
@@ -1049,26 +1051,38 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         that do not return data <emphasis>per se</emphasis>. For
         instance, <command>CREATE INDEX</command>. You do
         get back some information from the MySQL server, which
-        <methodname>execute()</methodname> returns to its caller in a
-        <ulink type="classref" url="ResNSel"/> object. In addition to
-        the obvious &mdash; a flag stating whether the query succeeded
-        or not &mdash; this object also contains things like the
-        number of rows that the query affected. If you only need the
-        success status, there's <methodname>Query::exec()</methodname>,
-        which just returns bool.</para>
+        <methodname>execute()</methodname> returns to its caller
+        in a <ulink type="classref" url="SimpleResult"/> object. In
+        addition to the obvious &mdash; a flag stating whether the
+        query succeeded or not &mdash; this object also contains things
+        like the number of rows that the query affected. If you only
+        need the success status, it's a little more efficient to call
+        <methodname>Query::exec()</methodname> instead, as it simply
+        returns <type>bool</type>.</para>
 
         <para>If your query does pull data from the database, the
         simplest option is <methodname>store()</methodname>. (All
-        of the examples up to this point have used this method.)
-        This returns a <ulink type="classref" url="Result"/> object,
-        which contains the entire result set. The nice thing about
-        this is that <classname>Result</classname> is a random-access
-        container, like <classname>std::vector</classname>, so you can
-        iterate through it forwards and backwards, access elements with
-        subscript notation, etc. If you'd rather store the result set
-        in an STL container instead of a <classname>Result</classname>
-        object, you can use <methodname>storein()</methodname>
-        instead.</para>
+        of the examples up to this point have used this
+        method.)  This returns a <ulink type="classref"
+        url="StoreQueryResult"/> object, which contains the
+        entire result set. It's especially convenient because
+        <classname>StoreQueryResult</classname> derives from
+        <classname>std::vector&lt;mysqlpp::Row&gt;</classname>, so it
+        opens the whole panoply of STL operations for accessing the
+        rows in the result set. Access rows randomly with subscript
+        notation, iterate forwards and backwards over the result set,
+        run STL algorithms on the set...it all works naturally.</para>
+
+        <para>If you like the idea of storing your
+        results in an STL container but don't want to use
+        <classname>std::vector</classname>, you can call
+        <methodname>Query::storein()</methodname> instead. It
+        lets you store the results in any standard STL container
+        (yes, both sequential and set-associative types) instead of
+        using <classname>StoreQueryResult</classname>. You do miss
+        out on some of the additional database information held by
+        <classname>StoreQueryResult</classname>'s other base class,
+        <ulink type="classref" url="ResultBase"/>, however.</para>
 
         <para><methodname>store*()</methodname> queries are convenient,
         but the cost of keeping the entire result set in main memory
@@ -1086,8 +1100,8 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
         <para>For these large result sets, the superior option
         is a <methodname>use()</methodname> query. This returns
-        a <ulink type="classref" url="ResUse"/> object, which is
-        similar to <classname>Result</classname>, but without
+        a <ulink type="classref" url="UseQueryResult"/> object, which is
+        similar to <classname>StoreQueryResult</classname>, but without
         all of the random-access features. This is because a
         "use" query tells the database server to send the results
         back one row at a time, to be processed linearly. It's
@@ -1470,8 +1484,8 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
         the same problem. The simplest recipie for disaster is:</para>
 
         <programlisting>
-Result r1 = query.use("select garbage from plink where foobie='tamagotchi'");
-Result r2 = query.use("select blah from bonk where bletch='smurf'");</programlisting>
+UseQueryResult r1 = query.use("select garbage from plink where foobie='tamagotchi'");
+UseQueryResult r2 = query.use("select blah from bonk where bletch='smurf'");</programlisting>
 
         <para>The second <methodname>use()</methodname> call fails
         because the first result set hasn't been consumed yet.</para>
@@ -1587,7 +1601,7 @@ query.parse();</programlisting>
         to 25 parameters. For example:</para>
 
         <programlisting>
-Result res = query.store("Dinner Rolls", "item", "item", "price")</programlisting>
+StoreQueryResult res = query.store("Dinner Rolls", "item", "item", "price")</programlisting>
 
         <para>with the template query provided above would
         produce:</para>
@@ -1678,8 +1692,8 @@ query.template_defaults["wheref"] = "item";</programlisting>
         <programlisting>
 query.template_defaults["field1"] = "item"; 
 query.template_defaults["field2"] = "price"; 
-Result res1 = query.store("Hamburger Buns", "item"); 
-Result res2 = query.store(1.25, "price"); </programlisting>
+StoreQueryResult res1 = query.store("Hamburger Buns", "item"); 
+StoreQueryResult res2 = query.store(1.25, "price"); </programlisting>
 
         <para>This stores the result of the following queries
         in <varname>res1</varname> and <varname>res2</varname>,
@@ -1701,7 +1715,7 @@ query.template_defaults["what"] = "Hamburger Buns";
 query.template_defaults["wheref"] = "item";
 query.template_defaults["field1"] = "item"; 
 query.template_defaults["field2"] = "price"; 
-Result res1 = query.store();</programlisting>
+StoreQueryResult res1 = query.store();</programlisting>
 
         <para>This can work, but it is <emphasis>not designed
         to</emphasis>. In fact, it's known to fail horribly in one
@@ -1728,7 +1742,7 @@ Result res1 = query.store();</programlisting>
         <programlisting>
 query.template_defaults["field1"] = "item"; 
 query.template_defaults["field2"] = "price"; 
-Result res = query.store(1.25); </programlisting>
+StoreQueryResult res = query.store(1.25); </programlisting>
 
         <para>This would throw <classname>BadParamCount</classname>
         because the <varname>wheref</varname> is not specified.</para>
@@ -2654,25 +2668,31 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
 
         <para>By way of illustration, let me explain a problem we
         had up until MySQL++ v3.0. When you issue a database query,
-        part of the data you get back in the result set is common
-        to all rows in that result set. For example, there's a
-        list of what columns are in each row.  Since this data is
-        the same for each row, older versions of MySQL++ kept this
-        information in the <ulink url="Result" type="classref"/>
-        object, and each <ulink url="Row" type="classref"/> kept
-        a pointer back to the <classname>Result</classname> that
-        created it, so it could access this common data at need. This
-        is fine as long as each <classname>Result</classname> object
-        outlives the <classname>Row</classname> objects it returns,
-        which isn't a hardship in a single-threaded program. But
-        in a multi-threaded program, there's frequently a desire to
+        part of the data you get back in the result set is common to
+        all rows in that result set. For example, there's a list of
+        what columns are in each row. Since this data is the same
+        for each row in the result set, older versions of MySQL++
+        kept this information in the <classname>Result</classname>
+        object (predecessor to <ulink url="StoreQueryResult"
+        type="classref"/>), and each <ulink url="Row" type="classref"/>
+        kept a pointer back to the <classname>Result</classname> that
+        created it so it could access this common data at need. This
+        was fine as long as each <classname>Result</classname>
+        object outlived the <classname>Row</classname> objects it
+        returned. While you'd have to go out of your way to kill off
+        the <classname>Result</classname> before you were finished with
+        the <classname>Row</classname>s in a typical single-threaded
+        program, in a multi-threaded program it's much easier to get
+        into trouble. For example, there's frequently a desire to
         let one connection do the queries, and other threads process
         the results. You can see how avoiding lifetime problems here
-        would require a careful locking strategy. We got around this
-        by giving these shared data structures a lifetime independent
-        of the <classname>Result</classname> object that intitially
-        creates it, so the last one out could turn off the lights,
-        so to speak.</para>
+        would require a careful locking strategy.</para>
+        
+        <para>We got around this in MySQL++ v3.0 by giving these
+        shared data structures a lifetime independent of the
+        <classname>StoreQueryResult</classname> object that intitially
+        creates it. These shared data structures stick around until
+        the last object needing them gets destroyed.</para>
 
         <para>Although this is now a solved problem, I bring it up
         because there are likely other similar lifetime and sequencing
