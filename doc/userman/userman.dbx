@@ -481,12 +481,14 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
         this area than a plain old <classname>vector</classname>: you
         can also access fields by name using subscript notation.</para>
 
-        <para>The only thing that isn't explicit in the code above is
-        that we delegate command line argument parsing and connection
-        establishment to <function>connect_to_db()</function> in
-        the <filename>util</filename> module. This function exists
+        <para>The only thing that isn't explicit in the code
+        above is that we delegate command line argument parsing
+        to <function>parse_command_line()</function> in the
+        <filename>excommon</filename> module. This function exists
         to give the examples a consistent interface, not to hide
-        important details.</para>
+        important details. You can treat it like a black box: it
+        takes <varname>argc</varname> and <varname>argv</varname>
+        as inputs and sends back database connection parameters.</para>
     </sect2>
 
 
