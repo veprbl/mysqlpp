@@ -31,7 +31,7 @@
 #include "common.h"
 
 #include "exceptions.h"
-#include "fields.h"
+#include "field.h"
 #include "field_names.h"
 #include "field_types.h"
 #include "noexceptions.h"
@@ -76,7 +76,7 @@ public:
 	ResUse() :
 	OptionalExceptions(),
 	driver_(0),
-	fields_(this)
+	current_field_(0)
 	{
 	}
 	
@@ -86,7 +86,8 @@ public:
 	/// \brief Create a copy of another ResUse object
 	ResUse(const ResUse& other) :
 	OptionalExceptions(),
-	driver_(0)
+	driver_(0),
+	current_field_(0)
 	{
 		copy(other);
 	}
@@ -98,7 +99,12 @@ public:
 	ResUse& operator =(const ResUse& other);
 
 	/// \brief Returns the next field in this result set
-	const Field& fetch_field() const;
+	const Field& fetch_field() const
+			{ return fields_.at(current_field_++); }
+
+	/// \brief Returns the given field in this result set
+	const Field& fetch_field(Fields::size_type i) const
+			{ return fields_.at(i); }
 
 	/// \brief Returns the lengths of the fields in the current row of
 	/// the result set.
@@ -130,11 +136,13 @@ public:
 
 	/// \brief Jumps to the given field within the result set
 	///
-	/// Wraps \c mysql_field_seek() in MySQL C API.
-	void field_seek(size_t field) const;
+	/// Calling this allows you to reset the default field index used
+	/// by fetch_field().
+	void field_seek(Fields::size_type field) const
+			{ current_field_ = field; }
 
 	/// \brief Returns the number of fields in this result set
-	int num_fields() const;
+	size_t num_fields() const { return fields_.size(); }
 
 	/// \brief Return the pointer to the underlying MySQL C API
 	/// result set object.
@@ -165,7 +173,7 @@ public:
 	
 	/// \brief Return the name of the table the result set comes from
 	const char* table() const
-			{ return fields_.size() > 0 ? fields_[0].table : ""; }
+			{ return fields_.empty() ? "" : fields_[0].table(); }
 
 	/// \brief Get the index of the named field.
 	///
@@ -222,6 +230,13 @@ protected:
 
 	/// \brief list of field types in result
 	RefCountedPointer<FieldTypes> types_;
+
+	/// \brief Default field index used by fetch_field()
+	///
+	/// It's mutable for the same reason result_ is: the field
+	/// duplicates behavior the C API provides for MYSQL_RES, for
+	/// reasons of control.
+	mutable Fields::size_type current_field_;
 
 	/// \brief Copy another ResUse object's contents into this one.
 	///

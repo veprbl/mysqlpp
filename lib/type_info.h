@@ -137,8 +137,6 @@ public:
 	/// If you don't, we have arranged a pretty spectacular crash for
 	/// your program.  So there.
 	mysql_type_info() :
-	length_(0),
-	max_length_(0),
 	num_(static_cast<unsigned char>(-1))
 	{
 	}
@@ -150,27 +148,12 @@ public:
 	/// \param _null if true, this type can hold a SQL null
 	mysql_type_info(enum_field_types t, bool _unsigned = false,
 			bool _null = false) :
-	length_(0),
-	max_length_(0),
 	num_(type(t, _unsigned, _null))
-	{
-	}
-
-	/// \brief Create object from a MySQL C API field
-	///
-	/// \param f field from which we extract the type info
-	mysql_type_info(const MYSQL_FIELD& f) :
-	length_(f.length),
-	max_length_(f.max_length),
-	num_(type(f.type, (f.flags & UNSIGNED_FLAG) != 0,
-			(f.flags & NOT_NULL_FLAG) == 0))
 	{
 	}
 
 	/// \brief Create object as a copy of another
 	mysql_type_info(const mysql_type_info& t) :
-	length_(t.length_),
-	max_length_(t.max_length_),
 	num_(t.num_)
 	{
 	}
@@ -188,8 +171,6 @@ public:
 	mysql_type_info& operator =(const mysql_type_info& t)
 	{
 		num_ = t.num_;
-		length_ = t.length_;
-		max_length_ = t.max_length_;
 		return *this;
 	}
 
@@ -219,18 +200,6 @@ public:
 	///
 	/// Returns the C++ type_info record corresponding to the SQL type.
 	const std::type_info& c_type() const { return *deref().c_type_; }
-
-	/// \brief Return length of data in this field
-	///
-	/// This only works if you initialized this object from a
-	/// MYSQL_FIELD object.
-	const unsigned int length() const { return length_; }
-
-	/// \brief Return maximum length of data in this field
-	///
-	/// This only works if you initialized this object from a
-	/// MYSQL_FIELD object.
-	const unsigned int max_length() const { return max_length_; }
 
 	/// \brief Returns the type_info for the C++ type inside of the
 	/// mysqlpp::Null type.
@@ -317,8 +286,6 @@ private:
 	}
 
 	unsigned char num_;
-	unsigned int length_;
-	unsigned int max_length_;
 };
 
 /// \brief Returns true if two mysql_type_info objects are equal.

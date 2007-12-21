@@ -41,7 +41,7 @@ FieldNames::init(const ResUse * res)
 	reserve(num);
 
 	for (int i = 0; i < num; i++) {
-		std::string p(res->fields().at(i).name);
+		std::string p(res->fields().at(i).name());
 		str_to_lwr(p);
 		push_back(p);
 	}

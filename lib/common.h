@@ -150,12 +150,4 @@ typedef unsigned long ulong;
 #	include <mysql.h>
 #endif
 
-
-namespace mysqlpp {
-
-/// \brief Alias for MYSQL_FIELD
-typedef MYSQL_FIELD Field;
-
-} // end namespace mysqlpp
-
 #endif // !defined(MYSQLPP_COMMON_H)

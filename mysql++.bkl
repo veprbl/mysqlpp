@@ -50,7 +50,6 @@
 				lib/datetime.cpp
 				lib/dbdriver.cpp
 				lib/field_names.cpp
-				lib/fields.cpp
 				lib/field_types.cpp
 				lib/manip.cpp
 				lib/myset.cpp

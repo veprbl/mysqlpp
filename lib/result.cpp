@@ -33,10 +33,19 @@ namespace mysqlpp {
 ResUse::ResUse(MYSQL_RES* result, DBDriver* dbd, bool te) :
 OptionalExceptions(te),
 driver_(result ? dbd : 0),
-fields_(this)
+fields_(Fields::size_type(result ? dbd->num_fields(result) : 0)),
+current_field_(0)
 {
 	if (result) {
 		result_ = result;
+
+		Fields::size_type i = 0;
+		const MYSQL_FIELD* pf;
+		while ((i < fields_.size()) && (pf = dbd->fetch_field(result))) {
+			fields_[i++] = pf;
+		}
+		dbd->field_seek(result, 0);		// semantics break otherwise!
+
 		names_ = new FieldNames(this);
 		types_ = new FieldTypes(this);
 	}
@@ -55,16 +64,19 @@ ResUse::copy(const ResUse& other)
 
 	if (other.result_) {
 		result_ = other.result_;
-		fields_ = Fields(this);
+		fields_ = other.fields_;
 		names_ = other.names_;
 		types_ = other.types_;
 		driver_ = other.driver_;
+		current_field_ = other.current_field_;
 	}
 	else {
 		result_ = 0;
+		fields_.clear();
 		names_ = 0;
 		types_ = 0;
 		driver_ = 0;
+		current_field_ = 0;
 	}
 }
 
@@ -73,13 +85,6 @@ void
 Result::data_seek(ulonglong offset) const
 {
 	driver_->data_seek(result_.raw(), offset);
-}
-
-
-const Field&
-ResUse::fetch_field() const
-{
-	return *driver_->fetch_field(result_.raw());
 }
 
 
@@ -133,20 +138,6 @@ ResUse::field_num(const std::string& i) const
 	}
 	
 	return int(index);
-}
-
-
-void
-ResUse::field_seek(size_t field) const
-{
-	driver_->field_seek(result_.raw(), field);
-}
-
-
-int
-ResUse::num_fields() const
-{
-	return driver_->num_fields(result_.raw());
 }
 
 
