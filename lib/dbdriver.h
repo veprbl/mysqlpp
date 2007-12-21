@@ -206,9 +206,21 @@ public:
 	/// \brief Returns information about a particular field in a result
 	/// set
 	///
-	/// Wraps \c mysql_fetch_field() in MySQL C API.
-	MYSQL_FIELD* fetch_field(MYSQL_RES* res) const
-			{ return mysql_fetch_field(res); }
+	/// \param res result set to fetch field information for
+	/// \param i field number to fetch information for, if given
+	///
+	/// If i parameter is given, this call is like a combination of
+	/// field_seek() followed by fetch_field() without the i parameter,
+	/// which otherwise just iterates through the set of fields in the
+	/// given result set.
+	///
+	/// Wraps \c mysql_fetch_field() and mysql_fetch_field_direct() in
+	/// MySQL C API.  (Which one it uses depends on i parameter.)
+	MYSQL_FIELD* fetch_field(MYSQL_RES* res, size_t i = UINT_MAX) const
+	{
+		return i == UINT_MAX ? mysql_fetch_field(res) :
+				mysql_fetch_field_direct(res, i);
+	}
 
 	/// \brief Jumps to the given field within the result set
 	///
