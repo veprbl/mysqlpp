@@ -33,7 +33,6 @@
 #include "mystring.h"
 #include "noexceptions.h"
 #include "refcounted.h"
-#include "subiter.h"
 #include "vallist.h"
 
 #include <vector>
@@ -48,6 +47,19 @@ class MYSQLPP_EXPORT ResultBase;
 #endif
 
 /// \brief Manages rows from a result set.
+///
+/// This class is like an extended version of a \c const \c std::vector
+/// of mysqlpp::String.  It adds stuff for populating the vector.  As
+/// for why it's \c const, what would it mean to modify a Row?  If we
+/// ever did support such semantics, it should probably actually modify
+/// the database.  We can't do that if we just derive from std::vector.
+///
+/// Not that we could derive from std::vector even if we wanted to:
+/// \c vector::operator[](size_type) would interfere with our
+/// \c operator[](const \c char*).  We can avoid this only by
+/// maintaining our own public inteface independent of that of
+/// \c vector.
+
 class MYSQLPP_EXPORT Row : public OptionalExceptions
 {
 private:
@@ -58,46 +70,48 @@ private:
     typedef bool Row::*private_bool_type;
 
 public:
-	typedef int difference_type;			///< type for index differences
-	typedef unsigned int size_type;			///< type of returned sizes
-	typedef String value_type;				///< type of data in container
-
-	/// \brief regular iterator type
+	/// \brief type of our internal data list
 	///
-	/// Note that this is the same as const_iterator; we don't have a
-	/// mutable iterator type.
-	typedef subscript_iterator<const Row, const value_type, size_type,
-			difference_type> iterator;	
-	typedef iterator const_iterator;		///< constant iterator type
+	/// This is public because all other typedefs we have for
+	/// mirroring std::vector's public interface depend on it.
+	typedef std::vector<String> list_type;
 
-	/// \brief mutable reverse iterator type
-	typedef const std::reverse_iterator<iterator> reverse_iterator;			
+	/// \brief constant iterator type
+	typedef list_type::const_iterator const_iterator;
+
+	/// \brief constant reference type
+	typedef list_type::const_reference const_reference;
 
 	/// \brief const reverse iterator type
-	typedef const std::reverse_iterator<const_iterator> const_reverse_iterator;		
+	typedef list_type::const_reverse_iterator const_reverse_iterator;
 
-	/// \brief Return maximum number of elements that can be stored
-	/// in container without resizing.
-	size_type max_size() const { return size(); }
+	/// \brief type for index differences
+	typedef list_type::difference_type difference_type;
 
-	/// \brief Returns true if container is empty
-	bool empty() const { return size() == 0; }
+	/// \brief iterator type
+	///
+	/// Note that this is just an alias for the const iterator.  Row
+	/// is immutable, but people are in the habit of saying 'iterator'
+	/// even when they don't intend to use the iterator to modify the
+	/// container, so we provide this as a convenience.
+	typedef const_iterator iterator;
 
-	/// \brief Return iterator pointing to first element in the
-	/// container
-	iterator begin() const { return iterator(this, 0); }
+	/// \brief reference type
+	///
+	/// \sa iterator for justification for this const_reference alias
+	typedef const_reference reference;
 
-	/// \brief Return iterator pointing to one past the last element
-	/// in the container
-	iterator end() const { return iterator(this, size()); }
+	/// \brief mutable reverse iterator type
+	///
+	/// \sa iterator for justification for this const_reverse_iterator
+	/// alias
+	typedef const_reverse_iterator reverse_iterator;
 
-	/// \brief Return reverse iterator pointing to first element in the
-	/// container
-	reverse_iterator rbegin() const { return reverse_iterator(end()); }
+	/// \brief type of returned sizes
+	typedef list_type::size_type size_type;
 
-	/// \brief Return reverse iterator pointing to one past the last
-	/// element in the container
-	reverse_iterator rend() const { return reverse_iterator(begin()); }
+	/// \brief type of data in container
+	typedef list_type::value_type value_type;
 
 	/// \brief Default constructor
 	Row() :
@@ -115,21 +129,173 @@ public:
 
 	/// \brief Create a row object
 	///
-	/// \param d MySQL C API row data
-	/// \param r result set that the row comes from
-	/// \param lengths length of each item in d
+	/// \param row MySQL C API row data
+	/// \param res result set that the row comes from
+	/// \param lengths length of each item in row
 	/// \param te if true, throw exceptions on errors
-	Row(MYSQL_ROW d, const ResultBase* r, const unsigned long* lengths,
-			bool te = true);
+	Row(MYSQL_ROW row, const ResultBase* res,
+			const unsigned long* lengths, bool te = true);
 
 	/// \brief Destroy object
 	~Row() { }
 
-	/// \brief Get the number of fields in the row.
-	size_type size() const { return data_.size(); }
+	/// \brief Get a const reference to the field given its index
+	///
+	/// If the index value is bad, the underlying std::vector is
+	/// supposed to throw an exception, according to the Standard.
+	const_reference at(size_type i) const { return data_.at(i); }
+
+	/// \brief Get a reference to the last element of the vector
+	const_reference back() const { return data_.back(); }
+
+	/// \brief Return a const iterator pointing to first element in the
+	/// container
+	const_iterator begin() const { return data_.begin(); }
+
+	/// \brief Returns true if container is empty
+	bool empty() const { return data_.empty(); }
+
+	/// \brief Return a const iterator pointing to one past the last
+	/// element in the container
+	const_iterator end() const { return data_.end(); }
+
+	/// \brief Get an "equal list" of the fields and values in this row
+	///
+	/// When inserted into a C++ stream, the delimiter 'd' will be used
+	/// between the items, " = " is the relationship operator, and items
+	/// will be quoted and escaped.
+	equal_list_ba<FieldNames, Row, quote_type0>
+			equal_list(const char* d = ",", const char* e = " = ") const;
+
+	/// \brief Get an "equal list" of the fields and values in this row
+	///
+	/// This method's parameters govern how the returned list will
+	/// behave when you insert it into a C++ stream:
+	///
+	/// \param d delimiter to use between items
+	/// \param e the operator to use between elements
+	/// \param m the manipulator to use for each element
+	///
+	/// For example, if d is ",", e is " = ", and m is the quote
+	/// manipulator, then the field and value lists (a, b) (c, d'e)
+	/// will yield an equal list that gives the following when inserted
+	/// into a C++ stream:
+	///
+	/// \code
+	///   'a' = 'c', 'b' = 'd''e'
+	/// \endcode
+	///
+	/// Notice how the single quote was 'escaped' in the SQL way to
+	/// avoid a syntax error.
+	template <class Manip>
+	equal_list_ba<FieldNames, Row, Manip> equal_list(const char* d,
+			const char* e, Manip m) const;
+
+	/// \brief Get a list of the field names in this row
+	///
+	/// When inserted into a C++ stream, the delimiter 'd' will be used
+	/// between the items, and no manipulator will be used on the items.
+	value_list_ba<FieldNames, do_nothing_type0>
+			field_list(const char* d = ",") const;
+
+	/// \brief Get a list of the field names in this row
+	///
+	/// \param d delimiter to place between the items when the list is
+	/// inserted into a C++ stream
+	/// \param m manipulator to use before each item when the list is
+	/// inserted into a C++ stream
+	template <class Manip>
+	value_list_ba<FieldNames, Manip> field_list(const char* d,
+			Manip m) const;
+
+	/// \brief Get a list of the field names in this row
+	///
+	/// \param d delimiter to place between the items when the list is
+	/// inserted into a C++ stream
+	/// \param m manipulator to use before each item when the list is
+	/// inserted into a C++ stream
+	/// \param vb for each true item in this list, add that field name
+	/// to the returned list; ignore the others
+	template <class Manip>
+	value_list_b<FieldNames, Manip> field_list(const char* d, Manip m,
+			const std::vector<bool>& vb) const;
+
+	/// \brief Get a list of the field names in this row
+	///
+	/// \param d delimiter to place between the items when the list is
+	/// inserted into a C++ stream
+	/// \param vb for each true item in this list, add that field name
+	/// to the returned list; ignore the others
+	///
+	/// Field names will be quoted and escaped when inserted into a C++
+	/// stream.
+	value_list_b<FieldNames, quote_type0> field_list(
+			const char* d, const std::vector<bool>& vb) const;
+
+	/// \brief Get a list of the field names in this row
+	///
+	/// \param vb for each true item in this list, add that field name
+	/// to the returned list; ignore the others
+	///
+	/// Field names will be quoted and escaped when inserted into a C++
+	/// stream, and a comma will be placed between them as a delimiter.
+	value_list_b<FieldNames, quote_type0> field_list(
+			const std::vector<bool>& vb) const;
+
+	/// \brief Get a list of the field names in this row
+	///
+	/// For each true parameter, the field name in that position within
+	/// the row is added to the returned list.  When the list is
+	/// inserted into a C++ stream, the delimiter 'd' will be placed
+	/// between the items as a delimiter, and the manipulator 'm' used
+	/// before each item.
+	template <class Manip>
+	value_list_b<FieldNames, Manip> field_list(const char *d, Manip m,
+			bool t0,
+			bool t1 = false, bool t2 = false, bool t3 = false,
+			bool t4 = false, bool t5 = false, bool t6 = false,
+			bool t7 = false, bool t8 = false, bool t9 = false,
+			bool ta = false, bool tb = false, bool tc = false) const;
+
+	/// \brief Get a list of the field names in this row
+	///
+	/// For each true parameter, the field name in that position within
+	/// the row is added to the returned list.  When the list is
+	/// inserted into a C++ stream, the delimiter 'd' will be placed
+	/// between the items as a delimiter, and the items will be quoted
+	/// and escaped.
+	value_list_b<FieldNames, quote_type0> field_list(
+			const char *d, bool t0,
+			bool t1 = false, bool t2 = false, bool t3 = false,
+			bool t4 = false, bool t5 = false, bool t6 = false,
+			bool t7 = false, bool t8 = false, bool t9 = false,
+			bool ta = false, bool tb = false, bool tc = false) const;
+
+	/// \brief Get a list of the field names in this row
+	///
+	/// For each true parameter, the field name in that position within
+	/// the row is added to the returned list.  When the list is
+	/// inserted into a C++ stream, a comma will be placed between the
+	/// items as a delimiter, and the items will be quoted and escaped.
+	value_list_b<FieldNames, quote_type0> field_list(
+			bool t0,
+			bool t1 = false, bool t2 = false, bool t3 = false,
+			bool t4 = false, bool t5 = false, bool t6 = false,
+			bool t7 = false, bool t8 = false, bool t9 = false,
+			bool ta = false, bool tb = false, bool tc = false) const;
+
+	/// \brief Returns a field's index given its name
+	size_type field_num(const char* name) const;
+
+	/// \brief Get a reference to the first element of the vector
+	const_reference front() const { return data_.front(); }
+
+	/// \brief Return maximum number of elements that can be stored
+	/// in container without resizing.
+	size_type max_size() const { return data_.max_size(); }
 
 	/// \brief Assignment operator
-	Row& operator=(const Row& rhs)
+	Row& operator =(const Row& rhs)
 	{
 		data_.assign(rhs.data_.begin(), rhs.data_.end());
 		field_names_.assign(rhs.field_names_);
@@ -143,18 +309,18 @@ public:
 	/// exception.
 	///
 	/// This operator is fairly inefficient.  operator[](int) is faster.
-	const value_type& operator [](const char* field) const;
+	const_reference operator [](const char* field) const;
 
 	/// \brief Get the value of a field given its index.
 	///
 	/// This function is just syntactic sugar, wrapping the at() method.
-	const value_type& operator [](int i) const { return at(i); }
-
-	/// \brief Get the value of a field given its index.
 	///
-	/// If the index value is bad, the underlying std::vector is
-	/// supposed to throw an exception, according to the Standard.
-	const value_type& at(int i) const { return data_.at(i); }
+	/// It's \b critical that the parameter type be \c int, not
+	/// \c size_type, because it will interfere with the \c const
+	/// \c char* overload otherwise.  row[0] is ambiguous when there
+	/// isn't an int overload.
+	const_reference operator [](int i) const
+			{ return at(static_cast<size_type>(i)); }
 
 	/// \brief Returns true if row object was fully initialized and
 	/// has data.
@@ -178,8 +344,16 @@ public:
 		return data_.size() && initialized_ ? &Row::initialized_ : 0;
 	}
 
-	/// \brief Returns a field's index given its name
-	size_type field_num(const char* name) const;
+	/// \brief Return reverse iterator pointing to first element in the
+	/// container
+	const_reverse_iterator rbegin() const { return data_.rbegin(); }
+
+	/// \brief Return reverse iterator pointing to one past the last
+	/// element in the container
+	const_reverse_iterator rend() const { return data_.rend(); }
+
+	/// \brief Get the number of fields in the row.
+	size_type size() const { return data_.size(); }
 
 	/// \brief Get a list of the values in this row
 	///
@@ -341,133 +515,8 @@ public:
 		return value_list_b<Row, quote_type0>(*this, vb, ",", quote);
 	}
 
-	/// \brief Get a list of the field names in this row
-	///
-	/// When inserted into a C++ stream, the delimiter 'd' will be used
-	/// between the items, and no manipulator will be used on the items.
-	value_list_ba<FieldNames, do_nothing_type0>
-			field_list(const char* d = ",") const;
-
-	/// \brief Get a list of the field names in this row
-	///
-	/// \param d delimiter to place between the items when the list is
-	/// inserted into a C++ stream
-	/// \param m manipulator to use before each item when the list is
-	/// inserted into a C++ stream
-	template <class Manip>
-	value_list_ba<FieldNames, Manip> field_list(const char* d,
-			Manip m) const;
-
-	/// \brief Get a list of the field names in this row
-	///
-	/// \param d delimiter to place between the items when the list is
-	/// inserted into a C++ stream
-	/// \param m manipulator to use before each item when the list is
-	/// inserted into a C++ stream
-	/// \param vb for each true item in this list, add that field name
-	/// to the returned list; ignore the others
-	template <class Manip>
-	value_list_b<FieldNames, Manip> field_list(const char* d, Manip m,
-			const std::vector<bool>& vb) const;
-
-	/// \brief Get a list of the field names in this row
-	///
-	/// \param d delimiter to place between the items when the list is
-	/// inserted into a C++ stream
-	/// \param vb for each true item in this list, add that field name
-	/// to the returned list; ignore the others
-	///
-	/// Field names will be quoted and escaped when inserted into a C++
-	/// stream.
-	value_list_b<FieldNames, quote_type0> field_list(
-			const char* d, const std::vector<bool>& vb) const;
-
-	/// \brief Get a list of the field names in this row
-	///
-	/// \param vb for each true item in this list, add that field name
-	/// to the returned list; ignore the others
-	///
-	/// Field names will be quoted and escaped when inserted into a C++
-	/// stream, and a comma will be placed between them as a delimiter.
-	value_list_b<FieldNames, quote_type0> field_list(
-			const std::vector<bool>& vb) const;
-
-	/// \brief Get a list of the field names in this row
-	///
-	/// For each true parameter, the field name in that position within
-	/// the row is added to the returned list.  When the list is
-	/// inserted into a C++ stream, the delimiter 'd' will be placed
-	/// between the items as a delimiter, and the manipulator 'm' used
-	/// before each item.
-	template <class Manip>
-	value_list_b<FieldNames, Manip> field_list(const char *d, Manip m,
-			bool t0,
-			bool t1 = false, bool t2 = false, bool t3 = false,
-			bool t4 = false, bool t5 = false, bool t6 = false,
-			bool t7 = false, bool t8 = false, bool t9 = false,
-			bool ta = false, bool tb = false, bool tc = false) const;
-
-	/// \brief Get a list of the field names in this row
-	///
-	/// For each true parameter, the field name in that position within
-	/// the row is added to the returned list.  When the list is
-	/// inserted into a C++ stream, the delimiter 'd' will be placed
-	/// between the items as a delimiter, and the items will be quoted
-	/// and escaped.
-	value_list_b<FieldNames, quote_type0> field_list(
-			const char *d, bool t0,
-			bool t1 = false, bool t2 = false, bool t3 = false,
-			bool t4 = false, bool t5 = false, bool t6 = false,
-			bool t7 = false, bool t8 = false, bool t9 = false,
-			bool ta = false, bool tb = false, bool tc = false) const;
-
-	/// \brief Get a list of the field names in this row
-	///
-	/// For each true parameter, the field name in that position within
-	/// the row is added to the returned list.  When the list is
-	/// inserted into a C++ stream, a comma will be placed between the
-	/// items as a delimiter, and the items will be quoted and escaped.
-	value_list_b<FieldNames, quote_type0> field_list(
-			bool t0,
-			bool t1 = false, bool t2 = false, bool t3 = false,
-			bool t4 = false, bool t5 = false, bool t6 = false,
-			bool t7 = false, bool t8 = false, bool t9 = false,
-			bool ta = false, bool tb = false, bool tc = false) const;
-
-	/// \brief Get an "equal list" of the fields and values in this row
-	///
-	/// When inserted into a C++ stream, the delimiter 'd' will be used
-	/// between the items, " = " is the relationship operator, and items
-	/// will be quoted and escaped.
-	equal_list_ba<FieldNames, Row, quote_type0>
-			equal_list(const char* d = ",", const char* e = " = ") const;
-
-	/// \brief Get an "equal list" of the fields and values in this row
-	///
-	/// This method's parameters govern how the returned list will
-	/// behave when you insert it into a C++ stream:
-	///
-	/// \param d delimiter to use between items
-	/// \param e the operator to use between elements
-	/// \param m the manipulator to use for each element
-	///
-	/// For example, if d is ",", e is " = ", and m is the quote
-	/// manipulator, then the field and value lists (a, b) (c, d'e)
-	/// will yield an equal list that gives the following when inserted
-	/// into a C++ stream:
-	///
-	/// \code
-	///   'a' = 'c', 'b' = 'd''e'
-	/// \endcode
-	///
-	/// Notice how the single quote was 'escaped' in the SQL way to
-	/// avoid a syntax error.
-	template <class Manip>
-	equal_list_ba<FieldNames, Row, Manip> equal_list(const char* d,
-			const char* e, Manip m) const;
-
 private:
-	std::vector<value_type> data_;
+	list_type data_;
 	RefCountedPointer<FieldNames> field_names_;
 	bool initialized_;
 };
