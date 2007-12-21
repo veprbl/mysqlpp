@@ -74,7 +74,7 @@ std::ostream& operator <<(std::ostream& os, const Time& t)
 
 std::ostream& operator <<(std::ostream& os, const DateTime& dt)
 {
-	if (dt.now) {
+	if (dt.is_now()) {
 		return os << "NOW()";
 	}
 	else {
@@ -177,7 +177,7 @@ int Time::compare(const Time& other) const
 
 int DateTime::compare(const DateTime& other) const
 {
-	if (now && other.now) {
+	if (is_now() && other.is_now()) {
 		return 0;
 	}
 	else {
@@ -195,7 +195,7 @@ int DateTime::compare(const DateTime& other) const
 
 DateTime::operator time_t() const
 {
-	if (now) {
+	if (is_now()) {
 		// Many factors combine to make it almost impossible for this
 		// case to return the same value as you'd get if you used this
 		// in a query.  But, you gotta better idea than to return the
@@ -244,6 +244,16 @@ DateTime::DateTime(time_t t)
 
 	now = false;
 }
+
+
+bool
+DateTime::is_now() const
+{
+	return now &&
+			year == 0 && month == 0 && day == 0 &&
+			hour == 0 && minute == 0 && second == 0;
+}
+
 
 } // end namespace mysqlpp
 

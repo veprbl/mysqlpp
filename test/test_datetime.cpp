@@ -125,6 +125,9 @@ main()
 	failures += test(0, 0, 0, 0, 0, 0);
 	failures += test(1, 2, 3, 4, 5, 6);
 	failures += test_ostream_form(DateTime(), "NOW()", "DateTime");
+	DateTime dt;
+	dt.year = 2007;
+	failures += test_ostream_form(dt, "2007-00-00 00:00:00", "DateTime");
 	return failures;
 }
 

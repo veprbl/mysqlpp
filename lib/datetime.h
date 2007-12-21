@@ -198,6 +198,17 @@ struct DateTime : public DTbase<DateTime>
 	/// \brief Parse a MySQL date and time string into this object.
 	MYSQLPP_EXPORT cchar* convert(cchar*);
 
+	/// \brief Returns true if 'now' member is true and all other
+	/// members are zero.
+	///
+	/// Can't just test 'now' because you can create the object with
+	/// the default ctor (giving a "now" value) and then assign values
+	/// to its data members later, which should make it "not now".  We
+	/// could do without this by hiding all the data members behind
+	/// accessors which can reset the "now" flag when setting other
+	/// values, but it's too simple a class to bother.
+	bool is_now() const;
+
 	/// Convert to time_t
 	operator time_t() const;
 };
