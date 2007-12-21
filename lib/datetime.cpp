@@ -74,9 +74,14 @@ std::ostream& operator <<(std::ostream& os, const Time& t)
 
 std::ostream& operator <<(std::ostream& os, const DateTime& dt)
 {
-	operator <<(os, Date(dt));
-	os << ' ';
-	return operator <<(os, Time(dt));
+	if (dt.now) {
+		return os << "NOW()";
+	}
+	else {
+		operator <<(os, Date(dt));
+		os << ' ';
+		return operator <<(os, Time(dt));
+	}
 }
 
 
@@ -147,6 +152,8 @@ cchar* DateTime::convert(cchar* str)
 	hour = t.hour;
 	minute = t.minute;
 	second = t.second;
+
+	now = false;
 	
 	return str;
 }
@@ -170,29 +177,43 @@ int Time::compare(const Time& other) const
 
 int DateTime::compare(const DateTime& other) const
 {
-	Date d(*this), od(other);
-	Time t(*this), ot(other);
-
-	if (int x = d.compare(od)) {
-		return x;
+	if (now && other.now) {
+		return 0;
 	}
 	else {
-		return t.compare(ot);
+		Date d(*this), od(other);
+		Time t(*this), ot(other);
+
+		if (int x = d.compare(od)) {
+			return x;
+		}
+		else {
+			return t.compare(ot);
+		}
 	}
 }
 
 DateTime::operator time_t() const
 {
-	struct tm tm;
-	tm.tm_sec = second;
-	tm.tm_min = minute;
-	tm.tm_hour = hour;
-	tm.tm_mday = day;
-	tm.tm_mon = month - 1;
-	tm.tm_year = year - 1900;
-	tm.tm_isdst = -1;
+	if (now) {
+		// Many factors combine to make it almost impossible for this
+		// case to return the same value as you'd get if you used this
+		// in a query.  But, you gotta better idea than to return the
+		// current time for an object initialized with the value "now"?
+		return time(0);
+	}
+	else {
+		struct tm tm;
+		tm.tm_sec = second;
+		tm.tm_min = minute;
+		tm.tm_hour = hour;
+		tm.tm_mday = day;
+		tm.tm_mon = month - 1;
+		tm.tm_year = year - 1900;
+		tm.tm_isdst = -1;
 
-	return mktime(&tm);
+		return mktime(&tm);
+	}
 };
 
 DateTime::DateTime(time_t t)
@@ -220,6 +241,8 @@ DateTime::DateTime(time_t t)
 	hour = tm.tm_hour;
 	minute = tm.tm_min;
 	second = tm.tm_sec;
+
+	now = false;
 }
 
 } // end namespace mysqlpp

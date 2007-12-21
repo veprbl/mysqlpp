@@ -195,6 +195,9 @@
 
 	<!-- Define library testing programs' output targets, if enabled -->
 	<if cond="BUILDTEST=='yes'">
+		<exe id="test_datetime" template="programs">
+			<sources>test/test_datetime.cpp</sources>
+		</exe>
 		<exe id="test_manip" template="programs">
 			<sources>test/test_manip.cpp</sources>
 		</exe>

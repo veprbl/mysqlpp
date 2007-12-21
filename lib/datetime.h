@@ -26,7 +26,7 @@
  USA
 ***********************************************************************/
 
-#ifndef MYSQLPP_DATETIME_H
+#if !defined(MYSQLPP_DATETIME_H)
 #define MYSQLPP_DATETIME_H
 
 #include "common.h"
@@ -102,6 +102,13 @@ struct DTbase
 ///
 /// Objects of this class can be inserted into streams, and
 /// initialized from MySQL DATETIME strings.
+///
+/// If you use the default constructor, it's sensible to use the object
+/// in a SQL query as of MySQL++ v3.0.  When converting the object to a
+/// string form for assembling the query, we convert to the SQL function
+/// "NOW()", allowing the database server to set the value.  In older
+/// versions of MySQL++, you'd get a "zero time" instead.
+
 struct DateTime : public DTbase<DateTime>
 {
 	unsigned short year;	///< the year, as a simple integer
@@ -110,6 +117,7 @@ struct DateTime : public DTbase<DateTime>
 	unsigned char hour;		///< the hour, 0-23
 	unsigned char minute;	///< the minute, 0-59
 	unsigned char second;	///< the second, 0-59
+	bool now;				///< true if not given explicit value
 
 	/// \brief Default constructor
 	DateTime() :
@@ -119,7 +127,29 @@ struct DateTime : public DTbase<DateTime>
 	day(0),
 	hour(0),
 	minute(0),
-	second(0)
+	second(0),
+	now(true)
+	{
+	}
+
+	/// \brief Initialize object from discrete y/m/d h:m:s values.
+	///
+	/// \param y year
+	/// \param mon month
+	/// \param d day of month
+	/// \param h hour
+	/// \param min minute
+	/// \param s second
+	DateTime(unsigned short y, unsigned char mon, unsigned char d,
+			unsigned char h, unsigned char min, unsigned char s) :
+	DTbase<DateTime>(),
+	year(y),
+	month(mon),
+	day(d),
+	hour(h),
+	minute(min),
+	second(s),
+	now(false)
 	{
 	}
 	
@@ -131,7 +161,8 @@ struct DateTime : public DTbase<DateTime>
 	day(other.day),
 	hour(other.hour),
 	minute(other.minute),
-	second(other.second)
+	second(other.second),
+	now(false)
 	{
 	}
 
