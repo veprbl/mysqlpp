@@ -228,6 +228,12 @@ public:
 	void field_seek(MYSQL_RES* res, size_t field) const
 			{ mysql_field_seek(res, field); }
 
+	/// \brief Releases memory used by a result set
+	///
+	/// Wraps \c mysql_free_result() in MySQL C API.
+	void free_result(MYSQL_RES* res) const
+			{ mysql_free_result(res); }
+
 	/// \brief Return the connection options object
 	st_mysql_options get_options() const { return mysql_.options; }
 

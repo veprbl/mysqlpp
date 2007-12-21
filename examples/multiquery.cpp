@@ -46,7 +46,7 @@ typedef vector<int> IntVectorType;
 
 
 static void
-print_header(IntVectorType& widths, Result& res)
+print_header(IntVectorType& widths, StoreQueryResult& res)
 {
 	cout << "  |" << setfill(' ');
 	for (size_t i = 0; i < res.field_names()->size(); i++) {
@@ -79,10 +79,10 @@ print_row_separator(IntVectorType& widths)
 
 
 static void
-print_result(Result& res, int index)
+print_result(StoreQueryResult& res, int index)
 {
 	// Show how many rows are in result, if any
-	int num_results = res.size();
+	StoreQueryResult::size_type num_results = res.size();
 	if (res && (num_results > 0)) {
 		cout << "Result set " << index << " has " << num_results <<
 				" row" << (num_results == 1 ? "" : "s") << ':' << endl;
@@ -107,9 +107,8 @@ print_result(Result& res, int index)
 	print_row_separator(widths);
 
 	// Display the result set contents
-	for (int i = 0; i < num_results; ++i) {
-		Row row = res.fetch_row();
-		print_row(widths, row);
+	for (StoreQueryResult::size_type i = 0; i < num_results; ++i) {
+		print_row(widths, res[i]);
 	}
 
 	// Print result set footer
@@ -121,7 +120,7 @@ static void
 print_multiple_results(Query& query)
 {
 	// Execute query and print all result sets
-	Result res = query.store();
+	StoreQueryResult res = query.store();
 	print_result(res, 0);
 	for (int i = 1; query.more_results(); ++i) {
 		res = query.store_next();

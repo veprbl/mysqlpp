@@ -53,7 +53,7 @@ main(int argc, char *argv[])
 
 		// Retrieve an item added by resetdb; it won't be there if
 		// tquery* or custom3 is run since resetdb.
-		mysqlpp::Result res1 = query.store("Nürnberger Brats");
+		mysqlpp::StoreQueryResult res1 = query.store("Nürnberger Brats");
 		if (res1.empty()) {
 			throw mysqlpp::BadQuery("UTF-8 bratwurst item not found in "
 					"table, run resetdb");
@@ -64,7 +64,7 @@ main(int argc, char *argv[])
 		query.reset();		// forget previous template query data
 		query << "update stock set item = %0q where item = %1q";
 		query.parse();
-		mysqlpp::ResNSel res2 = query.execute("Nuerenberger Bratwurst",
+		mysqlpp::SimpleResult res2 = query.execute("Nuerenberger Bratwurst",
 				res1[0][0].c_str());
 
 		// Print the new table contents.

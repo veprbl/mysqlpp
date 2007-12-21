@@ -52,7 +52,7 @@ main(int argc, char *argv[])
 		// a time instead of storing the entire result set in memory
 		// and then iterating over it.
 		mysqlpp::Query query = conn.query("select * from stock");
-		if (mysqlpp::ResUse res = query.use()) {
+		if (mysqlpp::UseQueryResult res = query.use()) {
 			// Display header
 			cout.setf(ios::left);
 			cout << setw(31) << "Item" <<

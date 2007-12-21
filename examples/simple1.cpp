@@ -50,11 +50,10 @@ main(int argc, char *argv[])
 		// Retrieve a subset of the sample stock table set up by resetdb
 		// and display it.
 		mysqlpp::Query query = conn.query("select item from stock");
-		if (mysqlpp::Result res = query.store()) {
+		if (mysqlpp::StoreQueryResult res = query.store()) {
 			cout << "We have:" << endl;
-			mysqlpp::Row row;
-			for (int i = 0; row = res[i]; ++i) {
-				cout << '\t' << row[0] << endl;
+			for (int i = 0; i < res.num_rows(); ++i) {
+				cout << '\t' << res[i][0] << endl;
 			}
 		}
 		else {

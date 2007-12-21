@@ -82,13 +82,13 @@ print_stock_row(const mysqlpp::Row& row)
 // Print out a number of rows from the example 'stock' table.
 
 void
-print_stock_rows(mysqlpp::Result& res)
+print_stock_rows(mysqlpp::StoreQueryResult& res)
 {
 	print_stock_header(res.size());
 
-	// Use the Result class's read-only random access iterator to walk
+	// Use the StoreQueryResult class's read-only random access iterator to walk
 	// through the query results.
-	mysqlpp::Result::iterator i;
+	mysqlpp::StoreQueryResult::iterator i;
 	for (i = res.begin(); i != res.end(); ++i) {
 		// Notice that a dereferenced result iterator can be converted
 		// to a Row object, which makes for easier element access.
@@ -112,6 +112,6 @@ print_stock_table(mysqlpp::Query& query)
 	cout << "Query: " << query << endl;
 
 	// Execute it, and display the results
-	mysqlpp::Result res = query.store();
+	mysqlpp::StoreQueryResult res = query.store();
 	print_stock_rows(res);
 }

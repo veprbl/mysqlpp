@@ -325,7 +325,7 @@ public:
 	///
 	/// Use one of the execute() overloads if you don't expect the
 	/// server to return a result set. For instance, a DELETE query.
-	/// The returned ResNSel object contains status information from
+	/// The returned SimpleResult object contains status information from
 	/// the server, such as whether the query succeeded, and if so how
 	/// many rows were affected.
 	///
@@ -334,10 +334,10 @@ public:
 	/// via the insert() method, or by using the object's stream
 	/// interface.)
 	///
-	/// \return ResNSel status information about the query
+	/// \return SimpleResult status information about the query
 	///
 	/// \sa exec(), store(), storein(), and use()
-	ResNSel execute() { return execute(str(template_defaults)); }
+	SimpleResult execute() { return execute(str(template_defaults)); }
 
 	/// \brief Execute template query using given parameters.
     ///
@@ -347,7 +347,7 @@ public:
     /// template queries dynamically, at run time.
 	///
 	/// \param p parameters to use in the template query.
-	ResNSel execute(SQLQueryParms& p);
+	SimpleResult execute(SQLQueryParms& p);
 
 	/// \brief Execute query in a C++ string, or substitute string into
 	/// a template query and execute it.
@@ -355,13 +355,13 @@ public:
 	/// \param str If the object represents a compiled template query,
 	/// substitutes this string in for the first parameter.  Otherwise,
 	/// takes the string as a complete SQL query and executes it.
-	ResNSel execute(const SQLTypeAdapter& str);
+	SimpleResult execute(const SQLTypeAdapter& str);
 
 	/// \brief Execute query in a known-length string of characters.
 	/// This can include null characters.
 	///
 	/// Executes the query immediately, and returns the results.
-	ResNSel execute(const char* str, size_t len);
+	SimpleResult execute(const char* str, size_t len);
 
 	/// \brief Execute a query that can return a result set
 	/// 
@@ -384,10 +384,10 @@ public:
 	///
 	/// This function has the same set of overloads as execute().
 	///
-	/// \return ResUse object that can walk through result set serially
+	/// \return UseQueryResult object that can walk through result set serially
 	///
 	/// \sa exec(), execute(), store() and storein()
-	ResUse use() { return use(str(template_defaults)); }
+	UseQueryResult use() { return use(str(template_defaults)); }
 
 	/// \brief Get results from a template query using given parameters.
     ///
@@ -397,21 +397,21 @@ public:
     /// template queries dynamically, at run time.
 	///
 	/// \param p parameters to use in the template query.
-	ResUse use(SQLQueryParms& p);
+	UseQueryResult use(SQLQueryParms& p);
 
 	/// \brief Execute query in a C++ string
 	///
 	/// Executes the query immediately, and returns an object that
 	/// lets you walk through the result set one row at a time, in
 	/// sequence.  This is more memory-efficient than store().
-	ResUse use(const SQLTypeAdapter& str);
+	UseQueryResult use(const SQLTypeAdapter& str);
 
 	/// \brief Execute query in a known-length C string
 	///
 	/// Executes the query immediately, and returns an object that
 	/// lets you walk through the result set one row at a time, in
 	/// sequence.  This is more memory-efficient than store().
-	ResUse use(const char* str, size_t len);
+	UseQueryResult use(const char* str, size_t len);
 
 	/// \brief Execute a query that can return a result set
 	///
@@ -431,10 +431,10 @@ public:
 	///
 	/// This function has the same set of overloads as execute().
 	///
-	/// \return Result object containing entire result set
+	/// \return StoreQueryResult object containing entire result set
 	///
 	/// \sa exec(), execute(), storein(), and use()
-	Result store() { return store(str(template_defaults)); }
+	StoreQueryResult store() { return store(str(template_defaults)); }
 
 	/// \brief Store results from a template query using given parameters.
     ///
@@ -444,21 +444,21 @@ public:
     /// template queries dynamically, at run time.
 	///
 	/// \param p parameters to use in the template query.
-	Result store(SQLQueryParms& p);
+	StoreQueryResult store(SQLQueryParms& p);
 
 	/// \brief Execute query in a C++ string
 	///
 	/// Executes the query immediately, and returns an object that
 	/// contains the entire result set.  This is less memory-efficient
 	/// than use(), but it lets you have random access to the results.
-	Result store(const SQLTypeAdapter& str);
+	StoreQueryResult store(const SQLTypeAdapter& str);
 
 	/// \brief Execute query in a known-length C string
 	///
 	/// Executes the query immediately, and returns an object that
 	/// contains the entire result set.  This is less memory-efficient
 	/// than use(), but it lets you have random access to the results.
-	Result store(const char* str, size_t len);
+	StoreQueryResult store(const char* str, size_t len);
 
 	/// \brief Execute a query, and call a functor for each returned row
 	///
@@ -473,7 +473,7 @@ public:
 	template <typename Function>
 	Function for_each(const SQLTypeAdapter& query, Function fn)
 	{	
-		mysqlpp::ResUse res = use(query);
+		mysqlpp::UseQueryResult res = use(query);
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
 			while (mysqlpp::Row row = res.fetch_row()) {
@@ -494,7 +494,7 @@ public:
 	template <typename Function>
 	Function for_each(Function fn)
 	{	
-		mysqlpp::ResUse res = use();
+		mysqlpp::UseQueryResult res = use();
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
 			while (mysqlpp::Row row = res.fetch_row()) {
@@ -520,7 +520,7 @@ public:
 	{	
 		std::string query("select * from ");
 		query += ssqls._table;
-		mysqlpp::ResUse res = use(query);
+		mysqlpp::UseQueryResult res = use(query);
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
 			while (mysqlpp::Row row = res.fetch_row()) {
@@ -553,7 +553,7 @@ public:
 	template <class Sequence, typename Function>
 	Function store_if(Sequence& con, const SQLTypeAdapter& query, Function fn)
 	{	
-		mysqlpp::ResUse res = use(query);
+		mysqlpp::UseQueryResult res = use(query);
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
 			while (mysqlpp::Row row = res.fetch_row()) {
@@ -582,7 +582,7 @@ public:
 	{	
 		std::string query("select * from ");
 		query += ssqls._table;
-		mysqlpp::ResUse res = use(query);
+		mysqlpp::UseQueryResult res = use(query);
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
 			while (mysqlpp::Row row = res.fetch_row()) {
@@ -607,7 +607,7 @@ public:
 	template <class Sequence, typename Function>
 	Function store_if(Sequence& con, Function fn)
 	{	
-		mysqlpp::ResUse res = use();
+		mysqlpp::UseQueryResult res = use();
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
 			while (mysqlpp::Row row = res.fetch_row()) {
@@ -645,8 +645,8 @@ public:
 	/// this function just wraps store() when built against older API
 	/// libraries.
 	///
-	/// \return Result object containing the next result set.
-	Result store_next();
+	/// \return StoreQueryResult object containing the next result set.
+	StoreQueryResult store_next();
 
 	/// \brief Return whether more results are waiting for a multi-query
 	/// or stored procedure response.
@@ -925,9 +925,9 @@ public:
 	// from Doxygen, which gets confused by macro instantiations that look
 	// like method declarations.
 	mysql_query_define0(std::string, str)
-	mysql_query_define0(ResNSel, execute)
-	mysql_query_define0(Result, store)
-	mysql_query_define0(ResUse, use)
+	mysql_query_define0(SimpleResult, execute)
+	mysql_query_define0(StoreQueryResult, store)
+	mysql_query_define0(UseQueryResult, use)
 	mysql_query_define1(storein_sequence)
 	mysql_query_define1(storein_set)
 	mysql_query_define1(storein)
@@ -982,7 +982,7 @@ inline std::ostream& operator <<(std::ostream& os, Query& q)
 template <class Sequence>
 void Query::storein_sequence(Sequence& con, const SQLTypeAdapter& s)
 {
-	ResUse result = use(s);
+	UseQueryResult result = use(s);
 	while (1) {
 		MYSQL_ROW d = result.fetch_raw_row();
 		if (!d)
@@ -998,7 +998,7 @@ void Query::storein_sequence(Sequence& con, const SQLTypeAdapter& s)
 template <class Set>
 void Query::storein_set(Set& con, const SQLTypeAdapter& s)
 {
-	ResUse result = use(s);
+	UseQueryResult result = use(s);
 	while (1) {
 		MYSQL_ROW d = result.fetch_raw_row();
 		if (!d)

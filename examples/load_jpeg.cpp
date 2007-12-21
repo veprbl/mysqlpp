@@ -105,7 +105,7 @@ main(int argc, char *argv[])
 		Query query = con.query();
 		query << "INSERT INTO images (data) VALUES(\"" <<
 				mysqlpp::escape << img_data << "\")";
-		ResNSel res = query.execute();
+		SimpleResult res = query.execute();
 
 		// If we get here, insertion succeeded
 		cout << "Inserted \"" << img_name <<

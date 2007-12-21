@@ -54,7 +54,7 @@ main(int argc, char *argv[])
 
 		// Get contents of main example table
 		mysqlpp::Query query = con.query("select * from stock");
-		mysqlpp::Result res = query.store();
+		mysqlpp::StoreQueryResult res = query.store();
 
 		// Show info about each field in that table
 		char widths[] = { 8, 15, 57 };

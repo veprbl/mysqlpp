@@ -58,7 +58,7 @@ main(int argc, char *argv[])
 		// tquery* or custom3 is run since resetdb.
 		mysqlpp::SQLQueryParms sqp;
 		sqp << "Nürnberger Brats";
-		mysqlpp::Result res1 = query.store(sqp);
+		mysqlpp::StoreQueryResult res1 = query.store(sqp);
 		if (res1.empty()) {
 			throw mysqlpp::BadQuery("UTF-8 bratwurst item not found in "
 					"table, run resetdb");
@@ -71,7 +71,7 @@ main(int argc, char *argv[])
 		query.parse();
 		sqp.clear();
 		sqp << "Nuerenberger Bratwurst" << res1[0][0].c_str();
-		mysqlpp::ResNSel res2 = query.execute(sqp);
+		mysqlpp::SimpleResult res2 = query.execute(sqp);
 
 		// Print the new table contents.
 		print_stock_table(query);

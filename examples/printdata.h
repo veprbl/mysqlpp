@@ -35,7 +35,7 @@ void print_stock_row(const mysqlpp::Row& r);
 void print_stock_row(const mysqlpp::sql_char& item,
 		mysqlpp::sql_bigint num, mysqlpp::sql_double weight,
 		mysqlpp::sql_double price, const mysqlpp::sql_date& date);
-void print_stock_rows(mysqlpp::Result& res);
+void print_stock_rows(mysqlpp::StoreQueryResult& res);
 void print_stock_table(mysqlpp::Query& query);
 
 #endif // !defined(MYSQLPP_PRINTDATA_H)

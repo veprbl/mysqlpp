@@ -30,7 +30,7 @@
 
 namespace mysqlpp {
 
-Row::Row(MYSQL_ROW d, const ResUse* r, const unsigned long* lengths,
+Row::Row(MYSQL_ROW d, const ResultBase* r, const unsigned long* lengths,
 		bool throw_exceptions) :
 OptionalExceptions(throw_exceptions),
 initialized_(false)

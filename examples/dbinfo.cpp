@@ -75,11 +75,11 @@ show_databases(mysqlpp::Connection& con)
 {
     mysqlpp::Query query = con.query("show databases");
 	separator(cout, query.str());
-    mysqlpp::Result res = query.store();
+    mysqlpp::StoreQueryResult res = query.store();
 
     cout << "Databases found: " << res.size();
     cout.setf(ios::left);
-    mysqlpp::Result::iterator rit;
+    mysqlpp::StoreQueryResult::iterator rit;
     for (rit = res.begin(); rit != res.end(); ++rit) {
         cout << "\n\t" << (*rit)[0];
     }
@@ -95,7 +95,7 @@ show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
 		mysqlpp::Query query = con.query();
 		query << "describe " << *it;
 		separator(cout, query.str());
-		mysqlpp::Result res = query.store();
+		mysqlpp::StoreQueryResult res = query.store();
 
 		unsigned int columns = res.num_fields();
 		vector<int> widths;
@@ -126,7 +126,7 @@ show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
 		}
 		cout << endl;
 
-		mysqlpp::Result::iterator rit;
+		mysqlpp::StoreQueryResult::iterator rit;
 		for (rit = res.begin(); rit != res.end(); ++rit) {
 			for (int i = 0; i < columns; ++i) {
 				if (widths[i]) {
@@ -147,12 +147,12 @@ show_tables(mysqlpp::Connection& con)
 {
     mysqlpp::Query query = con.query("show tables");
 	separator(cout, query.str());
-	mysqlpp::Result res = query.store();
+	mysqlpp::StoreQueryResult res = query.store();
 
 	cout << "Tables found: " << res.size();
 	cout.setf(ios::left);
 	vector<string> tables;
-    mysqlpp::Result::iterator rit;
+    mysqlpp::StoreQueryResult::iterator rit;
 	for (rit = res.begin(); rit != res.end(); ++rit) {
 		string tbl((*rit)[0]);
 		cout << "\n\t" << tbl;

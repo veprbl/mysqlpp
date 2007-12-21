@@ -80,7 +80,7 @@ main()
 		con.connect(IMG_DATABASE, IMG_HOST, IMG_USER, IMG_PASSWORD);
 		Query query = con.query();
 		query << "SELECT * FROM images WHERE id = " << img_id;
-		ResUse res = query.use();
+		UseQueryResult res = query.use();
 		if (res) {
 			images img = res.fetch_row();
 			cout << "Content-type: image/jpeg" << endl;

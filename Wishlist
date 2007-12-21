@@ -9,21 +9,8 @@ widely useful.  Patches or proposals of this sort are always welcome.
 
 v3.0 Plan
 ---------
-    o Redesign Result to be a real container of Rows:
-
-      - Either copy everything appropriate from ResUse into Result and
-        drop inheritance between them, or move everything common
-        between them into a new ResultBase from which they both derive.
-        Result is-not-a ResUse.
-
-      - Instead of keeping the MYSQL_RES object passed to the ctor
-        as a data member, Result should keep a vector<Row>, which it
-        populates as soon as it is passed the MYSQL_RES.  It can then
-        immediately free the result set.
-
-      - Can then make operator[] return by reference, removing the
-        last reason subscript_iterator::operator ->() had to be
-        removed.  Restore it for Result and Row.
+    o Change Row into a vector<String> derivative, dropping data_
+	  member and removing last use of subscript_iterator.
 
     o Add syntactic sugar to the Date and Time classes.  A way to
       represent SQL's NOW() function would be especially helpful.
@@ -103,7 +90,7 @@ v3.1 Tentative Plan
 
         http://lists.mysql.com/plusplus/3984
 
-    o Define operator<< for Fields, Row, ResUse, etc.  In other
+    o Define operator<< for Fields, Row, StoreQueryResult, etc.  In other
       words, there should be a way to get a user-readable version of
       received data without a lot of code.  CSV format by default, and
       mysql(1)-like ASCII grid optionally, perhaps with a manipulator?

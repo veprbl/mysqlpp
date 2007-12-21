@@ -49,7 +49,7 @@ main(int argc, char *argv[])
 	if (conn.connect(db, server, user, pass)) {
 		// Retrieve the sample stock table set up by resetdb
 		mysqlpp::Query query = conn.query("select * from stock");
-		mysqlpp::Result res = query.store();
+		mysqlpp::StoreQueryResult res = query.store();
 
 		// Display results
 		if (res) {
@@ -62,13 +62,12 @@ main(int argc, char *argv[])
 					"Date" << endl << endl;
 
 			// Get each row in result set, and print its contents
-			mysqlpp::Row row;
-			for (int i = 0; row = res[i]; ++i) {
-				cout << setw(30) << row["item"] << ' ' <<
-						setw(9) << row["num"] << ' ' <<
-						setw(9) << row["weight"] << ' ' <<
-						setw(9) << row["price"] << ' ' <<
-						setw(9) << row["sdate"] <<
+			for (int i = 0; i < res.num_rows(); ++i) {
+				cout << setw(30) << res[i]["item"] << ' ' <<
+						setw(9) << res[i]["num"] << ' ' <<
+						setw(9) << res[i]["weight"] << ' ' <<
+						setw(9) << res[i]["price"] << ' ' <<
+						setw(9) << res[i]["sdate"] <<
 						endl;
 			}
 		}

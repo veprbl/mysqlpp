@@ -156,7 +156,7 @@ Query::exec(const std::string& str)
 }
 
 
-ResNSel
+SimpleResult
 Query::execute(SQLQueryParms& p)
 {
 	AutoFlag<> af(template_defaults.processing_);
@@ -164,7 +164,7 @@ Query::execute(SQLQueryParms& p)
 }
 
 
-ResNSel
+SimpleResult
 Query::execute(const SQLTypeAdapter& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
@@ -182,7 +182,7 @@ Query::execute(const SQLTypeAdapter& s)
 }
 
 
-ResNSel
+SimpleResult
 Query::execute(const char* str, size_t len)
 {
 	copacetic_ = conn_->driver()->execute(str, len);
@@ -193,13 +193,13 @@ Query::execute(const char* str, size_t len)
 	}
 
 	if (copacetic_) {
-		return ResNSel(conn_, insert_id(), affected_rows(), info());
+		return SimpleResult(conn_, insert_id(), affected_rows(), info());
 	}
 	else if (throw_exceptions()) {
 		throw BadQuery(error(), errnum());
 	}
 	else {
-		return ResNSel();
+		return SimpleResult();
 	}
 }
 
@@ -450,7 +450,7 @@ Query::reset()
 }
 
 
-Result
+StoreQueryResult
 Query::store(SQLQueryParms& p)
 {
 	AutoFlag<> af(template_defaults.processing_);
@@ -458,7 +458,7 @@ Query::store(SQLQueryParms& p)
 }
 
 
-Result 
+StoreQueryResult 
 Query::store(const SQLTypeAdapter& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
@@ -476,7 +476,7 @@ Query::store(const SQLTypeAdapter& s)
 }
 
 
-Result
+StoreQueryResult
 Query::store(const char* str, size_t len)
 {
 	copacetic_ = conn_->driver()->execute(str, len);
@@ -492,7 +492,7 @@ Query::store(const char* str, size_t len)
 	}
 
 	if (res) {
-		return Result(res, conn_->driver(), throw_exceptions());
+		return StoreQueryResult(res, conn_->driver(), throw_exceptions());
 	}
 	else {
 		// Either result set is empty (which is copacetic), or there
@@ -502,7 +502,7 @@ Query::store(const char* str, size_t len)
 		// there are good reasons for it to be unable to predict this.
 		copacetic_ = conn_->driver()->result_empty();
 		if (copacetic_ || !throw_exceptions()) {
-			return Result();
+			return StoreQueryResult();
 		}
 		else {
 			throw BadQuery(error(), errnum());
@@ -511,7 +511,7 @@ Query::store(const char* str, size_t len)
 }
 
 
-Result
+StoreQueryResult
 Query::store_next()
 {
 #if MYSQL_VERSION_ID > 41000		// only in MySQL v4.1 +
@@ -520,7 +520,8 @@ Query::store_next()
 		// There are more results, so return next result set.
 		MYSQL_RES* res = conn_->driver()->store_result();
 		if (res) {
-			return Result(res, conn_->driver(), throw_exceptions());
+			return StoreQueryResult(res, conn_->driver(),
+					throw_exceptions());
 		} 
 		else {
 			// Result set is null, but throw an exception only i it is
@@ -531,7 +532,7 @@ Query::store_next()
 				throw BadQuery(error(), errnum());
 			} 
 			else {
-				return Result();
+				return StoreQueryResult();
 			}
 		}
 	}
@@ -543,11 +544,11 @@ Query::store_next()
 			throw BadQuery(error(), errnum());
         }
 		else {
-			return Result();	// normal end-of-result-sets case
+			return StoreQueryResult();	// normal end-of-result-sets case
 		}
     }
     else {
-        return Result();
+        return StoreQueryResult();
 	}
 #else
 	return store();
@@ -566,7 +567,7 @@ Query::str(SQLQueryParms& p)
 }
 
 
-ResUse
+UseQueryResult
 Query::use(SQLQueryParms& p)
 {
 	AutoFlag<> af(template_defaults.processing_);
@@ -574,7 +575,7 @@ Query::use(SQLQueryParms& p)
 }
 
 
-ResUse
+UseQueryResult
 Query::use(const SQLTypeAdapter& s)
 {
 	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
@@ -592,7 +593,7 @@ Query::use(const SQLTypeAdapter& s)
 }
 
 
-ResUse
+UseQueryResult
 Query::use(const char* str, size_t len)
 {
 	copacetic_ = conn_->driver()->execute(str, len);
@@ -608,7 +609,7 @@ Query::use(const char* str, size_t len)
 	}
 
 	if (res) {
-		return ResUse(res, conn_->driver(), throw_exceptions());
+		return UseQueryResult(res, conn_->driver(), throw_exceptions());
 	}
 	else {
 		// Either result set is empty (which is copacetic), or there
@@ -618,7 +619,7 @@ Query::use(const char* str, size_t len)
 		// there are good reasons for it to be unable to predict this.
 		copacetic_ = conn_->driver()->result_empty();
 		if (copacetic_ || !throw_exceptions()) {
-			return ResUse();
+			return UseQueryResult();
 		}
 		else {
 			throw BadQuery(error(), errnum());

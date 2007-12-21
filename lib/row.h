@@ -25,7 +25,7 @@
  USA
 ***********************************************************************/
 
-#ifndef MYSQLPP_ROW_H
+#if !defined(MYSQLPP_ROW_H)
 #define MYSQLPP_ROW_H
 
 #include "common.h"
@@ -44,7 +44,7 @@ namespace mysqlpp {
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
 class FieldNames;
-class MYSQLPP_EXPORT ResUse;
+class MYSQLPP_EXPORT ResultBase;
 #endif
 
 /// \brief Manages rows from a result set.
@@ -119,7 +119,7 @@ public:
 	/// \param r result set that the row comes from
 	/// \param lengths length of each item in d
 	/// \param te if true, throw exceptions on errors
-	Row(MYSQL_ROW d, const ResUse* r, const unsigned long* lengths,
+	Row(MYSQL_ROW d, const ResultBase* r, const unsigned long* lengths,
 			bool te = true);
 
 	/// \brief Destroy object
@@ -165,7 +165,7 @@ public:
 	///
 	/// \code
 	///   Query q("....");
-	///   if (ResUse res = q.use()) {
+	///   if (UseQueryResult res = q.use()) {
 	///       // Can use 'res', query succeeded
 	///       while (Row row = res.fetch_row()) {
 	///           // Retreived another row in the result set, can use 'row'
@@ -474,4 +474,4 @@ private:
 
 } // end namespace mysqlpp
 
-#endif
+#endif // !defined(MYSQLPP_ROW_H)

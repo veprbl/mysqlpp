@@ -35,7 +35,7 @@ namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
-class MYSQLPP_EXPORT ResUse;
+class MYSQLPP_EXPORT ResultBase;
 #endif
 
 /// \brief Holds a list of SQL field names
@@ -52,7 +52,7 @@ public:
 	}
 	
 	/// \brief Create field name list from a result set
-	FieldNames(const ResUse* res)
+	FieldNames(const ResultBase* res)
 	{
 		init(res);
 	}
@@ -65,7 +65,7 @@ public:
 	}
 
 	/// \brief Initializes the field list from a result set
-	FieldNames& operator =(const ResUse* res)
+	FieldNames& operator =(const ResultBase* res)
 	{
 		init(res);
 		return *this;
@@ -95,7 +95,7 @@ public:
 	uint operator [](const std::string& s) const;
 
 private:
-	void init(const ResUse* res);
+	void init(const ResultBase* res);
 	void str_to_lwr(std::string& s) const
 	{
 		std::string::iterator it;

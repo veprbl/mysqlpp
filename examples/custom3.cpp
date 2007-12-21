@@ -52,7 +52,7 @@ main(int argc, char *argv[])
 				"select * from stock where item = \"Nürnberger Brats\"");
 
 		// Retrieve the row, throwing an exception if it fails.
-		mysqlpp::Result res = query.store();
+		mysqlpp::StoreQueryResult res = query.store();
 		if (res.empty()) {
 			throw mysqlpp::BadQuery("UTF-8 bratwurst item not found in "
 					"table, run resetdb");
