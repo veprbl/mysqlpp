@@ -415,15 +415,6 @@ swap(UseQueryResult& x, UseQueryResult& y)
 	y = tmp;
 }
 
-// This won't exist forever!  Wean yourself away from these as soon as
-// you can!
-#if defined(MYSQLPP_BACKWARDS_COMPATIBLE_RESULT_TYPES)
-#	define ResNSel SimpleResult
-#	define Result StoreQueryResult
-#	define ResUse UseQueryResult
-#endif
-
-
 } // end namespace mysqlpp
 
 #endif // !defined(MYSQLPP_RESULT_H)

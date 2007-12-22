@@ -69,6 +69,19 @@ namespace mysqlpp {
 /// the actual library you're linking to.
 MYSQLPP_EXPORT unsigned int get_library_version();
 
+// This won't exist forever!  Wean yourself away from these as soon as
+// you can!
+#if defined(MYSQLPP_OLD_CLASS_NAMES)
+#	define ColData String
+#	define NullisBlank NullIsBlank
+#	define NullisNull NullIsNull
+#	define NullisZero NullIsZero
+#	define ResNSel SimpleResult
+#	define Result StoreQueryResult
+#	define ResUse UseQueryResult
+#	define SQLString SQLTypeAdapter
+#endif
+
 } // end namespace mysqlpp
 
 #endif // !defined(MYSQLPP_MYSQLPP_H)
