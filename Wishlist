@@ -9,6 +9,9 @@ widely useful.  Patches or proposals of this sort are always welcome.
 
 v3.0 Plan
 ---------
+    o Is const_subscript_container still useful?  Should it just be
+      folded into Row?
+
     o Add userman chapter on connection options
 
     o Create examples/vstudio/threads to test new thread-related
@@ -103,21 +106,26 @@ v4.0 or Later
       - Make DBDriver class purely abstract; move its entire functional
         contents to new MysqlDriver.
 
-      - Create at least two other DBDriver subclasses to ensure base
-        class is reusable.  PostgresDriver and SqlLiteDriver?
+      - Must create at least two other DBDriver subclasses to
+        ensure base class is reusable before releasing v4.0.
+        PostgresDriver and SqlLiteDriver?
 
       - Give Connection ctor a parameter to let it know what kind of
         driver to create.
 
-      - Tricky bit: type_info module.  Extremely closely tied to
-        MySQL C API right now.  Will probably have to turn it into a
-        parallel class hierarchy to DBDriver, or fold it in with same.
+      - Tricky bits:
+    
+        - Initializing result set objects.
 
-      - Tricky bit: building MySQL++ on systems without autoconf.  How
-        to specify what DB engines are available?  Probably default to
-        supporting MySQL only, and let people turn things on manually
-        as they need them.  Or, maybe make them use Bakefile so they
-        can fiddle with the options if they want something atypical.
+        - type_info module.  Extremely closely tied to MySQL C API
+          right now.  Will probably have to turn it into a parallel
+          class hierarchy to DBDriver, or fold it in with same.
+
+        - Building MySQL++ on systems without autoconf.  How to
+          specify what DB engines are available?  Probably default to
+          supporting MySQL only, and let people turn things on manually
+          as they need them.  Or, maybe make them use Bakefile so they
+          can fiddle with the options if they want something atypical.
 
     o Some sort of support for prepared statements.  Can we hijack
       the template query mechanism?

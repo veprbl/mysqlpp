@@ -41,7 +41,7 @@
 	<if cond="BUILDLIBRARY=='yes'">
 		<dll id="mysqlpp">
 			<libname>mysqlpp</libname>
-			<so_version>2.9.0</so_version>
+			<so_version>3.0.0</so_version>
 
 			<sources>
 				lib/beemutex.cpp
