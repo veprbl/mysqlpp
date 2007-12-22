@@ -365,8 +365,8 @@
 					config.guess config.h.in config.sub configure* \
 					COPYING CREDITS exrun* HACKERS INSTALL install.bat \
 					install-sh libmysqlclient.def LICENSE Makefile.* \
-					mysql++.* mysql++_*.ds? osver README* rebake.bat \
-					Wishlist $(PKGNAME)
+					mysql++.* mysql++.sln mysql++_*.vcproj osver \
+					README* rebake.bat Wishlist $(PKGNAME)
 			</command>
 
 			<!-- config subdir -->
