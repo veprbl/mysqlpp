@@ -131,7 +131,7 @@ Query::escape_string(char* escaped, const char* original,
 	else {
 		// Should only happen in test/test_manip.cpp, since it doesn't
 		// want to open a DB connection just to test the manipulators.
-		return mysql_escape_string(escaped, original, length);
+		return DBDriver::escape_string_no_conn(escaped, original, length);
 	}
 }
 

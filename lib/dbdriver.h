@@ -174,11 +174,20 @@ public:
 	/// Wraps \c mysql_errno() in the MySQL C API.
 	int errnum() { return mysql_errno(&mysql_); }
 
-	/// \brief SQL-escapes the given string
+	/// \brief SQL-escapes the given string, taking into account the
+    /// default character set of the database server we're connected to.
 	///
 	/// Wraps \c mysql_real_escape_string() in the MySQL C API.
 	size_t escape_string(char* to, const char* from, size_t length)
 			{ return mysql_real_escape_string(&mysql_, to, from, length); }
+
+	/// \brief SQL-escapes the given string without reference to the 
+    /// character set of a database server.
+	///
+	/// Wraps \c mysql_escape_string() in the MySQL C API.
+	static size_t escape_string_no_conn(char* to, const char* from,
+            size_t length)
+			{ return mysql_escape_string(to, from, length); }
 
 	/// \brief Executes the given query string
 	///
