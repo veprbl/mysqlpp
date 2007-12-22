@@ -60,11 +60,12 @@
     <title>A Brief History of MySQL++</title>
 
     <para>MySQL++ was created in 1998 by Kevin Atkinson. It started
-    out MySQL-specific, but there were early efforts to try and make
-    it database-independent, and call it SQL++. This is where the old
-    library name "sqlplus" came from. This is also why the old versions
-    prefixed some class names with "Mysql" but not others: the others
-    were supposed to be the database-independent parts.</para>
+    out MySQL-specific, but there were early efforts to try and
+    make it database-independent, and call it SQL++. This is where
+    the old library name &ldquo;sqlplus&rdquo; came from. This
+    is also why the old versions prefixed some class names with
+    &ldquo;Mysql&rdquo; but not others: the others were supposed to
+    be the database-independent parts.</para>
 
     <para>Then in 1999, Sinisa Milivojevic unofficially took over
     maintenance of the library, releasing versions 1.0 and 1.1. (All
@@ -104,11 +105,11 @@
     <para>You may find people's individual email addresses in various
     files within the MySQL++ distribution. Please do not send mail
     to them unless you are sending something that is inherently
-    personal. Not all of the principal developers of MySQL++ are
-    still active in its development; those who have dropped out have
-    no wish to be bugged about MySQL++. Those of us still active
-    in MySQL++ development monitor the mailing list, so you aren't
-    getting any extra "coverage" by sending messages to additional
+    personal. Not all of the principal developers of MySQL++ are still
+    active in its development; those who have dropped out have no wish
+    to be bugged about MySQL++. Those of us still active in MySQL++
+    development monitor the mailing list, so you aren't getting any
+    extra &ldquo;coverage&rdquo; by sending messages to additional
     email addresses.</para>
   </sect2>
 </sect1>
@@ -506,9 +507,9 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     by just catching <classname>std::exception</classname>.
     However, it's better to have individual catch blocks for
     each of the concrete exception types that you expect, and
-    add a handler for either <classname>Exception</classname> or
-    <classname>std::exception</classname> to act as a "catch-all"
-    for unexpected exceptions.</para>
+    add a handler for either <classname>Exception</classname>
+    or <classname>std::exception</classname> to act as a
+    &ldquo;catch-all&rdquo; for unexpected exceptions.</para>
 
     <para>Some of these exceptions are optional. When exceptions
     are disabled on a MySQL++ object, it signals errors in some
@@ -555,21 +556,21 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     <itemizedlist>
       <listitem><para>The largest set of non-optional exceptions are
       those from the Standard C++ Library. For instance, if your
-      code said "<varname>row[21]</varname>" on a row containing
-      only 5 fields, the <classname>std::vector</classname>
+      code said &ldquo;<varname>row[21]</varname>&rdquo; on a row
+      containing only 5 fields, the <classname>std::vector</classname>
       underlying the row object will throw an exception. (It will,
       that is, if it conforms to the standard.) You might consider
       wrapping your program's main loop in a try block catching
       <classname>std::exception</classname>s, just in case you trigger
       one of these exceptions.</para></listitem>
 
-      <listitem><para><ulink type="classref" url="String"/> will always
-      throw <ulink type="classref" url="BadConversion"/> when you ask
-      it to do an improper type conversion. For example, you'll get
-      an exception if you try to convert "1.25" to <type>int</type>,
-      but not when you convert "1.00" to <type>int</type>. In the
-      latter case, MySQL++ knows that it can safely throw away the
-      fractional part.</para></listitem>
+      <listitem><para><ulink type="classref" url="String"/> will
+      always throw <ulink type="classref" url="BadConversion"/>
+      when you ask it to do an improper type conversion. For example,
+      you'll get an exception if you try to convert &ldquo;1.25&rdquo;
+      to <type>int</type>, but not when you convert &ldquo;1.00&rdquo;
+      to <type>int</type>. In the latter case, MySQL++ knows that it
+      can safely throw away the fractional part.</para></listitem>
 
       <listitem><para>If you use template queries and don't
       pass enough parameters when instantiating the template,
@@ -593,9 +594,9 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     <programlisting>
 SELECT * FROM stock WHERE item = 'Hotdog Buns' </programlisting>
 
-    <para>Because the string "Hotdog Buns" contains a space, it must
-    be quoted. With MySQL++, you don't have to add these quote marks
-    manually:</para>
+    <para>Because the string &ldquo;Hotdog Buns&rdquo; contains a
+    space, it must be quoted. With MySQL++, you don't have to add
+    these quote marks manually:</para>
 
     <programlisting>
 string s = "Hotdog Buns";
@@ -611,9 +612,9 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; 
     the SSQLS feature.)</para>
 
     <para>Quoting is pretty simple, but SQL syntax also often requires
-    that certain characters be "escaped". Imagine if the string in
-    the previous example was "Frank's Brand Hotdog Buns" instead. The
-    resulting query would be:</para>
+    that certain characters be &ldquo;escaped&rdquo;. Imagine if the
+    string in the previous example was &ldquo;Frank's Brand Hotdog
+    Buns&rdquo; instead. The resulting query would be:</para>
 
     <programlisting>
 SELECT * FROM stock WHERE item = 'Frank's Brand Hotdog Buns' </programlisting>
@@ -753,15 +754,16 @@ query.storein(res);
       more complex, like <type>mysqlpp::DateTime</type>.)</para>
 
       <para>There's a danger that this quiet coping behavior may
-      mask problems, but considering that the previous behavior
-      was for the program to crash when the database schema got out
-      of synch with the SSQLS definition, it's likely to be taken
-      as an improvement. This behavior may even be required in some
-      environements, particularly large "enterprise" deployments where
-      it just isn't practical to update everything all at once. As
-      long as the new database schema isn't too grossly different
-      from the old, your programs should continue to run until you
-      get around to updating them to use the new schema.</para>
+      mask problems, but considering that the previous behavior was
+      for the program to crash when the database schema got out of
+      synch with the SSQLS definition, it's likely to be taken as
+      an improvement. This behavior may even be required in some
+      environements, particularly large &ldquo;enterprise&rdquo;
+      deployments where it just isn't practical to update everything
+      all at once. As long as the new database schema isn't too
+      grossly different from the old, your programs should continue
+      to run until you get around to updating them to use the new
+      schema.</para>
     </sect3>
 
     <sect3>
@@ -857,9 +859,9 @@ query.storein(res);
     C++ type system, this effectively doubles the number of SQL data
     types. To emulate this, MySQL++ provides the <ulink type="classref"
     url="null">Null</ulink> template to allow the creation of distinct
-    "nullable" versions of existing C++ types. So for example, if you
-    have a <type>TINY INT UNSIGNED</type> column that can have nulls,
-    the proper declaration for MySQL++ would be:</para>
+    &ldquo;nullable&rdquo; versions of existing C++ types. So for
+    example, if you have a <type>TINY INT UNSIGNED</type> column that
+    can have nulls, the proper declaration for MySQL++ would be:</para>
 
     <programlisting>
 mysqlpp::Null&lt;mysqlpp::sql_tinyint_unsigned&gt; myfield;</programlisting>
@@ -889,12 +891,12 @@ myfield = mysqlpp::null;</programlisting>
     you try to convert a SQL null to a plain C++ data type, MySQL++
     will throw a <ulink type="classref" url="BadNullConversion"/>
     exception. If you insert a SQL null into a C++ stream, you get
-    "(NULL)". If you don't like this behavior, you can change it,
-    by passing a different value for the second parameter to template
-    <classname>Null</classname>. By default, this parameter is <ulink
-    type="structref" url="NullIsNull"/>, meaning that we should enforce
-    the uniqueness of the null type. To relax this distinction, you
-    can instantiate the <classname>Null</classname> template with a
+    &ldquo;(NULL)&rdquo;. If you don't like this behavior, you can
+    change it, by passing a different value for the second parameter to
+    template <classname>Null</classname>. By default, this parameter is
+    <ulink type="structref" url="NullIsNull"/>, meaning that we should
+    enforce the uniqueness of the null type. To relax this distinction,
+    you can instantiate the <classname>Null</classname> template with a
     different behavior type: <ulink type="structref" url="NullIsZero"/>
     or <ulink type="structref" url="NullIsBlank"/>. Consider this
     code:</para>
@@ -908,11 +910,11 @@ cout &lt;&lt; myfield &lt;&lt; endl;
 int x = myfield;
 cout &lt;&lt; x &lt;&lt; endl;</programlisting>
 
-    <para>This will print "0" twice. If you had used the default
-    for the second <classname>Null</classname> template parameter,
-    the first output statement would have printed "(NULL)", and the
-    second would have thrown a <classname>BadNullConversion</classname>
-    exception.</para>
+    <para>This will print &ldquo;0&rdquo; twice. If you had
+    used the default for the second <classname>Null</classname>
+    template parameter, the first output statement would have
+    printed &ldquo;(NULL)&rdquo;, and the second would have thrown
+    a <classname>BadNullConversion</classname> exception.</para>
   </sect2>
 
 
@@ -963,8 +965,8 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     from <methodname>Query::errnum()</methodname> (or
     <methodname>Connection::errnum()</methodname>, same thing),
     but what you'll almost certainly get instead is 0, meaning
-    "no error." Why? It's because you're probably using a
-    <classname>Transaction</classname> object to get automatic
+    &ldquo;no error.&rdquo; Why? It's because you're probably using
+    a <classname>Transaction</classname> object to get automatic
     roll-backs in the face of exceptions. In this case, the roll-back
     happens before your exception handler is called by issuing a
     <command>ROLLBACK</command> query to the database server. Thus,
@@ -1056,20 +1058,20 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     <methodname>use()</methodname> query. This returns a <ulink
     type="classref" url="UseQueryResult"/> object, which is similar
     to <classname>StoreQueryResult</classname>, but without all of
-    the random-access features. This is because a "use" query tells
-    the database server to send the results back one row at a time,
-    to be processed linearly. It's analogous to a C++ stream's input
-    iterator, as opposed to a random-access iterator that a container
-    like vector offers. By accepting this limitation, you can process
-    arbitrarily large result sets. This technique is demonstrated
-    in <filename>examples/simple3.cpp</filename>:</para>
+    the random-access features. This is because a &ldquo;use&rdquo;
+    query tells the database server to send the results back one
+    row at a time, to be processed linearly. It's analogous to a C++
+    stream's input iterator, as opposed to a random-access iterator
+    that a container like vector offers. By accepting this limitation,
+    you can process arbitrarily large result sets. This technique is
+    demonstrated in <filename>examples/simple3.cpp</filename>:</para>
 
     <programlisting><xi:include href="simple3.txt" parse="text"
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
     <para>This example does the same thing as
-    <filename>simple2</filename>, only with a "use" query instead of a
-    "store" query.</para>
+    <filename>simple2</filename>, only with a &ldquo;use&rdquo;
+    query instead of a &ldquo;store&rdquo; query.</para>
 
     <para>Valuable as <methodname>use()</methodname> queries are, they
     should not be the first resort in solving problems of excessive
@@ -1199,13 +1201,13 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
       base class and renamed it to reflect its proper limited
       function.</para></footnote></para>
 
-      <para>As its name suggests, its only purpose is to
-      adapt other data types to be used with SQL. It has a
-      whole bunch of conversion constructors, one for all data
-      types we expect to be used with MySQL++ for values in
-      queries. SQL queries are strings, so constructors that
-      take stringish types just make a copy of that string, and
-      all the others "stringize" the value in the format needed by
+      <para>As its name suggests, its only purpose is to adapt
+      other data types to be used with SQL. It has a whole bunch
+      of conversion constructors, one for all data types we
+      expect to be used with MySQL++ for values in queries. SQL
+      queries are strings, so constructors that take stringish
+      types just make a copy of that string, and all the others
+      &ldquo;stringize&rdquo; the value in the format needed by
       SQL.<footnote><para><classname>SQLTypeAdapter</classname> doesn't
       do <xref linkend="qescape"/> itself. That happens elsewhere,
       right at the point that the <classname>STA</classname> gets used
@@ -1244,12 +1246,12 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
       example of <classname>Set</classname>, MySQL++'s specialized
       <classname>std::set</classname> variant.</para></footnote></para>
 
-      <para>The key thing <classname>String</classname> provides
-      over <classname>std::string</classname> is conversion
-      of strings in SQL value formats to their native C++ data
-      types. For example, if you initialize it with the string
-      "2007-11-19", you can assign the <classname>String</classname>
-      to a <ulink type="structref" url="Date">Date</ulink>, not
+      <para>The key thing <classname>String</classname> provides over
+      <classname>std::string</classname> is conversion of strings in
+      SQL value formats to their native C++ data types. For example,
+      if you initialize it with the string &ldquo;2007-11-19&rdquo;,
+      you can assign the <classname>String</classname> to
+      a <ulink type="structref" url="Date">Date</ulink>, not
       because <classname>Date</classname> knows how to initialize
       itself from <classname>String</classname>, but the reverse:
       <classname>String</classname> has a bunch of implicit conversion
@@ -1293,12 +1295,12 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
       pristine form of data in a result set before it gets out of
       MySQL++'s internals where end-user code can see it, MySQL++'s
       <type>sql_blob</type> and related <type>typedef</type>s are
-      aliases for <classname>String</classname>. Using anything else
-      would require copies; while the whole "networked database server"
-      thing means most of MySQL++ can be quite inefficient and still
-      not affect benchmark results meaningfully, BLOBs tend to be big,
-      so making unnecessary copies can really make a difference. Which
-      brings us to...</para>
+      aliases for <classname>String</classname>. Using anything
+      else would require copies; while the whole &ldquo;networked
+      database server&rdquo; thing means most of MySQL++ can be quite
+      inefficient and still not affect benchmark results meaningfully,
+      BLOBs tend to be big, so making unnecessary copies can really
+      make a difference. Which brings us to...</para>
     </sect3>
 
 
@@ -1381,11 +1383,11 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     <title>Concurrent Queries on a Connection</title>
 
     <para>An important limitation of the MySQL C API library &mdash;
-    which MySQL++ is built atop, so it shares this limitation
-    &mdash; is that you can't have two concurrent queries running
-    on a single connection. If you try, you get an obscure error
-    message about "Commands out of sync" from the underlying C
-    API library. (You get it in a MySQL++ exception unless you
+    which MySQL++ is built atop, so it shares this limitation &mdash;
+    is that you can't have two concurrent queries running on a
+    single connection. If you try, you get an obscure error message
+    about &ldquo;Commands out of sync&rdquo; from the underlying
+    C API library. (You get it in a MySQL++ exception unless you
     have exceptions disabled, in which case you get a failure code
     and <methodname>Connection::error()</methodname> returns this
     message.)</para>
@@ -1410,7 +1412,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     program as well. As discussed above (<xref linkend="querytypes"/>),
     one of the options MySQL offers for executing a query lets you
     issue the query, then consume the rows one at a time, on demand:
-    it's the "use" query. If you don't consume all rows from a query
+    it's the &ldquo;use&rdquo; query. If you don't consume all rows from a query
     before you issue another on that connection, you are effectively
     trying to have multiple concurrent queries on a single connection,
     and you end up with the same problem. The simplest recipie for
@@ -1483,40 +1485,43 @@ query.parse();</programlisting>
     <tbody>
       <row>
         <entry><emphasis role="bold">%</emphasis></entry>
-        <entry>Print an actual "%"</entry>
+
+        <entry>Print an actual &ldquo;%&rdquo;</entry>
       </row>
 
       <row>
         <entry><emphasis role="bold">""</emphasis></entry>
+
         <entry>Don't quote or escape no matter what.</entry>
       </row>
 
       <row>
         <entry><emphasis role="bold">q</emphasis></entry>
-        <entry>This will escape the item using the MySQL
-        C API function <ulink url="mysql-escape-string"
-        type="mysqlapi"/> and add single quotes around it
-        as necessary, depending on the type of the value
-        you use.</entry>
+
+        <entry>This will escape the item using the MySQL C API
+        function <ulink url="mysql-escape-string" type="mysqlapi"/>
+        and add single quotes around it as necessary, depending on
+        the type of the value you use.</entry>
       </row>
 
       <row>
         <entry><emphasis role="bold">Q</emphasis></entry>
-        <entry>Quote but don't escape based on the same rules
-        as for 'q'. This can save a bit of processing time
-        if you know the strings will never need quoting</entry>
+
+        <entry>Quote but don't escape based on the same rules as for
+        'q'. This can save a bit of processing time if you know the
+        strings will never need quoting</entry>
       </row>
     </tbody>
     </tgroup>
     </informaltable>
     </blockquote>
 
-    <para>":name" is for an optional name which aids in filling
-    SQLQueryParms. Name can contain any alpha-numeric characters
-    or the underscore. You can have a trailing colon, which will be
-    ignored. If you need to represent an actual colon after the name,
-    follow the name with two colons. The first one will end the name
-    and the second one won't be processed.</para>
+    <para>&ldquo;:name&rdquo; is for an optional name which aids
+    in filling SQLQueryParms. Name can contain any alpha-numeric
+    characters or the underscore. You can have a trailing colon,
+    which will be ignored. If you need to represent an actual colon
+    after the name, follow the name with two colons. The first one
+    will end the name and the second one won't be processed.</para>
   </sect2>
 
 
@@ -1764,7 +1769,7 @@ sql_create_#(NAME, COMPCOUNT, SETCOUNT, TYPE1, ITEM1, ... TYPE#, ITEM#)</program
     is 1, so only the <varname>item</varname> field will be checked
     when comparing two <classname>stock</classname> structures.</para>
 
-    <para>This feature works best when your table's "key"
+    <para>This feature works best when your table's &ldquo;key&rdquo;
     fields are the first ones in the table schema and you set
     <parameter>COMPCOUNT</parameter> equal to the number of key fields.
     That way, a check for equality between two SSQLS structures in
@@ -1787,7 +1792,7 @@ query.storein(result);
 cout &lt;&lt; result.lower_bound(stock("Hamburger"))-&gt;item &lt;&lt; endl;</programlisting>
 
     <para>This will print the first item in the result set that begins
-    with "Hamburger".</para>
+    with &ldquo;Hamburger.&rdquo;</para>
 
     <para>The third parameter to
     <varname>sql_create_</varname><emphasis>x</emphasis> is
@@ -1880,14 +1885,14 @@ stock::table() = "MyStockData";</programlisting>
     SSQLS. When this macro is defined, it suppresses the static data
     members in any SSQLS defined thereaftear.</para>
 
-    <para>Imagine we have a file <filename>my_ssqls.h</filename> which
-    includes a <function>sql_create_N</function> macro call to define
-    an SSQLS, and that that SSQLS is used in at least two modules. One
-    we'll call <filename>foo.cpp</filename>, and we'll say it's just
-    a user of the SSQLS; it doesn't "own" it. Another of the modules,
-    <filename>my_ssqls.cpp</filename> uses the SSQLS more heavily,
-    so we've called it the owner of the SSQLS. If there aren't very
-    many modules, this works nicely:</para>
+    <para>Imagine we have a file <filename>my_ssqls.h</filename>
+    which includes a <function>sql_create_N</function> macro call
+    to define an SSQLS, and that that SSQLS is used in at least two
+    modules. One we'll call <filename>foo.cpp</filename>, and we'll
+    say it's just a user of the SSQLS; it doesn't &ldquo;own&rdquo;
+    it. Another of the modules, <filename>my_ssqls.cpp</filename>
+    uses the SSQLS more heavily, so we've called it the owner of the
+    SSQLS. If there aren't very many modules, this works nicely:</para>
 
     <programlisting>
 // File foo.cpp, which just uses the SSQLS, but doesn't "own" it:
@@ -2203,14 +2208,15 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
     <para>Since no standards body held sway over things like
     international character encoding in the early days of computing,
-    many different character sets were invented. These character sets
-    weren't even standardized between operating systems, so heaven
-    help you if you needed to move localized Greek text on a DOS box
-    to a Russian Macintosh! The only way we got any international
-    communication done at all was to build standards on top of the
-    common 7-bit ASCII subset.  Either people used approximations like
-    a plain "c" instead of the French "&ccedil;", or they invented
-    things like HTML entities ("&amp;ccedil;" in this case) to encode
+    many different character sets were invented. These character
+    sets weren't even standardized between operating systems,
+    so heaven help you if you needed to move localized Greek text
+    on a DOS box to a Russian Macintosh! The only way we got any
+    international communication done at all was to build standards
+    on top of the common 7-bit ASCII subset.  Either people used
+    approximations like a plain &ldquo;c&rdquo; instead of the
+    French &ldquo;&ccedil;&rdquo;, or they invented things like HTML
+    entities (&ldquo;&amp;ccedil;&rdquo; in this case) to encode
     these additional characters using only 7-bit ASCII.</para>
 
     <para>Unicode solves this problem. It encodes every character used
@@ -2257,8 +2263,9 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
     code to correctly display a UTF-8 string. If you aren't sure
     whether your system supports UTF-8 natively, just run the
     <filename>simple1</filename> example: if the first item has two
-    high-ASCII characters in place of the "&uuml;" in "N&uuml;rnberger
-    Brats", you know it's not handling UTF-8.</para>
+    high-ASCII characters in place of the &ldquo;&uuml;&rdquo; in
+    &ldquo;N&uuml;rnberger Brats&rdquo;, you know it's not handling
+    UTF-8.</para>
 
     <para>If your Unix doesn't support UTF-8 natively, it likely
     doesn't support any form of Unicode at all, for the historical
@@ -2279,11 +2286,11 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
     <title>Unicode on Windows</title>
 
     <para>Each Windows API function that takes a string actually
-    comes in two versions. One version supports only 1-byte "ANSI"
-    characters (a superset of ASCII), so they end in 'A'. Windows
-    also supports the 2-byte subset of Unicode called <ulink
-    url="http://en.wikipedia.org/wiki/UCS-2">UCS-2</ulink>.
-    Some call these "wide" characters,
+    comes in two versions. One version supports only 1-byte
+    &ldquo;ANSI&rdquo; characters (a superset of ASCII), so they end
+    in 'A'. Windows also supports the 2-byte subset of Unicode called
+    <ulink url="http://en.wikipedia.org/wiki/UCS-2">UCS-2</ulink>.
+    Some call these &ldquo;wide&rdquo; characters,
     so the other set of functions end in 'W'. The <function><ulink
     url="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/windowing/dialogboxes/dialogboxreference/dialogboxfunctions/messagebox.asp">MessageBox</ulink>()</function>
     API, for instance, is actually a macro, not a real function. If
@@ -2350,11 +2357,11 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
     routines.</para>
 
     <para>All of this assumes you're using Windows NT or one of its
-    direct descendants: Windows 2000, Windows XP, Windows Vista, or
-    any "Server" variant of Windows. Windows 95 and its descendants
-    (98, ME, and CE) do not support UCS-2. They still have the 'W'
-    APIs for compatibility, but they just smash the data down to
-    8-bit and call the 'A' version for you.</para>
+    direct descendants: Windows 2000, Windows XP, Windows Vista,
+    or any &ldquo;Server&rdquo; variant of Windows. Windows 95 and
+    its descendants (98, ME, and CE) do not support UCS-2. They still
+    have the 'W' APIs for compatibility, but they just smash the data
+    down to 8-bit and call the 'A' version for you.</para>
   </sect2>
 
 
@@ -2377,9 +2384,9 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
 
   <para>MySQL++ doesn't fall out of the box ready to be used with
   threads. Furthermore, once you build a thread-aware program with
-  MySQL++, it isn't "thread safe" in an absolute sense: there exist
-  incorrect usage patterns which will cause errors. This section
-  will discuss these issues, and give advice on how to avoid
+  MySQL++, it isn't &ldquo;thread safe&rdquo; in an absolute sense:
+  there exist incorrect usage patterns which will cause errors. This
+  section will discuss these issues, and give advice on how to avoid
   problems.</para>
 
   <sect2>
@@ -2492,22 +2499,22 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
 
     <para>You might wonder why we don't just work around this weakness
     in the C API transparently in MySQL++ instead of mandating design
-    guidelines to avoid it. We'd like to do just that, but how? If
-    you consider just the threaded case, you could argue for the use
-    of mutexes to protect a connection from trying to execute two
-    queries at once. The cure is worse than the disease: it turns
-    a design error into a performance sap, as the second thread is
-    blocked indefinitely waiting for the connection to free up. Much
-    better to let the program get the "Commands out of sync" error,
-    which will guide you to this section of the manual, which tells you
-    how to avoid the error with a better design. Another option would
-    be to bury <classname>ConnectionPool</classname> functionality
-    within MySQL++ itself, so the library could create new connections
-    at need. Unfortunately, that increases the complexity of using
-    the library; the above example is one of the most complex in
-    MySQL++. The whole point of the library is to make using the
-    database easier. We added the pool option for those that really
-    need it, but an option it must remain.</para>
+    guidelines to avoid it. We'd like to do just that, but how? If you
+    consider just the threaded case, you could argue for the use of
+    mutexes to protect a connection from trying to execute two queries
+    at once. The cure is worse than the disease: it turns a design
+    error into a performance sap, as the second thread is blocked
+    indefinitely waiting for the connection to free up. Much better
+    to let the program get the &ldquo;Commands out of sync&rdquo;
+    error, which will guide you to this section of the manual, which
+    tells you how to avoid the error with a better design. Another
+    option would be to bury <classname>ConnectionPool</classname>
+    functionality within MySQL++ itself, so the library could
+    create new connections at need. Unfortunately, that increases
+    the complexity of using the library; the above example is one of
+    the most complex in MySQL++. The whole point of the library is
+    to make using the database easier. We added the pool option for
+    those that really need it, but an option it must remain.</para>
   </sect2>
 
 
@@ -2633,12 +2640,13 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
       <title>v1.7.10</title>
 
       <para>Removed <methodname>Row::operator[]()</methodname>
-      overloads except the one for <type>size_type</type>, and added
-      <methodname>Row::lookup_by_name()</methodname> to provide the
-      "subscript by string" functionality.  In practical terms,
-      this change means that the <varname>row["field"]</varname>
-      syntax no longer works; you must use the new
-      <methodname>lookup_by_name</methodname> method instead.</para>
+      overloads except the one for <type>size_type</type>, and
+      added <methodname>Row::lookup_by_name()</methodname>
+      to provide the &ldquo;subscript by string&rdquo;
+      functionality.  In practical terms, this change means that
+      the <varname>row["field"]</varname> syntax no longer works;
+      you must use the new <methodname>lookup_by_name</methodname>
+      method instead.</para>
 
       <para>Renamed the generated library on POSIX
       systems from <filename>libsqlplus</filename> to
@@ -2787,7 +2795,7 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
           url="ObjectNotInitialized"/> exception types, to fix
           overuse of <classname>BadQuery</classname>.  Now the
           latter is used only for errors on query execution. If
-          your program has a "catch-all" block taking a
+          your program has a &ldquo;catch-all&rdquo; block taking a
           <classname>std::exception</classname> for each try block
           containing MySQL++ statements, you probably won't need
           to change your program. Otherwise, the new exceptions
@@ -2850,8 +2858,8 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
         <title>Row class changes</title>
 
         <itemizedlist>
-          <listitem><para>Removed "field name" form of
-          <methodname>Row::field_list()</methodname>.  It was
+          <listitem><para>Removed &ldquo;field name&rdquo; form
+          of <methodname>Row::field_list()</methodname>.  It was
           pointless.</para></listitem>
 
           <listitem><para><classname>Row</classname>
@@ -2923,10 +2931,10 @@ query.execute(some_value);</programlisting>
       parameters over multiple queries. In the first snippet above,
       there is only one parameter, so in order to justify the use of
       template queries in the first place, it must be changing with
-      each query. Therefore, it isn't really a "default" parameter
-      at all. We did not make this change maliciously, but you
-      can understand why we are not in any hurry to restore this
-      "feature".</para>
+      each query. Therefore, it isn't really a &ldquo;default&rdquo;
+      parameter at all. We did not make this change maliciously,
+      but you can understand why we are not in any hurry to restore
+      this &ldquo;feature&rdquo;.</para>
 
       <para>(Incidentally, this change was made to allow better
       support for BLOB columns.)</para>
@@ -2989,7 +2997,7 @@ query.execute(some_value);</programlisting>
     <sect3>
       <title>v1.7.22</title>
 
-      <para>Removed "reset query" parameters from several
+      <para>Removed &ldquo;reset query&rdquo; parameters from several
       <classname>Query</classname> class members. This is not an API
       change, because the parameters were given default values, and
       the library would ignore any value other than the default. So,
@@ -3087,9 +3095,10 @@ query.execute(some_value);</programlisting>
   license closely based on the Linux Documentation Project License
   (LDPL) v2.0, included below. (The MySQL++ documentation isn't
   actually part of the Linux Documentation Project, so the main
-  changes are to LDP-related language. Also, generic language such as
-  "author's (or authors')" has been replaced with specific language,
-  because the license applies to only this one document.)</para>
+  changes are to LDP-related language. Also, generic language such
+  as &ldquo;author's (or authors')&rdquo; has been replaced with
+  specific language, because the license applies to only this one
+  document.)</para>
 
   <para>These licenses basically state that you are free to use,
   distribute and modify these works, whether for personal or
@@ -3187,14 +3196,14 @@ query.execute(some_value);</programlisting>
       The Lesser General Public License permits more lax criteria for
       linking other code with the library.</para>
 
-      <para>We call this license the "Lesser" General Public License
-      because it does Less to protect the user's freedom than the
-      ordinary General Public License.  It also provides other
+      <para>We call this license the &ldquo;Lesser&rdquo; General
+      Public License because it does Less to protect the user's freedom
+      than the ordinary General Public License.  It also provides other
       free software developers Less of an advantage over competing
-      non-free programs.  These disadvantages are the reason we use the
-      ordinary General Public License for many libraries.  However,
-      the Lesser license provides advantages in certain special
-      circumstances.</para>
+      non-free programs.  These disadvantages are the reason we
+      use the ordinary General Public License for many libraries.
+      However, the Lesser license provides advantages in certain
+      special circumstances.</para>
 
       <para>For example, on rare occasions, there may be a special need
       to encourage the widest possible use of a certain library, so
@@ -3217,12 +3226,12 @@ query.execute(some_value);</programlisting>
       that is linked with the Library has the freedom and the wherewithal
       to run that program using a modified version of the Library.</para>
 
-      <para>The precise terms and conditions for copying, distribution
-      and modification follow.  Pay close attention to the difference
-      between a "work based on the library" and a "work that uses the
-      library".  The former contains code derived from the library,
-      whereas the latter must be combined with the library in order
-      to run.</para>
+      <para>The precise terms and conditions for copying,
+      distribution and modification follow.  Pay close attention to
+      the difference between a &ldquo;work based on the library&rdquo;
+      and a &ldquo;work that uses the library&rdquo;.  The former
+      contains code derived from the library, whereas the latter must
+      be combined with the library in order to run.</para>
     </sect3>
 
 
@@ -3234,28 +3243,31 @@ query.execute(some_value);</programlisting>
       <para>0. This License Agreement applies to any software library
       or other program which contains a notice placed by the copyright
       holder or other authorized party saying it may be distributed
-      under the terms of this Lesser General Public License (also called
-      "this License").  Each licensee is addressed as "you".</para>
+      under the terms of this Lesser General Public License (also
+      called &ldquo;this License&rdquo;).  Each licensee is addressed
+      as &ldquo;you&rdquo;.</para>
 
-      <para>A "library" means a collection of software functions and/or
-      data prepared so as to be conveniently linked with application
-      programs (which use some of those functions and data) to form
-      executables.</para>
+      <para>A &ldquo;library&rdquo; means a collection of software
+      functions and/or data prepared so as to be conveniently linked
+      with application programs (which use some of those functions
+      and data) to form executables.</para>
 
-      <para>The "Library", below, refers to any such software library
-      or work which has been distributed under these terms.  A "work
-      based on the Library" means either the Library or any derivative
-      work under copyright law: that is to say, a work containing the
-      Library or a portion of it, either verbatim or with modifications
-      and/or translated straightforwardly into another language.
-      (Hereinafter, translation is included without limitation in the
-      term "modification".)</para>
+      <para>The &ldquo;Library&rdquo;, below, refers to any such
+      software library or work which has been distributed under
+      these terms.  A &ldquo;work based on the Library&rdquo; means
+      either the Library or any derivative work under copyright law:
+      that is to say, a work containing the Library or a portion of
+      it, either verbatim or with modifications and/or translated
+      straightforwardly into another language.  (Hereinafter,
+      translation is included without limitation in the term
+      &ldquo;modification&rdquo;.)</para>
 
-      <para>"Source code" for a work means the preferred form of the
-      work for making modifications to it.  For a library, complete
-      source code means all the source code for all modules it contains,
-      plus any associated interface definition files, plus the scripts
-      used to control compilation and installation of the library.</para>
+      <para>&ldquo;Source code&rdquo; for a work means the preferred
+      form of the work for making modifications to it.  For a library,
+      complete source code means all the source code for all modules
+      it contains, plus any associated interface definition files,
+      plus the scripts used to control compilation and installation
+      of the library.</para>
 
       <para>Activities other than copying, distribution and modification
       are not covered by this License; they are outside its scope.
@@ -3367,25 +3379,25 @@ query.execute(some_value);</programlisting>
 
       <para>5. A program that contains no derivative of any portion
       of the Library, but is designed to work with the Library by
-      being compiled or linked with it, is called a "work that uses
-      the Library".  Such a work, in isolation, is not a derivative
-      work of the Library, and therefore falls outside the scope of
-      this License.</para>
+      being compiled or linked with it, is called a &ldquo;work that
+      uses the Library&rdquo;.  Such a work, in isolation, is not
+      a derivative work of the Library, and therefore falls outside
+      the scope of this License.</para>
 
-      <para>However, linking a "work that uses the Library" with the
-      Library creates an executable that is a derivative of the Library
-      (because it contains portions of the Library), rather than a "work
-      that uses the library".  The executable is therefore covered by
-      this License.  Section 6 states terms for distribution of such
-      executables.</para>
+      <para>However, linking a &ldquo;work that uses the Library&rdquo;
+      with the Library creates an executable that is a derivative of
+      the Library (because it contains portions of the Library), rather
+      than a &ldquo;work that uses the library&rdquo;.  The executable
+      is therefore covered by this License.  Section 6 states terms
+      for distribution of such executables.</para>
 
-      <para>When a "work that uses the Library" uses material from a
-      header file that is part of the Library, the object code for
-      the work may be a derivative work of the Library even though
-      the source code is not.  Whether this is true is especially
-      significant if the work can be linked without the Library, or if
-      the work is itself a library.  The threshold for this to be true
-      is not precisely defined by law.</para>
+      <para>When a &ldquo;work that uses the Library&rdquo; uses
+      material from a header file that is part of the Library, the
+      object code for the work may be a derivative work of the Library
+      even though the source code is not.  Whether this is true is
+      especially significant if the work can be linked without the
+      Library, or if the work is itself a library.  The threshold
+      for this to be true is not precisely defined by law.</para>
 
       <para>If such an object file uses only numerical parameters,
       data structure layouts and accessors, and small macros and small
@@ -3401,11 +3413,12 @@ query.execute(some_value);</programlisting>
       the Library itself.</para>
 
       <para>6. As an exception to the Sections above, you may also
-      combine or link a "work that uses the Library" with the Library to
-      produce a work containing portions of the Library, and distribute
-      that work under terms of your choice, provided that the terms
-      permit modification of the work for the customer's own use and
-      reverse engineering for debugging such modifications.</para>
+      combine or link a &ldquo;work that uses the Library&rdquo;
+      with the Library to produce a work containing portions of the
+      Library, and distribute that work under terms of your choice,
+      provided that the terms permit modification of the work for
+      the customer's own use and reverse engineering for debugging
+      such modifications.</para>
 
       <para>You must give prominent notice with each copy of the work
       that the Library is used in it and that the Library and its use are
@@ -3419,14 +3432,15 @@ query.execute(some_value);</programlisting>
         <para>a) Accompany the work with the complete corresponding
         machine-readable source code for the Library including whatever
         changes were used in the work (which must be distributed under
-        Sections 1 and 2 above); and, if the work is an executable linked
-        with the Library, with the complete machine-readable "work that
-        uses the Library", as object code and/or source code, so that
-        the user can modify the Library and then relink to produce a
-        modified executable containing the modified Library.  (It is
-        understood that the user who changes the contents of definitions
-        files in the Library will not necessarily be able to recompile
-        the application to use the modified definitions.)</para>
+        Sections 1 and 2 above); and, if the work is an executable
+        linked with the Library, with the complete machine-readable
+        &ldquo;work that uses the Library&rdquo;, as object code
+        and/or source code, so that the user can modify the Library
+        and then relink to produce a modified executable containing
+        the modified Library.  (It is understood that the user who
+        changes the contents of definitions files in the Library will
+        not necessarily be able to recompile the application to use
+        the modified definitions.)</para>
 
         <para>b) Use a suitable shared library mechanism for linking
         with the Library.  A suitable mechanism is one that (1) uses at
@@ -3451,10 +3465,10 @@ query.execute(some_value);</programlisting>
         a copy.</para>
       </blockquote>
 
-      <para>For an executable, the required form of the "work that
-      uses the Library" must include any data and utility programs
-      needed for reproducing the executable from it.  However, as
-      a special exception, the materials to be distributed need not
+      <para>For an executable, the required form of the &ldquo;work
+      that uses the Library&rdquo; must include any data and utility
+      programs needed for reproducing the executable from it.  However,
+      as a special exception, the materials to be distributed need not
       include anything that is normally distributed (in either source
       or binary form) with the major components (compiler, kernel,
       and so on) of the operating system on which the executable runs,
@@ -3562,12 +3576,13 @@ query.execute(some_value);</programlisting>
       or concerns.</para>
 
       <para>Each version is given a distinguishing version number.
-      If the Library specifies a version number of this License which
-      applies to it and "any later version", you have the option of
-      following the terms and conditions either of that version or of any
-      later version published by the Free Software Foundation.  If the
-      Library does not specify a license version number, you may choose
-      any version ever published by the Free Software Foundation.</para>
+      If the Library specifies a version number of this License
+      which applies to it and &ldquo;any later version&rdquo;, you
+      have the option of following the terms and conditions either
+      of that version or of any later version published by the Free
+      Software Foundation.  If the Library does not specify a license
+      version number, you may choose any version ever published by
+      the Free Software Foundation.</para>
 
       <para>14. If you wish to incorporate parts of the Library
       into other free programs whose distribution conditions
@@ -3581,16 +3596,17 @@ query.execute(some_value);</programlisting>
 
       <para>NO WARRANTY</para>
 
-      <para>15. BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS
-      NO WARRANTY FOR THE LIBRARY, TO THE EXTENT PERMITTED BY APPLICABLE
-      LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
-      HOLDERS AND/OR OTHER PARTIES PROVIDE THE LIBRARY "AS IS" WITHOUT
-      WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING,
-      BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
-      AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE
-      QUALITY AND PERFORMANCE OF THE LIBRARY IS WITH YOU.  SHOULD THE
-      LIBRARY PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY
-      SERVICING, REPAIR OR CORRECTION.</para>
+      <para>15. BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE,
+      THERE IS NO WARRANTY FOR THE LIBRARY, TO THE EXTENT PERMITTED
+      BY APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING
+      THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE
+      LIBRARY &ldquo;AS IS&rdquo; WITHOUT WARRANTY OF ANY KIND,
+      EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+      THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+      PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND
+      PERFORMANCE OF THE LIBRARY IS WITH YOU.  SHOULD THE LIBRARY
+      PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,
+      REPAIR OR CORRECTION.</para>
 
       <para>16. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED
       TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO
@@ -3619,8 +3635,8 @@ query.execute(some_value);</programlisting>
       <para>To apply these terms, attach the following notices to
       the library.  It is safest to attach them to the start of each
       source file to most effectively convey the exclusion of warranty;
-      and each file should have at least the "copyright" line and a
-      pointer to where the full notice is found.</para>
+      and each file should have at least the &ldquo;copyright&rdquo;
+      line and a pointer to where the full notice is found.</para>
 
       <blockquote>
         <para>&lt;one line to give the library's name and a brief idea
@@ -3649,10 +3665,10 @@ query.execute(some_value);</programlisting>
       <para>Also add information on how to contact you by electronic
       and paper mail.</para>
 
-      <para>You should also get your employer (if you work as
-      a programmer) or your school, if any, to sign a "copyright
-      disclaimer" for the library, if necessary.  Here is a sample;
-      alter the names:</para>
+      <para>You should also get your employer (if you work as a
+      programmer) or your school, if any, to sign a &ldquo;copyright
+      disclaimer&rdquo; for the library, if necessary.  Here is a
+      sample; alter the names:</para>
 
       <blockquote>
         <para>Yoyodyne, Inc., hereby disclaims all copyright interest
