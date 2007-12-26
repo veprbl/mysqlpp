@@ -23,7 +23,7 @@ Item                           Num       Weight    Price     Date
 Nürnberger Brats              97        1.5       8.79      2005-03-10
 Pickle Relish                  87        1.5       1.75      1998-09-04
 Hot Mustard                    73        0.95      0.97      1998-05-25
-Hotdog Buns                    65        1.1       1.1       1998-04-23
+Hotdog Buns                    65        1.1       1.10      1998-04-23
 ================ END simple2 OUTPUT ================
 
 ---------------- BEGIN simple3 OUTPUT ----------------
@@ -32,7 +32,7 @@ Item                           Num       Weight    Price     Date
 Nürnberger Brats              97        1.5       8.79      2005-03-10
 Pickle Relish                  87        1.5       1.75      1998-09-04
 Hot Mustard                    73        0.95      0.97      1998-05-25
-Hotdog Buns                    65        1.1       1.1       1998-04-23
+Hotdog Buns                    65        1.1       1.10      1998-04-23
 ================ END simple3 OUTPUT ================
 
 ---------------- BEGIN store_if OUTPUT ----------------
@@ -141,20 +141,20 @@ Tables found: 4
  item                    char(30)              NO                         
  num                     bigint(20)            NO                         
  weight                  double                NO                         
- price                   double                NO                         
+ price                   decimal(6,2)          NO                         
  sdate                   date                  NO                         
  description             mediumtext            YES        NULL            
 ================ END dbinfo OUTPUT ================
 
 ---------------- BEGIN fieldinf OUTPUT ----------------
-Field   SQL Type       Equivalent C++ Type                                      
-======= ============== ======================================================== 
-item    CHAR NOT NULL  n/a                                                      
-num     BIGINT NOT NULLn/a                                                      
-weight  DOUBLE NOT NULLn/a                                                      
-price   DOUBLE NOT NULLn/a                                                      
-sdate   DATE NOT NULL  n/a                                                      
-descriptionBLOB NULL      n/a                                                      
+Field       SQL Type              Equivalent C++ Type                           
+=========== ===================== ============================================= 
+item        CHAR NOT NULL (25)    n/a                                           
+num         BIGINT NOT NULL (11)  n/a                                           
+weight      DOUBLE NOT NULL (8)   n/a                                           
+price       CHAR NOT NULL (25)    n/a                                           
+sdate       DATE NOT NULL (15)    n/a                                           
+description BLOB NULL (49)        n/a                                           
 
 SQL type of 'item' field most closely resembles the C++ string type.
 SQL type of 'description' field resembles a nullable variant of the C++ string type.

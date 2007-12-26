@@ -57,7 +57,7 @@ main(int argc, char *argv[])
 		mysqlpp::StoreQueryResult res = query.store();
 
 		// Show info about each field in that table
-		char widths[] = { 8, 15, 57 };
+		char widths[] = { 12, 22, 46 };
 		cout.setf(ios::left);
 		cout << setw(widths[0]) << "Field" <<
 				setw(widths[1]) << "SQL Type" <<
@@ -72,8 +72,11 @@ main(int argc, char *argv[])
 			// Suppress C++ type name outputs when run under dtest,
 			// as they're system-specific.
 			const char* cname = dtest_mode ? "n/a" : res.field_type(i).name();
+			mysqlpp::FieldTypes::value_type ft = res.field_type(i);
+			ostringstream os;
+			os << ft.sql_name() << " (" << ft.id() << ')';
 			cout << setw(widths[0]) << res.field_name(i).c_str() <<
-					setw(widths[1]) << res.field_type(i).sql_name() <<
+					setw(widths[1]) << os.str() <<
 					setw(widths[2]) << cname <<
 					endl;
 		}
