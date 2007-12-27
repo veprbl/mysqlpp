@@ -276,7 +276,7 @@ template <>
 struct RefCountedPointerDestroyer<MYSQL_RES>
 {
 	/// \brief Functor implementation
-	void operator()(MYSQL_RES* doomed)
+	void operator()(MYSQL_RES* doomed) const
 	{
 		if (doomed) {
 			mysql_free_result(doomed);

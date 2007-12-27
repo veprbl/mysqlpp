@@ -48,7 +48,7 @@ template <class T>
 struct RefCountedPointerDestroyer
 {
 	/// \brief Functor implementation
-	void operator()(T* doomed) { delete doomed; }
+	void operator()(T* doomed) const { delete doomed; }
 };
 
 
