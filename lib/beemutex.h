@@ -83,6 +83,35 @@ private:
     void* pmutex_;
 };
 
+
+/// \brief Wrapper around BeecryptMutex to add scope-bound locking
+/// and unlocking.
+///
+/// This allows code to lock a mutex and ensure it will unlock on exit
+/// from the enclosing scope even in the face of exceptions.  This is
+/// separate from BeecryptMutex because we don't want to make this
+/// behavior mandatory.
+
+class ScopedLock
+{
+public:
+	/// \brief Lock the mutex.
+	explicit ScopedLock(BeecryptMutex& mutex) :
+	mutex_(mutex)
+	{
+		mutex.lock();
+	}
+
+	/// \brief Unlock the mutex.
+    ~ScopedLock() { mutex_.unlock(); }
+
+private:
+    ScopedLock(const ScopedLock&);				// can't copy
+    ScopedLock& operator =(const ScopedLock&);	// can't assign
+
+    BeecryptMutex& mutex_;	///< the mutex object we manage
+};
+
 } // end namespace mysqlpp
 
 #endif // !defined(MYSQLPP_BEEMUTEX_H)
