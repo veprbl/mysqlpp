@@ -35,7 +35,6 @@ namespace mysqlpp {
 
 String::~String()
 {
-	dec_ref_count();
 }
 
 
@@ -184,7 +183,7 @@ String::it_is_null()
 		buffer_->set_null();
 	}
 	else {
-		buffer_ = new RefCountedBuffer(0, 0, mysql_type_info::string_type, true);
+		buffer_ = new SQLBuffer(0, 0, mysql_type_info::string_type, true);
 	}
 }
 

@@ -1,6 +1,5 @@
 /// \file refcounted.h
-/// \brief Declares the RefCountedPointer template and RefCountedBuffer
-/// class
+/// \brief Declares the RefCountedPointer template
 
 /***********************************************************************
  Copyright (c) 2007 by Educational Technology Resources, Inc. and
@@ -29,11 +28,7 @@
 #if !defined(MYSQLPP_REFCOUNTED_H)
 #define MYSQLPP_REFCOUNTED_H
 
-#include "type_info.h"
-
-#include <algorithm>
 #include <memory>
-#include <string>
 
 namespace mysqlpp {
 
@@ -263,99 +258,6 @@ private:
 	size_t* refs_;
 };
 
-
-/// \brief Holds a reference-counted data buffer, like a primitive
-/// sort of std::string.
-class RefCountedBuffer
-{
-public:
-	/// \brief Type of length values
-	typedef unsigned int size_type;
-
-	/// \brief Initialize object as a copy of a raw data buffer
-	///
-	/// Copies the string into a new buffer one byte longer than
-	/// the length value given, using that to hold a C string null
-	/// terminator, just for safety.  The length value we keep does
-	/// not include this extra byte, allowing this same mechanism
-	/// to work for both C strings and binary data.
-	RefCountedBuffer(const char* data, size_type length,
-			mysql_type_info type, bool is_null)
-			{ init(data, length, type, is_null); }
- 
-	/// \brief Initialize object as a copy of a C++ string object
-	RefCountedBuffer(const std::string& s, mysql_type_info type,
-			bool is_null) { init(s.data(), s.length(), type, is_null); }
-
-	/// \brief Destructor
-	~RefCountedBuffer() { delete[] data_; }
-
-	/// \brief Replace contents of buffer with copy of given C string
-	RefCountedBuffer& assign(const char* data, size_type length,
-			mysql_type_info type = mysql_type_info::string_type,
-			bool is_null = false);
-
-	/// \brief Replace contents of buffer with copy of given C++ string
-	RefCountedBuffer& assign(const std::string& s,
-			mysql_type_info type = mysql_type_info::string_type,
-			bool is_null = false);
-
-	/// \brief Increment reference count
-	void attach() { ++refs_; }
-
-	/// \brief Return pointer to raw data buffer
-	const char* data() const { return data_; }
-
-	/// \brief Decrement reference count
-	/// \return True if reference count has not yet fallen to zero
-	bool detach() { return --refs_ > 0; }
-
-	/// \brief Returns true if we were initialized with a data type
-	/// that must be escaped when used in a SQL query
-	bool escape_q() const { return type_.escape_q(); }
-
-	/// \brief Return number of bytes in data buffer
-	///
-	/// Count does not include the trailing null we tack on to our
-	/// copy of the buffer for ease of use in C string contexts.
-	/// We do this because we can be holding binary data just as
-	/// easily as a C string.
-	size_type length() const { return length_; }
-
-	/// \brief Returns true if type of buffer's contents is string
-	bool is_string() { return type_ == mysql_type_info::string_type; }
-
-	/// \brief Return true if buffer's contents represent a SQL
-	/// null.
-	///
-	/// The buffer's actual content will probably be "NULL" or
-	/// something like it, but in the SQL data type system, a SQL
-	/// null is distinct from a plain string with value "NULL".
-	bool is_null() const { return is_null_; }
-
-	/// \brief Returns true if we were initialized with a data type
-	/// that must be quoted when used in a SQL query
-	bool quote_q() const { return type_.quote_q(); }
-
-	/// \brief Sets the internal SQL null flag
-	void set_null() { is_null_ = true; }
-
-	/// \brief Return the SQL type of the data held in the buffer
-	const mysql_type_info& type() const { return type_; }
-
-private:
-	/// \brief Common initialization for ctors
-	void init(const char* pd, size_type len, mysql_type_info type,
-			bool is_null);
-	/// \brief Implementation detail of assign() and init()
-	void replace_buffer(const char* pd, size_type length);
-
-	const char* data_;		///< pointer to the raw data buffer
-	size_type length_;		///< bytes in buffer, without trailing null
-	mysql_type_info type_;	///< SQL type of data in the buffer
-	bool is_null_;			///< if true, string represents a SQL null
-	unsigned int refs_;		///< reference count for this object
-};
 
 } // end namespace mysqlpp
 

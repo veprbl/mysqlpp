@@ -32,6 +32,7 @@
 
 #include "datetime.h"
 #include "null.h"
+#include "sql_buffer.h"
 #include "sql_types.h"
 
 #include <stdexcept>
@@ -40,8 +41,7 @@
 namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)
-class RefCountedBuffer;
-class String;
+class MYSQLPP_EXPORT String;
 #endif
 
 /// \brief Converts many different data types to strings suitable for
@@ -295,14 +295,8 @@ public:
 #endif // !defined(DOXYGEN_IGNORE)
 
 private:
-	/// \brief Decrement the buffer's reference count
-	///
-	/// Called by dtor and by operator=()s before replacing the buffer's
-	/// contents.  If ref count falls to 0, deallocates the buffer.
-	void dec_ref_count();
- 
 	/// \brief Our internal string buffer
-	RefCountedBuffer* buffer_;
+	RefCountedBuffer buffer_;
 
 	/// \brief If true, one of the MySQL++ manipulators has processed
 	/// the string data.

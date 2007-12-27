@@ -1,5 +1,5 @@
 /***********************************************************************
- refcounted.cpp - Implements the RefCountedBuffer class.
+ sql_buffer.cpp - Implements the SQLBuffer class.
 
  Copyright (c) 2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
@@ -23,14 +23,14 @@
  USA
 ***********************************************************************/
 
-#include "refcounted.h"
+#include "sql_buffer.h"
 
 namespace mysqlpp {
 
 
-RefCountedBuffer&
-RefCountedBuffer::assign(const char* data, size_type length,
-		mysql_type_info type, bool is_null)
+SQLBuffer&
+SQLBuffer::assign(const char* data, size_type length, mysql_type_info type,
+		bool is_null)
 {
 	replace_buffer(data, length);
 	type_ = type;
@@ -38,9 +38,8 @@ RefCountedBuffer::assign(const char* data, size_type length,
 	return *this;
 }
 
-RefCountedBuffer& 
-RefCountedBuffer::assign(const std::string& s, mysql_type_info type,
-		bool is_null)
+SQLBuffer& 
+SQLBuffer::assign(const std::string& s, mysql_type_info type, bool is_null)
 {
 	replace_buffer(s.data(), s.length());
 	type_ = type;
@@ -49,25 +48,11 @@ RefCountedBuffer::assign(const std::string& s, mysql_type_info type,
 }
 
 void
-RefCountedBuffer::init(const char* pd, size_type length,
-		mysql_type_info type, bool is_null)
+SQLBuffer::replace_buffer(const char* pd, size_type length)
 {
+	delete[] data_;
 	data_ = 0;
-	refs_ = 1;
-	type_ = type;
-	is_null_ = is_null;
-
-	replace_buffer(pd, length);
-}
-
-void
-RefCountedBuffer::replace_buffer(const char* pd, size_type length)
-{
-	if (data_ || !pd) {
-		delete[] data_;
-		data_ = 0;
-		length_ = 0;
-	}
+	length_ = 0;
 
 	if (pd) {
 		// The casts for the data member are because the C type system

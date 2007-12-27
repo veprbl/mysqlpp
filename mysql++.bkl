@@ -59,9 +59,9 @@
 				lib/options.cpp
 				lib/qparms.cpp
 				lib/query.cpp
-				lib/refcounted.cpp
 				lib/result.cpp
 				lib/row.cpp
+				lib/sql_buffer.cpp
 				lib/stadapter.cpp
 				lib/tcp_connection.cpp
 				lib/transaction.cpp

@@ -34,7 +34,7 @@
 #include "datetime.h"
 #include "exceptions.h"
 #include "null.h"
-#include "refcounted.h"
+#include "sql_buffer.h"
 
 #include <string>
 #include <stdlib.h>
@@ -106,7 +106,7 @@ public:
 	/// An object constructed this way is essentially useless, but
 	/// sometimes you just need to construct a default object.
 	String() :
-	buffer_(0)
+	buffer_()
 	{
 	}
 
@@ -120,7 +120,6 @@ public:
 	String(const String& other) :
 	buffer_(other.buffer_)
 	{
-		buffer_->attach();
 	}
 
 	/// \brief Full constructor.
@@ -138,7 +137,7 @@ public:
 	explicit String(const char* str, size_type len,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
-	buffer_(new RefCountedBuffer(str, len, type, is_null))
+	buffer_(new SQLBuffer(str, len, type, is_null))
 	{
 	}
 
@@ -152,7 +151,7 @@ public:
 	explicit String(const std::string& str,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
-	buffer_(new RefCountedBuffer(str.data(), str.length(), type, is_null))
+	buffer_(new SQLBuffer(str.data(), str.length(), type, is_null))
 	{
 	}
 
@@ -166,7 +165,7 @@ public:
 	explicit String(const char* str,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
-	buffer_(new RefCountedBuffer(str, strlen(str), type, is_null))
+	buffer_(new SQLBuffer(str, strlen(str), type, is_null))
 	{
 	}
 
@@ -183,8 +182,7 @@ public:
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false)
 	{
-		dec_ref_count();
-		buffer_ = new RefCountedBuffer(str, len, type, is_null);
+		buffer_ = new SQLBuffer(str, len, type, is_null);
 	}
 
 	/// \brief Assign a C++ string to this object
@@ -197,8 +195,7 @@ public:
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false)
 	{
-		dec_ref_count();
-		buffer_ = new RefCountedBuffer(str.data(), str.length(), type, is_null);
+		buffer_ = new SQLBuffer(str.data(), str.length(), type, is_null);
 	}
 
 	/// \brief Assign a C string to this object
@@ -211,8 +208,7 @@ public:
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false)
 	{
-		dec_ref_count();
-		buffer_ = new RefCountedBuffer(str, strlen(str), type, is_null);
+		buffer_ = new SQLBuffer(str, strlen(str), type, is_null);
 	}
 
 	/// \brief Return a character within the string.
@@ -361,9 +357,7 @@ public:
 	/// \brief Assignment operator, from C++ string
 	String& operator =(const std::string& rhs)
 	{
-		dec_ref_count();
-
-		buffer_ = new RefCountedBuffer(rhs.data(), rhs.length(),
+		buffer_ = new SQLBuffer(rhs.data(), rhs.length(),
 				mysql_type_info::string_type, false);
 
 		return *this;
@@ -375,9 +369,7 @@ public:
 	/// the pointer.
 	String& operator =(const char* str)
 	{
-		dec_ref_count();
-
-		buffer_ = new RefCountedBuffer(str, strlen(str),
+		buffer_ = new SQLBuffer(str, strlen(str),
 				mysql_type_info::string_type, false);
 
 		return *this;
@@ -390,10 +382,7 @@ public:
 	/// deep copy, assign a string to this object instead.
 	String& operator =(const String& other)
 	{
-		dec_ref_count();
-
 		buffer_ = other.buffer_;
-		buffer_->attach();
 
 		return *this;
 	}
@@ -481,19 +470,7 @@ public:
 	operator Null<T, B>() const { return conv(Null<T, B>()); }
 
 private:
-	/// \brief Decrement the buffer's reference count
-	///
-	/// Called by dtor and by operator=()s before replacing the buffer's
-	/// contents.  If ref count falls to 0, deallocates the buffer.
-	void dec_ref_count()
-	{
-		if (buffer_ && !buffer_->detach()) {
-			delete buffer_;
-			buffer_ = 0;
-		}
-	}
-
-	RefCountedBuffer* buffer_;	///< pointer to data buffer manager object
+	RefCountedBuffer buffer_;	///< reference-counted data buffer
 
 	friend class SQLTypeAdapter;
 };
