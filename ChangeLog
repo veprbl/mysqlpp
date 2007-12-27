@@ -4,15 +4,14 @@
       programs share a set of Connection objects safely in situations
       where it isn't acceptable to have a Connection per thread.
 
-    o Added RefCountedPointer template and RefCountedBuffer class.
-      While these may be useful for end user code, they're only
-      intended for use within the library.  But even if you never
-      use them directly, it's useful to know about them because they
-      enable a lot of data sharing and decoupling that wasn't possible
-      before.  Below, wherever we refer to reference counting, know
-      that the feature is implemented using one of these mechanisms.
-      Jonathan Wakely did a lot of very helpful work on this, and
-      Joseph Artsimovich provided helpful commentary and advice.
+    o Added RefCountedPointer template, which provides automatic
+      memory management and data sharing.  It's not intended for use
+      outside of MySQL++ itself, but because it's behind so many of
+      the improvements in v3, I'm mentioning it here.  Every reference
+      to reference counting below refers to this template.  I created
+      the initial version of it, but Jonathan Wakely almost completely
+      rebuilt it, and Joseph Artsimovich provided helpful commentary
+      and advice as well.
 
     o Several improvements to Specialized SQL Structures (SSQLS):
     
@@ -62,14 +61,14 @@
         doesn't need it to be modifiable, so it's still the closest
         thing MySQL++ has to its own "string type".  Thus the name.
 
-      - Replaced the internal buffer management of String with a much
-        more clever reference-counted scheme.  This shows its greatest
-        advantage in the return from Row::operator[]() and such, which
-        for technical reasons must still return by value, not by
-        reference as is more common for this operator.  Because it
-        uses reference counting, this doesn't copy the buffer, so you
-        can index into a Row to get a BLOB column and not worry about
-        the additional copy it used to make.
+      - Replaced its internal buffer management with a much more
+        clever reference counted scheme.  This shows its greatest
+        advantage in the return from Row::operator[]() and such,
+        which for technical reasons must still return by value, not
+        by reference as is more common for this operator.  Because it
+        uses reference counting, this doesn't copy the buffer, so
+        you can index into a Row to get a BLOB column and not worry
+        about the additional copy it used to make.
 
     o Redesigned SQLString:
 
