@@ -6,12 +6,13 @@
 
     o Added RefCountedPointer template and RefCountedBuffer class.
       While these may be useful for end user code, they're only
-      intended for use within the library.  But even if you never use
-      them directly, it's useful to know about them because they enable
-      a lot of data sharing and decoupling that wasn't possible before.
-      Below, wherever we refer to reference counting, know that the
-      feature is implemented using one of these mechanisms.  Jonathan
-      Wakely did a lot of very helpful work on this.
+      intended for use within the library.  But even if you never
+      use them directly, it's useful to know about them because they
+      enable a lot of data sharing and decoupling that wasn't possible
+      before.  Below, wherever we refer to reference counting, know
+      that the feature is implemented using one of these mechanisms.
+      Jonathan Wakely did a lot of very helpful work on this, and
+      Joseph Artsimovich provided helpful commentary and advice.
 
     o Several improvements to Specialized SQL Structures (SSQLS):
     
@@ -95,12 +96,12 @@
 
       - Added many more conversion ctors.
 
-      - SQLTypeAdapter mechanisms using the C char data type now
-        treat them as single-character strings instead of one-byte
-        integers.
+      - STA interfaces using the 'char' data type now treat them as
+        single-character strings instead of one-byte integers, as
+        does the Standard C++ Library.
 
-      - Added tinyint interfaces to SQLTypeAdapter to replace the
-        former char interfaces.
+      - Added mysqlpp::tiny_int interfaces to STA to replace the
+        former char interfaces for those using one-byte integers.
 
     o As a result of the ColData -> String redesign, removed
       Row::raw_*().  Before String copies were efficient, this was
@@ -114,9 +115,8 @@
       not, it'll just return an empty String.  This was necessary to
       make the SSQLS subset and field order independence features work.
 
-    o Similarly, Result::field_num() returns -1 when you ask for
-      a field that doesn't exist instead of throwing BadFieldName if
-      exceptions are disabled.
+    o Similarly, Result::field_num() returns -1 when exceptions are
+      disabled and you ask for a field that doesn't exist.
 
     o You can now use the OptionalExceptions mechanism to disable
       exceptions on const MySQL++ objects.
@@ -168,6 +168,27 @@
         avoiding certain usage patterns due to crashes, it's worth
         trying your preferred way again.
 
+      - Result sets create a few data structures to hold information
+        common to all rows in that set.  The row objects need access
+        to these shared data structures, so on creation each gets
+        a pointer back to the result set object that creates it.
+        This was efficient, but required that a result set object
+        outlive any row objects it creates.  Now these shared data
+        structures are reference-counted, decoupling the lifetime of
+        the child row objects from their result set parent.
+
+      - Copy operations for result sets used to actually be "moves"
+        before, for efficiency.  (MySQL++ itelf only copied result
+        sets in returning them by value from the query execution
+        methods of Query, so this was acceptable if you didn't do
+        anything uncommon with these objects.)  Reference counted
+        data structures allow us to have copy semantics now without
+        sacrificing efficiency.
+
+      - You can now use Query::storein() with an STL container of Row
+        objects now, instead of having to use SSQLSes.  The lifetime
+        issue guaranteed a crash if you tried this before.
+
       - Removed a bunch of unnecessary alias methods:
 
         - columns() -> num_fields()
@@ -191,39 +212,11 @@
         - reset_types()
         - reset_field_types()
 
-      - Several data members held by result set objects were common to
-        all Row objects we kept, so when creating the Row we'd pass a
-        pointer to ourselves so they could call back up to the
-        result object to get access to this.  This was all nice and
-        efficient, except that it required that the result set object
-        outlive all row objects it created.  Now we're storing these in
-        reference-counted data structures and passing them to the 
-        Row so the "last one out can turn out the lights" so to speak.
-
-      - A non-obvious side benefit of the previous change is that
-        you can now use Query::storein() with an STL container of
-        Row objects now, instead of having to use SSQLSes.  This used
-        to be a guaranteed way to crash a program before, due to the
-        lifetime issue.
-
-      - Copying result objects wasn't possible before.  Copy ctors
-        did exist, but they did a "move" instead of a copy: the new
-        object gained ownership of all held data, and the old one
-        relinquished all its data.  This made returning result set
-        objects by value efficient, but constrained the ways you could
-        use these objects.  Now that the result sets use reference
-        counting for so much of the data they hold, true copies are
-        now possible without losing efficiency.
-
     o Field class used to just be a typedef for the corresponding C
       API class.  Now it's a real C++ class providing a more MySQL++
       sort of interface, plus good OO things like information hiding
-      and implementation detail abstraction.  If you were accessing
-      data in the Field structure before, it's likely that you'll
-      have to make code changes, if only to call accessor methods
-      instead of accessing the fields directly.  In addition to the
-      reference manual documentation for field.h, see the fieldinf.cpp
-      and dbinfo.cpp examples: they access Field the new way now.
+      and implementation detail abstraction.  This changes several
+      things about the interface.
 
     o Fields class was basically a specialized std::vector work-alike
       for dealing with the C API to get access to MYSQL_FIELD objects
@@ -232,25 +225,21 @@
 
     o Major improvements to the quoting and escaping mechanisms:
 
-      - One major improvement is due in part to the STA work described
-        above.  Because it has so many conversion ctors, all of which
-        preserve enough type information for proper SQL query building,
-        we were able to remove many specializations and overloads for
-        particular data types.  Now almost all quoting and escaping of
-        a particular sort happen in functions taking a SQLTypeAdapter.
-
-      - Side effects of above change are that quoting and escaping
-        now works correctly for plain C and C++ string types.
+      - Replaced almost all of the type-specific interfaces in manip.h
+        with a single version taking STA.  The compiler can convert
+        almost anything to STA without losing any information we need
+        for correct quoting and escaping.  This has the side benefit
+        that we can now do correct quoting and escaping for more data
+        types now, including plain C and C++ string types.
 
       - Fixed a bug in quote_double_only manipulator for String: was
         using single quotes by mistake.
 
-      - Custom stream manipulators for escaping and quoting values now
-        only work with Query stream.  Inserting them into any other C++
-        stream is a no-op.  Likewise, automatic quoting and escaping
-        for the specialized string classes String and SQLTypeAdapter
-        now only works when it's obvious we're building a SQL query,
-        not sending the objects to some other output stream.
+      - Escaping and quoting only works in instances where MySQL++
+        can tell you're building a SQL query and are using a data type
+        that requires it.  This affects many things, but the one most
+        likely to cause trouble is that inserting MySQL++'s quoting
+        and escaping manipulators in non-Query ostreams is now a no-op.
 
       - Added escape_string() member functions to Query and
         SQLQueryParms::escape_string(), and removed the global function
@@ -261,9 +250,10 @@
         now, and that's when we're disconnected from the server.
 
       - Previous two items form a trade-off: if your code was depending
-        on the ability to use quoting and escaping manipulators on
-        non-Query ostreams, you can build a replacement mechanism
-        using these new functions.
+        on MySQL++ to get SQL escaping and it no longer happens for
+        what we consider a good reason, you can build a replacement
+        mechanism using these new functions.  Quoting needs no special
+        support in MySQL++.
 
       - Removed 'r' and 'R' template query parameter modifiers,
         which meant "always quote" and "always quote and escape"
@@ -271,11 +261,8 @@
         corresponding manipulators (for good reason), so the removal
         restores symmetry.
 
-    o Created DBDriver class to almost completely wrap the low-level
-      MySQL C API interface:
-
-      - The class was created from a lot of Connection's and Query's
-        guts.
+    o Created DBDriver class from code previously in Connection and
+      Query to almost completely wrap the low-level MySQL C API:
 
       - Connection creates a DBDriver object upon connection and
         passes a pointer to it down to Query objects it creates.
@@ -283,36 +270,32 @@
         that need access to the C API.
 
       - Nothing outside DBDriver calls the C API directly now, though
-        DBDriver leaks C API data structures quite a lot.  As a
-        result, This is merely a tentative first step toward database
-        independence.  See the Wishlist for what remains to be done.
+        DBDriver leaks C API data structures quite a lot, so this
+        feature doesn't constitute "database independence."  See the
+        Wishlist for what must be done to get to that point.
 
     o Completely redesigned the connection option setting mechanism:
 
-      - Connection::set_option() used to be overloaded for every option
-        argument type we understood.  They'd also take a
-        Connection::Option enum value indicating the option type.
-        This design meant you could pass any Option value to any
-        set_option() overload, and the resulting argument type error
-        wouldn't be caught until run time.
+      - There's now just a single Connection::set_option() method that
+        takes a pointer to the abstract Option base class, and there is
+        an Option subclass for every connection option we understand.
+        Thus, type errors are now caught at compile time instead of
+        at run time.
 
-      - Connection::set_option() is no longer overloaded.  It now
-        just takes a pointer to one of the new Option subclasses.
-        There's a subclass for every connection option we understand,
-        and each has member variables of the appropriate type for
-        that connection option's arguments.  This new mechanism is
-        much more type-safe and object-oriented.
+      - Replaced Connection::enable_ssl() with SslOption class.
 
-      - Replaced Connection::enable_ssl() with an option, SslOption.
+      - Enabling data compression and setting the connection timeout
+        are no longer set via parameters to Connection interfaces.
+        These are now set with CompressOption and ConnectTimeoutOption.
 
-      - Removed compress, connect_timeout, and client_flag parameters
-        from Connection's ctor and connect() method.  All of these
-        things now have corresponding Option subclasses.  There's about
-        a dozen, so rather than list them here, look in lib/options.h.
+      - Similarly, removed client_flag parameters from Connection's
+        ctor and connect() method and added corresponding Option
+        subclasses.  There's about a dozen, so rather than list them
+        here, look for similarly-named classes in lib/options.h.
 
     o Moved Connection::affected_rows(), info() and insert_id() methods
       to class Query, as they relate to the most recently-executed
-      query.
+      query, not to the connection.
 
     o Several method name changes in Connection:
 
@@ -343,15 +326,10 @@
     o Added a DateTime ctor taking discrete year, month, day, hour,
       minute, and second values.
 
-    o The Date, DateTime and Time classes used to have implicit
-      conversion constructors for ColData and std::string.  Had to
-      turn these into a template ctor for any stringish type and
-      then had to make it explicit to make the Null<T> SSQLS support
-      mentioned above work.  The new template formulation made these
-      classes to "grabby" when the compiler was allowed to do implicit
-      conversions through it: the compiler would end up tying itself
-      in knots performing bizarre conversions.  Thanks for the basic
-      concept of this patch go to "Waba."
+    o The Date, DateTime and Time classes can still be initialized
+      from stringish types, but to make the Null<T> SSQLS support
+      mentioned above work, implicit conversions are no longer allowed.
+      Thanks for the basic concept of this patch go to "Waba."
 
     o Added copy ctor and assignment operator to Row.
 
@@ -363,14 +341,10 @@
 
     o Added operator[] to all classes that only had at().
 
-    o Query now automatically resets itself when inserting a new query
-      string into it when it holds an old query string that has been
-      executed already.  This removes the need to call Query::reset()
-      when reusing a query object for most forms of query building.
-      The exception is when using template queries: we can't auto-reset
-      because resetting throws away parsed template and the defaults.
-      The examples use reset() only when necessary, so emulate them.
-      It's safe to call reset() anyway, just wasteful.
+    o Query now automatically resets itself when being reused for a
+      new query unless you're using template queries.  This removes
+      the need for most calls to Query::reset().  It's still safe to
+      call reset() as before, just unnecessary most of the time.
 
     o Removed reset_query parameter from all Query methods.  It never
       worked, and above change implements the promise.
@@ -385,21 +359,16 @@
 
     o Added Query::exec(void), paralleling Query::execute(void).
 
-    o Removed Query::preview().  The most direct replacement for this
-      set of overloaded methods is the parallel set of str() methods,
-      which were just aliases before.  (Chose str() over preview()
-      because it's standard C++ nomenclature.)  But if you're just
-      looking to get a copy of a built query string and you aren't
-      using template queries, you can now insert the Query into a
-      stream and get the same result.  A lot of code in the examples
-      saying things like "cout << query.preview() << endl" now says
-      "cout << query << endl" instead, for example.
+    o Removed Query::preview().  The most direct replacement is str(),
+      which has always done the same thing.
+
+    o You can now insert a Query object into an ostream to get a copy
+      of the built query.  This means Query::str() is only necessary
+      when using template queries.
 
     o Removed overloads of Query::execute(), store(), and use()
-      that take only a const char*.  This is only an ABI change:
-      code that relied on these being available will just call the
-      versions taking a single SQLTypeAdapter.  This just snaps a
-      layer of indirection.
+      that take const char*.  It was redundant because const char*
+      converts implicitly to STA, for which overloads already exist.
 
     o Renamed Query::def to Query::template_defaults to make its
       purpose clearer.
@@ -445,8 +414,8 @@
 
     o Replaced all operator bool()s in MySQL++ classes with safer
       alternatives.  See http://www.artima.com/cppsource/safebool.html
-      Thanks to Jonathan Wakely and Joseph Artsimovich for much
-      helpful commentary, advice, and code used in these mechanisms.
+      Thanks to Jonathan Wakely for much helpful commentary, advice,
+      and code used in these mechanisms.
 
     o Decoupled Connection::copacetic_ from Connection::is_connected_.
       It is now possible for the object to be copacetic without being
