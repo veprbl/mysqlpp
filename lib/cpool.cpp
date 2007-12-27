@@ -1,9 +1,10 @@
 /***********************************************************************
  cpool.cpp - Implements the ConnectionPool class.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the
- CREDITS file in the top directory of the distribution for details.
+ Copyright (c) 2007 by Educational Technology Resources, Inc. and
+ (c) 2007 by Jonathan Wakely.  Others may also hold copyrights on
+ code in this file.  See the CREDITS file in the top directory of
+ the distribution for details.
 
  This file is part of MySQL++.
 
@@ -27,7 +28,71 @@
 
 #include "connection.h"
 
+#include <algorithm>
+#include <functional>
+
 namespace mysqlpp {
+
+
+/// \brief Functor to test whether a given ConnectionInfo object is
+/// "too old".
+///
+/// This is a template only because ConnectionInfo is private.  Making
+/// it a template means the private type is only used at the point of
+/// instantiation, where it is accessible.
+
+template <typename ConnInfoT>
+class TooOld : std::unary_function<ConnInfoT, bool>
+{
+public:
+	TooOld(unsigned int tmax) :
+	min_age_(time(0) - tmax)
+	{
+	}
+
+	bool operator()(const ConnInfoT& conn_info) const
+	{
+		return !conn_info.in_use && conn_info.last_used <= min_age_;
+	}
+
+private:
+	time_t min_age_;
+};
+
+
+
+//// clear /////////////////////////////////////////////////////////////
+// Destroy all connections in the pool and drain pool.
+
+void
+ConnectionPool::clear()
+{
+	ScopedLock lock(mutex_);	// ensure we're not interfered with
+
+	for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
+		destroy(it->conn);
+	}
+	pool_.clear();
+}
+
+
+//// find_mru //////////////////////////////////////////////////////////
+// Find most recently used available connection.  Uses operator< for
+// ConnectionInfo to order pool with MRU connection last.  Returns 0 if
+// there are no connections not in use.
+
+Connection*
+ConnectionPool::find_mru()
+{
+	PoolIt mru = std::max_element(pool_.begin(), pool_.end());
+	if (mru != pool_.end() && !mru->in_use) {
+		mru->in_use = true;
+		return mru->conn;
+	}
+	else {
+		return 0;
+	}
+}
 
 
 //// grab //////////////////////////////////////////////////////////////
@@ -35,50 +100,15 @@ namespace mysqlpp {
 Connection*
 ConnectionPool::grab()
 {
-	mutex_.lock();
-
-	// Find first unused connection in the pool
-	PoolIt it = pool_.begin();
-	while ((it != pool_.end()) && it->in_use) {
-		++it;
-	}
-	
-	if (it != pool_.end()) {
-		// Found at least one unused connection.  Try to find more, and
-		// decide which is the most recently used.
-		unsigned int tmax = max_idle_time();
-		time_t now = time(0);
-		PoolIt mru = it;
-		++it;
-		while (it != pool_.end()) {
-			if (it->in_use) {
-				// Can't use this one, it's busy
-				++it;			
-			}
-			else if ((now - it->last_used) > tmax) {
-				// This one's too old; nuke it
-				PoolIt doomed = it;
-				++it;
-				pool_.erase(doomed);
-			}
-			else if (it->last_used > mru->last_used) {
-				// Ah, found a free one more recently used; hang onto it
-				mru = it;
-				++it;
-			}
-		}
-
-		mru->in_use = true;
-		mutex_.unlock();
-		return mru->conn;
+	ScopedLock lock(mutex_);	// ensure we're not interfered with
+	remove_old_connections();
+	if (Connection* mru = find_mru()) {
+		return mru;
 	}
 	else {
-		// Pool was empty when this function was called, so create and
-		// return a new one.
+		// No free connections, so create and return a new one.
 		pool_.push_back(ConnectionInfo(create()));
-		Connection* pc = pool_.back().conn;
-		mutex_.unlock();
-		return pc;
+		return pool_.back().conn;
 	}
 }
 
@@ -88,17 +118,34 @@ ConnectionPool::grab()
 void
 ConnectionPool::release(const Connection* pc)
 {
-	mutex_.lock();
+	ScopedLock lock(mutex_);	// ensure we're not interfered with
 
 	for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
 		if (it->conn == pc) {
 			it->in_use = false;
+			it->last_used = time(0);
 			break;
 		}
 	}
-
-	mutex_.unlock();
 }
+
+
+//// remove_old_connections ////////////////////////////////////////////
+// Remove connections that were last used too long ago.
+
+void
+ConnectionPool::remove_old_connections()
+{
+	PoolIt it = pool_.begin(), doomed;
+	TooOld<ConnectionInfo> too_old(max_idle_time());
+
+	while ((it = std::find_if(it, pool_.end(), too_old)) != pool_.end()) {
+		doomed = it++;
+		destroy(doomed->conn);
+		pool_.erase(doomed);
+	}
+}
+
 
 } // end namespace mysqlpp
 

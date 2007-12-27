@@ -2,9 +2,10 @@
 /// \brief Declares the ConnectionPool class.
 
 /***********************************************************************
- Copyright (c) 2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the
- CREDITS file in the top directory of the distribution for details.
+ Copyright (c) 2007 by Educational Technology Resources, Inc. and
+ (c) 2007 by Jonathan Wakely.  Others may also hold copyrights on
+ code in this file.  See the CREDITS file in the top directory of
+ the distribution for details.
 
  This file is part of MySQL++.
 
@@ -31,6 +32,7 @@
 
 #include <list>
 
+#include <assert.h>
 #include <time.h>
 
 namespace mysqlpp {
@@ -63,20 +65,44 @@ public:
 	ConnectionPool() { }
 
 	/// \brief Dtor
-	virtual ~ConnectionPool() { }
-	
-	/// \brief Get the most recently used free connection in the pool.
+	///
+	/// If this assertion is raised, it means the derived class isn't
+	/// calling clear() in its dtor.
+	virtual ~ConnectionPool() { assert(pool_.empty()); }
+
+	/// \brief Drains the pool, freeing all allocated memory.
+	///
+	/// A derived class must call this in its dtor to avoid leaking all
+	/// Connection objects still in existence.  We can't do it up at
+	/// this level because this class's dtor can't call our subclass's
+	/// destroy() method.
+	void clear();
+
+	/// \brief Grab a free connection from the pool.
 	///
 	/// This method creates a new connection if an unused one doesn't
 	/// exist, and destroys any that have remained unused for too long.
+	/// If there is more than one free connection, we return the most
+	/// recently used one; this allows older connections to die off over
+	/// time when the caller's need for connections decreases.
 	///
-	/// \retval a pointer to the most recently used connection
+	/// Do not delete the returned pointer.  This object manages the
+	/// lifetime of connection objects it creates.
+	///
+	/// \retval a pointer to the connection
 	Connection* grab();
 
-	/// \brief Mark the given connection as no longer in use.
+	/// \brief Return a connection to the pool
 	///
-	/// If you don't call this function, connections returned by
-	/// connection() will never go away!
+	/// Marks the connection as no longer in use.  Also resets the
+	/// last-used time to the current time, so a call implies that the
+	/// connection was used shortly prior.
+	///
+	/// This means that you must always release connections as soon as
+	/// you're done with them.  Don't hold on to idle connections!  If
+	/// you delay releasing them, it screws up the "most recently used"
+	/// algorithm.  If you never release them, they can never be closed
+	/// when idle, so you might as well not be using a pool.
 	void release(const Connection* pc);
 
 protected:
@@ -92,6 +118,15 @@ protected:
 	///
 	/// \retval A connected Connection object
 	virtual Connection* create() = 0;
+
+	/// \brief Destroy a connection
+	///
+	/// Subclasses must override this.
+	///
+	/// This is for destroying the objects returned by create().
+	/// Because we can't know what the derived class did to create the
+	/// connection we can't reliably know how to destroy it.
+	virtual void destroy(Connection*) = 0;
 
 	/// \brief Returns the maximum number of seconds a connection is
 	/// able to remain idle before it is dropped.
@@ -116,9 +151,26 @@ private:
 		in_use(true)
 		{
 		}
+
+		// Strict weak ordering for ConnectionInfo objects.
+		// 
+		// This ordering defines all in-use connections to be "less
+		// than" those not in use.  Within each group, connections
+		// less recently touched are less than those more recent.
+		bool operator<(const ConnectionInfo& rhs) const
+		{
+			const ConnectionInfo& lhs = *this;
+			return lhs.in_use == rhs.in_use ?
+					lhs.last_used < rhs.last_used :
+					lhs.in_use;
+		}
 	};
 	typedef std::list<ConnectionInfo> PoolT;
 	typedef PoolT::iterator PoolIt;
+
+	//// Internal support functions
+	Connection* find_mru();
+	void remove_old_connections();
 
 	//// Internal data
 	PoolT pool_;
