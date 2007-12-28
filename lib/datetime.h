@@ -109,7 +109,7 @@ struct DTbase
 /// "NOW()", allowing the database server to set the value.  In older
 /// versions of MySQL++, you'd get a "zero time" instead.
 
-struct DateTime : public DTbase<DateTime>
+struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 {
 	unsigned short year;	///< the year, as a simple integer
 	unsigned char month;	///< the month, 1-12
@@ -230,7 +230,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& os,
 ///
 /// Objects of this class can be inserted into streams, and
 /// initialized from MySQL DATE strings.
-struct Date : public DTbase<Date>
+struct MYSQLPP_EXPORT Date : public DTbase<Date>
 {
 	unsigned short year;	///< the year, as a simple integer
 	unsigned char month;	///< the month, 1-12
@@ -302,7 +302,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& os,
 ///
 /// Objects of this class can be inserted into streams, and
 /// initialized from MySQL TIME strings.
-struct Time : public DTbase<Time>
+struct MYSQLPP_EXPORT Time : public DTbase<Time>
 {
 	unsigned char hour;		///< the hour, 0-23
 	unsigned char minute;	///< the minute, 0-59
