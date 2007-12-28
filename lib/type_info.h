@@ -36,6 +36,8 @@
 #include <map>
 #include <typeinfo>
 
+#include <assert.h>
+
 namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)
@@ -106,6 +108,8 @@ private:
 	friend class mysql_type_info;
 
 	typedef mysql_ti_sql_type_info sql_type_info;
+	typedef std::map<const std::type_info*, unsigned char, type_info_cmp>
+			map_type;
 
 	mysql_ti_sql_type_info_lookup(const sql_type_info types[],
 			const int size);
@@ -113,10 +117,12 @@ private:
 	const unsigned char& operator [](
 			const std::type_info& ti) const
 	{
-		return map_.find(&ti)->second;
+		map_type::const_iterator it = map_.find(&ti);
+		assert(it != map_.end());
+		return it->second;
 	}
 
-	std::map<const std::type_info*, unsigned char, type_info_cmp> map_;
+	map_type map_;
 };
 
 #endif // !defined(DOXYGEN_IGNORE)
