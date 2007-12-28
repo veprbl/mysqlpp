@@ -352,7 +352,10 @@ public:
 	void to_string(std::string& s) const;
 
 	/// \brief Get this object's current MySQL type.
-	mysql_type_info type() const { return buffer_->type(); }
+	mysql_type_info type() const
+	{
+		return buffer_ ? buffer_->type() : mysql_type_info::string_type;
+	}
 
 	/// \brief Assignment operator, from C++ string
 	String& operator =(const std::string& rhs)
