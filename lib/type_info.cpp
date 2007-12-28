@@ -78,7 +78,7 @@ const mysql_type_info::sql_type_info mysql_type_info::types[] = {
 	sql_type_info("DOUBLE NOT NULL", typeid(sql_double), 
 			MYSQL_TYPE_DOUBLE, mysql_ti_sql_type_info::tf_default),
 	sql_type_info("NULL NOT NULL", typeid(void),
-			MYSQL_TYPE_NULL),
+			MYSQL_TYPE_NULL, mysql_ti_sql_type_info::tf_default),
 	sql_type_info("TIMESTAMP NOT NULL", typeid(sql_timestamp), 
 			MYSQL_TYPE_TIMESTAMP),
 	sql_type_info("BIGINT NOT NULL", typeid(sql_bigint), 
