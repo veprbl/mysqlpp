@@ -35,6 +35,14 @@
 # only if you must.
 my $max_data_members = 25;
 
+# To make comparisons between floating point values, we subtract them,
+# take the absolute value, and test to see if that delta is under this
+# value.  If it is, we call the two values "equal".  Change this as fits
+# your need for precision.  Note that we express it as a string because
+# we want the value copied literally into custom.h, not "preprocessed" 
+# by Perl as a floating-point value.
+my $fp_min_delta = "0.00001";
+
 
 # No user-serviceable parts below.
 
@@ -61,6 +69,18 @@ print OUT0 << "---";
 #include "sql_types.h"
 
 #include <string>
+
+#include <math.h>
+
+// Smallest difference between two floating point numbers recognized
+// in making comparisons.  If the absolute delta is under this
+// threshold, the two values are considered equal.  You can either
+// override this permanently by changing custom.pl, or you can do it
+// on a case-by-case basis at compile time by defining this to another
+// value before #including this header.
+#if !defined(MYSQLPP_FP_MIN_DELTA)
+#	define MYSQLPP_FP_MIN_DELTA $fp_min_delta
+#endif
 
 namespace mysqlpp {
 
@@ -113,13 +133,26 @@ inline int sql_cmp($type a, $type b)
 ---
 }
 
-@types = ("double", "float", "longlong", "ulonglong");
+@types = ("longlong", "ulonglong");
 foreach my $type (@types) {
     print OUT0 << "---";
 
 inline int sql_cmp($type a, $type b) 
 {
 	if (a == b) return 0;
+	if (a <  b) return -1;
+	return 1;
+}
+---
+}	
+
+@types = ("double", "float");
+foreach my $type (@types) {
+    print OUT0 << "---";
+
+inline int sql_cmp($type a, $type b) 
+{
+	if (fabs(a - b) < MYSQLPP_FP_MIN_DELTA) return 0;
 	if (a <  b) return -1;
 	return 1;
 }

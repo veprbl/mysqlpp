@@ -40,6 +40,17 @@
     
       - You can now use 'bool' type in SSQLS.
 
+      - SSQLSes have always had a < operator defined for them for
+        various reasons, which compares the first N fields, where N
+        is the second parameter to sql_create_X.  Earlier versions
+        of MySQL++ did comparisons using exact equality for all data
+        types including floating-point.  Now there is a configurable
+        value at the top of lib/custom.pl that lets you set the
+        minimum threshold between two floating point values such
+        that they will be considered equal.  It's also possible to
+        redefine this threshold on a per-module basis by #defining
+        MYSQLPP_FP_MIN_DELTA before #including custom.h.
+
     o You can now use mysqlpp::null as a template query parameter to
       get a SQL null.
 
