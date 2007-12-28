@@ -136,13 +136,12 @@ ConnectionPool::release(const Connection* pc)
 void
 ConnectionPool::remove_old_connections()
 {
-	PoolIt it = pool_.begin(), doomed;
 	TooOld<ConnectionInfo> too_old(max_idle_time());
 
+	PoolIt it = pool_.begin();
 	while ((it = std::find_if(it, pool_.end(), too_old)) != pool_.end()) {
-		doomed = it++;
-		destroy(doomed->conn);
-		pool_.erase(doomed);
+		destroy(it->conn);
+		pool_.erase(it++);
 	}
 }
 
