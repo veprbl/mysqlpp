@@ -93,9 +93,9 @@ v3.1 Tentative Plan
     o Has experience with new thread awareness changed our mind on
       atomic inc/dec of reference counts in RefCounted*?
 
-	o Create a fixed-point data type for use with SQL's DECIMAL and
-	  related types.  Right now, sql_decimal is a typedef for double,
-	  so you lose accuracy in the fractional part.
+    o Create a fixed-point data type for use with SQL's DECIMAL and
+      related types.  Right now, sql_decimal is a typedef for double,
+      so you lose accuracy in the fractional part.
 
 
 v4.0 or Later
@@ -109,8 +109,27 @@ v4.0 or Later
         ensure base class is reusable before releasing v4.0.
         PostgresDriver and SqlLiteDriver?
 
-      - Give Connection ctor a parameter to let it know what kind of
-        driver to create.
+      - Templatize all classes that use DBDriver interface with the
+        DB driver type.  This lets you specify the driver type to use
+        with a Connection and all its children without modifying the
+        existing method parameter lists.  This also lets us worry less
+        about C API types, as they can be hidden away behind typedefs:
+
+        class MysqlDriver : public DBDriver { ...
+           typedef MYSQL_ROW row_type;
+           ...
+        }
+
+        template <class DBD = MysqlDriver>
+        class Connection ... { ...
+           Query<DBD> query();
+           ...
+        }
+
+        template <class DBD = MysqlDriver>
+        class UseQueryResult { ...
+            DBD::row_type fetch_raw_row();
+        }
 
       - Tricky bits:
     
