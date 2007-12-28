@@ -62,17 +62,26 @@ private:
 
 
 //// clear /////////////////////////////////////////////////////////////
-// Destroy all connections in the pool and drain pool.
+// Destroy connections in the pool, either all of them (completely
+// draining the pool) or just those not currently in use.  The public
+// method shrink() is an alias for clear(false).
 
 void
-ConnectionPool::clear()
+ConnectionPool::clear(bool all)
 {
 	ScopedLock lock(mutex_);	// ensure we're not interfered with
 
-	for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
-		destroy(it->conn);
+	PoolIt it = pool_.begin(), doomed;
+	while (it != pool_.end()) {
+		if (all || !it->in_use) {
+			doomed = it++;
+			destroy(doomed->conn);
+			pool_.erase(doomed);
+		}
+		else {
+			++it;
+		}
 	}
-	pool_.clear();
 }
 
 

@@ -70,14 +70,6 @@ public:
 	/// calling clear() in its dtor.
 	virtual ~ConnectionPool() { assert(pool_.empty()); }
 
-	/// \brief Drains the pool, freeing all allocated memory.
-	///
-	/// A derived class must call this in its dtor to avoid leaking all
-	/// Connection objects still in existence.  We can't do it up at
-	/// this level because this class's dtor can't call our subclass's
-	/// destroy() method.
-	void clear();
-
 	/// \brief Grab a free connection from the pool.
 	///
 	/// This method creates a new connection if an unused one doesn't
@@ -105,7 +97,21 @@ public:
 	/// when idle, so you might as well not be using a pool.
 	void release(const Connection* pc);
 
+	/// \brief Remove all unused connections from the pool
+	void shrink() { clear(false); }
+
 protected:
+	//// Subclass interface
+	/// \brief Drains the pool, freeing all allocated memory.
+	///
+	/// A derived class must call this in its dtor to avoid leaking all
+	/// Connection objects still in existence.  We can't do it up at
+	/// this level because this class's dtor can't call our subclass's
+	/// destroy() method.
+	///
+	/// \param all if true, remove all connections, even those in use
+	void clear(bool all = true);
+
 	//// Subclass overrides
 	/// \brief Create a new connection
 	///
