@@ -58,7 +58,8 @@ public:
 	/// in the corresponding constructor for Connection.  This is a
 	/// feature, not a bug. :)
 	UnixDomainSocketConnection(cchar* path, cchar* db = 0,
-			cchar* user = 0, cchar* password = 0)
+			cchar* user = 0, cchar* password = 0) :
+	Connection()
 	{
 		connect(path, db, user, password);
 	}
@@ -67,9 +68,9 @@ public:
 	/// an existing connection.
 	///
 	/// \param other pre-existing connection to clone
-	UnixDomainSocketConnection(const UnixDomainSocketConnection& other)
+	UnixDomainSocketConnection(const UnixDomainSocketConnection& other) :
+	Connection(other)
 	{
-		copy(other);	// slices it, but that's okay
 	}
 
 	/// \brief Destroy object

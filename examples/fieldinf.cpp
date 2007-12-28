@@ -63,7 +63,7 @@ main(int argc, char *argv[])
 				setw(widths[1]) << "SQL Type" <<
 				setw(widths[2]) << "Equivalent C++ Type" <<
 				endl;
-		for (int i = 0; i < sizeof(widths) / sizeof(widths[0]); ++i) {
+		for (size_t i = 0; i < sizeof(widths) / sizeof(widths[0]); ++i) {
 			cout << string(widths[i] - 1, '=') << ' ';
 		}
 		cout << endl;

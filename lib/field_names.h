@@ -46,13 +46,15 @@ public:
 	FieldNames() { }
 
 	/// \brief Copy constructor
-	FieldNames(const FieldNames& other)
+	FieldNames(const FieldNames& other) :
+	std::vector<std::string>()
 	{
 		assign(other.begin(), other.end());
 	}
 	
 	/// \brief Create field name list from a result set
-	FieldNames(const ResultBase* res)
+	FieldNames(const ResultBase* res) :
+	std::vector<std::string>()
 	{
 		init(res);
 	}

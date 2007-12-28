@@ -159,7 +159,7 @@ DBDriver::query_info()
 
 
 bool
-DBDriver::set_option(int o, bool arg)
+DBDriver::set_option(unsigned int o, bool arg)
 {
 	// If we get through this loop and n is 1, only one bit is set in
 	// the option value, which is as it should be.

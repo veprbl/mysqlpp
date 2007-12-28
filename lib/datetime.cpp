@@ -214,7 +214,7 @@ DateTime::operator time_t() const
 
 		return mktime(&tm);
 	}
-};
+}
 
 DateTime::DateTime(time_t t)
 {

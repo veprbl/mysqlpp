@@ -60,7 +60,8 @@ public:
 	/// in the corresponding constructor for Connection.  This is a
 	/// feature, not a bug. :)
 	TCPConnection(cchar* addr, cchar* db = 0, cchar* user = 0,
-			cchar* password = 0)
+			cchar* password = 0) :
+	Connection()
 	{
 		connect(addr, db, user, password);
 	}
@@ -69,9 +70,9 @@ public:
 	/// an existing connection.
 	///
 	/// \param other pre-existing connection to clone
-	TCPConnection(const TCPConnection& other)
+	TCPConnection(const TCPConnection& other) :
+	Connection(other)
 	{
-		copy(other);	// slices it, but that's okay
 	}
 
 	/// \brief Destroy object

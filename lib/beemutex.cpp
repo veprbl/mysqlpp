@@ -52,8 +52,10 @@ namespace mysqlpp {
 #if defined(ACTUALLY_DOES_SOMETHING)
 	static bc_mutex_t* impl_ptr(void* p)
 			{ return static_cast<bc_mutex_t*>(p); }
-	static bc_mutex_t impl_val(void* p)
-			{ return *static_cast<bc_mutex_t*>(p); }
+#	if defined(MYSQLPP_PLATFORM_WINDOWS)
+		static bc_mutex_t impl_val(void* p)
+				{ return *static_cast<bc_mutex_t*>(p); }
+#	endif
 #endif
 
 
@@ -68,7 +70,9 @@ BeecryptMutex::BeecryptMutex() throw (MutexFailed)
 	if (!impl_val(pmutex_))
 		throw MutexFailed("CreateMutex failed");
 #else
+#	if HAVE_SYNCH_H || HAVE_PTHREAD
 	register int rc;
+#	endif
 #	if HAVE_SYNCH_H
 		if ((rc = mutex_init(impl_ptr(pmutex_), USYNC_THREAD, 0)))
 			throw MutexFailed(strerror(rc));
@@ -104,7 +108,9 @@ BeecryptMutex::lock() throw (MutexFailed)
 		return;
 	throw MutexFailed("WaitForSingleObject failed");
 #else
+#	if HAVE_SYNCH_H || HAVE_PTHREAD
 	register int rc;
+#	endif
 #	if HAVE_SYNCH_H
 		if ((rc = mutex_lock(impl_ptr(pmutex_))))
 			throw MutexFailed(strerror(rc));
@@ -158,7 +164,9 @@ BeecryptMutex::unlock() throw (MutexFailed)
 	if (!ReleaseMutex(impl_val(pmutex_)))
 		throw MutexFailed("ReleaseMutex failed");
 #else
+#	if HAVE_SYNCH_H || HAVE_PTHREAD
 		register int rc;
+#	endif
 #	if HAVE_SYNCH_H
 		if ((rc = mutex_unlock(impl_ptr(pmutex_))))
 			throw MutexFailed(strerror(rc));

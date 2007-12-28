@@ -51,7 +51,7 @@ private:
 	enum {
 		tf_default = 1,
 		tf_null = 2,
-		tf_unsigned = 4,
+		tf_unsigned = 4
 	};
 
 	friend class mysql_type_info;

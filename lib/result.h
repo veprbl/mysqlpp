@@ -168,7 +168,11 @@ protected:
 	ResultBase(MYSQL_RES* result, DBDriver* dbd, bool te = true);
 	
 	/// \brief Create object as a copy of another ResultBase
-	ResultBase(const ResultBase& other) { copy(other); }
+	ResultBase(const ResultBase& other) :
+	OptionalExceptions()
+	{
+		copy(other);
+	}
 
 	/// \brief Copy another ResultBase object's contents into this one.
 	ResultBase& copy(const ResultBase& other);
@@ -230,6 +234,7 @@ public:
 	/// object
 	StoreQueryResult(const StoreQueryResult& other) :
 	ResultBase(),
+	std::vector<Row>(),
 	copacetic_(false)
 	{
 		copy(other);

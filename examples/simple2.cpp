@@ -62,7 +62,7 @@ main(int argc, char *argv[])
 					"Date" << endl << endl;
 
 			// Get each row in result set, and print its contents
-			for (int i = 0; i < res.num_rows(); ++i) {
+			for (size_t i = 0; i < res.num_rows(); ++i) {
 				cout << setw(30) << res[i]["item"] << ' ' <<
 						setw(9) << res[i]["num"] << ' ' <<
 						setw(9) << res[i]["weight"] << ' ' <<

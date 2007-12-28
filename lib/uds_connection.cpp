@@ -49,6 +49,7 @@ UnixDomainSocketConnection::connect(cchar* path, cchar* db, cchar* user,
 	if (is_socket(path, &error_message_)) {
 		return Connection::connect(db, path, user, pass);
 	}
+	(void)common_complaint;
 #else
 	error_message_ = common_complaint;
 #endif

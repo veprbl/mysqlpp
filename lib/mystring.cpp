@@ -103,12 +103,12 @@ String::compare(size_type pos, size_type num,
 
 template <>
 String
-String::conv(String dummy) const { return *this; }
+String::conv(String) const { return *this; }
 
 
 template <>
 bool
-String::conv(bool dummy) const
+String::conv(bool) const
 {
 	return *this;	// delegate to operator bool
 }
@@ -116,7 +116,7 @@ String::conv(bool dummy) const
 
 template <>
 std::string
-String::conv(std::string dummy) const
+String::conv(std::string) const
 {
 	return buffer_ ? std::string(data(), length()) : std::string();
 }
@@ -124,7 +124,7 @@ String::conv(std::string dummy) const
 
 template <>
 Date
-String::conv(Date dummy) const
+String::conv(Date) const
 {
 	return buffer_ ? Date(c_str()) : Date();
 }
@@ -132,7 +132,7 @@ String::conv(Date dummy) const
 
 template <>
 DateTime
-String::conv(DateTime dummy) const
+String::conv(DateTime) const
 {
 	return buffer_ ? DateTime(c_str()) : DateTime();
 }
@@ -140,7 +140,7 @@ String::conv(DateTime dummy) const
 
 template <>
 Time
-String::conv(Time dummy) const
+String::conv(Time) const
 {
 	return buffer_ ? Time(c_str()) : Time(); 
 }

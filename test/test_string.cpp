@@ -29,20 +29,23 @@
 #include <iostream>
 
 
-// Does a simple equality comparison on the value, forcing the string
-// to convert itself to T on the way.
+// Does an equality comparison on the value, forcing the string to
+// convert itself to T on the way.  Note that we do this test in terms
+// of greater and less than to avoid pedantic GCC warnings for the
+// floating point type tests.
 template <typename T>
 static bool
 test_equality(const mysqlpp::String& s, T value)
 {
-	if (s.conv(value) == value) {
-		return true;
-	}
-	else {
+	T converted = s.conv(value);
+	if ((value < converted) || (value > converted)) {
 		std::cerr << "Type conversion to " << typeid(T).name() <<
 				" failed: \"" << s << "\" != \"" << value << "\"." <<
 				std::endl;
 		return false;
+	}
+	else {
+		return true;
 	}
 }
 
@@ -52,25 +55,25 @@ test_equality(const mysqlpp::String& s, T value)
 static bool
 test_numeric(const mysqlpp::String& s, int value)
 {
-	return	test_equality(s, (signed char)value) &&
-			test_equality(s, (unsigned char)value) &&
-			test_equality(s, (signed short)value) &&
-			test_equality(s, (unsigned short)value) &&
-			test_equality(s, (signed int)value) &&
-			test_equality(s, (unsigned int)value) &&
-			test_equality(s, (signed long)value) &&
-			test_equality(s, (unsigned long)value) &&
+	return	test_equality(s, static_cast<signed char>(value)) &&
+			test_equality(s, static_cast<unsigned char>(value)) &&
+			test_equality(s, static_cast<signed short>(value)) &&
+			test_equality(s, static_cast<unsigned short>(value)) &&
+			test_equality(s, static_cast<signed int>(value)) &&
+			test_equality(s, static_cast<unsigned int>(value)) &&
+			test_equality(s, static_cast<signed long>(value)) &&
+			test_equality(s, static_cast<unsigned long>(value)) &&
 #if !defined(NO_LONG_LONGS)
-			test_equality(s, (mysqlpp::longlong)value) &&
-			test_equality(s, (mysqlpp::ulonglong)value) &&
+			test_equality(s, static_cast<mysqlpp::longlong>(value)) &&
+			test_equality(s, static_cast<mysqlpp::ulonglong>(value)) &&
 #endif
-			test_equality(s, (float)value) &&
-			test_equality(s, (double)value);
+			test_equality(s, static_cast<float>(value)) &&
+			test_equality(s, static_cast<double>(value));
 }
 
 
 int
-main(int argc, char* argv[])
+main(int, char* argv[])
 {
 	try {
 		int failures = 0;
@@ -79,7 +82,8 @@ main(int argc, char* argv[])
 		mysqlpp::String nonzero("42");
 
 		failures += test_equality(empty, mysqlpp::Date()) == false;
-		failures += test_equality(empty, mysqlpp::DateTime()) == false;
+		failures += test_equality(empty, 
+				mysqlpp::DateTime(0, 0, 0, 0, 0, 0)) == false;
 		failures += test_equality(empty, mysqlpp::Time()) == false;
 		failures += test_equality(empty, false) == false;
 		failures += test_equality(nonzero, true) == false;

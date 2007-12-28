@@ -143,8 +143,8 @@ main()
 
 	int failures = 0;
 	failures += test(s, len) == false;
-	failures += test((char*)s, len) == false;
-	failures += test((const char*)s, len) == false;
+	failures += test(static_cast<char*>(s), len) == false;
+	failures += test(static_cast<const char*>(s), len) == false;
 	failures += test(std::string(s), len) == false;
 	failures += test(mysqlpp::SQLTypeAdapter(s), len) == false;
 	failures += test(mysqlpp::Null<std::string>(s), len) == false;

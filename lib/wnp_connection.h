@@ -63,9 +63,9 @@ public:
 	/// an existing connection.
 	///
 	/// \param other pre-existing connection to clone
-	WindowsNamedPipeConnection(const WindowsNamedPipeConnection& other)
+	WindowsNamedPipeConnection(const WindowsNamedPipeConnection& other) :
+	Connection(other)
 	{
-		copy(other);	// slices it, but that's okay
 	}
 
 	/// \brief Destroy object

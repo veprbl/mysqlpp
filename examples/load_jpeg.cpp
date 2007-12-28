@@ -76,10 +76,13 @@ main(int argc, char *argv[])
 				size_t img_size = img_file.tellg();
 				if (img_size > 10) {
 					img_file.seekg(0, ios::beg);
-					char* img_buffer = new char[img_size];
-					img_file.read(img_buffer, img_size);
-					if (is_jpeg((unsigned char*)img_buffer)) {
-						img_data.assign(img_buffer, img_size);
+					unsigned char* img_buffer = new unsigned char[img_size];
+					img_file.read(reinterpret_cast<char*>(img_buffer),
+							img_size);
+					if (is_jpeg(img_buffer)) {
+						img_data.assign(
+								reinterpret_cast<char*>(img_buffer),
+								img_size);
 					}
 					else {
 						cerr << '"' << img_file <<

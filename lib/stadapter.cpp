@@ -311,7 +311,7 @@ is_processed_(false)
 }
 #endif
 
-SQLTypeAdapter::SQLTypeAdapter(const null_type& n) :
+SQLTypeAdapter::SQLTypeAdapter(const null_type&) :
 buffer_(new SQLBuffer(null_str, typeid(void), true)),
 is_processed_(false)
 {
@@ -338,7 +338,7 @@ SQLTypeAdapter::assign(const char* pc, int len)
 }
 
 SQLTypeAdapter&
-SQLTypeAdapter::assign(const null_type& n)
+SQLTypeAdapter::assign(const null_type&)
 { 
 	buffer_ = new SQLBuffer(null_str, typeid(void), true);
 	is_processed_ = false;

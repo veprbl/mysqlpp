@@ -63,7 +63,7 @@ make_socket(const char* path, mode_t mode)
 	sun.sun_family = AF_LOCAL;
 	strncpy(sun.sun_path, path, sizeof(sun.sun_path));
 	sun.sun_path[sizeof(sun.sun_path) - 1] = '\0';
-	if (bind(fd, (sockaddr*)&sun, sizeof(sun)) < 0) {
+	if (bind(fd, reinterpret_cast<sockaddr*>(&sun), sizeof(sun)) < 0) {
 		return -1;
 	}
 

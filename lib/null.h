@@ -191,7 +191,7 @@ public:
 	/// Null<int> foo = null;
 	/// \endcode
 	/// ...to get a null \c int.
-	Null(const null_type& n) :
+	Null(const null_type&) :
 	is_null(true)
 	{
 	}

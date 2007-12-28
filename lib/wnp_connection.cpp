@@ -43,6 +43,9 @@ WindowsNamedPipeConnection::connect(cchar* db, cchar* user, cchar* pass)
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
 	return Connection::connect(db, ".", user, pass);
 #else
+	(void)db;
+	(void)user;
+	(void)pass;
 	error_message_ = common_complaint;
 	if (throw_exceptions()) {
 		throw ConnectionFailed(error_message_.c_str());
@@ -60,6 +63,7 @@ WindowsNamedPipeConnection::is_wnp(cchar* server)
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
 	return server && (strcmp(server, ".") == 0);
 #else
+	(void)server;
 	return false;
 #endif
 }

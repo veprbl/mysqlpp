@@ -396,7 +396,7 @@ public:
 	/// Manipulates the MYSQL.client_flag bit mask.  This allows these
 	/// flags to be treated the same way as any other connection option,
 	/// even though the C API handles them differently.
-	bool set_option(int option, bool arg);
+	bool set_option(unsigned int option, bool arg);
 
 	/// \brief Same as set_option(), except that it won't override
 	/// a previously-set option.

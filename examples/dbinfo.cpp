@@ -99,7 +99,7 @@ show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
 
 		unsigned int columns = res.num_fields();
 		vector<int> widths;
-		for (int i = 0; i < columns; ++i) {
+		for (unsigned int i = 0; i < columns; ++i) {
 			string s = res.field_name(i);
 			if (s.compare("field") == 0) {
 				widths.push_back(22);
@@ -128,7 +128,7 @@ show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
 
 		mysqlpp::StoreQueryResult::iterator rit;
 		for (rit = res.begin(); rit != res.end(); ++rit) {
-			for (int i = 0; i < columns; ++i) {
+			for (unsigned int i = 0; i < columns; ++i) {
 				if (widths[i]) {
 					cout << ' ' << setw(widths[i]) <<
 							(*rit)[i].c_str() << ' ';

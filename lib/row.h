@@ -121,6 +121,7 @@ public:
 	
 	/// \brief Copy constructor
 	Row(const Row& r) :
+	OptionalExceptions(),
 	data_(r.data_.begin(), r.data_.end()),
 	field_names_(r.field_names_),
 	initialized_(r.initialized_)

@@ -58,7 +58,6 @@ print_stock_row(const mysqlpp::sql_char& item, mysqlpp::sql_bigint num,
 		mysqlpp::sql_double weight, mysqlpp::sql_decimal price,
 		const mysqlpp::sql_date& date)
 {
-	char buf[100];
 	cout << setw(30) << item << ' ' <<
 			setw(9) << num << ' ' <<
 			setw(9) << weight << ' ' <<

@@ -49,7 +49,8 @@ public:
 	/// \brief Create empty object
 	Field() :
 	length_(0),
-	max_length_(0)
+	max_length_(0),
+	flags_(0)
 	{
 	}
 
@@ -58,10 +59,10 @@ public:
 	name_(pf->name),
 	table_(pf->table),
 	db_(pf->db),
-	length_(pf->length),
-	max_length_(pf->max_length),
 	type_(pf->type, (pf->flags & UNSIGNED_FLAG) != 0,
 			(pf->flags & NOT_NULL_FLAG) == 0),
+	length_(pf->length),
+	max_length_(pf->max_length),
 	flags_(pf->flags)
 	{
 	}
@@ -71,9 +72,9 @@ public:
 	name_(other.name_),
 	table_(other.table_),
 	db_(other.db_),
+	type_(other.type_),
 	length_(other.length_),
 	max_length_(other.max_length_),
-	type_(other.type_),
 	flags_(other.flags_)
 	{
 	}
