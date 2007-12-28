@@ -438,7 +438,9 @@ SQLTypeAdapter::operator =(const null_type& n)
 bool
 SQLTypeAdapter::quote_q() const
 {
-	return buffer_ ? buffer_->quote_q() : false;
+	// If no buffer, it means we're an empty string, so we need to be 
+	// quoted to be expressed properly in SQL.
+	return buffer_ ? buffer_->quote_q() : true;
 }
 
 int

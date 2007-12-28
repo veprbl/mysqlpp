@@ -72,6 +72,20 @@ test_numeric(const mysqlpp::String& s, int value)
 }
 
 
+static bool
+test_quote_q(const mysqlpp::String& s, bool expected)
+{
+	if (s.quote_q() == expected) {
+		return true;
+	}
+	else {
+		std::cerr << s.type().name() << " should" <<
+				(expected ? "" : " NOT") << " be quoted." << std::endl;
+		return false;
+	}
+}
+
+
 int
 main(int, char* argv[])
 {
@@ -90,6 +104,9 @@ main(int, char* argv[])
 		failures += test_numeric(empty, 0) == false;
 		failures += test_numeric(zero, 0) == false;
 		failures += test_numeric(nonzero, 42) == false;
+		failures += test_quote_q(empty, true) == false;
+		failures += test_quote_q(mysqlpp::String("1", typeid(int)),
+				false) == false;
 
 		return failures;
 	}
