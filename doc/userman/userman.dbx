@@ -2596,32 +2596,26 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
     <para>We're in the process of making it safer to share MySQL++'s
     data structures across threads.</para>
 
-    <para>By way of illustration, let me explain a problem we
-    had up until MySQL++ v3.0. When you issue a database query,
-    part of the data you get back in the result set is common to
-    all rows in that result set. For example, there's a list of
-    what columns are in each row. Since this data is the same for
-    each row in the result set, older versions of MySQL++ kept
-    this information in the <classname>Result</classname> object
-    (predecessor to <ulink url="StoreQueryResult" type="classref"/>),
-    and each <ulink url="Row" type="classref"/> kept a pointer
-    back to the <classname>Result</classname> that created it so
-    it could access this common data at need. This was fine as
-    long as each <classname>Result</classname> object outlived the
-    <classname>Row</classname> objects it returned. While you'd have
-    to go out of your way to kill off the <classname>Result</classname>
-    before you were finished with the <classname>Row</classname>s in a
-    typical single-threaded program, in a multi-threaded program it's
-    much easier to get into trouble. For example, there's frequently
-    a desire to let one connection do the queries, and other threads
-    process the results. You can see how avoiding lifetime problems
-    here would require a careful locking strategy.</para>
+    <para>By way of illustration, let me explain a problem we had up
+    until MySQL++ v3.0. When you issue a database query that returns
+    rows, you also get information about the columns in each row. Since
+    the column information is the same for each row in the result set,
+    older versions of MySQL++ kept this information in the result set
+    object, and each <ulink url="Row" type="classref"/> kept a pointer
+    back to the result set object that created it so it could access
+    this common data at need. This was fine as long as each result set
+    object outlived the <classname>Row</classname> objects it returned.
+    It required uncommon usage patterns to run into trouble in this area
+    in a single-threaded program, but in a multi-threaded program it was
+    easy. For example, there's frequently a desire to let one connection
+    do the queries, and other threads process the results. You can see
+    how avoiding lifetime problems here would require a careful locking
+    strategy.</para>
 
-    <para>We got around this in MySQL++ v3.0 by giving these
-    shared data structures a lifetime independent of the
-    <classname>StoreQueryResult</classname> object that intitially
-    creates it. These shared data structures stick around until the
-    last object needing them gets destroyed.</para>
+    <para>We got around this in MySQL++ v3.0 by giving these shared data
+    structures a lifetime independent of the result set object that
+    intitially creates it. These shared data structures stick around
+    until the last object needing them gets destroyed.</para>
 
     <para>Although this is now a solved problem, I bring it up because
     there are likely other similar lifetime and sequencing problems
