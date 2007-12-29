@@ -15,8 +15,6 @@ v3.0 Plan
     o Is const_subscript_container still useful?  Should it just be
       folded into Row?
 
-    o Add userman chapter on connection options
-
     o Create examples/vstudio/threads to test new thread-related
       features.  Only VC++ since every other platform has the
       possibility of building without thread support.  Then work

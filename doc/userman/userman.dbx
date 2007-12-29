@@ -1236,6 +1236,53 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
   </sect2>
 
 
+  <sect2 id="connopts" xreflabel="connection options">
+    <title>Connection Options</title>
+
+    <para>MySQL has a large number of options that control how it makes
+    the connection to the database server, and how that connection
+    behaves. The defaults are sufficient for most programs, so only one
+    of the MySQL++ example programs make any connection option changes.
+    Here is <filename>examples/multiquery.cpp</filename>:</para>
+
+    <programlisting><xi:include href="multiquery.txt" parse="text"
+    xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+
+    <para>This is a fairly complex example demonstrating the multi-query
+    and stored procedure features in newer versions of MySQL. Because
+    these are new features, and they change the communication between
+    the client and server, you have to enable these features in a
+    connection option. The key line is right up at the top of
+    <function>main()</function>, where it creates a <ulink
+    type="classref" url="MultiStatementsOption"/> object and passes it
+    to <methodname>Connection::set_option()</methodname>. That method
+    will take a pointer to any derivative of <ulink type="classref"
+    url="Option"/>: you just create such an object on the heap and pass
+    it in, which gives <classname>Connection</classname> the data values
+    it needs to set the option. You don't need to worry about releasing
+    the memory used by the <classname>Option</classname> objects; it's
+    done automatically.</para>
+
+    <para>The only tricky thing about setting options is that only a few
+    of them can be set after the connection is up. Most need to be set
+    just as shown in the example above: create an unconnected
+    <classname>Connection</classname> object, set your connection
+    options, and only then establish the connection. The option setting
+    mechanism takes care of applying the options at the correct time in
+    the connection establishment sequence.</para>
+
+    <para>If you're familiar with setting connection options in the
+    MySQL C API, you'll have to get your head around the fact that
+    MySQL++'s connection option mechanism is a much simpler,
+    higher-level design that doesn't resemble the C API in any way. The
+    C API has something like half a dozen different mechanisms for
+    setting options that control the connection. The flexibility of the
+    C++ type system allows us to wrap all of these up into a single
+    high-level mechanism while actually getting greater type safety than
+    the C API allows.</para>
+  </sect2>
+
+
   <sect2>
     <title>Getting Field Meta-Information</title>
 
