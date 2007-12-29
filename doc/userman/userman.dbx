@@ -503,6 +503,51 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
   </sect2>
 
 
+  <sect2 id="headers">
+    <title>#including MySQL++ Headers</title>
+
+    <para>You'll notice above that we're including
+    <filename>mysql++.h</filename> in the examples. There are many
+    headers in MySQL++, but this brings in all but one of them for you.
+    MySQL++ has a pretty cohesive design: it doesn't have very many
+    pieces that are truly independent of the others. So, there's not
+    much advantage in including the few headers you think you need
+    individually: you're likely to also drag in all the rest
+    indirectly.</para>
+
+    <para>The one header that <filename>mysql++.h</filename> doesn't
+    bring in for you is <filename>custom.h</filename>, which is only
+    useful if you use the optional <xref linkend="ssqlsintro"/>
+    feature.</para>
+
+    <para>By default on Unixy systems, MySQL++ installs its headers into
+    a <filename>mysql++</filename> subdirectory of one of the main system
+    include directories, either <filename>/usr/include</filename> or
+    <filename>/usr/local/include</filename>. Since it's typical for
+    either or both of these directories to be in your program's include
+    path already, you might be wondering if you can include the main
+    MySQL++ header like this:</para>
+
+    <programlisting>#include &lt;mysql++/mysql++.h&gt;</programlisting>
+
+    <para>The answer is, yes you can. You don't need to do anything
+    special to make it work.</para>
+
+    <para>Since MySQL is usually installed in much the same way
+    (<filename>/usr/include/mysql</filename> is common, for example),
+    you might then ask if you can get away without having the MySQL C
+    API header directory to your program's include path. You can, but
+    <filename>mysql++.h</filename> requires a little help from your
+    program to find the C API headers when you do this:</para>
+
+    <programlisting>#define MYSQLPP_MYSQL_HEADERS_BURIED
+#include &lt;mysql++/mysql++.h&gt;</programlisting>
+
+    <para>This tells it to prefix all includes for C API headers with
+    <filename>mysql/</filename>.</para>
+  </sect2>
+
+
   <sect2 id="exceptions" xreflabel="exceptions">
     <title>Exceptions</title>
 
@@ -620,8 +665,7 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; 
     inserted into the stream. This works for various string types,
     for any type of data that can be converted to MySQL++'s <ulink
     type="classref" url="SQLTypeAdapter">SQLTypeAdapter</ulink> type,
-    and for <xref linkend="ssqls"/>. (The next section introduces
-    the SSQLS feature.)</para>
+    and for <xref linkend="ssqlsintro"/>.</para>
 
     <para>Quoting is pretty simple, but SQL syntax also often requires
     that certain characters be &ldquo;escaped&rdquo;. Imagine if the
@@ -698,7 +742,7 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
   </sect2>
 
 
-  <sect2>
+  <sect2 id="ssqlsintro" xreflabel="Specialized SQL Structures">
     <title>Specialized SQL Structures</title>
 
     <sect3>
