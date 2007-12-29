@@ -592,20 +592,28 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     you pass to it, and then disables exceptions on it. When the
     <classname>NoExceptions</classname> object goes out of scope
     at the end of the block, it restores the exceptions flag to its
-    previous state.  See <filename>examples/resetdb.cpp</filename>
-    to see this technique at work.</para>
+    previous state:</para>
+
+    <programlisting>mysqlpp::Connection con(...); // exceptions enabled
+
+{
+  mysqlpp::NoExceptions ne(con);
+  if (!con.select_db("a_db_that_might_not_exist_yet")) {
+    // Our DB doesn't exist yet, so create and select it here; no need
+    // to push handling of this case way off in an exception handler.
+  }
+}</programlisting>
 
     <para>When one <classname>OptionalExceptions</classname> derivative
     passes its exceptions flag to another such object, it is only
-    passing a copy. This means that the two objects' flags operate
-    independently. There's no way to globally enable or disable this
-    flag on existing objects in a single call. If you're using the
-    <classname>NoExceptions</classname> feature and you're still
-    seeing optional exceptions thrown, you disabled exceptions on
-    the wrong object. The exception thrower could be unrelated to
-    the object you disabled exceptions on, it could be its parent,
-    or it could be a child created before you changed the exception
-    throwing flag.</para>
+    passing a copy; the two objects' flags operate independently.
+    There's no way to globally enable or disable this flag on existing
+    objects in a single call. If you're using the
+    <classname>NoExceptions</classname> feature and you're still seeing
+    optional exceptions thrown, you disabled exceptions on the wrong
+    object. The exception thrower could be unrelated to the object you
+    disabled exceptions on, it could be its parent, or it could be a
+    child created before you disabled optional exceptions.</para>
 
     <para>Some of the exceptions MySQL++ can throw are not
     optional:</para>
