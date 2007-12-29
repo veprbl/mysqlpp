@@ -37,14 +37,15 @@ namespace mysqlpp {
 /// \brief Functor to test whether a given ConnectionInfo object is
 /// "too old".
 ///
-/// This is a template only because ConnectionInfo is private.  Making
-/// it a template means the private type is only used at the point of
-/// instantiation, where it is accessible.
+/// \internal This is a template only because ConnectionInfo is private.
+/// Making it a template means the private type is only used at the point
+/// of instantiation, where it is accessible.
 
 template <typename ConnInfoT>
 class TooOld : std::unary_function<ConnInfoT, bool>
 {
 public:
+#if !defined(DOXYGEN_IGNORE)
 	TooOld(unsigned int tmax) :
 	min_age_(time(0) - tmax)
 	{
@@ -55,6 +56,7 @@ public:
 		return !conn_info.in_use && conn_info.last_used <= min_age_;
 	}
 
+#endif
 private:
 	time_t min_age_;
 };
