@@ -77,10 +77,16 @@ main(int argc, char *argv[])
 	mysqlpp::Connection con;
 	try {
 		if (parse_command_line(argc, argv, 0, &server, &user, &pass)) {
-			cout << "Connecting to '" << 
-					(user ? user : "USERNAME") << "'@'" <<
-					(server ? server : "localhost") << "', password '" << 
-					(pass ? pass : "") << "'..." << endl;
+			extern bool dtest_mode;
+			if (dtest_mode) {
+				cout << "Connecting to database server..." << endl;
+			}
+			else {
+				cout << "Connecting to '" << 
+						(user ? user : "USERNAME") << "'@'" <<
+						(server ? server : "localhost") << "', with" <<
+						(pass[0] ? "" : "out") << " password..." << endl;
+			}
 			con.connect(0, server, user, pass);
 		}
 		else {
