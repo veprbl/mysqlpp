@@ -187,7 +187,7 @@
     locations of your program.</para>
 
     <para>A third method for building queries is to use
-    <classname>Query</classname> with <xref linkend="ssqls"/>
+    <classname>Query</classname> with <xref linkend="ssqlsintro"/>
     (SSQLS). This feature lets you create C++ structures
     that mirror your database schemas. These in turn give
     <classname>Query</classname> the information it needs to build
@@ -266,7 +266,7 @@
       a pretty low level of abstraction. It's better than using the
       MySQL C API, but not by much. You can elevate things a little
       closer to the level of the problem space by using the <xref
-      linkend="ssqls"/> (SSQLS) feature. This lets you define C++
+      linkend="ssqlsintro"/> (SSQLS) feature. This lets you define C++
       structures that match the table structures in your database
       schema. In addition, it's easy to use SSQLSes with regular STL
       containers (and thus, algorithms) so you don't have to deal
@@ -724,7 +724,7 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
     <classname>Query</classname> streams and template queries is never
     implicit.<footnote><para>By contrast, the
     <classname>Query</classname> methods that take <xref
-    linkend="ssqls"/> <emphasis>do</emphasis> add quotes and escape
+    linkend="ssqlsintro"/> <emphasis>do</emphasis> add quotes and escape
     strings implicitly. It can do this because SSQLS knows all the SQL
     code and data types, so it never has to guess whether quoting or
     escaping is appropriate.</para></footnote> You must use manipulators
@@ -758,7 +758,7 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
       <title>Retrieving data</title>
 
       <para>The next example introduces one of the most powerful
-      features of MySQL++: <xref linkend="ssqls"/> (SSQLS). This is
+      features of MySQL++: Specialized SQL Structures (SSQLS). This is
       <filename>examples/custom1.cpp</filename>:</para>
 
       <programlisting><xi:include href="custom1.txt" parse="text" 
@@ -879,8 +879,8 @@ query.storein(res);
       <programlisting><xi:include href="custom4.txt" parse="text"
       xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-      <para>For more details on the SSQLS feature, see the <xref
-      linkend="ssqls"/> chapter.</para>
+      <para>For more details on the SSQLS feature, see <xref
+      linkend="ssqls"/>.</para>
     </sect3>
   </sect2>
 
@@ -1354,7 +1354,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
       <classname>String</classname> when converting it from the string
       form used in SQL result sets to the C++ data type you actually
       want the data in. It's the core of the structure population
-      mechanism in <xref linkend="ssqls"/>, for example.</para>
+      mechanism in <xref linkend="ssqlsintro"/>, for example.</para>
 
       <para>Because <classname>String</classname> is the last
       pristine form of data in a result set before it gets out of
@@ -1753,7 +1753,7 @@ StoreQueryResult res = query.store(1.25); </programlisting>
 </sect1>
 
 
-<sect1 id="ssqls" xreflabel="Specialized SQL Structures">
+<sect1 id="ssqls">
   <title>Specialized SQL Structures</title>
 
   <para>The Specialized SQL Structure (SSQLS) feature lets you
