@@ -2471,30 +2471,52 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
     class. It manages a pool of <classname>Connection</classname>s
     like library books: a thread checks one out, uses it, and then
     returns it to the pool when it's done with it. This keeps the
-    number of active connections as low as possible. The class is
-    abstract because it has two Template Methods that you need to
-    define, to provide implementation details MySQL++ can't know
-    itself. In designing your <classname>ConnectionPool</classname>
-    derivative, you might consider making it a Singleton (see Gamma
-    et al.), since there should only be one pool in a program.</para>
+    number of active connections as low as possible.</para>
+    
+    <para><classname>ConnectionPool</classname> has three methods that
+    you need to override in a subclass to make it concrete:
+    <methodname>create()</methodname>,
+    <methodname>destroy()</methodname>, and
+    <methodname>max_idle_time()</methodname>. These overrides let the
+    base class delegate operations it can't successfully do itself to
+    its subclass. (This is the Template Method pattern.) The
+    <classname>ConnectionPool</classname> can't know how to
+    <methodname>create()</methodname> the
+    <classname>Connection</classname> objects, because that depends on
+    how your program gets login parameters, server information, etc.
+    <classname>ConnectionPool</classname> also makes the subclass
+    <methodname>destroy()</methodname> the
+    <classname>Connection</classname> objects it created; it could
+    assume that they're simply allocated on the heap with
+    <methodname>new</methodname>, but it can't be sure, so the base
+    class delegates destruction, too. Finally, the base class can't know
+    what the connection idle timeout policy in the client would make the
+    most sense, so it asks via the
+    <methodname>max_idle_time()</methodname> method.</para>
+
+    <para>In designing your <classname>ConnectionPool</classname>
+    derivative, you might consider making it a Singleton (see Gamma et
+    al.), since there should only be one pool in a program.</para>
 
     <para>Here is an example showing how to use connection pools with
-    POSIX threads:</para>
+    threads on Windows:</para>
 
     <!-- FIXME: CPOOL EXAMPLE GOES HERE -->
 
-    <para>There are other examples in the MySQL++ examples subdirectory
-    for other thread implementations, but they're functionally
-    identical to this.</para>
+    <para>We show a Windows-only example here because only the native
+    Windows versions of MySQL++ come out of the box ready to be used
+    with threads. However, you should be able to reuse the key part of
+    the example, the <classname>ConnectionPool</classname> derivative,
+    in programs on other platforms without any trobule.</para>
 
     <para>Beware, connection pools only work correctly with threads if
-    you build MySQL++ with thread support. The mutex lock mechanism
-    used to keep the pool's internal data consistent while multiple
-    threads access it will just quietly become a no-op if MySQL++
-    is built without thread support. We do it this way because we
-    don't want to make thread support a MySQL++ prerequisite. And,
-    although it would be of limited value, this lets you use
-    <classname>ConnectionPool</classname> in single-threaded
+    you build MySQL++ with thread support, as described in the previous
+    section. The mutex lock mechanism used to keep the pool's internal
+    data consistent while multiple threads access it will just quietly
+    become a no-op if MySQL++ is built without thread support. We do it
+    this way because we don't want to make thread support a MySQL++
+    prerequisite. And, although it would be of limited value, this lets
+    you use <classname>ConnectionPool</classname> in single-threaded
     programs.</para>
 
     <para>You might wonder why we don't just work around this weakness
