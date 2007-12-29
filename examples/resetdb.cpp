@@ -76,10 +76,15 @@ main(int argc, char *argv[])
     const char *server = 0, *user = 0, *pass = "";
 	mysqlpp::Connection con;
 	try {
-		cout << "Connecting to database server..." << endl;
-		if (!parse_command_line(argc, argv, 0, &server, &user, &pass) ||
-                !con.connect(0, server, user, pass)) {
-			return 1;
+		if (parse_command_line(argc, argv, 0, &server, &user, &pass)) {
+			cout << "Connecting to '" << 
+					(user ? user : "USERNAME") << "'@'" <<
+					(server ? server : "localhost") << "', password '" << 
+					(pass ? pass : "") << "'..." << endl;
+			con.connect(0, server, user, pass);
+		}
+		else {
+			return 1;		// command line parsing failed
 		}
 	}
 	catch (exception& er) {
