@@ -1004,18 +1004,17 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
   <sect2>
     <title>Using Transactions</title>
 
-    <para>MySQL++ v2.1 added the <ulink type="classref"
-    url="Transaction"/> class, which makes it easier to use
-    transactions in an exception-safe manner. Normally you create the
-    <classname>Transaction</classname> object on the stack before
-    you issue the queries in your transaction set. Then, when all
-    the queries in the transaction set have been issued, you call
-    <function>Transaction::commit()</function>, which commits the
+    <para>The <ulink type="classref" url="Transaction"/> class makes it
+    easier to use SQL transactions in an exception-safe manner. Normally
+    you create the <classname>Transaction</classname> object on the
+    stack before you issue the queries in your transaction set. Then,
+    when all the queries in the transaction set have been issued, you
+    call <function>Transaction::commit()</function>, which commits the
     transaction set. If the <classname>Transaction</classname> object
-    goes out of scope before you call <function>commit()</function>,
-    the transaction set is rolled back. This ensures that if some code
-    throws an exception after the transaction is started but before
-    it is committed, the transaction isn't left unresolved.</para>
+    goes out of scope before you call <function>commit()</function>, the
+    transaction set is rolled back. This ensures that if some code
+    throws an exception after the transaction is started but before it
+    is committed, the transaction isn't left unresolved.</para>
 
     <para><filename>examples/transaction.cpp</filename> illustrates
     this:</para>
@@ -1208,11 +1207,11 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     <title>Executing Code for Each Row In a Result Set</title>
 
     <para>SQL is more than just a database query language. Modern
-    database engines can actually do some calculations on the data
-    on the server side. But, this isn't always the best way to
-    get something done. When you need to mix code and a query,
-    MySQL++'s new <methodname>Query::for_each()</methodname>
-    facility might be just what you need. This is
+    database engines can actually do some calculations on the data on
+    the server side. But, this isn't always the best way to get
+    something done. When you need to mix code and a query, MySQL++'s
+    <methodname>Query::for_each()</methodname> facility might be just
+    what you need. This is
     <filename>examples/for_each.cpp</filename>:</para>
 
     <programlisting><xi:include href="for_each.txt" parse="text"
