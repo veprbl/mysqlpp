@@ -888,26 +888,44 @@ query.storein(res);
   <sect2>
     <title>C++ Equivalents of SQL Column Types</title>
 
-    <para>In MySQL++ version 2.1, the new
-    <filename>sql_types.h</filename> header declares typedefs
+    <para>The <filename>sql_types.h</filename> header declares typedefs
     for all MySQL column types. These typedefs all begin with
-    <classname>sql_</classname> and end with a lowercase version of
-    the standard SQL type name. For instance, the MySQL++ typedef
-    corresponding to <classname>TINYINT UNSIGNED</classname> is
+    <type>sql_</type> and end with a lowercase version of the standard
+    SQL type name. For instance, the MySQL++ typedef corresponding to
+    <type>TINYINT UNSIGNED</type> is
     <classname>mysqlpp::sql_tinyint_unsigned</classname>.  You do not
-    have to use these typedefs; you could use an <classname>unsigned
-    char</classname> here if you wanted to. For that matter, you
-    could use a plain <classname>int</classname> in most cases;
-    MySQL++ is quite tolerant of this sort of thing. The typedefs
-    exist for style reasons, for those who want their C++ code to
-    use the closest equivalent type for any given SQL type.</para>
+    have to use these typedefs; in this particular case, you might get
+    away with using something as loose as <type>int</type>.</para>
+    
+    <para>The most obivious reason to use these typedefs is clarity.
+    Someone reading code that uses these typedefs can't be confused
+    about what the corresponding SQL type is.</para>
 
-    <para>Most of these typedefs use standard C++ data types, but
-    a few are aliases for a MySQL++ specific type. For instance,
-    the SQL type <classname>DATETIME</classname> is mirrored in
-    MySQL++ by <classname>mysqlpp::DateTime</classname>. For
-    consistency, <filename>sql_types.h</filename> includes a
-    typedef alias for <classname>DateTime</classname> called
+    <para>There's also a correctness aspect to using these typedefs. The
+    definitions of these types have changed over time as new, improved
+    types have become available in MySQL++. For a past example,
+    <type>sql_tinyint</type> used to just be an alias for <type>signed
+    char</type>, but when MySQL++ began treating <type>char</type> as a
+    single-character string instead of an integer, we changed the
+    <type>sql_tinyint</type> typedef to be an alias for
+    <type>mysqlpp::tiny_int&lt;signed char&gt;</type>. Code using the
+    type aliases changed over transparently, while code using what used
+    to be the correct corresponding C++ type usually broke. This is
+    likely to happen again in the future, too. One example that comes to
+    mind is that <type>sql_decimal</type> is currently an alias for
+    <type>double</type>, but SQL's <type>DECIMAL</type> type is a
+    fixed-point data type, while <type>double</type> is floating-point.
+    Thus, you lose accuracy when converting <type>DECIMAL</type> column
+    data to <type>sql_decimal</type> right now. In the future, we may add
+    a fixed-point data type to MySQL++; if we do, we'll certainly change
+    the tyepdef alias to use it instead of <type>double</type>.</para>
+
+    <para>Most of these typedefs use standard C++ data types, but a few
+    are aliases for a MySQL++ specific type. For instance, the SQL type
+    <classname>DATETIME</classname> is mirrored in MySQL++ by
+    <classname>mysqlpp::DateTime</classname>. For consistency,
+    <filename>sql_types.h</filename> includes a typedef alias for
+    <classname>DateTime</classname> called
     <classname>mysqlpp::sql_datetime</classname>.</para>
   </sect2>
 
@@ -925,7 +943,7 @@ query.storein(res);
     types. To emulate this, MySQL++ provides the <ulink type="classref"
     url="null">Null</ulink> template to allow the creation of distinct
     &ldquo;nullable&rdquo; versions of existing C++ types. So for
-    example, if you have a <type>TINY INT UNSIGNED</type> column that
+    example, if you have a <type>TINYINT UNSIGNED</type> column that
     can have nulls, the proper declaration for MySQL++ would be:</para>
 
     <programlisting>
