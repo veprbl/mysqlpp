@@ -669,11 +669,12 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; 
 
     <para>That code produces the same query string as in the previous
     example. We used the MySQL++ <type>quote_only</type> manipulator,
-    which causes single quotes to be added around the next item
-    inserted into the stream. This works for various string types,
-    for any type of data that can be converted to MySQL++'s <ulink
-    type="classref" url="SQLTypeAdapter">SQLTypeAdapter</ulink> type,
-    and for <xref linkend="ssqlsintro"/>.</para>
+    which causes single quotes to be added around the next item inserted
+    into the stream. This works for any type of data that can be
+    converted to MySQL++'s <ulink type="classref"
+    url="SQLTypeAdapter">SQLTypeAdapter</ulink> type, plus the <ulink
+    type="classref" url="Set"/> template. <xref linkend="ssqlsintro"/>
+    also use these manipulators internally.</para>
 
     <para>Quoting is pretty simple, but SQL syntax also often requires
     that certain characters be &ldquo;escaped&rdquo;. Imagine if the
@@ -705,48 +706,48 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
     url="../refman/index.html">reference manual</ulink>.</para>
 
     <para>It's important to realize that MySQL++'s quoting and escaping
-    mechanism is type-aware. It has no effect unless you insert
-    the manipulator into a <classname>Query</classname> or <ulink
+    mechanism is type-aware. Manipulators have no effect unless you
+    insert the manipulator into a <classname>Query</classname> or <ulink
     type="classref" url="SQLQueryParms">SQLQueryParms</ulink> stream.
-    <footnote><para><classname>SQLQueryParms</classname> is used as
-    a stream only as an implementation detail within the library. End
-    user code simply sees it as a <classname>std::vector</classname>
+    <footnote><para><classname>SQLQueryParms</classname> is used as a
+    stream only as an implementation detail within the library. End user
+    code simply sees it as a <classname>std::vector</classname>
     derivative.</para></footnote> Also, values are only quoted and/or
     escaped if they are of a data type that may need it. For example,
-    <ulink type="structref" url="Date">Date</ulink> must be quoted
-    but never needs to be escaped, and integer types need neither
-    quoting nor escaping. Manipulators are suggestions to the library,
-    not commands: MySQL++ will ignore these suggestions if it knows
-    it won't result in syntactically-incorrect SQL.</para>
+    <ulink type="structref" url="Date">Date</ulink> must be quoted but
+    never needs to be escaped, and integer types need neither quoting
+    nor escaping. Manipulators are suggestions to the library, not
+    commands: MySQL++ will ignore these suggestions if it knows it won't
+    result in syntactically-incorrect SQL.</para>
 
-    <para>It's also important to realize that as of MySQL++ v3,
-    quoting and escaping in <classname>Query</classname> streams
-    and template queries is never implicit.<footnote><para>By
-    contrast, the <classname>Query</classname> methods that take
-    <xref linkend="ssqls"/> <emphasis>do</emphasis> add quotes and
-    escape strings implicitly. It can do this because SSQLS knows all
-    the SQL code and data types, so it never has to guess whether
-    quoting or escaping is appropriate.</para></footnote> You must
-    use manipulators and template query flags as necessary to tell
-    MySQL++ where quoting and escaping is necessary. It would be
-    nice if MySQL++ could do quoting and escaping implicitly based
-    on data type, but this isn't possible in all cases.<footnote
-    id="whyexpmanip"><para>Unless you're smarter than I am, you
-    don't immediately see why explicit manipulators are necessary. We
-    can tell when quoting and escaping is <emphasis>not</emphasis>
-    appropriate based on type, so doesn't that mean we know when it
-    <emphasis>is</emphasis> appropriate?  Alas, no. For most data
-    types, it is possible to know, or at least make an awfully good
-    guess, but it's a complete toss-up for C strings, <type>const
-    char*</type>. A C string could be either a literal string of
-    SQL code, or it can be a value used in a query. Since there's
-    no easy way to know and it would damage the library's usability
-    to mandate that C strings only be used for one purpose or the
-    other, the library requires you to be explicit.</para></footnote>
-    Since MySQL++ can't reliably guess when quoting and escaping is
-    appropriate, and the programmer doesn't need to<footnote><para>One
-    hopes the programmer <emphasis>knows</emphasis>.</para></footnote>,
-    MySQL++ makes you tell it.</para>
+    <para>It's also important to realize that quoting and escaping in
+    <classname>Query</classname> streams and template queries is never
+    implicit.<footnote><para>By contrast, the
+    <classname>Query</classname> methods that take <xref
+    linkend="ssqls"/> <emphasis>do</emphasis> add quotes and escape
+    strings implicitly. It can do this because SSQLS knows all the SQL
+    code and data types, so it never has to guess whether quoting or
+    escaping is appropriate.</para></footnote> You must use manipulators
+    and template query flags as necessary to tell MySQL++ where quoting
+    and escaping is necessary. It would be nice if MySQL++ could do
+    quoting and escaping implicitly based on data type, but this isn't
+    possible in all cases.<footnote id="whyexpmanip"><para>Unless you're
+    smarter than I am, you don't immediately see why explicit
+    manipulators are necessary. We can tell when quoting and escaping is
+    <emphasis>not</emphasis> appropriate based on type, so doesn't that
+    mean we know when it <emphasis>is</emphasis> appropriate?  Alas, no.
+    For most data types, it is possible to know, or at least make an
+    awfully good guess, but it's a complete toss-up for C strings,
+    <type>const char*</type>. A C string could be either a literal
+    string of SQL code, or it can be a value used in a query. Since
+    there's no easy way to know and it would damage the library's
+    usability to mandate that C strings only be used for one purpose or
+    the other, the library requires you to be
+    explicit.</para></footnote> Since MySQL++ can't reliably guess when
+    quoting and escaping is appropriate, and the programmer doesn't need
+    to<footnote><para>One hopes the programmer
+    <emphasis>knows</emphasis>.</para></footnote>, MySQL++ makes you
+    tell it.</para>
   </sect2>
 
 
