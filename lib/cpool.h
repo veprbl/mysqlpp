@@ -42,32 +42,39 @@ namespace mysqlpp {
 class MYSQLPP_EXPORT Connection;
 #endif
 
-/// \brief A class to manage a pool of connections, for use in a
-/// multi-threaded program to allow multiple simultaneous queries.
+/// \brief Manages a pool of connections for programs that need more
+/// than one Connection object at a time, but can't predict how many
+/// they need in advance.
 ///
-/// This class manages a pool of active database connections.  This is
-/// useful in a multi-threaded program, because the MySQL C API doesn't
-/// permit multiple simultaneous operations on a single connection.  You
-/// can get around this limitation by having multiple connections, but
-/// this isn't easy to do well.  This class does it well. :)
+/// This class is useful in programs that need to make multiple
+/// simultaneous queries on the database; this requires multiple
+/// Connection objects due to a hard limitation of the underlying
+/// C API.  Connection pools are most useful in multithreaded programs,
+/// but it can be helpful to have one in a single-threaded program as
+/// well.  Sometimes it's necessary to get more data from the server
+/// while in the middle of processing data from an earlier query; this
+/// requires multiple connections.  Whether you use a pool or manage
+/// connections yourself is up to you, but realize that this class
+/// takes care of a lot of subtle details for you that aren't obvious.
 ///
-/// The pool use policy is to always use the most recently used
-/// connection that's not being used right now.  This ensures that
-/// excess connections get killed off reasonably quickly.  By contrast,
-/// picking the least recently used connection can result in a large
-/// pool of sparsely used connections because we'd keep resetting the
-/// last-used time of the least recently used connection.
+/// The pool's policy for connection reuse is to always return the 
+/// \em most recently used connection that's not being used right now.
+/// This ensures that excess connections don't hang around any longer
+/// than they must.  If the pool were to return the \em least recently
+/// used connection, it would be likely to result in a large pool of
+/// sparsely used connections because we'd keep resetting the last-used 
+/// time of whichever connection is least recently used at that moment.
 
 class ConnectionPool
 {
 public:
-	/// \brief Default ctor
+	/// \brief Create empty pool
 	ConnectionPool() { }
 
-	/// \brief Dtor
+	/// \brief Destroy object
 	///
-	/// If this assertion is raised, it means the derived class isn't
-	/// calling clear() in its dtor.
+	/// If the pool raises an assertion on destruction, it means our
+	/// subclass isn't calling clear() in its dtor as it should.
 	virtual ~ConnectionPool() { assert(pool_.empty()); }
 
 	/// \brief Grab a free connection from the pool.
@@ -86,22 +93,22 @@ public:
 
 	/// \brief Return a connection to the pool
 	///
-	/// Marks the connection as no longer in use.  Also resets the
-	/// last-used time to the current time, so a call implies that the
-	/// connection was used shortly prior.
+	/// Marks the connection as no longer in use.
 	///
-	/// This means that you must always release connections as soon as
-	/// you're done with them.  Don't hold on to idle connections!  If
-	/// you delay releasing them, it screws up the "most recently used"
-	/// algorithm.  If you never release them, they can never be closed
-	/// when idle, so you might as well not be using a pool.
+	/// The pool updates the last-used time of a connection only on
+	/// release, on the assumption that it was used just prior.  There's
+	/// nothing forcing you to do it this way: your code is free to
+	/// delay releasing idle connections as long as it likes.  You
+	/// want to avoid this because it will make the pool perform poorly;
+	/// if it doesn't know approximately how long a connection has
+	/// really been idle, it can't make good judgements about when to
+	/// remove it from the pool.
 	void release(const Connection* pc);
 
 	/// \brief Remove all unused connections from the pool
 	void shrink() { clear(false); }
 
 protected:
-	//// Subclass interface
 	/// \brief Drains the pool, freeing all allocated memory.
 	///
 	/// A derived class must call this in its dtor to avoid leaking all
@@ -112,7 +119,6 @@ protected:
 	/// \param all if true, remove all connections, even those in use
 	void clear(bool all = true);
 
-	//// Subclass overrides
 	/// \brief Create a new connection
 	///
 	/// Subclasses must override this.
