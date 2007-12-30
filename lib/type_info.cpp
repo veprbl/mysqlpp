@@ -57,7 +57,7 @@ namespace mysqlpp {
 // marked as default, the typeid() of each item must be unique.
 const mysql_type_info::sql_type_info mysql_type_info::types[] = {
 	sql_type_info("DECIMAL NOT NULL", typeid(sql_decimal),
-			MYSQL_TYPE_DECIMAL),
+			MYSQL_TYPE_NEWDECIMAL),
 	sql_type_info("TINYINT NOT NULL", typeid(sql_tinyint),
 			MYSQL_TYPE_TINY, mysql_ti_sql_type_info::tf_default),
 	sql_type_info("TINYINT UNSIGNED NOT NULL", typeid(sql_tinyint_unsigned),
@@ -114,7 +114,7 @@ const mysql_type_info::sql_type_info mysql_type_info::types[] = {
 			MYSQL_TYPE_STRING),
 
 	sql_type_info("DECIMAL NULL", typeid(Null<sql_decimal>), 
-			MYSQL_TYPE_DECIMAL, mysql_ti_sql_type_info::tf_null),
+			MYSQL_TYPE_NEWDECIMAL, mysql_ti_sql_type_info::tf_null),
 	sql_type_info("TINYINT NULL", typeid(Null<sql_tinyint>), 
 			MYSQL_TYPE_TINY, mysql_ti_sql_type_info::tf_default |
 			mysql_ti_sql_type_info::tf_null),

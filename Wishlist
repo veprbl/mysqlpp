@@ -9,12 +9,6 @@ widely useful.  Patches or proposals of this sort are always welcome.
 
 v3.0 Plan
 ---------
-    o fieldinf example showing price column as 'CHAR NOT NULL' instead
-      of 'DECIMAL(6,2)'.  Problem in type_info table?
-
-    o Is const_subscript_container still useful?  Should it just be
-      folded into Row?
-
     o Create examples/vstudio/threads to test new thread-related
       features.  Only VC++ since every other platform has the
       possibility of building without thread support.  Then work

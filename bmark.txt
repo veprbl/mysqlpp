@@ -152,7 +152,7 @@ Field       SQL Type              Equivalent C++ Type
 item        CHAR NOT NULL (25)    n/a                                           
 num         BIGINT NOT NULL (11)  n/a                                           
 weight      DOUBLE NOT NULL (8)   n/a                                           
-price       CHAR NOT NULL (25)    n/a                                           
+price       DECIMAL NOT NULL (0)  n/a                                           
 sdate       DATE NOT NULL (15)    n/a                                           
 description BLOB NULL (49)        n/a                                           
 
