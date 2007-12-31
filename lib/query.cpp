@@ -236,7 +236,7 @@ Query::operator=(const Query& rhs)
 	return *this;
 }
 
-Query::operator private_bool_type() const
+Query::operator Query::private_bool_type() const
 {
 	return *conn_ && copacetic_ ? &Query::copacetic_ : 0;
 }

@@ -46,19 +46,19 @@ namespace mysqlpp {
 /// This template also defines interfaces for converting the object to
 /// a string form, which a subclass must define.
 template <class T>
-struct DTbase
+struct MYSQLPP_EXPORT DTbase
 {
 	/// \brief Destroy object
 	virtual ~DTbase() { }
 
 	/// \brief Return a copy of the item in C++ string form
-	MYSQLPP_EXPORT operator std::string() const;
+	operator std::string() const;
 
 	/// \brief Compare this object to another of the same type
 	///
 	/// Returns < 0 if this object is "before" the other, 0 of they are
 	/// equal, and > 0 if this object is "after" the other.
-	MYSQLPP_EXPORT virtual int compare(const T& other) const = 0;
+	virtual int compare(const T& other) const = 0;
 
 	/// \brief Returns true if "other" is equal to this object
 	bool operator ==(const T& other) const
@@ -193,10 +193,10 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 	///
 	/// This method is protected because it is merely the engine used
 	/// by the various operators in DTbase.
-	MYSQLPP_EXPORT int compare(const DateTime& other) const;
+	int compare(const DateTime& other) const;
 
 	/// \brief Parse a MySQL date and time string into this object.
-	MYSQLPP_EXPORT cchar* convert(cchar*);
+	cchar* convert(cchar*);
 
 	/// \brief Returns true if 'now' member is true and all other
 	/// members are zero.
@@ -282,10 +282,10 @@ struct MYSQLPP_EXPORT Date : public DTbase<Date>
 	///
 	/// Returns < 0 if this date is before the other, 0 of they are
 	/// equal, and > 0 if this date is after the other.
-	MYSQLPP_EXPORT int compare(const Date& other) const;
+	int compare(const Date& other) const;
 
 	/// \brief Parse a MySQL date string into this object.
-	MYSQLPP_EXPORT cchar* convert(cchar*);
+	cchar* convert(cchar*);
 };
 
 /// \brief Inserts a Date object into a C++ stream
@@ -352,13 +352,13 @@ struct MYSQLPP_EXPORT Time : public DTbase<Time>
 	explicit Time(const Str& str) { convert(str.c_str()); }
 
 	/// \brief Parse a MySQL time string into this object.
-	MYSQLPP_EXPORT cchar* convert(cchar*);
+	cchar* convert(cchar*);
 
 	/// \brief Compare this time to another.
 	///
 	/// Returns < 0 if this time is before the other, 0 of they are
 	/// equal, and > 0 if this time is after the other.
-	MYSQLPP_EXPORT int compare(const Time& other) const;
+	int compare(const Time& other) const;
 };
 
 /// \brief Inserts a Time object into a C++ stream in a MySQL-compatible
