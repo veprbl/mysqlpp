@@ -32,22 +32,26 @@ then
 	PROG=$1
 fi
 
-if [ -n "$1" ]
+shift
+if [ -e "$1" ]
 then
-	shift
-
 	if [ `uname -s` == 'Darwin' ]
 	then
 		DYLD_LIBRARY_PATH=. $TOOL ./$PROG $*
 	elif [ `uname -o` == 'Cygwin' ]
 	then
-		cmd.exe /c exrun.bat $PROG $*
+		# Cygwin build case; see below for bash-as-DOS-shell case
+		PATH=. $TOOL ./$PROG $*
 	elif [ -e /usr/bin/ldd ]
 	then
 		LD_LIBRARY_PATH=. $TOOL ./$PROG $*
 	else
 		echo "ERROR: I don't grok this system's dynamic linkage system."
 	fi
+elif [ `uname -o` == 'Cygwin' ]
+then
+	# VC++ build, but using Cygwin's bash as shell to run programs
+	cmd.exe /c exrun.bat $PROG $*
 else
 	echo "usage: $0 $TOOL <example> [args...]"
 	echo

@@ -4,4 +4,4 @@ if not exist %PROG% set PROG=Debug\%1
 shift
 
 set PATH=Debug;%PATH%
-%PROG% %*
+%PROG% %1 %2 %3 %4 %5 %6 %7 %8 %9
