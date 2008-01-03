@@ -34,6 +34,17 @@
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for the following stuff.
 
+// Enable SSQLS by default.  Turned off below on platforms where we
+// know it doesn't work.
+#define MYSQLPP_SSQLS_COMPATIBLE
+
+// For all platforms but Visual C++ 2003, the following macro is just
+// an alias for "*this".  It needs a more complicated definition on
+// VC++ 2003 to work around an error in the overloaded operator lookup
+// logic.  For an explanation of the problem, see:
+// http://groups.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
+#define MYSQLPP_QUERY_THISPTR *this
+
 // Work out major platform-specific stuff here.
 #if defined(__WIN32__) || defined(_WIN32)
 #	define MYSQLPP_PLATFORM_WINDOWS
@@ -44,6 +55,18 @@
 
 	// Stuff for Visual C++ only
 #	if defined(_MSC_VER)
+#		define MYSQLPP_PLATFORM_VISUAL_CPP
+#		if _MSC_VER < 1400
+#			define MYSQLPP_QUERY_THISPTR dynamic_cast<std::ostream&>(*this)
+#			undef MYSQLPP_SSQLS_COMPATIBLE
+#		elif !defined(_STLP_VERSION) && !defined(_STLP_VERSION_STR)
+			// VC++ 2005 or newer and not using STLport, so #define
+			// portability flags indicating features we can use from
+			// the compiler's native RTL.
+#			define MYSQLPP_HAVE_LOCALTIME_S
+#			define MYSQLPP_HAVE_STD__NOINIT
+#		endif
+
 		// Disable whining about using 'this' as a member initializer on VC++.
 #		pragma warning(disable: 4355)
 		// Disable whining about implicit conversions to bool

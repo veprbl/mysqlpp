@@ -219,19 +219,16 @@ DateTime::operator time_t() const
 DateTime::DateTime(time_t t)
 {
 	struct tm tm;
-#if defined(_MSC_VER) && _MSC_VER >= 1400 && !defined(_STLP_VERSION) && \
-		!defined(_STLP_VERSION_STR)
-	// Use thread-safe localtime() replacement included with VS2005 and
-	// up, but only when using native RTL, not STLport.
+#if defined(MYSQLPP_HAVE_LOCALTIME_S)
+	// common.h detected localtime_s() from native RTL of VC++ 2005 and up
 	localtime_s(&tm, &t);
 #elif defined(HAVE_LOCALTIME_R)
-	// Detected POSIX thread-safe localtime() replacement.
+	// autoconf detected POSIX's localtime_r() on this system
 	localtime_r(&t, &tm);
 #else
 	// No explicitly thread-safe localtime() replacement found.  This
 	// may still be thread-safe, as some C libraries take special steps
-	// within localtime() to get thread safety.  For example, thread-
-	// local storage (TLS) in some Windows compilers.
+	// within localtime() to get thread safety, such as TLS.
 	memcpy(&tm, localtime(&t), sizeof(tm));
 #endif
 

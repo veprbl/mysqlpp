@@ -25,7 +25,7 @@
  USA
 ***********************************************************************/
 
-#ifndef MYSQLPP_QUERY_H
+#if !defined(MYSQLPP_QUERY_H)
 #define MYSQLPP_QUERY_H
 
 #include "common.h"
@@ -50,19 +50,6 @@
 #  if defined(HAVE_STD_SLIST) || defined(HAVE_GLOBAL_SLIST)
 #      include <slist>
 #  endif
-#endif
-
-/// \def MYSQLPP_QUERY_THISPTR
-/// \brief Helper macro used inside MySQL++ to work around a VC++ 2003 bug
-///
-/// This macro returns '*this', either directly or upcast to Query's
-/// base class to work around an error in the overloaded operator
-/// lookup logic in VC++ 2003.  For an explanation of the problem, see:
-/// http://groups.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
-#if defined(_MSC_VER) && (_MSC_VER < 1400)
-#	define MYSQLPP_QUERY_THISPTR dynamic_cast<std::ostream&>(*this)
-#else
-#	define MYSQLPP_QUERY_THISPTR *this
 #endif
 
 namespace mysqlpp {
@@ -1014,5 +1001,5 @@ void Query::storein_set(Set& con, const SQLTypeAdapter& s)
 
 } // end namespace mysqlpp
 
-#endif
+#endif // !defined(MYSQLPP_QUERY_H)
 

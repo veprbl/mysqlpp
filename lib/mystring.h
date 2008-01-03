@@ -499,16 +499,13 @@ template <class Type> class internal_string_to_int_proxy;
     TYPE num_;\
   };\
 
-#if defined(_MSC_VER)
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
+// Squish VC++ warning about "possible loss of data" for these conversions
 #	pragma warning(disable: 4244)
 #endif
 
 	internal_convert_string_to_int(float, strtod)
 	internal_convert_string_to_int(double, strtod)
-
-#if defined(_MSC_VER)
-#	pragma warning(default: 4244)
-#endif
 
 #undef internal_convert_string_to_int
 #define internal_convert_string_to_int(TYPE, FUNC) \
@@ -522,10 +519,6 @@ template <class Type> class internal_string_to_int_proxy;
     TYPE num_;\
   };\
 
-#if defined(_MSC_VER)
-#	pragma warning(disable: 4244)
-#endif
-
 	internal_convert_string_to_int(char, strtol)
 	internal_convert_string_to_int(signed char, strtol)
 	internal_convert_string_to_int(int, strtol)
@@ -537,12 +530,12 @@ template <class Type> class internal_string_to_int_proxy;
 	internal_convert_string_to_int(unsigned short int, strtoul)
 	internal_convert_string_to_int(unsigned long int, strtoul)
 
-#if defined(_MSC_VER)
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
 #	pragma warning(default: 4244)
 #endif
 
 #if !defined(NO_LONG_LONGS)
-#if defined(_MSC_VER)
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
 // Handle 64-bit ints the VC++ way
 internal_convert_string_to_int(longlong, _strtoi64)
 internal_convert_string_to_int(ulonglong, _strtoui64)
