@@ -1,5 +1,5 @@
 /***********************************************************************
- custom2.cpp - Example showing how to insert a row using the Specialized
+ ssqls2.cpp - Example showing how to insert a row using the Specialized
  	SQL Structures feature of MySQL++.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and

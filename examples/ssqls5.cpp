@@ -1,5 +1,5 @@
 /***********************************************************************
- custom5.cpp - Example showing how to use the equal_list() member of
+ ssqls5.cpp - Example showing how to use the equal_list() member of
  	some SSQLS types to build SELECT queries with custom WHERE clauses.
  
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, (c)

@@ -74,8 +74,9 @@ Running the Other Command Line Examples
             with a "use" query instead of a "store" query.  See the
             user manual for the difference between these methods.
 
-        custom1-6: Demonstrates the SSQLS features.  These examples
-            are explained in the user manual.
+        ssqls1-5: These demonstrate the SSQLS features.  Read the
+            SSQLS sections in the user manual for details about
+            these examples.
 
         multiquery: MySQL++ allows you to issue multiple queries at
             once, and get the results as separate sets.  This shows

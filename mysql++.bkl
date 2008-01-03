@@ -112,7 +112,7 @@
 			</if>
 
 			<if cond="FORMAT=='autoconf'">
-				<depends>lib/custom.h</depends>
+				<depends>lib/ssqls.h</depends>
 				<depends>lib/querydef.h</depends>
 
 				<cxxflags>@PTHREAD_CFLAGS@</cxxflags>
@@ -247,20 +247,20 @@
 		<exe id="cgi_jpeg" template="libexcommon-user,programs">
 			<sources>examples/cgi_jpeg.cpp</sources>
 		</exe>
-		<exe id="custom1" template="libexcommon-user,programs">
-			<sources>examples/custom1.cpp</sources>
+		<exe id="ssqls1" template="libexcommon-user,programs">
+			<sources>examples/ssqls1.cpp</sources>
 		</exe>
-		<exe id="custom2" template="libexcommon-user,programs">
-			<sources>examples/custom2.cpp</sources>
+		<exe id="ssqls2" template="libexcommon-user,programs">
+			<sources>examples/ssqls2.cpp</sources>
 		</exe>
-		<exe id="custom3" template="libexcommon-user,programs">
-			<sources>examples/custom3.cpp</sources>
+		<exe id="ssqls3" template="libexcommon-user,programs">
+			<sources>examples/ssqls3.cpp</sources>
 		</exe>
-		<exe id="custom4" template="libexcommon-user,programs">
-			<sources>examples/custom4.cpp</sources>
+		<exe id="ssqls4" template="libexcommon-user,programs">
+			<sources>examples/ssqls4.cpp</sources>
 		</exe>
-		<exe id="custom5" template="libexcommon-user,programs">
-			<sources>examples/custom5.cpp</sources>
+		<exe id="ssqls5" template="libexcommon-user,programs">
+			<sources>examples/ssqls5.cpp</sources>
 		</exe>
 		<exe id="dbinfo" template="libexcommon-user,programs">
 			<sources>examples/dbinfo.cpp</sources>
@@ -317,9 +317,9 @@
 			</command>
 		</modify-target>
 			
-		<action id="lib/custom.h">
-			<command>cd lib ; ./custom.pl</command>
-			<depends-on-file>lib/custom.pl</depends-on-file>
+		<action id="lib/ssqls.h">
+			<command>cd lib ; ./ssqls.pl</command>
+			<depends-on-file>lib/ssqls.pl</depends-on-file>
 		</action>
 
 		<action id="lib/querydef.h">

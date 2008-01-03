@@ -516,7 +516,7 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
     indirectly.</para>
 
     <para>The one header that <filename>mysql++.h</filename> doesn't
-    bring in for you is <filename>custom.h</filename>, which is only
+    bring in for you is <filename>ssqls.h</filename>, which is only
     useful if you use the optional <xref linkend="ssqlsintro"/>
     feature.</para>
 
@@ -759,9 +759,9 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
 
       <para>The next example introduces one of the most powerful
       features of MySQL++: Specialized SQL Structures (SSQLS). This is
-      <filename>examples/custom1.cpp</filename>:</para>
+      <filename>examples/ssqls1.cpp</filename>:</para>
 
-      <programlisting><xi:include href="custom1.txt" parse="text" 
+      <programlisting><xi:include href="ssqls1.txt" parse="text" 
       xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
       <para>Here is the stock.h header used by that example, and
@@ -772,7 +772,7 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
 
       <para>This example produces the same output as
       <filename>simple1.cpp</filename> (see <xref linkend="simple"/>),
-      but it does it with a custom C++ data structure paralleling the
+      but it does it with a generated C++ data structure paralleling the
       database schema instead of using MySQL++'s own data structures
       directly. This results in a higher level of abstraction and
       better use of idiomatic C++. In addition, in a real program
@@ -835,9 +835,9 @@ query.storein(res);
       <title>Adding data</title>
 
       <para>SSQLS can also be used to add data to a table. This is
-      <filename>examples/custom2.cpp</filename>:</para>
+      <filename>examples/ssqls2.cpp</filename>:</para>
 
-      <programlisting><xi:include href="custom2.txt" parse="text" 
+      <programlisting><xi:include href="ssqls2.txt" parse="text" 
       xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
       <para>That's all there is to it!</para>
@@ -856,9 +856,9 @@ query.storein(res);
       <title>Modifying data</title>
 
       <para>It almost as easy to modify data with SSQLS. This is
-      <filename>examples/custom3.cpp</filename>:</para>
+      <filename>examples/ssqls3.cpp</filename>:</para>
 
-      <programlisting><xi:include href="custom3.txt" parse="text"
+      <programlisting><xi:include href="ssqls3.txt" parse="text"
       xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
       <para>When you run the example you will notice that in the
@@ -874,9 +874,9 @@ query.storein(res);
 
       <para>SSQLS structures can be sorted and stored in STL
       associative containers as demonstrated in the next example. This
-      is <filename>examples/custom4.cpp</filename>:</para>
+      is <filename>examples/ssqls4.cpp</filename>:</para>
 
-      <programlisting><xi:include href="custom4.txt" parse="text"
+      <programlisting><xi:include href="ssqls4.txt" parse="text"
       xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
       <para>For more details on the SSQLS feature, see <xref
@@ -1830,12 +1830,10 @@ StoreQueryResult res = query.store(1.25); </programlisting>
   can use SSQLS structures to match existing data, and it can insert
   SSQLS structures directly into the database.</para>
 
-  <para>You define an SSQLS using one of several macros. (These
-  are in the file custom.h, and in the file that it includes,
-  custom-macros.h.) There are a bunch of different macros, for
-  different purposes. The following sections will discuss each macro
-  type separately, beginning with the easiest and most generally
-  useful.</para>
+  <para>You define an SSQLS using one of several macros defined in
+  <filename>ssqls.h</filename>. The following sections will discuss
+  each macro type separately, beginning with the easiest and most
+  generally useful.</para>
 
 
   <sect2>
@@ -2063,7 +2061,7 @@ sql_create_X(Y, Z....) // the SSQLS definition</programlisting>
     want to harness them for your own ends. Here is some pseudocode
     showing how the most useful of these methods would be defined
     for the <structname>stock</structname> structure used in all the
-    <filename>custom*.cpp</filename> examples:</para>
+    <filename>ssqls*.cpp</filename> examples:</para>
 
     <programlisting>
 // Basic form
@@ -2135,9 +2133,9 @@ Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,date = '1
     <methodname>equal_list()</methodname>. This example builds a query
     with fewer hard-coded strings than the most obvious technique
     requires, which makes it more robust in the face of change. Here
-    is <filename>examples/custom5.cpp</filename>:</para>
+    is <filename>examples/ssqls5.cpp</filename>:</para>
 
-    <programlisting><xi:include href="custom5.txt" parse="text" 
+    <programlisting><xi:include href="ssqls5.txt" parse="text" 
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
     <para>This example uses the list form of
@@ -2251,9 +2249,9 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
   <sect2>
     <title>Extending the SSQLS Mechanism</title>
 
-    <para>The SSQLS headers &mdash; custom.h and custom-macros.h
-    &mdash; are automatically generated by the Perl script
-    <filename>custom.pl</filename>. Although it is possible to change
+    <para>The SSQLS header <filename>ssqls.h</filename>
+    is automatically generated by the Perl script
+    <filename>ssqls.pl</filename>. Although it is possible to change
     this script to get additional functionality, it's usually better
     to do that through inheritance.</para>
 
@@ -2262,12 +2260,12 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
     out of the box. A smaller value may speed up compile time, or you
     may require a higher value because you have more complex tables
     than that. Simply change the <varname>max_data_members</varname>
-    variable at the top of <filename>custom.pl</filename> and
+    variable at the top of <filename>ssqls.pl</filename> and
     say <command>make</command>.  The limit for Visual C++ is 31,
     according to one report. There doesn't seem to be a practical
     limit with GCC 3.3 at least: I set the limit to 100 and the only
-    thing that happened is that custom-macros.h went from 1.3 MB to 18
-    MB and the build time for <filename>examples/custom.*</filename>
+    thing that happened is that ssqls.h went from 1.3 MB to 18
+    MB and the build time for <filename>examples/ssqls*</filename>
     got a lot longer.</para>
   </sect2>
 
@@ -2340,9 +2338,9 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
       Visual C++ 2003, but didn't let you use a given SSQLS in
       more than one module in a program. If you can live with that
       limitation and have a Perl interpreter on your system, you
-      can re-generate <filename>lib/custom-macros.h</filename> to
+      can re-generate <filename>lib/ssqls.h</filename> to
       remove the multiple-module SSQLS support. To do this, you run
-      the command <command>perl custom.pl -v</command> from within
+      the command <command>perl ssqls.pl -v</command> from within
       MySQL++'s <filename>lib</filename> subdirectory before you
       build and install the library.</para></listitem>
 

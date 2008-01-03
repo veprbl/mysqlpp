@@ -1,5 +1,5 @@
 /***********************************************************************
- tquery1.cpp - Example similar to custom3.cpp, except that it uses
+ tquery1.cpp - Example similar to ssqls3.cpp, except that it uses
 	template queries instead of SSQLS.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
@@ -52,7 +52,7 @@ main(int argc, char *argv[])
 		query.parse();
 
 		// Retrieve an item added by resetdb; it won't be there if
-		// tquery* or custom3 is run since resetdb.
+		// tquery* or ssqls3 is run since resetdb.
 		mysqlpp::StoreQueryResult res1 = query.store("Nürnberger Brats");
 		if (res1.empty()) {
 			throw mysqlpp::BadQuery("UTF-8 bratwurst item not found in "

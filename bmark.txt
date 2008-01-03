@@ -170,15 +170,15 @@ Creating deadlock testing tables...
 Reinitialized sample database successfully.
 ================ END resetdb OUTPUT ================
 
----------------- BEGIN custom1 OUTPUT ----------------
+---------------- BEGIN ssqls1 OUTPUT ----------------
 We have:
 	Nürnberger Brats
 	Pickle Relish
 	Hot Mustard
 	Hotdog Buns
-================ END custom1 OUTPUT ================
+================ END ssqls1 OUTPUT ================
 
----------------- BEGIN custom2 OUTPUT ----------------
+---------------- BEGIN ssqls2 OUTPUT ----------------
 Query: INSERT INTO stock (item,num,weight,price,sdate,description) VALUES ('Hot Dogs',100,1.5,1.75,'1998-09-25',NULL)
 Query: select * from stock
 Records found: 5
@@ -190,9 +190,9 @@ Pickle Relish                  87        1.5       1.75      1998-09-04
 Hot Mustard                    73        0.95      0.97      1998-05-25
 Hotdog Buns                    65        1.1       1.1       1998-04-23
 Hot Dogs                       100       1.5       1.75      1998-09-25
-================ END custom2 OUTPUT ================
+================ END ssqls2 OUTPUT ================
 
----------------- BEGIN custom3 OUTPUT ----------------
+---------------- BEGIN ssqls3 OUTPUT ----------------
 Query: UPDATE stock SET item = 'Nuerenberger Bratwurst',num = 97,weight = 1.5,price = 8.789999999999999,sdate = '2005-03-10',description = NULL WHERE item = 'Nürnberger Brats'
 Query: select * from stock
 Records found: 5
@@ -204,9 +204,9 @@ Pickle Relish                  87        1.5       1.75      1998-09-04
 Hot Mustard                    73        0.95      0.97      1998-05-25
 Hotdog Buns                    65        1.1       1.1       1998-04-23
 Hot Dogs                       100       1.5       1.75      1998-09-25
-================ END custom3 OUTPUT ================
+================ END ssqls3 OUTPUT ================
 
----------------- BEGIN custom4 OUTPUT ----------------
+---------------- BEGIN ssqls4 OUTPUT ----------------
 Records found: 5
 
 Item                           Num       Weight    Price     Date
@@ -218,10 +218,10 @@ Nuerenberger Bratwurst         97        1.5       8.79      2005-03-10
 Pickle Relish                  87        1.5       1.75      1998-09-04
 
 Currently 65 hotdog buns in stock.
-================ END custom4 OUTPUT ================
+================ END ssqls4 OUTPUT ================
 
----------------- BEGIN custom5 OUTPUT ----------------
+---------------- BEGIN ssqls5 OUTPUT ----------------
 Custom query:
 select * from stock where weight = 1.5 and price = 8.789999999999999
-================ END custom5 OUTPUT ================
+================ END ssqls5 OUTPUT ================
 

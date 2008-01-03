@@ -1,6 +1,8 @@
 /***********************************************************************
- custom3.cpp - Example showing how to update an SQL row using the
-	Specialized SQL Structures feature of MySQL++.
+ ssqls4.cpp - Example very similar to ssqls1.cpp, except that it
+	stores its result set in an STL set container.  This demonstrates
+	how one can manipulate MySQL++ result sets in a very natural C++
+	style.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
  (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
@@ -47,45 +49,35 @@ main(int argc, char *argv[])
 		// Establish the connection to the database server.
 		mysqlpp::Connection con(db, server, user, pass);
 
-		// Build a query to retrieve the stock item that has Unicode
-		// characters encoded in UTF-8 form.
-		mysqlpp::Query query = con.query(
-				"select * from stock where item = \"Nürnberger Brats\"");
+		// Retrieve all rows from the stock table and put them in an
+		// STL set.  Notice that this works just as well as storing them
+		// in a vector, which we did in ssqls1.cpp.  It works because
+		// SSQLS objects are less-than comparable.
+		mysqlpp::Query query = con.query("select * from stock");
+		set<stock> res;
+		query.storein(res);
 
-		// Retrieve the row, throwing an exception if it fails.
-		mysqlpp::StoreQueryResult res = query.store();
-		if (res.empty()) {
-			throw mysqlpp::BadQuery("UTF-8 bratwurst item not found in "
-					"table, run resetdb");
+		// Display the result set.  Since it is an STL set and we set up
+		// the SSQLS to compare based on the item column, the rows will
+		// be sorted by item.
+		print_stock_header(res.size());
+		set<stock>::iterator it;
+		cout.precision(3);
+		for (it = res.begin(); it != res.end(); ++it) {
+			print_stock_row(it->item.c_str(), it->num, it->weight,
+					it->price, it->sdate);
 		}
 
-		// Because there should only be one row in the result set,
-		// there's no point in storing the result in an STL container.
-		// We can store the first row directly into a stock structure
-		// because one of an SSQLS's constructors takes a Row object.
-		stock row = res[0];
-
-		// Create a copy so that the replace query knows what the
-		// original values are.
-		stock orig_row = row;
-
-		// Change the stock object's item to use only 7-bit ASCII, and
-		// to deliberately be wider than normal column widths printed
-		// by print_stock_table().
-		row.item = "Nuerenberger Bratwurst";
-
-		// Form the query to replace the row in the stock table.
-		query.update(orig_row, row);
-
-		// Show the query about to be executed.
-		cout << "Query: " << query << endl;
-
-		// Run the query with execute(), since UPDATE doesn't return a
-		// result set.
-		query.execute();
-
-		// Retrieve and print out the new table contents.
-        print_stock_table(query);
+		// Use set's find method to look up a stock item by item name.
+		// This also uses the SSQLS comparison setup.
+		it = res.find(stock("Hotdog Buns"));
+		if (it != res.end()) {
+			cout << endl << "Currently " << it->num <<
+					" hotdog buns in stock." << endl;
+		}
+		else {
+			cout << endl << "Sorry, no hotdog buns in stock." << endl;
+		}
 	}
 	catch (const mysqlpp::BadQuery& er) {
 		// Handle any query errors

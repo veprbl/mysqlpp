@@ -55,7 +55,7 @@ main(int argc, char *argv[])
 		query.parse();
 
 		// Retrieve an item added by resetdb; it won't be there if
-		// tquery* or custom3 is run since resetdb.
+		// tquery* or ssqls3 is run since resetdb.
 		mysqlpp::SQLQueryParms sqp;
 		sqp << "Nürnberger Brats";
 		mysqlpp::StoreQueryResult res1 = query.store(sqp);

@@ -28,7 +28,7 @@
 
 #if defined(MYSQLPP_SSQLS_COMPATIBLE)
 
-#include <custom.h>
+#include <ssqls.h>
 
 // The following is calling a very complex macro which will create
 // "struct stock", which has the member variables:

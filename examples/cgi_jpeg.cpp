@@ -4,10 +4,10 @@
 	
 	Use load_jpeg.cpp to load JPEG files into the database we query.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -28,7 +28,7 @@
 ***********************************************************************/
 
 #include <mysql++.h>
-#include <custom.h>
+#include <ssqls.h>
 
 using namespace std;
 using namespace mysqlpp;

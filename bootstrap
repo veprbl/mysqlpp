@@ -78,7 +78,7 @@ then
 		autoheader &&
 		autoconf &&
 		./configure --cache-file=config.cache --enable-maintainer-mode $* &&
-		make lib/custom.h lib/querydef.h &&
+		make lib/querydef.h lib/ssqls.h &&
 		set +x &&
 		success=awyeah
 fi

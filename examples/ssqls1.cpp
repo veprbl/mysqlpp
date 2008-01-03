@@ -1,5 +1,5 @@
 /***********************************************************************
- custom1.cpp - Example that produces the same results as simple1, but it
+ ssqls1.cpp - Example that produces the same results as simple1, but it
  	uses a Specialized SQL Structure to store the results instead of a
 	MySQL++ Result object.
  
