@@ -3,7 +3,7 @@
  	some SSQLS types to build SELECT queries with custom WHERE clauses.
  
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, (c)
- 2004-2007 by Educational Technology Resources, Inc., and (c) 2005 by
+ 2004-2008 by Educational Technology Resources, Inc., and (c) 2005 by
  Chris Frey.  Others may also hold copyrights on code in this file.
  See the CREDITS file in the top directory of the distribution for
  details.

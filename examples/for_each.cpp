@@ -2,10 +2,10 @@
  for_each.cpp - Demonstrates Query::for_each(), showing how to perform
 	an arbitrary action on each row in a result set.
 
- Copyright (c) 2005-2007 by Joel Fielder and Educational Technology
- Resources, Inc.  Others may also hold copyrights on code in this file.
- See the CREDITS file in the top directory of the distribution for
- details.
+ Copyright (c) 2005-2008 by Educational Technology Resources, Inc. and
+ (c) 2007 by Joel Fielder.  Others may also hold copyrights on code
+ in this file.  See the CREDITS file in the top directory of the
+ distribution for details.
 
  This file is part of MySQL++.
 

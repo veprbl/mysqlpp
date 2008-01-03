@@ -17,8 +17,8 @@
 /// - added more Doxygen comments, and changed some existing comments
 
 /***********************************************************************
- Copyright (c) 2004 Beeyond Software Holding BV and (c) 2007 by
- Educational Technology Resources, Inc.  Others may also hold
+ Copyright (c) 2004 Beeyond Software Holding BV and (c) 2007-2008
+ by Educational Technology Resources, Inc.  Others may also hold
  copyrights on code in this file.  See the CREDITS file in the top
  directory of the distribution for details.
 

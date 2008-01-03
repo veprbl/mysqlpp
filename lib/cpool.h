@@ -2,7 +2,7 @@
 /// \brief Declares the ConnectionPool class.
 
 /***********************************************************************
- Copyright (c) 2007 by Educational Technology Resources, Inc. and
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc. and
  (c) 2007 by Jonathan Wakely.  Others may also hold copyrights on
  code in this file.  See the CREDITS file in the top directory of
  the distribution for details.

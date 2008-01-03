@@ -4,7 +4,7 @@
 	to be useful, only to show how you can do result set filtering that
 	outstrips the power of SQL.
 
- Copyright (c) 2005-2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2005-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
