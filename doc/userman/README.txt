@@ -43,14 +43,15 @@ There are many alternatives for the tools in the square brackets:
     Project (http://xml.apache.org/fop/), because it's the best of
     the free-as-in-freedom XSL-FO processors.
 
-    FOP isn't without its faults.  If you'd like to try some of
-    the commercial XSL-FO processors, RenderX's XEP (renderx.com) is
-    avalable in a free-as-in-beer version that adds watermarks to your
-    pages.  Another popular option is Antenna House's XSL Formatter
-    (antennahouse.com), but there is no free offering.  The low-end
-    commercial version of each of these is around $300.  Another
-    relatively inexpensive option is Lunasil's Xinc (lunasil.com),
-    which is available in a personal-use edition for under $100.
+    FOP isn't without its faults.  If you'd like to try some of the
+    commercial XSL-FO processors, RenderX's XEP (renderx.com) is
+    available in a free-as-in-beer demo version that adds watermarks
+    to your pages.  Another popular option is Antenna House's XSL
+    Formatter (antennahouse.com), which comes in a 90-day demo version
+    that adds watermarks.  The low-end commercial version of each of
+    these is around $300.  Another relatively inexpensive option is
+    Lunasil's Xinc (lunasil.com), which is available in a personal-use
+    edition for under $100.
 
 The third replaceable piece above is the DocBook XSL stylesheet set.
 The stylesheets are the XSLT processor's rules, controlling how
