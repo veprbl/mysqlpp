@@ -204,6 +204,7 @@ main(int argc, char *argv[])
 	delete poolptr;
 
 #else
+	(void)argc;		// warning squisher
 	cout << argv[0] << " requires pthreads to function!" << endl;
 #endif
 	return 0;

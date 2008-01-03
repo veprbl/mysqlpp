@@ -104,6 +104,7 @@ main(int argc, char *argv[])
 #else
 	// MySQL++ works under Visual C++ 2003 with only one excpetion,
 	// SSQLS, so we have to stub out the examples to avoid build errors.
+	(void)argc;
 	std::cout << argv[0] << " requires Visual C++ 2005 or newer." << std::endl;
 #endif
 

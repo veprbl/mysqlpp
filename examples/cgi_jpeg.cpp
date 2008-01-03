@@ -48,7 +48,7 @@ sql_create_2(images,
 #if defined(MYSQLPP_SSQLS_COMPATIBLE)
 int main()
 #else
-int main(int argc, char* argv[])
+int main(int, char* argv[])
 #endif
 {
 #if defined(MYSQLPP_SSQLS_COMPATIBLE)
