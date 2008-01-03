@@ -95,8 +95,8 @@ protected:
 private:
 	// Our connection parameters
 	std::string db_, server_, user_, password_;
-}
-*poolptr = 0;
+};
+SimpleConnectionPool* poolptr = 0;
 
 
 #if defined(HAVE_PTHREAD)

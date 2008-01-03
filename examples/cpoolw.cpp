@@ -25,7 +25,6 @@
 ***********************************************************************/
 
 #include "cmdline.h"
-#include "printdata.h"
 
 #include <mysql++.h>
 
@@ -94,8 +93,8 @@ protected:
 private:
 	// Our connection parameters
 	std::string db_, server_, user_, password_;
-}
-*poolptr = 0;
+};
+SimpleConnectionPool* poolptr = 0;
 
 
 static DWORD WINAPI
@@ -135,6 +134,8 @@ worker_thread(LPVOID running_flag)
 	
 	return 0;
 }
+
+
 int
 main(int argc, char *argv[])
 {
@@ -187,6 +188,7 @@ main(int argc, char *argv[])
 	}
 	while (i < num_threads);
 	cout << endl << "All threads stopped!" << endl;
+
 	// Shut it all down...
 	delete poolptr;
 
