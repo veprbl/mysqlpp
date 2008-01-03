@@ -1,14 +1,14 @@
 #!/bin/sh
 if [ -z "$1" ]
 then
-	echo "usage: $0 <example> [args...]"
+	echo "usage: $0 [TOOL] <example> [args...]"
 	echo
 	echo "   Runs the given example, using the library in the current directory"
 	echo "   instead of using the system library search mechanism.  Accepts an "
 	echo "   arbitrary number of arguments."
 	echo
-	echo "   Example can be 'valgrind' instead, in which case we run the example"
-	echo "   under valgrind in memory checking mode."
+	echo "   TOOL can be 'valgrind', 'gdb', or 'ldd', which causes exrun to"
+	echo "   run the example program under the given tool."
 	echo
 	exit 1
 fi
@@ -53,7 +53,7 @@ then
 	# VC++ build, but using Cygwin's bash as shell to run programs
 	cmd.exe /c exrun.bat $PROG $*
 else
-	echo "usage: $0 $TOOL <example> [args...]"
+	echo "usage: $0 [TOOL] <example> [args...]"
 	echo
 	echo "   Run $0 without arguments for more detailed usage info."
 	echo
