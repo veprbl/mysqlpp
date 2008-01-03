@@ -1,7 +1,7 @@
 The user manual is written in XML DocBook format, version 4.3.
 It uses the official DocBook XSL stylesheets, and will build with
-versions as old as 1.58.1.  (Why these versions?  They're what comes
-with Red Hat Linux 9, the oldest system I still use.)
+versions as old as 1.65.1.  (Why these versions?  They're what comes
+with CentOS 3, the oldest system I still use.)
 
 To make the HTML version of the user manual, just type 'make' in this
 directory.  (Or 'make html' if you want to be pedantic.)  To make the
