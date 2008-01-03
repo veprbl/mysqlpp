@@ -15,9 +15,8 @@ v3.0 Plan
       it into userman's threads chapter, which already has a stub
       for this.
 
-    o Is MYSQLPP_QUERY_THISPTR still needed with VC++2003?  The recent
-      manipulator changes and the removal of all operator<<(Query&,
-      const T&) may make it unnecessary.
+    o Disable SSQLS if < VC++ 2005, remove custom.pl -v, and remove
+      discussion of it from userman.
 
     o Figure out how to name debug DLL and library under VC++ and
       Xcode differently (trailing '_d'?) to avoid trouble when mixing
