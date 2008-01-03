@@ -105,6 +105,9 @@ Running the Other Command Line Examples
             returned row.  This example uses this to gather statistics
             on the sample table's contents.
 
+        cpoolp, cpoolw: Respectively, the POSIX and Windows threads
+            variants of the ConnectionPool class demonstration.
+
         load_jpeg: Inserts a JPEG file into the sample database,
             for use by the cgi_jpeg example.  (See below.)  Unlike the
             other examples, this one takes anything given on the

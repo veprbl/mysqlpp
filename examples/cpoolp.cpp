@@ -25,11 +25,12 @@
 ***********************************************************************/
 
 #include "cmdline.h"
-#include "printdata.h"
 
 #include <mysql++.h>
 
 #include <iostream>
+
+#include "../config.h"
 
 using namespace std;
 
@@ -67,7 +68,7 @@ protected:
 		// Create connection using the parameters we were passed upon
 		// creation.  This could be something much more complex, but for
 		// the purposes of the example, this suffices.
-		cout << "Creating new pooled connection..." << endl;
+		cout << endl << "Creating new pooled connection!" << endl;
 		return new mysqlpp::Connection(
 				db_.empty() ? 0 : db_.c_str(),
 				server_.empty() ? 0 : server_.c_str(),
@@ -79,7 +80,7 @@ protected:
 	{
 		// Our superclass can't know how we created the Connection, so
 		// it delegates destruction to us, to be safe.
-		cout << "Destroying pooled connection..." << endl;
+		cout << endl << "Destroying pooled connection!" << endl;
 		delete cp;
 	}
 
@@ -98,9 +99,51 @@ private:
 *poolptr = 0;
 
 
+#if defined(HAVE_PTHREAD)
+static void*
+worker_thread(void* running_flag)
+{
+	// Pull data from the sample table a bunch of times, releasing the
+	// connection we use each time.
+	for (int i = 0; i < 6; ++i) {
+		// Go get a free connection from the pool, or create a new one
+		// if there are no free conns yet.
+		mysqlpp::Connection* cp = poolptr->grab();
+		if (!cp) {
+			cerr << "Failed to get a connection from the pool!" << endl;
+			break;
+		}
+
+		// Pull a copy of the sample stock table and print a dot for
+		// each row in the result set.
+		mysqlpp::Query query(cp->query("select * from stock"));
+		mysqlpp::StoreQueryResult res = query.store();
+		for (int j = 0; j < res.num_rows(); ++j) {
+			cout.put('.');
+		}
+
+		// Immediately release the connection once we're done using it.
+		// If we don't, the pool can't detect idle connections reliably.
+		poolptr->release(cp);
+
+		// Delay 1-4 seconds before doing it again.  Because this can
+		// delay longer than the idle timeout, we'll occasionally force
+		// the creation of a new connection on the next loop.
+		sleep(rand() % 4 + 1);	
+	}
+
+	// Tell main() that this thread is no longer running
+	*reinterpret_cast<bool*>(running_flag) = false;
+	
+	return 0;
+}
+#endif // defined(HAVE_PTHREAD)
+
+
 int
 main(int argc, char *argv[])
 {
+#if defined(HAVE_PTHREAD)
 	// Get database access parameters from command line
     const char* db = 0, *server = 0, *user = 0, *pass = "";
 	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
@@ -130,9 +173,38 @@ main(int argc, char *argv[])
 	// Setup complete.  Now let's spin some threads...
 	cout << "Pool created and working correctly.  Now to do some "
 			"real work..." << endl;
+	srand(time(0));
+	bool running[] = {
+			true, true, true, true, true, true, true,
+			true, true, true, true, true, true, true };
+	const int num_threads = sizeof(running) / sizeof(running[0]);
+	int i;
+	for (i = 0; i < num_threads; ++i) {
+		pthread_t pt;
+		int err = pthread_create(&pt, 0, worker_thread, running + i);
+		if (err != 0) {
+			cerr << "Failed to create thread " << i <<
+					": error code " << err << endl;
+			return 1;
+		}
+	}
+
+	// Test the 'running' flags every second until we find that they're
+	// all turned off, indicating that all threads are stopped.
+	cout << endl << "Waiting for threads to complete..." << endl;
+	do {
+		sleep(1);
+		i = 0;
+		while (i < num_threads && !running[i]) ++i;
+	}
+	while (i < num_threads);
+	cout << endl << "All threads stopped!" << endl;
 
 	// Shut it all down...
 	delete poolptr;
 
+#else
+	cout << argv[0] << " requires pthreads to function!" << endl;
+#endif
 	return 0;
 }
