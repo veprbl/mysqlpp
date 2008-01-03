@@ -154,20 +154,21 @@ On Manipulating the Build System Source Files
             Good for checking changes before making a public release.
 
     vstudio Builds only the Visual Studio project files.  (That is, it
-            runs rebake.bat for you.)  This is useful when using Cygwin
-            just as a command shell in preference to cmd.exe, as opposed
-            to using Cygwin to build MySQL++ using its native tools.
-            Passing 'vstudio' stops all command line processing in the
-            bootstrap script, so if you also pass some of the other
-            options, make 'vstudio' last.  Not all of the above options
-            are supported for Visual Studio, so don't be suprised if
-            they have no effect on the built project files.
+            runs rebake.bat for you.)  This is useful when using
+            Cygwin just as a command shell in preference to cmd.exe,
+            as opposed to using Cygwin to build MySQL++ using its
+            native tools.  Passing 'vstudio' stops all command line
+            processing in the bootstrap script, so if you also pass
+            some of the other options, make 'vstudio' last.  Not all
+            of the above options are supported for Visual Studio,
+            so don't be suprised if they have no effect on the built
+            project files.
 
     configure options
             As soon as the bootstrap script sees an option that it
             doesn't understand, it stops processing the command line.
             Any subsequent options are passed to the configure script.
-            See README.unix for more on configure script options.
+            See README-Unix.txt for more on configure script options.
 
 
 Maintaining a Private CVS Repository

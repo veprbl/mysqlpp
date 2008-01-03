@@ -68,18 +68,18 @@ rm -rf %{buildroot} doc/examples
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog COPYING CREDITS LICENSE README
+%doc ChangeLog COPYING.txt CREDITS.txt LICENSE.txt README.txt
 %{_libdir}/libmysqlpp.so.*
 
 %files devel
 %defattr(-,root,root,-)
-%doc doc/examples doc/README.devel README.examples Wishlist
+%doc doc/examples doc/README-devel-RPM.txt README-examples.txt Wishlist
 %{_includedir}/mysql++
 %{_libdir}/libmysqlpp.so
 
 %files manuals
 %defattr(-,root,root,-)
-%doc doc/html doc/pdf doc/README.manuals
+%doc doc/html doc/pdf doc/README-manuals-RPM.txt
 
 %changelog
 * Mon Jul 2 2007 Warren Young <mysqlpp@etr-usa.com> 2.3.0-1

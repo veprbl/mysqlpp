@@ -374,12 +374,11 @@
 			<!-- Copy files into package directory -->
 			<!-- top directory -->
 			<command>
-				cp Bakefiles.bkgen bootstrap ChangeLog cleanmf \
+				cp *.txt Bakefiles.bkgen bootstrap ChangeLog cleanmf \
 					config.guess config.h.in config.sub configure* \
-					COPYING CREDITS exrun* HACKERS INSTALL install.bat \
-					install-sh libmysqlclient.def LICENSE Makefile.* \
-					mysql++.* mysql++.sln mysql++_*.vcproj osver \
-					README* rebake.bat Wishlist $(PKGNAME)
+					exrun* install.bat install-sh libmysqlclient.def \
+                    Makefile.* mysql++.* mysql++.sln mysql++_*.vcproj \
+                    osver rebake.bat Wishlist $(PKGNAME)
 			</command>
 
 			<!-- config subdir -->
@@ -391,7 +390,7 @@
 					cp -r doc/README* doc/pdf doc/ssqls-pretty $(PKGNAME)/doc
 				</command>
 				<command>
-					for f in LICENSE Makefile mktxt README *.{dbx,xsl} ; \
+					for f in LICENSE.txt Makefile mktxt README.txt *.{dbx,xsl} ; \
 					do \
 						cp doc/userman/$(DDF) $(PKGNAME)/doc/userman ; \
 					done

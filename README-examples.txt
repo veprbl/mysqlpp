@@ -117,16 +117,15 @@ Running the Other Command Line Examples
 
         dbinfo: Dumps a bunch of information about the database
             server and some of the data it's managing.
-    
+
     If you run the load_jpeg example, you should consider also
     playing with the other half of the demonstration, cgi_jpeg.
     To run it, you'll need to install MySQL++ on a machine with
     a web server, then copy the cgi_jpeg program to the server's
     CGI directory.  For example, on a stock Red Hat type box,
     that would be /var/www/cgi-bin.  At that point, a request like
-    http://my.server.com/cgi-bin/cgi_jpeg?id=1 should show the
-    JPEG you loaded.  The ID value to use will be that reported
-    by load_jpeg.
+    http://my.server.com/cgi-bin/cgi_jpeg?id=1 should show the JPEG you
+    loaded.  The ID value to use will be that reported by load_jpeg.
 
 
 Dedicated Windows Examples
@@ -139,13 +138,13 @@ Dedicated Windows Examples
             contents.  Uses good old C++ and MFC.
 
         examples\vstudio\wforms.vcproj: The same thing, only written in
-            C++/CLI and using Windows Forms.  We needed a second example
-            for two reasons.  First, string handling is quite different
-            under .NET than in unmanaged C++.  Second, many developers
-            are now using Visual Studio Express, which doesn't include
-            MFC.  Please read README.vc before trying to run this example.
-            The MySQL++ build settings must be modified before it will
-            run correctly.
+            C++/CLI and using Windows Forms.  We needed a second
+            example for two reasons.  First, string handling is quite
+            different under .NET than in unmanaged C++.  Second, many
+            developers are now using Visual Studio Express, which
+            doesn't include MFC.  Please read README-Visual-C++.txt
+            before trying to run this example.  The MySQL++ build
+            settings must be modified before it will run correctly.
 
     Before trying to run these examples, run the updexdll.bat file
     in the top MySQL++ directory.  This copies the built mysqlpp.dll
@@ -157,8 +156,8 @@ Dedicated Windows Examples
     with these examples.  They only work correctly in Visual Studio
     2005 right now.  If you want to backport them to VS 2003, it's
     probably not hard, and we will accept patches for this.  The main
-    difficulty is that VS 2003 supports Managed C++, which isn't
-    the same thing as C++/CLI.
+    difficulty is that VS 2003 supports Managed C++, which isn't the
+    same thing as C++/CLI.
 
     The main justification for these examples is that Unicode is
     handled differently in Windows GUI programs than on the POSIX

@@ -1,5 +1,5 @@
-Patches for any of these thoughtfully considered!  See the HACKERS file
-for instructions on sending patches.
+Patches for any of these thoughtfully considered!  See the HACKERS.txt
+file for instructions on sending patches.
 
 Here's a meta-item that doesn't really fit into any of the categories
 below: any time you must hand-roll some SQL code in your program,

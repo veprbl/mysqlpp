@@ -74,7 +74,7 @@ Building the Library and Example Programs
     examples to ensure that the library is working correctly.
     In addition to the other generic examples, there are a few
     Visual C++ specific examples that you might want to look at in
-    examples\vstudio.  See README.examples for further details.
+    examples\vstudio.  See README-examples.txt for further details.
 
     Once you're sure the library is working correctly, you can run
     the install.bat file at the project root to automatically install
