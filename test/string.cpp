@@ -1,5 +1,5 @@
 /***********************************************************************
- test_string.cpp - Tests the behavior of mysqlpp::String, particularly
+ test/string.cpp - Tests the behavior of mysqlpp::String, particularly
 	its data conversion methods.
 
  Copyright (c) 2007 by Educational Technology Resources, Inc.

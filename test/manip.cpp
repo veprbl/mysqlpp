@@ -1,5 +1,5 @@
 /***********************************************************************
- test_manip.cpp - Tests the quoting and escaping manipulators.
+ test/manip.cpp - Tests the quoting and escaping manipulators.
 
  Copyright (c) 2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the

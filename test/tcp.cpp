@@ -1,5 +1,5 @@
 /***********************************************************************
- test_tcp.cpp - Tests the address parser/verifier in TCPConnection.
+ test/tcp.cpp - Tests the address parser/verifier in TCPConnection.
 
  Copyright (c) 2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the

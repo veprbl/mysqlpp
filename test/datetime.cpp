@@ -1,5 +1,5 @@
 /***********************************************************************
- test_datetime.cpp - Tests the Date, DateTime, and Time classes.
+ test/datetime.cpp - Tests the Date, DateTime, and Time classes.
 
  Copyright (c) 2007 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the

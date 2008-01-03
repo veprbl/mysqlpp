@@ -1,5 +1,5 @@
 /***********************************************************************
- test_uds.cpp - Tests the Unix domain socket verifier in
+ test/uds.cpp - Tests the Unix domain socket verifier in
  	UnixDomainSocketConnection.  This test always succeeds on Windows!
 
  Copyright (c) 2007 by Educational Technology Resources, Inc.

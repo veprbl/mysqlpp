@@ -196,22 +196,22 @@
 	<!-- Define library testing programs' output targets, if enabled -->
 	<if cond="BUILDTEST=='yes'">
 		<exe id="test_datetime" template="programs">
-			<sources>test/test_datetime.cpp</sources>
+			<sources>test/datetime.cpp</sources>
 		</exe>
 		<exe id="test_manip" template="programs">
-			<sources>test/test_manip.cpp</sources>
+			<sources>test/manip.cpp</sources>
 		</exe>
 		<exe id="test_string" template="programs">
-			<sources>test/test_string.cpp</sources>
+			<sources>test/string.cpp</sources>
 		</exe>
 		<exe id="test_tcp" template="programs">
-			<sources>test/test_tcp.cpp</sources>
+			<sources>test/tcp.cpp</sources>
 		</exe>
 		<exe id="test_uds" template="programs">
-			<sources>test/test_uds.cpp</sources>
+			<sources>test/uds.cpp</sources>
 		</exe>
 		<exe id="test_wnp" template="programs">
-			<sources>test/test_wnp.cpp</sources>
+			<sources>test/wnp.cpp</sources>
 		</exe>
 	</if>	<!-- build library test programs -->
 
