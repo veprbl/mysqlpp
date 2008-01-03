@@ -54,6 +54,7 @@
 // This #include order gives the fewest redundancies in the #include
 // dependency chain.
 #include "connection.h"
+#include "cpool.h"
 #include "query.h"
 #include "sql_types.h"
 #include "transaction.h"
