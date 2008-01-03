@@ -168,7 +168,7 @@
 			<lib-path>$(BUILD)</lib-path>
 			<include>$(MYSQL_WIN_DIR)\include</include>
 			<lib-path>$(MYSQL_WIN_DIR)\lib\opt</lib-path>
-			<sys-lib>mysqlpp</sys-lib>
+			<sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
 			<sys-lib>libmysql</sys-lib>
 		</if>
 
@@ -181,7 +181,7 @@
 			<include>"$(MYSQL_WIN_DIR)\include"</include>
 			<lib-path>"$(MYSQL_WIN_DIR)\lib\opt"</lib-path>
 			<sys-lib>mysqlclient</sys-lib>
-			<sys-lib>mysqlpp</sys-lib>
+			<sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
 		</if>
 
 		<if cond="FORMAT=='autoconf'">
@@ -211,9 +211,12 @@
 		<exe id="test_manip" template="programs">
 			<sources>test/manip.cpp</sources>
 		</exe>
-		<exe id="test_string" template="programs">
-			<sources>test/string.cpp</sources>
-		</exe>
+		<if cond="FORMAT!='msvs2003prj'">
+			<!-- VC++ 2003 can't compile this -->
+			<exe id="test_string" template="programs">
+				<sources>test/string.cpp</sources>
+			</exe>
+		</if>
 		<exe id="test_tcp" template="programs">
 			<sources>test/tcp.cpp</sources>
 		</exe>

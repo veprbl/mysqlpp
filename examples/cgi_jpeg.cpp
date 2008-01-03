@@ -38,14 +38,20 @@ using namespace mysqlpp;
 #define IMG_USER		"root"
 #define IMG_PASSWORD 	"nunyabinness"
 
+#if defined(MYSQLPP_SSQLS_COMPATIBLE)
 sql_create_2(images,
 	1, 2,
 	mysqlpp::sql_int_unsigned, id,
 	mysqlpp::sql_blob, data)
+#endif
 
-int
-main()
+#if defined(MYSQLPP_SSQLS_COMPATIBLE)
+int main()
+#else
+int main(int argc, char* argv[])
+#endif
 {
+#if defined(MYSQLPP_SSQLS_COMPATIBLE)
 	unsigned int img_id = 0;
 	char* cgi_query = getenv("QUERY_STRING");
 	if (cgi_query) {
@@ -104,6 +110,11 @@ main()
 		cout << "GENERAL ERROR: " << er.what() << endl;
 		return 1;
 	}
+#else
+	// MySQL++ works under Visual C++ 2003 with only one excpetion,
+	// SSQLS, so we have to stub out the examples to avoid build errors.
+	cout << argv[0] << " requires Visual C++ 2005 or newer." << endl;
+#endif
 
 	return 0;
 }

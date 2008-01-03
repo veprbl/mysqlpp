@@ -36,6 +36,7 @@ using namespace std;
 int
 main(int argc, char *argv[])
 {
+#if defined(MYSQLPP_SSQLS_COMPATIBLE)
 	// Get database access parameters from command line
     const char* db = 0, *server = 0, *user = 0, *pass = "";
 	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
@@ -102,6 +103,11 @@ main(int argc, char *argv[])
 		cerr << "Error: " << er.what() << endl;
 		return -1;
 	}
+#else
+	// MySQL++ works under Visual C++ 2003 with only one excpetion,
+	// SSQLS, so we have to stub out the examples to avoid build errors.
+	cout << argv[0] << " requires Visual C++ 2005 or newer." << endl;
+#endif
 
 	return 0;
 }

@@ -57,6 +57,7 @@
 #	if defined(_MSC_VER)
 #		define MYSQLPP_PLATFORM_VISUAL_CPP
 #		if _MSC_VER < 1400
+#			undef MYSQLPP_QUERY_THISPTR
 #			define MYSQLPP_QUERY_THISPTR dynamic_cast<std::ostream&>(*this)
 #			undef MYSQLPP_SSQLS_COMPATIBLE
 #		elif !defined(_STLP_VERSION) && !defined(_STLP_VERSION_STR)
