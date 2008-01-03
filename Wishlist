@@ -15,9 +15,6 @@ v3.0 Plan
       it into userman's threads chapter, which already has a stub
       for this.
 
-    o Disable SSQLS if < VC++ 2005, remove custom.pl -v, and remove
-      discussion of it from userman.
-
 
 v3.1 Tentative Plan
 -------------------

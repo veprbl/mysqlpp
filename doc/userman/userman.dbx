@@ -2051,15 +2051,6 @@ sql_create_X(Y, Z....) // the SSQLS definition</programlisting>
 // File my_ssqls.cpp, which owns the SSQLS:
 #define EXPAND_MY_SSQLS_STATICS
 #include "my_ssqls.h"</programlisting>
-
-    <para>Note that due to a compiler limitation, you can't use the
-    <varname>MYSQLPP_SSQLS_NO_STATICS</varname> feature with Visual
-    C++ 2003. As instructed in <filename>README.vc</filename>, you
-    have to disable this feature in order to get the SSQLS header
-    files to compile. Having done that, the SSQLS feature works
-    fine as long as you can live with using each structure type in
-    a single module. Visual C++ 2005 and newer don't suffer from
-    this limitation.</para>
   </sect2>
 
 
@@ -2317,6 +2308,56 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
     <programlisting><xi:include href="cgi_jpeg.txt" parse="text"
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+  </sect2>
+
+
+  <sect2 id="ssqls-vc2003">
+    <title>SSQLS and Visual C++ 2003</title>
+
+    <para>SSQLS works on all platforms supported by MySQL++ except
+    for Visual C++ 2003. (Because the rest of MySQL++ works just fine
+    with Visual C++ 2003, we haven't removed this platform from the
+    supported list entirely.)</para>
+
+    <para>If you do need SSQLS and are currently on Visual C++ 2003,
+    you have these options:</para>
+
+    <orderedlist>
+      <listitem><para>The simplest option is to upgrade to a newer
+      version of Visual C++. The compiler limitations that break
+      SSQLS are all fixed in Visual C++ 2005 and newer. <ulink
+      url="http://www.microsoft.com/express/vc/">Visual
+      C++ Express</ulink> is free and is apparently
+      here to stay; coupled with the free <ulink
+      url="http://wxwidgets.org/">wxWidgets</ulink> library, it lacks
+      little compared to Visual C++ Professional.  A bonus of using
+      wxWidgets is that it's cross-platform and better-supported
+      than MFC.</para></listitem>
+
+      <listitem><para>If you can't upgrade your compiler, you may
+      be able to downgrade to MySQL++ v2.<emphasis>x</emphasis>.
+      The SSQLS feature in these older versions worked with
+      Visual C++ 2003, but didn't let you use a given SSQLS in
+      more than one module in a program. If you can live with that
+      limitation and have a Perl interpreter on your system, you
+      can re-generate <filename>lib/custom-macros.h</filename> to
+      remove the multiple-module SSQLS support. To do this, you run
+      the command <command>perl custom.pl -v</command> from within
+      MySQL++'s <filename>lib</filename> subdirectory before you
+      build and install the library.</para></listitem>
+
+      <listitem><para>There's <ulink
+      url="http://svn.gna.org/viewcvs/*checkout*/mysqlpp/trunk/Wishlist">a
+      plan</ulink> to replace the current SSQLS mechanism with an
+      entirely new code base. Although this is being done primary
+      to get new features that are too difficult to add within the
+      current design, it also means we'll have the chance to test
+      step-by-step along the way that we don't reintroduce code that
+      Visual C++ 2003 doesn't support. This may happen without you
+      doing anything, but if there's someone on the team who cares
+      about this, that will naturally increase the chances that it
+      does happen.</para></listitem>
+    </orderedlist>
   </sect2>
 </sect1>
 

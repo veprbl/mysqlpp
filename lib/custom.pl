@@ -47,10 +47,6 @@ my $fp_min_delta = "0.00001";
 # No user-serviceable parts below.
 
 use strict;
-use Getopt::Std;
-
-our ($opt_v);
-getopts('v') or die "usage: custom.pl [-v]\n";
 
 open (OUT0, ">custom.h");
 open (OUT, ">custom-macros.h");
@@ -62,11 +58,15 @@ print OUT0 << "---";
 // not modify this file directly. Change the script instead.
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifndef MYSQLPP_CUSTOM_H
+#if !defined(MYSQLPP_CUSTOM_H)
 #define MYSQLPP_CUSTOM_H
 
 #include "noexceptions.h"
 #include "sql_types.h"
+
+#if !defined(MYSQLPP_SSQLS_COMPATIBLE)
+#	error Your compiler is not compatible with the SSQLS feature!
+#endif
 
 #include <string>
 
@@ -85,26 +85,14 @@ print OUT0 << "---";
 namespace mysqlpp {
 
 enum sql_dummy_type { sql_dummy };
----
-
-my ($suppress_statics_start, $suppress_statics_end) = ('', '');
-unless ($opt_v) {
-	print OUT0 << "---";
-
-#if defined(_MSC_VER) && (_MSC_VER < 1400)
-#	error Please run the MySQL++ script lib/custom.pl with the -v compatibility flag.
-#endif
 
 #ifdef MYSQLPP_SSQLS_NO_STATICS
-#	define MYSQLPP_SSQLS_EXPAND(...)
+#	define MYSQLPP_SSQLS_CONDITIONAL_STATICS(...)
 #else
-#	define MYSQLPP_SSQLS_EXPAND(...) __VA_ARGS__
+#	define MYSQLPP_SSQLS_CONDITIONAL_STATICS(...) __VA_ARGS__
 #endif
 
 ---
-	$suppress_statics_start = 'MYSQLPP_SSQLS_EXPAND(';
-	$suppress_statics_end = ')';
-}
 
 my @types = ("Date", "DateTime", "Time", "String", "std::string");
 foreach my $type (@types) {
@@ -165,7 +153,7 @@ print OUT0 << "---";
 
 } // end namespace mysqlpp
 
-#endif
+#endif // !defined(MYSQLPP_CUSTOM_H)
 
 ---
 
@@ -705,12 +693,12 @@ $defs
     NAME##_cus_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
 						mysqlpp::sql_cmp_type sc) const;
   }; 
-  $suppress_statics_start
-  const char *NAME::names[] = { 
-$names 
-  }; 
-  const char *NAME::_table = #NAME ;
-  $suppress_statics_end
+  MYSQLPP_SSQLS_CONDITIONAL_STATICS(
+	  const char *NAME::names[] = { 
+		 $names
+	  }; 
+	  const char *NAME::_table = #NAME ;
+  )
 
   template <class Manip>
   NAME##_cus_value_list<Manip>::NAME##_cus_value_list

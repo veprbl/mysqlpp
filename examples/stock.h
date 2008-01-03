@@ -25,6 +25,9 @@
 ***********************************************************************/
 
 #include <mysql++.h>
+
+#if defined(MYSQLPP_SSQLS_COMPATIBLE)
+
 #include <custom.h>
 
 // The following is calling a very complex macro which will create
@@ -44,4 +47,6 @@ sql_create_6(stock,
 	mysqlpp::sql_double, price,
 	mysqlpp::sql_date, sdate,
 	mysqlpp::Null<mysqlpp::sql_mediumtext>, description)
+
+#endif
 

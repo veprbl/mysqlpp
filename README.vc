@@ -1,19 +1,52 @@
+Visual C++ Version Compatibility
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    MySQL++ is fully-functional with Visual C++ 2005 and 2008.
+
+    MySQL++ also works with VS 2003, with the exception of the SSQLS
+    feature.  There was partial support for SSQLS in the MySQL++
+    v2 series, but a feature we added in MySQL++ v3.0 crashes the
+    compiler, so we had to remove support for it entirely.  You don't
+    need to change anything to use MySQL++ v3 with Visual C++ 2003.
+    The SSQLS parts of the library and the examples simply disable
+    themselves when built with Visual C++ 2003.
+
+    Older versions of Visual C++ are basically hopeless when it comes
+    to having sufficient support for Standard C++ to build MySQL++.
+    There is an ancient hacked version of MySQL++ on the official
+    MySQL++ web site that works with Visual C++ 6 and up, but my
+    advice if you're on so old a compiler is that you're better off
+    programming straight to the C API, if only because you can still
+    get support for it.
+
+    The .sln and .vcproj files shipped with MySQL++ are for Visual
+    Studio 2003.  If you have that version installed as well as a newer
+    version, double-clicking the .sln file will open the solution in
+    Visual Studio 2003.  (This is because .sln files aren't associated
+    with Visual Studio directly, they're associated with a helper
+    tool that examines the file's contents to decide which version of
+    Visual Studio to launch.)  To migrate the solution files to the
+    newer version, open the .sln file from within the desired version
+    of Visual Studio.  After saving out the migrated solution files,
+    double-clicking the .sln file will open it in the newer version.
+
+
 Prerequisites
 ~~~~~~~~~~~~~
-    We currently have full support only for Visual Studio 2005.  It may
-    work with the "Orca" beta of the next version of Visual Studio,
-    but it hasn't been tested.  With a little work you can make it
-    work on Visual Studio 2003 as well; see below.  Older versions
-    are basically hopeless when it comes to having sufficient support
-    for Standard C++ to build MySQL++.
+    You need to have the MySQL server installed on your development
+    system, even if you will be using a MySQL server on another server.
+    This is because in addition to installing the server itself,
+    it also installs the client-side development files that MySQL++
+    needs in order to communicate with a MySQL server.
 
-    You also need to have the MySQL server installed, even if you
-    will be using a MySQL server on another machine.  This is because
-    in addition to installing the server itself, it also installs
-    the client-side development files that MySQL++ needs in order to
-    communicate with a MySQL server.  The MySQL server installer hasn't
-    always installed the development files by default, so you might
-    need to do some kind of custom install so you can enable them.
+    Historically, the MySQL server installer has sometimes installed
+    the development files by default, and sometimes not.  If you get
+    an error about mysql-version.h or mysql.h when building MySQL++,
+    you might need to go back and reinstall the server and select a
+    custom install to enable installation of the development files.
+
+    If you're getting these header file errors and are certain the
+    development files are indeed installed, read on in the following
+    section.
 
 
 Building the Library and Example Programs
@@ -169,22 +202,6 @@ Working With Bakefile
     Once you've made your changes, you can generate the Visual C++
     project files by running rebake.bat, which you can find in the
     same directory as this README file.
-
-
-Making It Work With Visual Studio 2003
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MySQL++'s SSQLS feature depends on a feature of newer C++
-    compilers called variadic macro argument lists, which Visual
-    C++ 2003 doesn't support.  You can disable the use of this C++
-    feature at the expense of not being able to use a given SSQLS
-    macro in more than one module within your program.  If you can
-    live with that and you have a Perl interpreter on your system,
-    go into the lib subdirectory of the MySQL++ distribution and say:
-
-        perl custom.pl -v
-
-    This will regenerate custom.h and custom-macros.h without the
-    multi-module support so it will work with Visual C++ 2003.
 
 
 If You Run Into Problems...
