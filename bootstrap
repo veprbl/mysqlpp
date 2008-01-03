@@ -51,6 +51,10 @@ set -x &&
 	set +x &&
 	success=shonuff
 
+# Get rid of INSTALL symlink added by bakefilize.  We already have
+# INSTALL.txt.
+rm -f INSTALL
+
 # If that succeeded, move on to autotools stuff, etc.
 set +x
 if [ -n "$success" ]
