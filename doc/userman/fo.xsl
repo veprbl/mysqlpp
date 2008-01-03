@@ -44,4 +44,9 @@
 			</xsl:otherwise>
 		</xsl:choose> 
 	</xsl:template>
+
+	<!-- Rag-right lines -->
+	<xsl:attribute-set name="root.properties">
+		<xsl:attribute name="text-align">left</xsl:attribute>
+	</xsl:attribute-set>
 </xsl:stylesheet>
