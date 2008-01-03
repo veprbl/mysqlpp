@@ -486,49 +486,49 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
-template <class Type> class internal_string_to_int_proxy;
+template <class Type> class internal_string_to_number_proxy;
 
-#define internal_convert_string_to_int(TYPE, FUNC) \
+#define internal_convert_string_to_float(TYPE, FUNC) \
   template <> \
-  class internal_string_to_int_proxy<TYPE> {\
+  class internal_string_to_number_proxy<TYPE> {\
   public:\
-    internal_string_to_int_proxy(const char* str, const char *& end) { \
+    internal_string_to_number_proxy(const char* str, const char *& end) { \
       num_ = FUNC(str, const_cast<char **>(&end));}\
     operator TYPE () {return num_;}\
   private:\
     TYPE num_;\
   };\
 
-#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
-// Squish VC++ warning about "possible loss of data" for these conversions
-#	pragma warning(disable: 4244)
-#endif
-
-	internal_convert_string_to_int(float, strtod)
-	internal_convert_string_to_int(double, strtod)
-
-#undef internal_convert_string_to_int
 #define internal_convert_string_to_int(TYPE, FUNC) \
   template <> \
-  class internal_string_to_int_proxy<TYPE> {\
+  class internal_string_to_number_proxy<TYPE> {\
   public:\
-    internal_string_to_int_proxy(const char* str, const char *& end) { \
+    internal_string_to_number_proxy(const char* str, const char *& end) { \
       num_ = FUNC(str, const_cast<char **>(&end),10);}\
     operator TYPE () {return num_;}\
   private:\
     TYPE num_;\
   };\
 
-	internal_convert_string_to_int(char, strtol)
-	internal_convert_string_to_int(signed char, strtol)
-	internal_convert_string_to_int(int, strtol)
-	internal_convert_string_to_int(short int, strtol)
-	internal_convert_string_to_int(long int, strtol)
 
-	internal_convert_string_to_int(unsigned char, strtoul)
-	internal_convert_string_to_int(unsigned int, strtoul)
-	internal_convert_string_to_int(unsigned short int, strtoul)
-	internal_convert_string_to_int(unsigned long int, strtoul)
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
+// Squish VC++ warning about "possible loss of data" for these conversions
+#	pragma warning(disable: 4244)
+#endif
+
+internal_convert_string_to_float(float, strtod)
+internal_convert_string_to_float(double, strtod)
+
+internal_convert_string_to_int(char, strtol)
+internal_convert_string_to_int(signed char, strtol)
+internal_convert_string_to_int(int, strtol)
+internal_convert_string_to_int(short int, strtol)
+internal_convert_string_to_int(long int, strtol)
+
+internal_convert_string_to_int(unsigned char, strtoul)
+internal_convert_string_to_int(unsigned int, strtoul)
+internal_convert_string_to_int(unsigned short int, strtoul)
+internal_convert_string_to_int(unsigned long int, strtoul)
 
 #if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
 #	pragma warning(default: 4244)
@@ -608,7 +608,7 @@ String::conv(Type) const
 		std::string::size_type len = strbuf.size();
 		const char* str = strbuf.data();
 		const char* end = str;
-		Type num = internal_string_to_int_proxy<Type>(str, end);
+		Type num = internal_string_to_number_proxy<Type>(str, end);
 
 		if (*end == '.') {
 			++end;
@@ -636,7 +636,7 @@ String::conv(Type) const
 ///
 /// We can either do it this way, or define "\c strtob()" (string to
 /// bool, like \c strtol(), \c strtod()...) so we can use
-/// internal_string_to_int_proxy.
+/// internal_string_to_number_proxy.
 template <> MYSQLPP_EXPORT bool String::conv(bool) const;
 
 /// \brief Specialization of String::conv<Type>() for String
