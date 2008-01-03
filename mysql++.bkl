@@ -205,6 +205,9 @@
 
 	<!-- Define library testing programs' output targets, if enabled -->
 	<if cond="BUILDTEST=='yes'">
+		<exe id="test_cpool" template="programs">
+			<sources>test/cpool.cpp</sources>
+		</exe>
 		<exe id="test_datetime" template="programs">
 			<sources>test/datetime.cpp</sources>
 		</exe>
