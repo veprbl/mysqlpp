@@ -54,7 +54,7 @@ namespace mysqlpp {
 /// for you as-is, that's great, we won't try to stop you.  But if you
 /// run into a problem that doesn't affect MySQL++ itself, we're not
 /// likely to bother enhancing this class to fix the problem.
-class BeecryptMutex
+class MYSQLPP_EXPORT BeecryptMutex
 {
 public:
 	/// \brief Create the mutex object

@@ -65,7 +65,7 @@ class MYSQLPP_EXPORT Connection;
 /// sparsely used connections because we'd keep resetting the last-used 
 /// time of whichever connection is least recently used at that moment.
 
-class ConnectionPool
+class MYSQLPP_EXPORT ConnectionPool
 {
 public:
 	/// \brief Create empty pool
