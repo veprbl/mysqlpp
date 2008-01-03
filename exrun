@@ -33,7 +33,7 @@ then
 fi
 
 shift
-if [ -e "$1" ]
+if [ -e "$PROG" ]
 then
 	if [ `uname -s` == 'Darwin' ]
 	then
