@@ -75,7 +75,10 @@ public:
 	///
 	/// If the pool raises an assertion on destruction, it means our
 	/// subclass isn't calling clear() in its dtor as it should.
-	virtual ~ConnectionPool() { assert(pool_.empty()); }
+	virtual ~ConnectionPool() { assert(empty()); }
+
+	/// \brief Returns true if pool is empty
+	bool empty() const { return pool_.empty(); }
 
 	/// \brief Grab a free connection from the pool.
 	///
