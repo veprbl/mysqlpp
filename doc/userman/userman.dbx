@@ -2669,13 +2669,16 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
     <para>Here is an example showing how to use connection pools with
     threads on Windows:</para>
 
-    <!-- FIXME: CPOOL EXAMPLE GOES HERE -->
+    <programlisting><xi:include href="cpoolw.txt" parse="text"
+    xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-    <para>We show a Windows-only example here because only the native
-    Windows versions of MySQL++ come out of the box ready to be used
-    with threads. However, you should be able to reuse the key part of
-    the example, the <classname>ConnectionPool</classname> derivative,
-    in programs on other platforms without any trobule.</para>
+    <para>We show a Windows-only example here because only the
+    native Windows versions of MySQL++ come out of the box ready to
+    be used with threads. There is also a POSIX threads version in
+    <filename>examples/cpoolp.cpp</filename> for comparison. It should
+    work on most any modern Unixy type system, but see the instructions
+    in <filename>README-Unix.txt</filename> for information on enabling
+    threads; they're only enabled by default on Windows.</para>
 
     <para>Beware, connection pools only work correctly with threads if
     you build MySQL++ with thread support, as described in the previous

@@ -7,15 +7,6 @@ consider whether it could be reduced to an API feature that would be
 widely useful.  Patches or proposals of this sort are always welcome.
 
 
-v3.0 Plan
----------
-    o Create examples/vstudio/threads to test new thread-related
-      features.  Only VC++ since every other platform has the
-      possibility of building without thread support.  Then work
-      it into userman's threads chapter, which already has a stub
-      for this.
-
-
 v3.1 Tentative Plan
 -------------------
     o SSQLS v2:
