@@ -45,6 +45,12 @@
 		</xsl:choose> 
 	</xsl:template>
 
+	<!-- Disable hyphenation.  The hyphenation patterns aren't installed
+	     as part of FOP, and we don't want it anyway. -->
+	<xsl:template name="set.flow.properties">
+		<xsl:attribute name="hyphenate">false</xsl:attribute>
+	</xsl:template>
+
 	<!-- Rag-right lines -->
 	<xsl:attribute-set name="root.properties">
 		<xsl:attribute name="text-align">left</xsl:attribute>
