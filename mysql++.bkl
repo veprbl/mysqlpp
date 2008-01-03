@@ -247,21 +247,18 @@
 		<exe id="cgi_jpeg" template="libexcommon-user,programs">
 			<sources>examples/cgi_jpeg.cpp</sources>
 		</exe>
-		<exe id="ssqls1" template="libexcommon-user,programs">
-			<sources>examples/ssqls1.cpp</sources>
-		</exe>
-		<exe id="ssqls2" template="libexcommon-user,programs">
-			<sources>examples/ssqls2.cpp</sources>
-		</exe>
-		<exe id="ssqls3" template="libexcommon-user,programs">
-			<sources>examples/ssqls3.cpp</sources>
-		</exe>
-		<exe id="ssqls4" template="libexcommon-user,programs">
-			<sources>examples/ssqls4.cpp</sources>
-		</exe>
-		<exe id="ssqls5" template="libexcommon-user,programs">
-			<sources>examples/ssqls5.cpp</sources>
-		</exe>
+		<if cond="FORMAT=='autoconf'">
+			<!-- Built conditionally because it uses POSIX threads -->
+			<exe id="cpoolp" template="libexcommon-user,programs">
+				<sources>examples/cpoolp.cpp</sources>
+			</exe>
+		</if>
+		<if cond="PLATFORM_WINDOWS_NATIVE=='yes'">
+			<!-- Built conditionally because it uses Windows threads -->
+			<exe id="cpoolw" template="libexcommon-user,programs">
+				<sources>examples/cpoolw.cpp</sources>
+			</exe>
+		</if>
 		<exe id="dbinfo" template="libexcommon-user,programs">
 			<sources>examples/dbinfo.cpp</sources>
 		</exe>
@@ -291,6 +288,21 @@
 		</exe>
 		<exe id="simple3" template="libexcommon-user,programs">
 			<sources>examples/simple3.cpp</sources>
+		</exe>
+		<exe id="ssqls1" template="libexcommon-user,programs">
+			<sources>examples/ssqls1.cpp</sources>
+		</exe>
+		<exe id="ssqls2" template="libexcommon-user,programs">
+			<sources>examples/ssqls2.cpp</sources>
+		</exe>
+		<exe id="ssqls3" template="libexcommon-user,programs">
+			<sources>examples/ssqls3.cpp</sources>
+		</exe>
+		<exe id="ssqls4" template="libexcommon-user,programs">
+			<sources>examples/ssqls4.cpp</sources>
+		</exe>
+		<exe id="ssqls5" template="libexcommon-user,programs">
+			<sources>examples/ssqls5.cpp</sources>
 		</exe>
 		<exe id="store_if" template="libexcommon-user,programs">
 			<sources>examples/store_if.cpp</sources>
