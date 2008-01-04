@@ -113,9 +113,17 @@ Using MySQL++ in an MFC Project
           change the 'debug' directory names to 'opt'.
 
         o Under Linker::Input add the following to "Additional
-          Dependencies":
+          Dependencies" for the Debug configuration:
+          
+            libmysql.lib wsock32.lib mysqlpp_d.lib
+
+          ...and then for the Release configuration:
           
             libmysql.lib wsock32.lib mysqlpp.lib
+
+          This difference is because MySQL++'s Debug DLL and import
+          library have a _d suffix so you can have both installed
+          without conflicts.
 
     You may want to study examples\vstudio\mfc\mfc.vcproj to see
     this in action.  Note that some of the paths will be different,
@@ -171,9 +179,10 @@ Using MySQL++ in a Windows Forms C++/CLI Project
 
         http://msdn2.microsoft.com/en-us/library/k8d11d4s.aspx
 
-    You may want to study examples\vstudio\wforms\wforms.vcproj to see
-    all this in action.  Note that some of the paths will be different,
-    because it can use relative paths for mysqlpp.dll.
+    You may want to study examples\vstudio\wforms\wforms.vcproj to
+    see all this in action.  Note that some of the paths will be
+    different, because it can use relative paths for mysqlpp_d.dll
+    and mysqlpp.dll.
 
 
 Working With Bakefile

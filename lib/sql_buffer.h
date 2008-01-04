@@ -59,7 +59,9 @@ public:
 	/// \brief Initialize object as a copy of a C++ string object
 	SQLBuffer(const std::string& s, mysql_type_info type, bool is_null) :
 			data_(), length_(), type_(type), is_null_(is_null)
-			{ replace_buffer(s.data(), s.length()); }
+	{
+		replace_buffer(s.data(), static_cast<size_type>(s.length()));
+	}
 
 	/// \brief Destructor
 	~SQLBuffer() { delete[] data_; }

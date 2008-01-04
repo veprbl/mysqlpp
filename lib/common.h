@@ -68,15 +68,17 @@
 #			define MYSQLPP_HAVE_STD__NOINIT
 #		endif
 
+		// Disable complaints about STL data members: VC++ believes
+		// these need to be __declspec(dllexport) for some reason.
+#		pragma warning(disable: 4251)
+		// Disable complaint that VC++ doesn't grok throw specs
+#		pragma warning(disable: 4290)
 		// Disable whining about using 'this' as a member initializer on VC++.
 #		pragma warning(disable: 4355)
 		// Disable whining about implicit conversions to bool
 #		pragma warning(disable: 4800)
 		// Disable nagging about new "secure" functions like strncpy_s()
 #		pragma warning(disable: 4996)
-		// Disable complaints about STL data members: VC++ believes
-		// these need to be __declspec(dllexport) for some reason.
-#		pragma warning(disable: 4251)
 		// Call _snprintf() for VC++ version of snprintf() function
 #		define snprintf _snprintf
 #	endif

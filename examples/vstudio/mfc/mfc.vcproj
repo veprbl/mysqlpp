@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mysqlpp.lib libmysql.lib"
+				AdditionalDependencies="mysqlpp_d.lib libmysql.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\Debug,C:\Program Files\MySQL\MySQL Server 5.0\lib\debug"
 				GenerateDebugInformation="true"

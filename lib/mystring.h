@@ -151,7 +151,8 @@ public:
 	explicit String(const std::string& str,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
-	buffer_(new SQLBuffer(str.data(), str.length(), type, is_null))
+	buffer_(new SQLBuffer(str.data(), static_cast<size_type>(str.length()),
+			type, is_null))
 	{
 	}
 
@@ -165,7 +166,8 @@ public:
 	explicit String(const char* str,
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false) :
-	buffer_(new SQLBuffer(str, strlen(str), type, is_null))
+	buffer_(new SQLBuffer(str, static_cast<size_type>(strlen(str)),
+			type, is_null))
 	{
 	}
 
@@ -195,7 +197,8 @@ public:
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false)
 	{
-		buffer_ = new SQLBuffer(str.data(), str.length(), type, is_null);
+		buffer_ = new SQLBuffer(str.data(), 
+				static_cast<size_type>(str.length()), type, is_null);
 	}
 
 	/// \brief Assign a C string to this object
@@ -208,7 +211,8 @@ public:
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false)
 	{
-		buffer_ = new SQLBuffer(str, strlen(str), type, is_null);
+		buffer_ = new SQLBuffer(str, static_cast<size_type>(strlen(str)),
+				type, is_null);
 	}
 
 	/// \brief Return a character within the string.
@@ -360,7 +364,8 @@ public:
 	/// \brief Assignment operator, from C++ string
 	String& operator =(const std::string& rhs)
 	{
-		buffer_ = new SQLBuffer(rhs.data(), rhs.length(),
+		buffer_ = new SQLBuffer(rhs.data(), 
+				static_cast<size_type>(rhs.length()),
 				mysql_type_info::string_type, false);
 
 		return *this;
@@ -372,7 +377,8 @@ public:
 	/// the pointer.
 	String& operator =(const char* str)
 	{
-		buffer_ = new SQLBuffer(str, strlen(str),
+		buffer_ = new SQLBuffer(str, 
+				static_cast<size_type>(strlen(str)),
 				mysql_type_info::string_type, false);
 
 		return *this;
@@ -576,6 +582,11 @@ internal_convert_string_to_int(ulonglong, strtoull)
   oprsw(<<, other, conv) \
   oprsw(>>, other, conv)
 
+// Squish more complaints about possible loss of data
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
+#	pragma warning(disable: 4244)
+#endif
+
 operator_binary(float, double)
 operator_binary(double, double)
 
@@ -588,6 +599,10 @@ operator_binary_int(unsigned char, unsigned long int)
 operator_binary_int(unsigned int, unsigned long int)
 operator_binary_int(unsigned short int, unsigned long int)
 operator_binary_int(unsigned long int, unsigned long int)
+
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
+#	pragma warning(default: 4244)
+#endif
 
 #if !defined(NO_LONG_LONGS)
 operator_binary_int(longlong, longlong)
