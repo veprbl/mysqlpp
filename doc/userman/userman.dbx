@@ -2673,12 +2673,12 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
 
     <para>The example works with both Windows native threads and with
     POSIX threads. (The file <filename>examples/threads.h</filename>
-    contains a few macros and such to abstract away the
-    differences between the two threading models.) Becuase
-    thread-enabled builds are only the default
-    on Windows, it's quite possible for this program to do nothing on
-    other platforms.  See your platform's <filename>README</filename>
-    file for instructions on enabling a thread-aware build.</para>
+    contains a few macros and such to abstract away the differences
+    between the two threading models.) Because thread-enabled builds
+    are only the default on Windows, it's quite possible for this
+    program to do nothing on other platforms.  See your platform's
+    <filename>README</filename> file for instructions on enabling a
+    thread-aware build.</para>
 
     <para>If you write your code without checks for thread support
     like you see in the code above and link it to a build of MySQL++
