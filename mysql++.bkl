@@ -380,11 +380,10 @@
 			<!-- Copy files into package directory -->
 			<!-- top directory -->
 			<command>
-				cp *.txt Bakefiles.bkgen bootstrap ChangeLog cleanmf \
+				cp *.bat *.txt Bakefiles.bkgen bootstrap ChangeLog cleanmf \
 					config.guess config.h.in config.sub configure* \
-					exrun* install.bat install-sh libmysqlclient.def \
-                    Makefile.* mysql++.* mysql++.sln mysql++_*.vcproj \
-                    osver rebake.bat Wishlist $(PKGNAME)
+					exrun install-sh libmysqlclient.def Makefile.* mysql++.* \
+					mysql++_*.vcproj osver Wishlist $(PKGNAME)
 			</command>
 
 			<!-- config subdir -->
