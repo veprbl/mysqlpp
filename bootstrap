@@ -5,6 +5,11 @@ BF_OPTIONS=
 while [ $ARGS != 0 ]
 do
 	case "$1" in
+		bat)
+			cmd /c bootstrap.bat $BF_OPTIONS
+			exit 0
+			;;
+
 		nodoc)
 			BF_OPTIONS="-DBUILDDOCS=no $BF_OPTIONS"
 			shift
@@ -28,11 +33,6 @@ do
 		pedantic)
 			export CXXFLAGS="-g -O2 -ansi -pedantic -Wall -W -Wold-style-cast -Wfloat-equal -Wwrite-strings -Wno-overloaded-virtual -Wno-long-long -Wno-variadic-macros -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 			shift
-			;;
-
-		vstudio)
-			cmd /c rebake.bat $BF_OPTIONS
-			exit 0
 			;;
 
 		*)
