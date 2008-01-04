@@ -1,5 +1,8 @@
 #!/bin/sh
 # Fetches the current Subversion dump file from gna.org, and saves it
-# in /pub/backups in a file named after the current date.
+# to a backup directory with the name changed to include the current
+# date so you can have any number of copies.
 
-wget -O /pub/backups/mysqlpp-`date +%Y%m%d`.dump.gz http://svn.gna.org/daily/mysqlpp.dump.gz
+BDIR=/pub/backups/mysqlpp
+mkdir -p $BDIR
+wget -O $BDIR/svn-dump-`date +%Y%m%d`.gz http://svn.gna.org/daily/mysqlpp.dump.gz
