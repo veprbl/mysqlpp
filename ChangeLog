@@ -1,8 +1,10 @@
-3.0.0 beta 1, 2007.12.22 (r2018)
+3.0.0 beta 2, 2008.01.04 (r2100)
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
       where it isn't acceptable to have a Connection per thread.
+
+    o Created examples/cpool.cpp to demonstrate this new class.
 
     o Added RefCountedPointer template, which provides automatic
       memory management and data sharing.  It's not intended for use
@@ -14,6 +16,9 @@
       and advice as well.
 
     o Several improvements to Specialized SQL Structures (SSQLS):
+
+      - Renamed custom* to ssqls*.  There's still a custom.h which
+        #includes ssqls.h for you, but it's only temporary.
     
       - They're finally compatible with Null<>-wrapped types.  This
         feature is based on the "Waba" patch posted to the mailing
@@ -28,11 +33,19 @@
         default values.  A side benefit is that the order of the fields
         in the SSQLS no longer has to match the order of fields in
         the result set.  Removed examples/custom6.cpp and reworked
-        custom1.cpp to demonstrate what custom6 used to, implicitly.
+        custom1.cpp to work more like simple1, which has the nice
+        side benefit of implicitly demonstrating what custom6 used to.
 
       - It's now possible to use mysqlpp::String, Date, DateTime, and
         Time types in the key field positions in an SSQLS as we can
         now compare them.
+
+      - If you use a floating-point data type in one of the key field
+        positions, it no longer uses exact comparison logic.  Instead,
+        it now does comparisons using a threshold value defaulting
+        to 0.00001.  Two floating point values differing by less than
+        this threshold value are considered equal.  See the top of
+        lib/ssqls.pl for details.
 
       - Removed "basic" variants of SSQLS creation macros.  They've
         been unofficially deprecated by dint of being all but

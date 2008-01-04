@@ -3158,7 +3158,7 @@ query.execute(some_value);</programlisting>
 
 
     <sect3 id="v3.0.0">
-      <title>v3.0.0 (as of beta 1)</title>
+      <title>v3.0.0 (as of beta 2)</title>
 
       <sect4>
         <title>Class name changes</title>
@@ -3617,6 +3617,26 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
 
 
       <sect4>
+        <title>Specialized SQL Structure (SSQLS) changes</title>
+
+        <para>Renamed <filename>custom*</filename> to
+        <filename>ssqls*</filename>. There is a backwards-compatibility
+        header <filename>custom.h</filename> which includes
+        <filename>ssqls.h</filename> for you, but it will go away in
+        a future version of MySQL++.</para>
+
+        <para>The new <classname>Null&lt;T&gt;</classname> support in
+        SSQLSes causes an internal compiler error in Visual C++ 2003.
+        (VC++ 2005 and newer have no trobule with it.) A poll on
+        the mailing list says there aren't many people still stuck
+        on this version, so we just ifdef'd out the SSQLS mechanism
+        and all the examples that use it when built with VC++ 2003.
+        If this affects you, see <xref linkend="ssqls-vc2003"/>
+        for suggestions on ways to cope.</para>
+      </sect4>
+
+
+      <sect4>
         <title>Miscellaneous changes</title>
 
         <para>MySQL++ does quoting and escaping much more selectively
@@ -3641,6 +3661,14 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
         <type>false</type> when the connection attempt fails. Call
         <methodname>Connection::is_connected()</methodname> if you
         just want to test whether the connection is up.</para>
+
+        <para>The debug mode build of the library now has a "_d"
+        suffix for Visual C++, MinGW, and Xcode. This lets you have
+        both versions installed without conflict. The release build
+        uses the current naming scheme. If you have an existing
+        program building against MySQL++ on these platforms, you'll
+        need to change your build options to use the new name in
+        debug mode.</para>
       </sect4>
     </sect3>
   </sect2>
