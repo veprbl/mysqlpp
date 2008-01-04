@@ -1,6 +1,7 @@
 /***********************************************************************
- cpoolp.cpp - POSIX threads version of ConnectionPool example.  Shows
- 	how to create and use a concrete ConnectionPool derivative.
+ cpool.cpp - ConnectionPool example.  Works with both Windows native
+	threads and POSIX threads.  Shows how to create and use a concrete
+	ConnectionPool derivative.
 
  Copyright (c) 2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
@@ -25,12 +26,9 @@
 ***********************************************************************/
 
 #include "cmdline.h"
-
-#include <mysql++.h>
+#include "threads.h"
 
 #include <iostream>
-
-#include "../config.h"
 
 using namespace std;
 
@@ -68,7 +66,7 @@ protected:
 		// Create connection using the parameters we were passed upon
 		// creation.  This could be something much more complex, but for
 		// the purposes of the example, this suffices.
-		cout << endl << "Creating new pooled connection!" << endl;
+		cout.put('C'); cout.flush(); // indicate connection creation
 		return new mysqlpp::Connection(
 				db_.empty() ? 0 : db_.c_str(),
 				server_.empty() ? 0 : server_.c_str(),
@@ -80,7 +78,7 @@ protected:
 	{
 		// Our superclass can't know how we created the Connection, so
 		// it delegates destruction to us, to be safe.
-		cout << endl << "Destroying pooled connection!" << endl;
+		cout.put('D'); cout.flush(); // indicate connection destruction
 		delete cp;
 	}
 
@@ -99,9 +97,9 @@ private:
 SimpleConnectionPool* poolptr = 0;
 
 
-#if defined(HAVE_PTHREAD)
-static void*
-worker_thread(void* running_flag)
+#if defined(HAVE_THREADS)
+static thread_return_t CALLBACK_SPECIFIER
+worker_thread(thread_arg_t running_flag)
 {
 	// Pull data from the sample table a bunch of times, releasing the
 	// connection we use each time.
@@ -137,13 +135,13 @@ worker_thread(void* running_flag)
 	
 	return 0;
 }
-#endif // defined(HAVE_PTHREAD)
+#endif
 
 
 int
 main(int argc, char *argv[])
 {
-#if defined(HAVE_PTHREAD)
+#if defined(HAVE_THREADS)
 	// Get database access parameters from command line
     const char* db = 0, *server = 0, *user = 0, *pass = "";
 	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
@@ -153,7 +151,10 @@ main(int argc, char *argv[])
 	// Create the pool and grab a connection.  We do it partly to test
 	// that the parameters are good before we start doing real work, and
 	// partly because we need a Connection object to call thread_aware()
-	// on to check that it's okay to start doing that real work.
+	// on to check that it's okay to start doing that real work.  This
+	// latter check should never fail on Windows, but will fail on most
+	// other systems unless you take positive steps to build with thread
+	// awareness turned on.  See README-*.txt for your platform.
 	poolptr = new SimpleConnectionPool(db, server, user, pass);
 	try {
 		mysqlpp::Connection* cp = poolptr->grab();
@@ -171,8 +172,8 @@ main(int argc, char *argv[])
 	}
 
 	// Setup complete.  Now let's spin some threads...
-	cout << "Pool created and working correctly.  Now to do some "
-			"real work..." << endl;
+	cout << endl << "Pool created and working correctly.  Now to do "
+			"some real work..." << endl;
 	srand(time(0));
 	bool running[] = {
 			true, true, true, true, true, true, true,
@@ -180,9 +181,7 @@ main(int argc, char *argv[])
 	const int num_threads = sizeof(running) / sizeof(running[0]);
 	int i;
 	for (i = 0; i < num_threads; ++i) {
-		pthread_t pt;
-		int err = pthread_create(&pt, 0, worker_thread, running + i);
-		if (err != 0) {
+		if (int err = create_thread(worker_thread, running + i)) {
 			cerr << "Failed to create thread " << i <<
 					": error code " << err << endl;
 			return 1;
@@ -191,7 +190,7 @@ main(int argc, char *argv[])
 
 	// Test the 'running' flags every second until we find that they're
 	// all turned off, indicating that all threads are stopped.
-	cout << endl << "Waiting for threads to complete..." << endl;
+	cout.put('W'); cout.flush(); // indicate waiting for completion
 	do {
 		sleep(1);
 		i = 0;
@@ -202,10 +201,11 @@ main(int argc, char *argv[])
 
 	// Shut it all down...
 	delete poolptr;
-
+	cout << endl;
 #else
 	(void)argc;		// warning squisher
-	cout << argv[0] << " requires pthreads to function!" << endl;
+	cout << argv[0] << " requires that threads be enabled!" << endl;
 #endif
+
 	return 0;
 }

@@ -2640,26 +2640,25 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
     like library books: a thread checks one out, uses it, and then
     returns it to the pool when it's done with it. This keeps the
     number of active connections as low as possible.</para>
-    
-    <para><classname>ConnectionPool</classname> has three methods that
-    you need to override in a subclass to make it concrete:
-    <methodname>create()</methodname>,
+
+    <para><classname>ConnectionPool</classname> has three
+    methods that you need to override in a subclass to
+    make it concrete: <methodname>create()</methodname>,
     <methodname>destroy()</methodname>, and
     <methodname>max_idle_time()</methodname>. These overrides let the
-    base class delegate operations it can't successfully do itself to
-    its subclass. (This is the Template Method pattern.) The
-    <classname>ConnectionPool</classname> can't know how to
-    <methodname>create()</methodname> the
-    <classname>Connection</classname> objects, because that depends on
-    how your program gets login parameters, server information, etc.
-    <classname>ConnectionPool</classname> also makes the subclass
-    <methodname>destroy()</methodname> the
-    <classname>Connection</classname> objects it created; it could
-    assume that they're simply allocated on the heap with
+    base class delegate operations it can't successfully do itself
+    to its subclass. The <classname>ConnectionPool</classname>
+    can't know how to <methodname>create()</methodname> the
+    <classname>Connection</classname> objects, because that
+    depends on how your program gets login parameters, server
+    information, etc.  <classname>ConnectionPool</classname>
+    also makes the subclass <methodname>destroy()</methodname>
+    the <classname>Connection</classname> objects it created; it
+    could assume that they're simply allocated on the heap with
     <methodname>new</methodname>, but it can't be sure, so the base
-    class delegates destruction, too. Finally, the base class can't know
-    what the connection idle timeout policy in the client would make the
-    most sense, so it asks via the
+    class delegates destruction, too. Finally, the base class can't
+    know what the connection idle timeout policy in the client
+    would make the most sense, so it asks its subclass via the
     <methodname>max_idle_time()</methodname> method.</para>
 
     <para>In designing your <classname>ConnectionPool</classname>
@@ -2667,47 +2666,56 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
     al.), since there should only be one pool in a program.</para>
 
     <para>Here is an example showing how to use connection pools with
-    threads on Windows:</para>
+    threads:</para>
 
-    <programlisting><xi:include href="cpoolw.txt" parse="text"
+    <programlisting><xi:include href="cpool.txt" parse="text"
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-    <para>We show a Windows-only example here because only the
-    native Windows versions of MySQL++ come out of the box ready to
-    be used with threads. There is also a POSIX threads version in
-    <filename>examples/cpoolp.cpp</filename> for comparison. It should
-    work on most any modern Unixy type system, but see the instructions
-    in <filename>README-Unix.txt</filename> for information on enabling
-    threads; they're only enabled by default on Windows.</para>
+    <para>The example works with both Windows native threads and with
+    POSIX threads. (The file <filename>examples/threads.h</filename>
+    contains a few macros and such to abstract away the
+    differences between the two threading models.) Becuase
+    thread-enabled builds are only the default
+    on Windows, it's quite possible for this program to do nothing on
+    other platforms.  See your platform's <filename>README</filename>
+    file for instructions on enabling a thread-aware build.</para>
 
-    <para>Beware, connection pools only work correctly with threads if
-    you build MySQL++ with thread support, as described in the previous
-    section. The mutex lock mechanism used to keep the pool's internal
-    data consistent while multiple threads access it will just quietly
-    become a no-op if MySQL++ is built without thread support. We do it
-    this way because we don't want to make thread support a MySQL++
-    prerequisite. And, although it would be of limited value, this lets
-    you use <classname>ConnectionPool</classname> in single-threaded
+    <para>If you write your code without checks for thread support
+    like you see in the code above and link it to a build of MySQL++
+    that isn't thread-aware, it won't immediately fail. The
+    threading mechanisms just fall back to a single-threaded
+    mode. A particular danger is that the mutex lock mechanism
+    used to keep the pool's internal data consistent while multiple
+    threads access it will just quietly become a no-op if MySQL++
+    is built without thread support. We do it this way because we
+    don't want to make thread support a MySQL++ prerequisite. And,
+    although it would be of limited value, this lets you use
+    <classname>ConnectionPool</classname> in single-threaded
     programs.</para>
 
     <para>You might wonder why we don't just work around this weakness
     in the C API transparently in MySQL++ instead of mandating design
-    guidelines to avoid it. We'd like to do just that, but how? If you
-    consider just the threaded case, you could argue for the use of
-    mutexes to protect a connection from trying to execute two queries
-    at once. The cure is worse than the disease: it turns a design
-    error into a performance sap, as the second thread is blocked
-    indefinitely waiting for the connection to free up. Much better
-    to let the program get the &ldquo;Commands out of sync&rdquo;
-    error, which will guide you to this section of the manual, which
-    tells you how to avoid the error with a better design. Another
-    option would be to bury <classname>ConnectionPool</classname>
-    functionality within MySQL++ itself, so the library could
-    create new connections at need. Unfortunately, that increases
-    the complexity of using the library; the above example is one of
-    the most complex in MySQL++. The whole point of the library is
-    to make using the database easier. We added the pool option for
-    those that really need it, but an option it must remain.</para>
+    guidelines to avoid it. We'd like to do just that, but how?</para>
+
+    <para>If you consider just the threaded case, you could argue
+    for the use of mutexes to protect a connection from trying to
+    execute two queries at once. The cure is worse than the disease:
+    it turns a design error into a performance sap, as the second
+    thread is blocked indefinitely waiting for the connection to
+    free up. Much better to let the program get the &ldquo;Commands
+    out of sync&rdquo; error, which will guide you to this section
+    of the manual, which tells you how to avoid the error with a
+    better design.</para>
+
+    <para>Another option would be to bury
+    <classname>ConnectionPool</classname> functionality within MySQL++
+    itself, so the library could create new connections at need. That's
+    no good because the above example is the most complex in MySQL++,
+    so if it were mandatory to use connection pools, the whole library
+    would be that much more complex to use. The whole point of MySQL++
+    is to make using the database easier. MySQL++ offers the connection
+    pool mechanism for those that really need it, but an option it
+    must remain.</para>
   </sect2>
 
 

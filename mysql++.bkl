@@ -250,18 +250,9 @@
 		<exe id="cgi_jpeg" template="libexcommon-user,programs">
 			<sources>examples/cgi_jpeg.cpp</sources>
 		</exe>
-		<if cond="FORMAT=='autoconf'">
-			<!-- Built conditionally because it uses POSIX threads -->
-			<exe id="cpoolp" template="libexcommon-user,programs">
-				<sources>examples/cpoolp.cpp</sources>
-			</exe>
-		</if>
-		<if cond="PLATFORM_WINDOWS_NATIVE=='yes'">
-			<!-- Built conditionally because it uses Windows threads -->
-			<exe id="cpoolw" template="libexcommon-user,programs">
-				<sources>examples/cpoolw.cpp</sources>
-			</exe>
-		</if>
+		<exe id="cpool" template="libexcommon-user,programs">
+			<sources>examples/cpool.cpp</sources>
+		</exe>
 		<exe id="dbinfo" template="libexcommon-user,programs">
 			<sources>examples/dbinfo.cpp</sources>
 		</exe>
