@@ -100,8 +100,9 @@ MYSQLPP_EXPORT unsigned int get_library_version();
 
 	\section classes Major Classes
 
-	In MySQL++, the main user-facing classes are mysqlpp::Connection,
-	mysqlpp::Query, mysqlpp::Result, and mysqlpp::Row.
+	In MySQL++, the main user-facing classes are
+	mysqlpp::Connection, mysqlpp::Query, mysqlpp::Row,
+	mysqlpp::StoreQueryResult, and mysqlpp::UseQueryResult.
 
 	In addition, MySQL++ has a mechanism called Specialized SQL
 	Structures (SSQLS), which allow you to create C++ structures
