@@ -92,6 +92,7 @@
 			<if cond="PLATFORM_WINDOWS_NATIVE=='yes'">
 				<define>UNICODE</define>
 				<define>_UNICODE</define>
+				<sys-lib>wsock32</sys-lib>
 			</if>
 
 			<if cond="FORMAT=='msvs2003prj'">
@@ -100,7 +101,6 @@
 				<include>$(MYSQL_WIN_DIR)\include</include>
 				<lib-path>$(MYSQL_WIN_DIR)\lib\opt</lib-path>
 				<sys-lib>libmysql</sys-lib>
-				<sys-lib>wsock32</sys-lib>
 			</if>
 
 			<if cond="FORMAT=='mingw'">
