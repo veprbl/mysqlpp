@@ -3347,6 +3347,10 @@ some_function(mysqlpp::DateTime("2007-12-22"));</programlisting>
         ctor so that it can't initialize itself properly, it throws
         the <classname>ObjectNotInitialized </classname> exception
         instead of <classname>BadQuery</classname>.</para>
+
+        <para>Together, these two changes mean that
+        <classname>BadQuery</classname> is now used solely to indicate
+        a problem executing the actual SQL query statement.</para>
       </sect4>
 
 
@@ -3371,13 +3375,11 @@ some_function(mysqlpp::DateTime("2007-12-22"));</programlisting>
           member function returning <type>bool</type> for each of
           these flags.</para></listitem>
 
-          <listitem><para>Some data members from the C API version
-          aren't reflected in the new class. During the v3 beta
-          process, we will entertain arguments for adding any of these
-          back in.  We'll be freezing the definition of the class upon
-          the final release of v3, and probably won't be lifting the
-          freeze until we start work on v4 (if ever that happens),
-          so check carefully!</para></listitem>
+          <listitem><para>The new class doesn't include all of the
+          data members from the C API version. We left out those that
+          aren't used within MySQL++ or its examples, or whose function
+          we couldn't understand. Basically, if we couldn't document
+          a reason to use it, we left it out.</para></listitem>
         </itemizedlist>
 
         <para><classname>Fields</classname> used to be a
@@ -3493,11 +3495,11 @@ cout &lt;&lt; query &lt;&lt; endl;</programlisting>
         </itemizedlist>
 
         <para>Renamed several methods for &ldquo;grammar&rdquo;
-        reasons. For example, if a method name was
-        &ldquo;plural,&rdquo; implying that it returns a container
-        instead of a single value, we dropped the trailing 's' from
-        its name. Some of these also fall into the duplicate method
-        category above:</para>
+        reasons. For example, some methods returned a single object
+        but had a &ldquo;plural&rdquo; name, implying that it returned
+        a container of objects. In cases like this, we changed the
+        name to agree with the return value. Some of these also fall
+        into the duplicate method category above:</para>
 
         <itemizedlist>
           <listitem><para>Use
