@@ -3345,7 +3345,7 @@ some_function(mysqlpp::DateTime("2007-12-22"));</programlisting>
 
         <para>If you pass bad values to the <classname>Row</classname>
         ctor so that it can't initialize itself properly, it throws
-        the new <classname>ObjectNotInitialized </classname> exception
+        the <classname>ObjectNotInitialized </classname> exception
         instead of <classname>BadQuery</classname>.</para>
       </sect4>
 
