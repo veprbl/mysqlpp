@@ -55,4 +55,11 @@
 	<xsl:attribute-set name="root.properties">
 		<xsl:attribute name="text-align">left</xsl:attribute>
 	</xsl:attribute-set>
+
+	<!-- Use a smaller font for code listings to increase the chances
+	     that they can fit on a single sheet, to reduce FOP complaints
+			 about being forced to split a listing across pages. -->
+	<xsl:attribute-set name="monospace.verbatim.properties">
+		<xsl:attribute name="font-size">85%</xsl:attribute>
+	</xsl:attribute-set>
 </xsl:stylesheet>
