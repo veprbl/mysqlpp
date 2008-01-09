@@ -58,3 +58,34 @@ Building the Library and Example Programs
     can run the install.bat file at the project root to automatically
     install the library files and headers in subdirectories under
     c:\mysql++.
+
+
+Cygwin and MinGW Coexistence
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    It's possible to have both Cygwin and MinGW installed and build
+    with the MinGW tools without interference from the Cygwin bits.
+    The main thing you have to take care of is that MinGW's bin
+    directory must precede the Cygwin bin directory in the PATH,
+    so that its tools are found first.  If you use Cygwin's bash
+    as a command shell in preference to the DOS-like cmd.exe, you
+    can use this shell script to temporarily set the environment to
+    "MinGW mode" and make it easy to get back to "Cygwin mode":
+
+        #!/bin/sh
+        PATH=/c/mingw/bin:/c/windows:/c/windows/system32:/c/cygwin/bin
+        echo "Say 'exit' to leave MinGW shell and restore Cygwin environment."
+        /usr/bin/bash --rcfile ~/.mingwrc
+
+    I recommend having at least this in the ~/.mingwrc file:
+
+        alias make=mingw32-make
+        PS1='MinGW: \W \$ '
+
+    The prompt change reminds you that you are in a sub-shell set up
+    for MinGW.  The alias for 'make' ensures you don't accidentally
+    run Cygwin's make, which won't work with Makefile.mingw.  We could
+    just leave /c/cygwin/bin out of the environment, but there are
+    Cygwin tools we want access to, like vim.  As long as all the
+    MinGW ones override those Cygwin also provides, we don't need to
+    worry about having both in the PATH.  Besides, having the alias
+    is nice for those who have 'make' committed to muscle memory.
