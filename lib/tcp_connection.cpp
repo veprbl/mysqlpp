@@ -112,11 +112,10 @@ TCPConnection::parse_address(string& addr, unsigned int& port,
 		}
 	}
 
-	// Turn service into a port number
-	if (service.empty()) {
-		port = 0;
-	}
-	else {
+	// Turn service into a port number, if it was given.  If not, don't
+	// overwrite port because it could have a legal value passed in from
+	// Connection.
+	if (!service.empty()) {
 		if (isdigit(service[0])) {
 			port = atoi(service.c_str());
 			if ((port < 1) || (port > USHRT_MAX)) {
