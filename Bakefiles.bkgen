@@ -6,7 +6,7 @@
 
     <!-- List of output formats to generate: -->
     <add-formats>
-        autoconf,msvs2003prj,mingw
+        autoconf,mingw,msvs2003prj,xcode2
     </add-formats>
 
     <add-flags formats="mingw">

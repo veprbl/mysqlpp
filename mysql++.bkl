@@ -155,33 +155,13 @@
 
 		<include>lib</include>
 
-		<if cond="FORMAT in ['autoconf', 'mingw', 'gnu']">
+		<if cond="FORMAT in ['autoconf', 'gnu', 'mingw', 'xcode2']">
 			<lib-path>.</lib-path>
 		</if>
 
 		<if cond="PLATFORM_WINDOWS_NATIVE=='yes'">
 			<define>UNICODE</define>
 			<define>_UNICODE</define>
-		</if>
-
-		<if cond="FORMAT=='msvs2003prj'">
-			<lib-path>$(BUILD)</lib-path>
-			<include>$(MYSQL_WIN_DIR)\include</include>
-			<lib-path>$(MYSQL_WIN_DIR)\lib\opt</lib-path>
-			<sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
-			<sys-lib>libmysql</sys-lib>
-		</if>
-
-		<if cond="FORMAT=='mingw'">
-			<define>MYSQLPP_NO_DLL</define>
-			<ldflags>
-				-Wl,--enable-auto-import -Wl,--enable-runtime-pseudo-reloc
-			</ldflags>
-			<lib-path>..\lib</lib-path>
-			<include>"$(MYSQL_WIN_DIR)\include"</include>
-			<lib-path>"$(MYSQL_WIN_DIR)\lib\opt"</lib-path>
-			<sys-lib>mysqlclient</sys-lib>
-			<sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
 		</if>
 
 		<if cond="FORMAT=='autoconf'">
@@ -195,11 +175,36 @@
 			</if>
 		</if>
 
+		<if cond="FORMAT=='mingw'">
+			<define>MYSQLPP_NO_DLL</define>
+			<ldflags>
+				-Wl,--enable-auto-import -Wl,--enable-runtime-pseudo-reloc
+			</ldflags>
+			<include>"$(MYSQL_WIN_DIR)\include"</include>
+			<lib-path>"$(MYSQL_WIN_DIR)\lib\opt"</lib-path>
+			<sys-lib>mysqlclient</sys-lib>
+			<sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
+		</if>
+
+		<if cond="FORMAT=='msvs2003prj'">
+			<lib-path>$(BUILD)</lib-path>
+			<include>$(MYSQL_WIN_DIR)\include</include>
+			<lib-path>$(MYSQL_WIN_DIR)\lib\opt</lib-path>
+			<sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
+			<sys-lib>libmysql</sys-lib>
+		</if>
+
 		<if cond="FORMAT=='gnu'">
 			<include>/usr/include/mysql</include>
 			<include>/usr/include/mysql++</include>
 			<sys-lib>mysqlpp</sys-lib>
 			<sys-lib>mysqlclient</sys-lib>
+		</if>
+
+		<if cond="FORMAT=='xcode2'">
+			<include>/usr/local/mysql/include</include>
+			<sys-lib>mysqlclient</sys-lib>
+			<sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
 		</if>
 	</template>
 
