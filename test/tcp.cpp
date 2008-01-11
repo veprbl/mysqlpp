@@ -31,10 +31,10 @@
 
 
 static void
-test(const char* addr_svc, const char* exp_addr, unsigned int exp_port)
+test(const char* addr_svc, unsigned int port, const char* exp_addr,
+		unsigned int exp_port)
 {
 	std::string addr(addr_svc), error;
-	unsigned int port;
 
 	mysqlpp::TCPConnection::parse_address(addr, port, error);
 	if (error.size()) {
@@ -57,10 +57,11 @@ test(const char* addr_svc, const char* exp_addr, unsigned int exp_port)
 
 
 static void
-fail(const char* addr_svc, const char* exp_addr, unsigned int exp_port)
+fail(const char* addr_svc, unsigned int port, const char* exp_addr,
+		unsigned int exp_port)
 {
 	try {
-		test(addr_svc, exp_addr, exp_port);
+		test(addr_svc, port, exp_addr, exp_port);
 	}
 	catch (...) {
 		return;		// eat expected error
@@ -78,21 +79,23 @@ main()
 {
 	try {
 		// Domain name and IPv4 literal tests
-		test(":", "", 0);
-		test("1.2.3.4", "1.2.3.4", 0);
-		test("1.2.3.4:", "1.2.3.4", 0);
-		test("1.2.3.4:567", "1.2.3.4", 567);
-		test("1.2.3.4:telnet", "1.2.3.4", 23);
-		test("a.b.com", "a.b.com", 0);
-		fail("@", "@", 0);
-		fail("::", "", 0);
-		fail(":", "1.2.3.4", 45);
-		fail("a.b.com::", "a.b.com", 0);
-		fail("a.b:com:1", "a.b.com", 1);
+		test(":", 0, "", 0);
+		test("1.2.3.4", 0, "1.2.3.4", 0);
+		test("1.2.3.4:", 0, "1.2.3.4", 0);
+		test("1.2.3.4:567", 0, "1.2.3.4", 567);
+		test("1.2.3.4", 890, "1.2.3.4", 890);
+		test("1.2.3.4:telnet", 0, "1.2.3.4", 23);
+		test("a.b.com", 0, "a.b.com", 0);
+		test("a.b.com", 987, "a.b.com", 987);
+		fail("@", 0, "@", 0);
+		fail("::", 0, "", 0);
+		fail(":", 0, "1.2.3.4", 45);
+		fail("a.b.com::", 0, "a.b.com", 0);
+		fail("a.b:com:1", 0, "a.b.com", 1);
 
 		// IPv6 literal tests
-		test("[]:123", "", 123);
-		test("[::]:telnet", "::", 23);
+		test("[]:123", 0, "", 123);
+		test("[::]:telnet", 0, "::", 23);
 
 		std::cout << "TCP address parsing passed." << std::endl;
 		return 0;
