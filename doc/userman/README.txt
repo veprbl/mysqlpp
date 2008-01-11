@@ -38,22 +38,39 @@ There are many alternatives for the tools in the square brackets:
     creating binary formats like PDF.
 
     The second replaceable piece in the diagram above is an XSL-FO
-    processor, which converts XSL-FO to a more directly useful
-    page layout format, like PDF.  We've chosen FOP from the Apache
-    Project (http://xml.apache.org/fop/), because it's the best of
-    the free-as-in-freedom XSL-FO processors.
+    processor, which converts XSL-FO to a more directly useful page
+    layout format, like PDF.  The user manual's build system supports
+    several alternatives.
 
-    If you'd like to try an alternative to FOP I recommend you first
-    look at RenderX's XEP, as there is a free version for non-commercial
-    use.  (http://renderx.com/download/personal.html)  If you're in a
-    commercial environment, RenderX also offers a crippled demo version
-    that's usable enough to test with.  The single-user version ($300)
-    is quite capable of formatting this manual.  Antenna House offers a
-    similar product, XSL Formatter (http://antennahouse.com/), with
-    pretty much the same price and demo restrictions as XEP.  A cheaper
-    alternative that I haven't tried (owing to the fact that it hasn't
-    been updated in a few years) is Lunasil's Xinc (lunasil.com), which
-    is available in a personal-use edition for under $100.
+    The build system relies on a simple script in this directory --
+    fo2pdf -- to find an XSL-FO formatter and run it.  It looks first
+    for RenderX's XEP, which comes in a free-as-in-beer version for
+    personal use.  (http://renderx.com/download/personal.html)  If
+    you're in a commercial environment, RenderX wants you to use their
+    commercial trial version which will format this manual without
+    complaint, but it puts watermarks and blank pages into the output.
+    They want $300 for the single-user to get clean output.  It's the
+    same as the free personal version, just with a different license.
+    You don't need the higher-end versions of XEP; they don't do
+    anything we need here.
+
+    If fo2pdf can't find XEP, it then looks for Antenna House's XSL
+    Formatter (http://antennahouse.com/).  It's pretty much the same
+    deal as XEP: crippled demo version for testing, and a single-user
+    version for $300.  There is no free version for personal use,
+    however.
+
+    Failing all that, fo2pdf falls back to the only free-as-in-speech
+    XSL-FO formmatter, Apache FOP (http://xmlgraphics.apache.org/fop/).
+    You might be wondering why this isn't the default.  It's just that
+    it's a good bet that if there's a commercial processor on the
+    system, it was put there quite purposefully by someone who paid (or
+    caused money to be paid) for it, and so wants it to be used.  The
+    commercial vendors can still get money for their products because
+    FOP hasn't caught up with them in several important areas.  That
+    said, don't feel that you need to go and buy an XSL-FO processor
+    just to build the manuals.  We try to always keep the manual in a
+    state where FOP can generate adequate output.
 
 The third replaceable piece above is the DocBook XSL stylesheet set.
 The stylesheets are the XSLT processor's rules, controlling how

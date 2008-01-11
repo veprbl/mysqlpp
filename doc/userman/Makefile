@@ -1,16 +1,4 @@
 ## ------------------------
-## Things you may need to diddle for your local system
-## ------------------------
-
-# If you've installed one of these three XSL-FO formatters but it's in a
-# different location, change this as needed.  Only one should be
-# uncommented for proper performance; by default, this is FOP.
-#AHCMD=/usr/XSLFormatterV42/run.sh
-FOPCMD=/usr/local/fop/fop
-#XEPCMD=/usr/local/xep/xep
-
-
-## ------------------------
 ## Input files
 ## ------------------------
 
@@ -59,9 +47,7 @@ clean:
 
 $(PDFFILE): $(DOCFILE) $(FO_SS) $(COMMON_SS)
 	xsltproc --xinclude $(FO_SS) $(DOCFILE) > $(FOFILE)
-	@if [ -n "$(FOPCMD)" ] ; then $(FOPCMD) -q -fo $(FOFILE) $(PDFFILE) ; fi
-	@if [ -n "$(AHCMD)" ] ; then $(AHCMD) -silent -d $(FOFILE) -o $(PDFFILE) ; fi
-	@if [ -n "$(XEPCMD)" ] ; then $(XEPCMD) -quiet $(FOFILE) ; fi
+	./fo2pdf $(FOFILE) $(PDFFILE)
 	cp $(PDFFILE) ../pdf
 
 $(HTML_DIR)/index.html: $(DOCFILE) $(EX_TXT) $(HTML_SS) $(COMMON_SS)
