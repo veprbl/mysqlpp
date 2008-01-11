@@ -139,19 +139,19 @@ Query::escape_string(char* escaped, const char* original,
 bool
 Query::exec(const std::string& str)
 {
-	copacetic_ = conn_->driver()->execute(str.data(),
-			static_cast<unsigned long>(str.length()));
-
-	if (parse_elems_.size() == 0) {
-		// not a template query, so auto-reset
-		reset();
+	if ((copacetic_ = conn_->driver()->execute(str.data(),
+			static_cast<unsigned long>(str.length()))) == true) {
+		if (parse_elems_.size() == 0) {
+			// Not a template query, so auto-reset
+			reset();
+		}
+		return true;
 	}
-
-	if (!copacetic_ && throw_exceptions()) {
+	else if (throw_exceptions()) {
 		throw BadQuery(error(), errnum());
 	}
 	else {
-		return copacetic_;
+		return false;
 	}
 }
 
@@ -185,14 +185,11 @@ Query::execute(const SQLTypeAdapter& s)
 SimpleResult
 Query::execute(const char* str, size_t len)
 {
-	copacetic_ = conn_->driver()->execute(str, len);
-
-	if (parse_elems_.size() == 0) {
-		// Not a template query, so auto-reset
-		reset();
-	}
-
-	if (copacetic_) {
+	if ((copacetic_ = conn_->driver()->execute(str, len)) == true) {
+		if (parse_elems_.size() == 0) {
+			// Not a template query, so auto-reset
+			reset();
+		}
 		return SimpleResult(conn_, insert_id(), affected_rows(), info());
 	}
 	else if (throw_exceptions()) {
@@ -479,19 +476,16 @@ Query::store(const SQLTypeAdapter& s)
 StoreQueryResult
 Query::store(const char* str, size_t len)
 {
-	copacetic_ = conn_->driver()->execute(str, len);
-
-	if (parse_elems_.size() == 0) {
-		// Not a template query, so auto-reset
-		reset();
-	}
-
 	MYSQL_RES* res = 0;
-	if (copacetic_) {
+	if ((copacetic_ = conn_->driver()->execute(str, len)) == true) {
 		res = conn_->driver()->store_result();
 	}
 
 	if (res) {
+		if (parse_elems_.size() == 0) {
+			// Not a template query, so auto-reset
+			reset();
+		}
 		return StoreQueryResult(res, conn_->driver(), throw_exceptions());
 	}
 	else {
@@ -501,11 +495,18 @@ Query::store(const char* str, size_t len)
 		// INSERT, DELETE...) it should call exec{ute}() instead, but
 		// there are good reasons for it to be unable to predict this.
 		copacetic_ = conn_->driver()->result_empty();
-		if (copacetic_ || !throw_exceptions()) {
+		if (copacetic_) {
+			if (parse_elems_.size() == 0) {
+				// Not a template query, so auto-reset
+				reset();
+			}
 			return StoreQueryResult();
 		}
-		else {
+		else if (throw_exceptions()) {
 			throw BadQuery(error(), errnum());
+		}
+		else {
+			return StoreQueryResult();
 		}
 	}
 }
@@ -596,19 +597,16 @@ Query::use(const SQLTypeAdapter& s)
 UseQueryResult
 Query::use(const char* str, size_t len)
 {
-	copacetic_ = conn_->driver()->execute(str, len);
-
-	if (parse_elems_.size() == 0) {
-		// Not a template query, so auto-reset
-		reset();
-	}
-
 	MYSQL_RES* res = 0;
-	if (copacetic_) {
+	if ((copacetic_ = conn_->driver()->execute(str, len)) == true) {
 		res = conn_->driver()->use_result();
 	}
 
 	if (res) {
+		if (parse_elems_.size() == 0) {
+			// Not a template query, so auto-reset
+			reset();
+		}
 		return UseQueryResult(res, conn_->driver(), throw_exceptions());
 	}
 	else {
@@ -618,11 +616,18 @@ Query::use(const char* str, size_t len)
 		// INSERT, DELETE...) it should call exec{ute}() instead, but
 		// there are good reasons for it to be unable to predict this.
 		copacetic_ = conn_->driver()->result_empty();
-		if (copacetic_ || !throw_exceptions()) {
+		if (copacetic_) {
+			if (parse_elems_.size() == 0) {
+				// Not a template query, so auto-reset
+				reset();
+			}
 			return UseQueryResult();
 		}
-		else {
+		else if (throw_exceptions()) {
 			throw BadQuery(error(), errnum());
+		}
+		else {
+			return UseQueryResult();
 		}
 	}
 }
