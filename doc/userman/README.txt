@@ -43,17 +43,17 @@ There are many alternatives for the tools in the square brackets:
     Project (http://xml.apache.org/fop/), because it's the best of
     the free-as-in-freedom XSL-FO processors.
 
-    FOP isn't without its faults.  If you'd like to try a commercial
-    XSL-FO processor, the userman Makefile has support for RenderX's
-    XEP (http://renderx.com/) and Antenna House's XSL Formatter
-    (http://antennahouse.com/).  See the top of the Makefile for
-    details on choosing one of these alternatives.  Both of them are
-    available in crippled demo versions that you can try, and both
-    have low-end versions for about US$300 that are suitable for
-    formatting this manual.  A cheaper alternative that I haven't
-    tried (owing to the fact that it hasn't been updated in a few
-    years) is Lunasil's Xinc (lunasil.com), which is available in a
-    personal-use edition for under $100.
+    If you'd like to try an alternative to FOP I recommend you first
+    look at RenderX's XEP, as there is a free version for non-commercial
+    use.  (http://renderx.com/download/personal.html)  If you're in a
+    commercial environment, RenderX also offers a crippled demo version
+    that's usable enough to test with.  The single-user version ($300)
+    is quite capable of formatting this manual.  Antenna House offers a
+    similar product, XSL Formatter (http://antennahouse.com/), with
+    pretty much the same price and demo restrictions as XEP.  A cheaper
+    alternative that I haven't tried (owing to the fact that it hasn't
+    been updated in a few years) is Lunasil's Xinc (lunasil.com), which
+    is available in a personal-use edition for under $100.
 
 The third replaceable piece above is the DocBook XSL stylesheet set.
 The stylesheets are the XSLT processor's rules, controlling how
