@@ -1,4 +1,4 @@
-3.0.0 release candidate 1, 2008.01.11 (r2119)
+3.0.0 release candidate 1, 2008.01.11 (r2120)
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
