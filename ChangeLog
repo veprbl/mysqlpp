@@ -1,4 +1,4 @@
-3.0.0 beta 2, 2008.01.04 (r2100)
+3.0.0 release candidate 1, 2008.01.11 (r2119)
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
@@ -364,13 +364,17 @@
 
     o Added operator[] to all classes that only had at().
 
-    o Query now automatically resets itself when being reused for a
-      new query unless you're using template queries.  This removes
-      the need for most calls to Query::reset().  It's still safe to
-      call reset() as before, just unnecessary most of the time.
+    o Query now automatically resets itself unless the query fails
+      or you're using template queries.  In either case, the contents
+      of the query's internal buffers are considered precious,
+      either for debugging, or future queries.  Except when using
+      template queries, this means you may be able to avoid calling
+      Query::reset() entirely.  It's still safe to call reset()
+      as before, just unnecessary most of the time.
 
-    o Removed reset_query parameter from all Query methods.  It never
-      worked, and above change implements the promise.
+    o Removed reset_query parameter from all Query methods.  It was
+      almost completely broken before, and above change does what
+      was really wanted to begin with.
 
     o Query::store_next() and Result::fetch_row() no longer throw
       the EndOfResults and EndOfResultSets exceptions; these are not
