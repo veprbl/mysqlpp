@@ -37,6 +37,8 @@
 #include "sql_buffer.h"
 
 #include <string>
+
+#include <locale.h>
 #include <stdlib.h>
 
 namespace mysqlpp {
@@ -612,7 +614,7 @@ operator_binary_int(ulonglong, ulonglong)
 #endif // DOXYGEN_IGNORE
 
 
-// The generic conv() implementation for integral types.
+// The generic conv() implementation for numeric types.
 template <class Type>
 Type
 String::conv(Type) const
@@ -625,7 +627,10 @@ String::conv(Type) const
 		const char* end = str;
 		Type num = internal_string_to_number_proxy<Type>(str, end);
 
-		if (*end == '.') {
+		lconv* lc = localeconv();
+		if ((lc && lc->decimal_point && lc->decimal_point[0] ) ? 
+				*end == lc->decimal_point[0] :
+				*end == '.') {
 			++end;
 			for (; *end == '0'; ++end) ;
 		}
