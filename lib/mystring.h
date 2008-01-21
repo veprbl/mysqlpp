@@ -316,7 +316,7 @@ public:
 				for (; *end == '0'; ++end) ;
 			}
 			
-			if (*end != '\0' && end != 0) {
+			if (*end != '\0') {
 				throw BadConversion(typeid(Type).name(), data(),
 						end - str, len);
 			}
