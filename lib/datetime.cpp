@@ -153,7 +153,7 @@ cchar* DateTime::convert(cchar* str)
 	minute = t.minute;
 	second = t.second;
 
-	now = false;
+	now_ = false;
 	
 	return str;
 }
@@ -239,14 +239,14 @@ DateTime::DateTime(time_t t)
 	minute = tm.tm_min;
 	second = tm.tm_sec;
 
-	now = false;
+	now_ = false;
 }
 
 
 bool
 DateTime::is_now() const
 {
-	return now &&
+	return now_ &&
 			year == 0 && month == 0 && day == 0 &&
 			hour == 0 && minute == 0 && second == 0;
 }

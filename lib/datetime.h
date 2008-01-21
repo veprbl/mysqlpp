@@ -117,7 +117,6 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 	unsigned char hour;		///< the hour, 0-23
 	unsigned char minute;	///< the minute, 0-59
 	unsigned char second;	///< the second, 0-59
-	bool now;				///< true if not given explicit value
 
 	/// \brief Default constructor
 	DateTime() :
@@ -128,7 +127,7 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 	hour(0),
 	minute(0),
 	second(0),
-	now(true)
+	now_(true)
 	{
 	}
 
@@ -149,7 +148,7 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 	hour(h),
 	minute(min),
 	second(s),
-	now(false)
+	now_(false)
 	{
 	}
 	
@@ -162,7 +161,7 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 	hour(other.hour),
 	minute(other.minute),
 	second(other.second),
-	now(false)
+	now_(other.now_)
 	{
 	}
 
@@ -209,8 +208,17 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 	/// values, but it's too simple a class to bother.
 	bool is_now() const;
 
+	/// \brief Factory to create an object instance that will convert
+	/// to SQL "NOW()" on insertion into a query
+	///
+	/// This is just syntactic sugar around the default ctor
+	static DateTime now() { return DateTime(); }
+
 	/// Convert to time_t
 	operator time_t() const;
+
+private:
+	bool now_;	///< true if object not initialized with explicit value
 };
 
 
