@@ -44,7 +44,72 @@
 namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)
-class SQLTypeAdapter;
+// Doxygen will not generate documentation for this section.
+
+template <class Type> class internal_string_to_number_proxy;
+
+#define internal_convert_string_to_float(TYPE, FUNC) \
+  template <> \
+  class internal_string_to_number_proxy<TYPE> {\
+  public:\
+    internal_string_to_number_proxy(const char* str, const char *& end) { \
+      num_ = FUNC(str, const_cast<char **>(&end));}\
+    operator TYPE () {return num_;}\
+  private:\
+    TYPE num_;\
+  };\
+
+#define internal_convert_string_to_int(TYPE, FUNC) \
+  template <> \
+  class internal_string_to_number_proxy<TYPE> {\
+  public:\
+    internal_string_to_number_proxy(const char* str, const char *& end) { \
+      num_ = FUNC(str, const_cast<char **>(&end),10);}\
+    operator TYPE () {return num_;}\
+  private:\
+    TYPE num_;\
+  };\
+
+
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
+// Squish VC++ warning about "possible loss of data" for these conversions
+#	pragma warning(disable: 4244)
+#endif
+
+internal_convert_string_to_float(float, strtod)
+internal_convert_string_to_float(double, strtod)
+
+internal_convert_string_to_int(char, strtol)
+internal_convert_string_to_int(signed char, strtol)
+internal_convert_string_to_int(int, strtol)
+internal_convert_string_to_int(short int, strtol)
+internal_convert_string_to_int(long int, strtol)
+
+internal_convert_string_to_int(unsigned char, strtoul)
+internal_convert_string_to_int(unsigned int, strtoul)
+internal_convert_string_to_int(unsigned short int, strtoul)
+internal_convert_string_to_int(unsigned long int, strtoul)
+
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
+#	pragma warning(default: 4244)
+#endif
+
+#if !defined(NO_LONG_LONGS)
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
+// Handle 64-bit ints the VC++ way
+internal_convert_string_to_int(longlong, _strtoi64)
+internal_convert_string_to_int(ulonglong, _strtoui64)
+#else
+// No better idea, so assume the C99 way.  If your compiler doesn't
+// support this, please provide a patch to extend this ifdef, or define
+// NO_LONG_LONGS.
+internal_convert_string_to_int(longlong, strtoll)
+internal_convert_string_to_int(ulonglong, strtoull)
+#endif
+#endif // !defined(NO_LONG_LONGS)
+
+#if !defined(DOXYGEN_IGNORE)
+class MYSQLPP_EXPORT SQLTypeAdapter;
 #endif
 
 /// \brief A std::string work-alike that can convert itself from SQL
@@ -231,8 +296,37 @@ public:
 	const char* c_str() const { return data(); }
 	
 	/// \brief Template for converting the column data to most any
-	/// integral data type.
-	template <class Type> Type conv(Type) const;
+	/// numeric data type.
+	template <class Type>
+	Type conv(Type) const
+	{
+		if (buffer_) {
+			std::string strbuf;
+			strip_leading_blanks(strbuf);
+			std::string::size_type len = strbuf.size();
+			const char* str = strbuf.data();
+			const char* end = str;
+			Type num = internal_string_to_number_proxy<Type>(str, end);
+
+			lconv* lc = localeconv();
+			if ((lc && lc->decimal_point && lc->decimal_point[0] ) ? 
+					*end == lc->decimal_point[0] :
+					*end == '.') {
+				++end;
+				for (; *end == '0'; ++end) ;
+			}
+			
+			if (*end != '\0' && end != 0) {
+				throw BadConversion(typeid(Type).name(), data(),
+						end - str, len);
+			}
+
+			return num;
+		}
+		else {
+			return 0;
+		}
+	}
 
 	/// \brief Overload of conv() for types wrapped with Null<>
 	///
@@ -490,73 +584,6 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 		const String& in);
 
 
-
-#if !defined(DOXYGEN_IGNORE)
-// Doxygen will not generate documentation for this section.
-
-template <class Type> class internal_string_to_number_proxy;
-
-#define internal_convert_string_to_float(TYPE, FUNC) \
-  template <> \
-  class internal_string_to_number_proxy<TYPE> {\
-  public:\
-    internal_string_to_number_proxy(const char* str, const char *& end) { \
-      num_ = FUNC(str, const_cast<char **>(&end));}\
-    operator TYPE () {return num_;}\
-  private:\
-    TYPE num_;\
-  };\
-
-#define internal_convert_string_to_int(TYPE, FUNC) \
-  template <> \
-  class internal_string_to_number_proxy<TYPE> {\
-  public:\
-    internal_string_to_number_proxy(const char* str, const char *& end) { \
-      num_ = FUNC(str, const_cast<char **>(&end),10);}\
-    operator TYPE () {return num_;}\
-  private:\
-    TYPE num_;\
-  };\
-
-
-#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
-// Squish VC++ warning about "possible loss of data" for these conversions
-#	pragma warning(disable: 4244)
-#endif
-
-internal_convert_string_to_float(float, strtod)
-internal_convert_string_to_float(double, strtod)
-
-internal_convert_string_to_int(char, strtol)
-internal_convert_string_to_int(signed char, strtol)
-internal_convert_string_to_int(int, strtol)
-internal_convert_string_to_int(short int, strtol)
-internal_convert_string_to_int(long int, strtol)
-
-internal_convert_string_to_int(unsigned char, strtoul)
-internal_convert_string_to_int(unsigned int, strtoul)
-internal_convert_string_to_int(unsigned short int, strtoul)
-internal_convert_string_to_int(unsigned long int, strtoul)
-
-#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
-#	pragma warning(default: 4244)
-#endif
-
-#if !defined(NO_LONG_LONGS)
-#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
-// Handle 64-bit ints the VC++ way
-internal_convert_string_to_int(longlong, _strtoi64)
-internal_convert_string_to_int(ulonglong, _strtoui64)
-#else
-// No better idea, so assume the C99 way.  If your compiler doesn't
-// support this, please provide a patch to extend this ifdef, or define
-// NO_LONG_LONGS.
-internal_convert_string_to_int(longlong, strtoll)
-internal_convert_string_to_int(ulonglong, strtoull)
-#endif
-#endif // !defined(NO_LONG_LONGS)
-
-
 #if !defined(MYSQLPP_NO_BINARY_OPERS) && !defined(DOXYGEN_IGNORE)
 // Ignore this section is MYSQLPP_NO_BINARY_OPERS is defined, or if this
 // section is being parsed by Doxygen.  In the latter case, it's ignored
@@ -612,40 +639,6 @@ operator_binary_int(ulonglong, ulonglong)
 #endif
 #endif // MYSQLPP_NO_BINARY_OPERS
 #endif // DOXYGEN_IGNORE
-
-
-// The generic conv() implementation for numeric types.
-template <class Type>
-Type
-String::conv(Type) const
-{
-	if (buffer_) {
-		std::string strbuf;
-		strip_leading_blanks(strbuf);
-		std::string::size_type len = strbuf.size();
-		const char* str = strbuf.data();
-		const char* end = str;
-		Type num = internal_string_to_number_proxy<Type>(str, end);
-
-		lconv* lc = localeconv();
-		if ((lc && lc->decimal_point && lc->decimal_point[0] ) ? 
-				*end == lc->decimal_point[0] :
-				*end == '.') {
-			++end;
-			for (; *end == '0'; ++end) ;
-		}
-		
-		if (*end != '\0' && end != 0) {
-			throw BadConversion(typeid(Type).name(), data(),
-					end - str, len);
-		}
-
-		return num;
-	}
-	else {
-		return 0;
-	}
-}
 
 
 #if !defined(DOXYGEN_IGNORE)
