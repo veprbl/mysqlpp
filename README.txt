@@ -60,24 +60,30 @@ Additional Things to Read
 
 Building the Library
 ~~~~~~~~~~~~~~~~~~~~
-    MySQL++ uses Bakefile to generate platform-specific project files
-    and makefiles from a single set of input files.  We currently
-    support these platforms:
+    MySQL++ uses Bakefile (http://bakefile.org/) to generate
+    platform-specific project files and makefiles from a single set
+    of input files.  We currently support these platforms:
 
     autoconf:
         For Unixy platforms, including Linux, Mac OS X, and Cygwin. See
-        README-Unix.txt for details. Supplementary details for Cygwin
-        are in README-Cygwin.txt.
+        README-Unix.txt for details.  Supplementary details for Cygwin
+        are in README-Cygwin.txt, and for OS X in README-Mac-OS-X.txt.
+
+    MinGW:
+        We ship Makefile.mingw for MinGW.  It currently only builds the
+        static version of the library for technical reasons.  This has
+        licensing ramifications.  See README-MinGW.txt for details.
 
     Visual C++:
         We ship Visual C++ 2003 project files.  This is the oldest
         version MySQL++ will run on, due to compiler limitations.
         See README-Visual-C++.txt for more details.
 
-    MinGW:
-        We ship Makefiles made for MinGW. These currently only work for
-        building static versions of the library, which has licensing
-        ramifications.  See README-MinGW.txt for details.
+    Xcode:
+        We ship an Xcode v2 project file.  It hasn't been tested
+        much yet, since the autoconf method works just fine on OS X.
+        As a result, we need both success and failure reports on the
+        mailing list.  See README-Mac-OS-X.txt for more information.
 
 
 Example Programs
