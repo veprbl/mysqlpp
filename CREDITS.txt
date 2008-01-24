@@ -47,7 +47,8 @@ Other contributors of note since 1.7.10:
 
     Jonathan Wakely <mysql@kayari.org> rebuilt my original versions
 	of ConnectionPool, RefCountedPointer, and RefCountedBuffer.
-	They're now simpler and safer.
+	They're now simpler and safer.  He also created the numeric
+    conversion logic in lib/mystring.h introduced in v3.0.
 
 
 Here are the personal credits from the old 1.7.9 documentation,

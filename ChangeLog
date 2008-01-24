@@ -1,4 +1,4 @@
-3.0.0 release candidate 1, 2008.01.11 (r2120)
+3.0.0 release candidate 2, 2008.01.23 (r2131)
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
@@ -93,6 +93,14 @@
         uses reference counting, this doesn't copy the buffer, so
         you can index into a Row to get a BLOB column and not worry
         about the additional copy it used to make.
+
+      - Conversions from string form to numerics (ints, floats...)
+        use a new, cleaner system by Jonathan Wakely.  In code that
+        wasn't abusing weaknesses in the old system, you won't see
+        a difference in this new one.  It just tightens up some of
+        the rules and makes it easier to make changes in the future
+        since we can better understand what it's doing, and we have
+        more points of control for making changes.
 
     o Redesigned SQLString:
 
@@ -344,7 +352,8 @@
     o If you use the default constructor for DateTime and don't
       subsequently set its year, month, day, hour, minute or second
       data members to nonzero values, it becomes the SQL function
-      "NOW()" in a query string.
+      "NOW()" in a query string.  You can also use DateTime::now()
+      as syntactic sugar for this.
 
     o Added a DateTime ctor taking discrete year, month, day, hour,
       minute, and second values.
@@ -513,9 +522,10 @@
     o Fixed an output formatting bug created in 2.3.0 that caused the
       tabular output from examples to not line up.
 
-    o Renamed examples/tquery.cpp to tquery1.cpp and created
-      examples/tquery2.cpp to demonstrate passing parameters via a
-      SQLQueryParametrs object instead of discretely.
+    o Renamed examples/tquery.cpp to tquery1.cpp.  Created tquery2.cpp
+      to demonstrate passing parameters via a SQLQueryParametrs object
+      instead of discretely.  Created tquery3.cpp for testing unquoted
+      template parameters, such as integers.
 
     o Renamed fieldinf1.cpp example to fieldinf.cpp, and simplified
       its output so it can be part of the dtest sequence.
