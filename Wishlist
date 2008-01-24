@@ -74,6 +74,9 @@ v3.1 Tentative Plan
       related types.  Right now, sql_decimal is a typedef for double,
       so you lose accuracy in the fractional part.
 
+    o Optional checked conversions in String for numerics: throw
+      BadConversion on range overflow?
+
 
 v4.0 or Later
 -------------
