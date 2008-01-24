@@ -83,8 +83,7 @@ Running the Other Command Line Examples
             that, and also how to use stored procedures, which return
             their results in the same way as a multiquery.
 
-        tquery: A simple example showing how to use the template query
-            facility.
+        tquery1-3: Shows how to use the template query facility.
 
         transaction: Shows how to use the Transaction class to create
             transaction sets which automatically roll back if not
