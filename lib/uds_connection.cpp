@@ -64,7 +64,7 @@ UnixDomainSocketConnection::connect(cchar* path, cchar* db, cchar* user,
 
 
 bool
-UnixDomainSocketConnection::is_socket(cchar* path, string* error)
+UnixDomainSocketConnection::is_socket(cchar* path, std::string* error)
 {
 #if !defined(MYSQLPP_PLATFORM_WINDOWS)
 	if (path) {

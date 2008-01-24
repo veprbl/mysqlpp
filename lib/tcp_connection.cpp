@@ -69,8 +69,8 @@ TCPConnection::connect(cchar* addr, cchar* db, cchar* user, cchar* pass)
 
 
 bool
-TCPConnection::parse_address(string& addr, unsigned int& port,
-		string& error)
+TCPConnection::parse_address(std::string& addr, unsigned int& port,
+		std::string& error)
 {
 	error.clear();
 	

@@ -189,8 +189,8 @@ Connection::operator=(const Connection& rhs)
 
 
 bool
-Connection::parse_ipc_method(const char* server, string& host,
-		unsigned int& port, string& socket_name)
+Connection::parse_ipc_method(const char* server, std::string& host,
+		unsigned int& port, std::string& socket_name)
 {
 	// NOTE: This routine has no connection type knowledge.  It can only
 	// recognize a 0 value for the server parameter.  All substantial

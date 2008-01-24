@@ -54,7 +54,7 @@ is_processed_(processed)
 {
 }
 
-SQLTypeAdapter::SQLTypeAdapter(const string& str, bool processed) :
+SQLTypeAdapter::SQLTypeAdapter(const std::string& str, bool processed) :
 buffer_(new SQLBuffer(str, mysql_type_info::string_type, false)),
 is_processed_(processed)
 {
@@ -373,13 +373,14 @@ SQLTypeAdapter::compare(const SQLTypeAdapter& other) const
 }
 
 int
-SQLTypeAdapter::compare(const string& other) const
+SQLTypeAdapter::compare(const std::string& other) const
 {
 	return compare(0, length(), other.data());
 }
 
 int
-SQLTypeAdapter::compare(size_type pos, size_type num, string& other) const
+SQLTypeAdapter::compare(size_type pos, size_type num, 
+		std::string& other) const
 {
 	return compare(pos, num, other.data());
 }

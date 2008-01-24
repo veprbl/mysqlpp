@@ -100,9 +100,8 @@ namespace detail
 	};
 } // namespace detail
 
-#if !defined(DOXYGEN_IGNORE)
 class MYSQLPP_EXPORT SQLTypeAdapter;
-#endif
+#endif // !defined(DOXYGEN_IGNORE)
 
 /// \brief A std::string work-alike that can convert itself from SQL
 /// text data formats to C++ data types.
@@ -231,7 +230,7 @@ public:
 	}
 
 	/// \brief Destroy string
-	~String();
+	~String() { }
 
 	/// \brief Assign raw data to this object
 	///
@@ -659,9 +658,8 @@ operator_binary_int(unsigned long int, unsigned long int)
 #if !defined(NO_LONG_LONGS)
 operator_binary_int(longlong, longlong)
 operator_binary_int(ulonglong, ulonglong)
-#endif
-#endif // MYSQLPP_NO_BINARY_OPERS
-#endif // DOXYGEN_IGNORE
+#endif // !defined(NO_LONG_LONGS)
+#endif // !defined(MYSQLPP_NO_BINARY_OPERS) && !defined(DOXYGEN_IGNORE)
 
 
 #if !defined(DOXYGEN_IGNORE)

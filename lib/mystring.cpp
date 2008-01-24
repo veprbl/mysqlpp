@@ -33,11 +33,6 @@
 namespace mysqlpp {
 
 
-String::~String()
-{
-}
-
-
 char
 String::at(size_type pos) const
 {
@@ -63,11 +58,13 @@ String::compare(const String& other) const
 	}
 }
 
+
 int
 String::compare(const std::string& other) const
 {
 	return compare(0, length(), other.data());
 }
+
 
 int
 String::compare(size_type pos, size_type num, std::string& other) const
@@ -75,11 +72,13 @@ String::compare(size_type pos, size_type num, std::string& other) const
 	return compare(pos, num, other.data());
 }
 
+
 int
 String::compare(const char* other) const
 {
 	return compare(0, length(), other);
 }
+
 
 int
 String::compare(size_type pos, size_type num,
