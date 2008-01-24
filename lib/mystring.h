@@ -40,7 +40,6 @@
 #include <sstream>
 #include <limits>
 
-#include <locale.h>
 #include <stdlib.h>
 
 namespace mysqlpp {
