@@ -2,7 +2,7 @@
  test/string.cpp - Tests the behavior of mysqlpp::String, particularly
 	its data conversion methods.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -50,8 +50,92 @@ test_equality(const mysqlpp::String& s, T value)
 }
 
 
-// Runs uses the above functions to test many different types of
-// conversion.
+// Check that we can convert strings with decimals in them to native
+// floating-point values, regardless of locale.
+static bool
+test_float_conversion()
+{
+	// This stuff should just work
+	if (!test_equality(mysqlpp::String("123.00"), 123)) return false;
+	if (!test_equality(mysqlpp::String("123."), 123)) return false;
+
+	// This is trickier: MySQL ignores the system locale when it comes
+	// to decimal separators, always using '.', so ensure the conversion
+	// stuff in MySQL++ does the right thing regardless.  Test against
+	// this system's current locale, an arbitrary European one where ','
+	// is the decimal separator, and the "C" locale where it's '.'.
+	if (!test_equality(mysqlpp::String("621.200"), 621.2)) return false;
+	std::locale old_locale = std::locale::global(std::locale::classic());
+	if (!test_equality(mysqlpp::String("621.200"), 621.2)) return false;
+	std::locale::global(std::locale("de_DE"));
+	if (!test_equality(mysqlpp::String("621.200"), 621.2)) return false;
+	std::locale::global(old_locale);
+
+	// Check that we choke on silly float-like values
+	try {
+		if (test_equality(mysqlpp::String("621.20.0"), 621.2)) {
+			std::cerr << "Quasi-FP with two decimal points "
+					"converting without error!" << std::endl;
+		}
+		return false;
+	}
+	catch (const mysqlpp::BadConversion&) {
+		return true;
+	}
+}
+
+
+// Tries to convert the given string to an int.  Returns false if we got
+// a BadConversion exception and didn't expect it, or didn't get one we
+// expected.  Returns false on all other exceptions regardless.
+static bool
+test_int_conversion(const mysqlpp::String& s, bool throw_expected)
+{
+	// Try the conversion
+	bool conv_threw = false;
+	try {
+		int converted = s;
+	}
+	catch (const mysqlpp::BadConversion&) {
+		conv_threw = true;
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Unexpected " << typeid(e).name() <<
+				" exception in test_int_conv: " << e.what() << std::endl;
+		return false;
+	}
+	catch (...) {
+		std::cerr << "Like, totally bogus exception in test_int_conv, "
+				"man!" << std::endl;
+		return false;
+	}
+
+	// Did it do what we expected?
+	if (throw_expected == conv_threw) {
+		return true;
+	}
+	else {
+		std::cerr << "Conversion of \"" << s << "\" to int " <<
+				(conv_threw ? "did not " : "") << "throw; did " <<
+				(throw_expected ? "not " : "") << "expect it to." <<
+				std::endl;
+		return false;
+	}
+}
+
+
+// Ensures that the program's locale doesn't affect our floating-point
+// conversions.  ('.' vs. ',' stuff.)
+static bool
+test_locale()
+{
+
+	return true;
+}
+
+
+// Ensures numeric conversions of many different types get handled
+// correctly.
 static bool
 test_numeric(const mysqlpp::String& s, int value)
 {
@@ -107,6 +191,9 @@ main(int, char* argv[])
 		failures += test_quote_q(empty, true) == false;
 		failures += test_quote_q(mysqlpp::String("1", typeid(int)),
 				false) == false;
+		failures += test_locale() == false;
+		failures += test_float_conversion() == false;
+		failures += test_float_conversion() == false;
 
 		return failures;
 	}

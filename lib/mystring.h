@@ -37,6 +37,8 @@
 #include "sql_buffer.h"
 
 #include <string>
+#include <sstream>
+#include <limits>
 
 #include <locale.h>
 #include <stdlib.h>
@@ -46,67 +48,58 @@ namespace mysqlpp {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 
-template <class Type> class internal_string_to_number_proxy;
+namespace detail
+{
+	template<typename T, bool is_signed = std::numeric_limits<T>::is_signed>
+	struct conv_promotion;
 
-#define internal_convert_string_to_float(TYPE, FUNC) \
-  template <> \
-  class internal_string_to_number_proxy<TYPE> {\
-  public:\
-    internal_string_to_number_proxy(const char* str, const char *& end) { \
-      num_ = FUNC(str, const_cast<char **>(&end));}\
-    operator TYPE () {return num_;}\
-  private:\
-    TYPE num_;\
-  };\
+	template<>
+	struct conv_promotion<float>
+	{
+		typedef double type;
+	};
 
-#define internal_convert_string_to_int(TYPE, FUNC) \
-  template <> \
-  class internal_string_to_number_proxy<TYPE> {\
-  public:\
-    internal_string_to_number_proxy(const char* str, const char *& end) { \
-      num_ = FUNC(str, const_cast<char **>(&end),10);}\
-    operator TYPE () {return num_;}\
-  private:\
-    TYPE num_;\
-  };\
+	template<>
+	struct conv_promotion<double>
+	{
+		typedef double type;
+	};
 
+#	if !defined(NO_LONG_LONGS)
+	template<>
+	struct conv_promotion<unsigned long long>
+	{
+		typedef unsigned long long type;
+	};
 
-#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
-// Squish VC++ warning about "possible loss of data" for these conversions
-#	pragma warning(disable: 4244)
-#endif
+	template<>
+	struct conv_promotion<long long>
+	{
+		typedef long long type;
+	};
+#	endif
 
-internal_convert_string_to_float(float, strtod)
-internal_convert_string_to_float(double, strtod)
+	// preserve existing behaviour, char converted as signed long
+	template<>
+	struct conv_promotion<char>
+	{
+		typedef long type;
+	};
 
-internal_convert_string_to_int(char, strtol)
-internal_convert_string_to_int(signed char, strtol)
-internal_convert_string_to_int(int, strtol)
-internal_convert_string_to_int(short int, strtol)
-internal_convert_string_to_int(long int, strtol)
+	// all other types use signed/unsigned long
 
-internal_convert_string_to_int(unsigned char, strtoul)
-internal_convert_string_to_int(unsigned int, strtoul)
-internal_convert_string_to_int(unsigned short int, strtoul)
-internal_convert_string_to_int(unsigned long int, strtoul)
+	template<typename T>
+	struct conv_promotion<T, true>
+	{
+		typedef long type;
+	};
 
-#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
-#	pragma warning(default: 4244)
-#endif
-
-#if !defined(NO_LONG_LONGS)
-#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
-// Handle 64-bit ints the VC++ way
-internal_convert_string_to_int(longlong, _strtoi64)
-internal_convert_string_to_int(ulonglong, _strtoui64)
-#else
-// No better idea, so assume the C99 way.  If your compiler doesn't
-// support this, please provide a patch to extend this ifdef, or define
-// NO_LONG_LONGS.
-internal_convert_string_to_int(longlong, strtoll)
-internal_convert_string_to_int(ulonglong, strtoull)
-#endif
-#endif // !defined(NO_LONG_LONGS)
+	template<typename T>
+	struct conv_promotion<T, false>
+	{
+		typedef unsigned long type;
+	};
+} // namespace detail
 
 #if !defined(DOXYGEN_IGNORE)
 class MYSQLPP_EXPORT SQLTypeAdapter;
@@ -295,38 +288,26 @@ public:
 	/// \brief Return a const pointer to the string data.
 	const char* c_str() const { return data(); }
 	
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
+// Squish VC++ warning about "possible loss of data" for these conversions
+#   pragma warning(disable: 4244)
+#endif
+
 	/// \brief Template for converting the column data to most any
 	/// numeric data type.
 	template <class Type>
 	Type conv(Type) const
 	{
-		if (buffer_) {
-			std::string strbuf;
-			strip_leading_blanks(strbuf);
-			std::string::size_type len = strbuf.size();
-			const char* str = strbuf.data();
-			const char* end = str;
-			Type num = internal_string_to_number_proxy<Type>(str, end);
-
-			lconv* lc = localeconv();
-			if ((lc && lc->decimal_point && lc->decimal_point[0] ) ? 
-					*end == lc->decimal_point[0] :
-					*end == '.') {
-				++end;
-				for (; *end == '0'; ++end) ;
-			}
-			
-			if (*end != '\0') {
-				throw BadConversion(typeid(Type).name(), data(),
-						end - str, len);
-			}
-
-			return num;
-		}
-		else {
-			return 0;
-		}
+		// Conversions are done using one of double/long/ulong/llong/ullong
+		// so we call a helper function to do the work using that type.
+		// This reduces the amount of template code instantiated.
+		typedef typename detail::conv_promotion<Type>::type conv_type;
+		return do_conv<conv_type>(typeid(Type).name());
 	}
+
+#if defined(MYSQLPP_PLATFORM_VISUAL_CPP)
+#   pragma warning(default: 4244)
+#endif
 
 	/// \brief Overload of conv() for types wrapped with Null<>
 	///
@@ -575,6 +556,49 @@ public:
 	operator Null<T, B>() const { return conv(Null<T, B>()); }
 
 private:
+	/// \brief Do the actual numeric conversion via @p Type.
+	template <class Type>
+	Type do_conv(const char* type_name) const
+	{
+		if (buffer_) {
+			std::stringstream buf;
+			buf.write(data(), length());
+			buf.imbue(std::locale::classic()); // "C" locale
+			Type num = Type();
+			
+			if (buf >> num) {
+				char c;
+				if (!(buf >> c)) {
+					// Nothing left in buffer, so conversion complete,
+					// and thus successful.
+					return num;
+				}
+
+				if (c == '.' &&
+						(typeid(Type) != typeid(float)) &&
+						(typeid(Type) != typeid(double))) {
+					// Conversion stopped on a decimal point -- locale
+					// doesn't matter to MySQL -- so only way to succeed
+					// is if it's an integer and everything following
+					// the decimal is inconsequential.
+					c = '0';	// handles '.' at end of string
+					while (buf >> c && c == '0') /* spin */ ;
+					if (buf.eof() && c == '0') {
+						return num;  // only zeros after decimal point
+					}
+				}
+			}
+			else if (buf.eof()) {
+				return num;  // nothing to convert, return default value
+			}
+
+			throw BadConversion(type_name, data(), 0, length());
+		}
+		else {
+			return 0;
+		}
+	}
+
 	RefCountedBuffer buffer_;	///< reference-counted data buffer
 
 	friend class SQLTypeAdapter;
