@@ -325,9 +325,9 @@
 
         <modify-target target="clean">
             <command>
+                rm -rf doc/latex doc/pdf ; \
                 cd doc/html/refman ; \
-                rm -f doxygen.css [a-z]*.{dot,html,map,md5,png} ; \
-                rm -rf doc/latex doc/pdf
+                rm -f doxygen.css [a-z]*.{dot,html,map,md5,png}
             </command>
         </modify-target>
             
