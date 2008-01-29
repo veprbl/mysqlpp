@@ -29,6 +29,11 @@ MYSQLPP_VERSION_BUGFIX=`echo $PACKAGE_VERSION | cut -f3 -d.`
 AC_SUBST(MYSQLPP_VERSION_BUGFIX)
 
 
+# Build current date macro, for inclusion on userman's title page
+MYSQLPP_CONFIGURE_DATE=`date '+%B %-d, %Y'`
+AC_SUBST(MYSQLPP_CONFIGURE_DATE)
+
+
 # Include Bakefile macros
 AC_BAKEFILE([m4_include(config/autoconf_inc.m4)])
 
@@ -82,5 +87,5 @@ STL_SLIST_EXTENSION
 #
 # Configure process complete; write out files generated from *.in.
 #
-AC_OUTPUT([Makefile mysql++.spec lib/Doxyfile lib/mysql++.h])
+AC_OUTPUT([Makefile mysql++.spec doc/userman/userman.dbx lib/Doxyfile lib/mysql++.h])
 
