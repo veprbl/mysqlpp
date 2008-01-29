@@ -2010,7 +2010,7 @@ stock::table() = "MyStockData";</programlisting>
     <varname>MYSQLPP_SSQLS_NO_STATICS</varname> in <emphasis>all but
     one</emphasis> of the modules that use the header definining the
     SSQLS. When this macro is defined, it suppresses the static data
-    members in any SSQLS defined thereaftear.</para>
+    members in any SSQLS defined thereafter.</para>
 
     <para>Imagine we have a file <filename>my_ssqls.h</filename>
     which includes a <function>sql_create_N</function> macro call
