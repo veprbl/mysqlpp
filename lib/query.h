@@ -363,7 +363,7 @@ public:
 	/// Because SQLTypeAdapter can be initialized from either a C string
 	/// or a C++ string, this overload accepts query strings in either
 	/// form.  Beware, SQLTypeAdapter also accepts many other data types
-	/// (this is its \i raison \i d'etre), so it will let you write code
+	/// (this is its \e raison \e d'etre), so it will let you write code
 	/// that compiles but results in bogus SQL queries.
 	///
 	/// To support template queries, there many more overloads of this
@@ -426,7 +426,7 @@ public:
 	/// Because SQLTypeAdapter can be initialized from either a C string
 	/// or a C++ string, this overload accepts query strings in either
 	/// form.  Beware, SQLTypeAdapter also accepts many other data types
-	/// (this is its \i raison \i d'etre), so it will let you write code
+	/// (this is its \e raison \e d'etre), so it will let you write code
 	/// that compiles but results in bogus SQL queries.
 	///
 	/// To support template queries, there many more overloads of this
@@ -489,7 +489,7 @@ public:
 	/// Because SQLTypeAdapter can be initialized from either a C string
 	/// or a C++ string, this overload accepts query strings in either
 	/// form.  Beware, SQLTypeAdapter also accepts many other data types
-	/// (this is its \i raison \i d'etre), so it will let you write code
+	/// (this is its \e raison \e d'etre), so it will let you write code
 	/// that compiles but results in bogus SQL queries.
 	///
 	/// To support template queries, there many more overloads of this
