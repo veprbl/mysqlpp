@@ -130,45 +130,6 @@ select (%0:field1, %1:field2) from stock where %2:wheref = %3q:what</programlist
   </sect2>
 
 
-  <sect2 id="tquery-overloading">
-    <title>Parameter Types and Function Overloads</title>
-
-    <para>There are quite a few overloads for each of
-    <classname>Query</classname>&rsquo;s query execution functions.
-    (<methodname>store()</methodname>, <methodname>use()</methodname>,
-    <methodname>execute()</methodname>...) It&rsquo;s possible to have
-    code that looks like it should work, but which doesn&rsquo;t,
-    because it&rsquo;s calling the wrong overload. For instance:</para>
-
-    <programlisting>
-query.storein(my_vector, "1");
-query.storein(my_vector, 1);</programlisting>
-
-    <para>The first one works, and the second does not. The cause is a
-    vestigial second parameter to one of
-    <methodname>storein()</methodname>&rsquo;s overloads that&rsquo;s
-    compatible with integers. Being vestigial, it&rsquo;s only getting
-    in the way right now, but we can&rsquo;t fix it until the next major
-    version of the libary, where it will be okay to break the ABI. Until
-    then, we&rsquo;re stuck with it.</para>
-
-    <para>If the MySQL server keeps rejecting your template queries, try
-    explicitly casting the parameters to
-    <classname>SQLString</classname>:</para>
-
-    <programlisting>
-query.storein(my_vector, SQLString(1));</programlisting>
-
-    <para>This ensures that your code calls one of the overloads meant
-    to handle template query parameters. I don&rsquo;t recommend doing
-    this habitually, because it will clutter your code. For the most
-    part, MySQL++&rsquo;s interface is set up to do the right thing.
-    It&rsquo;s just that there are still a few corner cases that
-    can&rsquo;t be fixed until the next time we can redesign the
-    interface.</para>
-  </sect2>
-
-
   <sect2 id="tquery-defaults">
     <title>Default Parameters</title>
 
