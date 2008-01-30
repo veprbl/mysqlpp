@@ -15,7 +15,7 @@
   the Standard Template Library (STL) and exceptions.</para>
 
 
-  <sect2>
+  <sect2 id="examples">
     <title>Running the Examples</title>
 
     <para>All of the examples are complete running programs. If you
@@ -165,7 +165,7 @@
   </sect2>
 
 
-  <sect2>
+  <sect2 id="simple2">
     <title>A More Complicated Example</title>
 
     <para>The <filename>simple1</filename> example above
@@ -433,7 +433,7 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
   <sect2 id="ssqlsintro" xreflabel="Specialized SQL Structures">
     <title>Specialized SQL Structures</title>
 
-    <sect3>
+    <sect3 id="ssqls1">
       <title>Retrieving data</title>
 
       <para>The next example introduces one of the most powerful
@@ -510,7 +510,8 @@ query.storein(res);
       schema.</para>
     </sect3>
 
-    <sect3>
+
+    <sect3 id="ssqls2">
       <title>Adding data</title>
 
       <para>SSQLS can also be used to add data to a table. This is
@@ -531,7 +532,8 @@ query.storein(res);
       may want to run resetdb after running this program.</para>
     </sect3>
 
-    <sect3>
+
+    <sect3 id="ssqls3">
       <title>Modifying data</title>
 
       <para>It almost as easy to modify data with SSQLS. This is
@@ -548,7 +550,8 @@ query.storein(res);
       example.</para>
     </sect3>
 
-    <sect3>
+
+    <sect3 id="ssqls4">
       <title>Less-than-comparable</title>
 
       <para>SSQLS structures can be sorted and stored in STL
@@ -564,7 +567,7 @@ query.storein(res);
   </sect2>
 
 
-  <sect2>
+  <sect2 id="sql_types">
     <title>C++ Equivalents of SQL Column Types</title>
 
     <para>The <filename>sql_types.h</filename> header declares typedefs
@@ -609,7 +612,7 @@ query.storein(res);
   </sect2>
 
 
-  <sect2>
+  <sect2 id="sql-null">
     <title>Handling SQL Nulls</title>
 
     <para>There is no equivalent of SQL's null in the standard C++
@@ -680,7 +683,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="Transaction">
     <title>Using Transactions</title>
 
     <para>The <ulink type="classref" url="Transaction"/> class makes it
@@ -882,7 +885,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="for_each">
     <title>Executing Code for Each Row In a Result Set</title>
 
     <para>SQL is more than just a database query language. Modern
@@ -962,7 +965,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="fieldinf">
     <title>Getting Field Meta-Information</title>
 
     <para>The following example demonstrates how to get
@@ -975,7 +978,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="string-types">
     <title>MySQL++'s Special String Types</title>
 
     <para>MySQL++ has two classes that work like
@@ -994,7 +997,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     the time to understand them.</para>
 
 
-    <sect3>
+    <sect3 id="SQLTypeAdapter">
       <title>SQLTypeAdapter</title>
 
       <para>The simpler of the two is
@@ -1036,7 +1039,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     </sect3>
 
 
-    <sect3>
+    <sect3 id="String">
       <title>String</title>
 
       <para>If MySQL++ can be said to have its own generic string
@@ -1112,7 +1115,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     </sect3>
 
 
-    <sect3>
+    <sect3 id="string-refcount">
       <title>Reference Counting</title>
 
       <para>To avoid unnecessary buffer copies, both
@@ -1133,7 +1136,7 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="blob">
     <title>Dealing with Binary Data</title>
 
     <para>The tricky part about dealing with binary data in MySQL++
@@ -1145,7 +1148,8 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
     but it's still possible to do it incorrectly. These examples
     demonstrate correct techniques.</para>
 
-    <sect3>
+
+    <sect3 id="blob-save">
       <title>Loading a binary file into a BLOB column</title>
 
       <para>This example shows how to insert binary data into
@@ -1166,7 +1170,8 @@ cout &lt;&lt; x &lt;&lt; endl;</programlisting>
       and quoting.</para>
     </sect3>
 
-    <sect3>
+
+    <sect3 id="blob-retreive">
       <title>Serving images from BLOB column via CGI</title>
 
       <para>This example is also a very short one, considering

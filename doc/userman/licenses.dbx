@@ -34,7 +34,7 @@
 
 
   <?hard-pagebreak?>
-  <sect2>
+  <sect2 id="lgpl">
     <title>GNU Lesser General Public License</title>
     <subtitle>Version 2.1, February 1999</subtitle>
 
@@ -47,7 +47,7 @@
     It also counts as the successor of the GNU Library Public License,
     version 2, hence the version number 2.1.]</para>
 
-    <sect3>
+    <sect3 id="lgpl-preamble">
       <title>Preamble</title>
 
       <para>The licenses for most software are designed to take away
@@ -161,7 +161,7 @@
     </sect3>
 
 
-    <sect3>
+    <sect3 id="lgpl-terms">
       <title>GNU LESSER GENERAL PUBLIC LICENSE</title>
       <subtitle>TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
         MODIFICATION</subtitle>
@@ -549,7 +549,7 @@
     </sect3>
 
 
-    <sect3>
+    <sect3 id="lgpl-howto">
       <title>How to Apply These Terms to Your New Libraries</title>
 
       <para>If you develop a new library, and you want it to be of the
@@ -612,17 +612,17 @@
 
 
   <?hard-pagebreak?>
-  <sect2>
+  <sect2 id="userman-license">
     <title>MySQL++ User Manual License</title>
 
-    <sect3>
+    <sect3 id="userman-license-copyright">
       <title>I. COPYRIGHT</title>
 
       <para>The copyright to the MySQL++ User Manual is owned by its
       authors.</para>
     </sect3>
 
-    <sect3>
+    <sect3 id="userman-license-main">
       <title>II. LICENSE</title>
 
       <para>The MySQL++ User Manual may be reproduced and distributed
@@ -633,7 +633,7 @@
       of redistribution is appreciated, to give the authors time to
       provide updated documents.</para>
 
-      <sect4>
+      <sect4 id="userman-license-req">
         <title>A. REQUIREMENTS OF MODIFIED WORKS</title>
 
         <para>All modified documents, including translations,

@@ -5,7 +5,7 @@
 <sect1 id="unicode" xreflabel="Using Unicode with MySQL++">
   <title>Using Unicode with MySQL++</title>
 
-  <sect2>
+  <sect2 id="unicode-history">
     <title>A Short History of Unicode</title>
     <subtitle>...with a focus on relevance to MySQL++</subtitle>
 
@@ -61,7 +61,7 @@
   </sect2>
 
 
-  <sect2>
+  <sect2 id="unicode-unix">
     <title>Unicode on Unixy Systems</title>
 
     <para>Linux and Unix have system-wide UTF-8 support these days. If
@@ -92,7 +92,7 @@
   </sect2>
 
 
-  <sect2>
+  <sect2 id="unicode-windows">
     <title>Unicode on Windows</title>
 
     <para>Each Windows API function that takes a string actually
@@ -175,7 +175,7 @@ System::Void ToUTF8(char* pcOut, int nOutLen, String^ sIn)
   </sect2>
 
 
-  <sect2>
+  <sect2 id="unicode-refs">
     <title>For More Information</title>
       <para>The <ulink url="http://www.unicode.org/faq/">Unicode
       FAQs</ulink> page has copious information on this complex

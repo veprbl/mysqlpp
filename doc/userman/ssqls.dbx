@@ -21,7 +21,7 @@
   generally useful.</para>
 
 
-  <sect2>
+  <sect2 id="sql_create">
     <title>sql_create</title>
 
     <para>This is the most basic sort of SSQLS declaration:</para>
@@ -70,7 +70,7 @@ sql_create_#(NAME, COMPCOUNT, SETCOUNT, TYPE1, ITEM1, ... TYPE#, ITEM#)</program
   </sect2>
 
 
-  <sect2>
+  <sect2 id="ssqls-compare-init">
     <title>SSQLS Comparison and Initialization</title>
 
     <para><varname>sql_create_</varname><emphasis>x</emphasis>
@@ -147,7 +147,7 @@ stock foo("Hotdog", 52);</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="ssqls-extra-features">
     <title>Additional Features of Specialized SQL
     Structures</title>
 
@@ -180,7 +180,7 @@ stock::table() = "MyStockData";</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="ssqls-in-header">
     <title>Using an SSQLS in Multiple Modules</title>
 
     <para>It's convenient to define an SSQLS in a header file so
@@ -237,7 +237,7 @@ sql_create_X(Y, Z....) // the SSQLS definition</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="ssqls-internals">
     <title>Harnessing SSQLS Internals</title>
 
     <para>The <symbol>sql_create</symbol> macros define several
@@ -365,7 +365,7 @@ query &lt;&lt; "select * from stock where " &lt;&lt;
   </sect2>
 
 
-  <sect2>
+  <sect2 id="ssqls-alt-creation">
     <title>Alternate Creation Methods</title>
 
     <para>If for some reason you want your SSQLS data members to have
@@ -405,7 +405,7 @@ sql_create_complete_5(stock, 2, 5,
   </sect2>
 
 
-  <sect2>
+  <sect2 id="ssqls-pretty">
     <title>Expanding SSQLS Macros</title>
 
     <para>If you ever need to see the code that a given
@@ -431,7 +431,7 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="ssqls-extension">
     <title>Extending the SSQLS Mechanism</title>
 
     <para>The SSQLS header <filename>ssqls.h</filename>
@@ -454,7 +454,8 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
     got a lot longer.</para>
   </sect2>
 
-  <sect2>
+
+  <sect2 id="ssqls-blob">
     <title>SSQLS and BLOB Columns</title>
 
     <para>It takes special care to use SSQLS with BLOB

@@ -12,7 +12,7 @@
   section will discuss these issues, and give advice on how to avoid
   problems.</para>
 
-  <sect2>
+  <sect2 id="thread-build">
     <title>Build Issues</title>
 
     <para>Before you can safely use MySQL++ with threads, there are
@@ -70,7 +70,8 @@
     </orderedlist>
   </sect2>
 
-  <sect2>
+
+  <sect2 id="thread-conn-mgmt">
     <title>Connection Management</title>
 
     <para>The MySQL C API underpinning MySQL++ does not allow multiple
@@ -174,7 +175,7 @@
   </sect2>
 
 
-  <sect2>
+  <sect2 id="thread-helpers">
     <title>Helper Functions</title>
 
     <para><classname>Connection</classname> has several
@@ -224,7 +225,7 @@
   </sect2>
 
 
-  <sect2>
+  <sect2 id="thread-data-sharing">
     <title>Sharing MySQL++ Data Structures</title>
 
     <para>We're in the process of making it safer to share MySQL++'s

@@ -25,7 +25,7 @@
   hierarchy. An overview of each follows.</para>
 
 
-  <sect2>
+  <sect2 id="Connection">
     <title>The Connection Object</title>
 
     <para>A <ulink type="classref" url="Connection"/> object
@@ -49,7 +49,7 @@
   </sect2>
 
 
-  <sect2>
+  <sect2 id="Query">
     <title>The Query Object</title>
 
     <para>Most often, you create SQL queries using a <ulink
@@ -86,7 +86,7 @@
   </sect2>
 
 
-  <sect2>
+  <sect2 id="Result">
     <title>Result Sets</title>
 
     <para>The field data in a result set are stored in a special
@@ -103,7 +103,7 @@
     <para>As for the result sets as a whole, MySQL++ has a number of
     different ways of representing them:</para>
 
-    <sect3>
+    <sect3 id="SimpleResult">
       <title>Queries That Do Not Return Data</title>
 
       <para>Not all SQL queries return data. An example is
@@ -114,7 +114,7 @@
       it impacted (if any), etc.</para>
     </sect3>
 
-    <sect3>
+    <sect3 id="StoreQueryResult">
       <title>Queries That Return Data: MySQL++ Data Structures</title>
 
       <para>The most direct way to retrieve a result set is to use
@@ -145,7 +145,7 @@
       is very useful when you need large result sets.</para>
     </sect3>
 
-    <sect3>
+    <sect3 id="storein">
       <title>Queries That Return Data: Specialized SQL
       Structures</title>
 
@@ -196,7 +196,7 @@ for (vector&lt;mysqlpp::Row&gt;::iterator it = v.begin(); it != v.end(); ++it) {
   </sect2>
 
 
-  <sect2>
+  <sect2 id="exceptions-intro">
     <title>Exceptions</title>
 
     <para>By default, the library throws <xref linkend="exceptions"/>

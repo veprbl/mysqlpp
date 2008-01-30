@@ -15,7 +15,7 @@
   are still documented only in the ChangeLog.</para>
 
 
-  <sect2>
+  <sect2 id="api-changes">
     <title>API Changes</title>
 
     <para>This section documents files, functions, methods and classes
@@ -24,7 +24,7 @@
     in your program to get it to compile after upgrading to each of
     these versions.</para>
 
-    <sect3>
+    <sect3 id="api-1.7.10">
       <title>v1.7.10</title>
 
       <para>Removed <methodname>Row::operator[]()</methodname>
@@ -42,7 +42,7 @@
     </sect3>
 
 
-    <sect3>
+    <sect3 id="api-1.7.19">
       <title>v1.7.19</title>
 
       <para>Removed <methodname>SQLQuery::operator=()</methodname>,
@@ -52,7 +52,7 @@
     </sect3>
 
 
-    <sect3>
+    <sect3 id="api-1.7.20">
       <title>v1.7.20</title>
 
       <para>The library used to have two names for many core classes:
@@ -71,10 +71,10 @@
     </sect3>
 
     
-    <sect3>
+    <sect3 id="api-2.0.0">
       <title>v2.0.0</title>
 
-      <sect4>
+      <sect4 id="api-2.0.0-Connection">
         <title>Connection class changes</title>
 
         <itemizedlist>
@@ -114,7 +114,7 @@
       </sect4>
 
 
-      <sect4>
+      <sect4 id="api-2.0.0-Exception">
         <title>Exception-related changes</title>
 
         <itemizedlist>
@@ -193,7 +193,7 @@
       </sect4>
 
 
-      <sect4>
+      <sect4 id="api-2.0.0-Query">
         <title>Query class changes</title>
 
         <itemizedlist>
@@ -222,7 +222,7 @@
       </sect4>
 
 
-      <sect4>
+      <sect4 id="api-2.0.0-Result">
         <title>Result/ResUse class changes</title>
 
         <itemizedlist>
@@ -242,7 +242,7 @@
       </sect4>
 
 
-      <sect4>
+      <sect4 id="api-2.0.0-Row">
         <title>Row class changes</title>
 
         <itemizedlist>
@@ -265,7 +265,7 @@
       </sect4>
 
 
-      <sect4>
+      <sect4 id="api-2.0.0-misc">
         <title>Miscellaneous changes</title>
 
         <itemizedlist>
@@ -290,7 +290,7 @@
       </sect4>
     </sect3>
 
-    <sect3>
+    <sect3 id="api-2.2.0">
       <title>v2.2.0</title>
 
       <para>Code like this will have to change:</para>
@@ -329,7 +329,7 @@ query.execute(some_value);</programlisting>
     </sect3>
 
 
-    <sect3>
+    <sect3 id="api-2.3.0">
       <title>v2.3.0</title>
 
       <para><methodname>Connection::set_option()</methodname>
@@ -353,7 +353,7 @@ query.execute(some_value);</programlisting>
     <sect3 id="v3.0.0">
       <title>v3.0.0 (as of beta 2)</title>
 
-      <sect4>
+      <sect4 id="v3.0.0-names">
         <title>Class name changes</title>
 
         <para>Several classes changed names in this
@@ -406,7 +406,7 @@ query.execute(some_value);</programlisting>
       </sect4>
 
 
-      <sect4>
+      <sect4 id="v3.0.0-Connection">
         <title>Connection class changes</title>
 
         <para>The option setting mechanism has been
@@ -495,7 +495,7 @@ query.execute(some_value);</programlisting>
       </sect4>
 
 
-      <sect4>
+      <sect4 id="v3.0.0-DateTime">
         <title>Date and Time class changes</title>
   
         <para>The <type>sql_timestamp</type> typedef is now
@@ -528,7 +528,7 @@ some_function(mysqlpp::DateTime("2007-12-22"));</programlisting>
       </sect4>
 
 
-      <sect4>
+      <sect4 id="v3.0.0-Exception">
         <title>Exception changes</title>
 
         <para>If an error occurs during the processing of a
@@ -547,7 +547,7 @@ some_function(mysqlpp::DateTime("2007-12-22"));</programlisting>
       </sect4>
 
 
-      <sect4>
+      <sect4 id="v3.0.0-Field">
         <title>Field and Fields class changes</title>
 
         <para><classname>Field</classname> is now a real C++ class,
@@ -593,7 +593,7 @@ typedef std::vector&lt;Field&gt; Fields;</programlisting>
       </sect4>
 
 
-      <sect4>
+      <sect4 id="v3.0.0-Query">
         <title>Query class changes</title>
 
         <para>If you were using <type>char</type> as an 8-bit integer
@@ -653,7 +653,7 @@ cout &lt;&lt; query &lt;&lt; endl;</programlisting>
       </sect4>
 
 
-      <sect4>
+      <sect4 id="v3.0.0-Result">
         <title>Result, ResUse, and ResNSel class changes</title>
 
         <para>In addition to the class name changes described
@@ -782,7 +782,7 @@ for (i = 0; i &lt; res.num_rows(); ++i) {
       </sect4>
 
 
-      <sect4>
+      <sect4 id="v3.0.0-Row">
         <title>Row class changes</title>
 
         <para>Removed <methodname>Row::raw_data()</methodname>,
@@ -811,7 +811,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
       </sect4>
 
 
-      <sect4>
+      <sect4 id="v3.0.0-SSQLS">
         <title>Specialized SQL Structure (SSQLS) changes</title>
 
         <para>Renamed <filename>custom*</filename> to
@@ -831,7 +831,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
       </sect4>
 
 
-      <sect4>
+      <sect4 id="v3.0.0-misc">
         <title>Miscellaneous changes</title>
 
         <para>MySQL++ does quoting and escaping much more selectively
@@ -869,7 +869,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="abi-changes">
     <title>ABI Changes</title>
 
     <para>This section documents those library changes that require you
@@ -883,7 +883,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
     section.</para>
 
 
-    <sect3>
+    <sect3 id="abi-1.7.18">
       <title>v1.7.18</title>
 
       <para>The <classname>Query</classname> classes now subclass from
@@ -892,7 +892,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
     </sect3>
 
 
-    <sect3>
+    <sect3 id="abi-1.7.19">
       <title>v1.7.19</title>
 
       <para>Fixed several <type>const</type>-incorrectnesses in the
@@ -900,7 +900,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
     </sect3>
 
 
-    <sect3>
+    <sect3 id="abi-1.7.22">
       <title>v1.7.22</title>
 
       <para>Removed &ldquo;reset query&rdquo; parameters from several
@@ -912,7 +912,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
     </sect3>
 
 
-    <sect3>
+    <sect3 id="abi-1.7.24">
       <title>v1.7.24</title>
 
       <para>Some freestanding functions didn't get moved into
@@ -923,7 +923,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
     </sect3>
 
 
-    <sect3>
+    <sect3 id="abi-2.0.0">
       <title>v2.0.0</title>
 
       <para>Removed <methodname>Connection::infoo()</methodname>.
@@ -980,7 +980,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
     </sect3>
 
 
-    <sect3>
+    <sect3 id="abi-3.0.0">
       <title>v3.0.0</title>
 
       <para>Removed <varname>reset_query</varname> parameters from

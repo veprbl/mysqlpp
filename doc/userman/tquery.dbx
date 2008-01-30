@@ -28,7 +28,7 @@
   <para>Let's dig into this feature a little deeper.</para>
 
 
-  <sect2>
+  <sect2 id="tquery-setup">
     <title>Setting up Template Queries</title>
 
     <para>To set up a template query, you simply insert it into the
@@ -99,7 +99,7 @@ query.parse();</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="tquery-parms">
     <title>Setting the Parameters at Execution Time</title>
 
     <para>To specify the parameters when you want to execute
@@ -130,7 +130,7 @@ select (%0:field1, %1:field2) from stock where %2:wheref = %3q:what</programlist
   </sect2>
 
 
-  <sect2>
+  <sect2 id="tquery-overloading">
     <title>Parameter Types and Function Overloads</title>
 
     <para>There are quite a few overloads for each of
@@ -168,7 +168,8 @@ query.storein(my_vector, SQLString(1));</programlisting>
     the next time we can redesign the interface.</para>
   </sect2>
 
-  <sect2>
+
+  <sect2 id="tquery-defaults">
     <title>Default Parameters</title>
 
     <para>The template query mechanism allows you to set
@@ -236,7 +237,7 @@ StoreQueryResult res1 = query.store();</programlisting>
   </sect2>
 
 
-  <sect2>
+  <sect2 id="tquery-errors">
     <title>Error Handling</title>
 
     <para>If for some reason you did not specify all the parameters

@@ -19,7 +19,7 @@
   subscribe.</para>
 
 
-  <sect2>
+  <sect2 id="history">
     <title>A Brief History of MySQL++</title>
 
     <para>MySQL++ was created in 1998 by Kevin Atkinson. It started
@@ -55,7 +55,7 @@
   </sect2>
 
 
-  <sect2>
+  <sect2 id="asking-questions">
     <title>If You Have Questions...</title>
 
     <para>If you want to email someone to ask questions about
