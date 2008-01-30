@@ -289,7 +289,7 @@ public:
 	/// SQLTypeAdapter data type directly in your code.
 	///
 	/// There many more overloads of this type (25 total, by default;
-	/// see lib/querydef.pl), each taking one more SQLTypeAdapter object
+	/// see \c lib/querydef.pl), each taking one more SQLTypeAdapter object
 	/// than the previous one.  See the template query overview above
 	/// for more about this topic.
 	std::string str(const SQLTypeAdapter& arg0)
@@ -367,7 +367,7 @@ public:
 	/// that compiles but results in bogus SQL queries.
 	///
 	/// To support template queries, there many more overloads of this
-	/// type (25 total, by default; see lib/querydef.pl), each taking
+	/// type (25 total, by default; see \c lib/querydef.pl), each taking
 	/// one more SQLTypeAdapter object than the previous one.  See the
 	/// template query overview above for more about this topic.
 	SimpleResult execute(const SQLTypeAdapter& str);
@@ -430,7 +430,7 @@ public:
 	/// that compiles but results in bogus SQL queries.
 	///
 	/// To support template queries, there many more overloads of this
-	/// type (25 total, by default; see lib/querydef.pl), each taking
+	/// type (25 total, by default; see \c lib/querydef.pl), each taking
 	/// one more SQLTypeAdapter object than the previous one.  See the
 	/// template query overview above for more about this topic.
 	UseQueryResult use(const SQLTypeAdapter& str);
@@ -493,7 +493,7 @@ public:
 	/// that compiles but results in bogus SQL queries.
 	///
 	/// To support template queries, there many more overloads of this
-	/// type (25 total, by default; see lib/querydef.pl), each taking
+	/// type (25 total, by default; see \c lib/querydef.pl), each taking
 	/// one more SQLTypeAdapter object than the previous one.  See the
 	/// template query overview above for more about this topic.
 	StoreQueryResult store(const SQLTypeAdapter& str);
@@ -742,7 +742,7 @@ public:
 	/// SQL query string
 	///
 	/// There many more overloads of this type (25 total, by default;
-	/// see lib/querydef.pl), each taking one more SQLTypeAdapter object
+	/// see \c lib/querydef.pl), each taking one more SQLTypeAdapter object
 	/// than the previous one.  See the template query overview above
 	/// for more about this topic.
 	template <class Sequence>
@@ -799,7 +799,7 @@ public:
 	/// SQL query string
 	///
 	/// There many more overloads of this type (25 total, by default;
-	/// see lib/querydef.pl), each taking one more SQLTypeAdapter object
+	/// see \c lib/querydef.pl), each taking one more SQLTypeAdapter object
 	/// than the previous one.  See the template query overview above
 	/// for more about this topic.
 	template <class Set>
