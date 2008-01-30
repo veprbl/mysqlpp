@@ -355,10 +355,10 @@ query.execute(some_value);</programlisting>
     </sect3>
 
 
-    <sect3 id="v3.0.0">
+    <sect3 id="api-3.0.0">
       <title>v3.0.0 (as of beta 2)</title>
 
-      <sect4 id="v3.0.0-names">
+      <sect4 id="api-3.0.0-names">
         <title>Class name changes</title>
 
         <para>Several classes changed names in this
@@ -411,7 +411,7 @@ query.execute(some_value);</programlisting>
       </sect4>
 
 
-      <sect4 id="v3.0.0-Connection">
+      <sect4 id="api-3.0.0-Connection">
         <title>Connection class changes</title>
 
         <para>The option setting mechanism has been redesigned. (Yes,
@@ -500,7 +500,7 @@ query.execute(some_value);</programlisting>
       </sect4>
 
 
-      <sect4 id="v3.0.0-DateTime">
+      <sect4 id="api-3.0.0-DateTime">
         <title>Date and Time class changes</title>
   
         <para>The <type>sql_timestamp</type> typedef is now
@@ -532,7 +532,7 @@ some_function(mysqlpp::DateTime("2007-12-22"));</programlisting>
       </sect4>
 
 
-      <sect4 id="v3.0.0-Exception">
+      <sect4 id="api-3.0.0-Exception">
         <title>Exception changes</title>
 
         <para>If an error occurs during the processing of a
@@ -551,7 +551,7 @@ some_function(mysqlpp::DateTime("2007-12-22"));</programlisting>
       </sect4>
 
 
-      <sect4 id="v3.0.0-Field">
+      <sect4 id="api-3.0.0-Field">
         <title>Field and Fields class changes</title>
 
         <para><classname>Field</classname> is now a real C++ class,
@@ -598,7 +598,7 @@ typedef std::vector&lt;Field&gt; Fields;</programlisting>
       </sect4>
 
 
-      <sect4 id="v3.0.0-Query">
+      <sect4 id="api-3.0.0-Query">
         <title>Query class changes</title>
 
         <para>If you were using <type>char</type> as an 8-bit integer
@@ -658,7 +658,7 @@ cout &lt;&lt; query &lt;&lt; endl;</programlisting>
       </sect4>
 
 
-      <sect4 id="v3.0.0-Result">
+      <sect4 id="api-3.0.0-Result">
         <title>Result, ResUse, and ResNSel class changes</title>
 
         <para>In addition to the class name changes described above,
@@ -787,7 +787,7 @@ for (i = 0; i &lt; res.num_rows(); ++i) {
       </sect4>
 
 
-      <sect4 id="v3.0.0-Row">
+      <sect4 id="api-3.0.0-Row">
         <title>Row class changes</title>
 
         <para>Removed <methodname>Row::raw_data()</methodname>,
@@ -816,7 +816,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
       </sect4>
 
 
-      <sect4 id="v3.0.0-SSQLS">
+      <sect4 id="api-3.0.0-SSQLS">
         <title>Specialized SQL Structure (SSQLS) changes</title>
 
         <para>Renamed <filename>custom*</filename> to
@@ -836,7 +836,7 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
       </sect4>
 
 
-      <sect4 id="v3.0.0-misc">
+      <sect4 id="api-3.0.0-misc">
         <title>Miscellaneous changes</title>
 
         <para>MySQL++ does quoting and escaping much more selectively
