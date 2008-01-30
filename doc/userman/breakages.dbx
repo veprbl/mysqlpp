@@ -382,6 +382,9 @@ query.execute(some_value);</programlisting>
 
           <listitem><para><classname>ResUse</classname> is now
           <classname>UseQueryResult</classname>.</para></listitem>
+
+          <listitem><para><classname>SQLString</classname> is now
+          <classname>SQLTypeAdapter</classname>.</para></listitem>
         </itemizedlist>
 
         <para>When first building existing code against this version,
