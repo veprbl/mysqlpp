@@ -79,8 +79,10 @@ class MYSQLPP_EXPORT Connection;
 /// \c std::ostringstream, etc.) in that you can just insert things
 /// into the stream, building the query up piece by piece. When the
 /// query string is complete, you  call the overloaded version of
-/// \c exec*(), \c store*() or \c use() that takes no parameters, which
-/// executes the built query and returns any results.
+/// \link mysqlpp::Query::execute() exec*(), \endlink
+/// \link mysqlpp::Query::store() store*(), \endlink or
+/// \link mysqlpp::Query::use() use() \endlink takes no parameters,
+/// which executes the built query and returns any results.
 ///
 /// If you are using the library's Specialized SQL Structures feature,
 /// Query has several special functions for generating common SQL
@@ -95,12 +97,20 @@ class MYSQLPP_EXPORT Connection;
 /// C's \c printf() function, in that you insert a specially-formatted
 /// query string into the object which contains placeholders for data.
 /// You call the parse() method to tell the Query object that the query
-/// string contains placeholders. Once that's done, you can call any of
-/// the many overloaded methods that take a number of SQLTypeAdapters (up to
-/// 25 by default) or any type that can be converted to SQLTypeAdapter, and
-/// those parameters will be inserted into the placeholders. When you
-/// call one of the parameterless functions the execute the query, the
-/// final query string is assembled and sent to the server.
+/// string contains placeholders. Having done that, you call one of the
+/// the many
+/// \link mysqlpp::Query::execute(const SQLTypeAdapter&) exec*(), \endlink
+/// \link mysqlpp::Query::store(const SQLTypeAdapter&) store*(), \endlink
+/// or \link mysqlpp::Query::use(const SQLTypeAdapter&) use() \endlink
+/// overloads that take SQLTypeAdapter objects.  There are 25 of each by
+/// default, differing only in the number of STA objects they take.
+/// (See \c lib/querydef.pl if you need to change the limit, or 
+/// \c examples/tquery2.cpp for a way around it that doesn't require 
+/// changing the library.)  Only the version taking a single STA object
+/// is documented below, as to document all of them would just be
+/// repetitive.  For each Query method that takes a single STA object,
+/// there's a good chance there's a set of undocumented overloads that
+/// take more of them for the purpose of filling out a template query.
 ///
 /// See the user manual for more details about these options.
 
@@ -266,14 +276,22 @@ public:
 	/// or the stream interface.)
 	void reset();
 
-	/// \brief Get built query as a null-terminated C++ string
+	/// \brief Get built query as a C++ string
 	std::string str() { return str(template_defaults); }
 
-	/// \brief Get built query as a null-terminated C++ string with
-	/// template query parameter substitution.
+	/// \brief Get built query as a C++ string with template query
+	/// parameter substitution.
 	///
 	/// \param arg0 the value to substitute for the first template query
-	/// parameter
+	/// parameter; because SQLTypeAdapter implicitly converts from many
+	/// different data types, this method is very flexible in what it
+	/// accepts as a parameter.  You shouldn't have to use the
+	/// SQLTypeAdapter data type directly in your code.
+	///
+	/// There many more overloads of this type (25 total, by default;
+	/// see lib/querydef.pl), each taking one more SQLTypeAdapter object
+	/// than the previous one.  See the template query overview above
+	/// for more about this topic.
 	std::string str(const SQLTypeAdapter& arg0)
 			{ return str(SQLQueryParms() << arg0); }
 
@@ -336,12 +354,22 @@ public:
 	/// \param p parameters to use in the template query.
 	SimpleResult execute(SQLQueryParms& p);
 
-	/// \brief Execute query in a C++ string, or substitute string into
-	/// a template query and execute it.
+	/// \brief Execute a query that returns no rows
 	///
-	/// \param str If the object represents a compiled template query,
-	/// substitutes this string in for the first parameter.  Otherwise,
-	/// takes the string as a complete SQL query and executes it.
+	/// \param str if this object is set up as a template query, this is
+	/// the value to substitute for the first template query parameter;
+	/// else, it is the SQL query string to execute
+	///
+	/// Because SQLTypeAdapter can be initialized from either a C string
+	/// or a C++ string, this overload accepts query strings in either
+	/// form.  Beware, SQLTypeAdapter also accepts many other data types
+	/// (this is its \i raison \i d'etre), so it will let you write code
+	/// that compiles but results in bogus SQL queries.
+	///
+	/// To support template queries, there many more overloads of this
+	/// type (25 total, by default; see lib/querydef.pl), each taking
+	/// one more SQLTypeAdapter object than the previous one.  See the
+	/// template query overview above for more about this topic.
 	SimpleResult execute(const SQLTypeAdapter& str);
 
 	/// \brief Execute query in a known-length string of characters.
@@ -350,7 +378,8 @@ public:
 	/// Executes the query immediately, and returns the results.
 	SimpleResult execute(const char* str, size_t len);
 
-	/// \brief Execute a query that can return a result set
+	/// \brief Execute a query that can return rows, with access to
+	/// the rows in sequence
 	/// 
 	/// Use one of the use() overloads if memory efficiency is
 	/// important.  They return an object that can walk through
@@ -376,7 +405,8 @@ public:
 	/// \sa exec(), execute(), store() and storein()
 	UseQueryResult use() { return use(str(template_defaults)); }
 
-	/// \brief Get results from a template query using given parameters.
+	/// \brief Execute a template query that can return rows, with
+	/// access to the rows in sequence
     ///
     /// This method should only be used by code that doesn't know,
     /// at compile time, how many parameters it will have.  This is
@@ -386,18 +416,34 @@ public:
 	/// \param p parameters to use in the template query.
 	UseQueryResult use(SQLQueryParms& p);
 
-	/// \brief Execute query in a C++ string
+	/// \brief Execute a query that can return rows, with access to
+	/// the rows in sequence
 	///
-	/// Executes the query immediately, and returns an object that
-	/// lets you walk through the result set one row at a time, in
-	/// sequence.  This is more memory-efficient than store().
+	/// \param str if this object is set up as a template query, this is
+	/// the value to substitute for the first template query parameter;
+	/// else, it is the SQL query string to execute
+	///
+	/// Because SQLTypeAdapter can be initialized from either a C string
+	/// or a C++ string, this overload accepts query strings in either
+	/// form.  Beware, SQLTypeAdapter also accepts many other data types
+	/// (this is its \i raison \i d'etre), so it will let you write code
+	/// that compiles but results in bogus SQL queries.
+	///
+	/// To support template queries, there many more overloads of this
+	/// type (25 total, by default; see lib/querydef.pl), each taking
+	/// one more SQLTypeAdapter object than the previous one.  See the
+	/// template query overview above for more about this topic.
 	UseQueryResult use(const SQLTypeAdapter& str);
 
-	/// \brief Execute query in a known-length C string
+	/// \brief Execute a query that can return rows, with access to
+	/// the rows in sequence
 	///
-	/// Executes the query immediately, and returns an object that
-	/// lets you walk through the result set one row at a time, in
-	/// sequence.  This is more memory-efficient than store().
+	/// This overload is for situations where you have the query in a
+	/// C string and have its length already.  If you want to execute
+	/// a query in a null-terminated C string or have the query string
+	/// in some other form, you probably want to call
+	/// use(const SQLTypeAdapter&) instead.  SQLTypeAdapter converts
+	/// from plain C strings and other useful data types implicitly.
 	UseQueryResult use(const char* str, size_t len);
 
 	/// \brief Execute a query that can return a result set
@@ -433,18 +479,34 @@ public:
 	/// \param p parameters to use in the template query.
 	StoreQueryResult store(SQLQueryParms& p);
 
-	/// \brief Execute query in a C++ string
+	/// \brief Execute a query that can return rows, returning all
+	/// of the rows in a random-access container
 	///
-	/// Executes the query immediately, and returns an object that
-	/// contains the entire result set.  This is less memory-efficient
-	/// than use(), but it lets you have random access to the results.
+	/// \param str if this object is set up as a template query, this is
+	/// the value to substitute for the first template query parameter;
+	/// else, it is the SQL query string to execute
+	///
+	/// Because SQLTypeAdapter can be initialized from either a C string
+	/// or a C++ string, this overload accepts query strings in either
+	/// form.  Beware, SQLTypeAdapter also accepts many other data types
+	/// (this is its \i raison \i d'etre), so it will let you write code
+	/// that compiles but results in bogus SQL queries.
+	///
+	/// To support template queries, there many more overloads of this
+	/// type (25 total, by default; see lib/querydef.pl), each taking
+	/// one more SQLTypeAdapter object than the previous one.  See the
+	/// template query overview above for more about this topic.
 	StoreQueryResult store(const SQLTypeAdapter& str);
 
-	/// \brief Execute query in a known-length C string
+	/// \brief Execute a query that can return rows, returning all
+	/// of the rows in a random-access container
 	///
-	/// Executes the query immediately, and returns an object that
-	/// contains the entire result set.  This is less memory-efficient
-	/// than use(), but it lets you have random access to the results.
+	/// This overload is for situations where you have the query in a
+	/// C string and have its length already.  If you want to execute
+	/// a query in a null-terminated C string or have the query string
+	/// in some other form, you probably want to call
+	/// store(const SQLTypeAdapter&) instead.  SQLTypeAdapter converts
+	/// from plain C strings and other useful data types implicitly.
 	StoreQueryResult store(const char* str, size_t len);
 
 	/// \brief Execute a query, and call a functor for each returned row
@@ -670,6 +732,34 @@ public:
 		storein_sequence(con, str(template_defaults));
 	}
 
+	/// \brief Executes a query, storing the result rows in an STL
+	/// sequence container.
+	///
+	/// \param con the container to store the results in
+	///
+	/// \param s if Query is set up as a template query, this is the value
+	/// to substitute for the first template query parameter; else, the
+	/// SQL query string
+	///
+	/// There many more overloads of this type (25 total, by default;
+	/// see lib/querydef.pl), each taking one more SQLTypeAdapter object
+	/// than the previous one.  See the template query overview above
+	/// for more about this topic.
+	template <class Sequence>
+	void storein_sequence(Sequence& con, const SQLTypeAdapter& s)
+	{
+		UseQueryResult result = use(s);
+		while (1) {
+			MYSQL_ROW d = result.fetch_raw_row();
+			if (!d)
+				break;
+			Row row(d, &result, result.fetch_lengths(), true);
+			if (!row)
+				break;
+			con.push_back(typename Sequence::value_type(row));
+		}
+	}
+
 	/// \brief Execute template query using given parameters, storing
     /// the results in a sequence type container.
     ///
@@ -697,6 +787,34 @@ public:
 	void storein_set(Set& con)
 	{
 		storein_set(con, str(template_defaults));
+	}
+
+	/// \brief Executes a query, storing the result rows in an STL
+	/// set-associative container.
+	///
+	/// \param con the container to store the results in
+	///
+	/// \param s if Query is set up as a template query, this is the value
+	/// to substitute for the first template query parameter; else, the
+	/// SQL query string
+	///
+	/// There many more overloads of this type (25 total, by default;
+	/// see lib/querydef.pl), each taking one more SQLTypeAdapter object
+	/// than the previous one.  See the template query overview above
+	/// for more about this topic.
+	template <class Set>
+	void storein_set(Set& con, const SQLTypeAdapter& s)
+	{
+		UseQueryResult result = use(s);
+		while (1) {
+			MYSQL_ROW d = result.fetch_raw_row();
+			if (!d)
+				return;
+			Row row(d, &result, result.fetch_lengths(), true);
+			if (!row)
+				break;
+			con.insert(typename Set::value_type(row));
+		}
 	}
 
 	/// \brief Execute template query using given parameters, storing
@@ -962,42 +1080,6 @@ inline std::ostream& operator <<(std::ostream& os, Query& q)
 	return os << q.str();
 }
 
-
-#if !defined(DOXYGEN_IGNORE)
-// Doxygen will not generate documentation for this section.
-
-template <class Sequence>
-void Query::storein_sequence(Sequence& con, const SQLTypeAdapter& s)
-{
-	UseQueryResult result = use(s);
-	while (1) {
-		MYSQL_ROW d = result.fetch_raw_row();
-		if (!d)
-			break;
-		Row row(d, &result, result.fetch_lengths(), true);
-		if (!row)
-			break;
-		con.push_back(typename Sequence::value_type(row));
-	}
-}
-
-
-template <class Set>
-void Query::storein_set(Set& con, const SQLTypeAdapter& s)
-{
-	UseQueryResult result = use(s);
-	while (1) {
-		MYSQL_ROW d = result.fetch_raw_row();
-		if (!d)
-			return;
-		Row row(d, &result, result.fetch_lengths(), true);
-		if (!row)
-			break;
-		con.insert(typename Set::value_type(row));
-	}
-}
-
-#endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp
 

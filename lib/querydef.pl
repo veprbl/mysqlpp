@@ -6,7 +6,7 @@
 #	number limits the number of parameters a MySQL++ template query can
 #	accept.  This value can be changed from its default, below.
 #
-# Copyright (c) 2006-2007 by Educational Technology Resources, Inc.
+# Copyright (c) 2006-2008 by Educational Technology Resources, Inc.
 # Others may also hold copyrights on code in this file.  See the CREDITS
 # file in the top directory of the distribution for details.
 #
@@ -69,13 +69,10 @@ for (my $i = 1; $i < $max_parameters; ++$i) {
 	}
 	print OUT "); } \\\n";
 }
+print OUT "\n";
 
 ## Add mysql_query_define1 macro
-print OUT << "---";
-
-#define mysql_query_define1(FUNC) \\
-	template <class T> void FUNC(T& container, const SQLTypeAdapter& arg0); \\
----
+print OUT "#define mysql_query_define1(FUNC) \\\n";
 for (my $i = 1; $i < $max_parameters; ++$i) {
 	print OUT "\ttemplate <class T> void FUNC(T& container";
 	for (my $j = 0; $j < $i + 1; ++$j) {
@@ -88,7 +85,8 @@ for (my $i = 1; $i < $max_parameters; ++$i) {
 	}
 	print OUT "); } \\\n";
 }
+print OUT "\n";
 
 ## That's all, folks!
-print OUT "\n#endif // !defined(MYSQLPP_QUERYDEF_H)\n";
+print OUT "#endif // !defined(MYSQLPP_QUERYDEF_H)\n";
 
