@@ -39,13 +39,6 @@ using namespace std;
 
 namespace mysqlpp {
 
-template <class T>
-DTbase<T>::operator std::string() const
-{
-	return stream2string(*this);
-}
-
-
 std::ostream& operator <<(std::ostream& os, const Date& d)
 {
 	char fill = os.fill('0');
@@ -193,6 +186,25 @@ int DateTime::compare(const DateTime& other) const
 	}
 }
 
+
+Date::operator std::string() const
+{
+	return stream2string(*this);
+}
+
+
+DateTime::operator std::string() const
+{
+	return stream2string(*this);
+}
+
+
+Time::operator std::string() const
+{
+	return stream2string(*this);
+}
+
+
 DateTime::operator time_t() const
 {
 	if (is_now()) {
@@ -215,6 +227,7 @@ DateTime::operator time_t() const
 		return mktime(&tm);
 	}
 }
+
 
 DateTime::DateTime(time_t t)
 {

@@ -51,9 +51,6 @@ struct MYSQLPP_EXPORT DTbase
 	/// \brief Destroy object
 	virtual ~DTbase() { }
 
-	/// \brief Return a copy of the item in C++ string form
-	operator std::string() const;
-
 	/// \brief Compare this object to another of the same type
 	///
 	/// Returns < 0 if this object is "before" the other, 0 of they are
@@ -214,8 +211,14 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 	/// This is just syntactic sugar around the default ctor
 	static DateTime now() { return DateTime(); }
 
+	/// Convert to std::string
+	operator std::string() const;
+
 	/// Convert to time_t
 	operator time_t() const;
+
+	/// Return our value in std::string form
+	std::string str() const { return *this; }
 
 private:
 	bool now_;	///< true if object not initialized with explicit value
@@ -294,6 +297,12 @@ struct MYSQLPP_EXPORT Date : public DTbase<Date>
 
 	/// \brief Parse a MySQL date string into this object.
 	cchar* convert(cchar*);
+
+	/// Convert to std::string
+	operator std::string() const;
+
+	/// Return our value in std::string form
+	std::string str() const { return *this; }
 };
 
 /// \brief Inserts a Date object into a C++ stream
@@ -367,6 +376,12 @@ struct MYSQLPP_EXPORT Time : public DTbase<Time>
 	/// Returns < 0 if this time is before the other, 0 of they are
 	/// equal, and > 0 if this time is after the other.
 	int compare(const Time& other) const;
+
+	/// Convert to std::string
+	operator std::string() const;
+
+	/// Return our value in std::string form
+	std::string str() const { return *this; }
 };
 
 /// \brief Inserts a Time object into a C++ stream in a MySQL-compatible

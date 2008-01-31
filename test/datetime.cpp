@@ -1,7 +1,7 @@
 /***********************************************************************
  test/datetime.cpp - Tests the Date, DateTime, and Time classes.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <string>
 
 #include <stdio.h>
 
@@ -37,7 +38,8 @@ using namespace std;
 // Compare the given string against the object inserted into an ostream.
 template <class T>
 static unsigned int
-test_ostream_form(const T& object, const char* expected, const char* what)
+test_ostream_insert(const T& object, const char* expected, 
+		const char* what)
 {
 	ostringstream os;
 	os << object;
@@ -46,9 +48,56 @@ test_ostream_form(const T& object, const char* expected, const char* what)
 	}
 	else {
 		cerr << what << " '" << object << "' should be '" <<
-				expected << "' in string form!" << endl;
+				expected << "' when inserted into ostream!" << endl;
 		return 1;
 	}
+}
+
+
+// Compare the given string against the return value of the object's
+// str() method.
+template <class T>
+static unsigned int
+test_str_method(const T& object, const char* expected, const char* what)
+{
+	if (object.str().compare(expected) == 0) {
+		return 0;
+	}
+	else {
+		cerr << what << " '" << object << "' should return '" <<
+				expected << "' from str() method!" << endl;
+		return 1;
+	}
+}
+
+
+// Compare the given string against the object when cast to std::string
+template <class T>
+static unsigned int
+test_string_operator(const T& object, const char* expected, 
+		const char* what)
+{
+	if (string(object).compare(expected) == 0) {
+		return 0;
+	}
+	else {
+		cerr << what << " '" << object << "' should be '" <<
+				expected << "' when cast to std::string!" << endl;
+		return 1;
+	}
+}
+
+
+// Compare the given string against the object when converted in several
+// different ways to a string.
+template <class T>
+static unsigned int
+test_stringization(const T& object, const char* expected, 
+		const char* what)
+{
+	return	test_ostream_insert(object, expected, what) +
+			test_string_operator(object, expected, what) +
+			test_str_method(object, expected, what);
 }
 
 
@@ -61,7 +110,7 @@ test_date(const Date& d, int year, int month, int day)
 		char ac[20];
 		snprintf(ac, sizeof(ac), "%04d-%02d-%02d",
 				year, month, day);
-		return test_ostream_form(d, ac, "Date");
+		return test_stringization(d, ac, "Date");
 	}
 	else {
 		cerr << "Date '" << d << "' values should be '" <<
@@ -80,7 +129,7 @@ test_time(const Time& t, int hour, int minute, int second)
 		char ac[20];
 		snprintf(ac, sizeof(ac), "%02d:%02d:%02d",
 				hour, minute, second);
-		return test_ostream_form(t, ac, "Time");
+		return test_stringization(t, ac, "Time");
 	}
 	else {
 		cerr << "Time '" << t << "' values should be '" <<
@@ -124,10 +173,10 @@ main()
 	unsigned int failures = 0;
 	failures += test(0, 0, 0, 0, 0, 0);
 	failures += test(1, 2, 3, 4, 5, 6);
-	failures += test_ostream_form(DateTime(), "NOW()", "DateTime");
+	failures += test_stringization(DateTime(), "NOW()", "DateTime");
 	DateTime dt;
 	dt.year = 2007;
-	failures += test_ostream_form(dt, "2007-00-00 00:00:00", "DateTime");
+	failures += test_stringization(dt, "2007-00-00 00:00:00", "DateTime");
 	return failures;
 }
 
