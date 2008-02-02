@@ -31,72 +31,12 @@
 
 #include "common.h"
 
+#include "comparable.h"
+
 #include <string>
 #include <iostream>
 
 namespace mysqlpp {
-
-/// \brief Base class template for MySQL++ date and time classes.
-///
-/// A subclass mixes this class in to its interface, implements
-/// compare(), and thereby gains a full set of comparison operators.
-template <class T>
-class MYSQLPP_EXPORT DTbase
-{
-public:
-	/// \brief Returns true if "other" is equal to this object
-	bool operator ==(const T& other) const
-	{
-		return !compare(other);
-	}
-
-	/// \brief Returns true if "other" is not equal to this object
-	bool operator !=(const T& other) const
-	{
-		return compare(other);
-	}
-
-	/// \brief Returns true if "other" is less than this object
-	bool operator <(const T& other) const
-	{
-		return compare(other) < 0;
-	}
-
-	/// \brief Returns true if "other" is less than or equal to this object
-	bool operator <=(const T& other) const
-	{
-		return compare(other) <= 0;
-	}
-
-	/// \brief Returns true if "other" is greater than this object
-	bool operator >(const T& other) const
-	{
-		return compare(other) > 0;
-	}
-
-	/// \brief Returns true if "other" is greater than or equal to this object
-	bool operator >=(const T& other) const
-	{
-		return compare(other) >= 0;
-	}
-
-protected:
-	/// \brief Destroy object
-	///
-	/// This class has nothing to destroy, but declaring the dtor
-	/// virtual placates some compilers set to high warning levels.
-	/// Protecting it ensures you can't delete subclasses through base
-	/// class pointers, which makes no sense because this class isn't
-	/// made for polymorphism.  It's just a mixin.
-	virtual ~DTbase() { }
-
-	/// \brief Compare this object to another of the same type
-	///
-	/// Returns < 0 if this object is "before" the other, 0 of they are
-	/// equal, and > 0 if this object is "after" the other.
-	virtual int compare(const T& other) const = 0;
-};
-
 
 /// \brief C++ form of SQL's DATETIME type.
 ///
@@ -105,12 +45,12 @@ protected:
 /// to SQL string form, extract the individual y/m/d h:m:s values,
 /// convert it to C's time_t, etc.
 
-class MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
+class MYSQLPP_EXPORT DateTime : public Comparable<DateTime>
 {
 public:
 	/// \brief Default constructor
 	DateTime() :
-	DTbase<DateTime>(),
+	Comparable<DateTime>(),
 	year_(0),
 	month_(0),
 	day_(0),
@@ -131,7 +71,7 @@ public:
 	/// \param s second_
 	DateTime(unsigned short y, unsigned char mon, unsigned char d,
 			unsigned char h, unsigned char min, unsigned char s) :
-	DTbase<DateTime>(),
+	Comparable<DateTime>(),
 	year_(y),
 	month_(mon),
 	day_(d),
@@ -144,7 +84,7 @@ public:
 	
 	/// \brief Initialize object as a copy of another Date
 	DateTime(const DateTime& other) :
-	DTbase<DateTime>(),
+	Comparable<DateTime>(),
 	year_(other.year_),
 	month_(other.month_),
 	day_(other.day_),
@@ -276,7 +216,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& os,
 ///
 /// Objects of this class can be inserted into streams, and
 /// initialized from SQL DATE strings.
-class MYSQLPP_EXPORT Date : public DTbase<Date>
+class MYSQLPP_EXPORT Date : public Comparable<Date>
 {
 public:
 	/// \brief Default constructor
@@ -284,7 +224,7 @@ public:
 
 	/// \brief Initialize object
 	Date(unsigned short y, unsigned char m, unsigned char d) :
-	DTbase<Date>(),
+	Comparable<Date>(),
 	year_(y),
 	month_(m),
 	day_(d)
@@ -293,7 +233,7 @@ public:
 	
 	/// \brief Initialize object as a copy of another Date
 	Date(const Date& other) :
-	DTbase<Date>(),
+	Comparable<Date>(),
 	year_(other.year_),
 	month_(other.month_),
 	day_(other.day_)
@@ -302,7 +242,7 @@ public:
 
 	/// \brief Initialize object from date part of date/time object
 	Date(const DateTime& other) :
-	DTbase<Date>(),
+	Comparable<Date>(),
 	year_(other.year()),
 	month_(other.month()),
 	day_(other.day())
@@ -383,7 +323,7 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& os,
 ///
 /// Objects of this class can be inserted into streams, and
 /// initialized from SQL TIME strings.
-class MYSQLPP_EXPORT Time : public DTbase<Time>
+class MYSQLPP_EXPORT Time : public Comparable<Time>
 {
 public:
 	/// \brief Default constructor
@@ -399,7 +339,7 @@ public:
 
 	/// \brief Initialize object as a copy of another Time
 	Time(const Time& other) :
-	DTbase<Time>(),
+	Comparable<Time>(),
 	hour_(other.hour_),
 	minute_(other.minute_),
 	second_(other.second_)
@@ -408,7 +348,7 @@ public:
 
 	/// \brief Initialize object from time part of date/time object
 	Time(const DateTime& other) :
-	DTbase<Time>(),
+	Comparable<Time>(),
 	hour_(other.hour()),
 	minute_(other.minute()),
 	second_(other.second())
