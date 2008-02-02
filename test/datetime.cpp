@@ -106,7 +106,9 @@ test_stringization(const T& object, const char* expected,
 static unsigned int
 test_date(const Date& d, int year, int month, int day)
 {
-	if (d.year == year && d.month == d.month && d.day == day) {
+	if (	d.year() == year && 
+			d.month() == month && 
+			d.day() == day) {
 		char ac[20];
 		snprintf(ac, sizeof(ac), "%04d-%02d-%02d",
 				year, month, day);
@@ -125,7 +127,9 @@ test_date(const Date& d, int year, int month, int day)
 static unsigned int
 test_time(const Time& t, int hour, int minute, int second)
 {
-	if (t.hour == hour && t.minute == minute && t.second == second) {
+	if (	t.hour() == hour && 
+			t.minute() == minute && 
+			t.second() == second) {
 		char ac[20];
 		snprintf(ac, sizeof(ac), "%02d:%02d:%02d",
 				hour, minute, second);
@@ -175,7 +179,7 @@ main()
 	failures += test(1, 2, 3, 4, 5, 6);
 	failures += test_stringization(DateTime(), "NOW()", "DateTime");
 	DateTime dt;
-	dt.year = 2007;
+	dt.year(2007);
 	failures += test_stringization(dt, "2007-00-00 00:00:00", "DateTime");
 	return failures;
 }

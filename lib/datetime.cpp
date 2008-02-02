@@ -43,9 +43,9 @@ std::ostream& operator <<(std::ostream& os, const Date& d)
 {
 	char fill = os.fill('0');
 	ios::fmtflags flags = os.setf(ios::right);
-	os		<< setw(4) << d.year << '-' 
-			<< setw(2) << static_cast<int>(d.month) << '-'
-			<< setw(2) << static_cast<int>(d.day);
+	os		<< setw(4) << d.year() << '-' 
+			<< setw(2) << static_cast<int>(d.month()) << '-'
+			<< setw(2) << static_cast<int>(d.day());
 	os.flags(flags);
 	os.fill(fill);
 	return os;
@@ -56,9 +56,9 @@ std::ostream& operator <<(std::ostream& os, const Time& t)
 {
 	char fill = os.fill('0');
 	ios::fmtflags flags = os.setf(ios::right);
-	os		<< setw(2) << static_cast<int>(t.hour) << ':' 
-			<< setw(2) << static_cast<int>(t.minute) << ':'
-			<< setw(2) << static_cast<int>(t.second);
+	os		<< setw(2) << static_cast<int>(t.hour()) << ':' 
+			<< setw(2) << static_cast<int>(t.minute()) << ':'
+			<< setw(2) << static_cast<int>(t.second());
 	os.flags(flags);
 	os.fill(fill);
 	return os;
@@ -87,19 +87,19 @@ cchar* Date::convert(cchar* str)
 	num[2] = *str++;
 	num[3] = *str++;
 	num[4] = 0;
-	year = static_cast<unsigned short>(strtol(num, 0, 10));
+	year_ = static_cast<unsigned short>(strtol(num, 0, 10));
 	if (*str == '-') str++;
 
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	month = static_cast<unsigned char>(strtol(num, 0, 10));
+	month_ = static_cast<unsigned char>(strtol(num, 0, 10));
 	if (*str == '-') str++;
 
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	day = static_cast<unsigned char>(strtol(num, 0, 10));
+	day_ = static_cast<unsigned char>(strtol(num, 0, 10));
 
 	return str;
 }
@@ -112,19 +112,19 @@ cchar* Time::convert(cchar* str)
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	hour = static_cast<unsigned char>(strtol(num,0,10));
+	hour_ = static_cast<unsigned char>(strtol(num,0,10));
 	if (*str == ':') str++;
 
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	minute = static_cast<unsigned char>(strtol(num,0,10));
+	minute_ = static_cast<unsigned char>(strtol(num,0,10));
 	if (*str == ':') str++;
 
 	num[0] = *str++;
 	num[1] = *str++;
 	num[2] = 0;
-	second = static_cast<unsigned char>(strtol(num,0,10));
+	second_ = static_cast<unsigned char>(strtol(num,0,10));
 
 	return str;
 }
@@ -134,17 +134,17 @@ cchar* DateTime::convert(cchar* str)
 {
 	Date d;
 	str = d.convert(str);
-	year = d.year;
-	month = d.month;
-	day = d.day;
+	year_ = d.year();
+	month_ = d.month();
+	day_ = d.day();
 	
 	if (*str == ' ') ++str;
 
 	Time t;
 	str = t.convert(str);
-	hour = t.hour;
-	minute = t.minute;
-	second = t.second;
+	hour_ = t.hour();
+	minute_ = t.minute();
+	second_ = t.second();
 
 	now_ = false;
 	
@@ -154,23 +154,23 @@ cchar* DateTime::convert(cchar* str)
 
 int Date::compare(const Date& other) const
 {
-	if (year != other.year) return year - other.year;
-	if (month != other.month) return month - other.month;
-	return day - other.day;
+	if (year_ != other.year_) return year_ - other.year_;
+	if (month_ != other.month_) return month_ - other.month_;
+	return day_ - other.day_;
 }
 
 
 int Time::compare(const Time& other) const
 {
-	if (hour != other.hour) return hour - other.hour;
-	if (minute != other.minute) return minute - other.minute;
-	return second - other.second;
+	if (hour_ != other.hour_) return hour_ - other.hour_;
+	if (minute_ != other.minute_) return minute_ - other.minute_;
+	return second_ - other.second_;
 }
 
 
 int DateTime::compare(const DateTime& other) const
 {
-	if (is_now() && other.is_now()) {
+	if (now_ && other.now_) {
 		return 0;
 	}
 	else {
@@ -207,7 +207,7 @@ Time::operator std::string() const
 
 DateTime::operator time_t() const
 {
-	if (is_now()) {
+	if (now_) {
 		// Many factors combine to make it almost impossible for this
 		// case to return the same value as you'd get if you used this
 		// in a query.  But, you gotta better idea than to return the
@@ -216,12 +216,12 @@ DateTime::operator time_t() const
 	}
 	else {
 		struct tm tm;
-		tm.tm_sec = second;
-		tm.tm_min = minute;
-		tm.tm_hour = hour;
-		tm.tm_mday = day;
-		tm.tm_mon = month - 1;
-		tm.tm_year = year - 1900;
+		tm.tm_sec = second_;
+		tm.tm_min = minute_;
+		tm.tm_hour = hour_;
+		tm.tm_mday = day_;
+		tm.tm_mon = month_ - 1;
+		tm.tm_year = year_ - 1900;
 		tm.tm_isdst = -1;
 
 		return mktime(&tm);
@@ -245,26 +245,15 @@ DateTime::DateTime(time_t t)
 	memcpy(&tm, localtime(&t), sizeof(tm));
 #endif
 
-	year = tm.tm_year + 1900;
-	month = tm.tm_mon + 1;
-	day = tm.tm_mday;
-	hour = tm.tm_hour;
-	minute = tm.tm_min;
-	second = tm.tm_sec;
+	year_ = tm.tm_year + 1900;
+	month_ = tm.tm_mon + 1;
+	day_ = tm.tm_mday;
+	hour_ = tm.tm_hour;
+	minute_ = tm.tm_min;
+	second_ = tm.tm_sec;
 
 	now_ = false;
 }
 
-
-bool
-DateTime::is_now() const
-{
-	return now_ &&
-			year == 0 && month == 0 && day == 0 &&
-			hour == 0 && minute == 0 && second == 0;
-}
-
-
 } // end namespace mysqlpp
-
 

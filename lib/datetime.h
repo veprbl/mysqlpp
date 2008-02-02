@@ -1,5 +1,5 @@
 /// \file datetime.h
-/// \brief Declares classes to add MySQL-compatible date and time
+/// \brief Declares classes to add SQL-compatible date and time
 /// types to C++'s type system.
 
 /***********************************************************************
@@ -38,25 +38,12 @@ namespace mysqlpp {
 
 /// \brief Base class template for MySQL++ date and time classes.
 ///
-/// This template primarily defines the comparison operators, which are
-/// all implemented in terms of compare(). Each subclass implements that
-/// as a protected method, because these operators are the only
-/// supported comparison method.
-///
-/// This template also defines interfaces for converting the object to
-/// a string form, which a subclass must define.
+/// A subclass mixes this class in to its interface, implements
+/// compare(), and thereby gains a full set of comparison operators.
 template <class T>
-struct MYSQLPP_EXPORT DTbase
+class MYSQLPP_EXPORT DTbase
 {
-	/// \brief Destroy object
-	virtual ~DTbase() { }
-
-	/// \brief Compare this object to another of the same type
-	///
-	/// Returns < 0 if this object is "before" the other, 0 of they are
-	/// equal, and > 0 if this object is "after" the other.
-	virtual int compare(const T& other) const = 0;
-
+public:
 	/// \brief Returns true if "other" is equal to this object
 	bool operator ==(const T& other) const
 	{
@@ -92,59 +79,65 @@ struct MYSQLPP_EXPORT DTbase
 	{
 		return compare(other) >= 0;
 	}
+
+protected:
+	/// \brief Destroy object
+	///
+	/// This class has nothing to destroy, but declaring the dtor
+	/// virtual placates some compilers set to high warning levels.
+	/// Protecting it ensures you can't delete subclasses through base
+	/// class pointers, which makes no sense because this class isn't
+	/// made for polymorphism.  It's just a mixin.
+	virtual ~DTbase() { }
+
+	/// \brief Compare this object to another of the same type
+	///
+	/// Returns < 0 if this object is "before" the other, 0 of they are
+	/// equal, and > 0 if this object is "after" the other.
+	virtual int compare(const T& other) const = 0;
 };
 
 
-/// \brief C++ form of MySQL's DATETIME type.
+/// \brief C++ form of SQL's DATETIME type.
 ///
-/// Objects of this class can be inserted into streams, and
-/// initialized from MySQL DATETIME strings.
-///
-/// If you use the default constructor, it's sensible to use the object
-/// in a SQL query as of MySQL++ v3.0.  When converting the object to a
-/// string form for assembling the query, we convert to the SQL function
-/// "NOW()", allowing the database server to set the value.  In older
-/// versions of MySQL++, you'd get a "zero time" instead.
+/// This object exists primarily for conversion purposes.  You can
+/// initialize it in several different ways, and then convert the object
+/// to SQL string form, extract the individual y/m/d h:m:s values,
+/// convert it to C's time_t, etc.
 
-struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
+class MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 {
-	unsigned short year;	///< the year, as a simple integer
-	unsigned char month;	///< the month, 1-12
-	unsigned char day;		///< the day, 1-31
-	unsigned char hour;		///< the hour, 0-23
-	unsigned char minute;	///< the minute, 0-59
-	unsigned char second;	///< the second, 0-59
-
+public:
 	/// \brief Default constructor
 	DateTime() :
 	DTbase<DateTime>(),
-	year(0),
-	month(0),
-	day(0),
-	hour(0),
-	minute(0),
-	second(0),
+	year_(0),
+	month_(0),
+	day_(0),
+	hour_(0),
+	minute_(0),
+	second_(0),
 	now_(true)
 	{
 	}
 
 	/// \brief Initialize object from discrete y/m/d h:m:s values.
 	///
-	/// \param y year
-	/// \param mon month
-	/// \param d day of month
-	/// \param h hour
-	/// \param min minute
-	/// \param s second
+	/// \param y year_
+	/// \param mon month_
+	/// \param d day_ of month_
+	/// \param h hour_
+	/// \param min minute_
+	/// \param s second_
 	DateTime(unsigned short y, unsigned char mon, unsigned char d,
 			unsigned char h, unsigned char min, unsigned char s) :
 	DTbase<DateTime>(),
-	year(y),
-	month(mon),
-	day(d),
-	hour(h),
-	minute(min),
-	second(s),
+	year_(y),
+	month_(mon),
+	day_(d),
+	hour_(h),
+	minute_(min),
+	second_(s),
 	now_(false)
 	{
 	}
@@ -152,25 +145,28 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 	/// \brief Initialize object as a copy of another Date
 	DateTime(const DateTime& other) :
 	DTbase<DateTime>(),
-	year(other.year),
-	month(other.month),
-	day(other.day),
-	hour(other.hour),
-	minute(other.minute),
-	second(other.second),
+	year_(other.year_),
+	month_(other.month_),
+	day_(other.day_),
+	hour_(other.hour_),
+	minute_(other.minute_),
+	second_(other.second_),
 	now_(other.now_)
 	{
 	}
 
-	/// \brief Initialize object from a C string containing a MySQL
+	/// \brief Initialize object from a C string containing a SQL
 	/// date-and-time string
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
 	/// zero-padded.
 	explicit DateTime(cchar* str) { convert(str); }
 	
-	/// \brief Initialize object from a C++ type of string containing
-	/// a MySQL date-and-time string
+	/// \brief Initialize object from a C++ string containing a
+	/// SQL date-and-time string
+	///
+	/// This works with any stringish class that declares a c_str()
+	/// member function: std::string, mysqlpp::String...
 	///
 	/// \sa DateTime(cchar*)
 	template <class Str>
@@ -179,31 +175,45 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 		convert(str.c_str());
 	}
 
-	/// \brief Initialize object from a time_t
+	/// \brief Initialize object from a \c time_t
 	explicit DateTime(time_t t);
 
-	/// \brief Compare this datetime to another.
+	/// \brief Compare this object to another.
 	///
-	/// Returns < 0 if this datetime is before the other, 0 of they are
-	/// equal, and > 0 if this datetime is after the other.
-	///
-	/// This method is protected because it is merely the engine used
-	/// by the various operators in DTbase.
+	/// Returns < 0 if this object is before the other, 0 of they are
+	/// equal, and > 0 if this object is after the other.
 	int compare(const DateTime& other) const;
 
-	/// \brief Parse a MySQL date and time string into this object.
+	/// \brief Parse a SQL date and time string into this object.
 	cchar* convert(cchar*);
 
-	/// \brief Returns true if 'now' member is true and all other
-	/// members are zero.
-	///
-	/// Can't just test 'now' because you can create the object with
-	/// the default ctor (giving a "now" value) and then assign values
-	/// to its data members later, which should make it "not now".  We
-	/// could do without this by hiding all the data members behind
-	/// accessors which can reset the "now" flag when setting other
-	/// values, but it's too simple a class to bother.
-	bool is_now() const;
+	/// \brief Get the date/time value's day part, 1-31
+	unsigned char day() const { return day_; }
+
+	/// \brief Change the date/time value's day part, 1-31
+	void day(unsigned char d) { day_ = d; now_ = false; }
+
+	/// \brief Get the date/time value's hour part, 0-23
+	unsigned char hour() const { return hour_; }
+
+	/// \brief Change the date/time value's hour part, 0-23
+	void hour(unsigned char h) { hour_ = h; now_ = false; }
+
+	/// \brief Returns true if object will evaluate to SQL "NOW()" on
+	/// conversion to string.
+	bool is_now() const { return now_; }
+
+	/// \brief Get the date/time value's minute part, 0-59
+	unsigned char minute() const { return minute_; }
+
+	/// \brief Change the date/time value's minute part, 0-59
+	void minute(unsigned char m) { minute_ = m; now_ = false; }
+
+	/// \brief Get the date/time value's month part, 1-12
+	unsigned char month() const { return month_; }
+
+	/// \brief Change the date/time value's month part, 1-12
+	void month(unsigned char m) { month_ = m; now_ = false; }
 
 	/// \brief Factory to create an object instance that will convert
 	/// to SQL "NOW()" on insertion into a query
@@ -211,22 +221,47 @@ struct MYSQLPP_EXPORT DateTime : public DTbase<DateTime>
 	/// This is just syntactic sugar around the default ctor
 	static DateTime now() { return DateTime(); }
 
-	/// Convert to std::string
+	/// \brief Convert to std::string
 	operator std::string() const;
 
-	/// Convert to time_t
+	/// \brief Convert to time_t
 	operator time_t() const;
 
-	/// Return our value in std::string form
+	/// \brief Get the date/time value's second part, 0-59
+	unsigned char second() const { return second_; }
+
+	/// \brief Change the date/time value's second part, 0-59
+	void second(unsigned char s) { second_ = s; now_ = false; }
+
+	/// \brief Return our value in std::string form
 	std::string str() const { return *this; }
 
+	/// \brief Get the date/time value's year part
+	///
+	/// There's no trickery here like in some date/time implementations
+	/// where you have to add 1900 or something like that.
+	unsigned short year() const { return year_; }
+
+	/// \brief Change the date/time value's year part
+	///
+	/// Pass the year value normally; we don't optimize the value by
+	/// subtracting 1900 like some other date/time implementations.
+	void year(unsigned short y) { year_ = y; now_ = false; }
+
 private:
+	unsigned short year_;	///< the year, as a simple integer
+	unsigned char month_;	///< the month, 1-12
+	unsigned char day_;		///< the day, 1-31
+	unsigned char hour_;	///< the hour, 0-23
+	unsigned char minute_;	///< the minute, 0-59
+	unsigned char second_;	///< the second, 0-59
+
 	bool now_;	///< true if object not initialized with explicit value
 };
 
 
 /// \brief Inserts a DateTime object into a C++ stream in a
-/// MySQL-compatible format.
+/// SQL-compatible format.
 ///
 /// The date and time are inserted into the stream, in that order,
 /// with a space between them.
@@ -237,43 +272,40 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& os,
 		const DateTime& dt);
 
 
-/// \brief C++ form of MySQL's DATE type.
+/// \brief C++ form of SQL's DATE type.
 ///
 /// Objects of this class can be inserted into streams, and
-/// initialized from MySQL DATE strings.
-struct MYSQLPP_EXPORT Date : public DTbase<Date>
+/// initialized from SQL DATE strings.
+class MYSQLPP_EXPORT Date : public DTbase<Date>
 {
-	unsigned short year;	///< the year, as a simple integer
-	unsigned char month;	///< the month, 1-12
-	unsigned char day;		///< the day, 1-31
-
+public:
 	/// \brief Default constructor
-	Date() : year(0), month(0), day(0) { }
+	Date() : year_(0), month_(0), day_(0) { }
 
 	/// \brief Initialize object
 	Date(unsigned short y, unsigned char m, unsigned char d) :
 	DTbase<Date>(),
-	year(y),
-	month(m),
-	day(d)
+	year_(y),
+	month_(m),
+	day_(d)
 	{
 	}
 	
 	/// \brief Initialize object as a copy of another Date
 	Date(const Date& other) :
 	DTbase<Date>(),
-	year(other.year),
-	month(other.month),
-	day(other.day)
+	year_(other.year_),
+	month_(other.month_),
+	day_(other.day_)
 	{
 	}
 
 	/// \brief Initialize object from date part of date/time object
 	Date(const DateTime& other) :
 	DTbase<Date>(),
-	year(other.year),
-	month(other.month),
-	day(other.day)
+	year_(other.year()),
+	month_(other.month()),
+	day_(other.day())
 	{
 	}
 
@@ -283,7 +315,10 @@ struct MYSQLPP_EXPORT Date : public DTbase<Date>
 	/// zero-padded.
 	explicit Date(cchar* str) { convert(str); }
 	
-	/// \brief Initialize object from a C++ style string containing a date
+	/// \brief Initialize object from a C++ string containing a date
+	///
+	/// This works with any stringish class that declares a c_str()
+	/// member function: std::string, mysqlpp::String...
 	///
 	/// \sa Date(cchar*)
 	template <class Str>
@@ -295,14 +330,43 @@ struct MYSQLPP_EXPORT Date : public DTbase<Date>
 	/// equal, and > 0 if this date is after the other.
 	int compare(const Date& other) const;
 
-	/// \brief Parse a MySQL date string into this object.
+	/// \brief Parse a SQL date string into this object.
 	cchar* convert(cchar*);
 
-	/// Convert to std::string
+	/// \brief Get the date's day part, 1-31
+	unsigned char day() const { return day_; }
+
+	/// \brief Change the date's day part, 1-31
+	void day(unsigned char d) { day_ = d; }
+
+	/// \brief Get the date's month part, 1-12
+	unsigned char month() const { return month_; }
+
+	/// \brief Change the date's month part, 1-12
+	void month(unsigned char m) { month_ = m; }
+
+	/// \brief Convert to std::string
 	operator std::string() const;
 
-	/// Return our value in std::string form
+	/// \brief Return our value in std::string form
 	std::string str() const { return *this; }
+
+	/// \brief Get the date's year part
+	///
+	/// There's no trickery here like in some date implementations
+	/// where you have to add 1900 or something like that.
+	unsigned short year() const { return year_; }
+
+	/// \brief Change the date's year part
+	///
+	/// Pass the year value normally; we don't optimize the value by
+	/// subtracting 1900 like some other date implementations.
+	void year(unsigned short y) { year_ = y; }
+
+private:
+	unsigned short year_;	///< the year, as a simple integer
+	unsigned char month_;	///< the month, 1-12
+	unsigned char day_;		///< the day, 1-31
 };
 
 /// \brief Inserts a Date object into a C++ stream
@@ -315,61 +379,58 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& os,
 		const Date& d);
 
 
-/// \brief C++ form of MySQL's TIME type.
+/// \brief C++ form of SQL's TIME type.
 ///
 /// Objects of this class can be inserted into streams, and
-/// initialized from MySQL TIME strings.
-struct MYSQLPP_EXPORT Time : public DTbase<Time>
+/// initialized from SQL TIME strings.
+class MYSQLPP_EXPORT Time : public DTbase<Time>
 {
-	unsigned char hour;		///< the hour, 0-23
-	unsigned char minute;	///< the minute, 0-59
-	unsigned char second;	///< the second, 0-59
-
+public:
 	/// \brief Default constructor
-	Time() : hour(0), minute(0), second(0) { }
+	Time() : hour_(0), minute_(0), second_(0) { }
 
 	/// \brief Initialize object
 	Time(unsigned char h, unsigned char m, unsigned char s) :
-	hour(h),
-	minute(m),
-	second(s)
+	hour_(h),
+	minute_(m),
+	second_(s)
 	{
 	}
 
 	/// \brief Initialize object as a copy of another Time
 	Time(const Time& other) :
 	DTbase<Time>(),
-	hour(other.hour),
-	minute(other.minute),
-	second(other.second)
+	hour_(other.hour_),
+	minute_(other.minute_),
+	second_(other.second_)
 	{
 	}
 
 	/// \brief Initialize object from time part of date/time object
 	Time(const DateTime& other) :
 	DTbase<Time>(),
-	hour(other.hour),
-	minute(other.minute),
-	second(other.second)
+	hour_(other.hour()),
+	minute_(other.minute()),
+	second_(other.second())
 	{
 	}
 
-	/// \brief Initialize object from a C string containing a MySQL
+	/// \brief Initialize object from a C string containing a SQL
 	/// time string
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
 	/// zero-padded.
 	explicit Time(cchar* str) { convert(str); }
 
-	/// \brief Initialize object from a C++ type string containing a
-	/// MySQL time string
+	/// \brief Initialize object from a C++ string containing a
+	/// SQL time string
+	///
+	/// This works with any stringish class that declares a c_str()
+	/// member function: std::string, mysqlpp::String...
 	///
 	/// \sa Time(cchar*)
 	template <class Str>
 	explicit Time(const Str& str) { convert(str.c_str()); }
-
-	/// \brief Parse a MySQL time string into this object.
-	cchar* convert(cchar*);
 
 	/// \brief Compare this time to another.
 	///
@@ -377,14 +438,40 @@ struct MYSQLPP_EXPORT Time : public DTbase<Time>
 	/// equal, and > 0 if this time is after the other.
 	int compare(const Time& other) const;
 
+	/// \brief Parse a SQL time string into this object.
+	cchar* convert(cchar*);
+
+	/// \brief Get the time's hour part, 0-23
+	unsigned char hour() const { return hour_; }
+
+	/// \brief Change the time's hour part, 0-23
+	void hour(unsigned char h) { hour_ = h; }
+
+	/// \brief Get the time's minute part, 0-59
+	unsigned char minute() const { return minute_; }
+
+	/// \brief Change the time's minute part, 0-59
+	void minute(unsigned char m) { minute_ = m; }
+
 	/// Convert to std::string
 	operator std::string() const;
 
+	/// \brief Get the time's second part, 0-59
+	unsigned char second() const { return second_; }
+
+	/// \brief Change the time's second part, 0-59
+	void second(unsigned char s) { second_ = s; }
+
 	/// Return our value in std::string form
 	std::string str() const { return *this; }
+
+private:
+	unsigned char hour_;	///< the hour, 0-23
+	unsigned char minute_;	///< the minute, 0-59
+	unsigned char second_;	///< the second, 0-59
 };
 
-/// \brief Inserts a Time object into a C++ stream in a MySQL-compatible
+/// \brief Inserts a Time object into a C++ stream in a SQL-compatible
 /// format.
 ///
 /// The format is HH:MM:SS, zero-padded.
