@@ -1,4 +1,4 @@
-3.0.0 release candidate 2, 2008.01.23 (r2131)
+3.0.0 release candidate 3, 2008.02.01 (r2154)
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
@@ -7,62 +7,49 @@
     o Created examples/cpool.cpp to demonstrate this new class.
 
     o Added RefCountedPointer template, which provides automatic
-      memory management and data sharing.  It's not intended for use
-      outside of MySQL++ itself, but because it's behind so many of
-      the improvements in v3, I'm mentioning it here.  Every reference
-      to reference counting below refers to this template.  I created
-      the initial version of it, but Jonathan Wakely almost completely
-      rebuilt it, and Joseph Artsimovich provided helpful commentary
-      and advice as well.
+      memory management and data sharing.  It's not intended
+      for use outside of MySQL++ itself, but it's the mechanism
+      behind everything below where reference counting is mentioned.
+      I created the initial version of it, but Jonathan Wakely almost
+      completely rebuilt it, and Joseph Artsimovich provided helpful
+      commentary and advice as well.
 
-    o Several improvements to Specialized SQL Structures (SSQLS):
+    o Many improvements to Specialized SQL Structures (SSQLS):
 
       - Renamed custom* to ssqls*.  There's still a custom.h which
-        #includes ssqls.h for you, but it's only temporary.
-    
-      - They're finally compatible with Null<>-wrapped types.  This
-        feature is based on the "Waba" patch posted to the mailing
-        list back in the v2.0 days but with many changes, partly
-        because of changes in the underlying library since those days,
-        but also to be less intrusive.
+        #includes ssqls.h for you, but it's only intended to ease
+        the transition to the new name.  It will go away in a future
+        release, probably as soon as v3.1.
+
+      - SSQLSes are finally compatible with Null<>-wrapped types.  This
+        feature is based loosely on the "Waba" patch posted to the
+        mailing list back in the v2.0 days.
 
       - It's no longer necessary to define a different SSQLS for each
         different field set you use in queries.  That is to say,
         you can define an SSQLS for an entire table and store just a
         subset of the table in it now, with the other fields keeping
-        default values.  A side benefit is that the order of the fields
-        in the SSQLS no longer has to match the order of fields in
-        the result set.  Removed examples/custom6.cpp and reworked
-        custom1.cpp to work more like simple1, which has the nice
-        side benefit of implicitly demonstrating what custom6 used to.
+        default values.  Removed examples/custom6.cpp, as custom1.cpp
+        can now demonstrate the same thing, implicitly.
+
+      - An SSQLS's field order no longer has to match the order of
+        fields in the result set it is populated from.
 
       - It's now possible to use mysqlpp::String, Date, DateTime, and
-        Time types in the key field positions in an SSQLS as we can
-        now compare them.
+        Time types in the key field positions in an SSQLS as they
+        now support the necessary comparison interfaces.
 
       - If you use a floating-point data type in one of the key field
         positions, it no longer uses exact comparison logic.  Instead,
-        it now does comparisons using a threshold value defaulting
-        to 0.00001.  Two floating point values differing by less than
-        this threshold value are considered equal.  See the top of
-        lib/ssqls.pl for details.
+        it now does [in]equality comparisons by testing whether the
+        difference between two floating-point values is less than a
+        configurable threshold defaulting to 0.00001.
 
       - Removed "basic" variants of SSQLS creation macros.  They've
         been unofficially deprecated by dint of being all but
         undocumented and unexemplified for a very long time now.
     
-      - You can now use 'bool' type in SSQLS.
-
-      - SSQLSes have always had a < operator defined for them for
-        various reasons, which compares the first N fields, where N
-        is the second parameter to sql_create_X.  Earlier versions
-        of MySQL++ did comparisons using exact equality for all data
-        types including floating-point.  Now there is a configurable
-        value at the top of lib/custom.pl that lets you set the
-        minimum threshold between two floating point values such
-        that they will be considered equal.  It's also possible to
-        redefine this threshold on a per-module basis by #defining
-        MYSQLPP_FP_MIN_DELTA before #including custom.h.
+      - You can now use 'bool' type in an SSQLS.
 
     o You can now use mysqlpp::null as a template query parameter to
       get a SQL null.
@@ -82,25 +69,21 @@
         renamed the result to String, and deleted the const_string
         class.  It'd be a complete std::string replacement -- with
         SQL-related enhancements -- if it were modifiable, but MySQL++
-        doesn't need it to be modifiable, so it's still the closest
-        thing MySQL++ has to its own "string type".  Thus the name.
+        doesn't need it to be modifiable.  Yet, it's still the closest
+        thing MySQL++ has to its own string type; thus the name.
 
       - Replaced its internal buffer management with a much more
         clever reference counted scheme.  This shows its greatest
-        advantage in the return from Row::operator[]() and such,
-        which for technical reasons must still return by value, not
-        by reference as is more common for this operator.  Because it
-        uses reference counting, this doesn't copy the buffer, so
-        you can index into a Row to get a BLOB column and not worry
-        about the additional copy it used to make.
+        advantage in the return from Row::operator[](), which for
+        technical reasons must return by value, not by reference
+        as is more common.  This lets you pass around Strings by
+        value while having the efficiency of reference semantics.
+        This can be important with large return values, like BLOBs.
 
-      - Conversions from string form to numerics (ints, floats...)
-        use a new, cleaner system by Jonathan Wakely.  In code that
-        wasn't abusing weaknesses in the old system, you won't see
-        a difference in this new one.  It just tightens up some of
-        the rules and makes it easier to make changes in the future
-        since we can better understand what it's doing, and we have
-        more points of control for making changes.
+      - Converting String to numeric types (ints, floats...) uses a
+        new, cleaner system by Jonathan Wakely.  Unless you were
+        abusing weaknesses in the old system, you won't see a
+        difference.  It's just more robust and flexible.
 
     o Redesigned SQLString:
 
@@ -132,13 +115,13 @@
         does the Standard C++ Library.
 
       - Added mysqlpp::tiny_int interfaces to STA to replace the
-        former char interfaces for those using one-byte integers.
+        former char interfaces for those needing one-byte integers.
 
     o As a result of the ColData -> String redesign, removed
-      Row::raw_*().  Before String copies were efficient, this was
-      helpful in accessing BLOB data.  It was doubly helpful before
-      String dealt correctly with embedded null characters, but that
-      reason is gone now, too.
+      Row::raw_*().  Before String copies were efficient, this
+      was helpful in accessing BLOB data efficiently.  It was also
+      required back when ColData didn't deal correctly with embedded
+      null characters, but that reason is gone now, too.
 
     o Row::operator[](const char*) no longer unconditionally throws the
       BadFieldName exception when you ask for a field that doesn't
@@ -339,6 +322,44 @@
     o Removed Connection::api_version().  It does the same thing as
       client_version().
 
+    o Lots of changes to Date, DateTime, and Time classes:
+
+      - If you use the default constructor for DateTime and don't
+        subsequently set its year, month, day, hour, minute or second
+        data members to nonzero values, it becomes the SQL function
+        "NOW()" in a query string.  You can also use DateTime::now()
+        as syntactic sugar for this.
+
+      - As a result of above, had to hide all of DateTime's data
+        members behind accessor functions, to keep the state of the
+        object consistent.  (If it's initialized as "now" and you
+        give it an explicit year value, say, it is no longer "now",
+        so the setter has to clear the now-flag.)  There are getters
+        and setters for year, month, day, hour, minute and second,
+        all named after the member.
+
+      - Did the same for Date and Time for consistency, even though it
+        isn't technically required.
+
+      - The sql_timestamp typedef now aliases DateTime instead of Time.
+
+      - Renamed template class DTbase<T> to Comparable<T>.  The fact
+        that it's the common base class of all date and time classes
+        is irrelevant; making subclasses comparable is what it does,
+        so that's what it should be named after.
+
+      - Added a DateTime ctor taking discrete year, month, day, hour,
+        minute, and second values.
+
+      - Implicit conversion from stringish types to the date and time
+        types is no longer allowed.  This is part of the "Waba"
+        Null<T> patch mentioned above; allowing implicit conversions
+        would break this new feature.
+
+      - Added operator std::string and str() methods to all of these
+        classes.  Adding this to the existing operator << support, you
+        now have several ways to convert these objects to string form.
+
     o Parameterized tiny_int class on the value type so you can
       get both signed and unsigned TINYINTs
 
@@ -346,22 +367,6 @@
       mysqlpp::tiny_int<VT> instead of raw chars
 
     o Added sql_*text typedefs for things like MEDIUMTEXT
-
-    o Changed sql_timestamp typedef to be for DateTime instead of Time.
-
-    o If you use the default constructor for DateTime and don't
-      subsequently set its year, month, day, hour, minute or second
-      data members to nonzero values, it becomes the SQL function
-      "NOW()" in a query string.  You can also use DateTime::now()
-      as syntactic sugar for this.
-
-    o Added a DateTime ctor taking discrete year, month, day, hour,
-      minute, and second values.
-
-    o The Date, DateTime and Time classes can still be initialized
-      from stringish types, but to make the Null<T> SSQLS support
-      mentioned above work, implicit conversions are no longer allowed.
-      Thanks for the basic concept of this patch go to "Waba."
 
     o Added copy ctor and assignment operator to Row.
 
