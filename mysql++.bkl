@@ -361,7 +361,8 @@
         </action>
 
         <action id="doc/html/userman/index.html">
-            <depends-on-file>doc/userman/userman.dbx</depends-on-file>
+            <depends-on-file>doc/userman/*.dbx</depends-on-file>
+            <depends-on-file>doc/userman/userman.dbx.in</depends-on-file>
             <command>
                 cd doc/userman ; make html pdf ; cp userman.pdf ../pdf
             </command>
@@ -403,7 +404,7 @@
                     cp -r doc/README* doc/pdf doc/ssqls-pretty $(PKGNAME)/doc
                 </command>
                 <command>
-                    for f in LICENSE.txt Makefile mktxt README.txt *.{dbx,xsl} ; \
+                    for f in LICENSE.txt Makefile mktxt README.txt *.{dbx,in,xsl} ; \
                     do \
                         cp doc/userman/$(DDF) $(PKGNAME)/doc/userman ; \
                     done
