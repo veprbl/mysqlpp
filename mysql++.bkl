@@ -391,8 +391,8 @@
             <command>
                 cp -rL *.bat *.txt Bakefiles.bkgen bootstrap ChangeLog \
 					cleanmf config.guess config.h.in config.sub configure* \
-                    exrun install-sh libmysqlclient.def Makefile.* mysql++.* \
-                    mysql++_*.vcproj osver Wishlist $(PKGNAME)
+                    dtest exrun install-sh libmysqlclient.def Makefile.* \
+					mysql++.* mysql++_*.vcproj osver Wishlist $(PKGNAME)
             </command>
 
             <!-- config subdir -->
@@ -414,7 +414,9 @@
                         for f in *.{css,html} ; do \
                             cp doc/html/$(DDD)/$(DDF) $(PKGNAME)/doc/html/$(DDD) ; \
                         done ; \
-                    done ; 
+                    done
+                </command>
+                <command>
                     cp doc/html/refman/*.png $(PKGNAME)/doc/html/refman
                 </command>
             </if>
