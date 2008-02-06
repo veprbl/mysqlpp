@@ -95,6 +95,7 @@ test_int_conversion(const mysqlpp::String& s, bool throw_expected)
 	bool conv_threw = false;
 	try {
 		int converted = s;
+		(void)converted;	// pedantic warning squisher
 	}
 	catch (const mysqlpp::BadConversion&) {
 		conv_threw = true;
