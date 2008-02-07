@@ -2,7 +2,7 @@
  connection.cpp - Implements the Connection class.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS file in
  the top directory of the distribution for details.
 
@@ -129,8 +129,12 @@ Connection::count_rows(const std::string& table)
 	error_message_.clear();
 	Query q(this, throw_exceptions());
 	q << "SELECT COUNT(*) FROM " << table;
-	StoreQueryResult res = q.store();
-	return res[0][0];
+	if (StoreQueryResult res = q.store()) {
+		return res[0][0];
+	}
+	else {
+		return 0;
+	}
 }
 
 
