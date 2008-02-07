@@ -840,6 +840,26 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
         and all the examples that use it when built with VC++ 2003.  If
         this affects you, see <xref linkend="ssqls-vc2003"/> for
         suggestions on ways to cope.</para>
+
+        <para>If you aren&rsquo;t using the <type>sql_*</type> data
+        types in your SSQLSes there&rsquo;s a chance your program may
+        crash when using that SSQLS. <footnote><para>These typedefs
+        have been available since MySQL++ v2.1.</para></footnote>
+        This version of MySQL++ is stricter about mapping SQL to C++
+        type information, and vice versa. You know you&rsquo;ve
+        run across this if you get a run-time assertion about
+        <computeroutput>it != map_.end()</computeroutput> in
+        <filename>lib/type_info.h</filename>, on or around line
+        121. It means MySQL++ fell off the end of its internal SQL
+        to C++ data type map<footnote><para>This map is built from
+        <varname>mysql_type_info::types</varname>, defined at the top
+        of <filename>lib/type_info.cpp</filename>.</para></footnote>
+        when looking for appropriate conversion information.
+        Every data type in <filename>lib/sql_types.h</filename>
+        has a corresponding record in the type map, so if you stick
+        to those types, you&rsquo;ll be fine. It's also okay to
+        use types your C++ compiler can convert directly to these
+        predefined types.</para>
       </sect4>
 
 
@@ -962,25 +982,25 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
 
       <para>Reordered member variable declarations in some classes. The
       most common instance is when the private section was declared
-      before the public section; it is now the opposite way. This can
-      change the object&rsquo;s layout in memory, so a program linking
-      to the library must be rebuilt.</para>
+      before the public section; it is now the opposite way. This
+      can change the object&rsquo;s layout in memory, so a program
+      linking to the library must be rebuilt.</para>
 
-      <para>Simplified the date and time class hierarchy.  <ulink
-      type="structref" url="Date"/> used to derive from
-      <classname>mysql_date</classname>, <ulink type="structref"
-      url="Time"/> used to derive from
-      <classname>mysql_time</classname>, and <ulink type="structref"
-      url="DateTime"/> used to derive from both of those.  All three of
-      these classes used to derive from
-      <classname>mysql_dt_base</classname>.  All of the
-      <classname>mysql_*</classname> classes' functionality and data has
-      been folded into the leaf classes, and now the only thing shared
-      between them is their dependence on the <ulink type="structref"
-      url="DTbase"/> template. Since the leaf classes' interface has not
-      changed and end-user code shouldn&rsquo;t have been using the
-      other classes, this shouldn&rsquo;t affect the API in any
-      practical way.</para>
+      <para>Simplified the date and time class hierarchy.
+      <ulink type="structref" url="Date"/> used to
+      derive from <classname>mysql_date</classname>,
+      <ulink type="structref" url="Time"/> used to derive
+      from <classname>mysql_time</classname>, and <ulink
+      type="structref" url="DateTime"/> used to derive from
+      both of those.  All three of these classes used to derive
+      from <classname>mysql_dt_base</classname>.  All of the
+      <classname>mysql_*</classname> classes&rsquo; functionality
+      and data has been folded into the leaf classes, and now the
+      only thing shared between them is their dependence on the
+      <ulink type="structref" url="DTbase"/> template. Since the
+      leaf classes&rsquo; interface has not changed and end-user
+      code shouldn&rsquo;t have been using the other classes, this
+      shouldn&rsquo;t affect the API in any practical way.</para>
 
       <para><classname>mysql_type_info</classname> now always
       initializes its private <varname>num</varname> member.
