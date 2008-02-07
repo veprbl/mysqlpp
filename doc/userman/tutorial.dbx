@@ -462,13 +462,14 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
 
       <para>This example produces the same output as
       <filename>simple1.cpp</filename> (see <xref linkend="simple"/>),
-      but it does it with a generated C++ data structure paralleling the
-      database schema instead of using MySQL++&rsquo;s own data
-      structures directly. This results in a higher level of abstraction
-      and better use of idiomatic C++. In addition, in a real program
-      the exception handling code and the SSQLS definition would be
-      shared among many other pieces of code, so it&rsquo;s actually
-      fewer lines of unique code this way.</para>
+      but it uses higher-level data structures paralleling the
+      database schema instead of MySQL++&rsquo;s lower-level
+      generic data structures. It also uses MySQL++&rsquo;s <xref
+      linkend="exceptions"/> for error handling instead of doing
+      everything inline. For small example programs like these, the
+      overhead of SSQLS and exceptions doesn&rsquo;t pay off very
+      well, but in a real program, they end up working much better
+      than hand-rolled code.</para>
 
       <para>Notice that we are only pulling a single column from the
       <varname>stock</varname> table, but we are storing the rows in a
@@ -485,40 +486,49 @@ vector&lt;stock_subset&gt; res;
 query.storein(res);
 // ...etc...</programlisting>
 
-      <para>Prior to MySQL++ v3.0, you had no choice but to define a
-      separate SSQLS for each subset of the table you queried. If you
-      didn&rsquo;t, chances are good that the program would crash,
-      because MySQL++ used to populate an SSQLS by field order, not by
-      field name as it does now.</para>
+      <para>MySQL++ is flexible about populating
+      SSQLSes.<footnote><para>This is a new development in MySQL++
+      v3.0. Programs built against older versions of MySQL++ would
+      crash at almost any mismatch between the database schema and
+      the SSQLS definition. This is a serious problem when the design
+      of the client programs and the database can&rsquo;t be kept
+      in lock-step.</para></footnote> It works much like the Web,
+      a design that&rsquo;s enabled the development of the largest
+      distributed system in the world. Just as a browser ignores
+      tags and attributes it doesn&rsquo;t understand, you can
+      populate an SSQLS from a query result set containing columns
+      that don&rsquo;t exist in the SSQLS. And as a browser uses
+      sensible defaults when the page doesn&rsquo;t give explicit
+      values, you can have an SSQLS with more fields defined than
+      are in the query result set, and these SSQLS fields will get
+      default values. (Zero for numeric types, <type>false</type>
+      for <type>bool</type>, and a type-specific default for anything
+      more complex, like <type>mysqlpp::DateTime</type>.)</para>
 
-      <para>Another useful effect of this change is that you no longer
-      need to define the SSQLS&rsquo;s fields in the same order as the
-      fields in the SQL table.</para>
-
-      <para>More generally, this quiet coping behavior makes your code
-      resilient in the face of database schema changes. It works
-      something like the way web browsers treat HTML. Just as a browser
-      ignores tags and attributes it doesn&rsquo;t understand, you can
-      populate an SSQLS from a query result set containing columns that
-      don&rsquo;t exist in the SSQLS. And as a browser uses sensible
-      defaults when the page doesn&rsquo;t give explicit values, you can
-      have an SSQLS with more fields defined than are in the query
-      result set, and these SSQLS fields will get default values. (Zero
-      for numeric types, <type>false</type> for <type>bool</type>, and a
-      type-specific default for anything more complex, like
-      <type>mysqlpp::DateTime</type>.)</para>
-
-      <para>There&rsquo;s a danger that this quiet coping behavior may
-      mask problems, but considering that the previous behavior was for
-      the program to crash when the database schema got out of synch
-      with the SSQLS definition, it&rsquo;s likely to be taken as an
-      improvement. This behavior may even be required in some
-      environements, particularly large &ldquo;enterprise&rdquo;
-      deployments where it just isn&rsquo;t practical to update
-      everything all at once. As long as the new database schema
+      <para>In more concrete terms, the example above is able to
+      populate the <classname>stock</classname> objects using as
+      much information as it has, and leave the remaining fields at
+      their defaults. Conversely, you could also stuff the results
+      of <computeroutput>SELECT * FROM stock</computeroutput> into
+      the <classname>stock_subset</classname> SSQLS declared above;
+      the extra fields would just be ignored.</para>
+      
+      <para>We're trading run-time efficiency for flexibility here,
+      usually the right thing in a distributed system. Since MySQL is
+      a networked database server, many uses of it will qualify as
+      distributed systems. You can't count on being able to update
+      both the server(s) and all the clients at the same time, so
+      you have to make them flexible enough to cope with differences
+      while the changes propagate. As long as the new database schema
       isn&rsquo;t too grossly different from the old, your programs
-      should continue to run until you get around to updating them to
-      use the new schema.</para>
+      should continue to run until you get around to updating them
+      to use the new schema.</para>
+
+      <para>There&rsquo;s a danger that this quiet coping behavior
+      may mask problems, but considering that the previous behavior
+      was for the program to crash when the database schema got out
+      of synch with the SSQLS definition, it&rsquo;s likely to be
+      taken as an improvement.</para>
     </sect3>
 
 
@@ -553,10 +563,6 @@ query.storein(res);
       <programlisting><xi:include href="ssqls3.txt" parse="text"
       xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-      <para>When you run the example you will notice that in the WHERE
-      clause only the <varname>item</varname> field is checked for. This
-      is because SSQLS also also less-than-comparable.</para>
-
       <para>Don&rsquo;t forget to run resetdb after running the
       example.</para>
     </sect3>
@@ -571,6 +577,15 @@ query.storein(res);
 
       <programlisting><xi:include href="ssqls4.txt" parse="text"
       xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+
+      <para>The <methodname>find()</methodname> call works because
+      of the way the SSQLS was declared. It's properly covered
+      elsewhere, but suffice it to say, the "1" in the declaration
+      of <classname>stock</classname> above tells it that only the
+      first field needs to be checked in comparing two SSQLSes. In
+      database terms, this makes it the primary key. Therefore, when
+      searching for a match, our exemplar only had to have its first
+      field populated.</para>
 
       <para>For more details on the SSQLS feature, see <xref
       linkend="ssqls"/>.</para>
