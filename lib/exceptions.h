@@ -411,6 +411,28 @@ public:
 };
 
 
+/// \brief Thrown from the C++ to SQL data type conversion routine when
+/// it can't figure out how to map the type.
+///
+/// This exception is not optional.  The only alternatives when this
+/// happens are equally drastic: basically, either iterate past the
+/// end of an array (crashing the program) or call assert() to crash
+/// the program nicely.  At least this way you have some control over
+/// how your program ends.  You can even ignore the error and keep on
+/// going: this typically happens when building a SQL query, so you can
+/// handle it just the same as if the subsequent query execution failed.
+
+class MYSQLPP_EXPORT TypeLookupFailed : public Exception
+{
+public:
+	/// \brief Create exception object
+	explicit TypeLookupFailed(const std::string& w) :
+	Exception(w)
+	{
+	}
+};
+
+
 } // end namespace mysqlpp
 
 #endif // !defined(MYSQLPP_EXCEPTIONS_H)

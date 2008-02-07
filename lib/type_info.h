@@ -6,7 +6,7 @@
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS file in
  the top directory of the distribution for details.
 
@@ -28,15 +28,16 @@
  USA
 ***********************************************************************/
 
-#ifndef MYSQLPP_TYPE_INFO_H
+#if !defined(MYSQLPP_TYPE_INFO_H)
 #define MYSQLPP_TYPE_INFO_H
 
 #include "common.h"
 
-#include <map>
-#include <typeinfo>
+#include "exceptions.h"
 
-#include <assert.h>
+#include <map>
+#include <sstream>
+#include <typeinfo>
 
 namespace mysqlpp {
 
@@ -118,8 +119,14 @@ private:
 			const std::type_info& ti) const
 	{
 		map_type::const_iterator it = map_.find(&ti);
-		assert(it != map_.end());
-		return it->second;
+		if (it != map_.end()) {
+			return it->second;
+		}
+		else {
+			std::ostringstream outs;
+			outs << "Failed to find MySQL C API type ID for " << ti.name();
+			throw TypeLookupFailed(outs.str());
+		}
 	}
 
 	map_type map_;
@@ -336,5 +343,5 @@ inline bool operator !=(const mysql_type_info& a, const std::type_info& b)
 
 }								// end namespace mysqlpp
 
-#endif
+#endif // !defined(MYSQLPP_TYPE_INFO_H)
 

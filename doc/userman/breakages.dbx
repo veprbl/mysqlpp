@@ -841,25 +841,30 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
         this affects you, see <xref linkend="ssqls-vc2003"/> for
         suggestions on ways to cope.</para>
 
-        <para>If you aren&rsquo;t using the <type>sql_*</type> data
-        types in your SSQLSes there&rsquo;s a chance your program may
-        crash when using that SSQLS. <footnote><para>These typedefs
+        <para>If you are using types other than MySQL++&rsquo;s
+        <type>sql_*</type> ones <footnote><para>These typedefs
         have been available since MySQL++ v2.1.</para></footnote>
-        This version of MySQL++ is stricter about mapping SQL to C++
-        type information, and vice versa. You know you&rsquo;ve
-        run across this if you get a run-time assertion about
-        <computeroutput>it != map_.end()</computeroutput> in
-        <filename>lib/type_info.h</filename>, on or around line
-        121. It means MySQL++ fell off the end of its internal SQL
-        to C++ data type map<footnote><para>This map is built from
+        in your SSQLSes, code that previously worked may now see
+        <classname>TypeLookupFailed</classname> exceptions. (This
+        can be thrown even if exceptions are otherwise disabled in
+        MySQL++.) This version of MySQL++ is stricter about mapping
+        SQL to C++ type information, and vice versa. If the library
+        can&rsquo;t find a suitable mapping from one type system
+        to the other, it throws this exception, because its only
+        other option would be to crash or raise an assertion. This
+        typically happens when building SQL queries, so you can
+        probably handle it the same way as if the subsequent
+        query excecution failed. If you&rsquo;re catching the
+        generic <classname>mysqlpp::Exception</classname>, your
+        error handling code might not need to change. If you see
+        this exception, it does mean you need to look into your
+        use of data types, though. The table that controls this is
         <varname>mysql_type_info::types</varname>, defined at the top
-        of <filename>lib/type_info.cpp</filename>.</para></footnote>
-        when looking for appropriate conversion information.
-        Every data type in <filename>lib/sql_types.h</filename>
-        has a corresponding record in the type map, so if you stick
-        to those types, you&rsquo;ll be fine. It's also okay to
-        use types your C++ compiler can convert directly to these
-        predefined types.</para>
+        of <filename>lib/type_info.cpp</filename>. Every data type in
+        <filename>lib/sql_types.h</filename> has a corresponding record
+        in this table, so if you stick to those types, you&rsquo;ll
+        be fine. It&rsquo;s also okay to use types your C++ compiler
+        can convert directly to these predefined types.</para>
       </sect4>
 
 
