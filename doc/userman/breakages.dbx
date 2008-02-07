@@ -356,7 +356,7 @@ query.execute(some_value);</programlisting>
 
 
     <sect3 id="api-3.0.0">
-      <title>v3.0.0 (as of beta 2)</title>
+      <title>v3.0.0 (as of release candidate 3)</title>
 
       <sect4 id="api-3.0.0-names">
         <title>Class name changes</title>
@@ -500,6 +500,10 @@ query.execute(some_value);</programlisting>
           <methodname>status()</methodname> instead of
           <methodname>stat()</methodname>.</para></listitem>
         </itemizedlist>
+
+        <para>Also, removed <methodname>close()</methodname> in favor
+        of <methodname>disconnect()</methodname>, which has always
+        done the same thing.</para>
       </sect4>
 
 
