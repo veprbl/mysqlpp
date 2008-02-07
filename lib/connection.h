@@ -132,10 +132,18 @@ public:
 			const char* user = 0, const char* password = 0,
 			unsigned int port = 0);
 
-	/// \brief return true if connection was established successfully
+	/// \brief Returns true if connection was established successfully
 	///
 	/// \return true if connection was established successfully
 	bool connected() const;
+
+	/// \brief Returns the number of rows in a table
+	///
+	/// \param table name of table whose rows you want counted
+	///
+	/// This is syntactic sugar for a \c SELECT \c COUNT(*)
+	/// \c FROM \c table SQL query.
+	ulonglong count_rows(const std::string& table);
 
 	/// \brief Ask the database server to create a database
 	///

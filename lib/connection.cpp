@@ -123,6 +123,17 @@ Connection::copy(const Connection& other)
 }
 
 
+ulonglong
+Connection::count_rows(const std::string& table)
+{
+	error_message_.clear();
+	Query q(this, throw_exceptions());
+	q << "SELECT COUNT(*) FROM " << table;
+	StoreQueryResult res = q.store();
+	return res[0][0];
+}
+
+
 bool
 Connection::create_db(const std::string& db)
 {

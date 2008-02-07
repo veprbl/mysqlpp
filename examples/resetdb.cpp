@@ -5,7 +5,7 @@
 	the examples modify the table in this database.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2007 by Educational Technology Resources, Inc.
+ MySQL AB, and (c) 2004-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -159,12 +159,15 @@ main(int argc, char *argv[])
 		// the first row is a UTF-8 encoded Unicode string!  All you
 		// have to do to store Unicode data in recent versions of MySQL
 		// is use UTF-8 encoding.
-		cout << "Populating stock table..." << endl;
+		cout << "Populating stock table..." << flush;
 		query.execute("Nürnberger Brats", 97, 1.5, 8.79, "2005-03-10");
 		query.execute("Pickle Relish", 87, 1.5, 1.75, "1998-09-04");
 		query.execute("Hot Mustard", 73, .95, .97, "1998-05-25",
                 "good American yellow mustard, not that European stuff");
 		query.execute("Hotdog Buns", 65, 1.1, 1.1, "1998-04-23");
+
+		// Test that above did what we wanted.
+		cout << "inserted " << con.count_rows("stock") << " rows." << endl;
 
 		// Now create empty images table, for testing BLOB and auto-
 		// increment column features.
@@ -191,19 +194,19 @@ main(int argc, char *argv[])
 	}
 	catch (const mysqlpp::BadQuery& er) {
 		// Handle any query errors
-		cerr << "Query error: " << er.what() << endl;
+		cerr << endl << "Query error: " << er.what() << endl;
 		return 1;
 	}
 	catch (const mysqlpp::BadConversion& er) {
 		// Handle bad conversions
-		cerr << "Conversion error: " << er.what() << endl <<
+		cerr << endl << "Conversion error: " << er.what() << endl <<
 				"\tretrieved data size: " << er.retrieved <<
 				", actual size: " << er.actual_size << endl;
 		return 1;
 	}
 	catch (const mysqlpp::Exception& er) {
 		// Catch-all for any other MySQL++ exceptions
-		cerr << "Error: " << er.what() << endl;
+		cerr << endl << "Error: " << er.what() << endl;
 		return 1;
 	}
 
