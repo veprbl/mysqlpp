@@ -2,7 +2,7 @@
  stadapter.cpp - Implements the SQLTypeAdapter class.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS file in
  the top directory of the distribution for details.
 
@@ -179,6 +179,36 @@ is_processed_(false)
 
 #if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<unsigned> i) :
+buffer_(new SQLBuffer(i.is_null ? null_str : stream2string(i),
+		i.is_null ? typeid(void) : typeid(i.data), i.is_null)),
+is_processed_(false)
+{
+}
+#endif
+
+SQLTypeAdapter::SQLTypeAdapter(long i) :
+buffer_(new SQLBuffer(stream2string(i), typeid(i), false)),
+is_processed_(false)
+{
+}
+
+#if !defined(DOXYGEN_IGNORE)
+SQLTypeAdapter::SQLTypeAdapter(Null<long> i) :
+buffer_(new SQLBuffer(i.is_null ? null_str : stream2string(i),
+		i.is_null ? typeid(void) : typeid(i.data), i.is_null)),
+is_processed_(false)
+{
+}
+#endif
+
+SQLTypeAdapter::SQLTypeAdapter(unsigned long i) :
+buffer_(new SQLBuffer(stream2string(i), typeid(i), false)),
+is_processed_(false)
+{
+}
+
+#if !defined(DOXYGEN_IGNORE)
+SQLTypeAdapter::SQLTypeAdapter(Null<unsigned long> i) :
 buffer_(new SQLBuffer(i.is_null ? null_str : stream2string(i),
 		i.is_null ? typeid(void) : typeid(i.data), i.is_null)),
 is_processed_(false)

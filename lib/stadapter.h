@@ -3,7 +3,7 @@
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS file in
  the top directory of the distribution for details.
 
@@ -132,6 +132,13 @@ public:
 	/// \brief Create a string representation of an \c unsigned \c int
 	/// value
 	SQLTypeAdapter(unsigned i);
+
+	/// \brief Create a string representation of a \c long \c int value
+	SQLTypeAdapter(long i);
+
+	/// \brief Create a string representation of an \c unsigned
+	/// \c long \c int value
+	SQLTypeAdapter(unsigned long i);
 
 	/// \brief Create a string representation of a \c longlong value
 	SQLTypeAdapter(longlong i);
@@ -284,6 +291,8 @@ public:
 	SQLTypeAdapter(Null<unsigned short> i);
 	SQLTypeAdapter(Null<int> i);
 	SQLTypeAdapter(Null<unsigned> i);
+	SQLTypeAdapter(Null<long> i);
+	SQLTypeAdapter(Null<unsigned long> i);
 	SQLTypeAdapter(Null<longlong> i);
 	SQLTypeAdapter(Null<ulonglong> i);
 	SQLTypeAdapter(Null<float> i);
