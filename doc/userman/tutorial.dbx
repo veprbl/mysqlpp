@@ -579,7 +579,7 @@ query.storein(res);
       xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
       <para>The <methodname>find()</methodname> call works because
-      of the way the SSQLS was declared. It's properly covered
+      of the way the SSQLS was declared. It&rsquo;s properly covered
       elsewhere, but suffice it to say, the "1" in the declaration
       of <classname>stock</classname> above tells it that only the
       first field needs to be checked in comparing two SSQLSes. In
