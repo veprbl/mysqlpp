@@ -1,7 +1,7 @@
 /***********************************************************************
  sql_buffer.cpp - Implements the SQLBuffer class.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -24,6 +24,8 @@
 ***********************************************************************/
 
 #include "sql_buffer.h"
+
+#include <string.h>
 
 namespace mysqlpp {
 

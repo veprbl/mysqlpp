@@ -1,7 +1,7 @@
 /***********************************************************************
  tcp_connection.cpp - Implements the TCPConnection class.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -34,6 +34,7 @@
 #endif
 
 #include <ctype.h>
+#include <stdlib.h>
 
 using namespace std;
 

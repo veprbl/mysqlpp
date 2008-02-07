@@ -2,7 +2,7 @@
  cmdline.cpp - Utility functions for printing out data in common
     formats, required by most of the example programs.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -29,6 +29,7 @@
 #include <iostream>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
