@@ -71,6 +71,12 @@ public:
 	{
 	}
 	
+	/// \brief Return truthiness of value
+	operator bool() const
+	{
+		return value_;
+	}
+
 	/// \brief Return value as an \c int.
 	operator int() const
 	{
