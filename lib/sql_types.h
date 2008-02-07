@@ -2,7 +2,7 @@
 /// \brief Declares the closest C++ equivalent of each MySQL column type
 
 /***********************************************************************
- Copyright (c) 2006-2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2006-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -49,6 +49,9 @@ typedef int						sql_mediumint;
 typedef unsigned int		 	sql_mediumint_unsigned;
 typedef longlong				sql_bigint;
 typedef ulonglong				sql_bigint_unsigned;
+
+typedef sql_tinyint				sql_bool;
+typedef sql_tinyint				sql_boolean;
 
 typedef float					sql_float;
 typedef double					sql_double;
