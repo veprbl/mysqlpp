@@ -283,10 +283,6 @@ foreach my $i (1..$max_data_members) {
 	my $parmc = "";
 	my $parmC = "";
     my $parm_complete = ""; 
-    my $parm_names = "";
-	my $parm_names2c = "";
-    my $parm_order = "";
-	my $parm_order2c = "";
     my $parm_simple = "";
 	my $parm_simple2c = "";
 	my $parm_simple2c_b = "";
@@ -296,23 +292,15 @@ foreach my $i (1..$max_data_members) {
     my $value_list_cus = "";
 
     foreach my $j (1 .. $i) {
-		$parm_complete .= "T$j, I$j, N$j, O$j";
+		$parm_complete .= "T$j, I$j, N$j";
 		$parm_complete .= ", " unless $j == $i;
-		$parm_order    .= "T$j, I$j, O$j";
-		$parm_order    .= ", " unless $j == $i;
-		$parm_order2c  .= "T$j, I$j, #I$j, O$j";
-		$parm_order2c  .= ", " unless $j == $i;
-		$parm_names    .= "T$j, I$j, N$j";
-		$parm_names    .= ", " unless $j == $i;
-		$parm_names2c  .= "T$j, I$j, N$j, ". ($j-1);
-		$parm_names2c  .= ", " unless $j == $i;
 		$parm_simple   .= "T$j, I$j";
 		$parm_simple   .= ", " unless $j == $i;
-		$parm_simple2c .= "T$j, I$j, #I$j, ". ($j-1);
+		$parm_simple2c .= "T$j, I$j, #I$j";
 		$parm_simple2c .= ", " unless $j == $i;
 		$parm_simple_b   .= "T$j, I$j";
 		$parm_simple_b   .= ", " unless $j == $i;
-		$parm_simple2c_b .= "T$j, I$j, ". ($j-1);
+		$parm_simple2c_b .= "T$j, I$j";
 		$parm_simple2c_b .= ", " unless $j == $i;
 
 		$defs  .= "    T$j I$j;";
@@ -898,12 +886,6 @@ print OUT &prepare($out);
 print OUT << "---";
 #define sql_create_$i(NAME, CMP, CONTR, $parm_simple) \\
   sql_create_complete_$i(NAME, CMP, CONTR, $parm_simple2c) \\
-
-#define sql_create_c_order_$i(NAME, CMP, CONTR, $parm_order) \\
-  sql_create_complete_$i(NAME, CMP, CONTR, $parm_order2c)
-
-#define sql_create_c_names_$i(NAME, CMP, CONTR, $parm_names) \\
-  sql_create_complete_$i(NAME, CMP, CONTR, $parm_names2c)
 
 // ---------------------------------------------------
 //                  End Create $i
