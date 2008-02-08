@@ -27,31 +27,62 @@
     <para>This is the most basic sort of SSQLS declaration:</para>
 
     <programlisting>
-sql_create_5(stock, 1, 0,
-  string, item,
-  int, num,         
-  double, weight,  
-  double, price,  
-  mysqlpp::Date, date)</programlisting>
+sql_create_6(stock, 1, 6,
+    mysqlpp::sql_char, item,
+    mysqlpp::sql_bigint, num,
+    mysqlpp::sql_double, weight,
+    mysqlpp::sql_decimal, price,
+    mysqlpp::sql_date, sdate,
+    mysqlpp::Null&lt;mysqlpp::sql_mediumtext&gt;, description)</programlisting>
 
     <para>This creates a C++ structure called
-    <classname>stock</classname> containing five member variables
-    (<varname>item</varname>, <varname>num</varname>,
-    <varname>weight</varname>, <varname>price</varname> and
-    <varname>date</varname>), along with some constructors and other
-    member functions useful with MySQL++.</para>
+    <classname>stock</classname> containing six member
+    variables (<varname>item</varname>, <varname>num</varname>,
+    <varname>weight</varname>, <varname>price</varname>,
+    <varname>sdate</varname>, and <varname>description</varname>),
+    along with some constructors and other useful member
+    functions.</para>
 
-    <para>One of the generated constructors takes a reference to a
-    mysqlpp::Row object, allowing you to easily populate a vector of
-    stocks like so:</para>
+    <para>The parameter before each field name is the C++ data type
+    that will be used to hold that value in the SSQLS. MySQL++ has
+    a <type>sql_*</type> typedef for almost every data type MySQL
+    understands.<footnote><para>MySQL++ doesn&rsquo;t have typedefs
+    for some of the more exotic data types, like those for the
+    geospatial types. Patches to correct this will be thoughtfully
+    considered.</para></footnote> While it&rsquo;s possible to use
+    some regular C and C++ data types here, it&rsquo;s safer to use
+    the ones MySQL++ defines, as they&rsquo;re likely to be a better
+    match to the types used by the database server. Plus, if you use
+    the predefined types, you are assured that MySQL++ knows how to
+    do the data conversions between the C++ and SQL type systems. If
+    you use other data types and the C++ compiler can&rsquo;t convert
+    it to one MySQL++ already understands, MySQL++ will throw a
+    <ulink type="classref" url="TypeLookupFailed"/> exception. The
+    <type>sql_*</type> types are defined in MySQL++&rsquo;s
+    <filename>sql_types.h</filename> header. The naming scheme is
+    easy to learn when you know the SQL data type names.</para>
+
+    <para>Another thing you&rsquo;ll notice above is the type of the
+    last column. We&rsquo;ve wrapped it in MySQL++&rsquo;s <ulink
+    type="classref" url="Null"/> template, which enables it to take a
+    SQL null value in addition to the values the base data type allows.
+    For more on this topic, see <xref linkend="sql-null"/>.</para>
+
+    <para>One of the generated constructors takes a reference to
+    a <ulink type="classref" url="Row"/>, allowing you to easily
+    populate a vector of stocks like so:</para>
 
     <programlisting>
 vector&lt;stock&gt; result; 
 query.storein(result);</programlisting>
 
-    <para>That&rsquo;s all there is to it. The only requirements are
-    that the table structure be compatible with the SSQLS&rsquo;s member
-    variables, and that the fields are in the same order.</para>
+    <para>MySQL++ takes care of mapping result set data to SSQLS
+    fields. The SSQLS doesn&rsquo;t have to have the same number
+    of fields as the result set, and the order of fields in the
+    result set doesn&rsquo;t have to match the order of fields in
+    the SSQLS. Fields in the result set that don&rsquo;t exist in the
+    SSQLS are just quietly dropped, and fields in the SSQLS for which
+    there is no data in the result get set to a default value.</para>
 
     <para>The general format of this set of macros is:</para>
 
@@ -82,11 +113,11 @@ sql_create_#(NAME, COMPCOUNT, SETCOUNT, TYPE1, ITEM1, ... TYPE#, ITEM#)</program
     <classname>stock</classname> structures.</para>
 
     <para>This feature works best when your table&rsquo;s
-    &ldquo;key&rdquo; fields are the first ones in the table schema and
-    you set <parameter>COMPCOUNT</parameter> equal to the number of key
-    fields.  That way, a check for equality between two SSQLS structures
-    in your C++ code will give the same results as a check for equality
-    in SQL.</para>
+    &ldquo;key&rdquo; fields are the first ones in the SSQLS and
+    you set <parameter>COMPCOUNT</parameter> equal to the number
+    of key fields. That way, a check for equality between two SSQLS
+    structures in your C++ code will give the same results as a check
+    for equality in SQL.</para>
 
     <para><parameter>COMPCOUNT</parameter> must
     be at least 1. The current implementation of
@@ -116,11 +147,11 @@ cout &lt;&lt; result.lower_bound(stock("Hamburger"))-&gt;item &lt;&lt; endl;</pr
 
     <programlisting>
 sql_create_5(stock, 1, 2,
-  string, item,
-  int, num,         
-  double, weight,  
-  double, price,  
-  mysqlpp::Date, date)
+    mysqlpp::sql_char, item,
+    mysqlpp::sql_bigint, num,         
+    mysqlpp::sql_double, weight,  
+    mysqlpp::sql_decimal, price,  
+    mysqlpp::sql_date, sdate)
     
 stock foo("Hotdog", 52);</programlisting>
 
@@ -131,19 +162,26 @@ stock foo("Hotdog", 52);</programlisting>
     <para>The <parameter>COMPCOUNT</parameter> and
     <parameter>SETCOUNT</parameter> values cannot be equal. If they
     are, the macro will generate two initialization constructors with
-    identical parameter lists, which is illegal in C++. Why does this
-    happen? It&rsquo;s often convenient to be able to say something like
-    <userinput>x == stock("Hotdog")</userinput>. This requires that
-    there be a constructor taking <parameter>COMPCOUNT</parameter>
+    identical parameter lists, which is illegal in C++. You might be
+    asking, why does there need to be a constructor for comparison to
+    begin with? It&rsquo;s often convenient to be able to say something
+    like <userinput>x == stock("Hotdog")</userinput>. This requires
+    that there be a constructor taking <parameter>COMPCOUNT</parameter>
     arguments to create the temporary <classname>stock</classname>
-    instance used in the comparison. It is easy to work around
-    this limitation. Using our <classname>stock</classname>
-    example structure, if you wanted comparisons to consider all
-    5 fields and also be able to initialize all 5 fields at once,
-    you would pass 5 for <parameter>COMPCOUNT</parameter> and
-    0 for <parameter>SETCOUNT</parameter>. You would still get
-    a 5-parameter initialization constructor and a 5-parameter
-    <function>set()</function> function.</para>
+    instance used in the comparison.</para>
+
+    <para>This limitation is not a problem in practice. If you
+    want the same number of parameters in the initialization
+    constructor as the number of fields used in comparisons,
+    pass 0 for <parameter>SETCOUNT</parameter>. This suppresses
+    the duplicate constructor you&rsquo;d get if you used the
+    <parameter>COMPCOUNT</parameter> value instead. This is most
+    useful in very small SSQLSes, since it&rsquo;s easier for the
+    number of key fields to equal the number of fields you want to
+    compare on:</para>
+
+    <programlisting>
+sql_create_1(stock_item, 1, 0, mysqlpp::sql_char, item)</programlisting>
   </sect2>
 
 
@@ -286,7 +324,7 @@ stock_cus_value_list&lt;Manip&gt; value_list([cchar *d, [Manip m,] ]
     once, let&rsquo;s ease into the subject. Consider this code:</para>
 
     <programlisting>
-stock s("Dinner Rolls", 75, 0.95, 0.97, "1998-05-25");   
+stock s("Dinner Rolls", 75, 0.95, 0.97, sql_date("1998-05-25"));   
 cout &lt;&lt; "Value list: " &lt;&lt; s.value_list() &lt;&lt; endl;  
 cout &lt;&lt; "Field list: " &lt;&lt; s.field_list() &lt;&lt; endl;  
 cout &lt;&lt; "Equal list: " &lt;&lt; s.equal_list() &lt;&lt; endl;</programlisting>
@@ -295,8 +333,8 @@ cout &lt;&lt; "Equal list: " &lt;&lt; s.equal_list() &lt;&lt; endl;</programlist
 
     <programlisting>
 Value list: 'Dinner Rolls',75,0.95,0.97,'1998-05-25'   
-Field list: item,num,weight,price,date  
-Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,date = '1998-05-25'</programlisting>
+Field list: item,num,weight,price,sdate  
+Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,sdate = '1998-05-25'</programlisting>
 
     <para>That is, a &ldquo;value list&rdquo; is a list of data member
     values within a particular SSQLS instance, a &ldquo;field
@@ -367,43 +405,25 @@ query &lt;&lt; "select * from stock where " &lt;&lt;
   </sect2>
 
 
-  <sect2 id="ssqls-alt-creation">
-    <title>Alternate Creation Methods</title>
+  <sect2 id="ssqls-field-names">
+    <title>Having Different Field Names in C++ and SQL</title>
 
-    <para>If for some reason you want your SSQLS data members to have
-    different names than used in the MySQL database, you can do so
-    like this:</para>
-
-    <programlisting>
-sql_create_c_names_5(stock, 1, 5,   
-  string, item, "item",
-  int, num, "quantity",  
-  double, weight, "weight",  
-  double, price, "price"  
-  mysqlpp::Date, date, "shipment")</programlisting>
-
-    <para>If you want your SSQLS to have its data members in a
-    different order from those in the MySQL table, you can do it
-    like this:</para>
+    <para>There&rsquo;s a more advanced SSQLS creation macro,
+    which all the others are built on top of. Currently, the only
+    feature it adds over what&rsquo;s described above is that it
+    lets you name your SSQLS fields differently from the names
+    used by the database server. Perhaps you want to use <ulink
+    url="http://en.wikipedia.org/wiki/Hungarian_notation">Hungarian
+    notation</ulink> in your C++ program without changing the SQL
+    database schema:</para>
 
     <programlisting>
-sql_create_c_order_5(stock, 2, 5,   
-  mysqlpp::Date, date, 5,
-  double, price, 4,   
-  string, item, 1,  
-  int, num, 2,   
-  double, weight, 3)</programlisting>
-
-    <para>You can combine the custom names and custom ordering like
-    this:</para>
-
-    <programlisting>
-sql_create_complete_5(stock, 2, 5,   
-  mysqlpp::date, date, "shipment", 5,
-  double, price, "price", 4,
-  string, item, "item", 1,
-  int, num, "quantity", 2,
-  double, weight, "weight", 3)</programlisting>
+sql_create_complete_5(stock, 1, 5,   
+    mysqlpp::sql_char, item, "m_sItem",
+    mysqlpp::sql_bigint, num, "m_nNum",
+    mysqlpp::sql_double, weight, "m_fWeight",
+    mysqlpp::sql_decimal, price, "m_fPrice",
+    mysqlpp::sql_date, sdate, "m_Date")</programlisting>
   </sect2>
 
 
