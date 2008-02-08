@@ -264,6 +264,12 @@ public:
 	template <class Str>
 	explicit Date(const Str& str) { convert(str.c_str()); }
 
+	/// \brief Initialize object from a \c time_t
+	///
+	/// Naturally, we throw away the "time" part of the \c time_t.  If
+	/// you need to keep it, you want to use DateTime instead.
+	explicit Date(time_t t);
+
 	/// \brief Compare this date to another.
 	///
 	/// Returns < 0 if this date is before the other, 0 of they are
@@ -287,6 +293,11 @@ public:
 
 	/// \brief Convert to std::string
 	operator std::string() const;
+
+	/// \brief Convert to time_t
+	///
+	/// The "time" part of the \c time_t is "now"
+	operator time_t() const;
 
 	/// \brief Return our value in std::string form
 	std::string str() const { return *this; }
@@ -372,6 +383,12 @@ public:
 	template <class Str>
 	explicit Time(const Str& str) { convert(str.c_str()); }
 
+	/// \brief Initialize object from a \c time_t
+	///
+	/// Naturally, we throw away the "date" part of the \c time_t.  If
+	/// you need to keep it, you want to use DateTime instead.
+	explicit Time(time_t t);
+
 	/// \brief Compare this time to another.
 	///
 	/// Returns < 0 if this time is before the other, 0 of they are
@@ -395,6 +412,11 @@ public:
 
 	/// Convert to std::string
 	operator std::string() const;
+
+	/// \brief Convert to time_t
+	///
+	/// The "date" part of the \c time_t is "today"
+	operator time_t() const;
 
 	/// \brief Get the time's second part, 0-59
 	unsigned char second() const { return second_; }

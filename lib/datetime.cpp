@@ -40,6 +40,24 @@ using namespace std;
 
 namespace mysqlpp {
 
+static void
+safe_localtime(struct tm* ptm, const time_t t)
+{
+#if defined(MYSQLPP_HAVE_LOCALTIME_S)
+	// common.h detected localtime_s() from native RTL of VC++ 2005 and up
+	localtime_s(ptm, &t);
+#elif defined(HAVE_LOCALTIME_R)
+	// autoconf detected POSIX's localtime_r() on this system
+	localtime_r(&t, ptm);
+#else
+	// No explicitly thread-safe localtime() replacement found.  This
+	// may still be thread-safe, as some C libraries take special steps
+	// within localtime() to get thread safety, such as TLS.
+	memcpy(ptm, localtime(&t), sizeof(tm));
+#endif
+}
+
+
 std::ostream& operator <<(std::ostream& os, const Date& d)
 {
 	char fill = os.fill('0');
@@ -79,7 +97,46 @@ std::ostream& operator <<(std::ostream& os, const DateTime& dt)
 }
 
 
-cchar* Date::convert(cchar* str)
+Date::Date(time_t t)
+{
+	struct tm tm;
+	safe_localtime(&tm, t);
+
+	year_ = tm.tm_year + 1900;
+	month_ = tm.tm_mon + 1;
+	day_ = tm.tm_mday;
+}
+
+
+DateTime::DateTime(time_t t)
+{
+	struct tm tm;
+	safe_localtime(&tm, t);
+
+	year_ = tm.tm_year + 1900;
+	month_ = tm.tm_mon + 1;
+	day_ = tm.tm_mday;
+	hour_ = tm.tm_hour;
+	minute_ = tm.tm_min;
+	second_ = tm.tm_sec;
+
+	now_ = false;
+}
+
+
+Time::Time(time_t t)
+{
+	struct tm tm;
+	safe_localtime(&tm, t);
+
+	hour_ = tm.tm_hour;
+	minute_ = tm.tm_min;
+	second_ = tm.tm_sec;
+}
+
+
+const char*
+Date::convert(const char* str)
 {
 	char num[5];
 
@@ -106,7 +163,8 @@ cchar* Date::convert(cchar* str)
 }
 
 
-cchar* Time::convert(cchar* str)
+const char*
+Time::convert(const char* str)
 {
 	char num[5];
 
@@ -131,7 +189,8 @@ cchar* Time::convert(cchar* str)
 }
 
 
-cchar* DateTime::convert(cchar* str)
+const char*
+DateTime::convert(const char* str)
 {
 	Date d;
 	str = d.convert(str);
@@ -153,7 +212,8 @@ cchar* DateTime::convert(cchar* str)
 }
 
 
-int Date::compare(const Date& other) const
+int
+Date::compare(const Date& other) const
 {
 	if (year_ != other.year_) return year_ - other.year_;
 	if (month_ != other.month_) return month_ - other.month_;
@@ -161,7 +221,8 @@ int Date::compare(const Date& other) const
 }
 
 
-int Time::compare(const Time& other) const
+int
+Time::compare(const Time& other) const
 {
 	if (hour_ != other.hour_) return hour_ - other.hour_;
 	if (minute_ != other.minute_) return minute_ - other.minute_;
@@ -169,7 +230,8 @@ int Time::compare(const Time& other) const
 }
 
 
-int DateTime::compare(const DateTime& other) const
+int
+DateTime::compare(const DateTime& other) const
 {
 	if (now_ && other.now_) {
 		return 0;
@@ -206,6 +268,20 @@ Time::operator std::string() const
 }
 
 
+Date::operator time_t() const
+{
+	struct tm tm;
+	safe_localtime(&tm, time(0));
+
+	tm.tm_mday = day_;
+	tm.tm_mon = month_ - 1;
+	tm.tm_year = year_ - 1900;
+	tm.tm_isdst = -1;
+
+	return mktime(&tm);
+}
+
+
 DateTime::operator time_t() const
 {
 	if (now_) {
@@ -230,30 +306,17 @@ DateTime::operator time_t() const
 }
 
 
-DateTime::DateTime(time_t t)
+Time::operator time_t() const
 {
 	struct tm tm;
-#if defined(MYSQLPP_HAVE_LOCALTIME_S)
-	// common.h detected localtime_s() from native RTL of VC++ 2005 and up
-	localtime_s(&tm, &t);
-#elif defined(HAVE_LOCALTIME_R)
-	// autoconf detected POSIX's localtime_r() on this system
-	localtime_r(&t, &tm);
-#else
-	// No explicitly thread-safe localtime() replacement found.  This
-	// may still be thread-safe, as some C libraries take special steps
-	// within localtime() to get thread safety, such as TLS.
-	memcpy(&tm, localtime(&t), sizeof(tm));
-#endif
+	safe_localtime(&tm, time(0));
 
-	year_ = tm.tm_year + 1900;
-	month_ = tm.tm_mon + 1;
-	day_ = tm.tm_mday;
-	hour_ = tm.tm_hour;
-	minute_ = tm.tm_min;
-	second_ = tm.tm_sec;
+	tm.tm_sec = second_;
+	tm.tm_min = minute_;
+	tm.tm_hour = hour_;
+	tm.tm_isdst = -1;
 
-	now_ = false;
+	return mktime(&tm);
 }
 
 } // end namespace mysqlpp
