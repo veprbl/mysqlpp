@@ -390,7 +390,6 @@ $enums
 
   template <class Manip>
   class NAME##_value_list { 
-  /*friend std::ostream& operator << <> (std::ostream&, const NAME##_value_list&); */
   public: 
     const NAME *obj;
     mysqlpp::cchar *delim;
@@ -402,7 +401,6 @@ $enums
 
   template <class Manip>
   class NAME##_##field_list {
-  /* friend std::ostream& operator << <> (std::ostream&, const NAME##_field_list&); */
   public: 
     const NAME *obj; 
     mysqlpp::cchar *delim;
@@ -414,7 +412,6 @@ $enums
 
   template <class Manip>
   class NAME##_equal_list { 
-  /* friend std::ostream& operator << <> (std::ostream&, const NAME##_equal_list&); */
   public: 
     const NAME *obj;
     mysqlpp::cchar *delim;
@@ -427,8 +424,6 @@ $enums
 
   template <class Manip>
   class NAME##_cus_value_list {
-  /* friend std::ostream& operator << <> (std::ostream&, 
-				  const NAME##_cus_value_list<Manip>&); */
   public:
     const NAME *obj;
     std::vector<bool> *include;
@@ -445,8 +440,6 @@ $enums
 
   template <class Manip>
   class NAME##_cus_field_list { 
-  /* friend std::ostream& operator << <> (std::ostream&, 
-					  const NAME##_cus_field_list<Manip>&); */
   public:
     const NAME *obj; 
     std::vector<bool> *include; 
@@ -463,8 +456,6 @@ $enums
 
  template <class Manip>
  class NAME##_cus_equal_list {
- /* friend std::ostream& operator << <> (std::ostream&, 
-				  const NAME##_cus_equal_list<Manip>&); */
   public:
     const NAME *obj;
     std::vector<bool> *include;
