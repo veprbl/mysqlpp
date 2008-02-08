@@ -44,14 +44,11 @@ typedef tiny_int<unsigned char>	sql_tinyint_unsigned;
 typedef short					sql_smallint;
 typedef unsigned short			sql_smallint_unsigned;
 typedef int						sql_int;
-typedef unsigned int		 	sql_int_unsigned;
+typedef unsigned int			sql_int_unsigned;
 typedef int						sql_mediumint;
-typedef unsigned int		 	sql_mediumint_unsigned;
+typedef unsigned int			sql_mediumint_unsigned;
 typedef longlong				sql_bigint;
 typedef ulonglong				sql_bigint_unsigned;
-
-typedef sql_tinyint				sql_bool;
-typedef sql_tinyint				sql_boolean;
 
 typedef float					sql_float;
 typedef double					sql_double;
@@ -65,6 +62,25 @@ typedef std::string				sql_tinytext;
 typedef std::string				sql_text;
 typedef std::string				sql_mediumtext;
 typedef std::string				sql_longtext;
+
+// Aliases to match the rules MySQL uses in translating data types
+// from other database servers into its own type system.  From:
+// http://dev.mysql.com/doc/refman/5.0/en/other-vendor-data-types.html
+typedef sql_tinyint				sql_bool;
+typedef sql_tinyint				sql_boolean;
+typedef sql_varchar				sql_character_varying;
+typedef sql_decimal				sql_fixed;
+typedef sql_float				sql_float4;
+typedef sql_double				sql_float8;
+typedef sql_tinyint				sql_int1;
+typedef sql_smallint			sql_int2;
+typedef sql_mediumint			sql_int3;
+typedef sql_int					sql_int4;
+typedef sql_bigint				sql_int8;
+typedef sql_mediumtext			sql_long_varchar;
+typedef sql_mediumtext			sql_long;
+typedef sql_mediumint			sql_middleint;
+typedef sql_decimal				sql_numeric;
 #endif // !defined(DOXYGEN_IGNORE)
 
 } // end namespace mysqlpp
@@ -88,6 +104,7 @@ typedef std::string				sql_longtext;
 		typedef String			sql_tinyblob;
 		typedef String			sql_mediumblob;
 		typedef String			sql_longblob;
+		typedef sql_mediumblob	sql_long_varbinary;
 	} // end namespace mysqlpp
 #endif
 
