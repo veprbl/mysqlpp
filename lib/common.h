@@ -88,11 +88,6 @@
 #		pragma warning(disable: 4996)
 		// Call _snprintf() for VC++ version of snprintf() function
 #		define snprintf _snprintf
-#	elif defined(__MINGW32__)
-		// MinGW uses the MS standard C library, so it, too, lacks
-		// stdint.h.  Again, run test/inttypes.cpp to see if the guesses
-		// in lib/sql_types.h are correct on your particular system.
-#		define MYSQLPP_NO_STDINT_H
 #	endif
 
 	// Define DLL import/export tags for Windows compilers, where we build
