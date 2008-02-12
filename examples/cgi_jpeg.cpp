@@ -28,26 +28,22 @@
 ***********************************************************************/
 
 #include <mysql++.h>
-#include <ssqls.h>
 
-using namespace std;
-using namespace mysqlpp;
+#if defined(MYSQLPP_SSQLS_COMPATIBLE)
+#include <ssqls.h>
 
 #define IMG_DATABASE	"mysql_cpp_data"
 #define IMG_HOST		"localhost"
 #define IMG_USER		"root"
 #define IMG_PASSWORD 	"nunyabinness"
 
-#if defined(MYSQLPP_SSQLS_COMPATIBLE)
 sql_create_2(images,
 	1, 2,
 	mysqlpp::sql_int_unsigned, id,
 	mysqlpp::sql_blob, data)
-#endif
 
-#if defined(MYSQLPP_SSQLS_COMPATIBLE)
 int main()
-#else
+#else // !defined(MYSQLPP_SSQLS_COMPATIBLE)
 int main(int, char* argv[])
 #endif
 {
@@ -56,8 +52,8 @@ int main(int, char* argv[])
 	char* cgi_query = getenv("QUERY_STRING");
 	if (cgi_query) {
 		if ((strlen(cgi_query) < 4) || memcmp(cgi_query, "id=", 3)) {
-			cout << "Content-type: text/plain" << endl << endl;
-			cout << "ERROR: Bad query string" << endl;
+			std::cout << "Content-type: text/plain" << std::endl << std::endl;
+			std::cout << "ERROR: Bad query string" << std::endl;
 			return 1;
 		}
 		else {
@@ -65,55 +61,55 @@ int main(int, char* argv[])
 		}
 	}
 	else {
-		cerr << "Put this program into a web server's cgi-bin "
-				"directory, then" << endl;
-		cerr << "invoke it with a URL like this:" << endl;
-		cerr << endl;
-		cerr << "    http://server.name.com/cgi-bin/cgi_jpeg?id=2" <<
-				endl;
-		cerr << endl;
-		cerr << "This will retrieve the image with ID 2." << endl;
-		cerr << endl;
-		cerr << "You will probably have to change some of the #defines "
-				"at the top of" << endl;
-		cerr << "examples/cgi_jpeg.cpp to allow the lookup to work." <<
-				endl;
+		std::cerr << "Put this program into a web server's cgi-bin "
+				"directory, then" << std::endl;
+		std::cerr << "invoke it with a URL like this:" << std::endl;
+		std::cerr << std::endl;
+		std::cerr << "    http://server.name.com/cgi-bin/cgi_jpeg?id=2" <<
+				std::endl;
+		std::cerr << std::endl;
+		std::cerr << "This will retrieve the image with ID 2." << std::endl;
+		std::cerr << std::endl;
+		std::cerr << "You will probably have to change some of the #defines "
+				"at the top of" << std::endl;
+		std::cerr << "examples/cgi_jpeg.cpp to allow the lookup to work." <<
+				std::endl;
 		return 1;
 	}
 
-	Connection con(use_exceptions);
+	mysqlpp::Connection con(use_exceptions);
 	try {
 		con.connect(IMG_DATABASE, IMG_HOST, IMG_USER, IMG_PASSWORD);
-		Query query = con.query();
+		mysqlpp::Query query = con.query();
 		query << "SELECT * FROM images WHERE id = " << img_id;
-		UseQueryResult res = query.use();
+		mysqlpp::UseQueryResult res = query.use();
 		if (res) {
 			images img = res.fetch_row();
-			cout << "Content-type: image/jpeg" << endl;
-			cout << "Content-length: " << img.data.length() << "\n\n";
-			cout << img.data;
+			std::cout << "Content-type: image/jpeg" << std::endl;
+			std::cout << "Content-length: " << img.data.length() << "\n\n";
+			std::cout << img.data;
 		}
 		else {
-			cout << "Content-type: text/plain" << endl << endl;
-			cout << "ERROR: No such image with ID " << img_id << endl;
+			std::cout << "Content-type: text/plain" << std::endl << std::endl;
+			std::cout << "ERROR: No such image with ID " << img_id << std::endl;
 		}
 	}
-	catch (const BadQuery& er) {
+	catch (const mysqlpp::BadQuery& er) {
 		// Handle any query errors
-		cout << "Content-type: text/plain" << endl << endl;
-		cout << "QUERY ERROR: " << er.what() << endl;
+		std::cout << "Content-type: text/plain" << std::endl << std::endl;
+		std::cout << "QUERY ERROR: " << er.what() << std::endl;
 		return 1;
 	}
-	catch (const Exception& er) {
+	catch (const mysqlpp::Exception& er) {
 		// Catch-all for any other MySQL++ exceptions
-		cout << "Content-type: text/plain" << endl << endl;
-		cout << "GENERAL ERROR: " << er.what() << endl;
+		std::cout << "Content-type: text/plain" << std::endl << std::endl;
+		std::cout << "GENERAL ERROR: " << er.what() << std::endl;
 		return 1;
 	}
 #else
 	// MySQL++ works under Visual C++ 2003 with only one excpetion,
 	// SSQLS, so we have to stub out the examples to avoid build errors.
-	cout << argv[0] << " requires Visual C++ 2005 or newer." << endl;
+	std::cout << argv[0] << " requires Visual C++ 2005 or newer." << std::endl;
 #endif
 
 	return 0;
