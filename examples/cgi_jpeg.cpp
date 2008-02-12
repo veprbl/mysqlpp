@@ -77,9 +77,9 @@ int main(int, char* argv[])
 		return 1;
 	}
 
-	mysqlpp::Connection con(use_exceptions);
 	try {
-		con.connect(IMG_DATABASE, IMG_HOST, IMG_USER, IMG_PASSWORD);
+		mysqlpp::Connection con(IMG_DATABASE, IMG_HOST, IMG_USER,
+				IMG_PASSWORD);
 		mysqlpp::Query query = con.query();
 		query << "SELECT * FROM images WHERE id = " << img_id;
 		mysqlpp::UseQueryResult res = query.use();
