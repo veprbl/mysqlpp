@@ -141,7 +141,7 @@ enum sql_cmp_type { sql_use_compare };
 #if !defined(DOXYGEN_IGNORE)
 // Figure out how to get large integer support on this system.  Suppress
 // refman documentation for these typedefs, as they're system-dependent.
-#if defined(NO_LONG_LONGS)
+#if defined(MYSQLPP_NO_LONG_LONGS)
 // Alias "longlong" and "ulonglong" to the regular "long" counterparts
 typedef unsigned long ulonglong;
 typedef long longlong;
@@ -152,7 +152,7 @@ typedef __int64 longlong;
 #else
 // No better idea, so assume the C99 convention.  If your compiler
 // doesn't support this, please provide a patch to extend this ifdef, or
-// define NO_LONG_LONGS.
+// define MYSQLPP_NO_LONG_LONGS.
 typedef unsigned long long ulonglong;
 typedef long long longlong;
 #endif
