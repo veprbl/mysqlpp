@@ -99,12 +99,14 @@ public:
 		typename Container::const_iterator i = Container::begin();
 		typename Container::const_iterator e = Container::end();
 
-		while (true) {
-			s << *i;
-			if (++i == e) {
-				break;
+		if (i != e) {
+			while (true) {
+				s << *i;
+				if (++i == e) {
+					break;
+				}
+				s << ",";
 			}
-			s << ",";
 		}
 		
 		return s;
