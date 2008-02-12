@@ -52,7 +52,7 @@ namespace mysqlpp {
 /// integer overflows!
 
 template <typename VT = signed char>
-class MYSQLPP_EXPORT tiny_int
+class tiny_int
 {
 public:
 	//// Type aliases
