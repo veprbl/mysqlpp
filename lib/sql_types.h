@@ -1,5 +1,9 @@
 /// \file sql_types.h
 /// \brief Declares the closest C++ equivalent of each MySQL column type
+///
+/// The typedefs defined here are only for the "non-NULL" variants.
+/// To get nullable versions, wrap the appropriate type in the
+/// \c Null<T> template.  See null.h for more information.
 
 /***********************************************************************
  Copyright (c) 2006-2008 by Educational Technology Resources, Inc.
@@ -27,6 +31,7 @@
 #if !defined(MYSQLPP_SQL_TYPES_H_MAIN)
 #define MYSQLPP_SQL_TYPES_H_MAIN
 
+#include "common.h"
 #include "tiny_int.h"
 
 #include <string>
@@ -34,28 +39,45 @@
 namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)
-// Doxygen will not generate documentation for this section.
+// Suppress refman documentation for these typedefs, as they're
+// system-dependent.
 
-// Nearest C++ equivalents of MySQL data types.  These are only the "NOT
-// NULL" variants.  Wrap these types in MySQL++'s Null<> template to get
-// NULL-able types.
-typedef tiny_int<signed char>	sql_tinyint;
-typedef tiny_int<unsigned char>	sql_tinyint_unsigned;
-typedef short					sql_smallint;
-typedef unsigned short			sql_smallint_unsigned;
-typedef int						sql_int;
-typedef unsigned int			sql_int_unsigned;
-typedef int						sql_mediumint;
-typedef unsigned int			sql_mediumint_unsigned;
-typedef longlong				sql_bigint;
-typedef ulonglong				sql_bigint_unsigned;
+// Define C++ integer types that are most nearly equivalent to those
+// used by the MySQL server.
+#if defined(MYSQLPP_NO_STDINT_H)
+	// Boo, we're going to have to wing it.
+	typedef tiny_int<signed char>	sql_tinyint;
+	typedef tiny_int<unsigned char>	sql_tinyint_unsigned;
+	typedef signed short			sql_smallint;
+	typedef unsigned short			sql_smallint_unsigned;
+	typedef signed int				sql_int;
+	typedef unsigned int			sql_int_unsigned;
+	typedef signed int				sql_mediumint;
+	typedef unsigned int			sql_mediumint_unsigned;
+	typedef longlong				sql_bigint;
+	typedef ulonglong				sql_bigint_unsigned;
+#else
+	// Assume a system where C99 is supported in C++ in advance of
+	// actual standardization, so we can do this portably.
+#	include <stdint.h>
+	typedef tiny_int<int8_t>		sql_tinyint;
+	typedef tiny_int<uint8_t>		sql_tinyint_unsigned;
+	typedef int16_t					sql_smallint;
+	typedef uint16_t				sql_smallint_unsigned;
+	typedef int32_t					sql_int;
+	typedef uint32_t				sql_int_unsigned;
+	typedef int32_t					sql_mediumint;
+	typedef uint32_t				sql_mediumint_unsigned;
+	typedef int64_t					sql_bigint;
+	typedef uint64_t				sql_bigint_unsigned;
+#endif
 
+// Now define typedef equivalencies for the other standard MySQL
+// data types.  There aren't serious portability issues here.
 typedef float					sql_float;
 typedef double					sql_double;
 typedef double					sql_decimal;
-
 typedef std::string				sql_enum;
-
 typedef std::string				sql_char;
 typedef std::string				sql_varchar;
 typedef std::string				sql_tinytext;

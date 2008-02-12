@@ -5,10 +5,10 @@
 /// This file mostly takes care of platform differences.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2008 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -56,7 +56,14 @@
 	// Stuff for Visual C++ only
 #	if defined(_MSC_VER)
 #		define MYSQLPP_PLATFORM_VISUAL_CPP
+		// MS *still* doesn't ship stdint.h, through VC++ 2008 at least.
+		// This means we have to take a wild guess at appropriate
+		// integer types in lib/sql_types.h.  See test/inttypes.cpp for
+		// tests that check whether we've guessed well.
+#		define MYSQLPP_NO_STDINT_H
 #		if _MSC_VER < 1400
+			// Workarounds for limitations of VC++ 2003 that are fixed
+			// in 2005 and later.
 #			undef MYSQLPP_QUERY_THISPTR
 #			define MYSQLPP_QUERY_THISPTR dynamic_cast<std::ostream&>(*this)
 #			undef MYSQLPP_SSQLS_COMPATIBLE
@@ -81,6 +88,11 @@
 #		pragma warning(disable: 4996)
 		// Call _snprintf() for VC++ version of snprintf() function
 #		define snprintf _snprintf
+#	elif defined(__MINGW32__)
+		// MinGW uses the MS standard C library, so it, too, lacks
+		// stdint.h.  Again, run test/inttypes.cpp to see if the guesses
+		// in lib/sql_types.h are correct on your particular system.
+#		define MYSQLPP_NO_STDINT_H
 #	endif
 
 	// Define DLL import/export tags for Windows compilers, where we build
