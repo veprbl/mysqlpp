@@ -34,10 +34,10 @@
     </set>
 
     <!-- This convoluted syntax adds "_d" to the end of library and DLL
-         file names for VC++, MinGW and Xcode, in debug mode only. -->
+         file names for VC++ and Xcode, in debug mode only. -->
     <set var="DEBUG_SUFFIX"/>
     <set var="DEBUG_SUFFIX">
-        <if cond="PLATFORM_WINDOWS_NATIVE=='yes' and BUILD=='debug'">_d</if>
+        <if cond="FORMAT=='msvs2003prj' and BUILD=='debug'">_d</if>
         <if cond="FORMAT=='xcode2' and BUILD=='debug'">_d</if>
     </set>
 
