@@ -216,6 +216,9 @@
         <exe id="test_datetime" template="programs">
             <sources>test/datetime.cpp</sources>
         </exe>
+        <exe id="test_inttypes" template="programs">
+            <sources>test/inttypes.cpp</sources>
+        </exe>
         <exe id="test_manip" template="programs">
             <sources>test/manip.cpp</sources>
         </exe>
