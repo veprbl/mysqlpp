@@ -100,7 +100,7 @@ public:
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
 	/// zero-padded.
-	explicit DateTime(cchar* str) { convert(str); }
+	explicit DateTime(const char* str) { convert(str); }
 	
 	/// \brief Initialize object from a C++ string containing a
 	/// SQL date-and-time string
@@ -108,7 +108,7 @@ public:
 	/// This works with any stringish class that declares a c_str()
 	/// member function: std::string, mysqlpp::String...
 	///
-	/// \sa DateTime(cchar*)
+	/// \sa DateTime(const char*)
 	template <class Str>
 	explicit DateTime(const Str& str)
 	{
@@ -125,7 +125,7 @@ public:
 	int compare(const DateTime& other) const;
 
 	/// \brief Parse a SQL date and time string into this object.
-	cchar* convert(cchar*);
+	const char* convert(const char*);
 
 	/// \brief Get the date/time value's day part, 1-31
 	unsigned char day() const { return day_; }
@@ -253,14 +253,14 @@ public:
 	///
 	/// String must be in the YYYY-MM-DD format.  It doesn't have to be
 	/// zero-padded.
-	explicit Date(cchar* str) { convert(str); }
+	explicit Date(const char* str) { convert(str); }
 	
 	/// \brief Initialize object from a C++ string containing a date
 	///
 	/// This works with any stringish class that declares a c_str()
 	/// member function: std::string, mysqlpp::String...
 	///
-	/// \sa Date(cchar*)
+	/// \sa Date(const char*)
 	template <class Str>
 	explicit Date(const Str& str) { convert(str.c_str()); }
 
@@ -277,7 +277,7 @@ public:
 	int compare(const Date& other) const;
 
 	/// \brief Parse a SQL date string into this object.
-	cchar* convert(cchar*);
+	const char* convert(const char*);
 
 	/// \brief Get the date's day part, 1-31
 	unsigned char day() const { return day_; }
@@ -371,7 +371,7 @@ public:
 	///
 	/// String must be in the HH:MM:SS format.  It doesn't have to be
 	/// zero-padded.
-	explicit Time(cchar* str) { convert(str); }
+	explicit Time(const char* str) { convert(str); }
 
 	/// \brief Initialize object from a C++ string containing a
 	/// SQL time string
@@ -379,7 +379,7 @@ public:
 	/// This works with any stringish class that declares a c_str()
 	/// member function: std::string, mysqlpp::String...
 	///
-	/// \sa Time(cchar*)
+	/// \sa Time(const char*)
 	template <class Str>
 	explicit Time(const Str& str) { convert(str.c_str()); }
 
@@ -396,7 +396,7 @@ public:
 	int compare(const Time& other) const;
 
 	/// \brief Parse a SQL time string into this object.
-	cchar* convert(cchar*);
+	const char* convert(const char*);
 
 	/// \brief Get the time's hour part, 0-23
 	unsigned char hour() const { return hour_; }
