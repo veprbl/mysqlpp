@@ -392,7 +392,7 @@
             <!-- Copy files into package directory -->
             <!-- top directory -->
             <command>
-                cp -rL *.bat *.txt Bakefiles.bkgen bootstrap ChangeLog \
+                cp -RL *.bat *.txt Bakefiles.bkgen bootstrap ChangeLog \
 					cleanmf config.guess config.h.in config.sub configure* \
                     dtest exrun install-sh libmysqlclient.def Makefile.* \
 					mysql++.* mysql++_*.vcproj osver Wishlist $(PKGNAME)
@@ -404,7 +404,7 @@
             <!-- doc subdir -->
             <if cond="BUILDDOCS=='yes'">
                 <command>
-                    cp -rL doc/README* doc/pdf doc/ssqls-pretty $(PKGNAME)/doc
+                    cp -RL doc/README* doc/pdf doc/ssqls-pretty $(PKGNAME)/doc
                 </command>
                 <command>
                     for f in LICENSE.txt Makefile mktxt README.txt \*.{dbx,in,xsl} ; \
@@ -426,7 +426,7 @@
             <if cond="BUILDDOCS=='no'">
                 <command>
                     mkdir -p $(PKGNAME)/doc/html $(PKGNAME)/doc/pdf ;
-                    cp -rL doc/README* doc/ssqls-pretty $(PKGNAME)/doc
+                    cp -RL doc/README* doc/ssqls-pretty $(PKGNAME)/doc
                 </command>
             </if>
 
