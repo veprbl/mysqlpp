@@ -16,9 +16,9 @@ do
 			count=count+1
 		else
 			rm -f $TMP
-			echo " $t FAILED"
+			echo " $t FAILED ($errno)"
 			echo
-			echo "	Code $errno: $errmsg"
+			echo "$errmsg"
 			exit $?
 		fi
 	fi
