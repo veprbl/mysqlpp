@@ -67,8 +67,15 @@ test_float_conversion()
 	if (!test_equality(mysqlpp::String("621.200"), 621.2)) return false;
 	std::locale old_locale = std::locale::global(std::locale::classic());
 	if (!test_equality(mysqlpp::String("621.200"), 621.2)) return false;
-	std::locale::global(std::locale("de_DE"));
-	if (!test_equality(mysqlpp::String("621.200"), 621.2)) return false;
+	try {
+		std::locale::global(std::locale("de_DE"));
+		if (!test_equality(mysqlpp::String("621.200"), 621.2)) return false;
+	}
+	catch (std::runtime_error& e) {
+		std::cerr << "WARNING: skipping European locale string "
+				"conversion test:" << std::endl;
+		std::cerr << "\t" << e.what() << std::endl;
+	}
 	std::locale::global(old_locale);
 
 	// Check that we choke on silly float-like values
