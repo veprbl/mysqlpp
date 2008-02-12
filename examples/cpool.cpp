@@ -103,7 +103,7 @@ worker_thread(thread_arg_t running_flag)
 {
 	// Pull data from the sample table a bunch of times, releasing the
 	// connection we use each time.
-	for (int i = 0; i < 6; ++i) {
+	for (size_t i = 0; i < 6; ++i) {
 		// Go get a free connection from the pool, or create a new one
 		// if there are no free conns yet.
 		mysqlpp::Connection* cp = poolptr->grab();
@@ -116,7 +116,7 @@ worker_thread(thread_arg_t running_flag)
 		// each row in the result set.
 		mysqlpp::Query query(cp->query("select * from stock"));
 		mysqlpp::StoreQueryResult res = query.store();
-		for (int j = 0; j < res.num_rows(); ++j) {
+		for (size_t j = 0; j < res.num_rows(); ++j) {
 			cout.put('.');
 		}
 
@@ -178,8 +178,8 @@ main(int argc, char *argv[])
 	bool running[] = {
 			true, true, true, true, true, true, true,
 			true, true, true, true, true, true, true };
-	const int num_threads = sizeof(running) / sizeof(running[0]);
-	int i;
+	const size_t num_threads = sizeof(running) / sizeof(running[0]);
+	size_t i;
 	for (i = 0; i < num_threads; ++i) {
 		if (int err = create_thread(worker_thread, running + i)) {
 			cerr << "Failed to create thread " << i <<
