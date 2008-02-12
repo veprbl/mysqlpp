@@ -33,6 +33,7 @@
 #include "common.h"
 
 #include <errno.h>
+#include <string.h>
 
 
 namespace mysqlpp {
