@@ -50,6 +50,8 @@ rm -rf %{buildroot} doc/examples
 # Copy example programs to doc directory
 %{__mkdir_p} doc/examples
 %{__install} -m644 examples/*.{cpp,h} doc/examples/
+%{__install} -m644 config.h doc/examples/
+sed -i -e s@../config.h@config.h@ doc/examples/threads.h
 
 # Fix up simple example Makefile to allow it to build on the install
 # system, as opposed to the system where the Makefile was created.
