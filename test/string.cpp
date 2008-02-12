@@ -117,9 +117,9 @@ test_int_conversion(const mysqlpp::String& s, bool throw_expected)
 	}
 	else {
 		std::cerr << "Conversion of \"" << s << "\" to int " <<
-				(conv_threw ? "did not " : "") << "throw; did " <<
-				(throw_expected ? "not " : "") << "expect it to." <<
-				std::endl;
+				(conv_threw ? "did not throw" : "threw") << "; " <<
+				(throw_expected ? "did not expect" : "expected") <<
+				" it to." << std::endl;
 		return false;
 	}
 }
@@ -179,6 +179,9 @@ main(int, char* argv[])
 		mysqlpp::String empty;
 		mysqlpp::String zero("0");
 		mysqlpp::String nonzero("42");
+		mysqlpp::String intable1("42.");
+		mysqlpp::String intable2("42.0");
+		mysqlpp::String nonint("42.1");
 
 		failures += test_equality(empty, mysqlpp::Date()) == false;
 		failures += test_equality(empty, 
@@ -195,7 +198,13 @@ main(int, char* argv[])
 		failures += test_locale() == false;
 		failures += test_float_conversion() == false;
 		failures += test_float_conversion() == false;
-
+		failures += test_int_conversion(empty, false) == false;
+		failures += test_int_conversion(zero, false) == false;
+		failures += test_int_conversion(nonzero, false) == false;
+		failures += test_int_conversion(intable1, false) == false;
+		failures += test_int_conversion(intable2, false) == false;
+		failures += test_int_conversion(nonint, true) == false;
+		
 		return failures;
 	}
 	catch (mysqlpp::Exception& e) {
