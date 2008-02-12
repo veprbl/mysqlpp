@@ -356,7 +356,7 @@ query.execute(some_value);</programlisting>
 
 
     <sect3 id="api-3.0.0">
-      <title>v3.0.0 (as of release candidate 3)</title>
+      <title>v3.0.0 (as of release candidate 4)</title>
 
       <sect4 id="api-3.0.0-names">
         <title>Class name changes</title>
@@ -832,6 +832,18 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
         <filename>ssqls.h</filename> for you, but it will go away in a
         future version of MySQL++.</para>
 
+        <para>The only supported macros for creating
+        SSQLSes now are <function>sql_create_*</function>
+        and <function>sql_create_complete_*</function>. The
+        &ldquo;basic&rdquo; variants were removed because they&rsquo;re
+        less functional than <function>sql_create_*</function>, and
+        haven&rsquo;t been used in the examples or documentation for
+        a long time now. The other two methods were removed because
+        parameter ordering no longer matters so there&rsquo;s
+        no need for macros that let you have custom parameter
+        ordering. (It&rsquo;s more complicated than that, actually. See
+        the ChangeLog for the detailed whys and wherefores.)</para>
+
         <para>The new <classname>Null&lt;T&gt;</classname> support in
         SSQLSes causes an internal compiler error in Visual C++ 2003.
         (VC++ 2005 and newer have no trobule with it.) A poll on the
@@ -895,11 +907,15 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
         want to test whether the connection is up.</para>
 
         <para>The debug mode build of the library now has a "_d" suffix
-        for Visual C++, MinGW, and Xcode. This lets you have both
-        versions installed without conflict. The release build uses the
-        current naming scheme. If you have an existing program building
-        against MySQL++ on these platforms, you&rsquo;ll need to change
-        your build options to use the new name in debug mode.</para>
+        for Visual C++, and Xcode. This lets you have both versions
+        installed without conflict. The release build uses the current
+        naming scheme. If you have an existing program building against
+        MySQL++ on these platforms, you&rsquo;ll need to change your
+        build options to use the new name in debug mode.</para>
+
+        <para>Renamed <varname>NO_LONG_LONGS</varname> to
+        <varname>MYSQLPP_NO_LONG_LONGS</varname> to avoid a risk of
+        collision in the global macro namespace.</para>
       </sect4>
     </sect3>
   </sect2>

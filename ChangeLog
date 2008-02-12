@@ -1,4 +1,4 @@
-3.0.0 release candidate 3, 2008.02.01 (r2154)
+3.0.0 release candidate 4, 2008.02.12 (r2192)
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
@@ -35,6 +35,17 @@
       - An SSQLS's field order no longer has to match the order of
         fields in the result set it is populated from.
 
+      - As a result of previous, removed sql_create_c_order_* macros;
+        they have no purpose now.
+
+      - Removed order parameters from sql_create_complete_*, which now
+        gives it the same functionality as sql_create_c_names_* so
+        removed the latter, too.
+
+      - Removed "basic" variants of SSQLS creation macros.  They've
+        been unofficially deprecated by dint of being all but
+        undocumented and unexemplified for a very long time now.
+
       - It's now possible to use mysqlpp::String, Date, DateTime, and
         Time types in the key field positions in an SSQLS as they
         now support the necessary comparison interfaces.
@@ -44,10 +55,6 @@
         it now does [in]equality comparisons by testing whether the
         difference between two floating-point values is less than a
         configurable threshold defaulting to 0.00001.
-
-      - Removed "basic" variants of SSQLS creation macros.  They've
-        been unofficially deprecated by dint of being all but
-        undocumented and unexemplified for a very long time now.
     
       - You can now use 'bool' type in an SSQLS.
 
@@ -307,6 +314,9 @@
         subclasses.  There's about a dozen, so rather than list them
         here, look for similarly-named classes in lib/options.h.
 
+    o Added Connection::count_rows() to execute "SELECT COUNT(*) FROM
+      tablename" queries for you.
+
     o Moved Connection::affected_rows(), info() and insert_id() methods
       to class Query, as they relate to the most recently-executed
       query, not to the connection.
@@ -360,13 +370,30 @@
         classes.  Adding this to the existing operator << support, you
         now have several ways to convert these objects to string form.
 
-    o Parameterized tiny_int class on the value type so you can
-      get both signed and unsigned TINYINTs
+      - Added time_t conversion to Date and Time classes.  DateTime
+        already had it, since it's more legitimate to convert time_t
+        to DateTime, but you could already "slice" it with something
+        like Time(DateTime(time(0))) so there's no point pretending
+        you can't get from time_t to Date or Time.  Might as well
+        legitimize it.
 
-    o Changed the sql_tinyint and sql_tinyint_unsigned typedefs to use
-      mysqlpp::tiny_int<VT> instead of raw chars
+    o Improved tiny_int class:
+        
+      - Turned it into a template parameterized on the value type so
+        you can get both signed and unsigned TINYINTs
 
-    o Added sql_*text typedefs for things like MEDIUMTEXT
+      - Changed the sql_tinyint and sql_tinyint_unsigned typedefs to
+        use mysqlpp::tiny_int<VT> instead of raw chars
+
+      - Added a bool conversion ctor and operator, and typedef'd it
+        to sql_bool and sql_boolean to match MySQL server behavior
+
+    o Added many more sql_* typedefs.  We now have a typedef for every
+      type the MySQL server knows about, including those it supports
+      just for compatibility with other database servers.
+
+    o Changed the sql_*int* typedefs to use integer types of the same
+      size as the MySQL server.  (Run test/inttypes.cpp to test it.)
 
     o Added copy ctor and assignment operator to Row.
 
@@ -545,8 +572,10 @@
       Initial version created by Jim Wallace to test the value of
       all his BadQuery exception work, with reworking by me.
 
-    o Greatly expanded dtest suite.  Still very low coverage ratio,
-      but compared to previous release, it's a big improvement.
+    o Greatly expanded dtest suite.  Primary change is that we now
+      have a handful of unit tests, where in v2.3.2 we only tested
+      a subset of the examples.  Still very low coverage ratio,
+      but it's a big improvement.
 
     o Optimized #includes, especially in lib/*.h to reduce
       dependencies and thus compile time when one of these changes.
@@ -554,6 +583,15 @@
     o Fixed a typo in RPM filename generation that prevented -devel
       RPM from recognizing that the corresponding MySQL++ library
       RPM was installed.
+
+    o Renamed NO_LONG_LONGS to MYSQLPP_NO_LONG_LONGS to avoid a risk
+      of collision in the global macro namespace.
+    
+    o First cut at Xcode2 project support.  Testing needed!
+
+    o Debug build of library on VC++ and Xcode have a _d suffix now
+      so you can have both versions of the library installed without
+      conflict.
 
     o ...plus dozens of small bug fixes and internal enhancements,
       many documentation improvements, and expansion of support for
