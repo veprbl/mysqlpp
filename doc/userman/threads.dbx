@@ -30,7 +30,7 @@
         thread support on your system, not a requirement to do or die:
         if the script doesn&rsquo;t find what it needs to do threading,
         MySQL++ will just get built without thread support. See
-        <filename>README.unix</filename> for more details.</para>
+        <filename>README-Unix.txt</filename> for more details.</para>
 
         <para>When building MySQL++ with the Visual C++ project files or
         the MinGW Makefile that comes with the MySQL++ distribution,
@@ -46,13 +46,13 @@
         <para><emphasis>Link your program to a thread-aware build of the
         MySQL C API library.</emphasis></para>
 
-        <para>Depending on your platform, you might have to build this
-        yourself (e.g. Cygwin), or you might get only one library which
-        is always thread-aware (e.g. Visual C++), or there might be two
-        different MySQL C API libraries, one of which is thread-aware
-        and the other not (e.g. Linux). See the
-        <filename>README</filename>.* file for your particular platform,
-        and also the MySQL developer documentation.</para>
+        <para>Depending on your platform, you might have to build
+        this yourself (e.g. Cygwin), or you might get only one
+        library which is always thread-aware (e.g. Visual C++), or
+        there might be two different MySQL C API libraries, one of
+        which is thread-aware and the other not (e.g. Linux). See the
+        <filename>README-*.txt</filename> file for your particular
+        platform, and also the MySQL developer documentation.</para>
       </listitem>
 
       <listitem>
@@ -130,11 +130,11 @@
     <para>The example works with both Windows native threads and with
     POSIX threads. (The file <filename>examples/threads.h</filename>
     contains a few macros and such to abstract away the differences
-    between the two threading models.) Because thread-enabled builds are
-    only the default on Windows, it&rsquo;s quite possible for this
-    program to do nothing on other platforms.  See your platform&rsquo;s
-    <filename>README</filename> file for instructions on enabling a
-    thread-aware build.</para>
+    between the two threading models.) Because thread-enabled builds
+    are only the default on Windows, it&rsquo;s quite possible
+    for this program to do nothing on other platforms.  See your
+    platform&rsquo;s <filename>README-*.txt</filename> file for
+    instructions on enabling a thread-aware build.</para>
 
     <para>If you write your code without checks for thread support like
     you see in the code above and link it to a build of MySQL++ that
