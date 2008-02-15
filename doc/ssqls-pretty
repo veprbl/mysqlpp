@@ -22,7 +22,7 @@ $orgcode = <STDIN>;
 
 $out = << "---";
 
-#include <custom-macros.h>
+#include <ssqls.h>
 
 $macro
 
