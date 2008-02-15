@@ -477,6 +477,15 @@ query.execute(some_value);</programlisting>
         <classname>Query</classname>, as they relate to the most
         recently-executed query.</para>
 
+        <para>Changed the return type of
+        <methodname>Connection::ping()</methodname> from
+        <type>int</type> to <type>bool</type>. If you were calling
+        <methodname>ping()</methodname> in <type>bool</type> context
+        or using its return value in <type>bool</type> context,
+        you will need to reverse the sense of the test because the
+        previous return code used zero to mean success. Now it returns
+        <type>true</type> to indicate success.</para>
+
         <para>Renamed several methods:</para>
 
         <itemizedlist>
@@ -1080,9 +1089,6 @@ my_ssqls_type::table("MyTableName");</programlisting>
       <classname>Lockable</classname>. Since it was basically useless in
       prior versions, it can&rsquo;t be construed as an API
       change.</para>
-
-      <para>Changed <methodname>Connection::ping()</methodname>
-      return value from <type>int</type> to <type>bool</type>.</para>
     </sect3>
   </sect2>
 </sect1>
