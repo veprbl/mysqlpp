@@ -208,13 +208,36 @@ query.insert(s);</programlisting>
     features.</para>
 
     <para>Another feature you might find a use for is changing the
-    table name used in queries. By default, the table in the MySQL
-    database is assumed to have the same name as the SSQLS structure
-    type. But if this is inconvenient, you can globally change the
-    table name used in queries like this:</para>
+    table name MySQL++ uses to build queries involving SSQLSes. By
+    default, the database server table is assumed to have the same name
+    as the SSQLS structure type. But if this is inconvenient, you can
+    globally change the table name used in queries like this:</para>
 
     <programlisting>
 stock::table("MyStockData");</programlisting>
+
+    <para>It&rsquo;s also possible to change the name of a table on
+    a per-instance basis:</para>
+
+    <programlisting>
+stock s;
+s.instance_table("AlternateTable");</programlisting>
+
+    <para>This is useful when you have an SSQLS definition that is
+    compatible with multiple tables, so the table name to use for each
+    instance is different. The simplest way this can happen is if the
+    tables all have identical definitions; it saves you from having
+    to define a separate SSQLS for each table. It is also useful for
+    mapping a class hierarchy onto a set of table definitions. The
+    common SSQLS definition is the &ldquo;superclass&rdquo; for a
+    given set of tables.</para>
+
+    <para>Strictly speaking, you only need to use this feature in
+    multithreaded programs. Changing the static table name before
+    using each instance is safe if all changes happen within a single
+    thread. That said, it may still be convenient to change the name of
+    the table for an SSQLS instance in a single-threaded program if it
+    gets used for many operations over an extended span of code.</para>
   </sect2>
 
 

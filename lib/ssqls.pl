@@ -188,10 +188,10 @@ print OUT << "---";
 #define sql_COMPARE__0(NAME, $parm1)
 
 #define sql_compare_type_def_0(NAME, WHAT, NUM) \\
-  sql_compare_type_def_##NUM (NAME, WHAT, NUM)
+  sql_compare_type_def_##NUM(NAME, WHAT, NUM)
 
 #define sql_compare_type_defe_0(NAME, WHAT, NUM) \\
-  sql_compare_type_defe_##NUM (NAME, WHAT, NUM)
+  sql_compare_type_defe_##NUM(NAME, WHAT, NUM)
 
 // ---------------------------------------------------
 //                 End Mandatory Compare 
@@ -229,7 +229,7 @@ foreach my $i (1..$max_data_members) {
 // ---------------------------------------------------
 
 #define sql_compare_define_$i(NAME, $parm0) \\
-  NAME ($parm2) : $define {} \\
+  NAME($parm2) : $define {} \\
   void set  ($parm2) { \\
 $set \\
   } \\
@@ -239,7 +239,7 @@ $set \\
   void set  ($parm2) { \\
 $set \\
   } \\
-  NAME ($parm2) : $define {}
+  NAME($parm2) : $define, table_override_(0) {}
 
 #define sql_compare_type_def_$i(NAME, WHAT, NUM) \\
   return WHAT##_list(d, m, $compp)
@@ -249,7 +249,7 @@ $set \\
 
 #define sql_COMPARE__$i(NAME, $parm1) \\
   template <mysqlpp::sql_dummy_type dummy> \\
-  int sql_compare_##NAME (const NAME &x, const NAME &y) { \\
+  int sql_compare_##NAME(const NAME &x, const NAME &y) { \\
 $compr \\
   } \\
   template <mysqlpp::sql_dummy_type dummy> \\
@@ -471,18 +471,20 @@ $enums
       : obj(o), include(i), del_vector(false), delim(d), comp(c), manip(m) {}
   };
 
-  template <mysqlpp::sql_dummy_type dummy> int sql_compare_##NAME (const NAME &, const NAME &);
+  template <mysqlpp::sql_dummy_type dummy> int sql_compare_##NAME(const NAME&, const NAME&);
 
   struct NAME { 
 $defs 
-    NAME () {} 
-    NAME (const mysqlpp::Row &row);
-    void set (const mysqlpp::Row &row);
+    NAME() : table_override_(0) {} 
+    NAME(const mysqlpp::Row& row);
+    void set(const mysqlpp::Row &row);
     sql_compare_define_##CMP(NAME, $parmC)
     sql_construct_define_##CONTR(NAME, $parmC)
     static const char* names[];
-    static const char* const table() { return table_; }
     static void table(const char* t) { table_ = t; }
+    const char* const table() const
+            { return table_override_ ? table_override_ : NAME::table_; }
+    void instance_table(const char* t) { table_override_ = t; }
 
     NAME##_value_list<mysqlpp::quote_type0> value_list() const {
       return value_list(",", mysqlpp::quote);}
@@ -654,12 +656,13 @@ $defs
 
   private:
     static const char* table_;
+    const char* table_override_;
   }; 
   MYSQLPP_SSQLS_CONDITIONAL_STATICS(
 	  const char *NAME::names[] = { 
 		 $names
 	  }; 
-	  const char *NAME::table_ = #NAME ;
+	  const char* NAME::table_ = #NAME;
   )
 
   template <class Manip>
@@ -842,31 +845,36 @@ $cus_equal_list
   template <class Manip>
   inline NAME##_cus_value_list<Manip> 
   NAME::value_list(const char *d, Manip m, mysqlpp::sql_cmp_type /*sc*/) const {
-    sql_compare_type_def_##CMP (NAME, value, NUM);
+    sql_compare_type_def_##CMP(NAME, value, NUM);
   }
 
   template <class Manip>
   inline NAME##_cus_field_list<Manip> 
   NAME::field_list(const char *d, Manip m, mysqlpp::sql_cmp_type /*sc*/) const {
-    sql_compare_type_def_##CMP (NAME, field, NUM);
+    sql_compare_type_def_##CMP(NAME, field, NUM);
   }
 
   template <class Manip>
   inline NAME##_cus_equal_list<Manip> 
   NAME::equal_list(const char *d, const char *c, Manip m, mysqlpp::sql_cmp_type /*sc*/) const {
-    sql_compare_type_defe_##CMP (NAME, equal, NUM);
+    sql_compare_type_defe_##CMP(NAME, equal, NUM);
   }
 
   template <mysqlpp::sql_dummy_type dummy> 
-  void populate_##NAME (NAME *s, const mysqlpp::Row &row) { 
+  void populate_##NAME(NAME *s, const mysqlpp::Row &row) { 
 	mysqlpp::NoExceptions ignore_schema_mismatches(row);
 $popul
   } 
 
-  inline NAME::NAME (const mysqlpp::Row &row) 
-                                        {populate_##NAME<mysqlpp::sql_dummy>(this, row);}
-  inline void NAME::set (const mysqlpp::Row &row)
-                                        {populate_##NAME<mysqlpp::sql_dummy>(this, row);}
+  inline NAME::NAME(const mysqlpp::Row& row) :
+  table_override_(0)
+  {
+    populate_##NAME<mysqlpp::sql_dummy>(this, row);
+  }
+  inline void NAME::set(const mysqlpp::Row& row)
+  {
+    populate_##NAME<mysqlpp::sql_dummy>(this, row);
+  }
 
   sql_COMPARE__##CMP(NAME, $parmc )
 
