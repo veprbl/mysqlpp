@@ -92,29 +92,12 @@ public:
 		set2container(str.c_str(), set_insert(this));
 	}
 
-	/// \brief Insert this set's data into a C++ stream in
-	/// comma-separated format.
-	std::ostream& out_stream(std::ostream& s) const
-	{
-		typename Container::const_iterator i = Container::begin();
-		typename Container::const_iterator e = Container::end();
-
-		if (i != e) {
-			while (true) {
-				s << *i;
-				if (++i == e) {
-					break;
-				}
-				s << ",";
-			}
-		}
-		
-		return s;
-	}
-
 	/// \brief Convert this set's data to a string containing
 	/// comma-separated items.
-	operator std::string() { return stream2string(*this); }
+	operator std::string() const { return stream2string(*this); }
+
+	/// \brief Return our value in std::string form
+	std::string str() const { return *this; }
 };
 
 
@@ -123,7 +106,20 @@ template <class Container>
 inline std::ostream& operator <<(std::ostream& s,
 		const Set<Container>& d)
 {
-	return d.out_stream(s);
+	typename Container::const_iterator i = d.begin();
+	typename Container::const_iterator e = d.end();
+
+	if (i != e) {
+		while (true) {
+			s << *i;
+			if (++i == e) {
+				break;
+			}
+			s << ",";
+		}
+	}
+	
+	return s;
 }
 
 
