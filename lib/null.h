@@ -44,23 +44,43 @@ extern const std::string null_str;	///< "NULL" string constant
 
 /// \brief The type of the global mysqlpp::null object.
 ///
-/// This class is for internal use only.  Normal code should use
-/// Null instead.
+/// User code shouldn't declare variables of this type.  Use the
+/// Null template instead.
 class MYSQLPP_EXPORT null_type
 {
-public:
+private:
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	template <class Type> operator Type() const
+	template <typename CannotConvertNullToAnyOtherDataType>
+	operator CannotConvertNullToAnyOtherDataType() const
 	{
-		throw BadNullConversion();
-		return Type();
+		return CannotConvertNullToAnyOtherDataType();
 	}
 #endif // !defined(DOXYGEN_IGNORE)
 };
 
 /// \brief Global 'null' instance.  Use wherever you need a SQL null.
-/// (As opposed to a C++ language null pointer or null character.)
+///
+/// SQL null is equal to nothing else.  It is not the same as C++'s
+/// NULL value, it is not a Boolean false....it is unique.  As such, if
+/// you use this in some other type context, you will get a compiler
+/// error saying something about \c CannotConvertNullToAnyOtherDataType.
+/// The only thing you can assign this object instance to is a variable
+/// of type Null<T>, and then only directly.  Code like this does not
+/// work:
+///
+/// \code
+/// int foo = return_some_value_for_foo();
+/// mysqlpp::Null<int> bar = foo ? foo : mysqlpp::null;
+/// \endcode
+/// 
+/// The compiler will try to convert mysqlpp::null to \c int to make
+/// all values in the conditional operation consistent, but this is
+/// not legal.  Anyway, it's questionable code because it means you're
+/// using SQL null to mean the same thing as zero here.  If zero is a
+/// special value, there's no reason to use SQL null.  SQL null exists
+/// when every value for a particular column is legal and you need
+/// something that means "no legal value".
 const null_type null = null_type();
 
 
@@ -75,7 +95,7 @@ struct NullIsNull
 {
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	static null_type null_is() { return null_type(); }
+	static null_type null_is() { return null; }
 
 	static std::ostream& null_ostr(std::ostream& o)
 	{

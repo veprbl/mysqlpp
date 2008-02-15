@@ -172,20 +172,6 @@ public:
 };
 
 
-/// \brief Exception thrown when you attempt to convert a SQL null
-/// to an incompatible type.
-
-class MYSQLPP_EXPORT BadNullConversion : public Exception
-{
-public:
-	/// \brief Create exception object
-	explicit BadNullConversion(const char* w = "") :
-	Exception(w)
-	{
-	}
-};
-
-
 /// \brief Exception thrown when you pass an unrecognized option to
 /// Connection::set_option().
 

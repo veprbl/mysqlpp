@@ -678,35 +678,33 @@ mysqlpp::Null&lt;mysqlpp::sql_tinyint_unsigned&gt; myfield;</programlisting>
     <programlisting>
 myfield = mysqlpp::null;</programlisting>
 
-    <para>The final aspect of MySQL++&rsquo;s null handling is that, by
-    default, it will enforce the uniqueness of the SQL null value. If
-    you try to convert a SQL null to a plain C++ data type, MySQL++ will
-    throw a <ulink type="classref" url="BadNullConversion"/> exception.
-    If you insert a SQL null into a C++ stream, you get
-    &ldquo;(NULL)&rdquo;. If you don&rsquo;t like this behavior, you can
-    change it, by passing a different value for the second parameter to
-    template <classname>Null</classname>. By default, this parameter is
-    <ulink type="structref" url="NullIsNull"/>, meaning that we should
-    enforce the uniqueness of the null type. To relax this distinction,
+    <para>By default, MySQL++ enforces the uniqueness of SQL null at
+    compile time. If you try to convert a SQL null to any other data
+    type, the compiler will emit an error message saying something
+    about <type>CannotConvertNullToAnyOtherDataType</type>. It&rsquo;s
+    safe to insert a SQL null into a C++ stream, though: you get
+    &ldquo;(NULL)&rdquo;.</para>
+
+    <para>If you don&rsquo;t like this behavior, you can change it
+    by passing a different value for the second parameter to template
+    <classname>Null</classname>. By default, this parameter is <ulink
+    type="structref" url="NullIsNull"/>, meaning that we should
+    enforce the uniqueness of SQL null. To relax this distinction,
     you can instantiate the <classname>Null</classname> template with a
     different behavior type: <ulink type="structref" url="NullIsZero"/>
     or <ulink type="structref" url="NullIsBlank"/>. Consider this
     code:</para>
 
     <programlisting>
-mysqlpp::Null&lt;unsigned char, mysqlpp::NullIsZero&gt; myfield;
-
-myfield = mysqlpp::null;
+mysqlpp::Null&lt;unsigned char, mysqlpp::NullIsZero&gt; myfield(mysqlpp::null);
 cout &lt;&lt; myfield &lt;&lt; endl;
-
-int x = myfield;
-cout &lt;&lt; x &lt;&lt; endl;</programlisting>
+cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
 
     <para>This will print &ldquo;0&rdquo; twice. If you had used the
     default for the second <classname>Null</classname> template
     parameter, the first output statement would have printed
-    &ldquo;(NULL)&rdquo;, and the second would have thrown a
-    <classname>BadNullConversion</classname> exception.</para>
+    &ldquo;(NULL)&rdquo;, and the second wouldn&rsquo;t even
+    compile.</para>
   </sect2>
 
 
