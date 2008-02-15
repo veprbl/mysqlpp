@@ -481,7 +481,8 @@ $defs
     sql_compare_define_##CMP(NAME, $parmC)
     sql_construct_define_##CONTR(NAME, $parmC)
     static const char* names[];
-    static const char*& table() { return table_; }
+    static const char* const table() { return table_; }
+    static void table(const char* t) { table_ = t; }
 
     NAME##_value_list<mysqlpp::quote_type0> value_list() const {
       return value_list(",", mysqlpp::quote);}

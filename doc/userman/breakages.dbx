@@ -877,6 +877,26 @@ std::string(s.data(), s.length()); // raw_string() equivalent</programlisting>
         in this table, so if you stick to those types, you&rsquo;ll
         be fine. It&rsquo;s also okay to use types your C++ compiler
         can convert directly to these predefined types.</para>
+
+        <para>The <varname>_table</varname> static member variable
+        for each SSQLS is now private. The recommended way to access
+        this remains unchanged: the <function>table()</function>
+        static member function.</para>
+
+        <para><function>table()</function> used to return a modifiable
+        reference to the table name. Now there are two overloads,
+        one which returns an unmodifiable pointer to the table name,
+        and the other which takes <type>const char*</type> so you
+        can override the default table name. So, the code we used to
+        recommend for changing the SSQLS&rsquo;s table name:</para>
+
+        <programlisting>
+my_ssqls_type::table() = "MyTableName";</programlisting>
+
+        <para>now needs to be:</para>
+
+        <programlisting>
+my_ssqls_type::table("MyTableName");</programlisting>
       </sect4>
 
 

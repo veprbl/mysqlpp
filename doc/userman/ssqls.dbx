@@ -214,7 +214,7 @@ query.insert(s);</programlisting>
     table name used in queries like this:</para>
 
     <programlisting>
-stock::table() = "MyStockData";</programlisting>
+stock::table("MyStockData");</programlisting>
   </sect2>
 
 
