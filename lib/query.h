@@ -568,7 +568,7 @@ public:
 	Function for_each(const SSQLS& ssqls, Function fn)
 	{	
 		std::string query("select * from ");
-		query += ssqls._table;
+		query += ssqls.table();
 		mysqlpp::UseQueryResult res = use(query);
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
@@ -630,7 +630,7 @@ public:
 	Function store_if(Sequence& con, const SSQLS& ssqls, Function fn)
 	{	
 		std::string query("select * from ");
-		query += ssqls._table;
+		query += ssqls.table();
 		mysqlpp::UseQueryResult res = use(query);
 		if (res) {
 			mysqlpp::NoExceptions ne(res);

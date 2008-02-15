@@ -481,8 +481,7 @@ $defs
     sql_compare_define_##CMP(NAME, $parmC)
     sql_construct_define_##CONTR(NAME, $parmC)
     static const char* names[];
-    static const char* _table;
-    static const char*& table() { return _table; }
+    static const char*& table() { return table_; }
 
     NAME##_value_list<mysqlpp::quote_type0> value_list() const {
       return value_list(",", mysqlpp::quote);}
@@ -651,12 +650,15 @@ $defs
     template <class Manip>
     NAME##_cus_equal_list<Manip> equal_list(const char *d, const char *c, Manip m, 
 						mysqlpp::sql_cmp_type sc) const;
+
+  private:
+    static const char* table_;
   }; 
   MYSQLPP_SSQLS_CONDITIONAL_STATICS(
 	  const char *NAME::names[] = { 
 		 $names
 	  }; 
-	  const char *NAME::_table = #NAME ;
+	  const char *NAME::table_ = #NAME ;
   )
 
   template <class Manip>
