@@ -7,7 +7,7 @@
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS file in
  the top directory of the distribution for details.
 
@@ -51,7 +51,7 @@ class MYSQLPP_EXPORT null_type
 public:
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
-	template <class Type> operator Type()
+	template <class Type> operator Type() const
 	{
 		throw BadNullConversion();
 		return Type();
