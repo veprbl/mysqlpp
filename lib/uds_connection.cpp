@@ -1,7 +1,7 @@
 /***********************************************************************
  uds_connection.cpp - Implements the UnixDomainSocketConnection class.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -38,12 +38,12 @@ using namespace std;
 
 namespace mysqlpp {
 
-static cchar* common_complaint =
+static const char* common_complaint =
 		"WindowsNamedPipeConnection only works on Windows";
 
 bool
-UnixDomainSocketConnection::connect(cchar* path, cchar* db, cchar* user,
-		cchar* pass)
+UnixDomainSocketConnection::connect(const char* path,
+		const char* db, const char* user, const char* pass)
 {
 #if !defined(MYSQLPP_PLATFORM_WINDOWS)
 	if (is_socket(path, &error_message_)) {
@@ -64,7 +64,7 @@ UnixDomainSocketConnection::connect(cchar* path, cchar* db, cchar* user,
 
 
 bool
-UnixDomainSocketConnection::is_socket(cchar* path, std::string* error)
+UnixDomainSocketConnection::is_socket(const char* path, std::string* error)
 {
 #if !defined(MYSQLPP_PLATFORM_WINDOWS)
 	if (path) {

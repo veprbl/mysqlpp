@@ -42,7 +42,8 @@ namespace mysqlpp {
 
 
 bool
-TCPConnection::connect(cchar* addr, cchar* db, cchar* user, cchar* pass)
+TCPConnection::connect(const char* addr, const char* db,
+		const char* user, const char* pass)
 {
 	error_message_.clear();
 

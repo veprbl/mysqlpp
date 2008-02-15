@@ -2,7 +2,7 @@
 /// \brief Declares the WindowsNamedPipeConnection class.
 
 /***********************************************************************
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -52,8 +52,8 @@ public:
 	/// \param user user name to log in under, or 0 to use the user
 	///		name the program is running under
 	/// \param password password to use when logging in
-	WindowsNamedPipeConnection(cchar* db, cchar* user = 0,
-			cchar* password = 0) :
+	WindowsNamedPipeConnection(const char* db, const char* user = 0,
+			const char* password = 0) :
 	Connection()
 	{
 		connect(db, user, password);
@@ -79,7 +79,8 @@ public:
 	/// If you call this method on an object that is already connected
 	/// to a database server, the previous connection is dropped and a
 	/// new connection is established.
-	bool connect(cchar* db = 0, cchar* user = 0, cchar* password = 0);
+	bool connect(const char* db = 0, const char* user = 0,
+			const char* password = 0);
 
 	/// \brief Check that given string denotes a Windows named pipe
 	/// connection to MySQL
@@ -88,7 +89,7 @@ public:
 	///
 	/// \return false if server address does not denote a Windows
 	/// named pipe connection, or we are not running on Windows
-	static bool is_wnp(cchar* server);
+	static bool is_wnp(const char* server);
 };
 
 

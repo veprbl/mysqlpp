@@ -2,7 +2,7 @@
 /// \brief Declares the TCPConnection class.
 
 /***********************************************************************
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -59,8 +59,8 @@ public:
 	/// \b BEWARE: These parameters are not in the same order as those
 	/// in the corresponding constructor for Connection.  This is a
 	/// feature, not a bug. :)
-	TCPConnection(cchar* addr, cchar* db = 0, cchar* user = 0,
-			cchar* password = 0) :
+	TCPConnection(const char* addr, const char* db = 0, const char* user = 0,
+			const char* password = 0) :
 	Connection()
 	{
 		connect(addr, db, user, password);
@@ -86,8 +86,8 @@ public:
 	/// If you call this method on an object that is already connected
 	/// to a database server, the previous connection is dropped and a
 	/// new connection is established.
-	bool connect(cchar* addr = 0, cchar* db = 0, cchar* user = 0,
-			cchar* password = 0);
+	bool connect(const char* addr = 0, const char* db = 0,
+			const char* user = 0, const char* password = 0);
 
 	/// \brief Break the given TCP/IP address up into a separate address
 	/// and port form

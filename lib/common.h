@@ -153,16 +153,6 @@ typedef long long longlong;
 #endif
 #endif // !defined(DOXYGEN_IGNORE)
 
-/// \brief Contraction for 'const char*'
-typedef const char cchar;
-
-#if !defined(MYSQLPP_NO_UNSIGNED_INT_TYPES)
-/// \brief Contraction for 'unsigned int'
-typedef unsigned int uint;
-/// \brief Contraction for 'unsigned long'
-typedef unsigned long ulong;
-#endif
-
 } // end namespace mysqlpp
 
 // The MySQL headers define these macros, which is completely wrong in a

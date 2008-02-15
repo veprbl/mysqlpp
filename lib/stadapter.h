@@ -176,7 +176,7 @@ public:
 	SQLTypeAdapter& operator =(const null_type& n);
 
 	/// \brief Returns a const char pointer to the object's raw data
-	operator cchar*() const { return data(); }
+	operator const char*() const { return data(); }
 
 	/// \brief Copies another SQLTypeAdapter's data buffer into this
 	/// object.

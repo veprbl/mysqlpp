@@ -1,7 +1,7 @@
 /***********************************************************************
  wnp_connection.cpp - Implements the WindowsNamedPipeConnection class.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -33,12 +33,13 @@ using namespace std;
 
 namespace mysqlpp {
 
-static cchar* common_complaint =
+static const char* common_complaint =
 		"WindowsNamedPipeConnection only works on Windows";
 
 
 bool
-WindowsNamedPipeConnection::connect(cchar* db, cchar* user, cchar* pass)
+WindowsNamedPipeConnection::connect(const char* db, const char* user,
+		const char* pass)
 {
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
 	return Connection::connect(db, ".", user, pass);
@@ -58,7 +59,7 @@ WindowsNamedPipeConnection::connect(cchar* db, cchar* user, cchar* pass)
 
 
 bool
-WindowsNamedPipeConnection::is_wnp(cchar* server)
+WindowsNamedPipeConnection::is_wnp(const char* server)
 {
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
 	return server && (strcmp(server, ".") == 0);

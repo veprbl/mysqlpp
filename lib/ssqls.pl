@@ -392,10 +392,10 @@ $enums
   class NAME##_value_list { 
   public: 
     const NAME *obj;
-    mysqlpp::cchar *delim;
+    const char *delim;
     Manip manip;
   public: 
-    NAME##_value_list (const NAME *o, mysqlpp::cchar *d, Manip m) 
+    NAME##_value_list (const NAME *o, const char *d, Manip m) 
       : obj(o), delim(d), manip(m) {} 
   };
 
@@ -403,10 +403,10 @@ $enums
   class NAME##_##field_list {
   public: 
     const NAME *obj; 
-    mysqlpp::cchar *delim;
+    const char *delim;
     Manip manip;
   public: 
-    NAME##_field_list (const NAME *o, mysqlpp::cchar *d, Manip m) 
+    NAME##_field_list (const NAME *o, const char *d, Manip m) 
       : obj(o), delim(d), manip(m) {} 
   };
 
@@ -414,11 +414,11 @@ $enums
   class NAME##_equal_list { 
   public: 
     const NAME *obj;
-    mysqlpp::cchar *delim;
-    mysqlpp::cchar *comp;
+    const char *delim;
+    const char *comp;
     Manip manip;
   public: 
-    NAME##_equal_list (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m) 
+    NAME##_equal_list (const NAME *o, const char *d, const char *c, Manip m) 
       : obj(o), delim(d), comp(c), manip(m) {}
   };
 
@@ -428,13 +428,13 @@ $enums
     const NAME *obj;
     std::vector<bool> *include;
     bool del_vector;
-    mysqlpp::cchar *delim;
+    const char *delim;
     Manip manip;
   public: 
     ~NAME##_cus_value_list () {if (del_vector) delete include;} 
-    NAME##_cus_value_list (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms11);
-    NAME##_cus_value_list (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms22); 
-    NAME##_cus_value_list (const NAME *o, mysqlpp::cchar *d, Manip m ,std::vector<bool>* i)
+    NAME##_cus_value_list (const NAME *o, const char *d, Manip m, $cusparms11);
+    NAME##_cus_value_list (const NAME *o, const char *d, Manip m, $cusparms22); 
+    NAME##_cus_value_list (const NAME *o, const char *d, Manip m ,std::vector<bool>* i)
       : obj(o), include(i), del_vector(false), delim(d), manip(m) {}
   };
 
@@ -444,13 +444,13 @@ $enums
     const NAME *obj; 
     std::vector<bool> *include; 
     bool del_vector; 
-    mysqlpp::cchar *delim;
+    const char *delim;
     Manip manip;
   public: 
     ~NAME##_cus_field_list () {if (del_vector) delete include;} 
-    NAME##_cus_field_list (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms11); 
-    NAME##_cus_field_list (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms22); 
-    NAME##_cus_field_list (const NAME *o, mysqlpp::cchar *d, Manip m, std::vector<bool> *i) 
+    NAME##_cus_field_list (const NAME *o, const char *d, Manip m, $cusparms11); 
+    NAME##_cus_field_list (const NAME *o, const char *d, Manip m, $cusparms22); 
+    NAME##_cus_field_list (const NAME *o, const char *d, Manip m, std::vector<bool> *i) 
       : obj(o), include(i), del_vector(false), delim(d), manip(m) {}
   };
 
@@ -460,14 +460,14 @@ $enums
     const NAME *obj;
     std::vector<bool> *include;
     bool del_vector;
-    mysqlpp::cchar *delim;
-    mysqlpp::cchar *comp;
+    const char *delim;
+    const char *comp;
     Manip manip;
   public:
     ~NAME##_##cus_equal_list () {if (del_vector) delete include;}
-    NAME##_##cus_equal_list (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, $cusparms11); 
-    NAME##_##cus_equal_list (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, $cusparms22); 
-    NAME##_##cus_equal_list (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, std::vector<bool> *i) 
+    NAME##_##cus_equal_list (const NAME *o, const char *d, const char *c, Manip m, $cusparms11); 
+    NAME##_##cus_equal_list (const NAME *o, const char *d, const char *c, Manip m, $cusparms22); 
+    NAME##_##cus_equal_list (const NAME *o, const char *d, const char *c, Manip m, std::vector<bool> *i) 
       : obj(o), include(i), del_vector(false), delim(d), comp(c), manip(m) {}
   };
 
@@ -486,23 +486,23 @@ $defs
 
     NAME##_value_list<mysqlpp::quote_type0> value_list() const {
       return value_list(",", mysqlpp::quote);}
-    NAME##_value_list<mysqlpp::quote_type0> value_list(mysqlpp::cchar *d) const {
+    NAME##_value_list<mysqlpp::quote_type0> value_list(const char *d) const {
       return value_list(d, mysqlpp::quote);}
     template <class Manip> 
-    NAME##_value_list<Manip> value_list(mysqlpp::cchar *d, Manip m) const; 
+    NAME##_value_list<Manip> value_list(const char *d, Manip m) const; 
 
     NAME##_field_list<mysqlpp::do_nothing_type0> field_list() const {
       return field_list(",", mysqlpp::do_nothing);}
-    NAME##_field_list<mysqlpp::do_nothing_type0> field_list(mysqlpp::cchar *d) const {
+    NAME##_field_list<mysqlpp::do_nothing_type0> field_list(const char *d) const {
       return field_list(d, mysqlpp::do_nothing);}
     template <class Manip>
-    NAME##_field_list<Manip> field_list(mysqlpp::cchar *d, Manip m) const; 
+    NAME##_field_list<Manip> field_list(const char *d, Manip m) const; 
 
-    NAME##_equal_list<mysqlpp::quote_type0> equal_list(mysqlpp::cchar *d = ",", 
-                                              mysqlpp::cchar *c = " = ") const{
+    NAME##_equal_list<mysqlpp::quote_type0> equal_list(const char *d = ",", 
+                                              const char *c = " = ") const{
       return equal_list(d, c, mysqlpp::quote);}
     template <class Manip>
-    NAME##_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m) const; 
+    NAME##_equal_list<Manip> equal_list(const char *d, const char *c, Manip m) const; 
     
     /* cus_data */
 
@@ -519,32 +519,32 @@ $defs
       return value_list(",", mysqlpp::quote, sc);
     }
 
-    NAME##_cus_value_list<mysqlpp::quote_type0> value_list(mysqlpp::cchar *d, $cusparms1) const {
+    NAME##_cus_value_list<mysqlpp::quote_type0> value_list(const char *d, $cusparms1) const {
       return value_list(d, mysqlpp::quote, $cusparmsv);
     }
-    NAME##_cus_value_list<mysqlpp::quote_type0> value_list(mysqlpp::cchar *d, $cusparms2) const {
+    NAME##_cus_value_list<mysqlpp::quote_type0> value_list(const char *d, $cusparms2) const {
       return value_list(d, mysqlpp::quote, $cusparmsv);
     }
-    NAME##_cus_value_list<mysqlpp::quote_type0> value_list(mysqlpp::cchar *d, 
+    NAME##_cus_value_list<mysqlpp::quote_type0> value_list(const char *d, 
 						std::vector<bool> *i) const {
       return value_list(d, mysqlpp::quote, i);
     }
-    NAME##_cus_value_list<mysqlpp::quote_type0> value_list(mysqlpp::cchar *d, 
+    NAME##_cus_value_list<mysqlpp::quote_type0> value_list(const char *d, 
 						mysqlpp::sql_cmp_type sc) const {
       return value_list(d, mysqlpp::quote, sc);
     }
 
     template <class Manip>
-    NAME##_cus_value_list<Manip> value_list(mysqlpp::cchar *d, Manip m,
+    NAME##_cus_value_list<Manip> value_list(const char *d, Manip m,
 					  $cusparms1) const; 
     template <class Manip>
-    NAME##_cus_value_list<Manip> value_list(mysqlpp::cchar *d, Manip m,
+    NAME##_cus_value_list<Manip> value_list(const char *d, Manip m,
 					  $cusparms2) const; 
     template <class Manip>
-    NAME##_cus_value_list<Manip> value_list(mysqlpp::cchar *d, Manip m, 
+    NAME##_cus_value_list<Manip> value_list(const char *d, Manip m, 
 					  std::vector<bool> *i) const;
     template <class Manip>
-    NAME##_cus_value_list<Manip> value_list(mysqlpp::cchar *d, Manip m, 
+    NAME##_cus_value_list<Manip> value_list(const char *d, Manip m, 
 					  mysqlpp::sql_cmp_type sc) const;
     /* cus field */
 
@@ -562,34 +562,34 @@ $defs
       return field_list(",", mysqlpp::do_nothing, sc);
     }
 
-    NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(mysqlpp::cchar *d, 
+    NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(const char *d, 
 							   $cusparms1) const {
       return field_list(d, mysqlpp::do_nothing, $cusparmsv);
     }
-    NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(mysqlpp::cchar *d,
+    NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(const char *d,
 							   $cusparms2) const {
       return field_list(d, mysqlpp::do_nothing, $cusparmsv);
     }
-    NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(mysqlpp::cchar *d, 
+    NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(const char *d, 
 						std::vector<bool> *i) const {
       return field_list(d, mysqlpp::do_nothing, i);
     }
-    NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(mysqlpp::cchar *d, 
+    NAME##_cus_field_list<mysqlpp::do_nothing_type0> field_list(const char *d, 
 						mysqlpp::sql_cmp_type sc) const {
       return field_list(d, mysqlpp::do_nothing, sc);
     }
 
     template <class Manip>
-    NAME##_cus_field_list<Manip> field_list(mysqlpp::cchar *d, Manip m,
+    NAME##_cus_field_list<Manip> field_list(const char *d, Manip m,
 						$cusparms1) const; 
     template <class Manip>
-    NAME##_cus_field_list<Manip> field_list(mysqlpp::cchar *d, Manip m,
+    NAME##_cus_field_list<Manip> field_list(const char *d, Manip m,
 						$cusparms2) const; 
     template <class Manip>
-    NAME##_cus_field_list<Manip> field_list(mysqlpp::cchar *d, Manip m,
+    NAME##_cus_field_list<Manip> field_list(const char *d, Manip m,
 						std::vector<bool> *i) const;
     template <class Manip>
-    NAME##_cus_field_list<Manip> field_list(mysqlpp::cchar *d, Manip m, 
+    NAME##_cus_field_list<Manip> field_list(const char *d, Manip m, 
 						mysqlpp::sql_cmp_type sc) const;
 
     /* cus equal */
@@ -607,49 +607,49 @@ $defs
       return equal_list(",", " = ", mysqlpp::quote, sc);
     }
 
-    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(mysqlpp::cchar *d, $cusparms1) const {
+    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(const char *d, $cusparms1) const {
       return equal_list(d, " = ", mysqlpp::quote, $cusparmsv);
     }
-    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(mysqlpp::cchar *d, $cusparms2) const {
+    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(const char *d, $cusparms2) const {
       return equal_list(d, " = ", mysqlpp::quote, $cusparmsv);
     }
-    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(mysqlpp::cchar *d, 
+    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(const char *d, 
 						std::vector<bool> *i) const {
       return equal_list(d, " = ", mysqlpp::quote, i);
     }
-    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(mysqlpp::cchar *d, 
+    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(const char *d, 
 						mysqlpp::sql_cmp_type sc) const {
       return equal_list(d, " = ", mysqlpp::quote, sc);
     }
 
-    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c,
+    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(const char *d, const char *c,
                                                 $cusparms1) const {
       return equal_list(d, c, mysqlpp::quote, $cusparmsv);
     }
-    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c,
+    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(const char *d, const char *c,
                                                 $cusparms2) const {
       return equal_list(d, c, mysqlpp::quote, $cusparmsv);
     }
-    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c,
+    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(const char *d, const char *c,
 						std::vector<bool> *i) const {
       return equal_list(d, c, mysqlpp::quote, i);
     }
-    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c,
+    NAME##_cus_equal_list<mysqlpp::quote_type0> equal_list(const char *d, const char *c,
 						mysqlpp::sql_cmp_type sc) const {
       return equal_list(d, c, mysqlpp::quote, sc);
     }
 
     template <class Manip>
-    NAME##_cus_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
+    NAME##_cus_equal_list<Manip> equal_list(const char *d, const char *c, Manip m, 
 						$cusparms1) const; 
     template <class Manip>
-    NAME##_cus_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
+    NAME##_cus_equal_list<Manip> equal_list(const char *d, const char *c, Manip m, 
 						$cusparms2) const; 
     template <class Manip>
-    NAME##_cus_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
+    NAME##_cus_equal_list<Manip> equal_list(const char *d, const char *c, Manip m, 
 						std::vector<bool> *i) const;
     template <class Manip>
-    NAME##_cus_equal_list<Manip> equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
+    NAME##_cus_equal_list<Manip> equal_list(const char *d, const char *c, Manip m, 
 						mysqlpp::sql_cmp_type sc) const;
   }; 
   MYSQLPP_SSQLS_CONDITIONAL_STATICS(
@@ -661,7 +661,7 @@ $defs
 
   template <class Manip>
   NAME##_cus_value_list<Manip>::NAME##_cus_value_list
-  (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms11) 
+  (const NAME *o, const char *d, Manip m, $cusparms11) 
   { 
     delim = d;
     manip = m;
@@ -673,7 +673,7 @@ $create_bool
 
   template <class Manip>
   NAME##_cus_value_list<Manip>::NAME##_cus_value_list
-  (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms22) { 
+  (const NAME *o, const char *d, Manip m, $cusparms22) { 
     delim = d;
     manip = m;
     del_vector = true; 
@@ -684,7 +684,7 @@ $create_list
 
   template <class Manip>
   NAME##_cus_field_list<Manip>::NAME##_cus_field_list
-  (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms11) {
+  (const NAME *o, const char *d, Manip m, $cusparms11) {
     delim = d;
     manip = m;
     del_vector = true; 
@@ -695,7 +695,7 @@ $create_bool
 
   template <class Manip>
   NAME##_cus_field_list<Manip>::NAME##_cus_field_list
-  (const NAME *o, mysqlpp::cchar *d, Manip m, $cusparms22) { 
+  (const NAME *o, const char *d, Manip m, $cusparms22) { 
     delim = d;
     manip = m;
     del_vector = true; 
@@ -706,7 +706,7 @@ $create_list
 
   template <class Manip>
   NAME##_cus_equal_list<Manip>::NAME##_cus_equal_list
-  (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, $cusparms11) { 
+  (const NAME *o, const char *d, const char *c, Manip m, $cusparms11) { 
     delim = d;
     comp = c;
     manip = m;
@@ -718,7 +718,7 @@ $create_bool
 
   template <class Manip>
   NAME##_cus_equal_list<Manip>::NAME##_cus_equal_list
-  (const NAME *o, mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, $cusparms22) { 
+  (const NAME *o, const char *d, const char *c, Manip m, $cusparms22) { 
     delim = d;
     comp = c;
     manip = m;
@@ -768,89 +768,89 @@ $cus_equal_list
   } 
 
   template <class Manip>
-  inline NAME##_value_list<Manip> NAME::value_list(mysqlpp::cchar *d, Manip m) const { 
+  inline NAME##_value_list<Manip> NAME::value_list(const char *d, Manip m) const { 
     return NAME##_value_list<Manip> (this, d, m); 
   } 
 
   template <class Manip>
-  inline NAME##_field_list<Manip> NAME::field_list(mysqlpp::cchar *d, Manip m) const { 
+  inline NAME##_field_list<Manip> NAME::field_list(const char *d, Manip m) const { 
     return NAME##_field_list<Manip> (this, d, m); 
   } 
 
   template <class Manip>
-  inline NAME##_equal_list<Manip> NAME::equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m) const { 
+  inline NAME##_equal_list<Manip> NAME::equal_list(const char *d, const char *c, Manip m) const { 
     return NAME##_equal_list<Manip> (this, d, c, m); 
   } 
  
   template <class Manip>
-  inline NAME##_cus_value_list<Manip> NAME::value_list(mysqlpp::cchar *d, Manip m,
+  inline NAME##_cus_value_list<Manip> NAME::value_list(const char *d, Manip m,
 							   $cusparms11) const {
     return NAME##_cus_value_list<Manip> (this, d, m, $cusparmsv); 
   } 
 
   template <class Manip>
-  inline NAME##_cus_field_list<Manip> NAME::field_list(mysqlpp::cchar *d, Manip m,
+  inline NAME##_cus_field_list<Manip> NAME::field_list(const char *d, Manip m,
 							 $cusparms11) const { 
     return NAME##_cus_field_list<Manip> (this, d, m, $cusparmsv); 
   } 
 
   template <class Manip>
-  inline NAME##_cus_equal_list<Manip> NAME::equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m,
+  inline NAME##_cus_equal_list<Manip> NAME::equal_list(const char *d, const char *c, Manip m,
 							 $cusparms11) const { 
     return NAME##_cus_equal_list<Manip> (this, d, c, m, $cusparmsv); 
   } 
 
   template <class Manip>
-  inline NAME##_cus_value_list<Manip> NAME::value_list(mysqlpp::cchar *d, Manip m,
+  inline NAME##_cus_value_list<Manip> NAME::value_list(const char *d, Manip m,
 							   $cusparms22) const { 
     return NAME##_cus_value_list<Manip> (this, d, m, $cusparmsv); 
   } 
 
   template <class Manip>
-  inline NAME##_cus_field_list<Manip> NAME::field_list(mysqlpp::cchar *d, Manip m,
+  inline NAME##_cus_field_list<Manip> NAME::field_list(const char *d, Manip m,
 							 $cusparms22) const {
     return NAME##_cus_field_list<Manip> (this, d, m, $cusparmsv); 
   } 
 
   template <class Manip>
-  inline NAME##_cus_equal_list<Manip> NAME::equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, 
+  inline NAME##_cus_equal_list<Manip> NAME::equal_list(const char *d, const char *c, Manip m, 
 							 $cusparms22) const { 
     return NAME##_cus_equal_list<Manip> (this, d, c, m, $cusparmsv); 
   } 
 
   template <class Manip>
-  inline NAME##_cus_value_list<Manip> NAME::value_list(mysqlpp::cchar *d, Manip m,
+  inline NAME##_cus_value_list<Manip> NAME::value_list(const char *d, Manip m,
                                                        std::vector<bool> *i) const {
     return NAME##_cus_value_list<Manip> (this, d, m, i);
   }
 
   template <class Manip>
-  inline NAME##_cus_field_list<Manip> NAME::field_list(mysqlpp::cchar *d, Manip m,
+  inline NAME##_cus_field_list<Manip> NAME::field_list(const char *d, Manip m,
                                                        std::vector<bool> *i) const {
     return NAME##_cus_field_list<Manip> (this, d, m, i);
   }
 
   template <class Manip>
-  inline NAME##_cus_equal_list<Manip> NAME::equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m,
+  inline NAME##_cus_equal_list<Manip> NAME::equal_list(const char *d, const char *c, Manip m,
                                                        std::vector<bool> *i) const {
     return NAME##_cus_equal_list<Manip> (this, d, c, m, i);
   }
 
   template <class Manip>
   inline NAME##_cus_value_list<Manip> 
-  NAME::value_list(mysqlpp::cchar *d, Manip m, mysqlpp::sql_cmp_type /*sc*/) const {
+  NAME::value_list(const char *d, Manip m, mysqlpp::sql_cmp_type /*sc*/) const {
     sql_compare_type_def_##CMP (NAME, value, NUM);
   }
 
   template <class Manip>
   inline NAME##_cus_field_list<Manip> 
-  NAME::field_list(mysqlpp::cchar *d, Manip m, mysqlpp::sql_cmp_type /*sc*/) const {
+  NAME::field_list(const char *d, Manip m, mysqlpp::sql_cmp_type /*sc*/) const {
     sql_compare_type_def_##CMP (NAME, field, NUM);
   }
 
   template <class Manip>
   inline NAME##_cus_equal_list<Manip> 
-  NAME::equal_list(mysqlpp::cchar *d, mysqlpp::cchar *c, Manip m, mysqlpp::sql_cmp_type /*sc*/) const {
+  NAME::equal_list(const char *d, const char *c, Manip m, mysqlpp::sql_cmp_type /*sc*/) const {
     sql_compare_type_defe_##CMP (NAME, equal, NUM);
   }
 

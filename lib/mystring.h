@@ -479,7 +479,7 @@ public:
 	char operator [](size_type pos) const;
 
 	/// \brief Returns a const char pointer to the object's raw data
-	operator cchar*() const { return data(); }
+	operator const char*() const { return data(); }
 	
 	/// \brief Converts this object's string data to a signed char
 	operator signed char() const
