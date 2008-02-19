@@ -6,6 +6,21 @@ below: any time you must hand-roll some SQL code in your program,
 consider whether it could be reduced to an API feature that would be
 widely useful.  Patches or proposals of this sort are always welcome.
 
+v3.0 Final To-Do
+----------------
+    o Document MYSQLPP_* in userman
+
+    o Rename dist target to dist-temp, with a different temporary
+      output file name.  Make new dist target that unpacks this,
+      cds into the directory it unpacks into, rebake with doc and
+      test targets disabled, then pack it back up into new tarball
+      and nuke temp stuff.
+
+    o Make srpm target depend on dist-temp so building binary RPMs
+      doesn't try to build tests or rebuild docs.  Former have no
+      value to binary RPMs, and for the latter we want to just package
+      already-built docs.
+
 
 v3.1 Tentative Plan
 -------------------
@@ -59,7 +74,7 @@ v3.1 Tentative Plan
 
          http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
 
-	o Add a general-purpose backtick manipulator as well.
+    o Add a general-purpose backtick manipulator as well.
 
     o Define operator<< for Fields, Row, StoreQueryResult, etc.  In other
       words, there should be a way to get a user-readable version of
@@ -132,3 +147,7 @@ v4.0 or Later
 
     o If SSQLSv2 does use a common base class, change Query template
       methods taking SSQLS into concrete methods taking SsqlsBase&.
+
+    o Make Query::insert(), replace() and update() execute their
+      queries immediately.  Requires an ABI break, because they'll
+      have to return SimpleResult.
