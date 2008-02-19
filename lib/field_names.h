@@ -94,7 +94,7 @@ public:
 	}
 
 	/// \brief Get the index number of a field given its name
-	uint operator [](const std::string& s) const;
+	unsigned int operator [](const std::string& s) const;
 
 private:
 	void init(const ResultBase* res);

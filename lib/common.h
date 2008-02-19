@@ -153,6 +153,15 @@ typedef long long longlong;
 #endif
 #endif // !defined(DOXYGEN_IGNORE)
 
+#if !defined(MYSQLPP_NO_UNSIGNED_INT_TYPES)
+/// \brief Contraction for 'unsigned long'
+///
+/// This is not to be used within the library or directly by end-user
+/// code.  It exists to make the MySQL C API headers happy: my_global.h
+/// defines it, but we can't use it in MySQL++, so we do it ourselves.
+typedef unsigned long ulong;
+#endif
+
 } // end namespace mysqlpp
 
 // The MySQL headers define these macros, which is completely wrong in a
