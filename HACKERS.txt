@@ -44,15 +44,6 @@ Bootstrapping the Library
     In addition to Bakefile 0.2.3 and Perl 5, you'll also need autoconf
     1.59 or higher for this to run successfully.
 
-    As of this writing Bakefile 0.2.3 hasn't been released.  The only
-    reason we require it is for the new Visual C++ 2003 project
-    file support.  If you're using Visual C++ 2005 or newer, or some
-    other system entirely, you can step back to the latest released
-    version, 0.2.2.  You'll need to change all the 'msvs2003prj'
-    strings to 'msvs2005prj' in Bakefiles.bkgen and mysql++.bkl.
-    Also, change '0.2.3' to '0.2.2' at the top of mysql++.bkl.
-    These changes will allow the older version to process the Bakefile.
-
 
 Submitting Patches
 ~~~~~~~~~~~~~~~~~~
