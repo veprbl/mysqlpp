@@ -29,6 +29,9 @@
 
 #include <iostream>
 
+sql_create_1(ssqls, 1, 0,
+		mysqlpp::Null<int>, a_column);
+
 int
 main()
 {
@@ -47,7 +50,15 @@ main()
 			(mysqlpp::sql_cmp(null_int, null_int) == 0) &&
 			(mysqlpp::sql_cmp(null_int, non_null_int) < 0) &&
 			(mysqlpp::sql_cmp(non_null_int, null_int) > 0)) {
-		return 0;
+		ssqls foo(null_int), bar(non_null_int);
+		if ((foo < bar) && (foo != bar) && !(bar < foo) && !(foo == bar)) {
+			return 0;
+		}
+		else {
+			std::cerr << "SSQLS comparison gave unexpected result" <<
+					std::endl;
+			return 1;
+		}
 	}
 	else {
 		std::cerr << "Null comparison gave unexpected result" << std::endl;
