@@ -10,7 +10,7 @@
 
     <set var="PLATFORM_WINDOWS_NATIVE">no</set>
     <set var="THREAD_TYPE">single</set>
-    <if cond="FORMAT in ['msvs2003prj', 'mingw']">
+    <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'mingw']">
         <set var="PLATFORM_WINDOWS_NATIVE">yes</set>
         <set var="THREAD_TYPE">multi</set>
     </if>
@@ -37,8 +37,7 @@
          file names for VC++ and Xcode, in debug mode only. -->
     <set var="DEBUG_SUFFIX"/>
     <set var="DEBUG_SUFFIX">
-        <if cond="FORMAT=='msvs2003prj' and BUILD=='debug'">_d</if>
-        <if cond="FORMAT=='xcode2' and BUILD=='debug'">_d</if>
+        <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'xcode2'] and BUILD=='debug'">_d</if>
     </set>
 
     <set var="BUILDDOCS">yes</set>
@@ -46,6 +45,10 @@
     <set var="BUILDLIBRARY">yes</set>
     <set var="BUILDTEST">yes</set>
     <set var="HEADER_DIR">$(PREFIX)/include/mysql++</set>
+
+	<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj']">
+		<set-srcdir>..</set-srcdir>
+    </if>
 
     <if cond="BUILDLIBRARY=='yes'">
         <dll id="mysqlpp">
@@ -95,7 +98,7 @@
                 <sys-lib>wsock32</sys-lib>
             </if>
 
-            <if cond="FORMAT=='msvs2003prj'">
+			<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj']">
                 <define>MYSQLPP_MAKING_DLL</define>
                 <define>HAVE_MYSQL_SSL_SET</define>
                 <include>$(MYSQL_WIN_DIR)\include</include>
@@ -153,11 +156,13 @@
         <cxx-exceptions>on</cxx-exceptions>
         <debug-info>$(DEBUGINFO)</debug-info>
 
-        <include>lib</include>
-
         <if cond="FORMAT in ['autoconf', 'gnu', 'mingw', 'xcode2']">
+			<include>lib</include>
             <lib-path>.</lib-path>
         </if>
+		<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj']">
+			<include>../lib</include>
+		</if>
 
         <if cond="PLATFORM_WINDOWS_NATIVE=='yes'">
             <define>UNICODE</define>
@@ -186,7 +191,7 @@
             <sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
         </if>
 
-        <if cond="FORMAT=='msvs2003prj'">
+		<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj']">
             <lib-path>$(BUILD)</lib-path>
             <include>$(MYSQL_WIN_DIR)\include</include>
             <lib-path>$(MYSQL_WIN_DIR)\lib\opt</lib-path>
@@ -222,9 +227,12 @@
         <exe id="test_manip" template="programs">
             <sources>test/manip.cpp</sources>
         </exe>
-        <exe id="test_null_comparison" template="programs">
-            <sources>test/null_comparison.cpp</sources>
-        </exe>
+        <if cond="FORMAT!='msvs2003prj'">
+            <!-- VC++ 2003 can't compile this -->
+			<exe id="test_null_comparison" template="programs">
+				<sources>test/null_comparison.cpp</sources>
+			</exe>
+		</if>
         <exe id="test_qstream" template="programs">
             <sources>test/qstream.cpp</sources>
         </exe>
@@ -261,9 +269,12 @@
         </lib>
 
         <!-- The examples themselves -->
-        <exe id="cgi_jpeg" template="libexcommon-user,programs">
-            <sources>examples/cgi_jpeg.cpp</sources>
-        </exe>
+        <if cond="FORMAT!='msvs2003prj'">
+            <!-- VC++ 2003 can't compile current SSQLS code -->
+			<exe id="cgi_jpeg" template="libexcommon-user,programs">
+				<sources>examples/cgi_jpeg.cpp</sources>
+			</exe>
+        </if>
         <exe id="cpool" template="libexcommon-user,programs">
             <sources>examples/cpool.cpp</sources>
         </exe>
@@ -276,9 +287,12 @@
         <exe id="fieldinf" template="libexcommon-user,programs">
             <sources>examples/fieldinf.cpp</sources>
         </exe>
-        <exe id="for_each" template="libexcommon-user,programs">
-            <sources>examples/for_each.cpp</sources>
-        </exe>
+        <if cond="FORMAT!='msvs2003prj'">
+            <!-- VC++ 2003 can't compile current SSQLS code -->
+			<exe id="for_each" template="libexcommon-user,programs">
+				<sources>examples/for_each.cpp</sources>
+			</exe>
+        </if>
         <exe id="load_jpeg" template="libexcommon-user,programs">
             <sources>examples/load_jpeg.cpp</sources>
         </exe>
@@ -297,24 +311,27 @@
         <exe id="simple3" template="libexcommon-user,programs">
             <sources>examples/simple3.cpp</sources>
         </exe>
-        <exe id="ssqls1" template="libexcommon-user,programs">
-            <sources>examples/ssqls1.cpp</sources>
-        </exe>
-        <exe id="ssqls2" template="libexcommon-user,programs">
-            <sources>examples/ssqls2.cpp</sources>
-        </exe>
-        <exe id="ssqls3" template="libexcommon-user,programs">
-            <sources>examples/ssqls3.cpp</sources>
-        </exe>
-        <exe id="ssqls4" template="libexcommon-user,programs">
-            <sources>examples/ssqls4.cpp</sources>
-        </exe>
-        <exe id="ssqls5" template="libexcommon-user,programs">
-            <sources>examples/ssqls5.cpp</sources>
-        </exe>
-        <exe id="store_if" template="libexcommon-user,programs">
-            <sources>examples/store_if.cpp</sources>
-        </exe>
+        <if cond="FORMAT!='msvs2003prj'">
+            <!-- VC++ 2003 can't compile current SSQLS code -->
+			<exe id="ssqls1" template="libexcommon-user,programs">
+				<sources>examples/ssqls1.cpp</sources>
+			</exe>
+			<exe id="ssqls2" template="libexcommon-user,programs">
+				<sources>examples/ssqls2.cpp</sources>
+			</exe>
+			<exe id="ssqls3" template="libexcommon-user,programs">
+				<sources>examples/ssqls3.cpp</sources>
+			</exe>
+			<exe id="ssqls4" template="libexcommon-user,programs">
+				<sources>examples/ssqls4.cpp</sources>
+			</exe>
+			<exe id="ssqls5" template="libexcommon-user,programs">
+				<sources>examples/ssqls5.cpp</sources>
+			</exe>
+			<exe id="store_if" template="libexcommon-user,programs">
+				<sources>examples/store_if.cpp</sources>
+			</exe>
+        </if>
         <exe id="tquery1" template="libexcommon-user,programs">
             <sources>examples/tquery1.cpp</sources>
         </exe>
@@ -324,9 +341,12 @@
         <exe id="tquery3" template="libexcommon-user,programs">
             <sources>examples/tquery3.cpp</sources>
         </exe>
-        <exe id="transaction" template="libexcommon-user,programs">
-            <sources>examples/transaction.cpp</sources>
-        </exe>
+        <if cond="FORMAT!='msvs2003prj'">
+            <!-- VC++ 2003 can't compile current SSQLS code -->
+			<exe id="transaction" template="libexcommon-user,programs">
+				<sources>examples/transaction.cpp</sources>
+			</exe>
+        </if>
     </if>   <!-- build examples -->
 
     <if cond="FORMAT=='autoconf'">
@@ -401,7 +421,7 @@
                 cp -RL *.bat *.txt Bakefiles.bkgen bootstrap ChangeLog \
 					cleanmf config.guess config.h.in config.sub configure* \
                     dtest exrun install-sh libmysqlclient.def Makefile.* \
-					mysql++.* mysql++_*.vcproj osver Wishlist $(PKGNAME)
+					mysql++.* vc200[35] osver Wishlist $(PKGNAME)
             </command>
 
             <!-- config subdir -->

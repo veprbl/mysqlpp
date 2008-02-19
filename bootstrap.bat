@@ -1,4 +1,7 @@
 @echo off
+if not exist vc2003 mkdir vc2003
+if not exist vc2005 mkdir vc2005
+
 bakefile_gen %*
 if errorlevel 1 exit
 if not exist mysql++.sln goto no_bakefile

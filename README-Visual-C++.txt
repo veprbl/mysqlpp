@@ -7,8 +7,8 @@ Visual C++ Version Compatibility
     v2 series, but a feature we added in MySQL++ v3.0 crashes the
     compiler, so we had to remove support for it entirely.  You don't
     need to change anything to use MySQL++ v3 with Visual C++ 2003.
-    The SSQLS parts of the library and the examples simply disable
-    themselves when built with Visual C++ 2003.
+    The SSQLS parts of the library simply don't get built when you
+    use this compiler.
 
     Older versions of Visual C++ are basically hopeless when it comes
     to having sufficient support for Standard C++ to build MySQL++.
@@ -18,16 +18,11 @@ Visual C++ Version Compatibility
     programming straight to the C API, if only because you can still
     get support for it.
 
-    The .sln and .vcproj files shipped with MySQL++ are for Visual
-    Studio 2003.  If you have that version installed as well as a newer
-    version, double-clicking the .sln file will open the solution in
-    Visual Studio 2003.  (This is because .sln files aren't associated
-    with Visual Studio directly, they're associated with a helper
-    tool that examines the file's contents to decide which version of
-    Visual Studio to launch.)  To migrate the solution files to the
-    newer version, open the .sln file from within the desired version
-    of Visual Studio.  After saving out the migrated solution files,
-    double-clicking the .sln file will open it in the newer version.
+    There are two sets of .sln and .vcproj files shipped with MySQL++:
+    one for Visual C++ 2003 in the vc2003 subdirectory, and another
+    set for VC++ 2005 and newer in vc2005.  The only difference
+    between them is that the VC++ 2003 versions leave out several
+    things from the build for compatibility reasons.
 
 
 Prerequisites

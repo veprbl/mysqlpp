@@ -45,6 +45,7 @@ rm -f config.cache
 
 # Do Bakefile stuff first
 set -x &&
+	mkdir -p vc2003 vc2005 &&
 	bakefilize &&
 	bakefile_gen $BF_OPTIONS &&
 	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&

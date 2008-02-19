@@ -28,8 +28,6 @@
 ***********************************************************************/
 
 #include <mysql++.h>
-
-#if defined(MYSQLPP_SSQLS_COMPATIBLE)
 #include <ssqls.h>
 
 #define IMG_DATABASE	"mysql_cpp_data"
@@ -43,11 +41,7 @@ sql_create_2(images,
 	mysqlpp::sql_blob, data)
 
 int main()
-#else // !defined(MYSQLPP_SSQLS_COMPATIBLE)
-int main(int, char* argv[])
-#endif
 {
-#if defined(MYSQLPP_SSQLS_COMPATIBLE)
 	unsigned int img_id = 0;
 	char* cgi_query = getenv("QUERY_STRING");
 	if (cgi_query) {
@@ -106,11 +100,6 @@ int main(int, char* argv[])
 		std::cout << "GENERAL ERROR: " << er.what() << std::endl;
 		return 1;
 	}
-#else
-	// MySQL++ works under Visual C++ 2003 with only one excpetion,
-	// SSQLS, so we have to stub out the examples to avoid build errors.
-	std::cout << argv[0] << " requires Visual C++ 2005 or newer." << std::endl;
-#endif
 
 	return 0;
 }

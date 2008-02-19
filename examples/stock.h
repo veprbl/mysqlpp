@@ -2,7 +2,7 @@
  stock.h - Declares the stock SSQLS used by several of the examples.
  
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS file in
  the top directory of the distribution for details.
 
@@ -25,9 +25,6 @@
 ***********************************************************************/
 
 #include <mysql++.h>
-
-#if defined(MYSQLPP_SSQLS_COMPATIBLE)
-
 #include <ssqls.h>
 
 // The following is calling a very complex macro which will create
@@ -47,6 +44,4 @@ sql_create_6(stock,
 	mysqlpp::sql_double, price,
 	mysqlpp::sql_date, sdate,
 	mysqlpp::Null<mysqlpp::sql_mediumtext>, description)
-
-#endif
 

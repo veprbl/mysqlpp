@@ -37,7 +37,6 @@
 #include <math.h>
 
 
-#if defined(MYSQLPP_SSQLS_COMPATIBLE)
 // Define a functor for testing primality.
 struct is_prime
 {
@@ -61,13 +60,11 @@ struct is_prime
 		}
 	}
 };
-#endif // defined(MYSQLPP_SSQLS_COMPATIBLE)
 
 
 int
 main(int argc, char *argv[])
 {
-#if defined(MYSQLPP_SSQLS_COMPATIBLE)
 	// Get database access parameters from command line
     const char* db = 0, *server = 0, *user = 0, *pass = "";
 	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
@@ -101,12 +98,6 @@ main(int argc, char *argv[])
 		std::cerr << "Error: " << er.what() << std::endl;
 		return 1;
 	}
-#else
-	// MySQL++ works under Visual C++ 2003 with only one excpetion,
-	// SSQLS, so we have to stub out the examples to avoid build errors.
-	(void)argc;
-	std::cout << argv[0] << " requires Visual C++ 2005 or newer." << std::endl;
-#endif
 
 	return 0;
 }
