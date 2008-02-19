@@ -222,6 +222,9 @@
         <exe id="test_manip" template="programs">
             <sources>test/manip.cpp</sources>
         </exe>
+        <exe id="test_null_comparison" template="programs">
+            <sources>test/null_comparison.cpp</sources>
+        </exe>
         <exe id="test_qstream" template="programs">
             <sources>test/qstream.cpp</sources>
         </exe>

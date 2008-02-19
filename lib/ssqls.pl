@@ -147,6 +147,15 @@ inline int sql_cmp($type a, $type b)
 
 print OUT << "---";
 
+template <typename T>
+inline int sql_cmp(const mysqlpp::Null<T>& a, const mysqlpp::Null<T>& b) 
+{
+	if (a == b) return 0;
+	if (a <  b) return -1;
+	return 1;
+}
+
+
 // ---------------------------------------------------
 //                Begin Mandatory Compare 
 // ---------------------------------------------------

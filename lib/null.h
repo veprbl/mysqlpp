@@ -250,6 +250,61 @@ public:
 		is_null = true;
 		return *this;
 	}
+
+	/// \brief Do equality comparison of two nullable values
+	///
+	/// Two null objects are equal, and null is not equal to not-null.
+	/// If neither is null, we delegate to operator == for the base
+	/// data type.
+	bool operator ==(const Null<Type>& rhs) const
+	{
+		if (is_null && rhs.is_null) {
+			return true;
+		}
+		else if (is_null != rhs.is_null) {
+			return false;	// one null, the other not
+		}
+		else {
+			return data == rhs.data;
+		}
+	}
+
+	/// \brief Do equality comparison against hard-coded SQL null
+	///
+	/// This tells you the same thing as testing is_null member.
+	bool operator ==(const null_type&) const { return is_null; }
+
+	/// \brief Do inequality comparison of two nullable values
+	bool operator !=(const Null<Type>& rhs) const
+			{ return !(*this == rhs); }
+
+	/// \brief Do inequality comparison against hard-coded SQL null
+	bool operator !=(const null_type& rhs) const
+			{ return !(*this == rhs); }
+
+	/// \brief Do less-than comparison of two nullable values
+	///
+	/// Two null objects are equal to each other, and null is less
+	/// than not-null.  If neither is null, we delegate to operator <
+	/// for the base data type.
+	bool operator <(const Null<Type>& rhs) const
+	{
+		if (is_null && rhs.is_null) {
+			return false;
+		}
+		else if (is_null && !rhs.is_null) {
+			return true;
+		}
+		else {
+			return data < rhs.data;
+		}
+	}
+
+	/// \brief Do less-than comparison against hard-coded SQL null
+	///
+	/// Always returns false because we can only be greater than or
+	/// equal to a SQL null.
+	bool operator <(const null_type&) const { return false; }
 };
 
 
