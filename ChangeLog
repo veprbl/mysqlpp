@@ -1,4 +1,4 @@
-3.0.0 release candidate 4, 2008.02.12 (r2192)
+3.0.0 release candidate 5, 2008.02.19 (r2214)
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
@@ -23,7 +23,9 @@
 
       - SSQLSes are finally compatible with Null<>-wrapped types.  This
         feature is based loosely on the "Waba" patch posted to the
-        mailing list back in the v2.0 days.
+        mailing list back in the v2.0 days, but extended to allow
+        Null<T> types for key fields.  (The Waba patch only allowed
+        these types in non-key fields.)
 
       - It's no longer necessary to define a different SSQLS for each
         different field set you use in queries.  That is to say,
@@ -57,6 +59,14 @@
         configurable threshold defaulting to 0.00001.
     
       - You can now use 'bool' type in an SSQLS.
+
+      - Renamed _table static member variable in each SSQLS to table_
+        and made it private.  There are now public setter and getter
+        methods, table().
+
+      - Added per-instance table name overriding via instance_table()
+        setter.  table() getter returns static version if this is not
+        set, so it's still a global setting by default.
 
     o You can now use mysqlpp::null as a template query parameter to
       get a SQL null.
@@ -508,6 +518,11 @@
     o Renamed NullisNull to NullIsNull -- capital I -- and similar for
       NullisZero and NullisBlank.
 
+    o It's now a compile-time error to try to convert a MySQL++
+      representation of a SQL null to any other data type, rather
+      than a run-time error as in previous versions.  Removed
+      BadNullConversion exception as a result.
+
     o Way back in v1.7.x we used the BadQuery exception for all kinds
       of exceptional conditions, not just bad queries.  Replaced
       most of these in v2.0.0 with new dedicated exceptions, but a
@@ -549,6 +564,8 @@
       line, and use the values they get back to explicitly make the
       connection, so it isn't hidden.
 
+    o Removed cchar and uint typedefs.
+
     o Redesigned dbinfo example's output to be easier to read.
 
     o Fixed an output formatting bug created in 2.3.0 that caused the
@@ -583,6 +600,8 @@
     o Fixed a typo in RPM filename generation that prevented -devel
       RPM from recognizing that the corresponding MySQL++ library
       RPM was installed.
+
+    o RPM spec file improvements by Remi Collet.
 
     o Renamed NO_LONG_LONGS to MYSQLPP_NO_LONG_LONGS to avoid a risk
       of collision in the global macro namespace.
