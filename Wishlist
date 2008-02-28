@@ -1,10 +1,13 @@
 Patches for any of these thoughtfully considered!  See the HACKERS.txt
 file for instructions on sending patches.
 
-Here's a meta-item that doesn't really fit into any of the categories
-below: any time you must hand-roll some SQL code in your program,
-consider whether it could be reduced to an API feature that would be
-widely useful.  Patches or proposals of this sort are always welcome.
+
+Any Version
+-----------
+    o Any time you must hand-roll some SQL code in your program,
+      consider whether it could be generalized to a widely-useful
+      API feature.
+
 
 v3.0 Final To-Do
 ----------------
