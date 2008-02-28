@@ -35,6 +35,7 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+#include <climits>
 
 using namespace std;
 
