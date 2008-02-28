@@ -27,17 +27,19 @@ Visual C++ Version Compatibility
 
 Prerequisites
 ~~~~~~~~~~~~~
-    You need to have the MySQL server installed on your development
-    system, even if you will be using a MySQL server on another server.
-    This is because in addition to installing the server itself,
-    it also installs the client-side development files that MySQL++
+    You need to have the Windows version of the MySQL server installed
+    on your development system, even if you always access a MySQL
+    server on a different machine.  This is because in addition to
+    installing the server itself, the official MySQL Windows binaries
+    also install the client-side development files that MySQL++
     needs in order to communicate with a MySQL server.
 
-    Historically, the MySQL server installer has sometimes installed
-    the development files by default, and sometimes not.  If you get
-    an error about mysql-version.h or mysql.h when building MySQL++,
-    you might need to go back and reinstall the server and select a
-    custom install to enable installation of the development files.
+    Historically, the Windows version of the MySQL server installer
+    has sometimes installed the development files by default, and
+    sometimes not.  If you get an error about mysql-version.h or
+    mysql.h when building MySQL++, you might need to go back and
+    reinstall the server and select a custom install to enable
+    installation of the development files.
 
     If you're getting these header file errors and are certain the
     development files are indeed installed, read on in the following
