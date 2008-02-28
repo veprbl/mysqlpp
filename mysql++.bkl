@@ -421,8 +421,16 @@
                 cp -RL *.bat *.txt Bakefiles.bkgen bootstrap ChangeLog \
 					cleanmf config.guess config.h.in config.sub configure* \
                     dtest exrun install-sh libmysqlclient.def Makefile.* \
-					mysql++.* vc200[35] osver Wishlist $(PKGNAME)
+					mysql++.* osver Wishlist $(PKGNAME)
             </command>
+
+			<!-- VC++ project file subdirs -->
+			<command>
+				for d in vc200? ; do \
+					mkdir -p $(PKGNAME)/$(DDD) ; \
+					cp $(DDD)/*.{sln,vcproj} $(PKGNAME)/$(DDD) ; \
+				done
+			</command>
 
             <!-- config subdir -->
             <command>cp config/*.m4 $(PKGNAME)/config</command>
