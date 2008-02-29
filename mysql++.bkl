@@ -402,11 +402,7 @@
             <depends>doc/html/userman/index.html</depends>
         </action>
 
-        <action id="dist">
-            <if cond="BUILDDOCS=='yes'">
-                <depends>doc</depends>
-            </if>
-
+        <action id="@PACKAGE_NAME@-@PACKAGE_VERSION@">
             <!-- Set up package directory -->
             <command>
                 for d in config doc/{.,html}/{refman,userman} examples lib test ; \
@@ -487,27 +483,36 @@
                 cp test/*.cpp $(PKGNAME)/test
             </command>
 
-            <!-- distribution dir created, so pack up a copy and 
-                 nuke the temporary -->
+            <!-- re-bootstrap it to get a standard configuration -->
+            <command>cd $(PKGNAME) ; ./bootstrap nodoc nomaint</command>
+            <command>rm -f $(PKGNAME)/Makefile $(PKGNAME)/config.{log,status}</command>
+            <command>rm -fr $(PKGNAME)/autom4te.cache</command>
+        </action>
+
+		<action id="dist">
+            <depends>$(PKGNAME)</depends>
             <command>tar czf $(PKGNAME).tar.gz $(PKGNAME)</command>
             <command>rm -rf $(PKGNAME)</command>
         </action>
 
         <action id="rpm-setup">
-            <command>cp $(PKGNAME).tar.gz /usr/src/redhat/SOURCES</command>
             <depends>dist</depends>
+            <command>cp $(PKGNAME).tar.gz /usr/src/redhat/SOURCES</command>
         </action>
 
         <action id="rpm">
+            <if cond="BUILDDOCS=='yes'">
+                <depends>doc</depends>
+            </if>
+            <depends>rpm-setup</depends>
             <command>cd /usr/src/redhat/SPECS</command>
             <command>rpmbuild -bb mysql++.spec</command>
-            <depends>rpm-setup</depends>
         </action>
 
         <action id="srpm">
+            <depends>rpm-setup</depends>
             <command>cd /usr/src/redhat/SPECS</command>
             <command>rpmbuild -bs mysql++.spec</command>
-            <depends>rpm-setup</depends>
         </action>
 
         <action id="ebuild">

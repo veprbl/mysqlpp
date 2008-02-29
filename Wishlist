@@ -9,20 +9,6 @@ Any Version
       API feature.
 
 
-v3.0 Final To-Do
-----------------
-    o Rename dist target to dist-temp, with a different temporary
-      output file name.  Make new dist target that unpacks this,
-      cds into the directory it unpacks into, rebake with doc and
-      test targets disabled, then pack it back up into new tarball
-      and nuke temp stuff.
-
-    o Make srpm target depend on dist-temp so building binary RPMs
-      doesn't try to build tests or rebuild docs.  Former have no
-      value to binary RPMs, and for the latter we want to just package
-      already-built docs.
-
-
 v3.1 Tentative Plan
 -------------------
     o SSQLS v2:
