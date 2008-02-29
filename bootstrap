@@ -2,6 +2,7 @@
 
 ARGS=1
 BF_OPTIONS=
+MAINT_FLAGS="--cache-file=config.cache --enable-maintainer-mode"
 while [ $ARGS != 0 ]
 do
 	case "$1" in
@@ -22,6 +23,11 @@ do
 
 		nolib)
 			BF_OPTIONS="-DBUILDLIBRARY=no $BF_OPTIONS"
+			shift
+			;;
+
+		nomaint)
+			MAINT_FLAGS=
 			shift
 			;;
 
@@ -82,7 +88,7 @@ then
 		aclocal -I config -I $BAKEFILE_M4 &&
 		autoheader &&
 		autoconf &&
-		./configure --cache-file=config.cache --enable-maintainer-mode $* &&
+		./configure $MAINT_FLAGS $* &&
 		make lib/querydef.h lib/ssqls.h &&
 		set +x &&
 		success=awyeah
