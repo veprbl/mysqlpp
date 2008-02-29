@@ -11,8 +11,6 @@ Any Version
 
 v3.0 Final To-Do
 ----------------
-    o Document MYSQLPP_* in userman
-
     o Rename dist target to dist-temp, with a different temporary
       output file name.  Make new dist target that unpacks this,
       cds into the directory it unpacks into, rebake with doc and
