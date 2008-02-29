@@ -1,4 +1,4 @@
-3.0.0, 2008.02.29 (r2230)
+3.0.0, 2008.02.29 (r2230) The "Giant Leap Forward" release
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
