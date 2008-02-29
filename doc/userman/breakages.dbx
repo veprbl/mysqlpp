@@ -356,7 +356,7 @@ query.execute(some_value);</programlisting>
 
 
     <sect3 id="api-3.0.0">
-      <title>v3.0.0 (as of release candidate 4)</title>
+      <title>v3.0.0</title>
 
       <sect4 id="api-3.0.0-names">
         <title>Class name changes</title>
