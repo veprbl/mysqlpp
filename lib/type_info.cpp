@@ -57,7 +57,7 @@ namespace mysqlpp {
 // marked as default, the typeid() of each item must be unique.
 const mysql_type_info::sql_type_info mysql_type_info::types[] = {
 	sql_type_info("DECIMAL NOT NULL", typeid(sql_decimal),
-#if defined(MYSQL_TYPE_NEWDECIMAL)
+#if MYSQL_VERSION_ID >= 50001
 			MYSQL_TYPE_NEWDECIMAL
 #else
 			MYSQL_TYPE_DECIMAL
@@ -119,7 +119,7 @@ const mysql_type_info::sql_type_info mysql_type_info::types[] = {
 			MYSQL_TYPE_STRING),
 
 	sql_type_info("DECIMAL NULL", typeid(Null<sql_decimal>), 
-#if defined(MYSQL_TYPE_NEWDECIMAL)
+#if MYSQL_VERSION_ID >= 50001
 			MYSQL_TYPE_NEWDECIMAL
 #else
 			MYSQL_TYPE_DECIMAL
