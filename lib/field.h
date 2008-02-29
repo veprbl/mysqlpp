@@ -110,8 +110,10 @@ public:
 	/// \brief Return the field's name
 	const char* name() const { return name_.c_str(); }
 
+#if defined(NO_DEFAULT_VALUE_FLAG)
 	/// \brief Returns true if field has no default value
 	bool no_default() const { return flags_ & NO_DEFAULT_VALUE_FLAG; }
+#endif
 
 	/// \brief Returns true if field is part of a primary key
 	bool primary_key() const { return flags_ & PRI_KEY_FLAG; }
