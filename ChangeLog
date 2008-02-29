@@ -1,4 +1,14 @@
-3.0.0, 2008.02.29 (r2230) The "Giant Leap Forward" release
+3.0.0, 2008.02.29 (r2234) The "Giant Leap Forward" release
+
+    THIS IS NOT A DROP-IN REPLACEMENT FOR MySQL++ v2.x!
+
+    You will have to recompile your program against this version
+    of the library, and you will almost certainly have to make code
+    changes as well.  Please see these sections in the user manual
+    for information on migrating your code to this new version:
+
+    http://tangentsoft.net/mysql++/doc/html/userman/breakages.html#api-3.0.0
+    http://tangentsoft.net/mysql++/doc/html/userman/breakages.html#abi-3.0.0
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
@@ -1212,7 +1222,7 @@
     the user manual for a guide to migrating your code to this
     new version:
 
-    http://tangentsoft.net/mysql++/doc/userman/html/breakages.html
+        http://tangentsoft.net/mysql++/doc/html/userman/breakages.html
 
     o The library's shared object file name (soname) scheme has
       changed.  (This mainly affects POSIX systems.)
