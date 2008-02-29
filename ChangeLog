@@ -1,4 +1,4 @@
-3.0.0 release candidate 5, 2008.02.19 (r2214)
+3.0.0, 2008.02.29 (r2230)
 
     o Added ConnectionPool class, primarily to let multithreaded
       programs share a set of Connection objects safely in situations
@@ -611,6 +611,15 @@
     o Debug build of library on VC++ and Xcode have a _d suffix now
       so you can have both versions of the library installed without
       conflict.
+
+    o Moved the VC++ 2003 project files into a new vs2003 subdirectory
+      because there are so many of them.  Also created vs2005
+      subdirectory for VC++ 2005 and 2008 compatible project files.
+      2005 makes an even bigger mess of the directory containing
+      the .sln file, so the incentive is bigger.  Plus, we have to
+      disable several things to get VC++ 2003 to build MySQL++ now,
+      so we need a special 2005+ version of the project files for a
+      complete build, if the user has one of the newer compilers.
 
     o ...plus dozens of small bug fixes and internal enhancements,
       many documentation improvements, and expansion of support for
