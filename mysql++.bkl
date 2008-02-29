@@ -487,24 +487,14 @@
             <command>rm -rf $(PKGNAME)</command>
         </action>
 
-        <action id="rpm-setup">
-            <depends>dist</depends>
-            <command>cp $(PKGNAME).tar.gz /usr/src/redhat/SOURCES</command>
-        </action>
-
         <action id="rpm">
-            <depends>rpm-setup</depends>
-            <command>cd /usr/src/redhat/SPECS</command>
-            <command>rpmbuild -bb mysql++.spec</command>
-        </action>
-
-        <action id="srpm">
             <if cond="BUILDDOCS=='yes'">
                 <depends>doc</depends>
             </if>
-            <depends>rpm-setup</depends>
+            <depends>dist</depends>
+            <command>cp $(PKGNAME).tar.gz /usr/src/redhat/SOURCES</command>
             <command>cd /usr/src/redhat/SPECS</command>
-            <command>rpmbuild -bs mysql++.spec</command>
+            <command>rpmbuild -ba mysql++.spec</command>
         </action>
 
         <action id="ebuild">
