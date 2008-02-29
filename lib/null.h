@@ -48,7 +48,7 @@ extern const std::string null_str;	///< "NULL" string constant
 /// Null template instead.
 class MYSQLPP_EXPORT null_type
 {
-private:
+protected:
 #if !defined(DOXYGEN_IGNORE)
 // Doxygen will not generate documentation for this section.
 	template <typename CannotConvertNullToAnyOtherDataType>

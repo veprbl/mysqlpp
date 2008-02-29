@@ -2,7 +2,7 @@
  test/uds.cpp - Tests the Unix domain socket verifier in
  	UnixDomainSocketConnection.  This test always succeeds on Windows!
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS file in the top directory of the distribution for details.
 
@@ -24,7 +24,8 @@
  USA
 ***********************************************************************/
 
-#include <mysql++.h>
+#include <connection.h>
+#include <exceptions.h>
 
 #include <iostream>
 #include <sstream>
