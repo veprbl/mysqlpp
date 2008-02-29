@@ -24,28 +24,40 @@
  USA
 ***********************************************************************/
 
-#include <mysql++.h>
+#include <cpool.h>
+#include <connection.h>
 
 #include <iostream>
 
 #if defined(MYSQLPP_PLATFORM_WINDOWS)
 #	define SLEEP(n) Sleep((n) * 1000)
 #else
+#	include <unistd.h>
 #	define SLEEP(n) sleep(n)
 #endif
 
 using namespace std;
 
-
-class TCPConnectionPool : public mysqlpp::ConnectionPool
+class TestConnection : public mysqlpp::Connection
 {
 public:
-    ~TCPConnectionPool() { clear(); }
+	TestConnection() : itime_(time(0)) { }
+	time_t instantiation_time() const { return itime_; }
+
+private:
+	time_t itime_;
+};
+
+
+class TestConnectionPool : public mysqlpp::ConnectionPool
+{
+public:
+    ~TestConnectionPool() { clear(); }
 
     unsigned int max_idle_time() { return 1; }
 
 private:
-    mysqlpp::TCPConnection* create() { return new mysqlpp::TCPConnection(); }
+    TestConnection* create() { return new TestConnection; }
     void destroy(mysqlpp::Connection* cp) { delete cp; }
 };
 
@@ -53,7 +65,7 @@ private:
 int
 main()
 {
-	TCPConnectionPool pool;
+	TestConnectionPool pool;
 
 	mysqlpp::Connection* conn1 = pool.grab();
 	mysqlpp::Connection* conn2 = pool.grab();
@@ -69,10 +81,14 @@ main()
 		return 1;
 	}
 
+	time_t itime_c1 = dynamic_cast<TestConnection*>(conn1)->
+			instantiation_time();
 	pool.release(conn1);
 	SLEEP(pool.max_idle_time() + 1);
 	mysqlpp::Connection* conn4 = pool.grab();
-	if (conn1 == conn4) {
+	time_t itime_c4 = dynamic_cast<TestConnection*>(conn4)->
+			instantiation_time();
+	if (itime_c1 == itime_c4) {
 		cerr << "conn1 should have been destroyed but wasn't!" << endl;
 		return 1;
 	}
