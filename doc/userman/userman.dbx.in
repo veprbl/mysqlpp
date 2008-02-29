@@ -35,7 +35,7 @@
 			<holder>Educational Technology Resources</holder>
 		</copyright>
 
-		<pubdate>@MYSQLPP_CONFIGURE_DATE@</pubdate>
+		<pubdate><?dbtimestamp format="B d, Y"?></pubdate>
 	</articleinfo>
 
 

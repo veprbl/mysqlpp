@@ -29,11 +29,6 @@ MYSQLPP_VERSION_BUGFIX=`echo $PACKAGE_VERSION | cut -f3 -d.`
 AC_SUBST(MYSQLPP_VERSION_BUGFIX)
 
 
-# Build current date macro, for inclusion on userman's title page
-MYSQLPP_CONFIGURE_DATE=`date '+%B %d, %Y'`
-AC_SUBST(MYSQLPP_CONFIGURE_DATE)
-
-
 # Include Bakefile macros
 AC_BAKEFILE([m4_include(config/autoconf_inc.m4)])
 

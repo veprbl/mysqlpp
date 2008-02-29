@@ -45,12 +45,12 @@ clean:
 ## How to make output files
 ## ------------------------
 
-$(PDFFILE): *.dbx $(FO_SS) $(COMMON_SS)
+$(PDFFILE): *.dbx *.in $(FO_SS) $(COMMON_SS)
 	xsltproc --xinclude $(FO_SS) $(DOCFILE) > $(FOFILE)
 	./fo2pdf $(FOFILE) $(PDFFILE)
 	mkdir -p ../pdf && cp $(PDFFILE) ../pdf
 
-$(HTML_DIR)/index.html: *.dbx $(EX_TXT) $(HTML_SS) $(COMMON_SS)
+$(HTML_DIR)/index.html: *.dbx *.in $(EX_TXT) $(HTML_SS) $(COMMON_SS)
 	@xmllint --xinclude --postvalid --noent --noout $(DOCFILE)
 	xsltproc --xinclude -o $(HTML_DIR)/ $(HTML_SS) $(DOCFILE)
 
@@ -61,3 +61,6 @@ $(HTML_DIR)/index.html: *.dbx $(EX_TXT) $(HTML_SS) $(COMMON_SS)
 
 $(EX_TXT):
 	@./mktxt $@
+
+userman.dbx: userman.dbx.in
+	( cd ../.. ; ./config.status )
