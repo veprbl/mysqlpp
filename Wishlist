@@ -46,6 +46,9 @@ v3.1 Tentative Plan
         many tables with the same structure in a multithreaded program,
         so changing it statically isn't safe.
 
+      - Need a way to tag a column as auto-increment so it's left out
+        of INSERT queries, but still available for data retrieval.
+
     o Chris Frey's packarray class
 
     o Create adaptors for std::bitset, for storing binary data in a
