@@ -8,6 +8,16 @@ Any Version
       consider whether it could be generalized to a widely-useful
       API feature.
 
+v3.0
+----
+    o Make ConnectionPool::release() virtual.  grab(), too?
+
+    o Add protected ConnectionPool::size(), returning the current
+      size of the connection list.
+
+    o Use new facilities to limit the number of active connections
+      in examples/cpool.cpp.
+
 
 v3.1 Tentative Plan
 -------------------
