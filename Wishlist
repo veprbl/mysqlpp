@@ -18,6 +18,10 @@ v3.0
     o Use new facilities to limit the number of active connections
       in examples/cpool.cpp.
 
+    o Call Connection::thread_start() on worker_thread() entry in
+      examples/cpool.cpp?  Probably just pedantry, but the lack has
+      confused at least one person.
+
 
 v3.1 Tentative Plan
 -------------------
