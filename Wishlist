@@ -22,6 +22,9 @@ v3.0
       examples/cpool.cpp?  Probably just pedantry, but the lack has
       confused at least one person.
 
+    o Why are Connection::thread_start() and thread_end() not static?
+      Ditto DBDriver.
+
 
 v3.1 Tentative Plan
 -------------------
