@@ -180,7 +180,7 @@ Reinitialized sample database successfully.
 We have:
 	Nürnberger Brats
 	Pickle Relish
-	Hot Mustard
+	Hot Mustard (good American yellow mustard, not that European stuff)
 	Hotdog Buns
 ================ END ssqls1 OUTPUT ================
 
