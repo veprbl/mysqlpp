@@ -233,6 +233,12 @@
 				<sources>test/null_comparison.cpp</sources>
 			</exe>
 		</if>
+        <if cond="FORMAT!='msvs2003prj'">
+            <!-- VC++ 2003 can't compile this -->
+			<exe id="test_qssqls" template="programs">
+				<sources>test/qssqls.cpp</sources>
+			</exe>
+		</if>
         <exe id="test_qstream" template="programs">
             <sources>test/qstream.cpp</sources>
         </exe>
