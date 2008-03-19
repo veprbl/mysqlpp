@@ -179,49 +179,67 @@
     <title>Helper Functions</title>
 
     <para><classname>Connection</classname> has several thread-related
-    methods you might care about when using MySQL++ with threads.</para>
+    static methods you might care about when using MySQL++ with
+    threads.</para>
 
     <para>You can call
-    <methodname>Connection::thread_aware()</methodname> to determine
-    whether MySQL++ and the underlying C API library were both built to
-    be thread-aware. Again, I stress that thread
+    <methodname>Connection::thread_aware()</methodname> to
+    determine whether MySQL++ and the underlying C API library
+    were both built to be thread-aware. Again, I stress that thread
     <emphasis>awareness</emphasis> is not the same thing as thread
-    <emphasis>safety</emphasis>: it&rsquo;s still up to you to make your
-    code thread-safe. If this method returns true, it just means
-    it&rsquo;s <emphasis>possible</emphasis> to achieve
+    <emphasis>safety</emphasis>: it&rsquo;s still up to you to
+    make your code thread-safe. If this method returns true, it
+    just means it&rsquo;s <emphasis>possible</emphasis> to achieve
     thread-safety.</para>
 
     <para>If your program&rsquo;s connection-management strategy allows
     a thread to use a <classname>Connection</classname> object that
-    another thread created, you must call
-    <methodname>Connection::thread_start()</methodname> from these
-    threads before they do anything with MySQL++. It&rsquo;s safe for
-    the thread that created the <classname>Connection</classname> object
-    to call it, too, but unnecessary. This is because the underlying C
-    API library takes care of it for you when you try to establish your
-    first connection from that thread. So, if you use the simple
-    <classname>Connection</classname>-per-thread strategy lined out
-    above, you never need to call this method, but if you use something
-    more complex like <classname>ConnectionPool</classname>, you
-    do.</para>
+    another thread created before it creates a connection of its own,
+    you must call <methodname>Connection::thread_start()</methodname>
+    from that thread before it does anything with MySQL++. If a
+    thread creates a new connection before it uses a connection
+    created by another thread, though, it doesn&rsquo;t need to call
+    <methodname>Connection::thread_start()</methodname> because the
+    per-thread resources this allocates are implicitly created upon
+    creation of a connection if necessary.</para>
+
+    <para>This is why the simple
+    <classname>Connection</classname>-per-thread strategy
+    works: each thread that uses MySQL++ creates a connection
+    in that thread, implicitly allocating the per-thread
+    resources at the same time. You never need to call
+    <methodname>Connection::thread_start()</methodname> in this
+    instance. It&rsquo;s not harmful to call this function, just
+    unnecessary.</para>
+
+    <para>A good counterexample is using
+    <classname>ConnectionPool</classname>: you probably do need
+    to call <methodname>Connection::thread_start()</methodname>
+    at the start of each worker thread because you can&rsquo;t
+    usually tell whether you&rsquo;re getting a new connection
+    from the pool, or reusing one that another thread returned
+    to the pool after allocating it. It&rsquo;s possible to
+    conceive of situations where you can guarantee that each pool
+    user always allocates a fresh connection the first time it
+    calls <methodname>ConnectionPool::grab()</methodname>,
+    but thread programming is complex enough that
+    it&rsquo;s best to take the safe path and always call
+    <methodname>Connection::thread_start()</methodname> early in each
+    worker thread.</para>
 
     <para>Finally, there&rsquo;s the complementary method,
     <methodname>Connection::thread_end()</methodname>. Strictly
     speaking, it&rsquo;s not <emphasis>necessary</emphasis> to call
-    this. However, as alluded above, the underlying C API library
-    allocates some per-thread memory for each thread that calls
-    <methodname>Connection::thread_start()</methodname> or establishes
-    connections. It&rsquo;s not very much memory, it doesn&rsquo;t grow
-    over time, and a typical program is going to need this memory for
-    its entire run time anyway. Memory debuggers aren&rsquo;t smart
-    enough to know all this, though, so they will gripe about a memory
-    leak unless you call this from each thread that uses MySQL++ before
-    that thread exits.</para>
+    this. The per-thread memory allocated by the C API is small,
+    it doesn&rsquo;t grow over time, and a typical thread is going
+    to need this memory for its entire run time. Memory debuggers
+    aren&rsquo;t smart enough to know all this, though, so they will
+    gripe about a memory leak unless you call this from each thread
+    that uses MySQL++ before that thread exits.</para>
 
-    <para>It&rsquo;s not relevant to this chapter&rsquo;s topic, so to
-    be clear I want to point out that
-    <methodname>Connection::thread_id()</methodname> has to do with
-    threads in the database server, not client-side threads.</para>
+    <para>Although its name suggests otherwise,
+    <methodname>Connection::thread_id()</methodname> has nothing to
+    do with anything in this chapter.</para>
   </sect2>
 
 
