@@ -153,6 +153,9 @@ protected:
 	/// due to lack of use
 	virtual unsigned int max_idle_time() = 0;
 
+	/// \brief Returns the current size of the internal connection pool.
+	size_t size() const { return pool_.size(); }
+
 private:
 	//// Internal types
 	struct ConnectionInfo {
