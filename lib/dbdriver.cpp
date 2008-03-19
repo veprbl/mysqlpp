@@ -227,7 +227,7 @@ DBDriver::shutdown()
 
 
 bool
-DBDriver::thread_aware() const
+DBDriver::thread_aware()
 {
 #if defined(MYSQLPP_PLATFORM_WINDOWS) || defined(HAVE_PTHREAD) || defined(HAVE_SYNCH_H)
 	// Okay, good, MySQL++ itself is thread-aware, but only return true

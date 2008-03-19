@@ -453,14 +453,14 @@ public:
 	/// automatically make your program "thread-safe".  See the
 	/// <a href="../userman/threads.html">chapter on threads</a> in the
 	/// user manual for more information and guidance.
-	bool thread_aware() const;
+	static bool thread_aware();
 
 	/// \brief Tells the underlying MySQL C API library that this thread
 	/// is done using the library.
 	///
 	/// This exists because the MySQL C API library allocates some per-thread
 	/// memory which it doesn't release until you call this.
-	void thread_end() { mysql_thread_end(); }
+	static void thread_end() { mysql_thread_end(); }
 
 	/// \brief Returns the MySQL server thread ID for this connection
 	///
@@ -486,7 +486,7 @@ public:
 	/// any MySQL++ objects.  If you use a DBDriverPool object, this
 	/// applies; DBDriverPool isn't smart enough to call this for you,
 	/// and the MySQL C API won't do it, either.
-	bool thread_start() { return !mysql_thread_init(); }
+	static bool thread_start() { return !mysql_thread_init(); }
 
 	/// \brief Returns a result set from the last-executed query which
 	/// we can walk through in linear fashion, which doesn't store all
