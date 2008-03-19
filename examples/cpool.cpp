@@ -109,7 +109,7 @@ worker_thread(thread_arg_t running_flag)
 	// this won't happen.  Anyway, this is an example program, meant to
 	// show good style, so we take the high road and ensure the
 	// resources are allocated before we do any queries.
-	Connection::thread_start();
+	mysqlpp::Connection::thread_start();
 
 	// Pull data from the sample table a bunch of times, releasing the
 	// connection we use each time.
@@ -144,7 +144,7 @@ worker_thread(thread_arg_t running_flag)
 	*reinterpret_cast<bool*>(running_flag) = false;
 	
 	// Release the per-thread resources before we exit
-	Connection::thread_end();
+	mysqlpp::Connection::thread_end();
 
 	return 0;
 }
