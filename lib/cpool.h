@@ -106,7 +106,7 @@ public:
 	/// if it doesn't know approximately how long a connection has
 	/// really been idle, it can't make good judgements about when to
 	/// remove it from the pool.
-	void release(const Connection* pc);
+	virtual void release(const Connection* pc);
 
 	/// \brief Remove all unused connections from the pool
 	void shrink() { clear(false); }

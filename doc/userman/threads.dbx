@@ -119,6 +119,10 @@
     in the client would make the most sense, so it asks its subclass
     via the <methodname>max_idle_time()</methodname> method.</para>
 
+    <para><classname>ConnectionPool</classname> also allows you to
+    override <methodname>release()</methodname>, if needed. For simple
+    uses, it&rsquo;s not necessary to override this.</para>
+
     <para>In designing your <classname>ConnectionPool</classname>
     derivative, you might consider making it a Singleton (see Gamma
     et al.), since there should only be one pool in a program.</para>
