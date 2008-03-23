@@ -1,4 +1,4 @@
-3.0.1, 2008.03.19 (r2255)
+3.0.1, 2008.03.23 (r2263)
 
     o String objects can now be compared to mysqlpp::null directly.
 
