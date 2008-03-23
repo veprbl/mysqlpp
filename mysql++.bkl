@@ -459,6 +459,14 @@
 					cp doc/html/refman/*.png $(PKGNAME)/doc/html/refman
 				</command>
 			</if>
+            <if cond="BUILDDOCS!='yes'">
+				<!-- We have to copy this file even though we don't
+				     build the docs to make configure happy, because it
+					 wants to update the version number. -->
+				<command>
+					cp doc/userman/userman.dbx.in $(PKGNAME)/doc/userman
+				</command>
+			</if>
 
             <!-- examples subdir -->
             <command>
