@@ -144,11 +144,11 @@ Tables found: 4
 
 ================================ describe stock ================================
 |field                 ||type                ||null||key||default        |
- item                    char(30)              NO                         
- num                     bigint(20)            NO                         
- weight                  double                NO                         
- price                   decimal(6,2)          NO                         
- sdate                   date                  NO                         
+ item                    char(30)              NO         NULL            
+ num                     bigint(20)            NO         NULL            
+ weight                  double                NO         NULL            
+ price                   decimal(6,2)          NO         NULL            
+ sdate                   date                  NO         NULL            
  description             mediumtext            YES        NULL            
 ================ END dbinfo OUTPUT ================
 
