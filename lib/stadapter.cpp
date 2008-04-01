@@ -250,7 +250,7 @@ SQLTypeAdapter::SQLTypeAdapter(float f) :
 is_processed_(false)
 {
 	ostringstream outs;
-	outs.precision(7);	// max digits in IEEE 754 single-prec float
+	outs.precision(8);	// max dec digits in IEEE 754 32-bit float < 8
 	outs << f;
 	buffer_ = new SQLBuffer(outs.str(), typeid(f), false);
 }
@@ -264,7 +264,7 @@ is_processed_(false)
 	}
 	else {
 		ostringstream outs;
-		outs.precision(7);	// as above
+		outs.precision(8);	// as above
 		outs << f;
 		buffer_ = new SQLBuffer(outs.str(), typeid(f.data), false);
 	}
@@ -275,7 +275,7 @@ SQLTypeAdapter::SQLTypeAdapter(double f) :
 is_processed_(false)
 {
 	ostringstream outs;
-	outs.precision(16);	// max digits in IEEE 754 double-prec float
+	outs.precision(16);	// max dec digits in IEEE 754 64-bit float < 16
 	outs << f;
 	buffer_ = new SQLBuffer(outs.str(), typeid(f), false);
 }
