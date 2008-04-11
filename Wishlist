@@ -10,9 +10,6 @@ Any Version
 
 v3.0
 ----
-    o Need something like Query::success() again, due to bool
-      conversion ambiguity with some C++ standard libraries.
-
     o Limit the number of active connections in examples/cpool.cpp.
 
 
