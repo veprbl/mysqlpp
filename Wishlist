@@ -8,10 +8,6 @@ Any Version
       consider whether it could be generalized to a widely-useful
       API feature.
 
-v3.0
-----
-    o Limit the number of active connections in examples/cpool.cpp.
-
 
 v3.1 Tentative Plan
 -------------------

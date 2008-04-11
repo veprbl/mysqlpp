@@ -45,6 +45,7 @@ public:
 	// The object's only constructor
 	SimpleConnectionPool(const char* db, const char* server,
 			const char* user, const char* password) :
+	conns_in_use_(0),
 	db_(db ? db : ""),
 	server_(server ? server : ""),
 	user_(user ? user : ""),
@@ -57,6 +58,29 @@ public:
 	~SimpleConnectionPool()
 	{
 		clear();
+	}
+
+	// Do a simple form of in-use connection limiting: wait to return
+	// a connection until there are a reasonably low number in use
+	// already.  Can't do this in create() because we're interested in
+	// connections actually in use, not those created.  Also note that
+	// we keep our own count; ConnectionPool::size() isn't the same!
+	mysqlpp::Connection* grab()
+	{
+		while (conns_in_use_ > 8) {
+			cout.put('R'); cout.flush(); // indicate waiting for release
+			sleep(1);
+		}
+
+		++conns_in_use_;
+		return mysqlpp::ConnectionPool::grab();
+	}
+
+	// Other half of in-use conn count limit
+	void release(const mysqlpp::Connection* pc)
+	{
+		mysqlpp::ConnectionPool::release(pc);
+		--conns_in_use_;
 	}
 
 protected:
@@ -91,6 +115,9 @@ protected:
 	}
 
 private:
+	// Number of connections currently in use
+	unsigned int conns_in_use_;
+
 	// Our connection parameters
 	std::string db_, server_, user_, password_;
 };
@@ -110,6 +137,7 @@ worker_thread(thread_arg_t running_flag)
 	// show good style, so we take the high road and ensure the
 	// resources are allocated before we do any queries.
 	mysqlpp::Connection::thread_start();
+	cout.put('S'); cout.flush(); // indicate thread started
 
 	// Pull data from the sample table a bunch of times, releasing the
 	// connection we use each time.
@@ -142,6 +170,7 @@ worker_thread(thread_arg_t running_flag)
 
 	// Tell main() that this thread is no longer running
 	*reinterpret_cast<bool*>(running_flag) = false;
+	cout.put('E'); cout.flush(); // indicate thread ended
 	
 	// Release the per-thread resources before we exit
 	mysqlpp::Connection::thread_end();
