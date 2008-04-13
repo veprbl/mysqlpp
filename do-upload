@@ -34,17 +34,20 @@ then
 	fi
 	cp mysql++-$VERSION.tar.gz $TMPDIR
 
-	if [ ! -e /usr/src/redhat/RPMS/i386/mysql++-manuals-$VERSION-1.i386.rpm ]
-	then
-		make rpm
-	fi
-	cp /usr/src/redhat/RPMS/i386/mysql++-manuals-$VERSION-1.i386.rpm $TMPDIR
-
 	if [ ! -e /usr/src/redhat/SRPMS/mysql++-$VERSION-1.src.rpm ]
 	then
 		make srpm
 	fi
 	cp /usr/src/redhat/SRPMS/mysql++-$VERSION-1.src.rpm $TMPDIR
+fi
+
+if [ "$1" = "man" ]
+then
+	if [ ! -e /usr/src/redhat/RPMS/i386/mysql++-manuals-$VERSION-1.i386.rpm ]
+	then
+		make rpm
+	fi
+	cp /usr/src/redhat/RPMS/i386/mysql++-manuals-$VERSION-1.i386.rpm $TMPDIR
 fi
 
 cp /usr/src/redhat/RPMS/i386/mysql++-$VERSION-1.i386.rpm \
