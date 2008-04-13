@@ -1,4 +1,4 @@
-3.0.2, 2008.04.11 (r2272)
+3.0.2, 2008.04.13 (r2275)
 
     o Increased float to string conversion precision from 7 to 9 and
       double from 16 to 17 digits.  Previous values weren't enough

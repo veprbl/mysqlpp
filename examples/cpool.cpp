@@ -33,6 +33,7 @@
 using namespace std;
 
 
+#if defined(HAVE_THREADS)
 // Define a concrete ConnectionPool derivative.  Takes connection
 // parameters as inputs to its ctor, which it uses to create the
 // connections we're called upon to make.  Note that we also declare
@@ -124,7 +125,6 @@ private:
 SimpleConnectionPool* poolptr = 0;
 
 
-#if defined(HAVE_THREADS)
 static thread_return_t CALLBACK_SPECIFIER
 worker_thread(thread_arg_t running_flag)
 {
