@@ -7,7 +7,7 @@
     o Replaced Query's safe bool mechanism with an override of
       basic_ios::operator void*() to avoid a conflict between the
       two mechanisms.  As the base class version isn't virtual,
-      this is arguably evil, but it should be harmess in typical use.
+      this is arguably evil, but it should be harmless in typical use.
       Besides, testing Query in bool context usually isn't the right
       thing anyway: test the result set instead.
 
