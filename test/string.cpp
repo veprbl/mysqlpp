@@ -291,6 +291,7 @@ main(int, char* argv[])
 		failures += test_string_equality(zero, "0") == false;
 		failures += test_string_inequality(definit, zero) == false;
 		failures += test_string_inequality(zero, definit) == false;
+		failures += test_string_inequality(empty, nonzero) == false;
 		
 		return failures;
 	}
