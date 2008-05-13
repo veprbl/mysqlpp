@@ -144,7 +144,7 @@ public:
 	typedef const char value_type;
 
 	/// \brief Type of "size" integers
-	typedef unsigned int size_type;
+	typedef size_t size_type;
 
 	/// \brief Type of iterators
 	typedef const char* const_iterator;
