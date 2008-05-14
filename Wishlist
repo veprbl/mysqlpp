@@ -84,6 +84,13 @@ v3.1 Tentative Plan
     o Optional checked conversions in String for numerics: throw
       BadConversion on range overflow?
 
+	o Try to add Query::storein(container, ssqls), which generates
+	  SELECT * from {ssqls.table()} and stores the result.  May not be
+	  possible due to existing overloads, but try.  If it works, use
+	  this form in the userman Overview section, saving one LOC.
+
+	o Add Query::storein_if(), mirroring store_if()
+
 
 v4.0 or Later
 -------------
