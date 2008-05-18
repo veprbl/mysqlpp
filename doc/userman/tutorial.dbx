@@ -331,8 +331,9 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; 
     into the stream. This works for any type of data that can be
     converted to MySQL++&rsquo;s <ulink type="classref"
     url="SQLTypeAdapter">SQLTypeAdapter</ulink> type, plus the <ulink
-    type="classref" url="Set"/> template. <xref linkend="ssqlsintro"/>
-    also use these manipulators internally.</para>
+    type="classref" url="Set"/> template. <link
+    linkend="ssqls">SSQLS</link> also uses these manipulators
+    internally.</para>
 
     <para>Quoting is pretty simple, but SQL syntax also often requires
     that certain characters be &ldquo;escaped&rdquo;. Imagine if the
@@ -382,15 +383,15 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
     <para>It&rsquo;s also important to realize that quoting and escaping
     in <classname>Query</classname> streams and template queries is
     never implicit.<footnote><para>By contrast, the
-    <classname>Query</classname> methods that take <xref
-    linkend="ssqlsintro"/> <emphasis>do</emphasis> add quotes and escape
-    strings implicitly. It can do this because SSQLS knows all the SQL
-    code and data types, so it never has to guess whether quoting or
-    escaping is appropriate.</para></footnote> You must use manipulators
-    and template query flags as necessary to tell MySQL++ where quoting
-    and escaping is necessary. It would be nice if MySQL++ could do
-    quoting and escaping implicitly based on data type, but this
-    isn&rsquo;t possible in all cases.<footnote
+    <classname>Query</classname> methods that take an <link
+    linkend="ssqls">SSQLS</link> <emphasis>do</emphasis> add quotes and
+    escape strings implicitly. It can do this because SSQLS knows all
+    the SQL code and data types, so it never has to guess whether
+    quoting or escaping is appropriate.</para></footnote> You must use
+    manipulators and template query flags as necessary to tell MySQL++
+    where quoting and escaping is necessary. It would be nice if MySQL++
+    could do quoting and escaping implicitly based on data type, but
+    this isn&rsquo;t possible in all cases.<footnote
     id="whyexpmanip"><para>Unless you&rsquo;re smarter than I am, you
     don&rsquo;t immediately see why explicit manipulators are necessary.
     We can tell when quoting and escaping is <emphasis>not</emphasis>
@@ -411,163 +412,11 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
   </sect2>
 
 
-  <sect2 id="ssqlsintro" xreflabel="Specialized SQL Structures">
-    <title>Specialized SQL Structures</title>
-
-    <sect3 id="ssqls1">
-      <title>Retrieving data</title>
-
-      <para>The next example introduces one of the most powerful
-      features of MySQL++: Specialized SQL Structures (SSQLS). This is
-      <filename>examples/ssqls1.cpp</filename>:</para>
-
-      <programlisting><xi:include href="ssqls1.txt" parse="text" 
-      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-
-      <para>Here is the stock.h header used by that example, and
-      many others:</para>
-
-      <programlisting><xi:include href="stock.txt" parse="text"
-      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-
-      <para>This example produces the same output as
-      <filename>simple1.cpp</filename> (see <xref linkend="simple"/>),
-      but it uses higher-level data structures paralleling the
-      database schema instead of MySQL++&rsquo;s lower-level
-      generic data structures. It also uses MySQL++&rsquo;s <xref
-      linkend="exceptions"/> for error handling instead of doing
-      everything inline. For small example programs like these, the
-      overhead of SSQLS and exceptions doesn&rsquo;t pay off very
-      well, but in a real program, they end up working much better
-      than hand-rolled code.</para>
-
-      <para>Notice that we are only pulling a single column from the
-      <varname>stock</varname> table, but we are storing the rows in a
-      <type>std::vector&lt;stock&gt;</type>. It may strike you as
-      inefficient to have five unused fields per record. It&rsquo;s
-      easily remedied by defining a subset SSQLS:</para>
-
-      <programlisting>
-sql_create_1(stock_subset,
-    1, 0,
-    string, item)
-    
-vector&lt;stock_subset&gt; res;
-query.storein(res);
-// ...etc...</programlisting>
-
-      <para>MySQL++ is flexible about populating
-      SSQLSes.<footnote><para>This is a new development in MySQL++
-      v3.0. Programs built against older versions of MySQL++ would
-      crash at almost any mismatch between the database schema and
-      the SSQLS definition. This is a serious problem when the design
-      of the client programs and the database can&rsquo;t be kept
-      in lock-step.</para></footnote> It works much like the Web,
-      a design that&rsquo;s enabled the development of the largest
-      distributed system in the world. Just as a browser ignores
-      tags and attributes it doesn&rsquo;t understand, you can
-      populate an SSQLS from a query result set containing columns
-      that don&rsquo;t exist in the SSQLS. And as a browser uses
-      sensible defaults when the page doesn&rsquo;t give explicit
-      values, you can have an SSQLS with more fields defined than
-      are in the query result set, and these SSQLS fields will get
-      default values. (Zero for numeric types, <type>false</type>
-      for <type>bool</type>, and a type-specific default for anything
-      more complex, like <type>mysqlpp::DateTime</type>.)</para>
-
-      <para>In more concrete terms, the example above is able to
-      populate the <classname>stock</classname> objects using as
-      much information as it has, and leave the remaining fields at
-      their defaults. Conversely, you could also stuff the results
-      of <computeroutput>SELECT * FROM stock</computeroutput> into
-      the <classname>stock_subset</classname> SSQLS declared above;
-      the extra fields would just be ignored.</para>
-      
-      <para>We&rsquo;re trading run-time efficiency for flexibility
-      here, usually the right thing in a distributed system. Since MySQL
-      is a networked database server, many uses of it will qualify as
-      distributed systems. You can&rsquo;t count on being able to update
-      both the server(s) and all the clients at the same time, so you
-      have to make them flexible enough to cope with differences while
-      the changes propagate. As long as the new database schema
-      isn&rsquo;t too grossly different from the old, your programs
-      should continue to run until you get around to updating them to
-      use the new schema.</para>
-
-      <para>There&rsquo;s a danger that this quiet coping behavior
-      may mask problems, but considering that the previous behavior
-      was for the program to crash when the database schema got out
-      of synch with the SSQLS definition, it&rsquo;s likely to be
-      taken as an improvement.</para>
-    </sect3>
-
-
-    <sect3 id="ssqls2">
-      <title>Adding data</title>
-
-      <para>SSQLS can also be used to add data to a table. This is
-      <filename>examples/ssqls2.cpp</filename>:</para>
-
-      <programlisting><xi:include href="ssqls2.txt" parse="text" 
-      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-
-      <para>That&rsquo;s all there is to it!</para>
-
-      <para>There is one subtlety: MySQL++ automatically quotes and
-      escapes the data when building SQL queries using SSQLS structures.
-      It&rsquo;s efficient, too: MySQL++ is smart enough to apply
-      quoting and escaping only for those data types that actually
-      require it.</para>
-
-      <para>Because this example modifies the sample database, you
-      may want to run resetdb after running this program.</para>
-    </sect3>
-
-
-    <sect3 id="ssqls3">
-      <title>Modifying data</title>
-
-      <para>It almost as easy to modify data with SSQLS. This is
-      <filename>examples/ssqls3.cpp</filename>:</para>
-
-      <programlisting><xi:include href="ssqls3.txt" parse="text"
-      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-
-      <para>Don&rsquo;t forget to run resetdb after running the
-      example.</para>
-    </sect3>
-
-
-    <sect3 id="ssqls4">
-      <title>Less-than-comparable</title>
-
-      <para>SSQLS structures can be sorted and stored in STL associative
-      containers as demonstrated in the next example. This is
-      <filename>examples/ssqls4.cpp</filename>:</para>
-
-      <programlisting><xi:include href="ssqls4.txt" parse="text"
-      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-
-      <para>The <methodname>find()</methodname> call works because
-      of the way the SSQLS was declared. It&rsquo;s properly covered
-      elsewhere, but suffice it to say, the "1" in the declaration
-      of <classname>stock</classname> above tells it that only the
-      first field needs to be checked in comparing two SSQLSes. In
-      database terms, this makes it the primary key. Therefore, when
-      searching for a match, our exemplar only had to have its first
-      field populated.</para>
-
-      <para>For more details on the SSQLS feature, see <xref
-      linkend="ssqls"/>.</para>
-    </sect3>
-  </sect2>
-
-
-  <sect2 id="sql_types">
+  <sect2 id="sql-types">
     <title>C++ Equivalents of SQL Column Types</title>
 
-    <para>MySQL++ declares a C++ typedef corresponding to each data type
-    MySQL understands. (They&rsquo;re in
+    <para>MySQL++ declares a C++ typedef corresponding to almost every
+    data type MySQL understands. (They&rsquo;re in
     <filename>lib/sql_types.h</filename>.) The typedefs begin with
     <type>sql_</type> and end with a lowercase version of the standard
     SQL type name, with spaces replaced by underscores. For instance,
@@ -595,15 +444,17 @@ query.storein(res);
       both languages at the same time.</para></listitem>
 
       <listitem><para>Compatibility: using the MySQL++ types ensures
-      that data conversions between SQL and C++ forms are compatible;
-      na&iuml;ve use of native C++ types can result in data loss or even
-      run-time errors. This is important not just at the time you write
-      your program, it also helps forward compatibility: we occasionally
-      change the definitions of the MySQL++ typedefs to reduce the
-      differences between the C++ and SQL type systems. It&rsquo;s
-      happened before, and there&rsquo;s a future feature planned that
-      will do it again. Code using the MySQL++ typedefs just needs to be
-      recompiled to track these changes automatically.</para></listitem>
+      that data conversions between SQL and C++ forms are compatible.
+      Na&iuml;ve use of plain old C++ types can result in data
+      truncation, <ulink type="classref" url="TypeLookupFailed"/>
+      exceptions, and worse.</para>
+
+      <para>Type compatibility is important not just at the time you
+      write your program, it also helps forward compatibility: we
+      occasionally change the definitions of the MySQL++ typedefs to
+      reduce the differences between the C++ and SQL type systems. Code
+      using the MySQL++ typedefs just needs to be recompiled to track
+      these changes automatically.</para></listitem>
     </itemizedlist>
 
     <para>Most of these typedefs use standard C++ data types, but a few
@@ -613,6 +464,10 @@ query.storein(res);
     <filename>sql_types.h</filename> includes a typedef alias for
     <classname>DateTime</classname> called
     <classname>mysqlpp::sql_datetime</classname>.</para>
+
+    <para>MySQL++ doesn&rsquo;t have typedefs for the most exotic data
+    types, like those for the geospatial types. Patches to correct this
+    will be thoughtfully considered.</para>
   </sect2>
 
 
@@ -1064,7 +919,7 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
 
       <para>The key thing <classname>String</classname> provides over
       <classname>std::string</classname> is conversion of strings in SQL
-      value formats to their native C++ data types. For example, if you
+      value formats to their plain old C++ data types. For example, if you
       initialize it with the string &ldquo;2007-11-19&rdquo;, you can
       assign the <classname>String</classname> to a <ulink
       type="structref" url="Date">Date</ulink>, not because
@@ -1105,7 +960,8 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
       <classname>String</classname> when converting it from the string
       form used in SQL result sets to the C++ data type you actually
       want the data in. It&rsquo;s the core of the structure population
-      mechanism in <xref linkend="ssqlsintro"/>, for example.</para>
+      mechanism in <link linkend="ssqls">the SSQLS feature</link>, for
+      example.</para>
 
       <para>Because <classname>String</classname> is the last pristine
       form of data in a result set before it gets out of MySQL++&rsquo;s
