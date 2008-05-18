@@ -596,38 +596,45 @@ query.storein(res);
   <sect2 id="sql_types">
     <title>C++ Equivalents of SQL Column Types</title>
 
-    <para>The <filename>sql_types.h</filename> header declares typedefs
-    for all MySQL column types. These typedefs all begin with
+    <para>MySQL++ declares a C++ typedef corresponding to each data type
+    MySQL understands. (They&rsquo;re in
+    <filename>lib/sql_types.h</filename>.) The typedefs begin with
     <type>sql_</type> and end with a lowercase version of the standard
-    SQL type name. For instance, the MySQL++ typedef corresponding to
-    <type>TINYINT UNSIGNED</type> is
-    <classname>mysqlpp::sql_tinyint_unsigned</classname>.  You do not
-    have to use these typedefs; in this particular case, you might get
-    away with using something as loose as <type>int</type>.</para>
+    SQL type name, with spaces replaced by underscores. For instance,
+    the SQL type <type>TINYINT UNSIGNED</type> is represented in MySQL++
+    by <classname>mysqlpp::sql_tinyint_unsigned</classname>.</para>
 
-    <para>The most obivious reason to use these typedefs is clarity.
-    Someone reading code that uses these typedefs can&rsquo;t be
-    confused about what the corresponding SQL type is.</para>
+    <para>MySQL++ doesn&rsquo;t force you to use these typedefs. It
+    tries to be flexible with regard to data conversions, so you could
+    probably use <type>int</type> anywhere you use
+    <classname>mysqlpp::sql_tinyint_unsigned</classname>, for
+    example. That said, the MySQL++ typedefs give several
+    advantages:</para>
+    
+    <itemizedlist>
+      <listitem><para>Space efficiency: the MySQL++ types are no larger
+      than necessary to hold the MySQL data.</para></listitem>
 
-    <para>There&rsquo;s also a correctness aspect to using these
-    typedefs. The definitions of these types have changed over time as
-    new, improved types have become available in MySQL++. For a past
-    example, <type>sql_tinyint</type> used to just be an alias for
-    <type>signed char</type>, but when MySQL++ began treating
-    <type>char</type> as a single-character string instead of an
-    integer, we changed the <type>sql_tinyint</type> typedef to be an
-    alias for <type>mysqlpp::tiny_int&lt;signed char&gt;</type>. Code
-    using the type aliases changed over transparently, while code using
-    what used to be the correct corresponding C++ type usually broke.
-    This is likely to happen again in the future, too. One example that
-    comes to mind is that <type>sql_decimal</type> is currently an alias
-    for <type>double</type>, but SQL&rsquo;s <type>DECIMAL</type> type
-    is a fixed-point data type, while <type>double</type> is
-    floating-point.  Thus, you lose accuracy when converting
-    <type>DECIMAL</type> column data to <type>sql_decimal</type> right
-    now. In the future, we may add a fixed-point data type to MySQL++;
-    if we do, we&rsquo;ll certainly change the tyepdef alias to use it
-    instead of <type>double</type>.</para>
+      <listitem><para>Portability: if your program has to run on
+      multiple different system types (even just 32- and 64-bit versions
+      of the same OS and processor type) using the MySQL++ typedefs
+      insulates your code from platform changes.</para></listitem>
+
+      <listitem><para>Clarity: using C++ types named similarly to the
+      SQL types reduces the risk of confusion when working with code in
+      both languages at the same time.</para></listitem>
+
+      <listitem><para>Compatibility: using the MySQL++ types ensures
+      that data conversions between SQL and C++ forms are compatible;
+      na&iuml;ve use of native C++ types can result in data loss or even
+      run-time errors. This is important not just at the time you write
+      your program, it also helps forward compatibility: we occasionally
+      change the definitions of the MySQL++ typedefs to reduce the
+      differences between the C++ and SQL type systems. It&rsquo;s
+      happened before, and there&rsquo;s a future feature planned that
+      will do it again. Code using the MySQL++ typedefs just needs to be
+      recompiled to track these changes automatically.</para></listitem>
+    </itemizedlist>
 
     <para>Most of these typedefs use standard C++ data types, but a few
     are aliases for a MySQL++ specific type. For instance, the SQL type
