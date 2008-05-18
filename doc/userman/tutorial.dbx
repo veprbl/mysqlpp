@@ -52,21 +52,24 @@
     for Unixy systems, and the <filename>exrun.bat</filename> batch file
     for Windows. You pass the example program and its arguments to the
     <filename>exrun</filename> helper, which sets up the library search
-    path so that it will find the as-yet uninstalled version of the
-    MySQL++ library first. So on a Unixy system, the above command
-    becomes:</para>
+    path so that it will use the as-yet uninstalled version of the
+    MySQL++ library in preference to any other on your system:</para>
 
     <screen>./exrun resetdb [-s server_addr] [-u user] [-p password]</screen>
-    
-    <para>See <filename>README-examples.txt</filename> for more
-    details.</para>
+
+    <para>That's the typical form for a Unixy system. You leave off the
+    <command>./</command> bit on Windows. You can leave it off on a
+    Unixy system, too, if you have <filename>.</filename> in your
+    <varname>PATH</varname>. (Not a recommendation, just an
+    observation.)</para>
 
     <para>All of the program arguments are optional.</para>
 
     <para>If you don&rsquo;t give <option>-s</option>, the underlying
     MySQL C API assumes the server is on the local machine. It chooses
     one of several different IPC options based on the platform
-    configuration. You can give one of the following options to override
+    configuration. There are many different forms you can give as
+    <varname>server_addr</varname> with <option>-s</option> to override
     this default behavior:</para>
 
     <itemizedlist>
@@ -100,32 +103,46 @@
       </listitem>
     </itemizedlist>
 
-    <para>You can mix symbolic host and service names in any
-    combination. If the name doesn&rsquo;t contain a colon, it uses the
-    default port, 3306.</para>
+    <para>For the TCP forms, you can mix names and numbers for the host
+    and port/service parts in any combination. If the server name
+    doesn&rsquo;t contain a colon, it uses the default port,
+    3306.</para>
 
     <para>If you don&rsquo;t give <option>-u</option>, it assumes your
-    user name on the local machine is the same as your user name on the
-    database server.</para>
+    user name on the database server is the same as your login name on
+    the local machine.</para>
 
     <para>If you don&rsquo;t give <option>-p</option>, it will assume
-    the MySQL user doesn&rsquo;t have a password, which had better not
-    be the case.  It&rsquo;s a wild world out there; play safe,
-    kids.</para>
+    the MySQL user doesn&rsquo;t have a password. (One hopes this
+    isn&rsquo;t the case...)</para>
 
-    <para>A typical invocation is:</para>
+    <para>When running <filename>resetdb</filename>, the user name needs
+    to be for an account with permission to create the test database.
+    Once the database is created, you can use any account when running
+    the other examples that has DELETE, INSERT, SELECT and UPDATE
+    permissions for the test database. The MySQL root user can do all
+    this, of course, but you might want to set up a separate user,
+    having only the permissions necessary to work with the test
+    database:</para>
 
-    <screen>exrun.bat resetdb -u mydbuser -p nunyabinness</screen>
+    <screen>
+CREATE USER mysqlpp_test@'%' IDENTIFIED BY 'nunyabinness';
+GRANT ALL PRIVILEGES ON mysql_cpp_data.* TO mysqlpp_test@'%';</screen>
 
-    <para>For <filename>resetdb</filename>, the user name needs to be
-    for an account with permission to create databases. Once the
-    database is created, you can use any account that has read and write
-    permissions for the sample database,
-    <filename>mysql_cpp_data</filename>.</para>
+    <para>You could then create the sample database with the following
+    command:</para>
 
-    <para>You may also have to re-run <filename>resetdb</filename>
-    after running some of the other examples, as they change the
+    <screen>./exrun resetdb -u mysqlpp_test -p nunyabinness</screen>
+
+    <para>(Again, leave off the <command>./</command> bit on
+    Windows.)</para>
+
+    <para>You may have to re-run <filename>resetdb</filename> after
+    running some of the other examples, as they change the
     database.</para>
+
+    <para>See <filename>README-examples.txt</filename> for more
+    details on running the examples.</para>
   </sect2>
 
 
