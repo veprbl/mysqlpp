@@ -5,14 +5,14 @@
 <sect1 id="tutorial" xreflabel="Tutorial">
   <title>Tutorial</title>
 
-  <para>This tutorial is meant to give you a jump start in using
-  MySQL++. While it is a very complicated and powerful library,
-  it&rsquo;s possible to make quite functional programs without tapping
-  but a fraction of its power. This section will introduce you to the
-  most useful fraction.</para>
-
-  <para>This tutorial assumes you know C++ fairly well, in particular
-  the Standard Template Library (STL) and exceptions.</para>
+  <para>The <link linkend="overview">previous chapter</link> introduced
+  the major top-level mechanisms in MySQL++. Now we&rsquo;ll dig down a
+  little deeper and get into real examples. We start off with the basics
+  that every MySQL++ program will have to deal with, then work up to
+  more complex topics that are still widely interesting. You can stop
+  reading the manual after this chapter and still get a lot out of
+  MySQL++, ignoring the more advanced parts we present in later
+  chapters.</para>
 
 
   <sect2 id="examples">
@@ -64,11 +64,10 @@
     <para>All of the program arguments are optional.</para>
 
     <para>If you don&rsquo;t give <option>-s</option>, the underlying
-    MySQL C API assumes the server is on the local machine.  Depending
-    on how the C API library and the server are configured, it can use
-    any of several different IPC methods to contact the server. You can
-    instead specify how to contact the server yourself, with the method
-    depending on the value you give for the server address:</para>
+    MySQL C API assumes the server is on the local machine. It chooses
+    one of several different IPC options based on the platform
+    configuration. You can give one of the following options to override
+    this default behavior:</para>
 
     <itemizedlist>
       <listitem>
@@ -82,8 +81,8 @@
       </listitem>
 
       <listitem>
-        <para><emphasis>172.20.0.252:12345</emphasis>
-        &mdash; this would connect to IP address
+        <para><emphasis>172.20.0.252:12345</emphasis> &mdash; this would
+        connect to IP address
         <computeroutput>172.20.0.252</computeroutput> on TCP port
         <computeroutput>12345</computeroutput>.</para>
       </listitem>
@@ -467,16 +466,16 @@ query.storein(res);
       the <classname>stock_subset</classname> SSQLS declared above;
       the extra fields would just be ignored.</para>
       
-      <para>We're trading run-time efficiency for flexibility here,
-      usually the right thing in a distributed system. Since MySQL is
-      a networked database server, many uses of it will qualify as
-      distributed systems. You can't count on being able to update
-      both the server(s) and all the clients at the same time, so
-      you have to make them flexible enough to cope with differences
-      while the changes propagate. As long as the new database schema
+      <para>We&rsquo;re trading run-time efficiency for flexibility
+      here, usually the right thing in a distributed system. Since MySQL
+      is a networked database server, many uses of it will qualify as
+      distributed systems. You can&rsquo;t count on being able to update
+      both the server(s) and all the clients at the same time, so you
+      have to make them flexible enough to cope with differences while
+      the changes propagate. As long as the new database schema
       isn&rsquo;t too grossly different from the old, your programs
-      should continue to run until you get around to updating them
-      to use the new schema.</para>
+      should continue to run until you get around to updating them to
+      use the new schema.</para>
 
       <para>There&rsquo;s a danger that this quiet coping behavior
       may mask problems, but considering that the previous behavior
