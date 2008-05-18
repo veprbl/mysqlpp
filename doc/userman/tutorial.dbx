@@ -28,7 +28,7 @@
     can vary on different Linuxes.</para>
 
     <para>Before you get started, please read through any of the
-    <filename>README*</filename> files included with the MySQL++
+    <filename>README*.txt</filename> files included with the MySQL++
     distribution that are relevant to your platform. We won&rsquo;t
     repeat all of that here.</para>
 
@@ -58,7 +58,7 @@
 
     <screen>./exrun resetdb [-s server_addr] [-u user] [-p password]</screen>
     
-    <para>See <filename>README.examples</filename> for more
+    <para>See <filename>README-examples.txt</filename> for more
     details.</para>
 
     <para>All of the program arguments are optional.</para>
