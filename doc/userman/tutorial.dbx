@@ -202,9 +202,15 @@ GRANT ALL PRIVILEGES ON mysql_cpp_data.* TO mysqlpp_test@'%';</screen>
   <sect2 id="exceptions" xreflabel="exceptions">
     <title>Exceptions</title>
 
-    <para>By default, MySQL++ uses exceptions to signal errors. Most
-    of the examples have a full set of exception handlers. This is
-    worthy of emulation.</para>
+    <para>By default, MySQL++ uses exceptions to signal errors.
+    We&rsquo;ve been suppressing this in all the examples so far by
+    passing <symbol>false</symbol> to
+    <classname>Connection</classname>&rsquo;s constructor. This kept
+    these early examples simple at the cost of some flexibility and
+    power in error handling. In a real program, we recommend that you
+    leave exceptions enabled. You do this by either using the default
+    <classname>Connection</classname> constructor, or by using the
+    create-and-connect constructor.</para>
 
     <para>All of MySQL++&rsquo;s custom exceptions
     derive from a common base class, <ulink type="classref"
@@ -219,33 +225,36 @@ GRANT ALL PRIVILEGES ON mysql_cpp_data.* TO mysqlpp_test@'%';</screen>
     or <classname>std::exception</classname> to act as a
     &ldquo;catch-all&rdquo; for unexpected exceptions.</para>
 
-    <para>Most of these exceptions are optional. When exceptions
-    are disabled on a MySQL++ object, it signals errors in some
-    other way, typically by returning an error code or setting
-    an error flag. Classes that support this feature derive from
-    <ulink type="classref" url="OptionalExceptions"/>. Moreover,
-    when such an object creates another object that also derives from
-    this interface, it passes on its exception flag. Since everything
-    flows from the <ulink type="classref" url="Connection"/> object,
-    disabling exceptions on it at the start of the program disables
-    all optional exceptions. You can see this technique at work in
-    the <filename>simple[1-3]</filename> examples, which keeps them,
-    well, simple.</para>
+    <para>It&rsquo;s possible to suppress most MySQL++ exceptions.
+    MySQL++ still signals errors in this state, but it&rsquo;s done by
+    returning an error code or setting an error flag instead of with
+    exceptions. Classes that support this feature derive from the <ulink
+    type="classref" url="OptionalExceptions"/> interface. When an
+    <classname>OptionalExceptions</classname> derivative creates another
+    object that also derives from this interface, it passes on its
+    exception flag. Since everything flows from the <ulink
+    type="classref" url="Connection"/> object, disabling exceptions on
+    it at the start of the program disables all optional exceptions.
+    This is why passing <symbol>false</symbol> for the
+    <classname>Connection</classname> constructor&rsquo;s &ldquo;throw
+    exceptions&rdquo; parameter suppresses all optional exceptions in
+    the <filename>simple[1-3]</filename> examples. It keeps them, well,
+    simple.</para>
 
-    <para>Real-world code typically can&rsquo;t afford to lose
-    out on the additional information and control offered by
-    exceptions. But at the same time, it is still sometimes useful
-    to disable exceptions temporarily. To do this, put the section
-    of code that you want to not throw exceptions inside a block,
-    and create a <ulink type="classref" url="NoExceptions"/> object
-    at the top of that block. When created, it saves the exception
-    flag of the <classname>OptionalExceptions</classname> derivative
-    you pass to it, and then disables exceptions on it. When the
-    <classname>NoExceptions</classname> object goes out of scope
-    at the end of the block, it restores the exceptions flag to its
-    previous state:</para>
+    <para>This exception suppression mechanism is quite granular.
+    It&rsquo;s possible to leave exceptions enabled most of the time,
+    but suppress them in sections of the code where they aren&rsquo;t
+    helpful. To do this, put the section of code that you want to not
+    throw exceptions inside a block, and create a <ulink type="classref"
+    url="NoExceptions"/> object at the top of that block. When created,
+    it saves the exception flag of the
+    <classname>OptionalExceptions</classname> derivative you pass to it,
+    and then disables exceptions on it. When the
+    <classname>NoExceptions</classname> object goes out of scope at the
+    end of the block, it restores the exceptions flag to its previous
+    state:</para>
 
-    <programlisting>mysqlpp::Connection con(...); // exceptions enabled
+    <programlisting>mysqlpp::Connection con; // default ctor, so exceptions enabled
 
 {
   mysqlpp::NoExceptions ne(con);
