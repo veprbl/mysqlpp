@@ -96,10 +96,6 @@ v3.1 Tentative Plan
       wstring, C++/CLI native strings, etc.  Then convert examples that
       do this conversion to use this new mechanism.
 
-    o Document the fact that mysqlpp::String doesn't automatically widen
-      UTF-8 data received from the database: need it in refman (size()
-      member) and userman's Unicode chapter.
-
 
 v4.0 or Later
 -------------
