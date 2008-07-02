@@ -615,7 +615,9 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
     <filename>ssqls.pl</filename>. Although it is possible to
     change this script to get additional functionality, most of
     the time it&rsquo;s better to just derive a custom class from
-    the generated SSQLS to add functionality to it.</para>
+    the generated SSQLS to add functionality to it. (See the <link
+    linkend="ssqls-derivation">next section</link> to see how to do
+    this correctly.)</para>
 
     <para>That said, <filename>ssqls.pl</filename> does have a few
     configurables you might want to tweak.</para>
@@ -673,6 +675,120 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
     <screen>c:\mysql++> cd lib
 c:\lib> perl ssqls.pl</screen>
+  </sect2>
+
+
+  <sect2 id="ssqls-derivation">
+    <title>Deriving from an SSQLS</title>
+
+    <para>Specialized SQL Structures make good base
+    classes. They&rsquo;re simple, and have few requirements on any
+    class that derives from them. There are some gotchas to look out
+    for, however.</para>
+
+    <para>Consider this:</para>
+
+<programlisting>
+sql_create_2(
+  Base, 1, 2,
+  mysqlpp::sql_varchar, a,
+  mysqlpp::sql_int, b
+);
+
+class Derived : public Base
+{
+public:
+  // constructor
+  Derived(mysqlpp::sql_varchar _a, mysqlpp::sql_int _b) :
+  Base(_a, _b)
+  {
+  }
+
+  // functionality added to the SSQLS through inheritance
+  bool do_something_interesting(int data);
+};</programlisting>
+
+    <para>We&rsquo;ve derived a class from an SSQLS in order to add
+    a method to it. Easy, right?</para>
+
+    <para>Sadly, too easy. The code has a rather large flaw which makes
+    our derived class unusable as an SSQLS. In C++, if a derived class
+    has a function of the same name as one in the base class, the
+    base class versions of that function are all hidden by those in
+    the derived class. This applies to constructors, too: an SSQLS
+    defines several constructors, but our derived class defines
+    only one, causing that one to hide all of the ones in the base
+    class. Many of the MySQL++ mechanisms that use SSQLSes rely on
+    having these contructors, so our <classname>Derived</classname>
+    above is-not-a <classname>Base</classname>, and so it isn&rsquo;t
+    an SSQLS. If you try to use <classname>Derived</classname>
+    as an SSQLS, you&rsquo;ll get compiler errors wherever MySQL++
+    tries to access one of these other constructors.</para>
+
+    <para>There&rsquo;s another minor flaw, as well. Our lone constructor
+    above takes its parameters by value, but the corresponding
+    constructor in the SSQLS takes them by const reference. Our derived
+    class has technically hidden a fourth base class constructor this
+    way, but this particular case is more a matter of efficiency than
+    correctness. Code that needs the full-creation constructor will
+    still work with our code above, but passing stringish types like
+    <classname>sql_varchar</classname> by value instead of by const
+    reference is inefficient.</para>
+
+    <para>This is the corrected version of the above code:</para>
+
+<programlisting>
+sql_create_2(
+  Base, 1, 2,
+  mysqlpp::sql_varchar, a,
+  mysqlpp::sql_int, b
+);
+
+class Derived : public Base
+{
+public:
+  // default constructor<footnote><para>needed by mechanisms like <methodname>Query::storein()</methodname>; anything using an STL container, which usually require default ctors for contained data structures</para></footnote>
+  Derived() :
+  Base()
+  {
+  }
+
+  // for-comparison constructor<footnote><para>takes the <parameter>COMPCOUNT</parameter> subset of the SSQLS&rsquo;s data members, used for making comparison exemplars, used with <methodname>Query::update()</methodname> and similar mechanisms; see <xref linkend="sql_create"/> for more on <parameter>COMPCOUNT</parameter></para></footnote>
+  Derived(const mysqlpp::sql_varchar&amp; _a) :
+  Base(_a)
+  {
+  }
+
+  // full creation constructor
+  Derived(const mysqlpp::sql_varchar&amp; _a, const mysqlpp::sql_int&amp; _b) :
+  Base(_a, _b)
+  {
+  }
+
+  // population constructor<footnote><para>used in taking raw row data from a SQL result set and converting it to SSQLS form</para></footnote>
+  Derived(const mysqlpp::Row&amp; row) :
+  Base(row)
+  {
+  }
+
+  // functionality added to the SSQLS through inheritance
+  bool do_something_interesting(int data);
+};</programlisting>
+
+    <para>Now <classname>Derived</classname> is-an SSQLS.</para>
+
+    <para>You might wonder if you can use protected inheritance
+    above to redefine the SSQLS&rsquo;s public interface. For
+    instance, OO purists might object to the public data members
+    in an SSQLS. You could encapsulate these public data members
+    in the derived class by using protected inheritance, exposing
+    access to the base class&rsquo;s data members with public
+    accessor methods. The problem with this is that each SSQLS has
+    <emphasis>dozens</emphasis> of public member functions. These are
+    needed by MySQL++ internals, so unless you re-exposed all of them
+    as we did with the constructors above, you&rsquo;d again have an
+    SSQLS derivative that is-not-an SSQLS. Simply put, only public
+    inheritance is practical with SSQLSes.</para>
   </sect2>
 
 
