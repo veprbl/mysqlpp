@@ -4,9 +4,36 @@ file for instructions on sending patches.
 
 Any Version
 -----------
+    o Until Bakefile comes out with VS2008 support, add rules to
+      maintain a vc2008 subdirectory with copies of the project files
+      in vc2005 subdirectory.  Use Bakefile rules instead of ham-handed
+      copying in bootstrap script so that if these files are updated
+      after being cloned from vc2005, they're left alone.  This lets
+      me hand-convert them before making the distribution tarball.
+      Then, update README-Visual-C++.txt to cover new vc2008 directory.
+
+    o In dist target, emit big warning message if vc2008/mysql++.sln
+      doesn't show that it's been converted.  Not fatal: just means
+      that uploading that particular tarball to the public server
+      isn't a great idea.
+
+    o Make similar test in web site Makefile?  Can extract this file
+      in the same way we do the ChangeLog.  If not converted at that
+      point, it *is* fatal.
+
     o Any time you must hand-roll some SQL code in your program,
       consider whether it could be generalized to a widely-useful
       API feature.
+
+
+Known Bugs to Fix
+-----------------
+    o install.bat doesn't cope with new vs2003 and vs2005
+      subdirectories correctly.  Instead of fixing the batch file,
+      replace it with a JScript for WSH, so we can have actual logic
+      in the script, which will detect what's built before it goes
+      and tries to install it.  It might even pop up a simple GUI to
+      ask for the user's installation preferences.
 
 
 v3.1 Tentative Plan
