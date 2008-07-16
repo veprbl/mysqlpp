@@ -35,6 +35,12 @@ Known Bugs to Fix
       and tries to install it.  It might even pop up a simple GUI to
       ask for the user's installation preferences.
 
+    o Add autoconf test to check if -lz is needed to link to
+      -lmysqlclient.  Reportedly, MySQL Enterprise includes zlib
+      in its mysqlclient, so linking to it gives mulitple-defined
+      symbols.  MySQL says they won't change this, so we have to
+      be able to leave this out.
+
 
 v3.1 Tentative Plan
 -------------------
