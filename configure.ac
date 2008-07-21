@@ -48,13 +48,13 @@ then
 	LIBS="$PTHREAD_LIBS $LIBS"
 	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 	CC="$PTHREAD_CC"
+	AC_CHECK_HEADERS(synch.h)
 fi
 
 
 # Checks for libraries and local system features
 AC_CHECK_HEADERS(zlib.h, AC_CHECK_LIB(z, gzread, [],
 		[ AC_MSG_ERROR([zlib is required]) ]))
-AC_CHECK_HEADERS(synch.h)
 LIB_MATH
 LIB_SOCKET_NSL
 MYSQL_API_LOCATION
