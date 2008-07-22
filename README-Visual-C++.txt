@@ -137,8 +137,8 @@ Using MySQL++ in a Windows Forms C++/CLI Project
         o Under Configuration Properties > General, change "Common
           Language Runtime support" to the /clr setting.
 
-        o Under C/C++ > Command Line, remove the /EHsc from the
-          Additional Options section.
+        o Under C/C++ > Code Generation, change "Enable C++ Exceptions"
+          from "Yes (/EHsc)" to "Yes With SEH Exceptions (/EHa)"
 
     If you have already built MySQL++, be sure to perform a complete
     rebuild after changing these options.  The compiler will emit
