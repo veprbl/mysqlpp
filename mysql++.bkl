@@ -6,7 +6,6 @@
 
     <set var="DDD">$(DOLLAR)$(DOLLAR)d</set>
     <set var="DDF">$(DOLLAR)$(DOLLAR)f</set>
-    <set var="ZLIB">yes</set>
 
     <set var="PLATFORM_WINDOWS_NATIVE">no</set>
     <set var="THREAD_TYPE">single</set>
@@ -123,10 +122,6 @@
                 <ldflags>@PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
                 <sys-lib>@MYSQL_C_LIB@</sys-lib>
 
-                <if cond="ZLIB=='yes'">
-                    <sys-lib>z</sys-lib>
-                </if>
-
                 <modify-target target="uninstall">
                     <command>
                         rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)mysqlpp.$(SO_SUFFIX)
@@ -175,9 +170,6 @@
             <sys-lib>@MYSQL_C_LIB@</sys-lib>
             <warnings>max</warnings>
             <sys-lib>mysqlpp</sys-lib>
-            <if cond="ZLIB=='yes'">
-                <sys-lib>z</sys-lib>
-            </if>
         </if>
 
         <if cond="FORMAT=='mingw'">

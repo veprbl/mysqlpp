@@ -102,10 +102,29 @@ AC_DEFUN([MYSQL_API_LOCATION],
 
 	CPPFLAGS="$CPPFLAGS -I${MYSQL_incdir}"
 
+    AC_MSG_CHECKING([if we can link to MySQL C API library directly])
 	save_LIBS=$LIBS
-	LIBS="$LIBS $MYSQLPP_EXTRA_LIBS"
-	AC_CHECK_LIB($MYSQL_C_LIB, mysql_store_result, [], [
-			AC_MSG_ERROR([Could not find working MySQL client library!]) ])
+	LIBS="$LIBS -l$MYSQL_C_LIB $MYSQLPP_EXTRA_LIBS"
+	AC_TRY_LINK(
+        [ #include <mysql.h> ],
+        [ mysql_store_result(0); ],
+        AC_MSG_RESULT([yes]),
+        [ AC_MSG_RESULT([no])	
+          LIBS="$save_LIBS"
+          AC_CHECK_HEADERS(zlib.h, AC_CHECK_LIB(z, gzread, [],
+              [ AC_MSG_ERROR([zlib not found]) ]))
+          AC_MSG_CHECKING([whether adding -lz will let MySQL C API link succeed])
+          MYSQLPP_EXTRA_LIBS="-lz $MYSQLPP_EXTRA_LIBS"
+          LIBS="$save_LIBS -l$MYSQL_C_LIB $MYSQLPP_EXTRA_LIBS"
+          AC_TRY_LINK(
+              [ #include <mysql.h> ],
+              [ mysql_store_result(0); ],
+              AC_MSG_RESULT([yes]),
+              [ AC_MSG_RESULT([no])
+                AC_MSG_ERROR([Unable to link to MySQL client library!])
+              ]
+          )
+        ])
 	AC_SUBST(MYSQL_C_LIB)
 	LIBS=$save_LIBS
 ]) dnl MYSQL_API_LOCATION
