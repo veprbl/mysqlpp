@@ -51,10 +51,11 @@ rm -f config.cache
 
 # Do Bakefile stuff first
 set -x &&
-	mkdir -p vc2003 vc2005 &&
+	for d in 3 5 8 ; do mkdir -p vc200$d ; done &&
 	bakefilize &&
 	bakefile_gen $BF_OPTIONS &&
 	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&
+	find vc2005 -maxdepth 1 -type f -exec cp -u {} vc2008 \; &&
 	set +x &&
 	success=shonuff
 

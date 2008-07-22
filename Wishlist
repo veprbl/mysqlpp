@@ -4,24 +4,11 @@ file for instructions on sending patches.
 
 Any Version
 -----------
-    o Until Bakefile comes out with VS2008 support, add rules to
-      maintain a vc2008 subdirectory with copies of the project files
-      in vc2005 subdirectory.  Use Bakefile rules instead of ham-handed
-      copying in bootstrap script so that if these files are updated
-      after being cloned from vc2005, they're left alone.  This lets
-      me hand-convert them before making the distribution tarball.
-      Then, update README-Visual-C++.txt to cover new vc2008 directory.
+    o In web site Makefile, extract vc2008/*.sln to stdout, piping
+	  through grep to check that it is converted from vc2005.  Fail
+	  site build if not.
 
-    o In dist target, emit big warning message if vc2008/mysql++.sln
-      doesn't show that it's been converted.  Not fatal: just means
-      that uploading that particular tarball to the public server
-      isn't a great idea.
-
-    o Make similar test in web site Makefile?  Can extract this file
-      in the same way we do the ChangeLog.  If not converted at that
-      point, it *is* fatal.
-
-	o If pkg-config available, register ourselves with it using
+	o If pkg-config is available, register ourselves with it using
 	  information discovered by configure.  Also, write out a
 	  mysql++-config script, which either wraps pkg-config or
 	  reinvents it, poorly, for systems that don't have it.
