@@ -72,8 +72,17 @@ Building the Library and Example Programs
     examples\vstudio.  See README-examples.txt for further details.
 
     Once you're sure the library is working correctly, you can run
-    the install.bat file at the project root to automatically install
-    the library files and headers in subdirectories under c:\mysql++.
+    the install.hta file at the project root to install the library
+    files and headers in a directory of your choosing.
+    
+    (Aside: You may not have come across the .hta extension before.
+    It's for a rarely-used feature of Microsoft's Internet Explorer,
+    called HTML Applications.  Know what Adobe AIR is?  Kinda like
+    that, only without the compilation into a single binary blob,
+    the cross-platform compatibility, and the power of Flash and
+    ActionScript 3.  These limitations don't cause a problem here.
+    In fact, AIR would be vast overkill here.  Just open install.hta
+    in a text editor to see how it works.)
 
 
 Using MySQL++ in an MFC Project

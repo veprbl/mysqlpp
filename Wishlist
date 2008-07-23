@@ -18,16 +18,6 @@ Any Version
       API feature.
 
 
-Known Bugs to Fix
------------------
-    o install.bat doesn't cope with new vs2003 and vs2005
-      subdirectories correctly.  Instead of fixing the batch file,
-      replace it with a JScript for WSH, so we can have actual logic
-      in the script, which will detect what's built before it goes
-      and tries to install it.  It might even pop up a simple GUI to
-      ask for the user's installation preferences.
-
-
 v3.1 Tentative Plan
 -------------------
     o SSQLS v2:
