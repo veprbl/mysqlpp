@@ -15,7 +15,7 @@ Prerequisites
     To build MySQL++, you must have the MySQL C API development
     files installed.
 
-    On Unixy systems (Linux, Mac OS X, Cygwin, "real" Unix...),
+    On Unixy systems (Linux, Mac OS X, Cygwin, *BSD, Solaris...),
     the MySQL development files are installed if you build MySQL
     from source.  If you installed MySQL as a binary package, then
     the development files are often packaged separately from the
@@ -65,10 +65,11 @@ Building the Library
     of input files.  We currently support these build systems:
 
     autoconf:
-        For Unixy platforms, including Linux, Mac OS X, and Cygwin,
-        in addition to the "real" Unices.  See README-Unix.txt for
-        details.  Supplementary platform-specific details are in
-        README-Cygwin.txt, README-Linux.txt, and README-Mac-OS-X.txt.
+        For Unixy platforms, including Linux, Mac OS X, and Cygwin, in
+        addition to the "real" Unices.  See README-Unix.txt for general
+        instructions.  Supplementary platform-specific details are
+        in README-Cygwin.txt, README-Linux.txt, README-Mac-OS-X.txt,
+        and README-Solaris.txt.
 
     MinGW:
         We ship Makefile.mingw for MinGW.  It currently only builds the

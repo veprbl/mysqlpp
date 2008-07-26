@@ -7,6 +7,7 @@ Platform Variations
         README-Cygwin.txt
         README-Linux.txt
         README-Mac-OS-X.txt
+        README-Solaris.txt
 
     Notable other Unixes supported by MySQL++ are the BSDs and Solaris.
     As of yet, there are no special instructions for these Unix
