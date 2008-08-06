@@ -8,9 +8,7 @@ MySQL++.  The easiest way to do that in Solaris 10 is to pull down the
 GNOME System menu, go to Administration, and then to Package Manager.
 Search for "mysql5" and install those packages.  While there, you
 may also need to select the gcc and perl packages, if you haven't
-done that already.  Then when you go to build the MySQL++ library,
-give --with-mysql=/usr/mysql to the configure script; it won't find
-the development files in this nonstandard location otherwise.
+done that already.
 
 (Don't search for just "mysql" in Package Manager, as that will also
 bring up legacy MySQL 4.0 packages.  MySQL++ may build against 4.0
