@@ -1,10 +1,18 @@
-3.0.5, 2008.08.06 (r2330)
+3.0.5, 2008.08.06 (r2332)
 
     o Replaced install.bat with new install.hta, which has a GUI and a
       lot of embeded logic for doing The Right Thing, which we couldn't
       do in a dumb batch file.
 
     o Several fixes to allow it to build on Solaris 10.
+
+    o Fixed a bug in comparison of Null<T> to T: wouldn't always give
+      the right result for one particular combination of argument
+      values and order of parameters to operator <().  It wouldn't
+      fail all the time, either; it depended on the way the system's
+      memory allocator dealt with newly allocated RAM.  The bug was
+      discovered during the Solaris 10 porting effort, but it is not
+      a Solaris-specific bug.
 
     o Split Linux-specific material out of README-Unix.txt into
       README-Linux.txt, and created README-Solaris.txt.
