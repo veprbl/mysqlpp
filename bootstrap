@@ -56,8 +56,8 @@ set -x &&
 	bakefile_gen $BF_OPTIONS &&
 	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&
 	set +x &&
-	cp -u vc2005/* vc2008 > /dev/null 2>&1 &&
 	success=shonuff
+cp -u vc2005/* vc2008 > /dev/null 2>&1
 
 # Get rid of INSTALL symlink added by bakefilize.  We already have
 # INSTALL.txt.
