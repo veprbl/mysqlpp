@@ -4,10 +4,6 @@ file for instructions on sending patches.
 
 Any Version
 -----------
-    o In web site Makefile, extract vc2008/*.sln to stdout, piping
-      through grep to check that it is converted from vc2005.  Fail
-      site build if not.
-
     o If pkg-config is available, register ourselves with it using
       information discovered by configure.  Also, write out a
       mysql++-config script, which either wraps pkg-config or
@@ -21,6 +17,10 @@ Any Version
       from mysql_config.
 
     o Add /usr/mysql to default C API search path for OpenSolaris.
+
+    o Determine whether VC++ builds are CLR or native in install.hta.
+      On request via checkbox, install them into different subdirs,
+      so both versions can be installed without conflict.
 
 
 v3.1 Tentative Plan
