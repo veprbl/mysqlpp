@@ -4,6 +4,9 @@ file for instructions on sending patches.
 
 Any Version
 -----------
+    o Configure script should try to get MySQL C API directories
+      from mysql_config.
+
     o If pkg-config is available, register ourselves with it using
       information discovered by configure.  Also, write out a
       mysql++-config script, which either wraps pkg-config or
@@ -12,13 +15,6 @@ Any Version
     o Any time you must hand-roll some SQL code in your program,
       consider whether it could be generalized to a widely-useful
       API feature.
-
-    o Configure script should try to get MySQL C API directories
-      from mysql_config.
-
-    o Determine whether VC++ builds are CLR or native in install.hta.
-      On request via checkbox, install them into different subdirs,
-      so both versions can be installed without conflict.
 
 
 v3.1 Tentative Plan
