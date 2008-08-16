@@ -1,13 +1,16 @@
-<!----------------------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
  install.hta - GUI installer for Windows systems, using Microsoft's
-		HTML Application technology.  Requires MSIE, probably v5+.  Might
-		run on IE4.
+		HTML Application technology.  Tested on XP with IE7.  May
+		work on systems as old as Win9x with IE4.
 
  For all other platforms, use "make install".
 
- Copyright (c) 2008 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the
- CREDITS file in the top folder of the distribution for details.
+ Copyright (c) 2008 by Educational Technology Resources, Inc. and
+ Warren Young.  Others may also hold copyrights on code in this file.
+ See the CREDITS file in the top folder of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -25,9 +28,8 @@
  License along with MySQL++; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
  USA
----------------------------------------------------------------------->
-
-<html>
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Install MySQL++ Development Files</title>
 
@@ -39,7 +41,7 @@
 			singleinstance="yes"
 			sysmenu="no"/>
 
-		<style>
+		<style type="text/css">
 			body {
 				background-color: buttonface;
 				margin: 10px;
@@ -56,11 +58,11 @@
 			}
 		</style>
 
-		<script language="javascript" type="text/javascript">
+		<script type="text/javascript">
 			function $(id) { return document.getElementById(id); }
 		</script>
 
-		<script language="javascript" type="text/javascript">
+		<script type="text/javascript">
 			var c = '';
 			var fso = new ActiveXObject('Scripting.FileSystemObject');
 			var folderList, driveList, installTargetField, segregateManagedBox,
@@ -296,71 +298,75 @@
 	</head>
 	
 	<body onload="init()">
-		Where would you like to install the MySQL++ development files?
+		<p>
+			Where would you like to install the MySQL++ development
+			files?<br/>
 
-		<table cellspacing=10 cellpadding=0 border=0 width=100%>
-			<tr>
-				<td align=right valign=center>Drives:</td>
-				<td width=99%>
-					<select id="drive">
-					</select>
-				</td>
-			</tr>
+			<table cellspacing="10" cellpadding="0" border="0" width="100%"
+					summary="">
+				<tr>
+					<td align="right" valign="middle">Drives:</td>
+					<td width="99%">
+						<select id="drive">
+						</select>
+					</td>
+				</tr>
 
-			<tr>
-				<td align=right valign=top>Folders:</td>
-				<td width=99%>
-					<select id="folder" size="6">
-					</select>
-				</td>
-			</tr>
+				<tr>
+					<td align="right" valign="top">Folders:</td>
+					<td width="99%">
+						<select id="folder" size="6">
+						</select>
+					</td>
+				</tr>
 
-			<tr>
-				<td>&nbsp;</td>
-				<td>
-					<input type="checkbox" id="versionedFolder"> 
-					<span style="cursor: default"
-							onclick="toggleCheckbox('versionedFolder')">Install
-							in versioned folder?</span>
-				</td>
-			</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="checkbox" id="versionedFolder"/> 
+						<span style="cursor: default"
+								onclick="toggleCheckbox('versionedFolder')">Install
+								in versioned folder?</span>
+					</td>
+				</tr>
 
-			<tr>
-				<td>&nbsp;</td>
-				<td>
-					<input type="checkbox" id="segregateManaged"> 
-					<span style="cursor: default"
-						onclick="toggleCheckbox('segregateManaged')">Segregate
-						native C++ library builds from C++/CLI (CLR)
-						builds?</span>
-				</td>
-			</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="checkbox" id="segregateManaged"/> 
+						<span style="cursor: default"
+							onclick="toggleCheckbox('segregateManaged')">Segregate
+							native C++ library builds from C++/CLI (CLR)
+							builds?</span>
+					</td>
+				</tr>
 
-			<tr>
-				<td>&nbsp;</td>
-				<td>
-					<input type="checkbox" id="segregatePlatform"> 
-					<span style="cursor: default"
-						onclick="toggleCheckbox('segregatePlatform')">Segregate
-						libraries by platform?</span>
-				</td>
-			</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input type="checkbox" id="segregatePlatform"/> 
+						<span style="cursor: default"
+							onclick="toggleCheckbox('segregatePlatform')">Segregate
+							libraries by platform?</span>
+					</td>
+				</tr>
 
-			<tr>
-				<td align=right valign=center>Target:</td>
-				<td valign=center width=99%>
-					<input type="text" readonly class="status" id="installTarget"
-							size=80>
-				</td>
-			</tr>
+				<tr>
+					<td align="right" valign="middle">Target:</td>
+					<td valign="middle" width="99%">
+						<input type="text" readonly="readonly" class="status"
+								id="installTarget" size="80"/>
+					</td>
+				</tr>
 
-			<tr>
-				<td colspan=2 align=center>
-					<button onclick="install()"> Install Now </button>
-					&nbsp;
-					<button onclick="window.close()"> Never Mind </button>
-				</td>
-			</tr>
-		</table>
+				<tr>
+					<td colspan="2" align="center">
+						<button onclick="install()"> Install Now </button>
+						&nbsp;
+						<button onclick="window.close()"> Never Mind </button>
+					</td>
+				</tr>
+			</table>
+		<p>
 	</body>
 </html>
