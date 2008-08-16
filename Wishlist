@@ -16,8 +16,6 @@ Any Version
     o Configure script should try to get MySQL C API directories
       from mysql_config.
 
-    o Add /usr/mysql to default C API search path for OpenSolaris.
-
     o Determine whether VC++ builds are CLR or native in install.hta.
       On request via checkbox, install them into different subdirs,
       so both versions can be installed without conflict.
