@@ -7,7 +7,7 @@
 
  Copyright (c) 2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
- CREDITS file in the top directory of the distribution for details.
+ CREDITS file in the top folder of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -61,27 +61,29 @@
 		</script>
 
 		<script language="javascript" type="text/javascript">
+			var c = '';
 			var fso = new ActiveXObject('Scripting.FileSystemObject');
-			var directoryList, driveList, instDirField, versionedDirectoryBox;
-			var instBase = 'MySQL++';
+			var folderList, driveList, installTargetField, segregateManagedBox,
+				segregatePlatformBox, versionedFolderBox;
+			var managedBuild = false;
 
-			// Copies a file under a given prefix directory to another directory
-			// given as a subdirectory under some fixed prefix directory,
-			// creating the whole directory path if needed, if it doesn't exist.
-			// Skips prefix prepending if prefix is null.  Skips directory
+			// Copies a file under a given prefix folder to another folder
+			// given as a subfolder under some fixed prefix folder,
+			// creating the whole folder path if needed, if it doesn't exist.
+			// Skips prefix prepending if prefix is null.  Skips folder
 			// creation if source file doesn't exist.
-			function copyFile(filePrefix, file, dirPrefix, subdir)
+			function copyFile(filePrefix, file, dirPrefix, destSubDir)
 			{
 				var src = filePrefix ? fso.BuildPath(filePrefix, file) : file;
 				if ((!filePrefix || fso.FolderExists(filePrefix)) && 
 						((src.indexOf('*') != -1) || fso.FileExists(src))) {
 					var dst = createFolderRecursive(
-							dirPrefix ? fso.BuildPath(dirPrefix, subdir) : subdir);
+							dirPrefix ? fso.BuildPath(dirPrefix, destSubDir) : destSubDir);
 					try {
 						fso.CopyFile(src, dst);
 					}
 					catch (e) {
-						alert('Failed to copy ' + file + ' to ' + target + ': ' +
+						alert('Failed to copy ' + file + ' to ' + baseInstallFolder + ': ' +
 								e.message + '\n\nInstallation aborted!');
 						window.close();
 					}
@@ -105,7 +107,7 @@
 				}
 			}
 
-			// Like createDirectory(), but will create parent directories as
+			// Like createFolder(), but will create parent directories as
 			// needed.  Returns d, normalized.
 			function createFolderRecursive(d)
 			{
@@ -121,61 +123,87 @@
 			function init()
 			{
 				// Set initial window size
-				window.resizeTo(440, 324);
+				window.resizeTo(600, 390);
 
 				// Get references to main UI elements
-				directoryList = $('directory');
+				folderList = $('folder');
 				driveList = $('drive');
-				instDirField = $('instDir');
-				versionedDirectoryBox = $('versionedDirectory');
+				installTargetField = $('installTarget');
+				segregateManagedBox = $('segregateManaged');
+				segregatePlatformBox = $('segregatePlatform');
+				versionedFolderBox = $('versionedFolder');
 
 				// Populate drop-down list of available drives
 				populateDriveList();
 
 				// Populate list of directories on the current drive
-				populateDirectoryList();
+				populateFolderList();
 
-				// Now that we have drive and directory lists, set initial value
-				// for installation directory from default list selections.
-				updateInstDir();
+				// Now that we have drive and folder lists, set initial value
+				// for installation folder from default list selections.
+				updateInstallFolder();
 
 				// Set up UI event handlers.  We put it off to this point so
 				// UI is populated before first handler gets called.
 				driveList.onchange = function() {
-					populateDirectoryList();
-					updateInstDir();
+					populateFolderList();
+					updateInstallFolder();
 				}
-				directoryList.onchange = versionedDirectoryBox.onclick =
-						updateInstDir;
+				folderList.onchange = segregateManagedBox.onclick =
+						versionedFolderBox.onclick = updateInstallFolder;
 			}
 
 			// Do the actual installation
 			function install()
 			{
-				// Get installation target directory name
-				var target = instDirField.value;
-
+				var i, destSubDir, srcDir;
+				var usePlatform = segregatePlatformBox.checked;
+				var versions = [ '3', '5', '8' ], version;
+				
 				// Install header files
-				copyFile('lib', '*.h', target, 'include');
+				copyFile('lib', '*.h', baseInstallFolder, 'include');
 
 				// Install MinGW library build, if it exists
-				copyFile(null, 'libmysqlpp.a', target, 'mingw\\lib');
-				copyFile(null, 'mysqlpp.dll', target, 'mingw\\lib');
+				destSubDir = 'lib' + (usePlatform ? '\\MinGW' : '');
+				copyFile(null, 'libmysqlpp.a', baseInstallFolder, destSubDir);
+				copyFile(null, 'mysqlpp.dll', baseInstallFolder, destSubDir);
 
 				// Install any and all existing VC++ library builds
-				var i, j, vcDir,
-						versions = [ '3', '5', '8' ],
-						subdirs = [ 'Debug', 'Release' ];
 				for (i = 0; i < versions.length; ++i) {
-					vcDir = fso.BuildPath('vc200' + versions[i], 'Debug');
-					copyFile(vcDir, 'mysqlpp_d.dll', target, vcDir);
-					copyFile(vcDir, 'mysqlpp_d.lib', target, vcDir);
-					vcDir = fso.BuildPath('vc200' + versions[i], 'Release');
-					copyFile(vcDir, 'mysqlpp.dll', target, vcDir);
-					copyFile(vcDir, 'mysqlpp.lib', target, vcDir);
+					version = 'vc200' + versions[i];
+					destSubDir = 'lib' + 
+							(usePlatform ? '\\VC++ 200' + versions[i] : '');
+					if (segregateManagedBox.checked) {
+						destSubDir += '\\' + (isManagedBuild(version) ?
+								'CLR' : 'Native');
+					}
+					
+					srcDir = version + '\\Debug';
+					copyFile(srcDir, 'mysqlpp_d.dll', baseInstallFolder, destSubDir);
+					copyFile(srcDir, 'mysqlpp_d.lib', baseInstallFolder, destSubDir);
+					
+					srcDir = version + '\\Release';
+					copyFile(srcDir, 'mysqlpp.dll', baseInstallFolder, destSubDir);
+					copyFile(srcDir, 'mysqlpp.lib', baseInstallFolder, destSubDir);
 				}
 
 				window.close();
+			}
+			
+			// Returns true if the MySQL++ library for the given VC++
+			// version was built for use with the CLR.
+			function isManagedBuild(version)
+			{
+				var stream = fso.OpenTextFile(
+						version + '\\mysql++_mysqlpp.vcproj');
+				if (stream) {
+					var mloc = stream.ReadAll().indexOf('ManagedExtensions="1"');
+					stream.Close();
+					return mloc > 0;
+				}
+				else {
+					return false;
+				}
 			}
 
 			// Populates a drop-down list with the set of fixed disks and
@@ -211,41 +239,58 @@
 
 			// Populates a list box with the top-level directories on the
 			// currently-selected disk drive.
-			function populateDirectoryList()
+			function populateFolderList()
 			{
 				var driveRoot =
 						driveList.options[driveList.selectedIndex].value + ':\\';
 				var e, f = fso.GetFolder(driveRoot);
 				if (f) {
-					directoryList.options.length = 0;
-					directoryList.add(new Option(driveRoot, driveRoot, true, true));
+					folderList.options.length = 0;
+					folderList.add(new Option(driveRoot, driveRoot, true, true));
 					for (e = new Enumerator(f.SubFolders); !e.atEnd(); e.moveNext()) {
-						directoryList.add(new Option(e.item() + '\\'));
+						folderList.add(new Option(e.item() + '\\'));
 					}
 				}
 				else {
-					alert('Failed to get directory list for ' + driveRoot);
+					alert('Failed to get folder list for ' + driveRoot);
 				}
 			}
 
 			// On clicking the text label associated with "versioned install
-			// directory" checkbox, toggle checkbox and update UI.
+			// folder" checkbox, toggle checkbox and update UI.
 			function toggleVersioning()
 			{
-				if (versionedDirectoryBox) {
-					versionedDirectoryBox.checked = !versionedDirectoryBox.checked;
-					updateInstDir();
+				if (versionedFolderBox) {
+					versionedFolderBox.checked = !versionedFolderBox.checked;
+					updateInstallFolder();
+				}
+			}
+
+			// On clicking the text label associated with a checkbox, toggle
+			// checkbox state and update UI.
+			function toggleCheckbox(boxID)
+			{
+				var box = $(boxID);
+				if (box) {
+					box.checked = !box.checked;
+					updateInstallFolder();
 				}
 			}
 
 			// Called any time something changes that affects how we calculate
-			// the installation directory name.  Rebuilds it.
-			function updateInstDir()
+			// the installation folder name.  Rebuilds it.
+			function updateInstallFolder()
 			{
-				instDirField.value = 
-						directoryList.options[directoryList.selectedIndex].text +
-						instBase +
-						(versionedDirectoryBox.checked ? '\\3.0.4' : '');
+				baseInstallFolder =
+						folderList.options[folderList.selectedIndex].text +
+						'MySQL++' +
+						(versionedFolderBox.checked ? '\\3.0.6' : '');
+				installTargetField.value =
+						baseInstallFolder +
+						'\\{include,lib' +
+						(segregatePlatformBox.checked ? '\\PLATFORM' : '') +
+						(segregateManagedBox.checked ? '\\{CLR,Native}' : '') +
+						'}';
 			}
 		</script>
 	</head>
@@ -255,14 +300,6 @@
 
 		<table cellspacing=10 cellpadding=0 border=0 width=100%>
 			<tr>
-				<td align=right valign=center>Directory:</td>
-				<td valign=center width=99%>
-					<input type="text" readonly class="status" id="instDir"
-							size=50>
-				</td>
-			</tr>
-
-			<tr>
 				<td align=right valign=center>Drives:</td>
 				<td width=99%>
 					<select id="drive">
@@ -271,9 +308,9 @@
 			</tr>
 
 			<tr>
-				<td align=right valign=top>Directories:</td>
+				<td align=right valign=top>Folders:</td>
 				<td width=99%>
-					<select id="directory" size="6">
+					<select id="folder" size="6">
 					</select>
 				</td>
 			</tr>
@@ -281,9 +318,39 @@
 			<tr>
 				<td>&nbsp;</td>
 				<td>
-					<input type="checkbox" id="versionedDirectory"> 
-					<span style="cursor: default" onclick="toggleVersioning()">Install
-							in versioned directory?</span>
+					<input type="checkbox" id="versionedFolder"> 
+					<span style="cursor: default"
+							onclick="toggleCheckbox('versionedFolder')">Install
+							in versioned folder?</span>
+				</td>
+			</tr>
+
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<input type="checkbox" id="segregateManaged"> 
+					<span style="cursor: default"
+						onclick="toggleCheckbox('segregateManaged')">Segregate
+						native C++ library builds from C++/CLI (CLR)
+						builds?</span>
+				</td>
+			</tr>
+
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<input type="checkbox" id="segregatePlatform"> 
+					<span style="cursor: default"
+						onclick="toggleCheckbox('segregatePlatform')">Segregate
+						libraries by platform?</span>
+				</td>
+			</tr>
+
+			<tr>
+				<td align=right valign=center>Target:</td>
+				<td valign=center width=99%>
+					<input type="text" readonly class="status" id="installTarget"
+							size=80>
 				</td>
 			</tr>
 
