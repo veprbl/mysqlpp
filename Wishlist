@@ -22,9 +22,6 @@ Any Version
 
     o Get HTA to validate
 
-    o Generate install.hta from install.hta.in, updating version number
-      on configure.
-
 
 v3.1 Tentative Plan
 -------------------

@@ -80,5 +80,12 @@ STL_SLIST_EXTENSION
 #
 # Configure process complete; write out files generated from *.in.
 #
-AC_OUTPUT([Makefile mysql++.spec doc/userman/userman.dbx lib/Doxyfile lib/mysql++.h])
+AC_OUTPUT([\
+	doc/userman/userman.dbx \
+	install.hta \
+	lib/Doxyfile \
+	lib/mysql++.h \
+	mysql++.spec \
+	Makefile \
+])
 
