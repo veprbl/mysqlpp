@@ -129,7 +129,6 @@
                     <command>
                         for f in *.h ; do rm -f $(HEADER_DIR)/$(DDF) ; done
                     </command>
-                    <command>rmdir $(HEADER_DIR)</command>
                 </modify-target>
             </if>
         </dll>
