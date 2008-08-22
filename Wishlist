@@ -16,6 +16,18 @@ Any Version
       consider whether it could be generalized to a widely-useful
       API feature.
 
+    o Possible bug in combined use of stream and init-by-string
+      cases:
+
+          Query q = c.query("Initial bit of SQL here");
+          q << "more appended";
+
+      results in:
+
+          "more appendedf SQL here"
+
+      The stream insertion is overwriting the initial fragment.
+
 
 v3.1 Tentative Plan
 -------------------
