@@ -121,15 +121,6 @@
                 <include>.</include>
                 <ldflags>@PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
                 <sys-lib>@MYSQL_C_LIB@</sys-lib>
-
-                <modify-target target="uninstall">
-                    <command>
-                        rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)mysqlpp.$(SO_SUFFIX)
-                    </command>
-                    <command>
-                        for f in *.h ; do rm -f $(HEADER_DIR)/$(DDF) ; done
-                    </command>
-                </modify-target>
             </if>
         </dll>
 
@@ -356,7 +347,16 @@
                 rm -f doxygen.css [a-z]*.{dot,html,map,md5,png}
             </command>
         </modify-target>
-            
+
+		<modify-target target="uninstall">
+			<command>
+				-rmdir $(HEADER_DIR)
+			</command>
+			<command>
+				rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)mysqlpp.$(SO_SUFFIX)
+			</command>
+		</modify-target>
+ 
         <action id="lib/ssqls.h">
             <command>cd lib ; ./ssqls.pl</command>
             <depends-on-file>lib/ssqls.pl</depends-on-file>
