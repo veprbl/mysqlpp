@@ -48,8 +48,8 @@ main(int argc, char *argv[])
 
 		// Build a query to retrieve the stock item that has Unicode
 		// characters encoded in UTF-8 form.
-		mysqlpp::Query query = con.query(
-				"select * from stock where item = \"Nürnberger Brats\"");
+		mysqlpp::Query query = con.query("select * from stock ");
+		query << "where item = " << mysqlpp::quote << "Nürnberger Brats";
 
 		// Retrieve the row, throwing an exception if it fails.
 		mysqlpp::StoreQueryResult res = query.store();

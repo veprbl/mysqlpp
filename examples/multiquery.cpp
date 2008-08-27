@@ -154,13 +154,12 @@ main(int argc, char *argv[])
 		}
 
 		// Set up query with multiple queries.
-		Query query = con.query();
-		query << "DROP TABLE IF EXISTS test_table; " <<
-				"CREATE TABLE test_table(id INT); " <<
-				"INSERT INTO test_table VALUES(10); " <<
-				"UPDATE test_table SET id=20 WHERE id=10; " <<
-				"SELECT * FROM test_table; " <<
-				"DROP TABLE test_table";
+		Query query = con.query("DROP TABLE IF EXISTS test_table; "
+				"CREATE TABLE test_table(id INT); "
+				"INSERT INTO test_table VALUES(10); "
+				"UPDATE test_table SET id=20 WHERE id=10; "
+				"SELECT * FROM test_table; "
+				"DROP TABLE test_table");
 		cout << "Multi-query: " << endl << query << endl;
 
 		// Execute statement and display all result sets.

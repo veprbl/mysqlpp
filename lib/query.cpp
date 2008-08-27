@@ -47,6 +47,7 @@ copacetic_(true)
 	init(&sbuffer_);
 	if (qstr) {
 		sbuffer_.str(qstr);
+		seekp(0, std::ios::end);	// allow more insertions at end
 	}
 }
 
