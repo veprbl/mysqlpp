@@ -871,14 +871,14 @@ public:
       <listitem><para>There&rsquo;s <ulink
       url="http://svn.gna.org/viewcvs/*checkout*/mysqlpp/trunk/Wishlist">a
       plan</ulink> to replace the current SSQLS mechanism with an
-      entirely new code base. Although this is being done primary to get
-      new features that are too difficult to add within the current
-      design, it also means we&rsquo;ll have the chance to test
-      step-by-step along the way that we don&rsquo;t reintroduce code
-      that Visual C++ 2003 doesn&rsquo;t support. This may happen
-      without you doing anything, but if there&rsquo;s someone on the
-      team who cares about this, that will naturally increase the
-      chances that it does happen.</para></listitem>
+      entirely new code base. Although this is being done primarily
+      to get new features that are too difficult to add within the
+      current design, it also means we&rsquo;ll have the chance to
+      test step-by-step along the way that we don&rsquo;t reintroduce
+      code that Visual C++ 2003 doesn&rsquo;t support. This may happen
+      without you doing anything, but if there&rsquo;s someone on
+      the team who cares about this, that will naturally increase
+      the chances that it does happen.</para></listitem>
     </orderedlist>
   </sect2>
 </sect1>
