@@ -5,10 +5,10 @@ Visual C++ Version Compatibility
     MySQL++ also works with VC++ 2003 (a.k.a. VC++ 7.1), with the
     exception of the SSQLS feature.  There was partial support for
     SSQLS with VC++ 2003 in MySQL++ v2, but a feature we added in
-    MySQL++ v3.0 crashes this version of the compiler, so we had to
-    remove support for it entirely.  MySQL++ automatically disables
-    SSQLS when you build it with VC++ 2003.  As long as you avoid
-    using that feature of the library, you should be fine.
+    MySQL++ v3.0 crashes the VC++ 2003 compiler when you try to use
+    even simple SSQLS, so we had to remove support for this entirely
+    for that platform.  (See the v3.0 section in the Breakages chapter
+    of the user manual for details.)
 
     Older versions of Visual C++ are basically hopeless when it
     comes to building current versions of MySQL++.  They have too
@@ -17,13 +17,17 @@ Visual C++ Version Compatibility
     my advice is that you're best off programming straight to the
     MySQL C API rather than try to make MySQL++ build.
 
-    There are two sets of .sln and .vcproj files shipped with MySQL++:
-    one for Visual C++ 2003 in the vc2003 subdirectory, and another
-    set for VC++ 2005 and newer in vc2005.  The only difference
-    between them is that the VC++ 2003 versions omit SSQLS related
-    files from the build.  If you're using VC++ 2008, use the vc2005
-    project files; Visual Studio will walk you through the conversion
-    process, which will do the right thing.
+
+Where Are the Project Files, and Why So Many Versions?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    There are three sets of .sln and .vcproj files shipped with
+    MySQL++, in the vc2003, vc2005 and vc2008 subdirectories.
+    Other than the SSQLS issue brought up above, there no functional
+    difference between these versions.  We ship separate project
+    files for each version of Visual Studio partly to save you from
+    having to walk through the project conversion wizard, and partly
+    so you can build the library with multiple versions of Visual C++
+    without conflicts among the object files.
 
 
 Prerequisites

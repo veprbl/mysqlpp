@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <makefile>
-    <requires version="0.2.3"/>
+    <requires version="0.2.4"/>
     <using module="datafiles"/>
     <include file="presets/simple.bkl"/>
 
@@ -9,7 +9,7 @@
 
     <set var="PLATFORM_WINDOWS_NATIVE">no</set>
     <set var="THREAD_TYPE">single</set>
-    <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'mingw']">
+    <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj', 'mingw']">
         <set var="PLATFORM_WINDOWS_NATIVE">yes</set>
         <set var="THREAD_TYPE">multi</set>
     </if>
@@ -36,7 +36,7 @@
          file names for VC++ and Xcode, in debug mode only. -->
     <set var="DEBUG_SUFFIX"/>
     <set var="DEBUG_SUFFIX">
-        <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'xcode2'] and BUILD=='debug'">_d</if>
+        <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj', 'xcode2'] and BUILD=='debug'">_d</if>
     </set>
 
     <set var="BUILDDOCS">yes</set>
@@ -45,7 +45,7 @@
     <set var="BUILDTEST">yes</set>
     <set var="HEADER_DIR">$(PREFIX)/include/mysql++</set>
 
-	<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj']">
+	<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
 		<set-srcdir>..</set-srcdir>
     </if>
 
@@ -97,7 +97,7 @@
                 <sys-lib>wsock32</sys-lib>
             </if>
 
-			<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj']">
+			<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
                 <define>MYSQLPP_MAKING_DLL</define>
                 <define>HAVE_MYSQL_SSL_SET</define>
                 <include>$(MYSQL_WIN_DIR)\include</include>
@@ -145,7 +145,7 @@
 			<include>lib</include>
             <lib-path>.</lib-path>
         </if>
-		<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj']">
+		<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
 			<include>../lib</include>
 		</if>
 
@@ -173,7 +173,7 @@
             <sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
         </if>
 
-		<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj']">
+		<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
             <lib-path>$(BUILD)</lib-path>
             <include>$(MYSQL_WIN_DIR)\include</include>
             <lib-path>$(MYSQL_WIN_DIR)\lib\opt</lib-path>
