@@ -104,6 +104,12 @@ v3.1 Tentative Plan
       wstring, C++/CLI native strings, etc.  Then convert examples that
       do this conversion to use this new mechanism.
 
+	o Bring back mandatory quoting for manipulators?  If someone says
+	  os << mysqlpp::escape << foo; do they not really really mean
+	  escape foo?  Automatic quoting and escaping is different.  See
+
+	  http://lists.mysql.com/plusplus/7999
+
 
 v4.0 or Later
 -------------
