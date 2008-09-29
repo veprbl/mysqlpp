@@ -1,7 +1,6 @@
 Patches for any of these thoughtfully considered!  See the HACKERS.txt
 file for instructions on sending patches.
 
-
 Any Version
 -----------
     o Configure script should try to get MySQL C API directories
@@ -15,6 +14,16 @@ Any Version
     o Any time you must hand-roll some SQL code in your program,
       consider whether it could be generalized to a widely-useful
       API feature.
+
+
+v3.0.7
+------
+    o userman section covering how to set up Makefiles and project
+      files to use MySQL++, step-by-step.  Fold in discussion at end
+      of VC++ README and FAQ item stuff.  Then point from each to new
+      discussion.
+
+    o Ship with Bakefile 0.2.4 final.
 
 
 v3.1 Tentative Plan
@@ -104,11 +113,11 @@ v3.1 Tentative Plan
       wstring, C++/CLI native strings, etc.  Then convert examples that
       do this conversion to use this new mechanism.
 
-	o Bring back mandatory quoting for manipulators?  If someone says
-	  os << mysqlpp::escape << foo; do they not really really mean
-	  escape foo?  Automatic quoting and escaping is different.  See
+    o Bring back mandatory quoting for manipulators?  If someone says
+      os << mysqlpp::escape << foo; do they not really really mean
+      escape foo?  Automatic quoting and escaping is different.  See
 
-	  http://lists.mysql.com/plusplus/7999
+      http://lists.mysql.com/plusplus/7999
 
 
 v4.0 or Later
