@@ -119,6 +119,10 @@ v3.1 Tentative Plan
 
       http://lists.mysql.com/plusplus/7999
 
+    o Methods like Query::insert() do not work with Null<>-wrapped
+      SSQLS because they're not accessing SSQLS members through the
+      wrapper's 'data' member.  Add additional overloads to cope.
+
 
 v4.0 or Later
 -------------
