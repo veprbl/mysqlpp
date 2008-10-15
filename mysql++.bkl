@@ -45,8 +45,8 @@
     <set var="BUILDTEST">yes</set>
     <set var="HEADER_DIR">$(PREFIX)/include/mysql++</set>
 
-	<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
-		<set-srcdir>..</set-srcdir>
+    <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
+        <set-srcdir>..</set-srcdir>
     </if>
 
     <if cond="BUILDLIBRARY=='yes'">
@@ -97,7 +97,7 @@
                 <sys-lib>wsock32</sys-lib>
             </if>
 
-			<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
+            <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
                 <define>MYSQLPP_MAKING_DLL</define>
                 <define>HAVE_MYSQL_SSL_SET</define>
                 <include>$(MYSQL_WIN_DIR)\include</include>
@@ -119,8 +119,7 @@
 
                 <cxxflags>@PTHREAD_CFLAGS@</cxxflags>
                 <include>.</include>
-                <ldflags>@PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
-                <sys-lib>@MYSQL_C_LIB@</sys-lib>
+                <ldflags>-l@MYSQL_C_LIB@ @PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
             </if>
         </dll>
 
@@ -142,12 +141,12 @@
         <debug-info>$(DEBUGINFO)</debug-info>
 
         <if cond="FORMAT in ['autoconf', 'gnu', 'mingw', 'xcode2']">
-			<include>lib</include>
+            <include>lib</include>
             <lib-path>.</lib-path>
         </if>
-		<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
-			<include>../lib</include>
-		</if>
+        <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
+            <include>../lib</include>
+        </if>
 
         <if cond="PLATFORM_WINDOWS_NATIVE=='yes'">
             <define>UNICODE</define>
@@ -156,8 +155,7 @@
 
         <if cond="FORMAT=='autoconf'">
             <cxxflags>@PTHREAD_CFLAGS@</cxxflags>
-            <ldflags>@PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
-            <sys-lib>@MYSQL_C_LIB@</sys-lib>
+            <ldflags>-l@MYSQL_C_LIB@ @PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
             <warnings>max</warnings>
             <sys-lib>mysqlpp</sys-lib>
         </if>
@@ -173,7 +171,7 @@
             <sys-lib>mysqlpp$(DEBUG_SUFFIX)</sys-lib>
         </if>
 
-		<if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
+        <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">
             <lib-path>$(BUILD)</lib-path>
             <include>$(MYSQL_WIN_DIR)\include</include>
             <lib-path>$(MYSQL_WIN_DIR)\lib\opt</lib-path>
@@ -211,16 +209,16 @@
         </exe>
         <if cond="FORMAT!='msvs2003prj'">
             <!-- VC++ 2003 can't compile this -->
-			<exe id="test_null_comparison" template="programs">
-				<sources>test/null_comparison.cpp</sources>
-			</exe>
-		</if>
+            <exe id="test_null_comparison" template="programs">
+                <sources>test/null_comparison.cpp</sources>
+            </exe>
+        </if>
         <if cond="FORMAT!='msvs2003prj'">
             <!-- VC++ 2003 can't compile this -->
-			<exe id="test_qssqls" template="programs">
-				<sources>test/qssqls.cpp</sources>
-			</exe>
-		</if>
+            <exe id="test_qssqls" template="programs">
+                <sources>test/qssqls.cpp</sources>
+            </exe>
+        </if>
         <exe id="test_qstream" template="programs">
             <sources>test/qstream.cpp</sources>
         </exe>
@@ -259,9 +257,9 @@
         <!-- The examples themselves -->
         <if cond="FORMAT!='msvs2003prj'">
             <!-- VC++ 2003 can't compile current SSQLS code -->
-			<exe id="cgi_jpeg" template="libexcommon-user,programs">
-				<sources>examples/cgi_jpeg.cpp</sources>
-			</exe>
+            <exe id="cgi_jpeg" template="libexcommon-user,programs">
+                <sources>examples/cgi_jpeg.cpp</sources>
+            </exe>
         </if>
         <exe id="cpool" template="libexcommon-user,programs">
             <sources>examples/cpool.cpp</sources>
@@ -277,9 +275,9 @@
         </exe>
         <if cond="FORMAT!='msvs2003prj'">
             <!-- VC++ 2003 can't compile current SSQLS code -->
-			<exe id="for_each" template="libexcommon-user,programs">
-				<sources>examples/for_each.cpp</sources>
-			</exe>
+            <exe id="for_each" template="libexcommon-user,programs">
+                <sources>examples/for_each.cpp</sources>
+            </exe>
         </if>
         <exe id="load_jpeg" template="libexcommon-user,programs">
             <sources>examples/load_jpeg.cpp</sources>
@@ -301,24 +299,24 @@
         </exe>
         <if cond="FORMAT!='msvs2003prj'">
             <!-- VC++ 2003 can't compile current SSQLS code -->
-			<exe id="ssqls1" template="libexcommon-user,programs">
-				<sources>examples/ssqls1.cpp</sources>
-			</exe>
-			<exe id="ssqls2" template="libexcommon-user,programs">
-				<sources>examples/ssqls2.cpp</sources>
-			</exe>
-			<exe id="ssqls3" template="libexcommon-user,programs">
-				<sources>examples/ssqls3.cpp</sources>
-			</exe>
-			<exe id="ssqls4" template="libexcommon-user,programs">
-				<sources>examples/ssqls4.cpp</sources>
-			</exe>
-			<exe id="ssqls5" template="libexcommon-user,programs">
-				<sources>examples/ssqls5.cpp</sources>
-			</exe>
-			<exe id="store_if" template="libexcommon-user,programs">
-				<sources>examples/store_if.cpp</sources>
-			</exe>
+            <exe id="ssqls1" template="libexcommon-user,programs">
+                <sources>examples/ssqls1.cpp</sources>
+            </exe>
+            <exe id="ssqls2" template="libexcommon-user,programs">
+                <sources>examples/ssqls2.cpp</sources>
+            </exe>
+            <exe id="ssqls3" template="libexcommon-user,programs">
+                <sources>examples/ssqls3.cpp</sources>
+            </exe>
+            <exe id="ssqls4" template="libexcommon-user,programs">
+                <sources>examples/ssqls4.cpp</sources>
+            </exe>
+            <exe id="ssqls5" template="libexcommon-user,programs">
+                <sources>examples/ssqls5.cpp</sources>
+            </exe>
+            <exe id="store_if" template="libexcommon-user,programs">
+                <sources>examples/store_if.cpp</sources>
+            </exe>
         </if>
         <exe id="tquery1" template="libexcommon-user,programs">
             <sources>examples/tquery1.cpp</sources>
@@ -331,9 +329,9 @@
         </exe>
         <if cond="FORMAT!='msvs2003prj'">
             <!-- VC++ 2003 can't compile current SSQLS code -->
-			<exe id="transaction" template="libexcommon-user,programs">
-				<sources>examples/transaction.cpp</sources>
-			</exe>
+            <exe id="transaction" template="libexcommon-user,programs">
+                <sources>examples/transaction.cpp</sources>
+            </exe>
         </if>
     </if>   <!-- build examples -->
 
@@ -348,14 +346,14 @@
             </command>
         </modify-target>
 
-		<modify-target target="uninstall">
-			<command>
-				-rmdir $(HEADER_DIR)
-			</command>
-			<command>
-				rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)mysqlpp.$(SO_SUFFIX)
-			</command>
-		</modify-target>
+        <modify-target target="uninstall">
+            <command>
+                -rmdir $(HEADER_DIR)
+            </command>
+            <command>
+                rm -f $(DESTDIR)$(libdir)/$(DLLPREFIX)mysqlpp.$(SO_SUFFIX)
+            </command>
+        </modify-target>
  
         <action id="lib/ssqls.h">
             <command>cd lib ; ./ssqls.pl</command>
@@ -412,52 +410,52 @@
             <!-- top directory -->
             <command>
                 cp -RL *.bat *.txt Bakefiles.bkgen bootstrap ChangeLog \
-					cleanmf config.guess config.h.in config.sub configure* \
+                    cleanmf config.guess config.h.in config.sub configure* \
                     dtest exrun install* libmysqlclient.def Makefile.* \
-					mysql++.* osver Wishlist $(PKGNAME)
+                    mysql++.* osver Wishlist $(PKGNAME)
             </command>
 
-			<!-- VC++ project file subdirs -->
-			<command>
-				for d in vc200? ; do \
-					mkdir -p $(PKGNAME)/$(DDD) ; \
-					cp $(DDD)/*.{sln,vcproj} $(PKGNAME)/$(DDD) ; \
-				done
-			</command>
+            <!-- VC++ project file subdirs -->
+            <command>
+                for d in vc200? ; do \
+                    mkdir -p $(PKGNAME)/$(DDD) ; \
+                    cp $(DDD)/*.{sln,vcproj} $(PKGNAME)/$(DDD) ; \
+                done
+            </command>
 
             <!-- config subdir -->
             <command>cp config/*.m4 $(PKGNAME)/config</command>
 
             <!-- doc subdir -->
             <if cond="BUILDDOCS=='yes'">
-				<command>
-					cp -RL doc/README* doc/pdf doc/ssqls-pretty $(PKGNAME)/doc
-				</command>
-				<command>
-					for f in LICENSE.txt Makefile mktxt README.txt \*.{dbx,in,xsl} ; \
-					do \
-						cp doc/userman/$(DDF) $(PKGNAME)/doc/userman ; \
-					done
-				</command>
-				<command>
-					for d in refman userman ; do \
-						for f in *.{css,html} ; do \
-							cp doc/html/$(DDD)/$(DDF) $(PKGNAME)/doc/html/$(DDD) ; \
-						done ; \
-					done
-				</command>
-				<command>
-					cp doc/html/refman/*.png $(PKGNAME)/doc/html/refman
-				</command>
-			</if>
+                <command>
+                    cp -RL doc/README* doc/pdf doc/ssqls-pretty $(PKGNAME)/doc
+                </command>
+                <command>
+                    for f in LICENSE.txt Makefile mktxt README.txt \*.{dbx,in,xsl} ; \
+                    do \
+                        cp doc/userman/$(DDF) $(PKGNAME)/doc/userman ; \
+                    done
+                </command>
+                <command>
+                    for d in refman userman ; do \
+                        for f in *.{css,html} ; do \
+                            cp doc/html/$(DDD)/$(DDF) $(PKGNAME)/doc/html/$(DDD) ; \
+                        done ; \
+                    done
+                </command>
+                <command>
+                    cp doc/html/refman/*.png $(PKGNAME)/doc/html/refman
+                </command>
+            </if>
             <if cond="BUILDDOCS!='yes'">
-				<!-- We have to copy this file even though we don't
-				     build the docs to make configure happy, because it
-					 wants to update the version number. -->
-				<command>
-					cp doc/userman/userman.dbx.in $(PKGNAME)/doc/userman
-				</command>
-			</if>
+                <!-- We have to copy this file even though we don't
+                     build the docs to make configure happy, because it
+                     wants to update the version number. -->
+                <command>
+                    cp doc/userman/userman.dbx.in $(PKGNAME)/doc/userman
+                </command>
+            </if>
 
             <!-- examples subdir -->
             <command>
@@ -488,9 +486,9 @@
             <command>rm -fr $(PKGNAME)/autom4te.cache</command>
         </action>
 
-		<action id="dist">
+        <action id="dist">
             <depends>$(PKGNAME)</depends>
-			<command>./checkvc8</command>
+            <command>./checkvc8</command>
             <command>tar czf $(PKGNAME).tar.gz $(PKGNAME)</command>
             <command>rm -rf $(PKGNAME)</command>
         </action>
