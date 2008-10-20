@@ -61,7 +61,6 @@ print_row(IntVectorType& widths, Row& row)
 {
 	cout << "  |" << setfill(' ');
 	for (size_t i = 0; i < row.size(); ++i) {
-		mysqlpp::sql_bigint tmp = row[i];
 		cout << " " << setw(widths.at(i)) << row[i] << " |";
 	}
 	cout << endl;
@@ -155,19 +154,39 @@ main(int argc, char *argv[])
 		}
 
 		// Set up query with multiple queries.
-		while (1) {
-		Query query = con.query("DROP TABLE IF EXISTS test_table; "
-				"CREATE TABLE test_table(id INT); "
-				"INSERT INTO test_table VALUES(10); "
-				"UPDATE test_table SET id=20 WHERE id=10; "
-				"SELECT * FROM test_table; "
-				"DROP TABLE test_table");
+		Query query = con.query();
+		query << "DROP TABLE IF EXISTS test_table; " <<
+				"CREATE TABLE test_table(id INT); " <<
+				"INSERT INTO test_table VALUES(10); " <<
+				"UPDATE test_table SET id=20 WHERE id=10; " <<
+				"SELECT * FROM test_table; " <<
+				"DROP TABLE test_table";
 		cout << "Multi-query: " << endl << query << endl;
 
 		// Execute statement and display all result sets.
 		print_multiple_results(query);
-		usleep(10000);
-		}
+
+#if MYSQL_VERSION_ID >= 50000
+		// If it's MySQL v5.0 or higher, also test stored procedures, which
+		// return their results the same way multi-queries do.
+		query << "DROP PROCEDURE IF EXISTS get_stock; " <<
+				"CREATE PROCEDURE get_stock" <<
+				"( i_item varchar(20) ) " <<
+				"BEGIN " <<
+				"SET i_item = concat('%', i_item, '%'); " <<
+				"SELECT * FROM stock WHERE lower(item) like lower(i_item); " <<
+				"END;";
+		cout << "Stored procedure query: " << endl << query << endl;
+
+		// Create the stored procedure.
+		print_multiple_results(query);
+
+		// Call the stored procedure and display its results.
+		query << "CALL get_stock('relish')";
+		cout << "Query: " << query << endl;
+		print_multiple_results(query);
+#endif
+
 		return 0;
 	}
 	catch (const BadOption& err) {
