@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <makefile>
-    <requires version="0.2.4"/>
+    <requires version="0.2.5"/>
     <using module="datafiles"/>
     <include file="presets/simple.bkl"/>
 
