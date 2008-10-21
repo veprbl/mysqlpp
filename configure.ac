@@ -49,6 +49,7 @@ then
 	CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 	CC="$PTHREAD_CC"
 	AC_CHECK_HEADERS(synch.h)
+	AC_CHECK_HEADERS(unistd.h)
 fi
 
 
