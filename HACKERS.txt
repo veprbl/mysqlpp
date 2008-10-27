@@ -85,18 +85,54 @@ Testing Your Proposed Change
         $ ./dtest [password] [user] [server_addr]
 
     This automatically runs most of the examples, captures the outputs
-    to a file, and then compares that to a known-good run's outputs.
-    The purpose of this is that, before you submit a patch, run dtest
-    and see if it indicates that anything has changed.  If something
-    has and you can't account for it, it represents a problem that
-    you'll have to fix before submitting the patch.
+    to a file, and then compares that to a known-good run's outputs,
+    stored in bmark.txt.  So, before you submit a patch, run dtest
+    to see if anything has changed.  If something has and you can't
+    account for it, it represents a problem that you'll have to fix
+    before submitting the patch.  If it gives an expected change,
+    remove bmark.txt, re-run dtest, and include the bmark.txt diffs in
+    your patch.  This communicates to us the fact that you know there
+    are differences and want the patch evaluated anyway.  Otherwise,
+    we are likely to view the change as a bug.
 
-    If your change purposely causes different outputs from the dtest
-    run stored in svn, remove the bmark.txt file, then re-run dtest and
-    include the bmark.txt diffs with your patch.  This communicates
-    to us the fact that you know there are differences and want the
-    patch evaluated anyway.  Otherwise, we are likely to view the
-    change as a bug.
+    dtest also runs all of the unit tests in test/*.  The purpose of
+    test/* is different from that of examples/*:
+
+        - test/* are unit tests: each tests only one MySQL++ class,
+          independent of everything else.  Because DB access requires
+          several MySQL++ classes to cooperate, a unit test never
+          accesses a database; hence, no unit test needs DB connection
+          parameters.  We will never get 100% code coverage from
+          test/* alone.
+
+        - examples/* can be thought of as integration tests: they
+          test many pieces of MySQL++ working together, accessing
+          a real database server.  In addition to ensuring that all
+          the pieces work together and give consistent results from
+          platform to platform and run to run, it also fills in gaps
+          in the code coverage where no suitable test/* module could
+          be created.
+
+        - test/* programs always run silently on success, writing
+          output only to indicate test failures.  This is because
+          they're usually only run via dtest.
+
+        - examples/* are always "noisy," regardless of whether
+          they succeed or fail, because they're often used
+          interactively
+
+    Patches should include tests if they introduce new functionality
+    or fix a bug that the existing test coverage failed to catch.
+    These guidelines let you know where to put the new test.  If the
+    test is noisy, needs DB access, or tests multiple parts of the
+    library at once, it goes in examples/*.  If your change affects
+    only one class in MySQL++ and testing it can be done without
+    instantiating other MySQL++ classes -- other than by composition,
+    of course -- it should go in test/*.
+
+    Try to expand on an existing examples/* or test/* program.  Add a
+    new one only if you're introducing brand new functionality or
+    when a given feature currently has no test at all.
 
 
 Adding Support for a Different Compiler
