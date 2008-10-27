@@ -205,6 +205,14 @@ Testing Your Proposed Change
     program.  Add a new one only if you're introducing brand new
     functionality or when a given feature currently has no test at all.
 
+    Beware that the primary role the examples is to illustrate points
+    in the user manual.  If an existing example does something similar
+    to what a proper test would need to do and the test doesn't change
+    the nature of the example, don't worry about changing the example
+    code.  If your test would change the nature of the example, you
+    either need to do the test another way, or also submit a change
+    to doc/userman/*.dbx that incorporates the difference.
+
 
 Adding Support for a Different Compiler
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
