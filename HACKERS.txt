@@ -27,7 +27,7 @@ Bootstrapping the Library
     bootstrap.bat which wraps up all the steps you need to build
     these "missing" files.  To run it, just say "bootstrap" from a
     command shell in the top MySQL++ source directory.  For it to run
-    correctly, you will need Bakefile 0.2.3 (http://bakefile.org/) and
+    correctly, you will need Bakefile 0.2.5 (http://bakefile.org/) and
     a Perl 5 interpreter installed on your system, both in the PATH.
     The bootstrap script is smart enough to recognize when these
     tools are missing and stop processing so you can fix the problem.
@@ -41,7 +41,7 @@ Bootstrapping the Library
 
         $ ./bootstrap
 
-    In addition to Bakefile 0.2.3 and Perl 5, you'll also need autoconf
+    In addition to Bakefile 0.2.5 and Perl 5, you'll also need autoconf
     1.59 or higher for this to run successfully.
 
 
