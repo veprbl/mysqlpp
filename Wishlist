@@ -28,8 +28,8 @@ v3.0.7
       own index checking, some rely on at(), some throw MySQL++
       exceptions, some cause the underlying STL to throw...
 
-	o Look into Null<DateTime>.  Reportedly not working as smoothly
-	  as it ought.
+    o Look into Null<DateTime>.  Reportedly not working as smoothly
+      as it ought.
 
 
 v3.1 Tentative Plan
@@ -195,3 +195,7 @@ v4.0 or Later
       hold wide characters.  Then the method that converts UTF-8 to the
       platform's best wide character type can just return a different
       variant of mysqlpp::String.
+
+    o Add wrapper functions to Null<> like length() that call the
+      corresponding function on data member, if present, to make it
+      more transparent.  At minimum, mirror the std::string API.
