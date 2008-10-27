@@ -371,6 +371,9 @@ public:
 	/// \brief Raw access to the underlying buffer, with no C string
 	/// interpretation.
 	const char* data() const;
+
+	/// \brief Returns true if size() == 0
+	bool empty() const { return size() == 0; }
 	
 	/// \brief Return iterator pointing to one past the last character
 	/// of the string.
