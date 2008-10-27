@@ -175,7 +175,7 @@ main(int argc, char *argv[])
 		query.reset();		// forget template query info
 		query << 
 				"CREATE TABLE images (" <<
-				"  id INT UNSIGNED NOT NULL AUTO_INCREMENT, " <<
+				"  id INT UNSIGNED AUTO_INCREMENT, " <<
 				"  data BLOB, " <<
 				"  PRIMARY KEY (id)" <<
 				")";

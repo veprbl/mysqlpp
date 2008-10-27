@@ -67,6 +67,13 @@ buffer_(new SQLBuffer(str.is_null ? null_str : str.data,
 is_processed_(processed)
 {
 }
+
+SQLTypeAdapter::SQLTypeAdapter(const Null<String>& str, bool processed) :
+buffer_(new SQLBuffer(str.is_null ? null_str : str.data.data(),
+        str.is_null ? typeid(void) : typeid(str.data), str.is_null)),
+is_processed_(processed)
+{
+}
 #endif
 
 SQLTypeAdapter::SQLTypeAdapter(const char* str, bool processed) : 

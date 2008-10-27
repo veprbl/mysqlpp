@@ -284,6 +284,7 @@ public:
 	// Parallel interface for Null<>-wrapped versions of types we
 	// support above.  No need for parallel documentation.
 	SQLTypeAdapter(const Null<std::string>& str, bool processed = false);
+	SQLTypeAdapter(const Null<String>& str, bool processed = false);
 	SQLTypeAdapter(Null<char> c);
 	SQLTypeAdapter(Null<sql_tinyint> i);
 	SQLTypeAdapter(Null<sql_tinyint_unsigned> i);
