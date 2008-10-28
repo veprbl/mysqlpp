@@ -195,3 +195,9 @@ v4.0 or Later
     o Add wrapper functions to Null<> like length() that call the
       corresponding function on data member, if present, to make it
       more transparent.  At minimum, mirror the std::string API.
+
+    o Transaction class should check an "in transaction" flag on
+      Connection (or DBDriver) before sending BEGIN, defaulting to
+      false.  If set, the Transaction object does nothing.  If not
+      set, set it and send the query.  This prevents it from trying
+      to set up nested queries, which MySQL doesn't support.
