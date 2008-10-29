@@ -112,7 +112,7 @@ const mysql_type_info::sql_type_info mysql_type_info::types[] = {
 	sql_type_info("LONGBLOB NOT NULL", typeid(sql_longblob), 
 			MYSQL_TYPE_LONG_BLOB),
 	sql_type_info("BLOB NOT NULL", typeid(sql_blob), 
-			MYSQL_TYPE_BLOB),
+			MYSQL_TYPE_BLOB, mysql_ti_sql_type_info::tf_default),
 	sql_type_info("VARCHAR NOT NULL", typeid(sql_varchar), 
 			MYSQL_TYPE_VAR_STRING, mysql_ti_sql_type_info::tf_default),
 	sql_type_info("CHAR NOT NULL", typeid(sql_char), 
@@ -190,7 +190,8 @@ const mysql_type_info::sql_type_info mysql_type_info::types[] = {
 	sql_type_info("LONGBLOB NULL", typeid(Null<sql_longblob>), 
 			MYSQL_TYPE_LONG_BLOB, mysql_ti_sql_type_info::tf_null),
 	sql_type_info("BLOB NULL", typeid(Null<sql_blob>), 
-			MYSQL_TYPE_BLOB, mysql_ti_sql_type_info::tf_null),
+			MYSQL_TYPE_BLOB, mysql_ti_sql_type_info::tf_default |
+            mysql_ti_sql_type_info::tf_null),
 	sql_type_info("VARCHAR NULL", typeid(Null<sql_varchar>), 
 			MYSQL_TYPE_VAR_STRING, mysql_ti_sql_type_info::tf_default |
 			mysql_ti_sql_type_info::tf_null),
@@ -241,6 +242,11 @@ bool mysql_type_info::quote_q() const
 			ti == typeid(sql_date) ||
 			ti == typeid(sql_time) ||
 			ti == typeid(sql_datetime) ||
+			ti == typeid(sql_blob) ||
+			ti == typeid(sql_tinyblob) ||
+			ti == typeid(sql_mediumblob) ||
+			ti == typeid(sql_longblob) ||
+			ti == typeid(sql_char) ||
 			ti == typeid(sql_set);
 }
 
