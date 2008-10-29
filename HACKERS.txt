@@ -99,7 +99,7 @@ On Manipulating the Build System Source Files
     platforms without having to maintain separate build system files
     for each platform.
 
-    Bakefile (http://bakefile.sf.net/) produces most of these project
+    Bakefile (http://bakefile.org/) produces most of these project
     and make files from a single source file called mysql++.bkl.
 
     Except for small local changes, it's best to change mysql++.bkl
@@ -116,6 +116,13 @@ On Manipulating the Build System Source Files
     addition to or instead of mysql++.bkl to get the effect you want.
     Running bootstrap incorporates changes to all of these files in
     the GNU autoconf output.
+
+    While Bakefile's documentation isn't as comprehensive as it
+    ought to be, you can at least count on it to list all of the
+    available features.  So, if you can't see a way to make Bakefile
+    do something, it's likely it just can't do it.  Bakefile is a
+    high-level abstraction of build systems in general, so it'll never
+    support all the particulars of every odd build system out there.
 
 
 Submitting Patches

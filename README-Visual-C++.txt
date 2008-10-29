@@ -205,27 +205,19 @@ Working With Bakefile
 ~~~~~~~~~~~~~~~~~~~~~
     MySQL++'s top-level Visual Studio project files aren't
     maintained directly.  Instead, we use a tool called Bakefile
-    (http://bakefile.org/) to generate many different project file
-    and Makefile types from a single set of source files.  There is
-    a native Windows version of Bakefile up on that web site.
-    Download that and put the directory containing bakefile_gen.exe
-    in your Windows PATH.
+    (http://bakefile.org/) to generate them from mysql++.bkl. Since
+    there are so many project files in MySQL++, it's often simpler to
+    edit this source file and "re-bake" the project files from it than
+    to make your changes in Visual Studio.
 
-    Bakefile generates the various project files and Makefiles from
-    a single source file, mysql++.bkl.  This is usually the file you
-    need to change when you want to make some change to the MySQL++
-    build system.
+    To do this, download the native Windows version of Bakefile from the
+    web site given above.  Install it, and then put the installation
+    directory in your Windows PATH.  Then, open up a command window, cd
+    into the MySQL++ directory, and type "rebake".  This will run
+    rebake.bat, which rebuilds the Visual Studio project files from
+    mysql++.bkl.
 
-    While Bakefile's documentation isn't as comprehensive as it
-    ought to be, you can at least count on it to list all of the
-    available features.  So, if you can't see a way to make Bakefile
-    do something, it's likely it just can't do it.  Bakefile is a
-    high-level abstraction of build systems in general, so it'll never
-    support all the particulars of every odd build system out there.
-
-    Once you've made your changes, you can generate the Visual C++
-    project files by running rebake.bat, which you can find in the
-    same directory as this file.
+    There's more information about using Bakefile in HACKERS.txt.
 
 
 If You Run Into Problems...
