@@ -69,7 +69,9 @@ is_processed_(processed)
 }
 
 SQLTypeAdapter::SQLTypeAdapter(const Null<String>& str, bool processed) :
-buffer_(new SQLBuffer(str.is_null ? null_str : str.data.data(),
+buffer_(new SQLBuffer(
+		str.is_null ? null_str.c_str() : str.data.data(),
+		str.is_null ? null_str.length() : str.data.length(),
         str.is_null ? typeid(void) : typeid(str.data), str.is_null)),
 is_processed_(processed)
 {
