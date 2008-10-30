@@ -1,0 +1,9 @@
+CXX := g++
+CXXFLAGS := -I/usr/include/mysql -I/usr/local/include/mysql++
+LDFLAGS := -L/usr/local/lib -lmysqlpp -lmysqlclient
+EXECUTABLE := hello
+
+all: $(EXECUTABLE)
+
+clean: 
+    rm -f $(EXECUTABLE) *.o

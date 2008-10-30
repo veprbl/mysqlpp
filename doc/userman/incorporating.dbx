@@ -175,17 +175,55 @@
   <sect2 id="inc-unix">
     <title>Unixy Platforms: Linux, *BSD, OS X, Cygwin, Solaris...</title>
 
-    <sect3 id="inc-unix-makefile">
-      <title>Generic Makefiles</title>
+    <para>There are lots of ways to build programs on Unixy
+    platforms.  We&rsquo;ll cover just the most generic way
+    here, <filename>Makefile</filename>s. We&rsquo;ll use a very
+    simple example so it&rsquo;s clear how to translate this to
+    more sophisticated build systems such as GNU Autotools or
+    Bakefile.</para>
 
-      <para>Bla.</para>
-    </sect3>
+    <para>&ldquo;Hello, world!&rdquo; for MySQL++ might look something
+    like this:</para>
 
-    <sect3 id="inc-autotools">
-      <title>GNU Autotools: autoconf, automake...</title>
+    <programlisting><xi:include href="hello.cpp" parse="text"
+    xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-      <para>Bla.</para>
-    </sect3>
+    <para>Here&rsquo;s a <filename>Makefile</filename> for building
+    that program:</para>
+
+    <programlisting><xi:include href="Makefile.hello" parse="text"
+    xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+
+    <para>The first three lines are where all of the assumptions
+    about file and path names are laid out. Probably at least one of
+    these assumptions isn&rsquo;t true for your system, and so will
+    require changing.</para>
+
+    <para>The trickiest line is the third one. MySQL++ programs
+    need to get built against both the MySQL and MySQL++
+    libraries, because MySQL++ is built on top of the MySQL C
+    API library. If you&rsquo;re building a threaded program,
+    use <filename>-lmysqlclient_r</filename> instead. (See <xref
+    linkend="threads"/> for more details on building thread-aware
+    programs.)</para>
+
+    <para>On some systems, the order of libraries in the
+    <varname>LDFLAGS</varname> line is important: these linkers collect
+    symbols from right to left, so the rightmost library needs to
+    be the most generic. In this example, MySQL++ depends on MySQL,
+    so the MySQL C API library is rightmost.</para>
+
+    <para>You might need to add more libraries to the
+    <varname>LDFLAGS</varname> line.  <filename>-lnsl</filename>,
+    <filename>-lz</filename> and <filename>-lm</filename> are
+    common. If you study how MySQL++ itself gets built on your system,
+    you can see what it uses, and emulate that.</para>
+
+    <para>Beyond that, we have a pretty vanilla
+    <filename>Makefile</filename>. We don&rsquo;t have any special
+    dependency or build rules, because the default rules should work
+    fine, particularly if you&rsquo;re using GNU make, which is just
+    about universal these days.</para>
   </sect2>
 
 
@@ -195,7 +233,7 @@
     <sect3 id="inc-osx-makefile">
       <title>Makefiles</title>
 
-      <para>The <link linkend="inc-unix-makefile">generic Makefile
+      <para>The <link linkend="inc-unix">generic Makefile
       instructions above</link> cover most of what you need to know
       about using Makefiles on OS X.</para>
 
@@ -227,10 +265,10 @@
     <sect3 id="inc-mingw-makefile">
       <title>Makefiles (mingw32-make)</title>
 
-      <para>The <link linkend="inc-unix-makefile">generic Makefile
-      instructions above</link> apply to MinGW&rsquo;s version of
-      GNU make as well. This section will only cover the differences
-      particular to MinGW.</para>
+      <para>The <link linkend="inc-unix">generic Makefile instructions
+      above</link> apply to MinGW&rsquo;s version of GNU make as
+      well. This section will only cover the differences particular
+      to MinGW.</para>
     </sect3>
 
     <sect3 id="inc-mingw-ide">
@@ -249,9 +287,9 @@
 
     <para>As far as I can tell, the simplest way to build a C++
     project with Eclipse is to set up a Makefile for it as described
-    <link linkend="inc-unix-makefile">above</link>, then add an
-    external run configuration for your local make tool. Get the
-    project building from the command line with make, then go to Run |
+    <link linkend="inc-unix">above</link>, then add an external
+    run configuration for your local make tool. Get the project
+    building from the command line with make, then go to Run |
     External Tools | Open External Tools Dialog and add a new launch
     configuration.</para>
 
