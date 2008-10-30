@@ -263,12 +263,62 @@
     <title>MinGW</title>
 
     <sect3 id="inc-mingw-makefile">
-      <title>Makefiles (mingw32-make)</title>
+      <title>Makefiles</title>
 
       <para>The <link linkend="inc-unix">generic Makefile instructions
       above</link> apply to MinGW&rsquo;s version of GNU make as
-      well. This section will only cover the differences particular
-      to MinGW.</para>
+      well.</para>
+      
+      <para>The most uncommon thing about MinGW is that the GNU
+      make package you can download for it calls the executable
+      <filename>mingw32-make</filename> rather than simply
+      <filename>make</filename>. As I understand it, this is to allow
+      it to coexist with Cygwin, since MinGW&rsquo;s version often
+      works like an old DOS make program, whereas Cygwin&rsquo;s always
+      takes the Unixy path. Thus, a <filename>Makefile</filename>
+      written for one is likely to fail to work correctly with
+      the other, so you have to be able to specify which one you
+      mean. Taking the above <filename>Makefile</filename> as an
+      example, you might prefer to use <command>del</command> instead
+      of <command>rm</command> with MinGW.</para>
+
+      <para>If you have both MinGW and Cygwin installed, you may
+      be tempted to use Cygwin's superior command line environment
+      over a Windows command shell or MSYS. If you're like me,
+      you type <filename>make</filename> reflexively now; typing
+      <filename>mingw32-make</filename> instead isn't going to work. I
+      resolve these tensions with a pair of scripts that lets me work
+      in Cygwin mode most of the time and temporarily drop down into
+      &ldquo;MinGW mode&rdquo; only when necessary. I call the first
+      script <filename>mingw</filename>, and put it somewhere in the
+      Cygwin <varname>PATH</varname>:</para>
+
+      <programlisting>
+#!/bin/sh
+PATH=/cygdrive/c/mingw/bin:/cygdrive/c/windows:/cygdrive/c/windows/system32:/cygdrive/c/cygwin/bin
+echo "Say 'exit' to leave MinGW shell and restore Cygwin environment."
+/usr/bin/bash --rcfile ~/.mingwrc
+</programlisting>
+
+      <para>Then there's a tiny little file called
+      <filename>.mingwrc</filename> that goes in your Cygwin home
+      directory:</para>
+
+      <programlisting>
+alias make=mingw32-make
+PS1='MinGW: \W \$ '
+</programlisting>
+
+      <para>(This split is necessary due to the way Bash works.)</para>
+
+      <para>The first script sets up most of the MinGW environment,
+      putting the MinGW and Windows directories ahead of the Cygwin
+      directory so programs in those locations take precedence. Then
+      the second script finishes setting up the MinGW sub-shell,
+      causing the <filename>make</filename> command to invoke MinGW's
+      make program instead of Cygwin's, and changing the command
+      prompt to remind you that you're in a sub-shell. Just say
+      <command>exit</command> to get back to Cygwin mode.</para>
     </sect3>
 
     <sect3 id="inc-mingw-ide">
