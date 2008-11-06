@@ -18,11 +18,6 @@ Any Version
 
 v3.0.7
 ------
-    o userman section covering how to set up Makefiles and project
-      files to use MySQL++, step-by-step.  Fold in discussion at end
-      of VC++ README and FAQ item stuff.  Then point from each to new
-      discussion.
-
     o Sort out the differences in Row subscripting: some rely on
       vector::at(), some on vector::operator[], some do their
       own index checking, some rely on at(), some throw MySQL++
