@@ -750,7 +750,8 @@ public:
 			MYSQL_ROW d = result.fetch_raw_row();
 			if (!d)
 				break;
-			Row row(d, &result, result.fetch_lengths(), true);
+			Row row(d, &result, result.fetch_lengths(),
+					throw_exceptions());
 			if (!row)
 				break;
 			con.push_back(typename Sequence::value_type(row));
@@ -807,7 +808,8 @@ public:
 			MYSQL_ROW d = result.fetch_raw_row();
 			if (!d)
 				return;
-			Row row(d, &result, result.fetch_lengths(), true);
+			Row row(d, &result, result.fetch_lengths(),
+					throw_exceptions());
 			if (!row)
 				break;
 			con.insert(typename Set::value_type(row));
