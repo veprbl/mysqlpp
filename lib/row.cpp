@@ -163,13 +163,11 @@ Row::field_num(const char* name) const
 	if (field_names_) {
 		return (*field_names_)[name];
 	}
+	else if (throw_exceptions()) {
+		throw BadFieldName(name);
+	}
 	else {
-		if (throw_exceptions()) {
-			throw BadFieldName(name);
-		}
-		else {
-			return 0;
-		}
+		return 0;
 	}
 }
 
@@ -181,14 +179,12 @@ Row::operator [](const char* field) const
 	if (si < size()) {
 		return at(si);
 	}
+	else if (throw_exceptions()) {
+		throw BadFieldName(field);
+	}
 	else {
-		if (throw_exceptions()) {
-			throw BadFieldName(field);
-		}
-		else {
-			static value_type empty;
-			return empty;
-		}
+		static value_type empty;
+		return empty;
 	}
 }
 
