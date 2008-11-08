@@ -26,11 +26,6 @@ v3.0.7
     o Look into Null<DateTime>.  Reportedly not working as smoothly
       as it ought.
 
-	o Query::parse() should be a no-op if no parameters found in
-	  query string.  Currently, it crashes MySQL++ when you try to
-	  execute the query.  Probably trying to access the first element
-	  in an empty vector (SQLQueryParms) or something like that.
-
 
 v3.1 Tentative Plan
 -------------------
