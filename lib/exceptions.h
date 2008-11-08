@@ -35,6 +35,7 @@
 
 #include <exception>
 #include <string>
+#include <sstream>
 
 namespace mysqlpp {
 
@@ -169,6 +170,30 @@ public:
 
 	/// \brief Destroy exception
 	~BadFieldName() throw() { }
+};
+
+
+/// \brief Exception thrown when an object with operator [] or an
+/// at() method gets called with a bad index.
+
+class MYSQLPP_EXPORT BadIndex : public Exception
+{
+public:
+	/// \brief Create exception object
+	///
+	/// \param bad_index type of object bad index tried on
+	/// \param bad_index index value the container didn't like
+	explicit BadIndex(const char* what, int bad_index) :
+	Exception()
+	{
+		std::ostringstream outs;
+		outs << "Index " << bad_index << " on " << what <<
+				" out of range";
+		what_ = outs.str();
+	}
+
+	/// \brief Destroy exception
+	~BadIndex() throw() { }
 };
 
 

@@ -195,6 +195,9 @@
 
     <!-- Define library testing programs' output targets, if enabled -->
     <if cond="BUILDTEST=='yes'">
+        <exe id="test_array_index" template="programs">
+            <sources>test/array_index.cpp</sources>
+        </exe>
         <exe id="test_cpool" template="programs">
             <sources>test/cpool.cpp</sources>
         </exe>

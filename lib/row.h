@@ -144,7 +144,7 @@ public:
 	///
 	/// If the index value is bad, the underlying std::vector is
 	/// supposed to throw an exception, according to the Standard.
-	const_reference at(size_type i) const { return data_.at(i); }
+	const_reference at(size_type i) const;
 
 	/// \brief Get a reference to the last element of the vector
 	const_reference back() const { return data_.back(); }

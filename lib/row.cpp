@@ -62,6 +62,18 @@ initialized_(false)
 }
 
 
+Row::const_reference
+Row::at(size_type i) const
+{
+	if (i >= 0 && i < size()) {
+		return data_[i];
+	}
+	else {
+		throw BadIndex("Row", i);
+	}
+}
+
+
 equal_list_ba<FieldNames, Row, quote_type0>
 Row::equal_list(const char* d, const char* e) const
 {
