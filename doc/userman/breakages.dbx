@@ -795,7 +795,7 @@ for (i = 0; row = res[i]; ++i) {
 
         <programlisting>
 mysqlpp::Row row;
-mysqlpp::Result::size_type i;
+mysqlpp::StoreQueryResult::size_type i;
 for (i = 0; i &lt; res.num_rows(); ++i) {
   row = res[i];
   // Do something with row here
