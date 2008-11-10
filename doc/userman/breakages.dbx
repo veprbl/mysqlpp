@@ -800,6 +800,16 @@ for (i = 0; i &lt; res.num_rows(); ++i) {
   row = res[i];
   // Do something with row here
 }</programlisting>
+
+				<para>...or, in a more C++ish idiom:</para>
+
+        <programlisting>
+mysqlpp::Row row;
+mysqlpp::StoreQueryResult::const_iterator it;
+for (it = res.begin(); it != res.end(); ++it) {
+  row = *it;
+  // Do something with row here
+}</programlisting>
       </sect4>
 
 
