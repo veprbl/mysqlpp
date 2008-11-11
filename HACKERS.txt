@@ -156,6 +156,79 @@ Submitting Patches
     for not being able to make unified diffs.  :)
 
 
+The MySQL++ Code Style
+~~~~~~~~~~~~~~~~~~~~~~
+    Every code base should have a common code style.  Love it or
+    hate it, here are MySQL++'s current code style rules:
+
+    Source Code
+    ~~~~~~~~~~~
+        File types: ac, cpp, h, in, m4, pl
+
+        - Tabs for indents, size 4
+
+        - Unix line endings.  Any decent programmer's editor can
+          cope with this, even on Windows.
+
+        - C/C++ rules:
+
+            - Base whitespace style is AT&Tish: K&R/Stroustrup,
+              plus a little local spice.  If you have the indent(1)
+              program, the command is:
+
+                indent -kr -nce -cli4 -ss -di1 -psl -ts4 FILES...
+
+              That is, don't cuddle else, indent case statement labels,
+              space before semicolon with empty loop body, no extra
+              space between a variable type and name, return value
+              of function on separate line from rest of definition.
+
+            - Class names are in CamelCase, uppercased first letter
+
+            - Method names are in all_lower_case_with_underscores();
+              ditto most other global symbols.
+
+            - Macro names are in ALL_UPPERCASE_WITH_UNDERSCORES
+
+            - Doxygen comment for all public declarations, unless
+              there is a very good reason to keep the thing
+              undocumented.
+
+        - Perl and shell script rules are more or less the same
+          as for C/C++, to the extent this makes sense.
+
+
+    XML/HTML Dialects
+    ~~~~~~~~~~~~~~~~~
+        File types: bkl, dbx, hta
+
+        - Spaces for indents, size 2.  Shallow indents due to the
+          high level of nesting occurring in such files, and spaces
+          because they're not as annoying at shallow indent levels
+          in editors that don't treat space indents like tabs.
+
+        - Unix line endings.  Again, these are intended to be viewed
+          in a programmer's text editor, which should work with Unix
+          line endings no matter the platform.
+
+
+    Plain Text Files
+    ~~~~~~~~~~~~~~~~
+        File types: txt
+
+        - Spaces for indents, size 4.  Spaces because such files
+          are often viewed in Notepad and similarly crippled text
+          editors which use a default indent level of 8.
+
+        - DOS line endings, again for the Notepad reason.  And on
+          modern Unixy platforms, the tools cope with DOS line endings
+          reasonably well.  Better than the converse, anyway.
+
+
+    When in doubt, mimic what you see in the current code.  When still
+    in doubt, ask on the mailing list.
+
+
 Testing Your Proposed Change
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     MySQL++ includes a self-test mechanism called dtest.  It's a
