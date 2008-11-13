@@ -1,6 +1,6 @@
 /***********************************************************************
  test/array_index.cpp - Tests operator[] and at() on indexable objects
- 	to ensure they thcontainer exceptions when given bad indices.
+ 	to ensure they throw exceptions when given bad indices.
 
  Copyright (c) 2008 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
