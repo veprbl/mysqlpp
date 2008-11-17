@@ -49,6 +49,7 @@
 	<xi:include href="unicode.dbx" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 	<xi:include href="threads.dbx" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 	<xi:include href="configuration.dbx" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+	<xi:include href="incorporating.dbx" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 	<xi:include href="breakages.dbx" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 	<xi:include href="licenses.dbx" xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </article>
