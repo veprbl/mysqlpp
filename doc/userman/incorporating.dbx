@@ -191,7 +191,7 @@
     <para>Here&rsquo;s a <filename>Makefile</filename> for building
     that program:</para>
 
-    <programlisting><xi:include href="Makefile.hello" parse="text"
+    <programlisting><xi:include href="Makefile.hello.posix" parse="text"
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
     <para>The first three lines are where all of the assumptions
@@ -267,62 +267,83 @@
 
       <para>The <link linkend="inc-unix">generic Makefile instructions
       above</link> apply to MinGW&rsquo;s version of GNU make as
-      well.</para>
-      
-      <para>The most uncommon thing about MinGW is that the GNU
-      make package you can download for it calls the executable
-      <filename>mingw32-make</filename> rather than simply
-      <filename>make</filename>. As I understand it, this is to allow
-      it to coexist with Cygwin, since MinGW&rsquo;s version often
-      works like an old DOS make program, whereas Cygwin&rsquo;s always
-      takes the Unixy path. Thus, a <filename>Makefile</filename>
-      written for one is likely to fail to work correctly with
-      the other, so you have to be able to specify which one you
-      mean. Taking the above <filename>Makefile</filename> as an
-      example, you might prefer to use <command>del</command> instead
-      of <command>rm</command> with MinGW.</para>
+      well. You will have some differences due to the platform, so
+      here&rsquo;s the adjusted <filename>Makefile</filename>:</para>
 
-      <para>If you have both MinGW and Cygwin installed, you may
-      be tempted to use Cygwin's superior command line environment
-      over a Windows command shell or MSYS. If you're like me,
-      you type <filename>make</filename> reflexively now; typing
-      <filename>mingw32-make</filename> instead isn't going to work. I
-      resolve these tensions with a pair of scripts that lets me work
-      in Cygwin mode most of the time and temporarily drop down into
-      &ldquo;MinGW mode&rdquo; only when necessary. I call the first
-      script <filename>mingw</filename>, and put it somewhere in the
-      Cygwin <varname>PATH</varname>:</para>
+      <programlisting><xi:include
+      href="Makefile.hello.mingw" parse="text"
+      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-      <programlisting>
-#!/bin/sh
-PATH=/cygdrive/c/mingw/bin:/cygdrive/c/windows:/cygdrive/c/windows/system32:/cygdrive/c/cygwin/bin
-echo "Say 'exit' to leave MinGW shell and restore Cygwin environment."
-/usr/bin/bash --rcfile ~/.mingwrc
-</programlisting>
+      <para>Note the use of forward slashes. Also, we use
+      <command>del</command> instead of <command>rm</command>
+      in the clean target; this assumes there is no
+      <filename>sh.exe</filename> in your <varname>PATH</varname>,
+      which may not be true if you have Cygwin or MSYS installed. Read
+      on to see how to cope with that.</para>
 
-      <para>Then there's a tiny little file called
-      <filename>.mingwrc</filename> that goes in your Cygwin home
-      directory:</para>
+      <sect4 id="inc-mingw-cygwin">
+        <title>Working with MinGW Under Cygwin</title>
 
-      <programlisting>
-alias make=mingw32-make
-PS1='MinGW: \W \$ '
-</programlisting>
+        <para>Compared to Unix, the biggest difference you&rsquo;ll
+        find is that MinGW calls its <filename>make</filename>
+        executable <filename>mingw32-make</filename>. As I understand
+        it, this is to allow it to coexist with Cygwin, since the two
+        versions have some behavioral differences, despite both being
+        based on GNU Make.  A <filename>Makefile</filename> written
+        for one is likely to fail to work correctly with the other,
+        so you have to be able to specify which one you mean.</para>
 
-      <para>(This split is necessary due to the way Bash works.)</para>
+        <para>If you have both MinGW and Cygwin installed, you may be
+        tempted to use Cygwin&rsquo;s superior command line environment
+        over a Windows command shell or MSYS. If you&rsquo;re like me,
+        you type <filename>make</filename> reflexively now; typing
+        <filename>mingw32-make</filename> instead isn&rsquo;t going
+        to work. Another problem with having Cygwin and MinGW on the
+        same system is that this puts a <filename>sh.exe</filename>
+        program in your system&rsquo;s <varname>PATH</varname>
+        which makes MinGW make send shell commands to it instead of
+        <filename>cmd.exe</filename> as it normally would.  I find it
+        best to set up a special MinGW environment to avoid problems
+        stemming from these platform differences.</para>
 
-      <para>The first script sets up most of the MinGW environment,
-      putting the MinGW and Windows directories ahead of the Cygwin
-      directory so programs in those locations take precedence. Then
-      the second script finishes setting up the MinGW sub-shell,
-      causing the <filename>make</filename> command to invoke MinGW's
-      make program instead of Cygwin's, and changing the command
-      prompt to remind you that you're in a sub-shell. Just say
-      <command>exit</command> to get back to Cygwin mode.</para>
+        <para>I&rsquo;ve created a pair of scripts that let me work
+        in Cygwin mode most of the time and temporarily drop down
+        into &ldquo;MinGW mode&rdquo; only when necessary. I call the
+        first script <filename>mingw</filename>, and put it somewhere
+        in the Cygwin <varname>PATH</varname>:</para>
+
+        <programlisting>
+  #!/bin/sh
+  PATH=/cygdrive/c/mingw/bin:/cygdrive/c/windows:/cygdrive/c/windows/system32:/cygdrive/c/cygwin/bin
+  echo "Say 'exit' to leave MinGW shell and restore Cygwin environment."
+  /usr/bin/bash --rcfile ~/.mingwrc
+  </programlisting>
+
+        <para>Then there&rsquo;s a tiny little file called
+        <filename>.mingwrc</filename> that goes in your Cygwin home
+        directory:</para>
+
+        <programlisting>
+  alias make=mingw32-make
+  PS1='MinGW: \W \$ '
+  </programlisting>
+
+        <para>(This split is necessary due to the way Bash works.)</para>
+
+        <para>The first script sets up most of the MinGW environment,
+        putting the MinGW and Windows directories ahead of the Cygwin
+        directory so programs in those locations take precedence. Then
+        the second script finishes setting up the MinGW sub-shell,
+        causing the <filename>make</filename> command to invoke
+        MinGW&rsquo;s make program instead of Cygwin&rsquo;s, and
+        changing the command prompt to remind you that you&rsquo;re
+        in a sub-shell. Just say <command>exit</command> to get back
+        to Cygwin mode.</para>
+      </sect4>
     </sect3>
 
     <sect3 id="inc-mingw-ide">
-      <title>Third-Party IDEs (Dev-C++, Code::Blocks...)</title>
+      <title>Third-Party MinGW IDEs (Dev-C++, Code::Blocks...)</title>
 
       <para>I have no information on how to do this. We&rsquo;ve
       received reports on the mailing list from people that have made
