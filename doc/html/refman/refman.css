@@ -32,8 +32,13 @@ div.nav { background-color: #DDDDAA; border: 1px solid #CCBBAA; }
 /* Standard markup styles, borrowed from tangentsoft.net */
 body {
   background-color: #FFFFEE;
-  font-family: "Georgia", "New Century Schoolbook", "Times New Roman",
-      "Times", serif;
+  font-family:
+  	"Georgia",
+	"Luxi Serif",
+	"New Century Schoolbook",
+	"Times New Roman",
+  	"Times",
+	serif;
   margin-left: 30pt; 
   margin-right: 30pt; 
 }
@@ -45,36 +50,35 @@ a:active { color: #DA7417; }
 
 p { line-height: 140%; }
 
-h1 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
-  font-size: 20pt;
+h1, h2, h3, h4, h5, h6 {
   color: #501000;
+  font-family:
+  	"Verdana",
+	"Luxi Sans",
+	"Helvetica Narrow",
+	"Arial",
+	"Univers",
+	sans-serif;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 20pt;
   margin-left: 0pt;
 }
 h2 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 16pt;
-  font-weight: bold;
-  color: #501000;
   margin-left: -10pt;
 }
 h3 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 14pt;
-  font-weight: bold;
-  color: #501000;
   margin-left: -10pt;
 }
 h4 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
-  font-size: 10pt;
-  font-weight: bold;
-  color: #501000;
+  font-size: 12pt;
   margin-left: -10pt;
 }
 h5 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 10pt;
-  font-weight: bold;
-  color: #501000;
+  margin-left: -10pt;
 }

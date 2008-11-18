@@ -1,7 +1,12 @@
 BODY {
   background-color: #FFFFEE;
-  font-family: "Georgia", "New Century Schoolbook", "Times New Roman",
-      "Times", serif;
+  font-family:
+  	"Georgia",
+	"Luxi Serif",
+	"New Century Schoolbook",
+	"Times New Roman",
+  	"Times",
+	serif;
   margin-left: 30pt; 
   margin-right: 30pt; 
 }
@@ -23,41 +28,39 @@ a:active {
   color: #DA7417;
 }
 
-H1 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
-  font-size: 20pt;
+H1, H2, H3, H4, H5, H6 {
   color: #501000;
+  font-family:
+  	"Verdana",
+	"Luxi Sans",
+	"Helvetica Narrow",
+	"Arial",
+	"Univers",
+	sans-serif;
+  font-weight: bold;
+}
+
+H1 {
+  font-size: 20pt;
 }
 
 H2 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
-  font-size: 16pt;
-  font-weight: bold;
-  color: #501000;
+  font-size: 18pt;
 }
 
 H3 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 14pt;
-  font-weight: bold;
-  color: #501000;
 }
 
 H4 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 10pt;
-  font-weight: bold;
-  color: #501000;
 }
 H4.subtitle {
   margin-left: 20pt;
 }
 
 H5 {
-  font-family: verdana, helvetica narrow, arial, univers, sans-serif;
   font-size: 10pt;
-  font-weight: bold;
-  color: #501000;
   margin-left: 20pt;
 }
 
