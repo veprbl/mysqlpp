@@ -32,33 +32,39 @@ div.nav { background-color: #DDDDAA; border: 1px solid #CCBBAA; }
 /* Standard markup styles, borrowed from tangentsoft.net */
 body {
   background-color: #FFFFEE;
-  font-family:
-  	"Georgia",
-	"Luxi Serif",
-	"New Century Schoolbook",
-	"Times New Roman",
-  	"Times",
-	serif;
   margin-left: 30pt; 
   margin-right: 30pt; 
 }
+body, div, dd, dl, li, ol, p, td, ul {
+  font-family:
+    "Georgia",
+    "Luxi Serif",
+    "New Century Schoolbook",
+    "Times New Roman",
+    "Times",
+  serif;
+  font-size: 12pt;
+  line-height: 140%;
+}
 
+a { color: #491E00; }
 a:link { color: #491E00; }
 a:visited { color: #7D2E01; }
 a:hover { color: #CC5500; background-color: transparent; text-decoration: none; }
 a:active { color: #DA7417; } 
 
-p { line-height: 140%; }
+
+b { color: #501000; }
 
 h1, h2, h3, h4, h5, h6 {
   color: #501000;
   font-family:
-  	"Verdana",
-	"Luxi Sans",
-	"Helvetica Narrow",
-	"Arial",
-	"Univers",
-	sans-serif;
+    "Verdana",
+    "Luxi Sans",
+    "Helvetica Narrow",
+    "Arial",
+    "Univers",
+  sans-serif;
   font-weight: bold;
 }
 
