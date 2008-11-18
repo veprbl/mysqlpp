@@ -69,7 +69,7 @@ Row::at(size_type i) const
 		return data_[i];
 	}
 	else {
-		throw BadIndex("Row", i);
+		throw BadIndex("Row", i, size());
 	}
 }
 

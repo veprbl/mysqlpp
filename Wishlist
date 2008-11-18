@@ -8,12 +8,6 @@ Any Version
       API feature.
 
 
-v3.0.7
-------
-	o Throw BadIndex from all operator[]'s and at() methods on bad
-	  indices, and add them to test/array_index.cpp.
-
-
 v3.1 Tentative Plan
 -------------------
     o SSQLS v2:

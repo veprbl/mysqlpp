@@ -276,8 +276,8 @@ public:
 
 	/// \brief Return a character within the string.
 	///
-	/// Unlike \c operator[](), this function throws an 
-	/// \c std::out_of_range exception if the index isn't within range.
+	/// \throw mysqlpp::BadIndex if the row is not initialized or there
+	/// are less than \c i fields in the row.
 	char at(size_type pos) const;
 
 	/// \brief Return iterator pointing to the first character of
@@ -523,9 +523,11 @@ public:
 
 	/// \brief Return a character within the string.
 	///
-	/// Unlike at(), this access method doesn't check the index for
-	/// sanity.
-	char operator [](size_type pos) const;
+	/// This function is just syntactic sugar, wrapping the at() method.
+	///
+	/// \throw mysqlpp::BadIndex if the string is not initialized or there
+	/// are less than \c i fields in the string.
+	char operator [](size_type pos) const { return at(pos); }
 
 	/// \brief Returns a const char pointer to the object's raw data
 	operator const char*() const { return data(); }

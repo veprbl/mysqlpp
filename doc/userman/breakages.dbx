@@ -1001,6 +1001,22 @@ my_ssqls_type::table("MyTableName");</programlisting>
         collision in the global macro namespace.</para>
       </sect4>
     </sect3>
+
+
+    <sect3 id="api-3.0.7">
+      <title>v3.0.7</title>
+
+      <para>Most MySQL++ classes with <methodname>at()</methodname>
+      or <methodname>operator []()</methodname> methods now
+      throw the new <ulink type="structref" url="BadIndex"/>
+      exception when you pass an out-of-range index. These
+      methods variously either did not check their indices,
+      or threw <classname>std::out_of_range</classname> when
+      passed a bad index. The one exception that comes to mind is
+      <classname>Fields</classname>, which is just a typedef for a
+      specialization of <classname>std::vector</classname>, and the
+      Standard has its own rules for index checking.</para>
+    </sect3>
   </sect2>
 
 

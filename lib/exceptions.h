@@ -183,12 +183,13 @@ public:
 	///
 	/// \param bad_index type of object bad index tried on
 	/// \param bad_index index value the container didn't like
-	explicit BadIndex(const char* what, int bad_index) :
+	/// \param max_index largest legal index value for container
+	explicit BadIndex(const char* what, int bad_index, int max_index) :
 	Exception()
 	{
 		std::ostringstream outs;
 		outs << "Index " << bad_index << " on " << what <<
-				" out of range";
+				" out of range, max legal index is " << max_index;
 		what_ = outs.str();
 	}
 

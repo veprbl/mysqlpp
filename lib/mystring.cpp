@@ -38,7 +38,7 @@ char
 String::at(size_type pos) const
 {
 	if (pos >= size()) {
-		throw std::out_of_range("String");
+		throw BadIndex("String", pos, size());
 	}
 	else {
 		return buffer_->data()[pos];
@@ -219,12 +219,6 @@ String::to_string(std::string& s) const
 	}
 }
 
-
-char
-String::operator [](size_type pos) const
-{
-	return buffer_ ? buffer_->data()[pos] : 0;
-}
 
 /// \brief Stream insertion operator for String objects
 ///

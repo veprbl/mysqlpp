@@ -392,11 +392,12 @@ SQLTypeAdapter::at(size_type i) const throw(std::out_of_range)
 			return *(buffer_->data() + i);
 		}
 		else {
-			throw out_of_range("Not enough chars in SQLTypeAdapter");
+			throw BadIndex("Not enough chars in SQLTypeAdapter", i,
+					length());
 		}
 	}
 	else {
-		throw out_of_range("SQLTypeAdapter buffer not initialized");
+		throw BadIndex("SQLTypeAdapter buffer not initialized", i, -1);
 	}
 }
 
