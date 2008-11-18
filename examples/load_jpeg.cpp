@@ -74,7 +74,7 @@ main(int argc, char *argv[])
 			// We received at least one non-option argument on the
 			// command line, so treat it as a file name 
 			img_name = argv[ag_optind];
-			ifstream img_file(img_name, ios::ate);
+			ifstream img_file(img_name, ios::ate | ios::binary);
 			if (img_file) {
 				size_t img_size = img_file.tellg();
 				if (img_size > 10) {
