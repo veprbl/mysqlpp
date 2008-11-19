@@ -48,6 +48,11 @@ v3.1 Tentative Plan
       - Need a way to tag a column as auto-increment so it's left out
         of INSERT queries, but still available for data retrieval.
 
+      - Would be nice if it restored VC++ 2003 compatibility, and
+        allowed removal of 'explicit' from Date, DateTime and Time
+        ctors taking stringish types.  (Can't do the latter for real
+        until v4, but we can lay the ground work here.)
+
     o Chris Frey's packarray class
 
     o Create adaptors for std::bitset, for storing binary data in a
