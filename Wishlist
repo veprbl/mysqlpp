@@ -185,3 +185,6 @@ v4.0 or Later
       false.  If set, the Transaction object does nothing.  If not
       set, set it and send the query.  This prevents it from trying
       to set up nested queries, which MySQL doesn't support.
+
+    o Remove throw-spec for std::out_of_range from SQLTypeAdapter::at().
+      It no longer throws this, and throw-specs are passee' anyway.
