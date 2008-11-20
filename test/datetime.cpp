@@ -203,12 +203,16 @@ int
 main()
 {
 	unsigned int failures = 0;
+#if !defined(__SUNPRO_CC)
+	// Sun CC can't compile these tests for some reason.  So, skip them.
+	// See http://lists.mysql.com/plusplus/8164
 	failures += test(0, 0, 0, 0, 0, 0);
 	failures += test(1, 2, 3, 4, 5, 6);
 	failures += test_stringization(DateTime(), "NOW()", "DateTime");
 	DateTime dt;
 	dt.year(2007);
 	failures += test_stringization(dt, "2007-00-00 00:00:00", "DateTime");
+#endif
 	return failures;
 }
 
