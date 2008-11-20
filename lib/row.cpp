@@ -65,7 +65,7 @@ initialized_(false)
 Row::const_reference
 Row::at(size_type i) const
 {
-	if (i >= 0 && i < size()) {
+	if (i < size()) {
 		return data_[i];
 	}
 	else {
