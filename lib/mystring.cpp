@@ -50,7 +50,7 @@ int
 String::compare(const String& other) const
 {
 	if (other.buffer_) {
-		return compare(0, std::max(length(), other.length()), 
+		return compare(0, std::max(length(), other.length()),
 				other.buffer_->data());
 	}
 	else {
@@ -146,7 +146,7 @@ template <>
 Time
 String::conv(Time) const
 {
-	return buffer_ ? Time(c_str()) : Time(); 
+	return buffer_ ? Time(c_str()) : Time();
 }
 
 #endif // !defined(DOXYGEN_IGNORE)

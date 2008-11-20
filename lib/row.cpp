@@ -84,7 +84,7 @@ Row::equal_list(const char* d, const char* e) const
 
 template <class Manip>
 equal_list_ba<FieldNames, Row, Manip>
-Row::equal_list(const char* d, const char* e, Manip m) const 
+Row::equal_list(const char* d, const char* e, Manip m) const
 {
 	return equal_list_ba<FieldNames, Row, Manip>(
 			*field_names_, *this, d, e, m);

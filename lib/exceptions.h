@@ -289,7 +289,7 @@ public:
 	/// \param w explanation for why the exception was thrown
 	/// \param e the error number from the underlying database API
 	explicit BadQuery(const char* w = "", int e = 0) :
-	Exception(w), 
+	Exception(w),
 	errnum_(e)
 	{
 	}
@@ -299,7 +299,7 @@ public:
 	/// \param w explanation for why the exception was thrown
 	/// \param e the error number from the underlying database API
 	explicit BadQuery(const std::string& w, int e = 0) :
-	Exception(w), 
+	Exception(w),
 	errnum_(e)
 	{
 	}

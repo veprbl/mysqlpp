@@ -256,7 +256,7 @@ public:
 			mysql_type_info type = mysql_type_info::string_type,
 			bool is_null = false)
 	{
-		buffer_ = new SQLBuffer(str.data(), 
+		buffer_ = new SQLBuffer(str.data(),
 				static_cast<size_type>(str.length()), type, is_null);
 	}
 
@@ -390,13 +390,13 @@ public:
 	void it_is_null();
 
 	/// \brief Return number of bytes in the string
-    ///
-    /// Note that this doesn't count the number of \b characters in the
-    /// string.  If your database is configured to use an 8-bit character
-    /// set, this is a distinction without a difference.  But, if you're
-    /// using UTF-8 in the database, you will need to "widen" the UTF-8
-    /// data to use a fixed-size character set like UCS-2 and count the
-    /// characters that way.  You might use std::wstring, for example.
+	///
+	/// Note that this doesn't count the number of \b characters in the
+	/// string.  If your database is configured to use an 8-bit character
+	/// set, this is a distinction without a difference.  But, if you're
+	/// using UTF-8 in the database, you will need to "widen" the UTF-8
+	/// data to use a fixed-size character set like UCS-2 and count the
+	/// characters that way.  You might use std::wstring, for example.
 	size_type length() const;
 	
 	/// \brief Return the maximum number of characters in the string.
@@ -411,29 +411,29 @@ public:
 	bool quote_q() const;
 
 	/// \brief Return number of bytes in string
-    ///
-    /// See commentary for length() about the difference between bytes
-    /// and characters.
+	///
+	/// See commentary for length() about the difference between bytes
+	/// and characters.
 	size_type size() const { return length(); }
 	
-    /// \brief Returns a copy of our internal string without leading
-    /// blanks.
-    void strip_leading_blanks(std::string& s) const
-    {
-        const char* pc = data();
-        if (pc) {
-            size_type n = length();
-            while (n && (*pc == ' ')) {
-                ++pc;
-                --n;
-            }
+	/// \brief Returns a copy of our internal string without leading
+	/// blanks.
+	void strip_leading_blanks(std::string& s) const
+	{
+		const char* pc = data();
+		if (pc) {
+			size_type n = length();
+			while (n && (*pc == ' ')) {
+				++pc;
+				--n;
+			}
 
-            s.assign(pc, n);
-        }
-        else {
-            s.clear();
-        }
-    }
+			s.assign(pc, n);
+		}
+		else {
+			s.clear();
+		}
+	}
 
 	/// \brief Copies this object's data into a C++ string.
 	///
@@ -453,7 +453,7 @@ public:
 	/// \brief Assignment operator, from C++ string
 	String& operator =(const std::string& rhs)
 	{
-		buffer_ = new SQLBuffer(rhs.data(), 
+		buffer_ = new SQLBuffer(rhs.data(),
 				static_cast<size_type>(rhs.length()),
 				mysql_type_info::string_type, false);
 
@@ -466,7 +466,7 @@ public:
 	/// the pointer.
 	String& operator =(const char* str)
 	{
-		buffer_ = new SQLBuffer(str, 
+		buffer_ = new SQLBuffer(str,
 				static_cast<size_type>(strlen(str)),
 				mysql_type_info::string_type, false);
 
@@ -671,19 +671,19 @@ MYSQLPP_EXPORT std::ostream& operator <<(std::ostream& o,
 			{ return x opr static_cast<conv>(y); }
 
 #define operator_binary(other, conv) \
-  oprsw(+, other, conv) \
-  oprsw(-, other, conv) \
-  oprsw(*, other, conv) \
-  oprsw(/, other, conv)
+	oprsw(+, other, conv) \
+	oprsw(-, other, conv) \
+	oprsw(*, other, conv) \
+	oprsw(/, other, conv)
 
 #define operator_binary_int(other, conv) \
-  operator_binary(other, conv) \
-  oprsw(%, other, conv) \
-  oprsw(&, other, conv) \
-  oprsw(^, other, conv) \
-  oprsw(|, other, conv) \
-  oprsw(<<, other, conv) \
-  oprsw(>>, other, conv)
+	operator_binary(other, conv) \
+	oprsw(%, other, conv) \
+	oprsw(&, other, conv) \
+	oprsw(^, other, conv) \
+	oprsw(|, other, conv) \
+	oprsw(<<, other, conv) \
+	oprsw(>>, other, conv)
 
 // Squish more complaints about possible loss of data
 #if defined(MYSQLPP_PLATFORM_VISUAL_CPP)

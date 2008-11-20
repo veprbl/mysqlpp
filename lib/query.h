@@ -115,7 +115,7 @@ class MYSQLPP_EXPORT Connection;
 /// See the user manual for more details about these options.
 
 class MYSQLPP_EXPORT Query :
-        public std::ostream,
+		public std::ostream,
 		public OptionalExceptions
 {
 public:
@@ -342,11 +342,11 @@ public:
 	SimpleResult execute() { return execute(str(template_defaults)); }
 
 	/// \brief Execute template query using given parameters.
-    ///
-    /// This method should only be used by code that doesn't know,
-    /// at compile time, how many parameters it will have.  This is
-    /// useful within the library, and also for code that builds
-    /// template queries dynamically, at run time.
+	///
+	/// This method should only be used by code that doesn't know,
+	/// at compile time, how many parameters it will have.  This is
+	/// useful within the library, and also for code that builds
+	/// template queries dynamically, at run time.
 	///
 	/// \param p parameters to use in the template query.
 	SimpleResult execute(SQLQueryParms& p);
@@ -404,11 +404,11 @@ public:
 
 	/// \brief Execute a template query that can return rows, with
 	/// access to the rows in sequence
-    ///
-    /// This method should only be used by code that doesn't know,
-    /// at compile time, how many parameters it will have.  This is
-    /// useful within the library, and also for code that builds
-    /// template queries dynamically, at run time.
+	///
+	/// This method should only be used by code that doesn't know,
+	/// at compile time, how many parameters it will have.  This is
+	/// useful within the library, and also for code that builds
+	/// template queries dynamically, at run time.
 	///
 	/// \param p parameters to use in the template query.
 	UseQueryResult use(SQLQueryParms& p);
@@ -467,11 +467,11 @@ public:
 	StoreQueryResult store() { return store(str(template_defaults)); }
 
 	/// \brief Store results from a template query using given parameters.
-    ///
-    /// This method should only be used by code that doesn't know,
-    /// at compile time, how many parameters it will have.  This is
-    /// useful within the library, and also for code that builds
-    /// template queries dynamically, at run time.
+	///
+	/// This method should only be used by code that doesn't know,
+	/// at compile time, how many parameters it will have.  This is
+	/// useful within the library, and also for code that builds
+	/// template queries dynamically, at run time.
 	///
 	/// \param p parameters to use in the template query.
 	StoreQueryResult store(SQLQueryParms& p);
@@ -759,20 +759,20 @@ public:
 	}
 
 	/// \brief Execute template query using given parameters, storing
-    /// the results in a sequence type container.
-    ///
-    /// This method should only be used by code that doesn't know,
-    /// at compile time, how many parameters it will have.  This is
-    /// useful within the library, and also for code that builds
-    /// template queries dynamically, at run time.
+	/// the results in a sequence type container.
+	///
+	/// This method should only be used by code that doesn't know,
+	/// at compile time, how many parameters it will have.  This is
+	/// useful within the library, and also for code that builds
+	/// template queries dynamically, at run time.
 	///
 	/// \param con container that will receive the results
 	/// \param p parameters to use in the template query.
-    template <class Seq>
-    void storein_sequence(Seq& con, SQLQueryParms& p)
-    {
-        storein_sequence(con, str(p));
-    }
+	template <class Seq>
+	void storein_sequence(Seq& con, SQLQueryParms& p)
+	{
+		storein_sequence(con, str(p));
+	}
 
 	/// \brief Execute a query, storing the result set in an STL
 	/// associative container.
@@ -817,20 +817,20 @@ public:
 	}
 
 	/// \brief Execute template query using given parameters, storing
-    /// the results in a set type container.
-    ///
-    /// This method should only be used by code that doesn't know,
-    /// at compile time, how many parameters it will have.  This is
-    /// useful within the library, and also for code that builds
-    /// template queries dynamically, at run time.
+	/// the results in a set type container.
+	///
+	/// This method should only be used by code that doesn't know,
+	/// at compile time, how many parameters it will have.  This is
+	/// useful within the library, and also for code that builds
+	/// template queries dynamically, at run time.
 	///
 	/// \param con container that will receive the results
 	/// \param p parameters to use in the template query.
-    template <class Set>
-    void storein_set(Set& con, SQLQueryParms& p)
-    {
-        storein_set(con, str(p));
-    }
+	template <class Set>
+	void storein_set(Set& con, SQLQueryParms& p)
+	{
+		storein_set(con, str(p));
+	}
 
 	/// \brief Execute a query, and store the entire result set
 	/// in an STL container.

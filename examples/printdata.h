@@ -1,6 +1,6 @@
 /***********************************************************************
  printdata.h - Declares utility routines for printing out data in
-    common forms, used by most of the example programs.
+	common forms, used by most of the example programs.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
  (c) 2004-2007 by Educational Technology Resources, Inc.  Others may

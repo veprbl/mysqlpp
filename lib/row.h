@@ -67,7 +67,7 @@ private:
 	/// conversion operator.
 	///
 	/// \see http://www.artima.com/cppsource/safebool.html
-    typedef bool Row::*private_bool_type;
+	typedef bool Row::*private_bool_type;
 
 public:
 	/// \brief type of our internal data list
