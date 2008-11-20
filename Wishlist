@@ -30,6 +30,14 @@ v3.1 Tentative Plan
         Do it with an eye toward replacing Query's template methods
         taking SSQLSes with concrete methods taking SsqlsBase&.
 
+      - Instead of equal_list(), value_list(), etc., give SsqlsBase
+        more generic ways to get metadata.  Need to be able to get
+        a list of all column names, a list of just the COMPCOUNT
+        column names, and a list of the names of columns that have
+        been initialized through public setters or a ctor.  Also need
+        similar lists of column values in String or STA form.  Needed
+        to support extensions to Query like select() and delete().
+
       - Add truthiness operator to SSQLS to detect an incompletely-
         populated object?  Or maybe an incomplete() method?
 
