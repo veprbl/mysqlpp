@@ -101,9 +101,8 @@ private:
 
 	/// \brief Explicitly override parent class version so we don't get
 	/// complaints about hidden overloads with some compilers
-	bool connect(const char* db, const char* server,
-			const char* user, const char* password,
-			unsigned int port) { return false; }
+	bool connect(const char*, const char*, const char*, const char*,
+			unsigned int) { return false; }
 };
 
 
