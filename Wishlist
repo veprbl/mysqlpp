@@ -205,3 +205,8 @@ v4.0 or Later
 
     o Remove throw-spec for std::out_of_range from SQLTypeAdapter::at().
       It no longer throws this, and throw-specs are passee' anyway.
+
+	o Store failed query string in BadQuery exception object, to make
+	  logging and debugging easier.  One could have a try block wrapping
+	  many queries, and be able to recover the failed query string from
+	  the exception object, instead of somehow keeping track yourself.
