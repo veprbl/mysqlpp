@@ -210,3 +210,5 @@ v4.0 or Later
 	  logging and debugging easier.  One could have a try block wrapping
 	  many queries, and be able to recover the failed query string from
 	  the exception object, instead of somehow keeping track yourself.
+
+	  Patch: http://lists.mysql.com/plusplus/8374
