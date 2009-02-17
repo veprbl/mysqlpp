@@ -6,9 +6,10 @@
 /// directly in C++ code instead of sending the raw SQL commands.
 
 /***********************************************************************
- Copyright (c) 2006 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the
- CREDITS.txt file in the top directory of the distribution for details.
+ Copyright (c) 2006-2009 by Educational Technology Resources, Inc. and
+ (c) 2008 by AboveNet, Inc.  Others may also hold copyrights on code
+ in this file.  See the CREDITS.txt file in the top directory of the
+ distribution for details.
 
  This file is part of MySQL++.
 
@@ -83,6 +84,35 @@ public:
 private:
 	Connection& conn_;	///! Connection to send queries through
 	bool finished_;		///! True when we commit or roll back xaction
+};
+
+
+/// \brief Compile-time substitute for Transaction, which purposely
+/// does nothing.  Use it to instantiate templates that take Transaction
+/// when you don't want transactions to be used.
+///
+/// This was created for use with InsertPolicy, used by
+/// Query::insertfrom().  You might use it when your code already
+/// wraps a given sequence of MySQL++ calls in a transaction and does
+/// an insertfrom() as part of that.  MySQL doesn't support nested
+/// transactions, so you need to suppress the one insertfrom() would
+/// normally start.
+class MYSQLPP_EXPORT NoTransaction
+{
+public:
+	/// \brief Constructor
+	NoTransaction(Connection& conn, bool consistent = false)
+	{
+	}
+
+	/// \brief Destructor
+	~NoTransaction() { }
+
+	/// \brief stub to replace Transaction::commit()
+	void commit() { }
+
+	/// \brief stub to replace Transaction::rollback()
+	void rollback() { }
 };
 
 } // end namespace mysqlpp

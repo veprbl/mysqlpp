@@ -142,6 +142,66 @@ DBDriver::enable_ssl(const char* key, const char* cert,
 }
 
 
+size_t
+DBDriver::escape_string(std::string* ps, const char* original,
+		size_t length)
+{
+	if (ps == 0) {
+		// Can't do any real work!
+		return 0;
+	}
+	else if (original == 0) {
+		// ps must point to the original data as well as to the
+		// receiving string, so get the pointer and the length from it.
+		original = ps->data();
+		length = ps->length();
+	}
+	else if (length == 0) {
+		// We got a pointer to a C++ string just for holding the result
+		// and also a C string pointing to the original, so find the
+		// length of the original.
+		length = strlen(original);
+	}
+
+	char* escaped = new char[length * 2 + 1];
+	length = escape_string(escaped, original, length);
+	ps->assign(escaped, length);
+	delete[] escaped;
+
+	return length;
+}
+
+
+size_t
+DBDriver::escape_string_no_conn(std::string* ps, const char* original,
+		size_t length)
+{
+	if (ps == 0) {
+		// Can't do any real work!
+		return 0;
+	}
+	else if (original == 0) {
+		// ps must point to the original data as well as to the
+		// receiving string, so get the pointer and the length from it.
+		original = ps->data();
+		length = ps->length();
+	}
+	else if (length == 0) {
+		// We got a pointer to a C++ string just for holding the result
+		// and also a C string pointing to the original, so find the
+		// length of the original.
+		length = strlen(original);
+	}
+
+	char* escaped = new char[length * 2 + 1];
+	length = DBDriver::escape_string_no_conn(escaped, original, length);
+	ps->assign(escaped, length);
+	delete[] escaped;
+
+	return length;
+}
+
+
 DBDriver&
 DBDriver::operator=(const DBDriver& rhs)
 {

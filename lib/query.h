@@ -3,7 +3,7 @@
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS.txt file
  in the top directory of the distribution for details.
 
@@ -30,12 +30,15 @@
 
 #include "common.h"
 
+#include "exceptions.h"
 #include "noexceptions.h"
 #include "qparms.h"
 #include "querydef.h"
 #include "result.h"
 #include "row.h"
+#include "sqlstream.h"
 #include "stadapter.h"
+#include "transaction.h"
 
 #include <deque>
 #include <iomanip>
@@ -57,6 +60,7 @@ namespace mysqlpp {
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
 class MYSQLPP_EXPORT Connection;
+class MYSQLPP_EXPORT Transaction;
 #endif
 
 /// \brief A class for building and executing SQL queries.
@@ -119,6 +123,10 @@ class MYSQLPP_EXPORT Query :
 		public OptionalExceptions
 {
 public:
+	// Bring in InsertPolicy template as part of this class's interface,
+	// separate only in the sense that it's a self-contained concept.
+	#include "insertpolicy.h"
+
 	/// \brief Create a new query object attached to a connection.
 	///
 	/// This is the constructor used by mysqlpp::Connection::query().
@@ -151,31 +159,8 @@ public:
 	///
 	/// \retval number of characters placed in *ps
 	///
-	/// This method has three basic operation modes:
-	///
-	/// - Pass just a pointer to a C++ string containing the original
-	///   data to escape, plus act as receptacle for escaped version
-	/// - Pass a pointer to a C++ string to receive escaped string plus
-	///   a pointer to a C string to be escaped
-	/// - Pass nonzero for all parameters, taking original to be a
-	///   pointer to an array of char with given length; does not treat
-	///   null characters as special
-	///
-	/// There's a degenerate fourth mode, where ps is zero: simply
-	/// returns 0, because there is nowhere to store the result.
-	///
-	/// Note that if original is 0, we always ignore the length
-	/// parameter even if it is nonzero.  Length always comes from
-	/// ps->length() in this case.
-	///
-	/// ps is a pointer because if it were a reference, the other
-	/// overload would be impossible to call: the compiler would
-	/// complain that the two overloads are ambiguous because
-	/// std::string has a char* conversion ctor. A nice bonus is that
-	/// pointer syntax makes it clearer that the first parameter is an
-	/// "out" parameter.
-	///
 	/// \see comments for escape_string(char*, const char*, size_t)
+	/// and DBDriver::escape_string(std::string*, const char *, size_t)
 	/// for further details.
 	size_t escape_string(std::string* ps, const char* original = 0,
 			size_t length = 0) const;
@@ -190,12 +175,17 @@ public:
 	///
 	/// \retval number of characters placed in escaped
 	///
-	/// This is part of Query because proper SQL escaping takes the
-	/// database's current character set into account, which requires
-	/// access to the Connection object the query will go out on.  Also,
-	/// this function is very important to MySQL++'s Query stream
-	/// manipulator mechanism, so it's more convenient for this method
-	/// to live in Query rather than Connection.
+	/// DBDriver provides two versions of this method and 
+	/// Query::escape_string() calls the appropriate one based on whether
+	/// or not a database connection is available.  If the connection
+	/// is available, it can call the DBDriver::escape_string() method.
+	/// If there is no database connection available (normally only in
+	/// testing), then DBDriver provides a static version of the function 
+	/// that doesn't use a database connection.
+	///
+	/// \see comments for DBDriver::escape_string(char*, const char*, size_t),
+	/// DBDriver::escape_string_no_conn(char*, const char*, size_t)
+	/// for further details.
 	size_t escape_string(char* escaped, const char* original,
 			size_t length) const;
 
@@ -992,7 +982,7 @@ public:
 	/// \param last iterator pointing to one past the last element to
 	///    insert
 	///
-	/// \sa replace(), update()
+	/// \sa insertfrom(), replace(), update()
 	template <class Iter>
 	Query& insert(Iter first, Iter last)
 	{
@@ -1010,6 +1000,95 @@ public:
 		while (it != last) {
 			MYSQLPP_QUERY_THISPTR << ",(" << it->value_list() << ')';
 			++it;
+		}
+
+		return *this;
+	}
+
+	/// \brief Insert multiple new rows using an insert policy to
+	/// control how the INSERT statements are created using
+	/// items from an STL container.
+	///
+	/// \param first iterator pointing to first element in range to
+	///    insert
+	/// \param last iterator pointing to one past the last element to
+	///    insert
+	/// \param policy insert policy object, see insertpolicy.h for
+	/// details
+	///
+	/// \sa insert()
+
+	template <class Iter, class InsertPolicy>
+	Query& insertfrom(Iter first, Iter last, InsertPolicy& policy)
+	{
+		bool success = true;
+		bool empty = true;
+
+		reset();
+
+		if (first == last) {
+			return *this;   // empty set!
+		}
+
+		typename InsertPolicy::access_controller ac(*conn_);
+		
+		for (Iter it = first; it != last; ++it) {
+			if (policy.can_add(tellp(), *it)) {
+				if (empty) {
+					MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
+						"INSERT INTO " << it->table() << " (" <<
+						it->field_list() << ") VALUES (";
+				} 
+				else {
+					MYSQLPP_QUERY_THISPTR << ",(";
+				}
+
+				MYSQLPP_QUERY_THISPTR << it->value_list() << ')';
+
+				empty = false;
+			} 
+			else {
+				// execute what we've built up already, if there is anything
+				if (!empty) {
+					if (!exec()) {
+						success = false;
+						break;
+					}
+
+					empty = true;
+				}
+
+				// if we _still_ can't add, the policy is too strict
+				if (policy.can_add(tellp(), *it)) {
+					MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
+						"INSERT INTO " << it->table() << " (" <<
+						it->field_list() << ") VALUES (" <<
+						it->value_list() << ')';
+
+					empty = false;
+				} 
+				else {
+					// at this point all we can do is give up
+					if (throw_exceptions()) {
+						throw BadInsertPolicy("Insert policy is too strict");
+					}
+
+					success = false;
+					break;
+				}
+			}
+		}
+
+		// We might need to execute the last query here.
+		if (success && !empty && !exec()) {
+			success = false;
+		}
+
+		if (success) {
+			ac.commit();
+		} 
+		else {
+			ac.rollback();
 		}
 
 		return *this;

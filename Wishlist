@@ -7,6 +7,9 @@ Any Version
       consider whether it could be generalized to a widely-useful
       API feature.
 
+    o Suppress DOS line-ending related diffs from examples/cgi_jpeg
+      output when running dtest on Windows.  Check for -D?
+
 
 v3.1 Tentative Plan
 -------------------
@@ -61,9 +64,9 @@ v3.1 Tentative Plan
         ctors taking stringish types.  (Can't do the latter for real
         until v4, but we can lay the ground work here.)
 
-	  - Add Active Record type methods, and support data for same.
-	    E.g., mySsqls.save() should be able to write and execute
-		the UPDATE statement.
+      - Add Active Record type methods, and support data for same.
+        E.g., mySsqls.save() should be able to write and execute
+        the UPDATE statement.
 
     o Chris Frey's packarray class
 
@@ -206,9 +209,15 @@ v4.0 or Later
     o Remove throw-spec for std::out_of_range from SQLTypeAdapter::at().
       It no longer throws this, and throw-specs are passee' anyway.
 
-	o Store failed query string in BadQuery exception object, to make
-	  logging and debugging easier.  One could have a try block wrapping
-	  many queries, and be able to recover the failed query string from
-	  the exception object, instead of somehow keeping track yourself.
+    o Store failed query string in BadQuery exception object, to make
+      logging and debugging easier.  One could have a try block wrapping
+      many queries, and be able to recover the failed query string from
+      the exception object, instead of somehow keeping track yourself.
 
-	  Patch: http://lists.mysql.com/plusplus/8374
+      Patch: http://lists.mysql.com/plusplus/8374
+ 
+    o Query and SQLStream could have a common base class that would
+      allow the stream manipulator functions to catch and modify
+      strings based on only one dynamic_cast instead of requiring
+      two as it does since the addition of the SQLStream class.
+

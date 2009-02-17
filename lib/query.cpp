@@ -106,29 +106,15 @@ size_t
 Query::escape_string(std::string* ps, const char* original,
 		size_t length) const
 {
-	if (ps == 0) {
-		// Can't do any real work!
-		return 0;
+	if (conn_ && *conn_) {
+		// Normal case
+		return conn_->driver()->escape_string(ps, original, length);
 	}
-	else if (original == 0) {
-		// ps must point to the original data as well as to the
-		// receiving string, so get the pointer and the length from it.
-		original = ps->data();
-		length = ps->length();
+	else {
+		// Should only happen in test/test_manip.cpp, since it doesn't
+		// want to open a DB connection just to test the manipulators.
+		return DBDriver::escape_string_no_conn(ps, original, length);
 	}
-	else if (length == 0) {
-		// We got a pointer to a C++ string just for holding the result
-		// and also a C string pointing to the original, so find the
-		// length of the original.
-		length = strlen(original);
-	}
-
-	char* escaped = new char[length * 2 + 1];
-	length = escape_string(escaped, original, length);
-	ps->assign(escaped, length);
-	delete[] escaped;
-
-	return length;
 }
 
 

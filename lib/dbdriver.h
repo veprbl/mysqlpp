@@ -177,20 +177,85 @@ public:
 	/// Wraps \c mysql_errno() in the MySQL C API.
 	int errnum() { return mysql_errno(&mysql_); }
 
-	/// \brief SQL-escapes the given string, taking into account the
-	/// default character set of the database server we're connected to.
+	/// \brief Return a SQL-escaped version of the given character
+	/// buffer
+	///
+	/// \param escaped character buffer to hold escaped version; must
+	/// point to at least (length * 2 + 1) bytes
+	/// \param original pointer to the character buffer to escape
+	/// \param length number of characters to escape
+	///
+	/// \retval number of characters placed in escaped
 	///
 	/// Wraps \c mysql_real_escape_string() in the MySQL C API.
+	///
+	/// Proper SQL escaping takes the database's current character set 
+	/// into account, however if a database connection isn't available
+	/// DBDriver also provides a static version of this same method.
+	///
+	/// \sa escape_string_no_conn(char*, const char*, size_t)
 	size_t escape_string(char* to, const char* from, size_t length)
 			{ return mysql_real_escape_string(&mysql_, to, from, length); }
+
+	/// \brief Return a SQL-escaped version of a character buffer
+	///
+	/// \param ps pointer to C++ string to hold escaped version; if
+	/// original is 0, also holds the original data to be escaped
+	/// \param original if given, pointer to the character buffer to
+	/// escape instead of contents of *ps
+	/// \param length if both this and original are given, number of
+	/// characters to escape instead of ps->length()
+	///
+	/// \retval number of characters placed in *ps
+	///
+	/// This method has three basic operation modes:
+	///
+	/// - Pass just a pointer to a C++ string containing the original
+	///   data to escape, plus act as receptacle for escaped version
+	/// - Pass a pointer to a C++ string to receive escaped string plus
+	///   a pointer to a C string to be escaped
+	/// - Pass nonzero for all parameters, taking original to be a
+	///   pointer to an array of char with given length; does not treat
+	///   null characters as special
+	///
+	/// There's a degenerate fourth mode, where ps is zero: simply
+	/// returns 0, because there is nowhere to store the result.
+	///
+	/// Note that if original is 0, we always ignore the length
+	/// parameter even if it is nonzero.  Length always comes from
+	/// ps->length() in this case.
+	///
+	/// ps is a pointer because if it were a reference, the other
+	/// overload would be impossible to call: the compiler would
+	/// complain that the two overloads are ambiguous because
+	/// std::string has a char* conversion ctor. A nice bonus is that
+	/// pointer syntax makes it clearer that the first parameter is an
+	/// "out" parameter.
+	///
+	/// \see comments for escape_string(char*, const char*, size_t)
+	/// for further details.
+	/// 
+	/// \sa escape_string_no_conn(std::string*, const char*, size_t)
+	size_t escape_string(std::string* ps, const char* original,
+			size_t length);
 
 	/// \brief SQL-escapes the given string without reference to the 
 	/// character set of a database server.
 	///
 	/// Wraps \c mysql_escape_string() in the MySQL C API.
+	///
+	/// \sa escape_string(char*, const char*, size_t)
 	static size_t escape_string_no_conn(char* to, const char* from,
 			size_t length)
 			{ return mysql_escape_string(to, from, length); }
+
+	/// \brief SQL-escapes the given string without reference to the 
+	/// character set of a database server.
+	///
+	/// \sa escape_string(std::string*, const char*, size_t),
+	/// escape_string_no_conn(char*, const char*, size_t)
+	static size_t escape_string_no_conn(std::string* ps, 
+			const char* original = 0, size_t length = 0);
 
 	/// \brief Executes the given query string
 	///

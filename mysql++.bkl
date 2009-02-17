@@ -74,6 +74,7 @@
         lib/result.cpp
         lib/row.cpp
         lib/sql_buffer.cpp
+        lib/sqlstream.cpp
         lib/stadapter.cpp
         lib/tcp_connection.cpp
         lib/transaction.cpp
@@ -225,6 +226,9 @@
     <exe id="test_qstream" template="programs">
       <sources>test/qstream.cpp</sources>
     </exe>
+    <exe id="test_sqlstream" template="programs">
+      <sources>test/sqlstream.cpp</sources>
+    </exe>
     <if cond="FORMAT!='msvs2003prj'">
       <!-- VC++ 2003 can't compile this -->
       <exe id="test_string" template="programs">
@@ -317,6 +321,9 @@
       <exe id="ssqls5" template="libexcommon-user,programs">
         <sources>examples/ssqls5.cpp</sources>
       </exe>
+      <exe id="ssqls6" template="libexcommon-user,programs">$
+        <sources>examples/ssqls6.cpp</sources>
+      </exe>$
       <exe id="store_if" template="libexcommon-user,programs">
         <sources>examples/store_if.cpp</sources>
       </exe>

@@ -445,6 +445,24 @@ public:
 };
 
 
+/// \brief Exception thrown when an insert policy is too strict to
+/// create a valid INSERT statement.
+///
+/// Thrown by Query::insertfrom() if it is unable to add VALUES
+/// to an empty query.  This means the size threshold or max packet
+/// size of the policy is set too small.
+
+class MYSQLPP_EXPORT BadInsertPolicy : public Exception
+{
+public:
+	/// \brief Create exception object
+	explicit BadInsertPolicy(const std::string& w) :
+	Exception(w)
+	{
+	}
+};
+
+
 } // end namespace mysqlpp
 
 #endif // !defined(MYSQLPP_EXCEPTIONS_H)
