@@ -10,6 +10,10 @@ Any Version
     o Suppress DOS line-ending related diffs from examples/cgi_jpeg
       output when running dtest on Windows.  Check for -D?
 
+	o Write RowCountInsertPolicy
+	
+	o Make DefaultInsertPolicy the default!
+
 
 v3.1 Tentative Plan
 -------------------
