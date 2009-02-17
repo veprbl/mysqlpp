@@ -294,19 +294,24 @@ query.storein(res);
 
 
   <sect2 id="ssqls-comparing">
-    <title>Less-than-comparable</title>
+    <title>Storing SSQLSes in Associative Containers</title>
 
-    <para>SSQLS structures can be sorted and stored in STL associative
-    containers as demonstrated in the next example. This is
+    <para>One of the requirements of STL&rsquo;s associative
+    containers on data stored in them is that the data type
+    has to be less-than comparable. That is, it has to have
+    an <function>operator&nbsp;&lt;</function> defined.
+    SSQLS does optionally give you this, as demonstrated in
     <filename>examples/ssqls4.cpp</filename>:</para>
 
     <programlisting><xi:include href="ssqls4.txt" parse="text"
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-    <para>The <methodname>find()</methodname> call works because
-    of the way the SSQLS was declared. It&rsquo;s properly covered
-    elsewhere, but suffice it to say, the "1" in the declaration
-    of <classname>stock</classname> above tells it that only the
+    <para>The <methodname>find()</methodname> call works because of
+    the way the SSQLS was declared. It&rsquo;s properly covered
+    <link linkend="ssqls-compare-init">elsewhere</link>,
+    but suffice it to say, the &ldquo;1&rdquo; in the
+    declaration of <classname>stock</classname> <link
+    linkend="ssqls-retrieving">above</link> tells it that only the
     first field needs to be checked in comparing two SSQLSes. In
     database terms, this makes it the primary key. Therefore, when
     searching for a match, our exemplar only had to have its first
