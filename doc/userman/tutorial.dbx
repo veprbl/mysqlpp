@@ -57,11 +57,11 @@
 
     <screen>./exrun resetdb [-s server_addr] [-u user] [-p password]</screen>
 
-    <para>That's the typical form for a Unixy system. You leave off the
-    <command>./</command> bit on Windows. You can leave it off on a
-    Unixy system, too, if you have <filename>.</filename> in your
-    <varname>PATH</varname>. (Not a recommendation, just an
-    observation.)</para>
+    <para>That&rsquo;s the typical form for a Unixy system. You leave
+    off the <command>./</command> bit on Windows. You can leave it
+    off on a Unixy system, too, if you have <filename>.</filename>
+    in your <varname>PATH</varname>. (Not a recommendation, just
+    an observation.)</para>
 
     <para>All of the program arguments are optional.</para>
 
@@ -350,7 +350,7 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; 
 
     <para>Quoting is pretty simple, but SQL syntax also often requires
     that certain characters be &ldquo;escaped&rdquo;. Imagine if the
-    string in the previous example was &ldquo;Frank's Brand Hotdog
+    string in the previous example was &ldquo;Frank&rsquo;s Brand Hotdog
     Buns&rdquo; instead. The resulting query would be:</para>
 
     <programlisting>
@@ -490,15 +490,15 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
     <para>There is no equivalent of SQL&rsquo;s null in the standard C++
     type system.</para>
 
-    <para>The primary distinction is one of type: in SQL, null is a
-    column attribute, which affects whether that column can hold a SQL
-    null. Just like the <symbol>const</symbol> keyword in the C++ type
-    system, this effectively doubles the number of SQL data types. To
-    emulate this, MySQL++ provides the <ulink type="classref"
-    url="null">Null</ulink> template to allow the creation of distinct
-    &ldquo;nullable&rdquo; versions of existing C++ types. So for
-    example, if you have a <type>TINYINT UNSIGNED</type> column that can
-    have nulls, the proper declaration for MySQL++ would be:</para>
+    <para>The primary distinction is one of type. In SQL,
+    &ldquo;NULL&rdquo; is a type modifier, which affects whether
+    a column can hold a SQL null. C++ also defines something called
+    &ldquo;NULL&rdquo;, but it is not a type modifier. To emulate this,
+    MySQL++ provides the <ulink type="classref" url="null">Null</ulink>
+    template to allow the creation of distinct &ldquo;nullable&rdquo;
+    versions of existing C++ types. So for example, if you have a
+    <type>TINYINT UNSIGNED</type> column that can have nulls, the
+    proper declaration for MySQL++ would be:</para>
 
     <programlisting>
 mysqlpp::Null&lt;mysqlpp::sql_tinyint_unsigned&gt; myfield;</programlisting>

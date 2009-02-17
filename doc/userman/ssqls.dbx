@@ -52,32 +52,30 @@ sql_create_6(stock, 1, 6,
 
     <para>The parameter before each field name in the
     <function>sql_create_#</function> call is the C++ data type that
-    will be used to hold that value in the SSQLS. MySQL++ defines C++
-    types for almost every data type MySQL understands, of the form
-    <type>sql_*</type>. We&rsquo;re using them for all of the columns
-    above for reasons given in <xref linkend="sql-types"/>. While you
-    could use plain old C++ data types for most of these columns
-    (<type>long int</type> instead of <type>mysqlpp::sql_bigint</type>,
-    for example) the MySQL++ equivalents have <link
-    linkend="sql-types">several advantages</link>.</para>
+    will be used to hold that value in the SSQLS. While you could use
+    plain old C++ data types for most of these columns (<type>long
+    int</type> instead of <type>mysqlpp::sql_bigint</type>, for
+    example) it&rsquo;s <link linkend="sql-types">best to use the
+    MySQL++ typedefs</link>.</para>
 
-    <para>Consider the <varname>description</varname> field definition
-    above. It uses two MySQL++ features in combination to express a data
-    type that has no exact C++ type equivalent. The difference between
-    SQL&rsquo;s <type>MEDIUMTEXT</type> and C++&rsquo;s
-    <type>std::string</type> type is small, so MySQL++&rsquo;s typedef
-    just aliases the two. However, there&rsquo;s no equivalent of
-    SQL&rsquo;s &ldquo;null&rdquo; in the C++ type system.  MySQL++
-    offers the <ulink type="classref" url="Null"/> template, which
-    bridges this difference between the two type systems.  For more on
-    this topic, see <xref linkend="sql-null"/>.</para>
+    <para>Sometimes you have no choice but to use special MySQL++
+    data types to fully express the database schema. Consider
+    the <varname>description</varname> field. MySQL++&rsquo;s
+    <type>sql_mediumtext</type> type is just an alias for
+    <type>std::string</type>, since we don&rsquo;t need anything
+    fancier to hold a SQL <type>MEDIUMTEXT</type> value.
+    It&rsquo;s the SQL NULL attribute that causes trouble:
+    it <link linkend="sql-null">has no equivalent in the C++
+    type system</link>. MySQL++ offers the <ulink type="classref"
+    url="Null"/> template, which bridges this difference between the
+    two type systems.</para>
 
-    <para>The general format of this set of macros is:</para>
+    <para>The general format of this macro is:</para>
 
     <programlisting>
 sql_create_#(NAME, COMPCOUNT, SETCOUNT, TYPE1, ITEM1, ... TYPE#, ITEM#)</programlisting>
 
-    <para>Where # is the number of member variables,
+    <para>where # is the number of member variables,
     <parameter>NAME</parameter> is the name of the structure you wish to
     create, <parameter>TYPEx</parameter> is the type of a member
     variable, and <parameter>ITEMx</parameter> is that variable&rsquo;s
