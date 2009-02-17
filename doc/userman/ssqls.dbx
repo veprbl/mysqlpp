@@ -259,23 +259,208 @@ query.storein(res);
   <sect2 id="ssqls-adding">
     <title>Adding data</title>
 
-    <para>SSQLS can also be used to add data to a table. This is
-    <filename>examples/ssqls2.cpp</filename>:</para>
+    <para>SSQLS can also be used to add data to a table. MySQL++
+    offers several ways to do this, actually.</para>
 
-    <programlisting><xi:include href="ssqls2.txt" parse="text" 
-    xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+    <sect3 id="ssqls-add-one">
+      <title>Inserting a Single Row</title>
+      
+      <para>The simplest option is to insert a single row at a
+      time. This is <filename>examples/ssqls2.cpp</filename>:</para>
 
-    <para>That&rsquo;s all there is to it!</para>
+      <programlisting><xi:include href="ssqls2.txt" parse="text" 
+      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-    <para>There is one subtlety: MySQL++ automatically <link
-    linkend="qescape">quotes and escapes</link> the data when building
-    SQL queries using SSQLS structures.  It&rsquo;s efficient, too:
-    MySQL++ is smart enough to quote and escape data only for those data
-    types that actually require it.</para>
+      <para>That&rsquo;s all there is to it! MySQL++ even takes care
+      of <link linkend="qescape">quoting and escaping</link> the
+      data when building queries from SSQLS structures. It&rsquo;s
+      efficient, too: MySQL++ is smart enough to quote and escape
+      data only for those data types that actually require it.</para>
+    </sect3>
 
-    <para>Because this example modifies the sample database, you may
-    want to run <filename>resetdb</filename> after running this
-    program.</para>
+    <sect3 id="ssqls-add-range">
+      <title>Inserting Many Rows</title>
+      
+      <para>Inserting a single row is useful, to be sure,
+      but you might want to be able to insert many SSQLSes or
+      <classname>Row</classname> objects at once. MySQL++ knows
+      how to do that, too, sparing you the necessity of writing
+      the loop. Plus, MySQL++ uses an optimized implementation of
+      this algorithm, packing everything into a single SQL query,
+      eliminating the overhead of multiple calls between the
+      client and server. It&rsquo;s just a different overload of
+      <methodname>insert()</methodname>, which accepts a pair of
+      iterators into an STL container, inserting every row in that
+      range:</para>
+
+      <programlisting>vector&lt;stock&gt; lots_of_stuff;
+...populate the vector somehow...
+query.insert(lots_of_stuff.begin(), lots_of_stuff.end()).execute();</programlisting>
+
+      <para>By the way, notice that you can chain
+      <classname>Query</classname> operations like in the last line
+      above, because its methods return <symbol>*this</symbol> where
+      that makes sense.</para>
+    </sect3>
+
+    <sect3 id="ssqls-insertfrom">
+      <title>Working Around MySQL&rsquo;s Packet Size Limit</title>
+      
+      <para>The two-iterator form of <methodname>insert()</methodname>
+      has an associated risk: MySQL has a limit on the size of the
+      SQL query it will process. The default limit is 1&nbsp;MB. You
+      can raise the limit, but the reason the limit is configurable
+      is not to allow huge numbers of inserts in a single query. They
+      made the limit configurable because a single row might be bigger
+      than 1&nbsp;MB, so the default would prevent you from inserting
+      anything at all. If you raise the limit simply to be able to
+      insert more rows at once, you&rsquo;re courting disaster with
+      no compensating benefit: the more data you send at a time, the
+      greater the chance and cost of something going wrong.  Worse,
+      this is pure risk, because by the time you hit 1&nbsp;MB,
+      the per-packet overhead is such a small fraction of the data
+      being transferred that increasing the packet size buys you
+      essentially nothing.</para>
+
+      <para>Let&rsquo;s say you have a <classname>vector</classname>
+      containing several megabytes of data; it will get even bigger
+      when expressed in SQL form, so there&rsquo;s no way you can
+      insert it all in a single query without raising the MySQL packet
+      limit. One way to cope would be to write your own na&iuml;ve
+      loop, inserting just one row at a time. This is slow, because
+      you&rsquo;re paying the per-query cost for every row in the
+      container. Then you might realize that you could use the two
+      iterator form of <methodname>insert()</methodname>, passing
+      iterators expressing sub-ranges of the container instead of
+      trying to insert the whole container in one go. Now you&rsquo;ve
+      just got to figure out how to calculate those sub-ranges to
+      get efficient operation without exceeding the packet size
+      limit.</para>
+
+      <para>MySQL++ already knows how to do that, too, with
+      <methodname>Query::insertfrom()</methodname>.  We gave
+      it a different name instead of adding yet another
+      <methodname>insert()</methodname> overload because it
+      doesn&rsquo;t merely build the <command>INSERT</command> query,
+      which you then <methodname>execute()</methodname>. It&rsquo;s
+      more like <methodname>storein()</methodname>, in that it wraps
+      the entire operation up in a single call. This feature is
+      demonstrated in <filename>examples/ssqls6.cpp</filename>:</para>
+
+      <programlisting><xi:include href="ssqls6.txt" parse="text" 
+      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+
+      <para>The thing <methodname>insertfrom()</methodname> provides
+      that the two-iterator form of <methodname>insert()</methodname>
+      doesn&rsquo;t is a parameter taking a policy object. The policy
+      object controls how <methodname>insertfrom()</methodname>
+      builds the query strings, primarily controlling how large each
+      query gets before it executes it. We designed it to use policy
+      objects because there is no single &ldquo;right&rdquo; choice
+      for the decisions it makes.</para>
+
+      <para>MySQL++ ships with four different insertion policy classes,
+      which should cover most situations.</para>
+
+      <para><classname>MaxPacketInsertPolicy</classname>, demonstrated
+      in the example above, does things the most obvious way: when
+      you create it, you pass the maximum packet size, which it uses
+      to prevent queries from going over the size limit. It builds
+      up a query string row by row, checking each time through the
+      loop whether adding another insert statement to the query string
+      would make the packet size go over the limit. When that happens,
+      or it gets to the end of the iteration range, it executes the
+      query and starts over if it&rsquo;s not yet at the end. This
+      is robust, but it has a downside: it has to build each insert
+      query in advance of knowing that it can append it to the larger
+      query. Any time an insert query would push the packet over the
+      limit, it has to throw it away, causing the library to do more
+      work than is strictly necessary.</para>
+
+      <para>Imagine you&rsquo;ve done some benchmarking and have found
+      that the point of diminishing returns is at about 20&nbsp;KB per
+      query in your environment; beyond that point, the per-query
+      overhead ceases to be an issue. Let&rsquo;s also say you
+      know for a fact that your largest row will always be less than
+      1&nbsp;MB &mdash; less 20&nbsp;KB &mdash; when expressed as a SQL
+      insert statement. In that case, you can use the more efficient
+      <classname>SizeThresholdInsertPolicy</classname>. It differs
+      from <classname>MaxPacketInsertPolicy</classname> in that it
+      allows <methodname>insertfrom()</methodname> to insert rows
+      blindly into the query string until the built query exceeds
+      the threshold, 20&nbsp;KB in this example. Then it ships the
+      packet off, and if successful, starts a new query. Thus, each
+      query (except possibly the last) will be at least 20&nbsp;KB,
+      exceeding that only by as much as one row&rsquo;s worth of
+      data, minus one byte. This is quite appropriate behavior
+      when your rows are relatively small, as is typical for
+      tables not containing BLOB data. It is more efficient than
+      <classname>MaxPacketInsertPolicy</classname> because it never
+      has to throw away a built-up insert query.</para>
+
+      <para>An even simpler option is
+      <classname>RowCountInsertPolicy</classname>. This lets you simply
+      say how many rows at a time to insert into the database. This
+      works well when you have a good handle on how big each row
+      will be, so you can calculate in advance how many rows you
+      can insert at once without exceeding some given limit. Say
+      you know your rows can&rsquo;t be any bigger than about
+      1&nbsp;KB. If we stick with that 20&nbsp;KB target, passing
+      <classname>RowCountInsertPolicy(20)</classname> for the policy
+      object would ensure we never exceed the size threshold. Or,
+      say that maximum size value above is still true, but we also
+      know the average row size is only 200 bytes. You could pass
+      <classname>RowCountInsertPolicy(100)</classname> for the policy,
+      knowing that the average packet size will be around 20&nbsp;KB,
+      and the worst case packet size 100&nbsp;KB, still nowhere near
+      the default 1&nbsp;MB packet size limit. The code for this policy
+      is very simple, so it makes your program a little smaller than
+      if you used either of the above policies. Obviously it&rsquo;s
+      a bad choice if you aren&rsquo;t able to predict the size of
+      your rows accurately.</para>
+
+      <para>Finally, there&rsquo;s a fourth
+      option that you normally never use directly:
+      <classname>DefaultInsertPolicy</classname>. As
+      its name implies, a policy object of this type is
+      created when you don&rsquo;t specify one. This makes
+      <methodname>insertfrom()</methodname> work just like the
+      two-iterator form of <methodname>insert()</methodname>: it
+      tries to insert all the rows in the given iteration range in
+      a single query. The only reason to use this default is if you
+      like the name &ldquo;<methodname>insertfrom</methodname>&rdquo;
+      better, perhaps because it&rsquo;s clearly the inverse of
+      <methodname>storein</methodname>.</para>
+
+      <para>If one of the provided insert policy classes
+      doesn&rsquo;t suit your needs, you can easily create
+      a custom one. Just study the implementation in
+      <filename>lib/insertpolicy.*</filename>.</para>
+    </sect3>
+
+    <sect3 id="ssqls-insertfrom-transactions">
+      <title>Interaction with Transactions</title>
+      
+      <para>These policy classes are all templates, taking a parameter
+      that defaults to <ulink type="classref" url="Transaction"/>. This
+      means that, by default, <methodname>insertfrom()</methodname>
+      wraps the entire operation in a SQL transaction, so that if
+      any of the insertions fail, the database server rolls them all
+      back. This prevents an error in the middle of the operation
+      from leaving just part of the container&rsquo;s data inserted
+      in the database, which you usually don&rsquo;t want any more
+      than you&rsquo;d want half a single row to be inserted.</para>
+
+      <para>There are good reasons why you might
+      not want this. Perhaps the best reason is if the
+      <methodname>insertfrom()</methodname> call is to be part
+      of a larger transaction. MySQL doesn&rsquo;t support nested
+      transactions, so the <methodname>insertfrom()</methodname>
+      call will fail if it tries to start one of its own. You can
+      pass <classname>NoTransactions</classname> for the insert
+      policy&rsquo;s template parameter to make it suppress the
+      transaction code.</para>
+    </sect3>
   </sect2>
 
 
