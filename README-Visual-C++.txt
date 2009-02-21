@@ -49,8 +49,8 @@ Prerequisites
     build errors, read on.
 
 
-Adjusting the Project Settings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using Nonstandard MySQL Installations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     The Visual Studio project files that come with MySQL++ have
     everything set up correctly for the common case.  The biggest
     assumption in the settings is that you're using MySQL 5.0
@@ -75,6 +75,37 @@ Adjusting the Project Settings
     mysql++.bkl in the top level of the MySQL++ source tree, and run
     rebake.bat.  This will rebuild all of the project files for you,
     using the new MySQL path in all the many places it's needed.
+
+
+Building MySQL++ for 64-Bit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    The MySQL++ Visual Studio project files ship with the assumption
+    that you're building for 32-bit Windows.  While the utility
+    of running the MySQL server on a 64-bit system is clear, that
+    doesn't mandate running its client programs in 64-bit mode, too.
+    As a result, we haven't yet bothered to come up with an easy way
+    to change this.  Here's the hard way:
+
+    - Follow the steps above to change the MySQL install location,
+      if necessary.
+
+    - Open the solution file, then say Build > Configuration Manager
+
+    - Pull down the "Active solution platform" list box, say New...,
+      and add "x64", copying settings from the Win32 build, and
+      allowing it to create new project platforms.
+
+    - Pull the same list box down, say Edit..., and remove the Win32
+      build, unless you actually need both versions.
+
+    It should then build, except that you may have to re-run the
+    build a couple of times, due to errors about the build log being
+    unwritable or locked.  Just re-run the build until you get all of
+    the projects to build.  If re-running the build doesn't reduce
+    the number of failures, you have something else wrong, perhaps
+    due to not following the instructions above carefully.  It might
+    be simplest to just blow away the MySQL++ tree and try again.
+    (I did once, while formulating these instructions...sigh.)
 
 
 Building the Library and Example Programs
