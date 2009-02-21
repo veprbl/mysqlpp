@@ -37,7 +37,8 @@ Prerequisites
     server on a different machine.  This is because in addition to
     installing the server itself, the official MySQL Windows binaries
     also install the client-side development files that MySQL++
-    needs in order to communicate with a MySQL server.
+    needs in order to communicate with a MySQL server.  We call this
+    the MySQL C API; MySQL++ is a C++ wrapper for this C API.
 
     You have to do a Custom install to enable installation of these
     development files.  If you get an error about mysql-version.h or
@@ -45,29 +46,44 @@ Prerequisites
     server, paying careful attention to the options.
 
     If you've installed the development files and are still getting
-    header file include errors, read on.
+    build errors, read on.
+
+
+Adjusting the Project Settings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    The Visual Studio project files that come with MySQL++ have
+    everything set up correctly for the common case.  The biggest
+    assumption in the settings is that you're using MySQL 5.0
+    (the newest version considered suitable for production use
+    at the time of this writing) and that you installed it in
+    the default location:
+
+        C:\Program Files\MySQL\MySQL Server 5.0\
+
+    If you installed a different version, or it's in a different
+    directory, you need to change the project file settings to
+    reference the C API development files in that other location.
+    There are two ways to do this.
+
+    The hard way is to make 4 different changes to 39 separate
+    project files.  If you're a talented Visual Studio driver, you
+    can do this in as little as about 5 or 6 steps.  You might even
+    get it right the first time.
+
+    The easy way is to install Bakefile (http://bakefile.org/),
+    change the value of the MYSQL_WIN_DIR variable near the top of
+    mysql++.bkl in the top level of the MySQL++ source tree, and run
+    rebake.bat.  This will rebuild all of the project files for you,
+    using the new MySQL path in all the many places it's needed.
 
 
 Building the Library and Example Programs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    If you installed the MySQL server somewhere other than 
-    
-        C:\Program Files\MySQL\MySQL Server 5.0\
-        
-    you need to change the project file settings.  If you're willing to
-    install Bakefile (see below), you can do this quickly by changing
-    the variable MYSQL_WIN_DIR at the top of the file mysql++.bkl,
-    then regenerating the project files by running rebake.bat.
-    Otherwise, you'll need to change the include and library paths
-    in all of the project files by hand.
-
     You must build both the Debug and Release versions of the library,
     because a release build of your program won't work with a Debug
-    version of the MySQL++ DLL.  Since version 3.0, the VC++ build
-    of MySQL++ names these two DLLs differently: mysqlpp_d.dll for
-    the Debug version, and mysqlpp.dll for the Release version.
-    This lets you keep them in the same PATH directory, without a
-    concern as to whether the correct one will be used.
+    version of the MySQL++ DLL.  These DLLs get different names, so
+    you can install them in the same directory if needed: mysqlpp_d.dll
+    for the Debug version, and mysqlpp.dll for the Release version.
 
     With the library built, run at least the resetdb and simple1
     examples to ensure that the library is working correctly.
@@ -82,10 +98,8 @@ Building the Library and Example Programs
     (Aside: You may not have come across the .hta extension before.
     It's for a rarely-used feature of Microsoft's Internet Explorer,
     called HTML Applications.  Know what Adobe AIR is?  Kinda like
-    that, only without the compilation into a single binary blob,
-    the cross-platform compatibility, and the power of Flash and
-    ActionScript 3.  These limitations don't cause a problem here.
-    In fact, AIR would be vast overkill here.  Just open install.hta
+    that, only without the compilation into a single binary blob which
+    you must install before you can run it.  Just open install.hta
     in a text editor to see how it works.)
 
 
