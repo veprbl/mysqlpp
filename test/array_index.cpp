@@ -107,7 +107,7 @@ test_string_index(const ContainerT& container)
 				typeid(container).name() << '!' << std::endl;
 		return false;
 	}
-	catch (const mysqlpp::BadFieldName& e) {
+	catch (const mysqlpp::BadFieldName&) {
 		// Good; fall through to next test
 	}
 	catch (const mysqlpp::Exception& e) {
