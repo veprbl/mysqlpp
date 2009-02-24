@@ -10,9 +10,9 @@ Any Version
     o Suppress DOS line-ending related diffs from examples/cgi_jpeg
       output when running dtest on Windows.  Check for -D?
 
-	o Write RowCountInsertPolicy
-	
-	o Make DefaultInsertPolicy the default!
+  o Write RowCountInsertPolicy
+  
+  o Make DefaultInsertPolicy the default!
 
 
 v3.1 Tentative Plan
@@ -71,6 +71,16 @@ v3.1 Tentative Plan
       - Add Active Record type methods, and support data for same.
         E.g., mySsqls.save() should be able to write and execute
         the UPDATE statement.
+
+      - Auto-insert ctor: same as full-population ctor, but takes
+        a Connection* as well, and inserts the record into the table
+        over that connection on creation.  If there is a single
+        auto_increment field, auto-populate it on success.
+
+      - Similar for auto-select, taking only the key fields after
+        the Connection* parameter.  If the number of key fields equals
+        the total number of fields, there is only one ctor taking a
+        Connection*, doing auto-select, that being the safer operation.
 
     o Chris Frey's packarray class
 
