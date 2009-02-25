@@ -143,6 +143,9 @@ v3.1 Tentative Plan
       mysql++-config script, which either wraps pkg-config or
       reinvents it, poorly, for systems that don't have it.
 
+    o Try to add operator std::string to String.  If it doesn't work,
+      explain why not in the userman, and in Row::operator[] refman.
+
 
 v4.0 or Later
 -------------
