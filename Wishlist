@@ -146,6 +146,15 @@ v3.1 Tentative Plan
     o Try to add operator std::string to String.  If it doesn't work,
       explain why not in the userman, and in Row::operator[] refman.
 
+    o Try to get away from libexcommon?  Maybe move everything into
+      mysqlpp::examples namespace and build it as part of MySQL++-
+      the-library, so people trying to fork an example to create
+      something new don't have to worry about these routines.
+      Keep the sources in examples/ so Doxygen doesn't complain
+      about the routines being undocumented.  Some routines can
+      eventually be replaced by already-proposed future features,
+      like the ability to do pretty dumps of SSQLSes.
+
 
 v4.0 or Later
 -------------
