@@ -30,9 +30,10 @@
 /// Query::insertfrom().  You access it as Query::InsertPolicy<T>
 
 /***********************************************************************
- Copyright (c) 2008-2009 by AboveNet, Inc.  Others may also hold
- copyrights on code in this file.  See the CREDITS file in the top
- directory of the distribution for details.
+ Copyright (c) 2008-2009 by AboveNet, Inc., and (c) 2009 by Educational
+ Technology Resources, Inc.  Others may also hold copyrights on code
+ in this file.  See the CREDITS file in the top directory of the
+ distribution for details.
 
  This file is part of MySQL++.
 
@@ -55,7 +56,52 @@
 #if !defined(MYSQLPP_INSERTPOLICY_H)
 #define MYSQLPP_INSERTPOLICY_H
 
-/// \brief A policy object that triggers a new INSERT statement
+/// \brief An insert policy object that triggers a new INSERT
+/// statement after a given number of rows have been inserted.
+///
+/// This policy is very lightweight, but is only reliable when you
+/// can predict the size of each INSERT in advance.  The others do
+/// more processing to reduce the risk of unpredictable row sizes.
+template <class AccessController = Transaction>
+class MYSQLPP_EXPORT RowCountInsertPolicy
+{
+public:
+	/// \brief Constructor
+	RowCountInsertPolicy(unsigned int rows) :
+	cur_rows_(0),
+	max_rows_(rows)
+	{
+	}
+
+	/// \brief Destructor
+	~RowCountInsertPolicy() { }
+
+	/// \brief Can we add another object to the query?
+	///
+	/// \retval true if the object is allowed to be added to the
+	/// INSERT statement
+	template <class RowT>
+	bool can_add(int size, const RowT& object)
+	{
+		if (++cur_rows_ > max_rows_) {
+			cur_rows_ = 0;
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+
+	/// \brief Alias for our access controller type
+	typedef AccessController access_controller;
+
+private:
+	unsigned int cur_rows_;
+	unsigned const int max_rows_;
+};
+
+
+/// \brief An insert policy object that triggers a new INSERT statement
 /// after a size threshold for the length of the INSERT statement
 /// is exceeded.
 ///
@@ -96,7 +142,7 @@ private:
 };
 
 
-/// \brief A policy object that triggers a new INSERT statement
+/// \brief An insert policy object that triggers a new INSERT statement
 /// if the object to be added would cause the statement to exceed
 /// a maximum size.
 ///

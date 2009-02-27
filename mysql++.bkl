@@ -208,6 +208,9 @@
     <exe id="test_inttypes" template="programs">
       <sources>test/inttypes.cpp</sources>
     </exe>
+    <exe id="test_insertpolicy" template="programs">
+      <sources>test/insertpolicy.cpp</sources>
+    </exe>
     <exe id="test_manip" template="programs">
       <sources>test/manip.cpp</sources>
     </exe>
