@@ -98,6 +98,7 @@ public:
 	size_t escape_string(char* escaped, const char* original,
 			size_t length) const;
 
+	/// \brief Assigns contents of another SQLStream to this one
 	SQLStream& operator=(const SQLStream& rhs);
 
 	/// \brief Connection to send queries through

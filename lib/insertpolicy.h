@@ -5,7 +5,7 @@
 /// collections of SSQLS objects when certain constraints in the raw
 /// SQL command, such as a maximum are required.
 ///
-/// This file is not meant to be #included in end-user code.  It's
+/// This file is not meant to be included in end-user code.  It's
 /// included in Query's public interface, since it is only used with
 /// Query::insertfrom().  You access it as Query::InsertPolicy<T>
 
@@ -71,12 +71,10 @@ class MYSQLPP_EXPORT DefaultInsertPolicy
 {
 public:
 	/// \brief Constructor
-	DefaultInsertPolicy() {
-	}
+	DefaultInsertPolicy() { }
 
 	/// \brief Destructor
-	~DefaultInsertPolicy() {
-	}
+	~DefaultInsertPolicy() { }
 
 	/// \brief Can we add another object to the query?
 	///
@@ -86,10 +84,9 @@ public:
 	/// \retval true if the object is allowed to be added to the
 	/// INSERT statement
 	template <class RowT>
-	bool can_add(int size, const RowT& object) const {
-		return true;
-	}
+	bool can_add(int size, const RowT& object) const { return true; }
 
+	/// \brief Alias for our access controller type
 	typedef AccessController access_controller;
 };
 
@@ -126,7 +123,7 @@ public:
 		return (size < size_);
 	}
 
-
+	/// \brief Alias for our access controller type
 	typedef AccessController access_controller;
 
 private:
@@ -193,11 +190,11 @@ public:
 		}
 	}
 
+	/// \brief Alias for our access controller type
 	typedef AccessController access_controller;
 
 private:
 	Connection* conn_;
-
 	int size_;
 };
 

@@ -180,9 +180,9 @@ public:
 	/// \brief Return a SQL-escaped version of the given character
 	/// buffer
 	///
-	/// \param escaped character buffer to hold escaped version; must
+	/// \param to character buffer to hold escaped version; must
 	/// point to at least (length * 2 + 1) bytes
-	/// \param original pointer to the character buffer to escape
+	/// \param from pointer to the character buffer to escape
 	/// \param length number of characters to escape
 	///
 	/// \retval number of characters placed in escaped

@@ -181,7 +181,7 @@ class MYSQLPP_EXPORT BadIndex : public Exception
 public:
 	/// \brief Create exception object
 	///
-	/// \param bad_index type of object bad index tried on
+	/// \param what type of object bad index tried on
 	/// \param bad_index index value the container didn't like
 	/// \param max_index largest legal index value for container
 	explicit BadIndex(const char* what, int bad_index, int max_index) :
