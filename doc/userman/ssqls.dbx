@@ -259,8 +259,8 @@ query.storein(res);
   <sect2 id="ssqls-adding">
     <title>Adding data</title>
 
-    <para>SSQLS can also be used to add data to a table. MySQL++
-    offers several ways to do this, actually.</para>
+    <para>MySQL++ offers several ways to insert data in SSQLS form
+    into a database table.</para>
 
     <sect3 id="ssqls-add-one">
       <title>Inserting a Single Row</title>
@@ -350,17 +350,25 @@ query.insert(lots_of_stuff.begin(), lots_of_stuff.end()).execute();</programlist
       <programlisting><xi:include href="ssqls6.txt" parse="text" 
       xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-      <para>The thing <methodname>insertfrom()</methodname> provides
-      that the two-iterator form of <methodname>insert()</methodname>
-      doesn&rsquo;t is a parameter taking a policy object. The policy
-      object controls how <methodname>insertfrom()</methodname>
-      builds the query strings, primarily controlling how large each
-      query gets before it executes it. We designed it to use policy
-      objects because there is no single &ldquo;right&rdquo; choice
-      for the decisions it makes.</para>
+      <para>Most of the complexity in this example goes to
+      just reading in the data from a file; we have to get
+      our test data from somewhere. There are only two key
+      lines of code: create an insertion policy object, and
+      pass it along with an STL container full of row data to
+      <methodname>Query::insertfrom()</methodname>.</para>
 
-      <para>MySQL++ ships with four different insertion policy classes,
-      which should cover most situations.</para>
+      <para>This policy object is the main thing that differentiates
+      <methodname>insertfrom()</methodname> from the two-iterator
+      form of <methodname>insert()</methodname>. It controls
+      how <methodname>insertfrom()</methodname> builds the query
+      strings, primarily controlling how large each query gets before
+      <methodname>insertfrom()</methodname> executes it and starts
+      building a new query. We designed it to use policy objects
+      because there is no single &ldquo;right&rdquo; choice for the
+      decisions it makes.</para>
+
+      <para>MySQL++ ships with three different insertion policy
+      classes, which should cover most situations.</para>
 
       <para><classname>MaxPacketInsertPolicy</classname>, demonstrated
       in the example above, does things the most obvious way: when
@@ -384,21 +392,20 @@ query.insert(lots_of_stuff.begin(), lots_of_stuff.end()).execute();</programlist
       know for a fact that your largest row will always be less than
       1&nbsp;MB &mdash; less 20&nbsp;KB &mdash; when expressed as a SQL
       insert statement. In that case, you can use the more efficient
-      <classname>SizeThresholdInsertPolicy</classname>. It differs
-      from <classname>MaxPacketInsertPolicy</classname> in that it
-      allows <methodname>insertfrom()</methodname> to insert rows
-      blindly into the query string until the built query exceeds
-      the threshold, 20&nbsp;KB in this example. Then it ships the
-      packet off, and if successful, starts a new query. Thus, each
-      query (except possibly the last) will be at least 20&nbsp;KB,
-      exceeding that only by as much as one row&rsquo;s worth of
-      data, minus one byte. This is quite appropriate behavior
-      when your rows are relatively small, as is typical for
-      tables not containing BLOB data. It is more efficient than
-      <classname>MaxPacketInsertPolicy</classname> because it never
-      has to throw away a built-up insert query.</para>
+      <classname>SizeThresholdInsertPolicy</classname>. It differs from
+      <classname>MaxPacketInsertPolicy</classname> in that it allows
+      <methodname>insertfrom()</methodname> to insert rows blindly into
+      the query string until the built query exceeds the threshold,
+      20&nbsp;KB in this example. Then it ships the packet off, and if
+      successful, starts a new query. Thus, each query (except possibly
+      the last) will be at least 20&nbsp;KB, exceeding that only by as
+      much as one row&rsquo;s worth of data, minus one byte. This is
+      quite appropriate behavior when your rows are relatively small,
+      as is typical for tables not containing BLOB data. It is more
+      efficient than <classname>MaxPacketInsertPolicy</classname>
+      because it never has to throw away any SQL fragments.</para>
 
-      <para>An even simpler option is
+      <para>The simplest policy object type is
       <classname>RowCountInsertPolicy</classname>. This lets you simply
       say how many rows at a time to insert into the database. This
       works well when you have a good handle on how big each row
@@ -406,31 +413,19 @@ query.insert(lots_of_stuff.begin(), lots_of_stuff.end()).execute();</programlist
       can insert at once without exceeding some given limit. Say
       you know your rows can&rsquo;t be any bigger than about
       1&nbsp;KB. If we stick with that 20&nbsp;KB target, passing
-      <classname>RowCountInsertPolicy(20)</classname> for the policy
-      object would ensure we never exceed the size threshold. Or,
-      say that maximum size value above is still true, but we also
-      know the average row size is only 200 bytes. You could pass
-      <classname>RowCountInsertPolicy(100)</classname> for the policy,
-      knowing that the average packet size will be around 20&nbsp;KB,
-      and the worst case packet size 100&nbsp;KB, still nowhere near
-      the default 1&nbsp;MB packet size limit. The code for this policy
-      is very simple, so it makes your program a little smaller than
-      if you used either of the above policies. Obviously it&rsquo;s
-      a bad choice if you aren&rsquo;t able to predict the size of
-      your rows accurately.</para>
-
-      <para>Finally, there&rsquo;s a fourth
-      option that you normally never use directly:
-      <classname>DefaultInsertPolicy</classname>. As
-      its name implies, a policy object of this type is
-      created when you don&rsquo;t specify one. This makes
-      <methodname>insertfrom()</methodname> work just like the
-      two-iterator form of <methodname>insert()</methodname>: it
-      tries to insert all the rows in the given iteration range in
-      a single query. The only reason to use this default is if you
-      like the name &ldquo;<methodname>insertfrom</methodname>&rdquo;
-      better, perhaps because it&rsquo;s clearly the inverse of
-      <methodname>storein</methodname>.</para>
+      <classname>RowCountInsertPolicy&lt;&gt;(20)</classname>
+      for the policy object would ensure we never exceed
+      the size threshold. Or, say that maximum size
+      value above is still true, but we also know the
+      average row size is only 200 bytes. You could pass
+      <classname>RowCountInsertPolicy&lt;&gt;(100)</classname> for
+      the policy, knowing that the average packet size will be around
+      20&nbsp;KB, and the worst case packet size 100&nbsp;KB, still
+      nowhere near the default 1&nbsp;MB packet size limit. The code
+      for this policy is very simple, so it makes your program a little
+      smaller than if you used either of the above policies. Obviously
+      it&rsquo;s a bad choice if you aren&rsquo;t able to predict
+      the size of your rows accurately.</para>
 
       <para>If one of the provided insert policy classes
       doesn&rsquo;t suit your needs, you can easily create
