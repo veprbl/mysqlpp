@@ -1019,7 +1019,6 @@ public:
 	/// details
 	///
 	/// \sa insert()
-
 	template <class Iter, class InsertPolicy>
 	Query& insertfrom(Iter first, Iter last, InsertPolicy& policy)
 	{
@@ -1050,7 +1049,7 @@ public:
 				empty = false;
 			} 
 			else {
-				// execute what we've built up already, if there is anything
+				// Execute what we've built up already, if there is anything
 				if (!empty) {
 					if (!exec()) {
 						success = false;
@@ -1060,7 +1059,7 @@ public:
 					empty = true;
 				}
 
-				// if we _still_ can't add, the policy is too strict
+				// If we _still_ can't add, the policy is too strict
 				if (policy.can_add(tellp(), *it)) {
 					MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 						"INSERT INTO " << it->table() << " (" <<
@@ -1070,7 +1069,7 @@ public:
 					empty = false;
 				} 
 				else {
-					// at this point all we can do is give up
+					// At this point all we can do is give up
 					if (throw_exceptions()) {
 						throw BadInsertPolicy("Insert policy is too strict");
 					}
