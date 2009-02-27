@@ -499,27 +499,8 @@ query.insert(lots_of_stuff.begin(), lots_of_stuff.end()).execute();</programlist
   </sect2>
 
 
-  <sect2 id="ssqls-extra-features">
-    <title>Additional Features of Specialized SQL
-    Structures</title>
-
-    <para>Up to this point, we haven&rsquo;t been using all of the
-    features in the SSQLS structures we&rsquo;ve been generating.  What
-    else can we do with SSQLSes? Consider this:</para>
-
-    <programlisting>
-query.insert(s);</programlisting>
-
-    <para>This does exactly what you think it does: it builds
-    an <command>INSERT</command> query to insert the contents
-    of <varname>s</varname> into the database. You have only to
-    call <methodname>query::execute()</methodname> to actually
-    insert it. This is possible because SSQLSes have functions that
-    <classname>Query</classname> can call to get the list of fields
-    and such, which it uses to build the <command>INSERT</command>
-    query. <methodname>query::update()</methodname> and
-    <methodname>query::replace()</methodname> also rely on these
-    features.</para>
+  <sect2 id="ssqls-table-name">
+    <title>Changing the Table Name</title>
 
     <para>Another feature you might find a use for is changing the
     table name MySQL++ uses to build queries involving SSQLSes. By
@@ -538,9 +519,8 @@ stock s;
 s.instance_table("AlternateTable");</programlisting>
 
     <para>This is useful when you have an SSQLS definition that is
-    compatible with multiple tables, so the table name to use for each
-    instance is different. The simplest way this can happen is if the
-    tables all have identical definitions; it saves you from having
+    compatible with multiple tables, so the table name to use for
+    each instance is different. This feature saves you from having
     to define a separate SSQLS for each table. It is also useful for
     mapping a class hierarchy onto a set of table definitions. The
     common SSQLS definition is the &ldquo;superclass&rdquo; for a
