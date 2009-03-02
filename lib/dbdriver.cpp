@@ -125,8 +125,10 @@ DBDriver::copy(const DBDriver& other)
 void
 DBDriver::disconnect()
 {
-	mysql_close(&mysql_);
-	is_connected_ = false;
+	if (is_connected_) {
+		mysql_close(&mysql_);
+		is_connected_ = false;
+	}
 }
 
 
