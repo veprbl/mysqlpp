@@ -9,7 +9,12 @@ Any Version
 
     o Suppress DOS line-ending related diffs from examples/cgi_jpeg
       output when running dtest on Windows.  Check for -D?
-  
+
+    o Can we bring examples/vstudio into the top-level build system?
+      Would be nice to get MYSQL_WIN_DIR support, and to make it
+      link against the built MySQL++ instead of requiring it to be
+      installed first.
+
 
 v3.1 Tentative Plan
 -------------------
