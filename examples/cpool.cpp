@@ -216,7 +216,7 @@ main(int argc, char *argv[])
 	// Setup complete.  Now let's spin some threads...
 	cout << endl << "Pool created and working correctly.  Now to do "
 			"some real work..." << endl;
-	srand(time(0));
+	srand((unsigned int)time(0));
 	bool running[] = {
 			true, true, true, true, true, true, true,
 			true, true, true, true, true, true, true };
