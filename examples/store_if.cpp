@@ -4,7 +4,7 @@
 	to be useful, only to show how you can do result set filtering that
 	outstrips the power of SQL.
 
- Copyright (c) 2005-2008 by Educational Technology Resources, Inc.
+ Copyright (c) 2005-2009 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -67,7 +67,8 @@ main(int argc, char *argv[])
 {
 	// Get database access parameters from command line
 	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+	if (!mysqlpp::examples::parse_command_line(argc, argv, &db, &server,
+			&user, &pass)) {
 		return 1;
 	}
 

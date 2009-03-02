@@ -1,8 +1,11 @@
 /***********************************************************************
- cmdline.cpp - Utility functions for printing out data in common
-    formats, required by most of the example programs.
+ cmdline.cpp - Command line parsing stuff used by the example and
+    utility programs.  Not intended for end-user use!
 
- Copyright (c) 2007-2008 by Educational Technology Resources, Inc.
+ Copyright (c) 2007-2009 by Educational Technology Resources,
+ Inc.  getopt() and its associated globals are the public domain
+ implementation made available at the 1985 UNIFORUM conference in
+ Dallas, Texas; the code is untouched except for style tweaks.
  Others may also hold copyrights on code in this file.  See the
  CREDITS.txt file in the top directory of the distribution for details.
 
@@ -24,6 +27,7 @@
  USA
 ***********************************************************************/
 
+#define MYSQLPP_NOT_HEADER
 #include "cmdline.h"
 
 #include <iostream>
@@ -32,26 +36,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+////////////////////////////////////////////////////////////////////////
+// Standard getopt() globals, defined if there is no system getopt()
+#if defined(MYSQLPP_USING_OWN_GETOPT)
+	extern "C" {
+		static const char* optarg;
+		int optind = 1;
+	}
+#endif
 
-//// globals and constants /////////////////////////////////////////////
 
-bool dtest_mode = false;		// true when running under dtest
-int run_mode = 0;				// -m switch's value
-const char* kpcSampleDatabase = "mysql_cpp_data";
+//// getopt ////////////////////////////////////////////////////////////
+// Public-domain implementation of getopt(), defined on platforms where
+// we can't find one on the system.
 
-
-//// att_getopt ////////////////////////////////////////////////////////
-// An implementation of getopt(), included here so we don't have to
-// limit ourselves to platforms that provide this natively.  It is
-// adapted from the public domain getopt() implementation presented at
-// the 1985 UNIFORUM conference in Dallas, Texas.  It's been reformatted
-// and reworked a bit to fit in with MySQL++.
-
-static const char* ag_optarg;
-int ag_optind = 1;
-
-static int
-att_getopt(int argc, char* const argv[], const char* ag_opts)
+#if defined(MYSQLPP_USING_OWN_GETOPT)
+extern "C" int
+getopt(int argc, char* const argv[], const char* opts)
 {
 	static int optopt;
 	static int sp = 1;
@@ -60,63 +61,78 @@ att_getopt(int argc, char* const argv[], const char* ag_opts)
 
 	if (sp == 1) {
 		/* If all args are processed, finish */
-		if (ag_optind >= argc) {
+		if (optind >= argc) {
 			return EOF;
 		}
-		if (argv[ag_optind][0] != '-' || argv[ag_optind][1] == '\0') {
+		if (argv[optind][0] != '-' || argv[ag_optind][1] == '\0') {
 			return EOF;
 		}
 	}
-	else if (!strcmp(argv[ag_optind], "--")) {
-		/* No more ag_options to be processed after this one */
-		ag_optind++;
+	else if (!strcmp(argv[optind], "--")) {
+		/* No more goptions to be processed after this one */
+		optind++;
 		return EOF;
 	}
 
-	optopt = c = argv[ag_optind][sp];
+	optopt = c = argv[optind][sp];
 
-	/* Check for invalid ag_option */
-	if (c == ':' || (cp = strchr(ag_opts, c)) == NULL) {
+	/* Check for invalid goption */
+	if (c == ':' || (cp = strchr(gopts, c)) == 0) {
 		fprintf(stderr, "%s: illegal option -- %c\n", argv[0], c);
-		if (argv[ag_optind][++sp] == '\0') {
-			ag_optind++;
+		if (argv[optind][++sp] == '\0') {
+			optind++;
 			sp = 1;
 		}
 
 		return '?';
 	}
 
-	/* Does this ag_option require an argument? */
+	/* Does this goption require an argument? */
 	if (*++cp == ':') {
 		/* If so, get argument; if none provided output error */
-		if (argv[ag_optind][sp + 1] != '\0') {
-			ag_optarg = &argv[ag_optind++][sp + 1];
+		if (argv[optind][sp + 1] != '\0') {
+			optarg = &argv[ag_optind++][sp + 1];
 		}
-		else if (++ag_optind >= argc) {
+		else if (++optind >= argc) {
 			fprintf(stderr,
 					"%s: option requires an argument -- %c\n", argv[0], c);
 			sp = 1;
 			return '?';
 		}
 		else {
-			ag_optarg = argv[ag_optind++];
+			optarg = argv[ag_optind++];
 		}
 		sp = 1;
 	}
 	else {
-		if (argv[ag_optind][++sp] == '\0') {
+		if (argv[optind][++sp] == '\0') {
 			sp = 1;
-			ag_optind++;
+			optind++;
 		}
-		ag_optarg = NULL;
+		optarg = 0;
 	}
 
 	return c;
 }
+#endif // defined(MYSQLPP_USING_OWN_GETOPT)
+
+
+////////////////////////////////////////////////////////////////////////
+// Globals specific to the MySQL++ examples.  These are in the DLL only
+// out of lack of a better place to put them.  We do hide them away in
+// a special namespace however:
+
+namespace mysqlpp {
+namespace examples {
+
+bool dtest_mode = false;	// true when examples are running under dtest
+int run_mode = 0;			// -m switch's value
+const char* db_name = "mysql_cpp_data";
 
 
 //// print_usage ///////////////////////////////////////////////////////
-// Show the program's usage message
+// Show a generic usage message suitable for ../examples/*.cpp  The
+// parameters specialize the message to a minor degree.
 
 void
 print_usage(const char* program_name, const char* extra_parms)
@@ -139,8 +155,10 @@ print_usage(const char* program_name, const char* extra_parms)
 
 
 //// parse_command_line ////////////////////////////////////////////////
-// Wrapper around att_getopt() to return the parameters needed to
-// connect to a database server and select the database itself.
+// Wrapper around getopt() to handle command line format understood
+// by ../examples/*.cpp.  Returns parsed DB connection parameters.  Also
+// takes an optional "extra_parms" argument for passing to print_usage,
+// used when the example has nonstandard additional parameters.
 
 bool
 parse_command_line(int argc, char *argv[], const char** ppdb,
@@ -153,17 +171,17 @@ parse_command_line(int argc, char *argv[], const char** ppdb,
 	}
 
 	if (ppdb && !*ppdb) {
-		*ppdb = "mysql_cpp_data";       // use default DB
+		*ppdb = db_name;       // use default MySQL++ examples DB
 	}
 
 	int ch;
-	while ((ch = att_getopt(argc, argv, "m:p:s:u:D")) != EOF) {
+	while ((ch = getopt(argc, argv, "m:p:s:u:D")) != EOF) {
 		switch (ch) {
-			case 'm': run_mode = atoi(ag_optarg); break;
-			case 'p': *pppass = ag_optarg;        break;
-			case 's': *ppserver = ag_optarg;      break;
-			case 'u': *ppuser = ag_optarg;        break;
-			case 'D': dtest_mode = true;          break;
+			case 'm': run_mode = atoi(optarg); break;
+			case 'p': *pppass = optarg;        break;
+			case 's': *ppserver = optarg;      break;
+			case 'u': *ppuser = optarg;        break;
+			case 'D': dtest_mode = true;       break;
 			default:
 				print_usage(argv[0], extra_parms);
 				return false;
@@ -172,3 +190,6 @@ parse_command_line(int argc, char *argv[], const char** ppdb,
 
 	return true;
 }
+
+} // end namespace mysqlpp::examples
+} // end namespace mysqlpp

@@ -57,6 +57,7 @@
 
       <sources>
         lib/beemutex.cpp
+        lib/cmdline.cpp
         lib/connection.cpp
         lib/cpool.cpp
         lib/datetime.cpp
@@ -260,7 +261,6 @@
     <!-- Convenience library of routines used by most examples -->
     <lib id="excommon" template="programs">
       <libname>mysqlpp_excommon</libname>
-      <sources>examples/cmdline.cpp</sources>
       <sources>examples/printdata.cpp</sources>
     </lib>
 

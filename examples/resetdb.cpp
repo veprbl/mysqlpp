@@ -4,10 +4,10 @@
 	examples, and it is helpful sometimes to run it again, as some of
 	the examples modify the table in this database.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, and (c) 2004-2008 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
+ (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
+ also hold copyrights on code in this file.  See the CREDITS file in
+ the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -77,9 +77,9 @@ main(int argc, char *argv[])
 	const char *server = 0, *user = 0, *pass = "";
 	mysqlpp::Connection con;
 	try {
-		if (parse_command_line(argc, argv, 0, &server, &user, &pass)) {
-			extern bool dtest_mode;
-			if (dtest_mode) {
+		if (mysqlpp::examples::parse_command_line(argc, argv, 0,
+				&server, &user, &pass)) {
+			if (mysqlpp::examples::dtest_mode) {
 				cout << "Connecting to database server..." << endl;
 			}
 			else {
@@ -105,7 +105,7 @@ main(int argc, char *argv[])
 	{
 		mysqlpp::NoExceptions ne(con);
 		mysqlpp::Query query = con.query();
-		if (con.select_db(kpcSampleDatabase)) {
+		if (con.select_db(mysqlpp::examples::db_name)) {
 			// Toss old tables, ignoring errors because it would just
 			// mean the table doesn't exist, which doesn't matter.
 			cout << "Dropping existing sample data tables..." << endl;
@@ -116,8 +116,8 @@ main(int argc, char *argv[])
 		}
 		else {
 			// Database doesn't exist yet, so create and select it.
-			if (con.create_db(kpcSampleDatabase) &&
-					con.select_db(kpcSampleDatabase)) {
+			if (con.create_db(mysqlpp::examples::db_name) &&
+					con.select_db(mysqlpp::examples::db_name)) {
 				new_db = true;
 			}
 			else {

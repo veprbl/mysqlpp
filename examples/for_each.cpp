@@ -2,7 +2,7 @@
  for_each.cpp - Demonstrates Query::for_each(), showing how to perform
 	an arbitrary action on each row in a result set.
 
- Copyright (c) 2005-2008 by Educational Technology Resources, Inc. and
+ Copyright (c) 2005-2009 by Educational Technology Resources, Inc. and
  (c) 2007 by Joel Fielder.  Others may also hold copyrights on code
  in this file.  See the CREDITS.txt file in the top directory of the
  distribution for details.
@@ -80,7 +80,8 @@ main(int argc, char *argv[])
 {
 	// Get database access parameters from command line
 	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+	if (!mysqlpp::examples::parse_command_line(argc, argv, &db, &server,
+			&user, &pass)) {
 		return 1;
 	}
 

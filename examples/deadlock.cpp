@@ -5,7 +5,7 @@
 	while it's waiting for you to press Enter, run another copy with -m2
 	instead.
 
- Copyright (c) 2007 by Jim Wallace and (c) 2007 by Educational
+ Copyright (c) 2007 by Jim Wallace and (c) 2007-2009 by Educational
  Technology Resources, Inc.  Others may also hold copyrights on code
  in this file.  See the CREDITS.txt file in the top directory of the
  distribution for details.
@@ -46,12 +46,14 @@ main(int argc, char *argv[])
 {
 	// Get database access parameters from command line
 	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+	if (!mysqlpp::examples::parse_command_line(argc, argv, &db, &server,
+			&user, &pass)) {
 		return 1;
 	}
 
 	// Check that the mode parameter was also given and it makes sense
-	if ((run_mode != 1) && (run_mode != 2)) {
+	if ((mysqlpp::examples::run_mode != 1) &&
+			(mysqlpp::examples::run_mode != 2)) {
 		cerr << argv[0] << " must be run with -m1 or -m2 as one of "
 				"its command-line arguments." << endl;
 		return 1;
@@ -82,7 +84,8 @@ main(int argc, char *argv[])
 		// run while the first is waiting for Enter.
 		char dummy[100];
 		for (int i = 0; i < 2; ++i) {
-			int lock = run_mode + (run_mode == 1 ? i : -i);
+			int lock = mysqlpp::examples::run_mode +
+					(mysqlpp::examples::run_mode == 1 ? i : -i);
 			cout << "Trying lock " << lock << "..." << endl;
 
 			query << "select * from deadlock_test" << lock << 

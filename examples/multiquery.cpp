@@ -5,11 +5,11 @@
 	statments in a single query, or when dealing with the results of
 	calling a stored procedure.
 
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999, 2000 and 2001 by
- MySQL AB, (c) 2004, 2005 by Educational Technology Resources, Inc.,
- and (c) 2005 by Arnon Jalon.  Others may also hold copyrights on
- code in this file.  See the CREDITS.txt file in the top directory of
- the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB,
+ (c) 2004-2009 by Educational Technology Resources, Inc., and (c)
+ 2005 by Arnon Jalon.  Others may also hold copyrights on code in
+ this file.  See the CREDITS.txt file in the top directory of the
+ distribution for details.
 
  This file is part of MySQL++.
 
@@ -134,7 +134,8 @@ main(int argc, char *argv[])
 {
 	// Get connection parameters from command line
 	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+	if (!mysqlpp::examples::parse_command_line(argc, argv, &db, &server,
+			&user, &pass)) {
 		return 1;
 	}
 

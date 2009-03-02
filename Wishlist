@@ -18,6 +18,10 @@ Any Version
 
 v3.1 Tentative Plan
 -------------------
+	o OO-ify examples' command line parsing.  Pass argc, argv and
+	  extra_args to CommandLineOptions ctor, values saved in string
+	  member variables.
+
     o SSQLS v2:
 
       - Switch from C macros to a DSL that is translated to .cpp and

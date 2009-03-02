@@ -53,6 +53,14 @@ then
 fi
 
 
+# Try to find local getopt(); if we fail, we'll use the one in lib/cmdline.*
+AC_CHECK_FUNC(getopt, 
+		[AC_DEFINE(HAVE_POSIX_GETOPT, [], Define if getopt() is available in unistd.h)],
+		[AC_CHECK_LIB(iberty, getopt,
+			[AC_DEFINE(HAVE_LIBIBERTY_GETOPT, [], Define if getopt() is available in libiberty.h)],
+			[])])
+
+
 # Checks for libraries and local system features
 LIB_MATH
 LIB_SOCKET_NSL

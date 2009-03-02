@@ -3,7 +3,7 @@
 	database from a file.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS.txt file
  in the top directory of the distribution for details.
 
@@ -35,12 +35,6 @@ using namespace std;
 using namespace mysqlpp;
 
 
-// Pull in a state variable used by att_getopt() implementation so we
-// can pick up where standard command line processing leaves off.  Feel
-// free to ignore this implementation detail.
-extern int ag_optind;
-
-
 static bool
 is_jpeg(const char* img_data)
 {
@@ -57,8 +51,8 @@ main(int argc, char *argv[])
 {
 	// Get database access parameters from command line
 	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!parse_command_line(argc, argv, &db, &server, &user, &pass,
-			"[jpeg_file]")) {
+	if (!mysqlpp::examples::parse_command_line(argc, argv, &db,
+			&server, &user, &pass, "[jpeg_file]")) {
 		return 1;
 	}
 
@@ -70,10 +64,10 @@ main(int argc, char *argv[])
 		// we got on the command line.
 		images img(mysqlpp::null, mysqlpp::null);
 		const char* img_name = "NULL";
-		if (argc - ag_optind >= 1) {
+		if (argc - optind >= 1) {
 			// We received at least one non-option argument on the
 			// command line, so treat it as a file name 
-			img_name = argv[ag_optind];
+			img_name = argv[optind];
 			ifstream img_file(img_name, ios::ate | ios::binary);
 			if (img_file) {
 				size_t img_size = img_file.tellg();
@@ -97,7 +91,7 @@ main(int argc, char *argv[])
 
 			if (img.data.data.empty()) {
 				// File name was bad, or file contents aren't JPEG.  
-				print_usage(argv[0], "[jpeg_file]");
+				mysqlpp::examples::print_usage(argv[0], "[jpeg_file]");
 				return 1;
 			}
 		}

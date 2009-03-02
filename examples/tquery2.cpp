@@ -6,7 +6,7 @@
 	templates are coming from somewhere else, or being generated.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS.txt file
  in the top directory of the distribution for details.
 
@@ -40,7 +40,8 @@ main(int argc, char *argv[])
 {
 	// Get database access parameters from command line
 	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+	if (!mysqlpp::examples::parse_command_line(argc, argv, &db, &server,
+			&user, &pass)) {
 		return 1;
 	}
 
