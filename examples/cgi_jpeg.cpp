@@ -38,12 +38,9 @@ main(int argc, char* argv[])
 {
 	// Get database access parameters from command line if present, else
 	// use hard-coded values for true CGI case.
-    const char* db = "mysql_cpp_data";
-	const char* server = "localhost";
-	const char* user = "root";
-	const char* pass = "nunyabinness";
-	if (!mysqlpp::examples::parse_command_line(argc, argv, &db, &server,
-			&user, &pass)) {
+	mysqlpp::examples::CommandLine cmdline(argc, argv, "root",
+			"nunyabinness");
+	if (!cmdline) {
 		return 1;
 	}
 
@@ -79,7 +76,8 @@ main(int argc, char* argv[])
 
 	// Retrieve image from DB by ID
 	try {
-		mysqlpp::Connection con(db, server, user, pass);
+		mysqlpp::Connection con(mysqlpp::examples::db_name,
+				cmdline.server(), cmdline.user(), cmdline.pass());
 		mysqlpp::Query query = con.query();
 		query << "SELECT * FROM images WHERE id = " << img_id;
 		mysqlpp::StoreQueryResult res = query.store();

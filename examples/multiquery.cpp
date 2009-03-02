@@ -133,9 +133,8 @@ int
 main(int argc, char *argv[])
 {
 	// Get connection parameters from command line
-	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!mysqlpp::examples::parse_command_line(argc, argv, &db, &server,
-			&user, &pass)) {
+	mysqlpp::examples::CommandLine cmdline(argc, argv);
+	if (!cmdline) {
 		return 1;
 	}
 
@@ -150,7 +149,8 @@ main(int argc, char *argv[])
 		con.set_option(new MultiStatementsOption(true));
 
 		// Connect to the database
-		if (!con.connect(db, server, user, pass)) {
+		if (!con.connect(mysqlpp::examples::db_name, cmdline.server(),
+				cmdline.user(), cmdline.pass())) {
 			return 1;
 		}
 

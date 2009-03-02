@@ -73,26 +73,26 @@ main(int argc, char *argv[])
 		return 1;
 	}
 	
+	// Get connection parameters from command line
+	mysqlpp::examples::CommandLine cmdline(argc, argv);
+	if (!cmdline) {
+		return 1;
+	}
+
 	// Connect to database server
-	const char *server = 0, *user = 0, *pass = "";
 	mysqlpp::Connection con;
 	try {
-		if (mysqlpp::examples::parse_command_line(argc, argv, 0,
-				&server, &user, &pass)) {
-			if (mysqlpp::examples::dtest_mode) {
-				cout << "Connecting to database server..." << endl;
-			}
-			else {
-				cout << "Connecting to '" << 
-						(user ? user : "USERNAME") << "'@'" <<
-						(server ? server : "localhost") << "', with" <<
-						(pass[0] ? "" : "out") << " password..." << endl;
-			}
-			con.connect(0, server, user, pass);
+		if (cmdline.dtest_mode()) {
+			cout << "Connecting to database server..." << endl;
 		}
 		else {
-			return 1;		// command line parsing failed
+			cout << "Connecting to '" << 
+					(cmdline.user() || "USERNAME") << "'@'" <<
+					(cmdline.server() || "localhost") << "', with" <<
+					(cmdline.pass() && cmdline.pass()[0] ? "" : "out") <<
+					" password..." << endl;
 		}
+		con.connect(0, cmdline.server(), cmdline.user(), cmdline.pass());
 	}
 	catch (exception& er) {
 		cerr << "Connection failed: " << er.what() << endl;

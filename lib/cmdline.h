@@ -31,31 +31,98 @@
 
 #include "common.h"
 
-// Figure out how to get definitions for getopt() and its associated
-// globals.  Prefer POSIX version, fall back to GNU libiberty, and if
-// all else fails, MySQL++ can provide one.
-#if defined(HAVE_POSIX_GETOPT)
-#	include <unistd.h>
-#elif defined(HAVE_LIBIBERTY_GETOPT)
-#	include <libiberty.h>
-#else
-#	define MYSQLPP_USING_OWN_GETOPT
-	extern "C" int optind;
-#endif
+#include <string>
+#include <vector>
 
-// MySQL++ specific stuff
+#include <assert.h>
+
 namespace mysqlpp {
-	// High-level parsing mechanism for ../examples/*.cpp
+	// Simple class for parsing a command line and holding the results.
+	// Just contains common functionality and data structures; see
+	// overrides below for instantiable classes.
+	class MYSQLPP_EXPORT CommandLine
+	{
+	public:
+		//// Public types
+		typedef std::vector<std::string> ArgumentList;
+		typedef ArgumentList::const_iterator ArgumentListIt;
+
+		//// Public interface
+		// Get reference to list of command line arguments past the
+		// last flag and its possible argument.
+		const ArgumentList& extra_args() const 
+				{ return extra_args_; }
+
+	protected:
+		//// Subclass interface
+		// Hidden ctor and dtor to prevent instantiation
+		CommandLine(int argc, char* const argv[], const char* opts) :
+		argc_(argc),
+		argv_(argv),
+		opts_(opts)
+		{
+			assert(argc > 0 && argv && opts);
+		}
+		virtual ~CommandLine() { }
+
+		// Save non-option arguments to extra_args_ list.  Subclass
+		// ctor should call this after parse_next() loop gets EOF.
+		void collect_unparsed_arguments();
+
+		// Wrapper for getopt()
+		int parse_next() const;
+
+		// Get the program's executable name
+		const char* program_name() const { return argv_[0]; }
+
+	private:
+		//// Internal data
+		int argc_;
+		char* const* argv_;
+		const char* opts_;
+		ArgumentList extra_args_;
+	};
+
+	// Stuff related to MySQL++ examples specifically
 	namespace examples {
-		extern bool dtest_mode;
-		extern int run_mode;
+		// Name of examples' DB
 		extern const char* db_name;
-		extern bool parse_command_line(int argc, char *argv[],
-				const char** ppdb, const char** ppserver,
-				const char** ppuser, const char** pppass,
-				const char* extra_parms = "");
-		extern void print_usage(const char* program_name,
-				const char* extra_parms = "");
+
+		// Command line parsing mechanism for ../examples/*.cpp
+		class MYSQLPP_EXPORT CommandLine : public mysqlpp::CommandLine
+		{
+		public:
+			//// Public interface
+			// Ctor
+			CommandLine(int argc, char* const argv[],
+					const char* user = 0, const char* pass = 0,
+					const char* usage_extra = 0);
+
+			// Return truthy value if command line was parsed successfully
+			operator void*() const
+			{
+				return successful_ ? const_cast<bool*>(&successful_) : 0;
+			}
+
+			// Show a mesage explaining the program's proper usage
+			void print_usage(const char* extra) const;
+
+			// Accessors
+			bool dtest_mode() const { return dtest_mode_; }
+			const char* pass() const { return pass_; }
+			int run_mode() const { return run_mode_; }
+			const char* server() const { return server_; }
+			const char* user() const { return user_; }
+
+		private:
+			//// Internal data
+			bool successful_;
+			bool dtest_mode_;
+			int run_mode_;
+			const char* server_;
+			const char* user_;
+			const char* pass_;
+		};
 	} // end namespace mysqlpp::examples
 } // end namespace mysqlpp
 

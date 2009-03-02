@@ -50,25 +50,25 @@ int
 main(int argc, char *argv[])
 {
 	// Get database access parameters from command line
-	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!mysqlpp::examples::parse_command_line(argc, argv, &db,
-			&server, &user, &pass, "[jpeg_file]")) {
+	mysqlpp::examples::CommandLine cmdline(argc, argv);
+	if (!cmdline) {
 		return 1;
 	}
 
 	try {
 		// Establish the connection to the database server.
-		mysqlpp::Connection con(db, server, user, pass);
+		mysqlpp::Connection con(mysqlpp::examples::db_name,
+				cmdline.server(), cmdline.user(), cmdline.pass());
 
 		// Try to create a new item in the images table, based on what
 		// we got on the command line.
 		images img(mysqlpp::null, mysqlpp::null);
-		const char* img_name = "NULL";
-		if (argc - optind >= 1) {
+		string img_name = "NULL";
+		if (cmdline.extra_args().size()) {
 			// We received at least one non-option argument on the
 			// command line, so treat it as a file name 
-			img_name = argv[optind];
-			ifstream img_file(img_name, ios::ate | ios::binary);
+			img_name = cmdline.extra_args()[0];
+			ifstream img_file(img_name.c_str(), ios::ate | ios::binary);
 			if (img_file) {
 				size_t img_size = img_file.tellg();
 				if (img_size > 10) {
@@ -91,7 +91,7 @@ main(int argc, char *argv[])
 
 			if (img.data.data.empty()) {
 				// File name was bad, or file contents aren't JPEG.  
-				mysqlpp::examples::print_usage(argv[0], "[jpeg_file]");
+				cmdline.print_usage("[jpeg_file]");
 				return 1;
 			}
 		}

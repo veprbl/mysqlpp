@@ -163,15 +163,15 @@ int
 main(int argc, char* argv[])
 {
 	// Get database access parameters from command line
-	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!mysqlpp::examples::parse_command_line(argc, argv, &db,
-			&server, &user, &pass)) {
+	mysqlpp::examples::CommandLine cmdline(argc, argv);
+	if (!cmdline) {
 		return 1;
 	}
 
 	try {
 		// Connect to server, then dump a bunch of stuff we find on it
-		mysqlpp::Connection con(db, server, user, pass);
+		mysqlpp::Connection con(mysqlpp::examples::db_name,
+				cmdline.server(), cmdline.user(), cmdline.pass());
 		show_mysql_version(con);
 		show_databases(con);
 		show_tables(con);

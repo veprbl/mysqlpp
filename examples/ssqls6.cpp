@@ -84,9 +84,8 @@ int
 main(int argc, char *argv[])
 {
 	// Get database access parameters from command line
-	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!mysqlpp::examples::parse_command_line(argc, argv, &db,
-			&server, &user, &pass)) {
+	mysqlpp::examples::CommandLine cmdline(argc, argv);
+	if (!cmdline) {
 		return 1;
 	}
 
@@ -98,7 +97,8 @@ main(int argc, char *argv[])
 
 	try {
 		// Establish the connection to the database server.
-		mysqlpp::Connection con(db, server, user, pass);
+		mysqlpp::Connection con(mysqlpp::examples::db_name,
+				cmdline.server(), cmdline.user(), cmdline.pass());
 
 		// Clear all existing rows from stock table, as we're about to
 		// insert a bunch of new ones, and we want a clean slate.
