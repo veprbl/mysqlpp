@@ -77,13 +77,13 @@ namespace mysqlpp {
 		// parse_next() loop gets EOF.
 		void finish_parse();
 
-		// Wrapper for getopt()
-		int parse_next() const;
-
 		// Accessors for getopt() globals, so subclasses can ignore
 		// getopt()'s interface entirely.
 		const char* option_argument() const;
 		int option_index() const;
+
+		// Wrapper for getopt()
+		int parse_next() const;
 
 		// Get the program's executable name
 		const char* program_name() const { return argv_[0]; }
@@ -96,6 +96,7 @@ namespace mysqlpp {
 		bool successful_;
 		ArgumentList extra_args_;
 	};
+
 
 	// Stuff related to MySQL++ examples specifically
 	namespace examples {
@@ -115,7 +116,7 @@ namespace mysqlpp {
 			// Show a mesage explaining the program's proper usage
 			void print_usage(const char* extra) const;
 
-			// Accessors
+			// Read-only "get" accessors
 			bool dtest_mode() const { return dtest_mode_; }
 			const char* pass() const { return pass_; }
 			int run_mode() const { return run_mode_; }
@@ -124,6 +125,7 @@ namespace mysqlpp {
 
 		private:
 			//// Internal data
+			// Examples-specific command line parse results
 			bool dtest_mode_;
 			int run_mode_;
 			const char* server_;
