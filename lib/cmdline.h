@@ -53,21 +53,29 @@ namespace mysqlpp {
 		const ArgumentList& extra_args() const 
 				{ return extra_args_; }
 
+		// Return truthy value if command line was parsed successfully
+		operator void*() const
+		{
+			return successful_ ? const_cast<bool*>(&successful_) : 0;
+		}
+
 	protected:
 		//// Subclass interface
 		// Hidden ctor and dtor to prevent instantiation
 		CommandLineBase(int argc, char* const argv[], const char* opts) :
 		argc_(argc),
 		argv_(argv),
-		opts_(opts)
+		opts_(opts),
+		successful_(false)
 		{
 			assert(argc > 0 && argv && opts);
 		}
 		virtual ~CommandLineBase() { }
 
-		// Save non-option arguments to extra_args_ list.  Subclass
-		// ctor should call this after parse_next() loop gets EOF.
-		void collect_unparsed_arguments();
+		// Save non-option arguments to extra_args_ list, and mark the
+		// object as "successful".  Subclass ctor should call this after
+		// parse_next() loop gets EOF.
+		void finish_parse();
 
 		// Wrapper for getopt()
 		int parse_next() const;
@@ -85,6 +93,7 @@ namespace mysqlpp {
 		int argc_;
 		char* const* argv_;
 		const char* opts_;
+		bool successful_;
 		ArgumentList extra_args_;
 	};
 
@@ -103,12 +112,6 @@ namespace mysqlpp {
 					const char* user = 0, const char* pass = 0,
 					const char* usage_extra = 0);
 
-			// Return truthy value if command line was parsed successfully
-			operator void*() const
-			{
-				return successful_ ? const_cast<bool*>(&successful_) : 0;
-			}
-
 			// Show a mesage explaining the program's proper usage
 			void print_usage(const char* extra) const;
 
@@ -121,7 +124,6 @@ namespace mysqlpp {
 
 		private:
 			//// Internal data
-			bool successful_;
 			bool dtest_mode_;
 			int run_mode_;
 			const char* server_;

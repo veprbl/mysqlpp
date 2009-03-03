@@ -122,10 +122,10 @@
 
 namespace mysqlpp {
 
-//// CommandLineBase::collect_unparsed_arguments ///////////////////////
+//// CommandLineBase::finish_parse /////////////////////////////////////
 
 void
-CommandLineBase::collect_unparsed_arguments()
+CommandLineBase::finish_parse()
 {
 	const int nextras = argc_ - option_index();
 	if (nextras > 0) {
@@ -134,6 +134,8 @@ CommandLineBase::collect_unparsed_arguments()
 			extra_args_[i] = argv_[option_index() + i];
 		}
 	}
+
+	successful_ = true;
 }
 
 
@@ -183,7 +185,6 @@ const char* db_name = "mysql_cpp_data";
 CommandLine::CommandLine(int argc, char* const argv[],
 		const char* user, const char* pass, const char* usage_extra) :
 CommandLineBase(argc, argv, "m:p:s:u:D"),
-successful_(false),
 dtest_mode_(false),
 run_mode_(0),
 server_(0),
@@ -204,9 +205,7 @@ pass_(pass && *pass ? pass : "")
 		}
 	}
 
-	collect_unparsed_arguments();
-
-	successful_ = true;
+	finish_parse();
 }
 
 
