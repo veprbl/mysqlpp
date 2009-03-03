@@ -40,7 +40,7 @@ namespace mysqlpp {
 	// Simple class for parsing a command line and holding the results.
 	// Just contains common functionality and data structures; see
 	// overrides below for instantiable classes.
-	class MYSQLPP_EXPORT CommandLine
+	class MYSQLPP_EXPORT CommandLineBase
 	{
 	public:
 		//// Public types
@@ -56,14 +56,14 @@ namespace mysqlpp {
 	protected:
 		//// Subclass interface
 		// Hidden ctor and dtor to prevent instantiation
-		CommandLine(int argc, char* const argv[], const char* opts) :
+		CommandLineBase(int argc, char* const argv[], const char* opts) :
 		argc_(argc),
 		argv_(argv),
 		opts_(opts)
 		{
 			assert(argc > 0 && argv && opts);
 		}
-		virtual ~CommandLine() { }
+		virtual ~CommandLineBase() { }
 
 		// Save non-option arguments to extra_args_ list.  Subclass
 		// ctor should call this after parse_next() loop gets EOF.
@@ -89,7 +89,7 @@ namespace mysqlpp {
 		extern const char* db_name;
 
 		// Command line parsing mechanism for ../examples/*.cpp
-		class MYSQLPP_EXPORT CommandLine : public mysqlpp::CommandLine
+		class MYSQLPP_EXPORT CommandLine : public CommandLineBase
 		{
 		public:
 			//// Public interface

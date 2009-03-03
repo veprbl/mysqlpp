@@ -122,10 +122,10 @@
 
 namespace mysqlpp {
 
-//// CommandLine::collect_unparsed_arguments ///////////////////////////
+//// CommandLineBase::collect_unparsed_arguments ///////////////////////
 
 void
-CommandLine::collect_unparsed_arguments()
+CommandLineBase::collect_unparsed_arguments()
 {
 	const int nextras = argc_ - optind;
 	if (nextras > 0) {
@@ -137,12 +137,12 @@ CommandLine::collect_unparsed_arguments()
 }
 
 
-//// CommandLine::parse_next ///////////////////////////////////////////
+//// CommandLineBase::parse_next ///////////////////////////////////////
 // Wrapper around getopt(), using the stuff passed to our ctor to
 // construct its argument list.
 
 int
-CommandLine::parse_next() const
+CommandLineBase::parse_next() const
 {
 	return getopt(argc_, argv_, opts_);
 }
@@ -160,7 +160,7 @@ const char* db_name = "mysql_cpp_data";
 
 CommandLine::CommandLine(int argc, char* const argv[],
 		const char* user, const char* pass, const char* usage_extra) :
-mysqlpp::CommandLine(argc, argv, "m:p:s:u:D"),
+CommandLineBase(argc, argv, "m:p:s:u:D"),
 successful_(false),
 dtest_mode_(false),
 run_mode_(0),
