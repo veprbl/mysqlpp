@@ -127,13 +127,35 @@ namespace mysqlpp {
 void
 CommandLineBase::collect_unparsed_arguments()
 {
-	const int nextras = argc_ - optind;
+	const int nextras = argc_ - option_index();
 	if (nextras > 0) {
 		extra_args_.resize(nextras);
 		for (int i = 0; i < nextras; ++i) {
-			extra_args_[i] = argv_[optind + i];
+			extra_args_[i] = argv_[option_index() + i];
 		}
 	}
+}
+
+
+//// CommandLineBase::option_argument //////////////////////////////////
+// Accessor for optarg, so caller doesn't have to know about this
+// getopt() style interface.  Particualy helpful on non-POSIX systems.
+
+const char*
+CommandLineBase::option_argument() const
+{
+	return optarg;
+}
+
+
+//// CommandLineBase::option_index /////////////////////////////////////
+// Accessor for optind, so caller doesn't have to know about this
+// getopt() style interface.  Particualy helpful on non-POSIX systems.
+
+int
+CommandLineBase::option_index() const
+{
+	return optind;
 }
 
 
@@ -171,11 +193,11 @@ pass_(pass && *pass ? pass : "")
 	int ch;
 	while ((ch = parse_next()) != EOF) {
 		switch (ch) {
-			case 'm': run_mode_ = atoi(optarg); break;
-			case 'p': pass_ = optarg;           break;
-			case 's': server_ = optarg;         break;
-			case 'u': user_ = optarg;           break;
-			case 'D': dtest_mode_ = true;       break;
+			case 'm': run_mode_ = atoi(option_argument()); break;
+			case 'p': pass_ = option_argument();           break;
+			case 's': server_ = option_argument();         break;
+			case 'u': user_ = option_argument();           break;
+			case 'D': dtest_mode_ = true;                  break;
 			default:
 				print_usage(usage_extra);
 				return;

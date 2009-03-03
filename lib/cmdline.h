@@ -72,6 +72,11 @@ namespace mysqlpp {
 		// Wrapper for getopt()
 		int parse_next() const;
 
+		// Accessors for getopt() globals, so subclasses can ignore
+		// getopt()'s interface entirely.
+		const char* option_argument() const;
+		int option_index() const;
+
 		// Get the program's executable name
 		const char* program_name() const { return argv_[0]; }
 
