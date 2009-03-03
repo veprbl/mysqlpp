@@ -18,70 +18,173 @@ Any Version
 
 v3.1 Tentative Plan
 -------------------
-    o SSQLS v2:
+    o SSQLS v2 (http://lists.mysql.com/plusplus/6929):
 
-      - Switch from C macros to a DSL that is translated to .cpp and
-        .h files by a tool built along with MySQL++ library.  Design:
+      - Command line parser, implementing this usage:
 
-        http://lists.mysql.com/plusplus/6929
+        ssqlsxlat [-i input.ssqls] [ -1 input-ssqlsv1.cpp ]
+                [ -u user ] [ -p password ] [ -s server ] [ -t table ]
+                [ -o parsedump.ssqls]
 
-      - Switch per SSQLS that makes it throw an exception when it sees
-        a mismatch between DB schema and SSQLS definition.  Harkens
-        back to pre v3.0 SSQLS behavior, where you'd get a crash as
-        it tried to fill out fields by position, and fail.  For the
-        B&D folk who don't like the new "just cope" behavior.
+        -i: parse SSQLSv2 DSL, generating C++ output at minimum
+        -1: find SSQLSv1 declarations in C++ code, and try to interpret
+            as equivalent SSQLSv2
+        -u, -p, -s and -t: log into server, get schema details for a
+            table, and generate output as if parsed from SSQLSv2 DSL
+        -o: write SSQLSv2 parse info out to .ssqls file
 
-      - Try to design it so as much code as possible resides in
-        a common base class (SsqlsBase) that all SSQLSes derive from.
-        Can't do it in v1 because virtually everything is specific
-        to the structure's type.  Study equal_list(), for example.
-        Do it with an eye toward replacing Query's template methods
-        taking SSQLSes with concrete methods taking SsqlsBase&.
+        The latter should work with -i, -1, or -t inputs, implying that
+        all of these construct the same data structure, which -o walks,
+        much as regular C++ output code does, differing only in the
+        output format.
 
-      - Instead of equal_list(), value_list(), etc., give SsqlsBase
-        more generic ways to get metadata.  Need to be able to get
-        a list of all column names, a list of just the COMPCOUNT
-        column names, and a list of the names of columns that have
-        been initialized through public setters or a ctor.  Also need
-        similar lists of column values in String or STA form.  Needed
-        to support extensions to Query like select() and delete().
+      - SSQLSv2 DSL parser:
 
-      - Add truthiness operator to SSQLS to detect an incompletely-
-        populated object?  Or maybe an incomplete() method?
+        stock.ssqls:
 
-      - Add features to ssqlsxlat to write SSQLSv2 declaration files
-        from existing schemas extracted from CREATE TABLE statements,
-        from running databases, and from C++ files containing old
-        SSQLS v1 declarations.
+            include common.ssqls
 
-      - Add table creation ability to SSQLS.  It has the schema...
+            table stock alias SQLStock filebase ssqls_stock
+                field item type bigint alias id is autoinc is key
+                field num type bigint
+                field weight type double
+                field price type double
+                field sdate type date
+                field description type mediumtext is null
 
-      - Support per-instance table name overrides, instead of just
-        per SSQLS?  Needed if you're going to use a single SSQLS for
-        many tables with the same structure in a multithreaded program,
-        so changing it statically isn't safe.
+        common.ssqls:
 
-      - Need a way to tag a column as auto-increment so it's left out
-        of INSERT queries, but still available for data retrieval.
+            option implementation_extension cc
+            option header_extension hh
+            option use_accessors getX 
+            option exception_on_schema_mismatch true
 
-      - Would be nice if it restored VC++ 2003 compatibility, and
-        allowed removal of 'explicit' from Date, DateTime and Time
-        ctors taking stringish types.  (Can't do the latter for real
-        until v4, but we can lay the ground work here.)
+        That is, a simple line-based verb/noun pair system, with
+        potentially multiple pairs per line depending on the initial
+        verb.  Indent level controls whether certain verbs are allowed,
+        and if so, which higher-level verb they apply to.  Includes are
+        just recursion: parse the included file immediately using
+        the same parser, then at EOF resume parsing the includer.
 
-      - Add Active Record type methods, and support data for same.
-        E.g., mySsqls.save() should be able to write and execute
-        the UPDATE statement.
+      - SSQLSv2 DSL generator: walk data structure created by previous,
+        writing back out valid SSQLSv2.
+        
+      - Write test1.ssqls and test2.ssqls; former includes latter.
+        Add to dtest:
+        
+            ssqlsxlat -i ssqlsxlat/test1.ssqls -o /tmp/dtest1.ssqls
+            cat /tmp/dtest1.ssqls
+            ssqlsxlat -i /tmp/dtest1.ssqls -o /tmp/dtest2.ssqls
+            die if ! diff -q /tmp/dtest[12].ssqls
+        
+        Checks that parse results don't change, and that reparsing
+        -o output doesn't give different -o output.
 
-      - Auto-insert ctor: same as full-population ctor, but takes
-        a Connection* as well, and inserts the record into the table
-        over that connection on creation.  If there is a single
-        auto_increment field, auto-populate it on success.
+      - C++ code generator, from walking DSL parse tree:
 
-      - Similar for auto-select, taking only the key fields after
-        the Connection* parameter.  If the number of key fields equals
-        the total number of fields, there is only one ctor taking a
-        Connection*, doing auto-select, that being the safer operation.
+        Above stock.ssqls gives ssqls_stock.hh containing:
+
+            class SQLStock : public mysqlpp::SsqlsBase
+            {
+            public:
+                SQLStock(Connection* conn = 0); // default ctor
+                SQLStock(const mysqlpp::Row& row,
+                        Connection* conn = 0); // full init from query
+                SQLStock(mysqlpp::sql_bigint key1); // exemplar creation
+                SQLStock(Connection* conn,
+                        mysqlpp::sql_bigint key1) // calls load();
+                SQLStock(
+                    mysqlpp::sql_bigint f1,
+                    mysqlpp::sql_bigint f2,
+                    mysqlpp::sql_double f3,
+                    mysqlpp::sql_double f4,
+                    const mysqlpp::sql_date& f5,
+                    const mysqlpp::sql_mediumtext& f6); // full init
+                SQLStock(Connection* conn,
+                    mysqlpp::sql_bigint f2,
+                    mysqlpp::sql_double f3,
+                    mysqlpp::sql_double f4,
+                    const mysqlpp::sql_date& f5,
+                    const mysqlpp::sql_mediumtext& f6); // calls create()
+                SQLStock(Connection* conn,
+                    mysqlpp::sql_bigint f1,
+                    mysqlpp::sql_bigint f2,
+                    mysqlpp::sql_double f3,
+                    mysqlpp::sql_double f4,
+                    const mysqlpp::sql_date& f5,
+                    const mysqlpp::sql_mediumtext& f6); // calls save()
+
+                bool createTable(Connection* conn = 0) const;
+                const char* getTableName() const
+                        { return class_table_name_ || table(); }
+                void setTableName(const char* name)
+                        { instance_table(name); }
+                static void setTableName(const char* name)
+                        { class_table_name_ = name; }
+
+                std::ostream& equal_list(std::ostream& os) const;
+                std::ostream& name_list(std::ostream& os) const;
+                std::ostream& value_list(std::ostream& os) const;
+
+                mysqlpp::sql_bigint getId() const;
+                mysqlpp::sql_bigint getNum() const;
+                mysqlpp::sql_double getWeight() const;
+                mysqlpp::sql_double getPrice() const;
+                const mysqlpp::sql_date& getSdate() const;
+                const mysqlpp::sql_mediumtext& getDescription() const;
+ 
+                void setId(mysqlpp::sql_bigint value);
+                void setNum(mysqlpp::sql_bigint value);
+                void setWeight(mysqlpp::sql_double value);
+                void setPrice(mysqlpp::sql_double value);
+                void setSdate(const mysqlpp::sql_date& value);
+                void setDescripion(const mysqlpp::sql_mediumtext& value);
+ 
+                bool operator<(const SQLStock& rhs) const;
+
+            protected:
+                mysqlpp::sql_bigint id_;
+                mysqlpp::sql_bigint num_;
+                mysqlpp::sql_double weight_;
+                mysqlpp::sql_double price_;
+                mysqlpp::sql_date sdate_;
+                mysqlpp::sql_mediumtext description_;
+
+                std::bitset<6> set_fields_;
+
+            private:
+                static const char* class_table_name_;
+            };
+
+        ...and ssqls_stock.cc, containing implementation for same.
+
+      - MySQL table metadata to SSQLSv2 data structure translator.
+        (-s, -u, -p and -t flag support.)  Add this to dtest,
+        extracting stock.ssqls definition from DB.
+
+      - Replace Query's template methods taking SSQLSes with concrete
+        methods taking const SsqlsBase&.
+
+      - Create Query::remove(const SsqlsBase&)
+
+      - Try to restore VC++ 2003 compatibility
+
+      - Try to remove of 'explicit' from Date, DateTime and Time
+        ctors taking stringish types.  (Can't do it for real until v4,
+        but we can lay the ground work here.)
+
+      - Auto-create() ctor: if there is an auto_increment field,
+        populate it on query success.
+
+      - Detect ctor conflicts corresponding to sql_create_N(N, N...)
+        in SSQLSv1.  ssqlsxlat can be smart enough to just not emit
+        duplicate ctors.
+
+      - Special case of ctor suppression: if the number of key fields
+        equals the total number of fields, you get an auto-load()
+        ctor, not auto-update().
+
+      - Replace CREATE TABLE SQL in resetdb with create_table() calls.
 
     o Chris Frey's packarray class
 
