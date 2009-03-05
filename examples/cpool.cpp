@@ -44,13 +44,12 @@ class SimpleConnectionPool : public mysqlpp::ConnectionPool
 {
 public:
 	// The object's only constructor
-	SimpleConnectionPool(const char* db, const char* server,
-			const char* user, const char* password) :
+	SimpleConnectionPool(mysqlpp::examples::CommandLine& cl) :
 	conns_in_use_(0),
-	db_(db ? db : ""),
-	server_(server ? server : ""),
-	user_(user ? user : ""),
-	password_(password ? password : "")
+	db_(mysqlpp::examples::db_name),
+	server_(cl.server()),
+	user_(cl.user()),
+	password_(cl.pass())
 	{
 	}
 
@@ -185,8 +184,8 @@ main(int argc, char *argv[])
 {
 #if defined(HAVE_THREADS)
 	// Get database access parameters from command line
-	const char* db = 0, *server = 0, *user = 0, *pass = "";
-	if (!parse_command_line(argc, argv, &db, &server, &user, &pass)) {
+	mysqlpp::examples::CommandLine cmdline(argc, argv);
+	if (!cmdline) {
 		return 1;
 	}
 
@@ -197,7 +196,7 @@ main(int argc, char *argv[])
 	// latter check should never fail on Windows, but will fail on most
 	// other systems unless you take positive steps to build with thread
 	// awareness turned on.  See README-*.txt for your platform.
-	poolptr = new SimpleConnectionPool(db, server, user, pass);
+	poolptr = new SimpleConnectionPool(cmdline);
 	try {
 		mysqlpp::Connection* cp = poolptr->grab();
 		if (!cp->thread_aware()) {
