@@ -126,7 +126,7 @@
     database:</para>
 
     <screen>
-CREATE USER mysqlpp_test@'%' IDENTIFIED BY 'nunyabinness';
+CREATE USER mysqlpp_test@'%' IDENTIFIED BY &rsquo;nunyabinness';
 GRANT ALL PRIVILEGES ON mysql_cpp_data.* TO mysqlpp_test@'%';</screen>
 
     <para>You could then create the sample database with the following
@@ -259,7 +259,7 @@ GRANT ALL PRIVILEGES ON mysql_cpp_data.* TO mysqlpp_test@'%';</screen>
 {
   mysqlpp::NoExceptions ne(con);
   if (!con.select_db("a_db_that_might_not_exist_yet")) {
-    // Our DB doesn't exist yet, so create and select it here; no need
+    // Our DB doesn&rsquo;t exist yet, so create and select it here; no need
     // to push handling of this case way off in an exception handler.
   }
 }</programlisting>
@@ -354,12 +354,12 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; 
     Buns&rdquo; instead. The resulting query would be:</para>
 
     <programlisting>
-SELECT * FROM stock WHERE item = 'Frank's Brand Hotdog Buns' </programlisting>
+SELECT * FROM stock WHERE item = 'Frank&rsquo;s Brand Hotdog Buns' </programlisting>
 
     <para>That&rsquo;s not valid SQL syntax. The correct syntax is:</para>
 
     <programlisting>
-SELECT * FROM stock WHERE item = 'Frank''s Brand Hotdog Buns' </programlisting>
+SELECT * FROM stock WHERE item = 'Frank'&rsquo;s Brand Hotdog Buns' </programlisting>
 
     <para>As you might expect, MySQL++ provides that feature, too,
     through its <type>escape</type> manipulator. But here, we want both
@@ -367,7 +367,7 @@ SELECT * FROM stock WHERE item = 'Frank''s Brand Hotdog Buns' </programlisting>
     manipulator:</para>
 
     <programlisting>
-string s = "Frank's Brand Hotdog Buns";
+string s = "Frank&rsquo;s Brand Hotdog Buns";
 query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </programlisting>
 
     <para>The <type>quote</type> manipulator both quotes strings and
@@ -1070,46 +1070,90 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
     <title>Concurrent Queries on a Connection</title>
 
     <para>An important limitation of the MySQL C API library &mdash;
-    which MySQL++ is built atop, so it shares this limitation &mdash; is
-    that you can&rsquo;t have two concurrent queries running on a single
-    connection. If you try, you get an obscure error message about
+    which MySQL++ is built atop, so it shares this limitation &mdash;
+    is that you can only have one query in progress on each connection
+    to the database server. If you try to issue a second query while
+    one is still in progress, you get an obscure error message about
     &ldquo;Commands out of sync&rdquo; from the underlying C API
-    library. (You get it in a MySQL++ exception unless you have
-    exceptions disabled, in which case you get a failure code and
-    <methodname>Connection::error()</methodname> returns this
-    message.)</para>
+    library. (You normally get this message in a MySQL++ exception
+    unless you have exceptions disabled, in which case you get a
+    failure code and <methodname>Connection::error()</methodname>
+    returns this message.)</para>
 
-    <para>The easiest way to cause this error is in a multithreaded
-    program where you have a single <ulink type="classref"
-    url="Connection"/> object, but allow multiple threads to issue
-    queries on it. Unless you put in a lot of work to synchronize
-    access, this is almost guaranteed to fail.</para>
+    <para>There are lots of ways to run into this limitation:</para>
 
-    <para>If you give each thread that issues queries has its own
-    <classname>Connection</classname> object, you can still run into
-    trouble if you pass the data you get from queries around to other
-    threads. What can happen is that one of these child objects
-    indirectly calls back to the <classname>Connection</classname> at a
-    time where it&rsquo;s involved with another query. (There are other
-    ways to run into trouble when sharing MySQL++ data structures among
-    threads, but the whole topic is complex enough to deserve its own
-    chapter, <xref linkend="threads"/>.)</para>
+    <itemizedlist>
+      <listitem>
+        <para>The easiest way is to try to use a single <ulink
+        type="classref" url="Connection"/> object in a multithreaded
+        program, with more than one thread attempting to use it to
+        issue queries.  Unless you put in a lot of work to synchronize
+        access, this is almost guaranteed to fail at some point, giving
+        the dread &ldquo;Commands out of sync&rdquo; error.</para>
+      </listitem>
 
-    <para>It&rsquo;s possible to run into this problem in a
-    single-threaded program as well. As discussed above (<xref
-    linkend="querytypes"/>), one of the options MySQL offers for
-    executing a query lets you issue the query, then consume the rows
-    one at a time, on demand: it&rsquo;s the &ldquo;use&rdquo; query. If
-    you don&rsquo;t consume all rows from a query before you issue
-    another on that connection, you are effectively trying to have
-    multiple concurrent queries on a single connection, and you end up
-    with the same problem. The simplest recipie for disaster is:</para>
+      <listitem>
+        <para>You might then think to give each thread that issues
+        queries its own <classname>Connection</classname> object.
+        You can still run into trouble if you pass the data you get
+        from queries around to other threads. What can happen is
+        that one of these child objects indirectly calls back to the
+        <classname>Connection</classname> at a time where it&rsquo;s
+        involved with another query. This and other topics is properly
+        covered elsewhere, in <xref linkend="threads"/>.)</para>
+      </listitem>
 
-    <programlisting>
+      <listitem>
+        <para>One way to run into this problem without using
+        threads is with &ldquo;use&rdquo; queries, discussed <link
+        linkend="querytypes">above</link>. If you don&rsquo;t
+        consume all rows from a query before you issue another on
+        that connection, you are effectively trying to have multiple
+        concurrent queries on a single connection. Here&rsquo;s a
+        recipie for this particular disaster:</para>
+
+        <programlisting>
 UseQueryResult r1 = query.use("select garbage from plink where foobie='tamagotchi'");
 UseQueryResult r2 = query.use("select blah from bonk where bletch='smurf'");</programlisting>
 
-    <para>The second <methodname>use()</methodname> call fails because
-    the first result set hasn&rsquo;t been consumed yet.</para>
+        <para>The second <methodname>use()</methodname> call fails because
+        the first result set hasn&rsquo;t been consumed yet.</para>
+      </listitem>
+
+      <listitem>
+        <para>Still another way to run into this limitation
+        is if you use MySQL&rsquo;s multi-query feature. This
+        lets you give multiple queries in a single call,
+        separated by semicolons, and get back the results for
+        each query separately. If you issue three queries using
+        <methodname>Query::store()</methodname>, you only get
+        back the first query&rsquo;s results with that call, and
+        then have to call <methodname>store_next()</methodname>
+        to get the subsequent query results.  MySQL++ provides
+        <methodname>Query::more_results()</methodname> so
+        you know whether you&rsquo;re done, or need to call
+        <methodname>store_next()</methodname> again.  Until you reach
+        the last result set, you can&rsquo;t issue another query on
+        that connection.</para>
+      </listitem>
+
+      <listitem>
+        <para>Finally, there&rsquo;s a way to run into this
+        that surprises almost everyone sooner or later: stored
+        procedures. MySQL normally returns <emphasis>at least
+        two</emphasis> result sets for a stored procedure call. The
+        simple case is that the stored procedure contains a single
+        SQL query, and it succeeds: you get two results, first the
+        results of the embedded SQL query, and then the result
+        of the call itself. If there are multiple SQL queries
+        within the stored procedure, you get more than two result
+        sets. Until you consume them all, you can&rsquo;t start a
+        new query on the connection. As above, you want to have
+        a loop calling <methodname>more_results()</methodname>
+        and <methodname>store_next()</methodname> to work your
+        way through all of the result sets produced by the stored
+        procedure call.</para>
+      </listitem>
+    </itemizedlist>
   </sect2>
 </sect1>
