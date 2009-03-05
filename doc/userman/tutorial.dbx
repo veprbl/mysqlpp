@@ -1099,8 +1099,8 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
         from queries around to other threads. What can happen is
         that one of these child objects indirectly calls back to the
         <classname>Connection</classname> at a time where it&rsquo;s
-        involved with another query. This and other topics is properly
-        covered elsewhere, in <xref linkend="threads"/>.)</para>
+        involved with another query. This is properly covered
+        elsewhere, in <xref linkend="thread-data-sharing"/>.)</para>
       </listitem>
 
       <listitem>
