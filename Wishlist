@@ -356,3 +356,8 @@ v4.0 or Later
       strings based on only one dynamic_cast instead of requiring
       two as it does since the addition of the SQLStream class.
 
+	o Make internal call chain steps like Query::execute(SQLQueryParms&)
+	  protected?  No good reason for end users to call it, and making
+	  it part of the public API causes people to try calling it, and
+	  discovering that it's not a very elegant interface, compared to
+	  the ones taking SQLStrings.
