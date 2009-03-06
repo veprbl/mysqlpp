@@ -220,6 +220,15 @@ v3.1 Tentative Plan
       mysql++-config script, which either wraps pkg-config or
       reinvents it, poorly, for systems that don't have it.
 
+	o Would this be smart:
+
+		#define NOW() mysqlpp::DateTime()
+
+	  ?  Useful with template queries, but risky in that it's a short
+	  word at global scope.  This would be inefficient, but maybe okay:
+
+	    inline DateTime NOW() { return DateTime(); }
+
 
 v3.2 Tentative Plan
 -------------------
