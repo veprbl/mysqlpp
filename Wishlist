@@ -223,6 +223,10 @@ v3.1 Tentative Plan
 
 v3.2 Tentative Plan
 -------------------
+	o mysqlpp::execute manipulator.  Immediately executes built
+	  query string.  Works best with exceptions, as that's the only way
+	  to detect failures.
+
     o Chris Frey's packarray class
 
     o Create adaptors for std::bitset, for storing binary data in a
