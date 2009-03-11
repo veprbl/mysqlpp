@@ -6,7 +6,7 @@
 #	number limits the number of parameters a MySQL++ template query can
 #	accept.  This value can be changed from its default, below.
 #
-# Copyright (c) 2006-2008 by Educational Technology Resources, Inc.
+# Copyright (c) 2006-2009 by Educational Technology Resources, Inc.
 # Others may also hold copyrights on code in this file.  See the CREDITS
 # file in the top directory of the distribution for details.
 #
@@ -50,6 +50,8 @@ print OUT << "---";
 
 #ifndef MYSQLPP_QUERYDEF_H
 #define MYSQLPP_QUERYDEF_H
+
+#define MYSQLPP_TQUERY_MAX_PARAMETERS $max_parameters
 
 ---
 

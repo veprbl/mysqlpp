@@ -5,7 +5,7 @@
 #	functions and classes, varying only in trivial ways.
 #
 # Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
-# (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
+# (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
 # also hold copyrights on code in this file.  See the CREDITS.txt file
 # in the top directory of the distribution for details.
 #
@@ -89,6 +89,8 @@ enum sql_dummy_type { sql_dummy };
 #else
 #	define MYSQLPP_SSQLS_CONDITIONAL_STATICS(...) __VA_ARGS__
 #endif
+
+#define MYSQLPP_SSQLS_MAX_MEMBERS $max_data_members
 
 ---
 
