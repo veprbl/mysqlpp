@@ -257,6 +257,14 @@ public:
 	/// that must be escaped when used in a SQL query
 	bool escape_q() const;
 
+	/// \brief Return true if buffer's contents represent a SQL
+	/// null.
+	///
+	/// The buffer's actual content will probably be "NULL" or
+	/// something like it, but in the SQL data type system, a SQL
+	/// null is distinct from a plain string with value "NULL".
+	bool is_null() const { return buffer_->is_null(); }
+
 	/// \brief Returns true if the internal 'processed' flag is set.
 	///
 	/// This is an implementation detail of template queries, used to

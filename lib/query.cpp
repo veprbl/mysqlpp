@@ -2,7 +2,7 @@
  query.cpp - Implements the Query class.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS.txt file
  in the top directory of the distribution for details.
 
@@ -421,12 +421,17 @@ Query::proc(SQLQueryParms& p)
 			}
 
 			SQLTypeAdapter& param = (*c)[num];
-			SQLTypeAdapter* ss = pprepare(i->option, param, c->bound());
-			MYSQLPP_QUERY_THISPTR << *ss;
-			if (ss != &param) {
-				// pprepare() returned a new string object instead of
-				// updating param in place, so we need to delete it.
-				delete ss;
+			if (param.is_null()) {
+				MYSQLPP_QUERY_THISPTR << "NULL";
+			}
+			else {
+				SQLTypeAdapter* ss = pprepare(i->option, param, c->bound());
+				MYSQLPP_QUERY_THISPTR << *ss;
+				if (ss != &param) {
+					// pprepare() returned a new string object instead of
+					// updating param in place, so we need to delete it.
+					delete ss;
+				}
 			}
 		}
 	}
