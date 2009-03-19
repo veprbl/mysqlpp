@@ -63,7 +63,7 @@
 				if (optind >= argc) {
 					return EOF;
 				}
-				if (argv[optind][0] != '-' || argv[ag_optind][1] == '\0') {
+				if (argv[optind][0] != '-' || argv[optind][1] == '\0') {
 					return EOF;
 				}
 			}
@@ -76,7 +76,7 @@
 			optopt = c = argv[optind][sp];
 
 			/* Check for invalid goption */
-			if (c == ':' || (cp = strchr(gopts, c)) == 0) {
+			if (c == ':' || (cp = strchr(opts, c)) == 0) {
 				fprintf(stderr, "%s: illegal option -- %c\n", argv[0], c);
 				if (argv[optind][++sp] == '\0') {
 					optind++;
@@ -90,7 +90,7 @@
 			if (*++cp == ':') {
 				/* If so, get argument; if none provided output error */
 				if (argv[optind][sp + 1] != '\0') {
-					optarg = &argv[ag_optind++][sp + 1];
+					optarg = &argv[optind++][sp + 1];
 				}
 				else if (++optind >= argc) {
 					fprintf(stderr,
@@ -99,7 +99,7 @@
 					return '?';
 				}
 				else {
-					optarg = argv[ag_optind++];
+					optarg = argv[optind++];
 				}
 				sp = 1;
 			}
