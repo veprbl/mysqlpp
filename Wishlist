@@ -220,21 +220,25 @@ v3.1 Tentative Plan
       mysql++-config script, which either wraps pkg-config or
       reinvents it, poorly, for systems that don't have it.
 
-	o Would this be smart:
+    o Would this be smart:
 
-		#define NOW() mysqlpp::DateTime()
+        #define NOW() mysqlpp::DateTime()
 
-	  ?  Useful with template queries, but risky in that it's a short
-	  word at global scope.  This would be inefficient, but maybe okay:
+      ?  Useful with template queries, but risky in that it's a short
+      word at global scope.  This would be inefficient, but maybe okay:
 
-	    inline DateTime NOW() { return DateTime(); }
+        inline DateTime NOW() { return DateTime(); }
+
+    o Add String::operator==(const mysqlpp::null_type&).  Needed to
+      allow comparison of row[x] returns to SQL null.  Change one of
+      the examples to show it?
 
 
 v3.2 Tentative Plan
 -------------------
-	o mysqlpp::execute manipulator.  Immediately executes built
-	  query string.  Works best with exceptions, as that's the only way
-	  to detect failures.
+    o mysqlpp::execute manipulator.  Immediately executes built
+      query string.  Works best with exceptions, as that's the only way
+      to detect failures.
 
     o Chris Frey's packarray class
 
@@ -365,8 +369,8 @@ v4.0 or Later
       strings based on only one dynamic_cast instead of requiring
       two as it does since the addition of the SQLStream class.
 
-	o Make internal call chain steps like Query::execute(SQLQueryParms&)
-	  protected?  No good reason for end users to call it, and making
-	  it part of the public API causes people to try calling it, and
-	  discovering that it's not a very elegant interface, compared to
-	  the ones taking SQLStrings.
+    o Make internal call chain steps like Query::execute(SQLQueryParms&)
+      protected?  No good reason for end users to call it, and making
+      it part of the public API causes people to try calling it, and
+      discovering that it's not a very elegant interface, compared to
+      the ones taking SQLStrings.
