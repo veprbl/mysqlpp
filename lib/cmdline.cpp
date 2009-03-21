@@ -123,19 +123,21 @@
 namespace mysqlpp {
 
 //// CommandLineBase::finish_parse /////////////////////////////////////
+// Called by subclass when it's finished parsing the command line.  It
+// does nothing if we're not still in a "successful" state.
 
 void
 CommandLineBase::finish_parse()
 {
-	const int nextras = argc_ - option_index();
-	if (nextras > 0) {
-		extra_args_.resize(nextras);
-		for (int i = 0; i < nextras; ++i) {
-			extra_args_[i] = argv_[option_index() + i];
+	if (successful_) {
+		const int nextras = argc_ - option_index();
+		if (nextras > 0) {
+			extra_args_.resize(nextras);
+			for (int i = 0; i < nextras; ++i) {
+				extra_args_[i] = argv_[option_index() + i];
+			}
 		}
 	}
-
-	successful_ = true;
 }
 
 
@@ -172,6 +174,23 @@ CommandLineBase::parse_next() const
 }
 
 
+//// CommandLineBase::parse_error //////////////////////////////////////
+// Called by subclasses when they encounter an error in parsing.  We
+// wrap up several details of handling that error: display the
+// message on stderr, call the subclass's print_usage() method, and
+// marks the object as no longer successful.
+
+void
+CommandLineBase::parse_error(const char* message)
+{
+	if (message) {
+		std::cerr << message << '\n';
+	}
+	print_usage();
+	successful_ = false;
+}
+
+
 ////////////////////////////////////////////////////////////////////////
 // Command line parser for MySQL++ examples.
 
@@ -189,10 +208,11 @@ dtest_mode_(false),
 run_mode_(0),
 server_(0),
 user_(user && *user ? user : 0),
-pass_(pass && *pass ? pass : "")
+pass_(pass && *pass ? pass : ""),
+usage_extra_(usage_extra)
 {
 	int ch;
-	while ((ch = parse_next()) != EOF) {
+	while (successful() && ((ch = parse_next()) != EOF)) {
 		switch (ch) {
 			case 'm': run_mode_ = atoi(option_argument()); break;
 			case 'p': pass_ = option_argument();           break;
@@ -200,7 +220,7 @@ pass_(pass && *pass ? pass : "")
 			case 'u': user_ = option_argument();           break;
 			case 'D': dtest_mode_ = true;                  break;
 			default:
-				print_usage(usage_extra);
+				parse_error();
 				return;
 		}
 	}
@@ -233,4 +253,89 @@ CommandLine::print_usage(const char* extra) const
 }
 
 } // end namespace mysqlpp::examples
+
+
+////////////////////////////////////////////////////////////////////////
+// Command line parser for MySQL++'s ssqlsxlat tool.
+
+namespace ssqlsxlat {
+
+//// ssqlsxlat::CommandLine ctor ////////////////////////////////////////
+
+CommandLine::CommandLine(int argc, char* const argv[]) :
+CommandLineBase(argc, argv, "i:o:p:s:t:u:1:"),
+input_(0),
+output_(0),
+pass_(""),
+server_(0),
+user_(0),
+input_source_(input_unknown)
+{
+	// Parse the command line
+	int ch;
+	while (successful() && ((ch = parse_next()) != EOF)) {
+		switch (ch) {
+			case 'o': output_ = option_argument(); break;
+			case 'p': pass_ = option_argument();   break;
+			case 's': server_ = option_argument(); break;
+			case 'u': user_ = option_argument();   break;
+			case 'i':
+			case 't':
+			case '1':
+				if (input_) {
+					std::cerr << "Warning: overriding previous input "
+							"source!  Only last -i, -t or -1 is "
+							"effective.\n";
+				}
+				input_ = option_argument();
+				input_source_ =
+						(ch == '1' ? input_ssqlsv1 :
+						 ch == 'i' ? input_ssqlsv2 :
+						             input_table);
+				break;
+
+			default:
+				parse_error();
+		}
+	}
+	finish_parse();
+
+	// Figure out whether command line makes sense, and if not, tell
+	// user about it.
+	if (successful()) {
+		if (input_source_ == input_unknown) {
+			parse_error("No input source given!  Need -i, -t or -1.");
+		}
+		else if ((input_source_ != input_ssqlsv2) && !output_) {
+			parse_error("Need -o if you give -t or -1!");
+		}
+	}
+}
+
+
+//// ssqlsxlat::CommandLine::print_usage ////////////////////////////////
+// Show a generic usage message suitable for ../ssqlsxlat/*.cpp  The
+// parameters specialize the message to a minor degree.
+
+void
+CommandLine::print_usage() const
+{
+	std::cerr << "usage: " << program_name() <<
+        	" [ -i input.ssqls ] [ -1 input-ssqlsv1.cpp ]\n"
+			"\t[ -u user ] [ -p password ] [ -s server ] [ -t table ]\n"
+			"\t[ -o parsedump.ssqls ]\n";
+	std::cerr << std::endl;
+	std::cerr <<
+			"\t-i: parse SSQLSv2 DSL, generating C++ output at minimum\n"
+			"\t-1: find SSQLSv1 declarations in C++ code, and try to\n"
+			"\t    interpret as equivalent SSQLSv2; requires -o\n"
+			"\t-u, -p, -s and -t: log into server, get schema details\n"
+			"\t    for a table, and generate output as if parsed from\n"
+			"\t    SSQLSv2 DSL; requires -o\n"
+			"\t-o: write out .ssqls file containing info found by\n"
+			"\t    processing -i, -t or -1\n";
+	std::cerr << std::endl;
+}
+
+} // end namespace mysqlpp::ssqlsxlat
 } // end namespace mysqlpp

@@ -66,15 +66,15 @@ namespace mysqlpp {
 		argc_(argc),
 		argv_(argv),
 		opts_(opts),
-		successful_(false)
+		successful_(argc > 0 && argv && opts)
 		{
-			assert(argc > 0 && argv && opts);
+			assert(successful_);
 		}
 		virtual ~CommandLineBase() { }
 
-		// Save non-option arguments to extra_args_ list, and mark the
-		// object as "successful".  Subclass ctor should call this after
-		// parse_next() loop gets EOF.
+		// If object is still marked as "successful", save non-option
+		// arguments to extra_args_ list.  Subclass ctor should call
+		// this after the parse_next() loop gets EOF.
 		void finish_parse();
 
 		// Accessors for getopt() globals, so subclasses can ignore
@@ -82,11 +82,21 @@ namespace mysqlpp {
 		const char* option_argument() const;
 		int option_index() const;
 
+		// Prints the passed message, calls subclass's print_usage(),
+		// and marks the object as no longer successful.
+		void parse_error(const char* message = 0);
+
 		// Wrapper for getopt()
 		int parse_next() const;
 
+		// Show a message explaining the program's proper usage
+		virtual void print_usage() const = 0;
+
 		// Get the program's executable name
 		const char* program_name() const { return argv_[0]; }
+
+		// Returns true if nothing has gone wrong since calling the ctor.
+		bool successful() const { return successful_; }
 
 	private:
 		//// Internal data
@@ -113,7 +123,8 @@ namespace mysqlpp {
 					const char* user = 0, const char* pass = 0,
 					const char* usage_extra = 0);
 
-			// Show a mesage explaining the program's proper usage
+			// Show a message explaining the program's proper usage
+			void print_usage() const { print_usage(usage_extra_); }
 			void print_usage(const char* extra) const;
 
 			// Read-only "get" accessors
@@ -131,8 +142,49 @@ namespace mysqlpp {
 			const char* server_;
 			const char* user_;
 			const char* pass_;
+			const char* usage_extra_;
 		};
 	} // end namespace mysqlpp::examples
+
+
+	// Command line parser for MySQL++'s ssqlsxlat tool
+	namespace ssqlsxlat {
+		class MYSQLPP_EXPORT CommandLine : public CommandLineBase
+		{
+		public:
+			//// Public types
+			enum input_source_t {
+				input_unknown,
+				input_ssqlsv1,
+				input_ssqlsv2,
+				input_table
+			};
+
+			//// Public interface
+			// Ctor
+			CommandLine(int argc, char* const argv[]);
+
+			// Show a message explaining the program's proper usage
+			void print_usage() const;
+
+			// Read-only "get" accessors
+			const char* input() const { return input_; }
+			const char* output() const { return output_; }
+			const char* pass() const { return pass_; }
+			const char* server() const { return server_; }
+			const char* user() const { return user_; }
+			input_source_t input_source() const { return input_source_; }
+
+		private:
+			//// Internal data: command line parse results
+			const char* input_;
+			const char* output_;
+			const char* pass_;
+			const char* server_;
+			const char* user_;
+			input_source_t input_source_;
+		};
+	} // end namespace mysqlpp::ssqlsxlat
 } // end namespace mysqlpp
 
 #endif // !defined(MYSQLPP_CMDLINE_H)

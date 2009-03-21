@@ -195,6 +195,11 @@
     </if>
   </template>
 
+  <!-- Build rules for ssqlsxlat tool -->
+  <exe id="ssqlsxlat" template="programs">
+    <sources>ssx/main.cpp</sources>
+  </exe>
+
   <!-- Define library testing programs' output targets, if enabled -->
   <if cond="BUILDTEST=='yes'">
     <exe id="test_array_index" template="programs">

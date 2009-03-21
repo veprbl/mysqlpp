@@ -20,24 +20,6 @@ v3.1 Tentative Plan
 -------------------
     o SSQLS v2 (http://lists.mysql.com/plusplus/6929):
 
-      - Command line parser, implementing this usage:
-
-        ssqlsxlat [-i input.ssqls] [ -1 input-ssqlsv1.cpp ]
-                [ -u user ] [ -p password ] [ -s server ] [ -t table ]
-                [ -o parsedump.ssqls]
-
-        -i: parse SSQLSv2 DSL, generating C++ output at minimum
-        -1: find SSQLSv1 declarations in C++ code, and try to interpret
-            as equivalent SSQLSv2
-        -u, -p, -s and -t: log into server, get schema details for a
-            table, and generate output as if parsed from SSQLSv2 DSL
-        -o: write SSQLSv2 parse info out to .ssqls file
-
-        The latter should work with -i, -1, or -t inputs, implying that
-        all of these construct the same data structure, which -o walks,
-        much as regular C++ output code does, differing only in the
-        output format.
-
       - SSQLSv2 DSL parser:
 
         stock.ssqls:
