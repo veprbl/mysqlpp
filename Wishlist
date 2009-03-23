@@ -258,6 +258,30 @@ v3.2 Tentative Plan
 
     o Try to add operator std::string to String.  If it doesn't work,
       explain why not in the userman, and in Row::operator[] refman.
+      
+    o Wrap LOAD DATA INFILE:
+
+      bool Query::load_file(
+          const char* path,
+          bool local_path,
+          const char* table,
+          const char* field_terminator = 0,   // default \t
+          const char* field_encloser = 0,     // default none
+          const char* field_escape = 0,       // default \
+          const char* line_terminator = 0,    // \n on *ix, \r\n on Windows
+          const char* line_starter = 0,       // default none
+          const char* character_set = 0,      // default UTF-8
+          const char* comment_prefix = 0,     // ignore no lines
+          bool replace_existing = false,
+          bool ignore_duplicates = false,
+          bool low_priority = false,
+          int skip_lines = 0);
+
+    o Wrappers for above: load_local_tab_file(), load_local_csv_file(),
+      load_remote_*()...
+
+    o Query::save_file() interfaces, wrapping SELECT ... INTO FILE,
+      modeled on above.
 
 
 v4.0 or Later
