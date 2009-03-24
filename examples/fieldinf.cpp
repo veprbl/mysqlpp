@@ -90,7 +90,7 @@ main(int argc, char *argv[])
 		if (res.field_type(5) == typeid(string)) {
 			cout << "Should not happen! Type check failure." << endl;
 		}
-		else if (res.field_type(5) == typeid(mysqlpp::Null<mysqlpp::String>)) {
+		else if (res.field_type(5) == typeid(mysqlpp::sql_blob_null)) {
 			cout << "SQL type of 'description' field resembles "
 					"a nullable variant of the C++ string type." << endl;
 		}

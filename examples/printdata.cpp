@@ -55,8 +55,7 @@ print_stock_header(int rows)
 
 void
 print_stock_row(const mysqlpp::sql_char& item, mysqlpp::sql_bigint num,
-		mysqlpp::sql_double weight,
-		mysqlpp::Null<mysqlpp::sql_decimal> price,
+		mysqlpp::sql_double weight, mysqlpp::sql_decimal_null price,
 		const mysqlpp::sql_date& date)
 {
 	cout << setw(30) << item << ' ' <<

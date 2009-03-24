@@ -32,7 +32,7 @@
 //
 //   sql_char item;
 //   ...
-//   Null<sql_mediumtext> description;
+//   sql_mediumtext_null description;
 //
 // plus methods to help populate the class from a MySQL row.  See the
 // SSQLS sections in the user manual for further details.
@@ -41,7 +41,7 @@ sql_create_6(stock,
 	mysqlpp::sql_char, item,
 	mysqlpp::sql_bigint, num,
 	mysqlpp::sql_double, weight,
-	mysqlpp::Null<mysqlpp::sql_double>, price,
+	mysqlpp::sql_double_null, price,
 	mysqlpp::sql_date, sdate,
-	mysqlpp::Null<mysqlpp::sql_mediumtext>, description)
+	mysqlpp::sql_mediumtext_null, description)
 
