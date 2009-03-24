@@ -57,7 +57,7 @@
 #include "cpool.h"
 #include "query.h"
 #include "sql_types.h"
-#include "ssqls2.h"
+//#include "ssqls2.h"
 #include "transaction.h"
 
 namespace mysqlpp {
