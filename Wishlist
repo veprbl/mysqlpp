@@ -244,7 +244,9 @@ v3.2 Tentative Plan
 
     o Create a fixed-point data type for use with SQL's DECIMAL and
       related types.  Right now, sql_decimal is a typedef for double,
-      so you lose accuracy in the fractional part.
+      so you lose accuracy in the fractional part.  Don't forget to
+	  include an "is_null" flag to cope with conversion from infinite
+	  or NaN float values; that's how MySQL stores these.
 
     o Optional checked conversions in String for numerics: throw
       BadConversion on range overflow?
