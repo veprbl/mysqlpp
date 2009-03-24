@@ -106,14 +106,14 @@ is_processed_(false)
 }
 #endif
 
-SQLTypeAdapter::SQLTypeAdapter(sql_tinyint i) :
+SQLTypeAdapter::SQLTypeAdapter(tiny_int<signed char> i) :
 buffer_(new SQLBuffer(stream2string(i), typeid(i), false)),
 is_processed_(false)
 {
 }
 
 #if !defined(DOXYGEN_IGNORE)
-SQLTypeAdapter::SQLTypeAdapter(Null<sql_tinyint> i) :
+SQLTypeAdapter::SQLTypeAdapter(Null<tiny_int<signed char> > i) :
 buffer_(new SQLBuffer(i.is_null ? null_str : stream2string(i),
 		i.is_null ? typeid(void) : typeid(i.data), i.is_null)),
 is_processed_(false)
@@ -121,14 +121,14 @@ is_processed_(false)
 }
 #endif
 
-SQLTypeAdapter::SQLTypeAdapter(sql_tinyint_unsigned i) :
+SQLTypeAdapter::SQLTypeAdapter(tiny_int<unsigned char> i) :
 buffer_(new SQLBuffer(stream2string(i), typeid(i), false)),
 is_processed_(false)
 {
 }
 
 #if !defined(DOXYGEN_IGNORE)
-SQLTypeAdapter::SQLTypeAdapter(Null<sql_tinyint_unsigned> i) :
+SQLTypeAdapter::SQLTypeAdapter(Null<tiny_int<unsigned char> > i) :
 buffer_(new SQLBuffer(i.is_null ? null_str : stream2string(i),
 		i.is_null ? typeid(void) : typeid(i.data), i.is_null)),
 is_processed_(false)
