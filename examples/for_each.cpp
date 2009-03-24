@@ -51,7 +51,7 @@ public:
 	{
 		items_  += s.num;
 		weight_ += (s.num * s.weight);
-		cost_   += (s.num * s.price);
+		cost_   += (s.num * s.price.data);
 	}
 	
 private:

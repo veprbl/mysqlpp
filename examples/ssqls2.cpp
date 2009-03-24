@@ -30,6 +30,7 @@
 #include "stock.h"
 
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -50,7 +51,8 @@ main(int argc, char *argv[])
 		// Create and populate a stock object.  We could also have used
 		// the set() member, which takes the same parameters as this
 		// constructor.
-		stock row("Hot Dogs", 100, 1.5, 1.75,
+		stock row("Hot Dogs", 100, 1.5,
+				numeric_limits<double>::infinity(),	// "priceless," ha!
 				mysqlpp::sql_date("1998-09-25"), mysqlpp::null);
 
 		// Form the query to insert the row into the stock table.

@@ -137,7 +137,7 @@ main(int argc, char *argv[])
 				"  item CHAR(30) NOT NULL, " <<
 				"  num BIGINT NOT NULL, " <<
 				"  weight DOUBLE NOT NULL, " <<
-				"  price DECIMAL(6,2) NOT NULL, " <<
+				"  price DECIMAL(6,2) NULL, " << // NaN & inf. == NULL
 				"  sdate DATE NOT NULL, " <<
 				"  description MEDIUMTEXT NULL) " <<
 				"ENGINE = InnoDB " <<

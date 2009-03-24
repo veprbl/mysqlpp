@@ -2,7 +2,7 @@
  stadapter.cpp - Implements the SQLTypeAdapter class.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS.txt file
  in the top directory of the distribution for details.
 
@@ -31,6 +31,7 @@
 #include "stream2string.h"
 
 #include <iomanip>
+#include <limits>
 #include <sstream>
 
 using namespace std;
@@ -258,17 +259,32 @@ is_processed_(false)
 SQLTypeAdapter::SQLTypeAdapter(float f) :
 is_processed_(false)
 {
-	ostringstream outs;
-	outs.precision(9);	// max dec digits needed for IEEE 754 32-bit float
-	outs << f;
-	buffer_ = new SQLBuffer(outs.str(), typeid(f), false);
+	numeric_limits<float> nlf;
+	if ((nlf.has_infinity && (f == nlf.infinity())) ||
+			(nlf.has_quiet_NaN && (f == nlf.quiet_NaN())) ||
+			(nlf.has_signaling_NaN && (f == nlf.signaling_NaN()))) {
+		// f isn't null-able, but it's infinite or NaN, so store it
+		// as a 0.  This at least prevents syntactically-invalid SQL.
+		buffer_ = new SQLBuffer("0", typeid(f), true);
+	}
+	else {
+		ostringstream outs;
+		outs.precision(9);	// max dec digits needed for IEEE 754 32-bit float
+		outs << f;
+		buffer_ = new SQLBuffer(outs.str(), typeid(f), false);
+	}
 }
 
 #if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<float> f) :
 is_processed_(false)
 {
-	if (f.is_null) {
+	numeric_limits<float> nlf;
+	if (f.is_null ||
+			(nlf.has_infinity && (f.data == nlf.infinity())) ||
+			(nlf.has_quiet_NaN && (f.data == nlf.quiet_NaN())) ||
+			(nlf.has_signaling_NaN && (f.data == nlf.signaling_NaN()))) {
+		// MySQL wants infinite and NaN FP values stored as SQL NULL
 		buffer_ = new SQLBuffer(null_str, typeid(void), true);
 	}
 	else {
@@ -283,17 +299,32 @@ is_processed_(false)
 SQLTypeAdapter::SQLTypeAdapter(double f) :
 is_processed_(false)
 {
-	ostringstream outs;
-	outs.precision(17);	// max dec digits needed for IEEE 754 64-bit float
-	outs << f;
-	buffer_ = new SQLBuffer(outs.str(), typeid(f), false);
+	numeric_limits<double> nld;
+	if ((nld.has_infinity && (f == nld.infinity())) ||
+			(nld.has_quiet_NaN && (f == nld.quiet_NaN())) ||
+			(nld.has_signaling_NaN && (f == nld.signaling_NaN()))) {
+		// f isn't null-able, but it's infinite or NaN, so store it
+		// as a 0.  This at least prevents syntactically-invalid SQL.
+		buffer_ = new SQLBuffer("0", typeid(f), true);
+	}
+	else {
+		ostringstream outs;
+		outs.precision(17);	// max dec digits needed for IEEE 754 64-bit float
+		outs << f;
+		buffer_ = new SQLBuffer(outs.str(), typeid(f), false);
+	}
 }
 
 #if !defined(DOXYGEN_IGNORE)
 SQLTypeAdapter::SQLTypeAdapter(Null<double> f) :
 is_processed_(false)
 {
-	if (f.is_null) {
+	numeric_limits<double> nld;
+	if (f.is_null ||
+			(nld.has_infinity && (f.data == nld.infinity())) ||
+			(nld.has_quiet_NaN && (f.data == nld.quiet_NaN())) ||
+			(nld.has_signaling_NaN && (f.data == nld.signaling_NaN()))) {
+		// MySQL wants infinite and NaN FP values stored as SQL NULL
 		buffer_ = new SQLBuffer(null_str, typeid(void), true);
 	}
 	else {

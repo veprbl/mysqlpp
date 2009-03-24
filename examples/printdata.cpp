@@ -3,7 +3,7 @@
 	formats, required by most of the example programs.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2007 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS.txt file
  in the top directory of the distribution for details.
 
@@ -55,7 +55,8 @@ print_stock_header(int rows)
 
 void
 print_stock_row(const mysqlpp::sql_char& item, mysqlpp::sql_bigint num,
-		mysqlpp::sql_double weight, mysqlpp::sql_decimal price,
+		mysqlpp::sql_double weight,
+		mysqlpp::Null<mysqlpp::sql_decimal> price,
 		const mysqlpp::sql_date& date)
 {
 	cout << setw(30) << item << ' ' <<
