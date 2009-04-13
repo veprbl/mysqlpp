@@ -116,14 +116,11 @@
     It&rsquo;s a thornier problem when using threads, though.</para>
 
     <para>The simple fix is to just create a separarate <ulink
-    url="Connection" type="classref"/> object for each thread
-    that needs to make database queries. This works well if you
-    have a small number of threads that need to make queries, and
-    each thread uses its connection often enough that the server
-    doesn&rsquo;t time out waiting for queries.<footnote><para>By
-    default, current MySQL servers have an 8 hour idle timeout on
-    connections. It&rsquo;s a configuration option, though, so your
-    server may be set differently.</para></footnote></para>
+    url="Connection" type="classref"/> object for each thread that
+    needs to make database queries. This works well if you have a small
+    number of threads that need to make queries, and each thread uses
+    its connection often enough that the server doesn&rsquo;t <link
+    linkend="conn-timeout">time out</link> waiting for queries.</para>
 
     <para>If you have lots of threads or the frequency of queries is
     low, the connection management overhead will be excessive. To avoid

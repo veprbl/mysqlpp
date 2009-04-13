@@ -1206,6 +1206,79 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
   </sect2>
 
 
+  <sect2 id="conn-timeout">
+    <title>Dealing with Connection Timeouts</title>
+
+    <para>By default, current MySQL servers have an 8 hour idle
+    timeout on connections. The most common way to run into this
+    problem is when you have a program that runs continually, but you
+    keep finding that it dies overnight or over the weekend because
+    no one is making it issue queries. The MySQL server closes the
+    connection after the configured idle timeout to free up resources,
+    because a networked program can never be sure that the remote
+    peer is still there when no data is being transferred.</para>
+
+    <para>You cannot detect this by calling
+    <methodname>Connection::connected()</methodname>. If
+    that returns <symbol>true</symbol>, it just means
+    that either the connect-on-create constructor or the
+    <methodname>connect()</methodname> call succeeded and that we
+    haven&rsquo;t observed the connection to be down since then.
+    If the server closes the connection, you won&rsquo;t know it
+    until the next time you try to talk to it. This is simply due to
+    the nature of network programming.</para>
+
+    <para>One way around this problem is to <ulink
+    url="http://dev.mysql.com/doc/refman/5.0/en/gone-away.html">configure
+    MySQL</ulink> to use a different timeout. This timeout is in
+    seconds, so the default of 8 hours is 28,800 seconds. You could
+    figure out the longest possible time that your program could be
+    left idle. For instance, it could be left running over a long
+    4-day weekend, which is 345,600 seconds, which you could round
+    up to 350,000 or 400,000 just to keep things simple.</para>
+
+    <para>You can also change this parameter on a per-connection
+    basis, too, by using MySQL++&rsquo;s <ulink type="classref"
+    url="ConnectTimeoutOption"/> <link linkend="connopts">connection
+    option</link>.</para>
+
+    <para>Another way to tackle this, if your program is asynchronous
+    (i.e. doesn&rsquo;t stay blocked forever waiting on I/O while idle)
+    or uses <link linkend="threads">threads</link>, is to periodically
+    call <methodname>Connection::ping()</methodname>. This sends
+    the smallest possible amount of data to the database server,
+    which will reset its idle timer. If the server responds,
+    <methodname>ping()</methodname> returns <symbol>true</symbol>,
+    so this also gives your program the ability to detect that
+    the server has gone away before trying a query. Don&rsquo;t
+    ping the server too often, though, as it takes a tiny amount
+    of processing capability to handle a ping, which can add up to
+    a significant amount if done often enough by a client, or even
+    just rarely by enough clients. When I do this, I just assume the
+    database server is there, pinging it no more often than half the
+    connection timeout.  With the default of 8 hours, then, I&rsquo;d
+    ping between every 4 and 7 hours.</para>
+
+    <para>An interesting variant is to ping the server before each
+    query, or, better, before each group of queries within a larger
+    operation. It has an advantage over pinging during idle time in
+    that the client is about to use far more server resources to
+    handle the query than it will take to handle the ping, so the
+    ping time gets lost in the overhead. On the other hand, if the
+    client issues queries frequently when not idle, it can result
+    in a lot more pings than would happen if you just pinged every
+    N hours while idle.</para>
+
+    <para>Finally, some programmers prefer to wrap the querying
+    mechanism in an error handler that catches the &ldquo;server has
+    gone away&rdquo; error and tries to reestablish the connection and
+    reissue the query. This adds some complexity, but it makes your
+    program more robust without taking up unnecessary resources. If you
+    did this, you could even change the server to drop idle connections
+    more often, thus tying up fewer TCP/IP stack resources.</para>
+  </sect2>
+
+
   <sect2 id="concurrentqueries">
     <title>Concurrent Queries on a Connection</title>
 
