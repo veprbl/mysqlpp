@@ -426,31 +426,90 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
 
 
   <sect2 id="sql-types">
-    <title>C++ Equivalents of SQL Column Types</title>
+    <title>C++ vs. SQL Data Types</title>
 
-    <para>MySQL++ declares a C++ typedef corresponding to almost every
-    data type MySQL understands. (They&rsquo;re in
-    <filename>lib/sql_types.h</filename>.) The typedefs begin with
-    <type>sql_</type> and end with a lowercase version of the standard
-    SQL type name, with spaces replaced by underscores. For instance,
-    the SQL type <type>TINYINT UNSIGNED</type> is represented in MySQL++
-    by <classname>mysqlpp::sql_tinyint_unsigned</classname>.</para>
+    <para>The C++ and SQL data type systems have several differences
+    that can cause problems when using MySQL++, or any other SQL
+    based system, for that matter.</para>
+
+    <para>Most of the data types you can store in a SQL database are
+    either numbers or text strings. If you&rsquo;re only looking at
+    the data going between the database server and your application,
+    there aren&rsquo;t even numbers: SQL is a textual language, so
+    numbers and everything else gets transferred between the client
+    and the database server in text string form.<footnote><para>Yes,
+    we&rsquo;re aware that there is a feature in MySQL that lets you
+    transfer row data in a binary form, but we don&rsquo;t support
+    this yet. We may, someday, probably as an extension to <link
+    linkend="ssqls">SSQLS</link>. The only real reason to do so
+    is to shave off some of the data translation overhead, which
+    is typically neglibible in practice, swamped by the far greater
+    disk and network I/O overheads inherent in use of a client-server
+    database system like MySQL.</para></footnote> Consequently, MySQL++
+    has a lot of <link linkend="string-types">special support</link>
+    for text strings, and can translate to several C++ numeric data
+    types transparently.</para>
+
+    <para>Some people worry that this translation via an intermediate
+    string form will cause data loss. Obviously the text string data
+    types are immune from problems in this regard. We&rsquo;re also
+    confident that MySQL++ translates <link linkend="blob">BLOB</link>
+    and integer data types losslessly.</para>
+
+    <para>The biggest worry is with floating-point numbers. (The FLOAT
+    and DOUBLE SQL data types.) We did have a problem with this in
+    older versions of MySQL++, but we believe we fixed it completely
+    in v3.0.2. No one has since proven data loss via this path. There
+    is still a known problem
+
+    <footnote>
+      <para>SQL&rsquo;s DECIMAL data type is a configurable-precision
+      fixed-point number format. MySQL++ currently translates these to
+      <type>double</type>, a floating-point data format, the closest
+      thing available in the C++ type system. Since the main reason
+      to use DECIMAL is to get away from the weird roundoff behavior
+      of floating-point numbers, this could be viewed as a serious
+      problem. The thing is, though, in all the years MySQL++ has
+      been around, I don&rsquo;t remember anyone actually complaining
+      about it. Apparently there&rsquo;s either no one using DECIMAL
+      with MySQL++, or they&rsquo;re ignoring any roundoff errors
+      they get as a result. Until this wheel squeaks, it&rsquo;s not
+      likely to be greased. To fix this, we&rsquo;ll have to create
+      a new custom data type to hold such column values, which will
+      be a lot of work for apparently little return.</para>
+    </footnote>
+
+    with the SQL DECIMAL type, which is somewhat related to the
+    floating-point issue, but it&rsquo;s apparently rarely encountered,
+    which is why it hasn&rsquo;t been fixed yet.</para>
+
+    <para>The best way to avoid problems with data translation
+    is to always use the special MySQL++ data types defined in
+    <filename>lib/sql_types.h</filename> corresponding to your
+    SQL schema. These typedefs begin with <type>sql_</type> and
+    end with a lowercase version of the standard SQL type name,
+    with spaces replaced by underscores. For instance, the SQL
+    type <type>TINYINT UNSIGNED</type> is represented in MySQL++
+    by <classname>mysqlpp::sql_tinyint_unsigned</classname>. (See
+    the <link linkend="sql-null">next section</link> for extensions
+    to this feature for handling SQL nulls.)</para>
 
     <para>MySQL++ doesn&rsquo;t force you to use these typedefs. It
-    tries to be flexible with regard to data conversions, so you could
-    probably use <type>int</type> anywhere you use
-    <classname>mysqlpp::sql_tinyint_unsigned</classname>, for
-    example. That said, the MySQL++ typedefs give several
+    tries to be flexible with regard to data conversions,
+    so you could probably use <type>int</type> anywhere you
+    use <classname>mysqlpp::sql_tinyint_unsigned</classname>,
+    for example. That said, the MySQL++ typedefs give several
     advantages:</para>
-    
+
     <itemizedlist>
-      <listitem><para>Space efficiency: the MySQL++ types are no larger
-      than necessary to hold the MySQL data.</para></listitem>
+      <listitem><para>Space efficiency: the MySQL++ types are no
+      larger than necessary to hold the MySQL data.</para></listitem>
 
       <listitem><para>Portability: if your program has to run on
-      multiple different system types (even just 32- and 64-bit versions
-      of the same OS and processor type) using the MySQL++ typedefs
-      insulates your code from platform changes.</para></listitem>
+      multiple different system types (even just 32- and 64-bit
+      versions of the same operating system and processor type)
+      using the MySQL++ typedefs insulates your code from platform
+      changes.</para></listitem>
 
       <listitem><para>Clarity: using C++ types named similarly to the
       SQL types reduces the risk of confusion when working with code in
@@ -462,33 +521,37 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
       truncation, <ulink type="classref" url="TypeLookupFailed"/>
       exceptions, and worse.</para>
 
-      <para>Type compatibility is important not just at the time you
-      write your program, it also helps forward compatibility: we
-      occasionally change the definitions of the MySQL++ typedefs to
-      reduce the differences between the C++ and SQL type systems. Code
-      using the MySQL++ typedefs just needs to be recompiled to track
-      these changes automatically.</para></listitem>
+      <para>Type compatibility is important not just at the time
+      you write your program, it also helps forward compatibility:
+      we occasionally change the definitions of the MySQL++
+      typedefs to reduce the differences between the C++
+      and SQL type systems. We&rsquo;ll be fixing the DECIMAL issue
+      brought up above this way, for instance; if your program
+      uses <classname>sql_decimal</classname> instead of the
+      current underlying type, <type>double</type>, your program
+      will pick up this improvement automatically with just a
+      recompile.</para></listitem>
     </itemizedlist>
 
-    <para>Most of these typedefs use standard C++ data types, but a few
-    are aliases for a MySQL++ specific type. For instance, the SQL type
-    <classname>DATETIME</classname> is mirrored in MySQL++ by
-    <classname>mysqlpp::DateTime</classname>. For consistency,
-    <filename>sql_types.h</filename> includes a typedef alias for
-    <classname>DateTime</classname> called
+    <para>Most of these typedefs use standard C++ data types, but
+    a few are aliases for a MySQL++ specific type. For instance,
+    the SQL type <classname>DATETIME</classname> is mirrored in
+    MySQL++ by <classname>mysqlpp::DateTime</classname>. For
+    consistency, <filename>sql_types.h</filename> includes a
+    typedef alias for <classname>DateTime</classname> called
     <classname>mysqlpp::sql_datetime</classname>.</para>
 
     <para>MySQL++ doesn&rsquo;t have typedefs for the most exotic data
-    types, like those for the geospatial types. Patches to correct this
-    will be thoughtfully considered.</para>
+    types, like those for the geospatial types. Patches to correct
+    this will be thoughtfully considered.</para>
   </sect2>
 
 
   <sect2 id="sql-null">
     <title>Handling SQL Nulls</title>
 
-    <para>There is no equivalent of SQL&rsquo;s null in the standard C++
-    type system.</para>
+    <para>There is no equivalent of SQL&rsquo;s null in the standard
+    C++ type system.</para>
 
     <para>The primary distinction is one of type. In SQL,
     &ldquo;NULL&rdquo; is a type modifier, which affects whether
@@ -503,22 +566,22 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
     <programlisting>
 mysqlpp::Null&lt;mysqlpp::sql_tinyint_unsigned&gt; myfield;</programlisting>
 
-    <para>Template instantiations are first-class types in the C++
-    language, on par with any other type. You can use
+    <para>Template instantiations are first-class types in
+    the C++ language, on par with any other type. You can use
     <classname>Null</classname> template instantiations anywhere
-    you&rsquo;d use the plain version of that type. (You can see a
-    complete list of <classname>Null</classname> template instantiations
-    for all column types that MySQL understands at the top of
-    <filename>lib/type_info.cpp</filename>.)</para>
+    you&rsquo;d use the plain version of that type. (You can
+    see a complete list of <classname>Null</classname> template
+    instantiations for all column types that MySQL understands at
+    the top of <filename>lib/type_info.cpp</filename>.)</para>
 
-    <para>There&rsquo;s a secondary distinction between SQL null and
-    anything available in the standard C++ type system: SQL null is a
-    distinct value, equal to nothing else. We can&rsquo;t use
-    C++&rsquo;s <symbol>NULL</symbol> for this because it is ambiguous,
-    being equal to 0 in integer context. MySQL++ provides the global
-    <varname>null</varname> object, which you can assign to a
-    <classname>Null</classname> template instance to make it equal to
-    SQL null:</para>
+    <para>There&rsquo;s a secondary distinction between SQL null
+    and anything available in the standard C++ type system: SQL
+    null is a distinct value, equal to nothing else. We can&rsquo;t
+    use C++&rsquo;s <symbol>NULL</symbol> for this because it is
+    ambiguous, being equal to 0 in integer context. MySQL++ provides
+    the global <varname>null</varname> object, which you can assign
+    to a <classname>Null</classname> template instance to make it
+    equal to SQL null:</para>
 
     <programlisting>
 myfield = mysqlpp::null;</programlisting>
@@ -550,6 +613,285 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
     parameter, the first output statement would have printed
     &ldquo;(NULL)&rdquo;, and the second wouldn&rsquo;t even
     compile.</para>
+  </sect2>
+
+
+  <sect2 id="string-types">
+    <title>MySQL++&rsquo;s Special String Types</title>
+
+    <para>MySQL++ has two classes that work like
+    <classname>std::string</classname> to some degree: <ulink
+    type="classref" url="String"/> and <ulink type="classref"
+    url="SQLTypeAdapter"/>. These classes exist to provide functionality
+    that <classname>std::string</classname> doesn&rsquo;t provide, but
+    they are neither derivatives of nor complete supersets of
+    <classname>std::string</classname>.  As a result, end-user code
+    generally doesn&rsquo;t deal with these classes directly, because
+    <classname>std::string</classname> is a better general-purpose
+    string type. In fact, MySQL++ itself uses
+    <classname>std::string</classname> most of the time, too. But, the
+    places these specialized stringish types do get used are so
+    important to the way MySQL++ works that it&rsquo;s well worth taking
+    the time to understand them.</para>
+
+
+    <sect3 id="SQLTypeAdapter">
+      <title>SQLTypeAdapter</title>
+
+      <para>The simpler of the two is
+      <classname>SQLTypeAdapter</classname>, or
+      <classname>STA</classname> for short.<footnote><para>In version 2
+      of MySQL++ and earlier, <classname>SQLTypeAdapter</classname> was
+      called <classname>SQLString</classname>, but it was confusing
+      because its name and the fact that it derived from
+      <classname>std::string</classname> suggested that it was a
+      general-purpose string type. MySQL++ even used it this way in a
+      few places internally. In v3, we made it a simple base class and
+      renamed it to reflect its proper limited
+      function.</para></footnote></para>
+
+      <para>As its name suggests, its only purpose is to adapt other
+      data types to be used with SQL. It has a whole bunch of conversion
+      constructors, one for all data types we expect to be used with
+      MySQL++ for values in queries. SQL queries are strings, so
+      constructors that take stringish types just make a copy of that
+      string, and all the others &ldquo;stringize&rdquo; the value in
+      the format needed by
+      SQL.<footnote><para><classname>SQLTypeAdapter</classname>
+      doesn&rsquo;t do <xref linkend="qescape"/> itself. That happens
+      elsewhere, right at the point that the <classname>STA</classname>
+      gets used to build a query.</para></footnote> The conversion
+      constructors preserve type information, so this stringization
+      process doesn&rsquo;t throw away any essential information.</para>
+
+      <para><classname>STA</classname> is used anywhere MySQL++ needs to
+      be able to accept any of several data types for use in a SQL
+      query. Major users are <classname>Query</classname>&rsquo;s
+      template query mechanism and the <classname>Query</classname>
+      stream quoting and escaping mechanism. You care about
+      <classname>STA</classname> because any time you pass a data value
+      to MySQL++ to be used in building a SQL query, it goes through
+      <classname>STA</classname>. <classname>STA</classname> is one of
+      the key pieces in MySQL++ that makes it easy to generate
+      syntactically-correct SQL queries.</para>
+    </sect3>
+
+
+    <sect3 id="String">
+      <title>String</title>
+
+      <para>If MySQL++ can be said to have its own generic string type,
+      it&rsquo;s <classname>String</classname>, but it&rsquo;s not
+      really functional enough for general use. It&rsquo;s possible that
+      in future versions of MySQL++ we&rsquo;ll expand its interface to
+      include everything <classname>std::string</classname> does, so
+      that&rsquo;s why it&rsquo;s called that.<footnote><para>If you
+      used MySQL++ before v3, <classname>String</classname> used to be
+      called <classname>ColData</classname>. It was renamed because
+      starting in v2.3, we began using it for holding more than just
+      column data. I considered renaming it
+      <classname>SQLString</classname> instead, but that would have
+      confused old MySQL++ users to no end. Instead, I followed the
+      example of <classname>Set</classname>, MySQL++&rsquo;s specialized
+      <classname>std::set</classname> variant.</para></footnote></para>
+
+      <para>The key thing <classname>String</classname> provides over
+      <classname>std::string</classname> is conversion of strings in SQL
+      value formats to their plain old C++ data types. For example, if you
+      initialize it with the string &ldquo;2007-11-19&rdquo;, you can
+      assign the <classname>String</classname> to a <ulink
+      type="structref" url="Date">Date</ulink>, not because
+      <classname>Date</classname> knows how to initialize itself from
+      <classname>String</classname>, but the reverse:
+      <classname>String</classname> has a bunch of implicit conversion
+      operators defined for it, so you can use it in any type context
+      that makes sense in your application.</para>
+
+      <para>Because <methodname>Row::operator[]</methodname> returns
+      <classname>String</classname>, you can say things like
+      this:</para>
+
+      <programlisting>int x = row["x"];</programlisting>
+
+      <para>In a very real sense, <classname>String</classname> is the
+      inverse of <classname>STA</classname>:
+      <classname>String</classname> converts SQL value strings to C++
+      data types, and <classname>STA</classname> converts C++ data types
+      to SQL value strings.<footnote><para>During the development of
+      MySQL++ v3.0, I tried merging
+      <classname>SQLTypeAdapter</classname> and
+      <classname>String</classname> into a single class to take
+      advantage of this. The resulting class gave the C++ compiler the
+      freedom to tie itself up in knots, because it was then allowed to
+      convert almost any data type to almost any other. You&rsquo;d get
+      a tangle of ambiguous data type conversion errors from the most
+      innocent code.</para></footnote></para>
+
+      <para><classname>String</classname> has two main uses.</para>
+
+      <para>By far the most common use is as the field value type of
+      <classname>Row</classname>, as exemplified above. It&rsquo;s not
+      just the return type of <methodname>Row::operator[]</methodname>,
+      though: it&rsquo;s actually the value type used within
+      <classname>Row</classname>&rsquo;s internal array. As a result,
+      any time MySQL++ pulls data from the database, it goes through
+      <classname>String</classname> when converting it from the string
+      form used in SQL result sets to the C++ data type you actually
+      want the data in. It&rsquo;s the core of the structure population
+      mechanism in <link linkend="ssqls">the SSQLS feature</link>, for
+      example.</para>
+
+      <para>Because <classname>String</classname> is the last pristine
+      form of data in a result set before it gets out of MySQL++&rsquo;s
+      internals where end-user code can see it, MySQL++&rsquo;s
+      <type>sql_blob</type> and related <type>typedef</type>s are
+      aliases for <classname>String</classname>. Using anything else
+      would require copies; while the whole &ldquo;networked database
+      server&rdquo; thing means most of MySQL++ can be quite inefficient
+      and still not affect benchmark results meaningfully, BLOBs tend to
+      be big, so making unnecessary copies can really make a difference.
+      Which brings us to...</para>
+    </sect3>
+
+
+    <sect3 id="string-refcount">
+      <title>Reference Counting</title>
+
+      <para>To avoid unnecessary buffer copies, both
+      <classname>STA</classname> and <classname>String</classname> are
+      implemented in terms of a reference-counted copy-on-write buffer
+      scheme. Both classes share the same underlying mechanism, and so
+      are interoperable. This means that if you construct one of these
+      objects from another, it doesn&rsquo;t actually copy the string
+      data, it only copies a pointer to the data buffer, and increments
+      its reference count. If the object has new data assigned to it or
+      it&rsquo;s otherwise modified, it decrements its reference count
+      and creates its own copy of the buffer. This has a lot of
+      practical import, such as the fact that
+      <methodname>Row::operator[]</methodname> can return
+      <classname>String</classname> by value, and it&rsquo;s still
+      efficient.</para>
+    </sect3>
+  </sect2>
+
+
+  <sect2 id="blob">
+    <title>Dealing with Binary Data</title>
+
+    <para>Historically, there was no way to hold arbitrary-sized blocks
+    of raw binary data in an SQL database. There was resistance to
+    adding such a feature to SQL for a long time because it&rsquo;s
+    better, where possible, to decompose blocks of raw binary data into
+    a series of numbers and text strings that <emphasis>can</emphasis>
+    be stored in the database. This lets you query, address and
+    manipulate elements of the data block individually.</para>
+
+    <para>A classic SQL newbie mistake is trying to treat the database
+    server as a file system. Some embedded platforms use a database
+    engine as a file system, but MySQL doesn&rsquo;t typically live
+    in that world. When your platform already has a perfectly good
+    file system, you should use it for big, nondecomposable blocks
+    of binary data in most cases.</para>
+
+    <para>A common example people use when discussing this is
+    images in database-backed web applications. If you store the
+    image in the database, you have to write code to retrieve the
+    image from the database and send it to the client; there&rsquo;s
+    more overhead, and less efficient use of the system&rsquo;s I/O
+    caching system. If you store the image in the filesystem, all
+    you have to do is point the web server to the directory where
+    the images live, and put a URL for that image in your generated
+    HTML. Because you&rsquo;re giving the web server a direct path
+    to a file on disk, operation is far more efficient. Web servers
+    are very good at slurping whole files off of disk and sending
+    them out to the network, and operating systems are very good at
+    caching file accesses. Plus, you avoid the overhead of pushing the
+    data through the high-level language your web app is written in,
+    which is typically an interpreted language, not C++.  Some people
+    still hold out on this, claiming superior security and other
+    features of a database engine, but I call bunk on that, too.
+    Modern web servers and file systems are capable of very granular
+    access control.</para>
+
+    <para>Occasionally you really do need to store a nondecomposable
+    block of binary data in the database. For such cases, modern
+    SQL database servers support BLOB data types, for Binary Large
+    OBject. This is often just called binary data, though of course
+    all data in a modern computer is binary at some level.</para>
+
+    <para>The tricky part about dealing with binary data in MySQL++ is
+    to ensure that you don&rsquo;t ever treat the data as a C string,
+    which is really easy to do accidentally. C strings treat zero bytes
+    as special end-of-string characters, but they&rsquo;re not special
+    at all in binary data. We&rsquo;ve made a lot of improvements
+    to the way MySQL++ handles <link linkend="string-types">string
+    data</link> to avoid this problem, but it&rsquo;s still possible
+    to bypass these features, wrecking your BLOBs. These examples
+    demonstrate correct techniques.</para>
+
+
+    <sect3 id="blob-save">
+      <title>Loading a binary file into a BLOB column</title>
+
+      <para>Above, I opined that it&rsquo;s usually incorrect to
+      store image data in a database, particularly with web apps,
+      of which CGI is a primitive form. Still, it makes a nice,
+      simple example.</para>
+
+      <para>Instead of a single example program, we have here a
+      matched pair. The first example takes the name of a JPEG
+      file on the command line along with all the other <link
+      linkend="examples">common example program parameters</link>,
+      loads that file into memory, and stores it in a BLOB column in
+      the database.</para>
+
+      <para>This example also demonstrates how to retrieve the
+      value assigned to an auto-increment column in the previous
+      insertion. This example uses that feature in the typical way,
+      to create unique IDs for rows as they&rsquo;re inserted.</para>
+
+      <para>Here is <filename>examples/load_jpeg.cpp</filename>:</para>
+
+      <programlisting><xi:include href="load_jpeg.txt" parse="text"
+      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+
+      <para>Notice that we used the <type>escape</type> manipulator
+      when building the INSERT query above. This is because
+      <type>mysqlpp::sql_blob</type> is just an alias for one of the
+      special MySQL++ <link linkend="string-types">string types</link>,
+      which don&rsquo;t do automatic <link linkend="qescape">quoting
+      and escaping</link>. They can&rsquo;t, because MySQL++ also
+      uses these data types to hold raw SQL query strings, which
+      would break due to doubled quoting and/or escaping if it were
+      automatic.</para>
+    </sect3>
+
+
+    <sect3 id="blob-retreive">
+      <title>Serving images from BLOB column via CGI</title>
+
+      <para>The other example in this pair is rather short,
+      considering how much it does. It parses a CGI query string
+      giving the image ID, uses that to retreive data loaded into
+      the database by <filename>load_jpeg</filename>, and writes
+      it out in the form a web server wants when processing a CGI
+      call, all with adequate real-world error handling. This is
+      <filename>examples/cgi_jpeg.cpp</filename>:</para>
+
+      <programlisting><xi:include href="cgi_jpeg.txt" parse="text"
+      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
+
+      <para>While you can run it by hand, it&rsquo;s
+      best to install this in a web server&rsquo;s CGI
+      program directory, then call it with a URL like
+      <uri>http://my.server.com/cgi-bin/cgi_jpeg?id=1</uri>. That
+      retrieves the JPEG with ID 1 from the database and returns it
+      to the web server, which will send it on to the browser.</para>
+
+      <para>We&rsquo;ve included an image with MySQL++
+      that you can use with this example pair,
+      <filename>examples/logo.jpg</filename>.</para>
+    </sect3>
   </sect2>
 
 
@@ -848,221 +1190,6 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
 
     <programlisting><xi:include href="fieldinf.txt" parse="text"
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-  </sect2>
-
-
-  <sect2 id="string-types">
-    <title>MySQL++&rsquo;s Special String Types</title>
-
-    <para>MySQL++ has two classes that work like
-    <classname>std::string</classname> to some degree: <ulink
-    type="classref" url="String"/> and <ulink type="classref"
-    url="SQLTypeAdapter"/>. These classes exist to provide functionality
-    that <classname>std::string</classname> doesn&rsquo;t provide, but
-    they are neither derivatives of nor complete supersets of
-    <classname>std::string</classname>.  As a result, end-user code
-    generally doesn&rsquo;t deal with these classes directly, because
-    <classname>std::string</classname> is a better general-purpose
-    string type. In fact, MySQL++ itself uses
-    <classname>std::string</classname> most of the time, too. But, the
-    places these specialized stringish types do get used are so
-    important to the way MySQL++ works that it&rsquo;s well worth taking
-    the time to understand them.</para>
-
-
-    <sect3 id="SQLTypeAdapter">
-      <title>SQLTypeAdapter</title>
-
-      <para>The simpler of the two is
-      <classname>SQLTypeAdapter</classname>, or
-      <classname>STA</classname> for short.<footnote><para>In version 2
-      of MySQL++ and earlier, <classname>SQLTypeAdapter</classname> was
-      called <classname>SQLString</classname>, but it was confusing
-      because its name and the fact that it derived from
-      <classname>std::string</classname> suggested that it was a
-      general-purpose string type. MySQL++ even used it this way in a
-      few places internally. In v3, we made it a simple base class and
-      renamed it to reflect its proper limited
-      function.</para></footnote></para>
-
-      <para>As its name suggests, its only purpose is to adapt other
-      data types to be used with SQL. It has a whole bunch of conversion
-      constructors, one for all data types we expect to be used with
-      MySQL++ for values in queries. SQL queries are strings, so
-      constructors that take stringish types just make a copy of that
-      string, and all the others &ldquo;stringize&rdquo; the value in
-      the format needed by
-      SQL.<footnote><para><classname>SQLTypeAdapter</classname>
-      doesn&rsquo;t do <xref linkend="qescape"/> itself. That happens
-      elsewhere, right at the point that the <classname>STA</classname>
-      gets used to build a query.</para></footnote> The conversion
-      constructors preserve type information, so this stringization
-      process doesn&rsquo;t throw away any essential information.</para>
-
-      <para><classname>STA</classname> is used anywhere MySQL++ needs to
-      be able to accept any of several data types for use in a SQL
-      query. Major users are <classname>Query</classname>&rsquo;s
-      template query mechanism and the <classname>Query</classname>
-      stream quoting and escaping mechanism. You care about
-      <classname>STA</classname> because any time you pass a data value
-      to MySQL++ to be used in building a SQL query, it goes through
-      <classname>STA</classname>. <classname>STA</classname> is one of
-      the key pieces in MySQL++ that makes it easy to generate
-      syntactically-correct SQL queries.</para>
-    </sect3>
-
-
-    <sect3 id="String">
-      <title>String</title>
-
-      <para>If MySQL++ can be said to have its own generic string type,
-      it&rsquo;s <classname>String</classname>, but it&rsquo;s not
-      really functional enough for general use. It&rsquo;s possible that
-      in future versions of MySQL++ we&rsquo;ll expand its interface to
-      include everything <classname>std::string</classname> does, so
-      that&rsquo;s why it&rsquo;s called that.<footnote><para>If you
-      used MySQL++ before v3, <classname>String</classname> used to be
-      called <classname>ColData</classname>. It was renamed because
-      starting in v2.3, we began using it for holding more than just
-      column data. I considered renaming it
-      <classname>SQLString</classname> instead, but that would have
-      confused old MySQL++ users to no end. Instead, I followed the
-      example of <classname>Set</classname>, MySQL++&rsquo;s specialized
-      <classname>std::set</classname> variant.</para></footnote></para>
-
-      <para>The key thing <classname>String</classname> provides over
-      <classname>std::string</classname> is conversion of strings in SQL
-      value formats to their plain old C++ data types. For example, if you
-      initialize it with the string &ldquo;2007-11-19&rdquo;, you can
-      assign the <classname>String</classname> to a <ulink
-      type="structref" url="Date">Date</ulink>, not because
-      <classname>Date</classname> knows how to initialize itself from
-      <classname>String</classname>, but the reverse:
-      <classname>String</classname> has a bunch of implicit conversion
-      operators defined for it, so you can use it in any type context
-      that makes sense in your application.</para>
-
-      <para>Because <methodname>Row::operator[]</methodname> returns
-      <classname>String</classname>, you can say things like
-      this:</para>
-
-      <programlisting>int x = row["x"];</programlisting>
-
-      <para>In a very real sense, <classname>String</classname> is the
-      inverse of <classname>STA</classname>:
-      <classname>String</classname> converts SQL value strings to C++
-      data types, and <classname>STA</classname> converts C++ data types
-      to SQL value strings.<footnote><para>During the development of
-      MySQL++ v3.0, I tried merging
-      <classname>SQLTypeAdapter</classname> and
-      <classname>String</classname> into a single class to take
-      advantage of this. The resulting class gave the C++ compiler the
-      freedom to tie itself up in knots, because it was then allowed to
-      convert almost any data type to almost any other. You&rsquo;d get
-      a tangle of ambiguous data type conversion errors from the most
-      innocent code.</para></footnote></para>
-
-      <para><classname>String</classname> has two main uses.</para>
-
-      <para>By far the most common use is as the field value type of
-      <classname>Row</classname>, as exemplified above. It&rsquo;s not
-      just the return type of <methodname>Row::operator[]</methodname>,
-      though: it&rsquo;s actually the value type used within
-      <classname>Row</classname>&rsquo;s internal array. As a result,
-      any time MySQL++ pulls data from the database, it goes through
-      <classname>String</classname> when converting it from the string
-      form used in SQL result sets to the C++ data type you actually
-      want the data in. It&rsquo;s the core of the structure population
-      mechanism in <link linkend="ssqls">the SSQLS feature</link>, for
-      example.</para>
-
-      <para>Because <classname>String</classname> is the last pristine
-      form of data in a result set before it gets out of MySQL++&rsquo;s
-      internals where end-user code can see it, MySQL++&rsquo;s
-      <type>sql_blob</type> and related <type>typedef</type>s are
-      aliases for <classname>String</classname>. Using anything else
-      would require copies; while the whole &ldquo;networked database
-      server&rdquo; thing means most of MySQL++ can be quite inefficient
-      and still not affect benchmark results meaningfully, BLOBs tend to
-      be big, so making unnecessary copies can really make a difference.
-      Which brings us to...</para>
-    </sect3>
-
-
-    <sect3 id="string-refcount">
-      <title>Reference Counting</title>
-
-      <para>To avoid unnecessary buffer copies, both
-      <classname>STA</classname> and <classname>String</classname> are
-      implemented in terms of a reference-counted copy-on-write buffer
-      scheme. Both classes share the same underlying mechanism, and so
-      are interoperable. This means that if you construct one of these
-      objects from another, it doesn&rsquo;t actually copy the string
-      data, it only copies a pointer to the data buffer, and increments
-      its reference count. If the object has new data assigned to it or
-      it&rsquo;s otherwise modified, it decrements its reference count
-      and creates its own copy of the buffer. This has a lot of
-      practical import, such as the fact that
-      <methodname>Row::operator[]</methodname> can return
-      <classname>String</classname> by value, and it&rsquo;s still
-      efficient.</para>
-    </sect3>
-  </sect2>
-
-
-  <sect2 id="blob">
-    <title>Dealing with Binary Data</title>
-
-    <para>The tricky part about dealing with binary data in MySQL++ is
-    to ensure that you don&rsquo;t ever treat the data as a C string,
-    which is really easy to do accidentally. C strings treat zero bytes
-    as special end-of-string characters, but they&rsquo;re not special
-    at all in binary data. Recent releases of MySQL++ do a better job of
-    letting you keep data in forms that don&rsquo;t have this problem,
-    but it&rsquo;s still possible to do it incorrectly. These examples
-    demonstrate correct techniques.</para>
-
-
-    <sect3 id="blob-save">
-      <title>Loading a binary file into a BLOB column</title>
-
-      <para>This example shows how to insert binary data into a MySQL
-      table&rsquo;s BLOB column with MySQL++, and also how to get the
-      value of the auto-increment column from the previous insert. (This
-      MySQL feature is usually used to create unique IDs for rows as
-      they&rsquo;re inserted.) The program requires one command line
-      parameter over that required by the other examples you&rsquo;ve
-      seen so far, the path to a JPEG file. This is
-      <filename>examples/load_jpeg.cpp</filename>:</para>
-
-      <programlisting><xi:include href="load_jpeg.txt" parse="text"
-      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-
-      <para>Notice that we used the <type>escape</type> manipulator when
-      building the INSERT query above. This is because we&rsquo;re not
-      using one of the MySQL++ types that does automatic escaping and
-      quoting.</para>
-    </sect3>
-
-
-    <sect3 id="blob-retreive">
-      <title>Serving images from BLOB column via CGI</title>
-
-      <para>This example is also a very short one, considering the
-      function that it performs. It retreives data loaded by
-      <filename>load_jpeg</filename> and prints it out in the form a web
-      server can accept for a CGI call. This is
-      <filename>examples/cgi_jpeg.cpp</filename>:</para>
-
-      <programlisting><xi:include href="cgi_jpeg.txt" parse="text"
-      xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-
-      <para>You install this in a web server&rsquo;s CGI program
-      directory, then call it with a URL like
-      <uri>http://my.server.com/cgi-bin/cgi_jpeg?id=1</uri>.  That
-      retrieves the JPEG with ID 1 from the table and returns it to the
-      web server, which will send it on to the browser.</para>
-    </sect3>
   </sect2>
 
 
