@@ -1206,19 +1206,6 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
   </sect2>
 
 
-  <sect2 id="fieldinf">
-    <title>Getting Field Meta-Information</title>
-
-    <para>The following example demonstrates how to get information
-    about the fields in a result set, such as the name of the field and
-    the SQL type. This is
-    <filename>examples/fieldinf.cpp</filename>:</para>
-
-    <programlisting><xi:include href="fieldinf.txt" parse="text"
-    xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
-  </sect2>
-
-
   <sect2 id="concurrentqueries">
     <title>Concurrent Queries on a Connection</title>
 
@@ -1308,5 +1295,18 @@ UseQueryResult r2 = query.use("select blah from bonk where bletch='smurf'");</pr
         procedure call.</para>
       </listitem>
     </itemizedlist>
+  </sect2>
+
+
+  <sect2 id="fieldinf">
+    <title>Getting Field Meta-Information</title>
+
+    <para>The following example demonstrates how to get information
+    about the fields in a result set, such as the name of the field and
+    the SQL type. This is
+    <filename>examples/fieldinf.cpp</filename>:</para>
+
+    <programlisting><xi:include href="fieldinf.txt" parse="text"
+    xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
   </sect2>
 </sect1>
