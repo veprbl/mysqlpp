@@ -784,19 +784,19 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
       <title>Reference Counting</title>
 
       <para>To avoid unnecessary buffer copies, both
-      <classname>STA</classname> and <classname>String</classname> are
-      implemented in terms of a reference-counted copy-on-write buffer
-      scheme. Both classes share the same underlying mechanism, and so
-      are interoperable. This means that if you construct one of these
-      objects from another, it doesn&rsquo;t actually copy the string
-      data, it only copies a pointer to the data buffer, and increments
-      its reference count. If the object has new data assigned to it or
-      it&rsquo;s otherwise modified, it decrements its reference count
-      and creates its own copy of the buffer. This has a lot of
-      practical import, such as the fact that
-      <methodname>Row::operator[]</methodname> can return
-      <classname>String</classname> by value, and it&rsquo;s still
-      efficient.</para>
+      <classname>STA</classname> and <classname>String</classname>
+      are implemented in terms of a reference-counted copy-on-write
+      buffer scheme. Both classes share the same underlying mechanism,
+      and so are interoperable. This means that if you construct
+      one of these objects from another, it doesn&rsquo;t actually
+      copy the string data, it only copies a pointer to the data
+      buffer, and increments its reference count. If the object
+      has new data assigned to it or it&rsquo;s otherwise modified,
+      it decrements its reference count and creates its own copy of
+      the buffer. This has a lot of practical import, such as the
+      fact that even though <methodname>Row::operator[]</methodname>
+      returns <classname>String</classname>s by value, it&rsquo;s
+      still efficient.</para>
     </sect3>
   </sect2>
 
@@ -819,25 +819,25 @@ cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
     file system, you should use it for big, nondecomposable blocks
     of binary data in most cases.</para>
 
-    <para>A common example people use when discussing this is
-    images in database-backed web applications. If you store the
-    image in the database, you have to write code to retrieve the
-    image from the database and send it to the client; there&rsquo;s
-    more overhead, and less efficient use of the system&rsquo;s I/O
-    caching system. If you store the image in the filesystem, all
-    you have to do is point the web server to the directory where
-    the images live, and put a URL for that image in your generated
-    HTML. Because you&rsquo;re giving the web server a direct path
-    to a file on disk, operation is far more efficient. Web servers
-    are very good at slurping whole files off of disk and sending
-    them out to the network, and operating systems are very good at
-    caching file accesses. Plus, you avoid the overhead of pushing the
-    data through the high-level language your web app is written in,
-    which is typically an interpreted language, not C++.  Some people
-    still hold out on this, claiming superior security and other
-    features of a database engine, but I call bunk on that, too.
-    Modern web servers and file systems are capable of very granular
-    access control.</para>
+    <para>A common example people use when discussing this is images
+    in database-backed web applications. If you store the image in the
+    database, you have to write code to retrieve the image from the
+    database and send it to the client; there&rsquo;s more overhead,
+    and less efficient use of the system&rsquo;s I/O caching system. If
+    you store the image in the filesystem, all you have to do is
+    point the web server to the directory where the images live,
+    and put a URL for that image in your generated HTML. Because
+    you&rsquo;re giving the web server a direct path to a file on
+    disk, operation is far more efficient. Web servers are very
+    good at slurping whole files off of disk and sending them out
+    to the network, and operating systems are very good at caching
+    file accesses. Plus, you avoid the overhead of pushing the data
+    through the high-level language your web app is written in, which
+    is typically an interpreted language, not C++. Some people still
+    hold out on this, claiming that database engines have superior
+    security features, but I call bunk on that, too. Operating systems
+    and web servers are capable of building access control systems
+    every bit as granular and secure as a database system.</para>
 
     <para>Occasionally you really do need to store a nondecomposable
     block of binary data in the database. For such cases, modern
