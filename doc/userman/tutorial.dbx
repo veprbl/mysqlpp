@@ -550,69 +550,95 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
   <sect2 id="sql-null">
     <title>Handling SQL Nulls</title>
 
-    <para>There is no equivalent of SQL&rsquo;s null in the standard
-    C++ type system.</para>
+    <para>Both C++ and SQL have things in them called NULL, but they
+    differ in several ways. Consequently, MySQL++ has to provide
+    special support for this, rather than just wrap native C++
+    facilities as it can with most data type issues.</para>
 
-    <para>The primary distinction is one of type. In SQL,
-    &ldquo;NULL&rdquo; is a type modifier, which affects whether
-    a column can hold a SQL null. C++ also defines something called
-    &ldquo;NULL&rdquo;, but it is not a type modifier. To emulate this,
-    MySQL++ provides the <ulink type="classref" url="null">Null</ulink>
-    template to allow the creation of distinct &ldquo;nullable&rdquo;
-    versions of existing C++ types. So for example, if you have a
-    <type>TINYINT UNSIGNED</type> column that can have nulls, the
-    proper declaration for MySQL++ would be:</para>
+    <sect3 id="sql-null-type">
+      <title>SQL NULL is a type modifier</title>
 
-    <programlisting>
+      <para>The primary distinction is one of type. In SQL,
+      &ldquo;NULL&rdquo; is a type modifier, which affects whether
+      you can legally store a null value in that column. There&rsquo;s
+      simply nothing like it in C++.</para>
+
+      <para>To emulate SQL NULL, MySQL++ provides the <ulink
+      type="classref" url="null">Null</ulink> template to allow
+      the creation of distinct &ldquo;nullable&rdquo; versions of
+      existing C++ types. So for example, if you have a <type>TINYINT
+      UNSIGNED</type> column that can have nulls, the proper
+      declaration for MySQL++ would be:</para>
+
+      <programlisting>
 mysqlpp::Null&lt;mysqlpp::sql_tinyint_unsigned&gt; myfield;</programlisting>
 
-    <para>Template instantiations are first-class types in
-    the C++ language, on par with any other type. You can use
-    <classname>Null</classname> template instantiations anywhere
-    you&rsquo;d use the plain version of that type. (You can
-    see a complete list of <classname>Null</classname> template
-    instantiations for all column types that MySQL understands at
-    the top of <filename>lib/type_info.cpp</filename>.)</para>
+      <para>As of MySQL++ 3.1, we also provide shorter aliases for
+      such types:</para>
 
-    <para>There&rsquo;s a secondary distinction between SQL null
-    and anything available in the standard C++ type system: SQL
-    null is a distinct value, equal to nothing else. We can&rsquo;t
-    use C++&rsquo;s <symbol>NULL</symbol> for this because it is
-    ambiguous, being equal to 0 in integer context. MySQL++ provides
-    the global <varname>null</varname> object, which you can assign
-    to a <classname>Null</classname> template instance to make it
-    equal to SQL null:</para>
+      <programlisting>
+mysqlpp::sql_tinyint_unsigned_null myfield;</programlisting>
 
-    <programlisting>
+      <para>These types are declared in
+      <filename>lib/sql_types.h</filename>. You might want to scan
+      through that to see what all is available.</para>
+
+      <para>Template instantiations are first-class types in the C++
+      language, so there&rsquo;s no possible confusion between this
+      feature of MySQL++ and C++&rsquo;s native NULL concept.</para>
+    </sect3>
+
+    <sect3 id="sql-null-value">
+      <title>SQL NULL is a unique value</title>
+
+      <para>There&rsquo;s a secondary distinction between SQL null and
+      anything available in the standard C++ type system: SQL null
+      is a distinct value, equal to nothing else. We can&rsquo;t
+      use C++&rsquo;s <symbol>NULL</symbol> for this because it
+      is ambiguous, being equal to 0 in integer context. MySQL++
+      provides the global <varname>null</varname> object, which you
+      can assign to a <classname>Null</classname> template instance
+      to make it equal to SQL null:</para>
+
+      <programlisting>
 myfield = mysqlpp::null;</programlisting>
 
-    <para>By default, MySQL++ enforces the uniqueness of SQL null at
-    compile time. If you try to convert a SQL null to any other data
-    type, the compiler will emit an error message saying something
-    about <type>CannotConvertNullToAnyOtherDataType</type>. It&rsquo;s
-    safe to insert a SQL null into a C++ stream, though: you get
-    &ldquo;(NULL)&rdquo;.</para>
+      <para>If you insert a MySQL++ field holding a SQL null into a
+      C++ IOstream, you get &ldquo;(NULL)&rdquo;, something fairly
+      unlikely to be in a normal output string, thus reasonably
+      preserving the uniqueness of the SQL null value.</para>
 
-    <para>If you don&rsquo;t like this behavior, you can change it
-    by passing a different value for the second parameter to template
-    <classname>Null</classname>. By default, this parameter is <ulink
-    type="structref" url="NullIsNull"/>, meaning that we should
-    enforce the uniqueness of SQL null. To relax this distinction,
-    you can instantiate the <classname>Null</classname> template with a
-    different behavior type: <ulink type="structref" url="NullIsZero"/>
-    or <ulink type="structref" url="NullIsBlank"/>. Consider this
-    code:</para>
+      <para>MySQL++ also tries to enforce the uniqueness of the
+      SQL null value at compile time in assignments and data
+      conversions. If you try to store a SQL null in a field type
+      that isn&rsquo;t wrapped by <classname>Null</classname>
+      or try to assign a <classname>Null</classname>-wrapped
+      field value to a variable of the inner non-wrapped type,
+      the compiler will emit some ugly error message, yelling about
+      <type>CannotConvertNullToAnyOtherDataType</type>.  (The exact
+      message is compiler-dependent.)</para>
 
-    <programlisting>
+      <para>If you don&rsquo;t like these behaviors, you can change
+      them by passing a different value for the second parameter
+      to template <classname>Null</classname>. By default, this
+      parameter is <ulink type="structref" url="NullIsNull"/>,
+      meaning that we should enforce the uniqueness of SQL
+      null. To relax the distinctions, you can instantiate the
+      <classname>Null</classname> template with a different behavior
+      type: <ulink type="structref" url="NullIsZero"/> or <ulink
+      type="structref" url="NullIsBlank"/>. Consider this code:</para>
+
+      <programlisting>
 mysqlpp::Null&lt;unsigned char, mysqlpp::NullIsZero&gt; myfield(mysqlpp::null);
 cout &lt;&lt; myfield &lt;&lt; endl;
 cout &lt;&lt; int(myfield) &lt;&lt; endl;</programlisting>
 
-    <para>This will print &ldquo;0&rdquo; twice. If you had used the
-    default for the second <classname>Null</classname> template
-    parameter, the first output statement would have printed
-    &ldquo;(NULL)&rdquo;, and the second wouldn&rsquo;t even
-    compile.</para>
+      <para>This will print &ldquo;0&rdquo; twice. If you had used the
+      default for the second <classname>Null</classname> template
+      parameter, the first output statement would have printed
+      &ldquo;(NULL)&rdquo;, and the second wouldn&rsquo;t even
+      compile.</para>
+    </sect3>
   </sect2>
 
 
