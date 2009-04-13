@@ -335,6 +335,11 @@ v4.0 or Later
           as they need them.  Or, maybe make them use Bakefile so they
           can fiddle with the options if they want something atypical.
 
+	o Fork mysqlpp::String into mysqlpp::Blob, which differs only in
+	  that it knows that it should be automatically quoted and escaped
+	  when inserted into a SQL query.  Could do this in 3.x, but it's a
+	  pretty serious API breakage.
+
     o Some sort of support for prepared statements.  Can we hijack
       the template query mechanism?
 
