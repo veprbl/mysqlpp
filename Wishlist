@@ -18,6 +18,8 @@ Any Version
 
 v3.1 Tentative Plan
 -------------------
+	o Check that it works with Connector/C and MySQL 5.1
+
 	o Document sql_*_null in userman
 
     o SSQLS v2 (http://lists.mysql.com/plusplus/6929):
