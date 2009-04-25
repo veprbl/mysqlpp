@@ -219,6 +219,14 @@ v3.1 Tentative Plan
       allow comparison of row[x] returns to SQL null.  Change one of
       the examples to show it?
 
+	o Add ConnectionPool::remove(), allowing the caller to release a
+	  grabbed connection but also cause it to be closed, removed from
+	  the pool, such as because an error occurred on it.  Alternately,
+	  call it exchange(), passing in a bad connection and getting
+	  another back, so caller can loop on a call until it succeeds,
+	  purging pool of bad connections.  Reported to be needed when
+	  remote server gets restarted.
+
 
 v3.2 Tentative Plan
 -------------------
