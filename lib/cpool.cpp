@@ -85,6 +85,22 @@ ConnectionPool::clear(bool all)
 }
 
 
+//// exchange //////////////////////////////////////////////////////////
+// Passed connection is defective, so remove it from the pool and return
+// a new one.
+
+Connection*
+ConnectionPool::exchange(const Connection* pc)
+{
+	// Don't grab the mutex first.  remove() and grab() both do.
+	// Inefficient, but we'd have to hoist their contents up into this
+	// method or extract a mutex-free version of each mechanism for
+	// each, both of which are also inefficient.
+	remove(pc);
+	return grab();
+}
+
+
 //// find_mru //////////////////////////////////////////////////////////
 // Find most recently used available connection.  Uses operator< for
 // ConnectionInfo to order pool with MRU connection last.  Returns 0 if
@@ -140,13 +156,34 @@ ConnectionPool::release(const Connection* pc)
 
 
 //// remove ////////////////////////////////////////////////////////////
-// Given an iterator into the pool, destroy the connection and remove
-// it from the pool.  This is only a utility function for use by other
-// class internals.
+// 2 versions:
+//
+// First takes a Connection pointer, finds it in the pool, and calls
+// the second.  It's public, because Connection pointers are all
+// outsiders see of the pool.
+//
+// Second takes an iterator into the pool, destroys the referenced
+// connection and removes it from the pool.  This is only a utility
+// function for use by other class internals.
+
+void
+ConnectionPool::remove(const Connection* pc)
+{
+	ScopedLock lock(mutex_);	// ensure we're not interfered with
+
+	for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
+		if (it->conn == pc) {
+			remove(it);
+			return;
+		}
+	}
+}
 
 void
 ConnectionPool::remove(const PoolIt& it)
 {
+	// Don't grab the mutex.  Only called from other functions that do
+	// grab it.
 	destroy(it->conn);
 	pool_.erase(it);
 }
@@ -174,12 +211,7 @@ ConnectionPool::safe_grab()
 {
 	Connection* pc;
 	while (!(pc = grab())->ping()) {
-		for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
-			if (it->conn == pc) {
-				remove(it);
-				break;
-			}
-		}
+		remove(pc);
 	}
 }
 
