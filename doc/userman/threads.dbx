@@ -158,6 +158,19 @@
     derivative, you might consider making it a Singleton (see Gamma
     et al.), since there should only be one pool in a program.</para>
 
+    <para>Another thing you might consider doing is passing a
+    <ulink url="ReconnectOption" type="classref"/> object to
+    <methodname>Connection::set_option()</methodname> in your
+    <methodname>create()</methodname> override before returning the
+    new <classname>Connection</classname> pointer. This will cause
+    the underlying MySQL C API to try to reconnect to the database
+    server if a query fails because the connection was dropped
+    by the server. This can happen if the DB server is allowed to
+    restart out from under your application. In many applications,
+    this isn&rsquo;t allowed, or if it does happen, you might want
+    your code to be able to detect it, so MySQL++ doesn&rsquo;t set
+    this option for you automatically.</para>
+
     <para>Here is an example showing how to use connection pools with
     threads:</para>
 
