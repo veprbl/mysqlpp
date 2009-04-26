@@ -167,5 +167,22 @@ ConnectionPool::remove_old_connections()
 }
 
 
+//// safe_grab /////////////////////////////////////////////////////////
+
+Connection*
+ConnectionPool::safe_grab()
+{
+	Connection* pc;
+	while (!(pc = grab())->ping()) {
+		for (PoolIt it = pool_.begin(); it != pool_.end(); ++it) {
+			if (it->conn == pc) {
+				remove(it);
+				break;
+			}
+		}
+	}
+}
+
+
 } // end namespace mysqlpp
 

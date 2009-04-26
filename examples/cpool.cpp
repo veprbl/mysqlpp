@@ -3,7 +3,7 @@
 	threads and POSIX threads.  Shows how to create and use a concrete
 	ConnectionPool derivative.
 
- Copyright (c) 2008 by Educational Technology Resources, Inc.
+ Copyright (c) 2008-2009 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS.txt file in the top directory of the distribution for details.
 
@@ -129,11 +129,11 @@ worker_thread(thread_arg_t running_flag)
 {
 	// Ask the underlying C API to allocate any per-thread resources it
 	// needs, in case it hasn't happened already.  In this particular
-	// program, it's almost guaranteed that the grab() call below will
-	// create a new connection the first time through, and thus allocate
-	// these resources implicitly, but there's a nonzero chance that
-	// this won't happen.  Anyway, this is an example program, meant to
-	// show good style, so we take the high road and ensure the
+	// program, it's almost guaranteed that the safe_grab() call below
+	// will create a new connection the first time through, and thus
+	// allocate these resources implicitly, but there's a nonzero chance
+	// that this won't happen.  Anyway, this is an example program,
+	// meant to show good style, so we take the high road and ensure the
 	// resources are allocated before we do any queries.
 	mysqlpp::Connection::thread_start();
 	cout.put('S'); cout.flush(); // indicate thread started
@@ -143,7 +143,7 @@ worker_thread(thread_arg_t running_flag)
 	for (size_t i = 0; i < 6; ++i) {
 		// Go get a free connection from the pool, or create a new one
 		// if there are no free conns yet.
-		mysqlpp::Connection* cp = poolptr->grab();
+		mysqlpp::Connection* cp = poolptr->safe_grab();
 		if (!cp) {
 			cerr << "Failed to get a connection from the pool!" << endl;
 			break;
@@ -198,7 +198,7 @@ main(int argc, char *argv[])
 	// awareness turned on.  See README-*.txt for your platform.
 	poolptr = new SimpleConnectionPool(cmdline);
 	try {
-		mysqlpp::Connection* cp = poolptr->grab();
+		mysqlpp::Connection* cp = poolptr->safe_grab();
 		if (!cp->thread_aware()) {
 			cerr << "MySQL++ wasn't built with thread awareness!  " <<
 					argv[0] << " can't run without it." << endl;

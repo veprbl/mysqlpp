@@ -108,6 +108,18 @@ public:
 	/// remove it from the pool.
 	virtual void release(const Connection* pc);
 
+	/// \brief Grab a free connection from the pool, testing that it's
+	/// connected before returning it.
+	///
+	/// This is just a wrapper around grab(), Connection::ping() and
+	/// release(), and is thus less efficient than grab().  Use it only
+	/// when it's possible for MySQL server connections to go away
+	/// unexpectedly, such as when the DB server can be restarted out
+	/// from under your application.
+	///
+	/// \retval a pointer to the connection
+	virtual Connection* safe_grab();
+
 	/// \brief Remove all unused connections from the pool
 	void shrink() { clear(false); }
 
