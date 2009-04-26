@@ -1,7 +1,7 @@
 /***********************************************************************
  cpool.cpp - Implements the ConnectionPool class.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc. and
+ Copyright (c) 2007-2009 by Educational Technology Resources, Inc. and
  (c) 2007 by Jonathan Wakely.  Others may also hold copyrights on
  code in this file.  See the CREDITS.txt file in the top directory
  of the distribution for details.
@@ -73,12 +73,10 @@ ConnectionPool::clear(bool all)
 {
 	ScopedLock lock(mutex_);	// ensure we're not interfered with
 
-	PoolIt it = pool_.begin(), doomed;
+	PoolIt it = pool_.begin();
 	while (it != pool_.end()) {
 		if (all || !it->in_use) {
-			doomed = it++;
-			destroy(doomed->conn);
-			pool_.erase(doomed);
+			remove(it++);
 		}
 		else {
 			++it;
@@ -141,6 +139,19 @@ ConnectionPool::release(const Connection* pc)
 }
 
 
+//// remove ////////////////////////////////////////////////////////////
+// Given an iterator into the pool, destroy the connection and remove
+// it from the pool.  This is only a utility function for use by other
+// class internals.
+
+void
+ConnectionPool::remove(const PoolIt& it)
+{
+	destroy(it->conn);
+	pool_.erase(it);
+}
+
+
 //// remove_old_connections ////////////////////////////////////////////
 // Remove connections that were last used too long ago.
 
@@ -151,8 +162,7 @@ ConnectionPool::remove_old_connections()
 
 	PoolIt it = pool_.begin();
 	while ((it = std::find_if(it, pool_.end(), too_old)) != pool_.end()) {
-		destroy(it->conn);
-		pool_.erase(it++);
+		remove(it++);
 	}
 }
 

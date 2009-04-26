@@ -188,6 +188,7 @@ private:
 
 	//// Internal support functions
 	Connection* find_mru();
+	void remove(const PoolIt& it);
 	void remove_old_connections();
 
 	//// Internal data
