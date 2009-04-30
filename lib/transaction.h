@@ -46,13 +46,50 @@ class MYSQLPP_EXPORT Connection;
 class MYSQLPP_EXPORT Transaction
 {
 public:
-	/// \brief Constructor
+	/// \brief Transaction isolation levels defined in SQL
+	///
+	/// These values can be passed to one of the Transaction
+	/// constructors to change the way the database engine protects
+	/// transactions from other DB updates.  These values are in order
+	/// of increasing isolation, but decreasing performance.
+	enum IsolationLevel {
+		read_uncommitted,	///< allow "dirty reads" from other transactions
+		read_committed,		///< only read rows committed by other transactions
+		repeatable_read,	///< other transactions do not affect repeated reads in this transaction
+		serializable		///< this transaction prevents writes to any rows it accesses while it runs
+	};
+
+	/// \brief Isolation level scopes defined in SQL
+	///
+	/// These values are only used with one of the Transaction
+	/// constructors, to select which transaction(s) our change to
+	// the isolation scope will affect.
+	enum IsolationScope {
+		this_transaction,	///< change level for this transaction only
+		session,			///< change level for all transactions in this session
+		global				///< change level for all transactions on the DB server
+	};
+
+	/// \brief Simple constructor
 	///
 	/// \param conn The connection we use to manage the transaction set
 	/// \param consistent Whether to use "consistent snapshots" during
 	/// the transaction. See the documentation for "START TRANSACTION"
 	/// in the MySQL manual for more on this.
 	Transaction(Connection& conn, bool consistent = false);
+
+	/// \brief Constructor allowing custom transaction isolation level
+	/// and scope
+	///
+	/// \param conn The connection we use to manage the transaction set
+	/// \param level Isolation level to use for this transaction
+	/// \param scope Selects the scope of the isolation level change
+	/// \param consistent Whether to use "consistent snapshots" during
+	/// the transaction. See the documentation for "START TRANSACTION"
+	/// in the MySQL manual for more on this.
+	Transaction(Connection& conn, IsolationLevel level,
+			IsolationScope scope = this_transaction,
+			bool consistent = false);
 
 	/// \brief Destructor
 	///

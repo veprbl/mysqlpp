@@ -1,6 +1,6 @@
 /***********************************************************************
- transaction.cpp - Example showing how to use the transaction support in
-	MySQL++ v2.1 and up.
+ transaction.cpp - Example showing how to use MySQL++'s transaction
+ 	features.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
  (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
@@ -55,7 +55,15 @@ main(int argc, char *argv[])
 
 		// Insert a few rows in a single transaction set
 		{
-			mysqlpp::Transaction trans(con);
+			// Use a higher level of transaction isolation than MySQL
+			// offers by default.  This trades some speed for more
+			// predictable behavior.  We've set it to affect all
+			// transactions started through this DB server connection,
+			// so it affects the next block, too, even if we don't
+			// commit this one.
+			mysqlpp::Transaction trans(con,
+					mysqlpp::Transaction::serializable,
+					mysqlpp::Transaction::session);
 
 			stock row("Sauerkraut", 42, 1.2, 0.75,
 					mysqlpp::sql_date("2006-03-06"), mysqlpp::null);
@@ -74,6 +82,8 @@ main(int argc, char *argv[])
 			
 		// Now let's test auto-rollback
 		{
+			// Start a new transaction, keeping the same isolation level
+			// we set above, since it was set to affect the session.
 			mysqlpp::Transaction trans(con);
 			cout << "\nNow adding catsup to the database..." << endl;
 
