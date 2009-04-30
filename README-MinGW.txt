@@ -22,9 +22,8 @@ Prerequisite: MySQL C Development Files
     
     If not, you have two options.
 
-    The simplest is to edit Makefile.mingw.  This is a generated
-    file, but if that's all the only change to MySQL++ you need,
-    it works fine.
+    The simplest is to edit Makefile.mingw.  This is a generated file,
+    but if that's the only change to MySQL++ you need, it works fine.
 
     If you're doing deeper work on MySQL++, you should change the
     variable MYSQL_WIN_DIR at the top of mysql++.bkl instead.  Then to
@@ -74,14 +73,14 @@ Building the Library and Example Programs
 
 Cygwin and MinGW Coexistence
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    It's possible to have both Cygwin and MinGW installed and build with
-    the MinGW tools without interference from the Cygwin bits.  The main
-    thing you have to take care of is that MinGW's bin directory must
-    precede the Cygwin bin directory in the PATH, so that its tools are
-    found first.  If you use Cygwin's bash as a command shell in
-    preference to the DOS-like cmd.exe, you can use this shell script to
-    temporarily set the environment to "MinGW mode" and make it easy to
-    get back to "Cygwin mode":
+    It's possible to have both Cygwin and MinGW installed and build
+    with the MinGW tools without interference from the Cygwin bits.
+    The main thing you have to take care of is that MinGW's bin
+    directory must precede the Cygwin bin directory in the PATH,
+    so that its tools are found first.  If you use Cygwin's bash
+    as a command shell in preference to the DOS-like cmd.exe, you
+    can use this shell script to temporarily set the environment to
+    "MinGW mode" and make it easy to get back to "Cygwin mode":
 
         #!/bin/sh
         PATH=/c/mingw/bin:/c/windows:/c/windows/system32:/c/cygwin/bin
