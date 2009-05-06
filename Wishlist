@@ -172,6 +172,11 @@ v3.1 Tentative Plan
 
       - Replace CREATE TABLE SQL in resetdb with create_table() calls.
 
+	  - Option to use integer indices into Row when populating?  Only
+	    bother if it gives a speed advantage we can actually see,
+		because it removes all the dynamic typing advantages we got with
+		the change to field name indices in v3.0.
+
     o Try to add Query::storein(container, ssqls), which generates
       SELECT * from {ssqls.table()} and stores the result.  May not be
       possible due to existing overloads, but try.  If it works, use
