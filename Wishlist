@@ -230,10 +230,23 @@ v3.1 Tentative Plan
       allow comparison of row[x] returns to SQL null.  Change one of
       the examples to show it?
 
-    o Add DBDriver::library_begin() and library_end(), wrapping
-      similarly named functions in the C API.  Recommend adding
-      calls to them in custom ConnectionPool subclasses.  Move
-      memory leak FAQ into userman, rewriting it to cover all this.
+    o Memory "leak" and C API library init fixes:
+    
+      - Add DBDriver::library_begin() and library_end(), wrapping
+        similarly named functions in the C API.
+
+      - Create Process class, which you create at the top of main()
+        on the stack, purely to call these automatically.
+
+      - Update userman to recommend creating Process object in
+        ConnectionPool derivatives, instead.
+
+      - Create Thread class to call existing DBDriver::thread_start()
+        and thread_end(), similar to Process, created on the stack
+        of the thread entry function.
+
+      - Move memory leak FAQ into userman, rewriting it to cover
+        all this.
 
 
 v3.2 Tentative Plan
