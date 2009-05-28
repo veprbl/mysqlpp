@@ -63,33 +63,33 @@ AC_CACHE_CHECK([for MySQL++ devel stuff], ac_cv_mysqlpp_devel,
 	#
 	# Look for MySQL++ library
 	#
-	MYSQLPP_libdir=
+	MYSQLPP_LIB_DIR=
 	for dir in $MYSQLPP_lib_check
 	do
 		if test -d "$dir" && \
 			( test -f "$dir/libmysqlpp.so" ||
 			  test -f "$dir/libmysqlpp.a" )
 		then
-			MYSQLPP_libdir=$dir
+			MYSQLPP_LIB_DIR=$dir
 			break
 		fi
 	done
 
-	if test -z "$MYSQLPP_libdir"
+	if test -z "$MYSQLPP_LIB_DIR"
 	then
 		AC_MSG_ERROR([Didn't find the MySQL++ library dir in '$MYSQLPP_lib_check'])
 	fi
 
-	case "$MYSQLPP_libdir" in
+	case "$MYSQLPP_LIB_DIR" in
 		/* ) ;;
-		* )  AC_MSG_ERROR([The MySQL++ library directory ($MYSQLPP_libdir) must be an absolute path.]) ;;
+		* )  AC_MSG_ERROR([The MySQL++ library directory ($MYSQLPP_LIB_DIR) must be an absolute path.]) ;;
 	esac
 
-	AC_MSG_RESULT([lib in $MYSQLPP_libdir])
+	AC_MSG_RESULT([lib in $MYSQLPP_LIB_DIR])
 
-	case "$MYSQLPP_libdir" in
+	case "$MYSQLPP_LIB_DIR" in
 	  /usr/lib) ;;
-	  *) LDFLAGS="$LDFLAGS -L${MYSQLPP_libdir}" ;;
+	  *) LDFLAGS="$LDFLAGS -L${MYSQLPP_LIB_DIR}" ;;
 	esac
 
 
@@ -97,29 +97,29 @@ AC_CACHE_CHECK([for MySQL++ devel stuff], ac_cv_mysqlpp_devel,
 	# Look for MySQL++ headers
 	#
 	AC_MSG_CHECKING([for MySQL++ header directory])
-	MYSQLPP_incdir=
+	MYSQLPP_INC_DIR=
 	for dir in $MYSQLPP_inc_check
 	do
 		if test -d "$dir" && test -f "$dir/mysql++.h"
 		then
-			MYSQLPP_incdir=$dir
+			MYSQLPP_INC_DIR=$dir
 			break
 		fi
 	done
 
-	if test -z "$MYSQLPP_incdir"
+	if test -z "$MYSQLPP_INC_DIR"
 	then
 		AC_MSG_ERROR([Didn't find the MySQL++ header dir in '$MYSQLPP_inc_check'])
 	fi
 
-	case "$MYSQLPP_incdir" in
+	case "$MYSQLPP_INC_DIR" in
 		/* ) ;;
-		* )  AC_MSG_ERROR([The MySQL++ header directory ($MYSQLPP_incdir) must be an absolute path.]) ;;
+		* )  AC_MSG_ERROR([The MySQL++ header directory ($MYSQLPP_INC_DIR) must be an absolute path.]) ;;
 	esac
 
-	AC_MSG_RESULT([$MYSQLPP_incdir])
+	AC_MSG_RESULT([$MYSQLPP_INC_DIR])
 
-	CPPFLAGS="$CPPFLAGS -I${MYSQLPP_incdir}"
+	CPPFLAGS="$CPPFLAGS -I${MYSQLPP_INC_DIR} -I${MYSQL_C_INC_DIR}"
 
 	AC_MSG_CHECKING([that we can build MySQL++ programs])
 	AC_COMPILE_IFELSE(
@@ -127,5 +127,8 @@ AC_CACHE_CHECK([for MySQL++ devel stuff], ac_cv_mysqlpp_devel,
 		[mysqlpp::Connection c(false)])],
 		ac_cv_mysqlpp_devel=yes,
 		AC_MSG_ERROR(no))
+
+	AC_SUBST(MYSQLPP_INC_DIR)
+	AC_SUBST(MYSQLPP_LIB_DIR)
 ])]) dnl End MYSQLPP_DEVEL
 

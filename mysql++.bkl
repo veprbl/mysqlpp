@@ -121,7 +121,7 @@
 
         <cxxflags>@PTHREAD_CFLAGS@</cxxflags>
         <include>.</include>
-        <ldflags>-l@MYSQL_C_LIB@ @PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
+        <ldflags>-l@MYSQL_C_LIB_NAME@ @PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
       </if>
     </dll>
 
@@ -157,7 +157,7 @@
 
     <if cond="FORMAT=='autoconf'">
       <cxxflags>@PTHREAD_CFLAGS@</cxxflags>
-      <ldflags>-l@MYSQL_C_LIB@ @PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
+      <ldflags>-l@MYSQL_C_LIB_NAME@ @PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
       <warnings>max</warnings>
       <sys-lib>mysqlpp</sys-lib>
     </if>

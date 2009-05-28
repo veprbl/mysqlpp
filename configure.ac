@@ -64,7 +64,7 @@ AC_CHECK_FUNC(getopt,
 # Checks for libraries and local system features
 LIB_MATH
 LIB_SOCKET_NSL
-MYSQL_API_LOCATION
+MYSQL_C_API_LOCATION
 MYSQL_WITH_SSL
 AX_C_LOCALTIME_R
 AC_CHECK_LIB(intl, main)
