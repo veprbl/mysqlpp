@@ -2,7 +2,7 @@
 # mysql++.m4 - Example autoconf macro showing how to find MySQL++
 #	library and header files.
 #
-# Copyright (c) 2004-2008 by Educational Technology Resources, Inc.
+# Copyright (c) 2004-2009 by Educational Technology Resources, Inc.
 #
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU Lesser General Public License as published
@@ -37,7 +37,7 @@ dnl This macro depends on having the default compiler and linker flags
 dnl set up for building programs against the MySQL C API.  The mysql.m4
 dnl macro in this directory fits this bill; run it first.
 dnl
-dnl @version 1.1, 2008/02/07
+dnl @version 1.2, 2009/05/28
 dnl @author Warren Young <mysqlpp@etr-usa.com>
 
 AC_DEFUN([MYSQLPP_DEVEL],
@@ -49,13 +49,13 @@ AC_CACHE_CHECK([for MySQL++ devel stuff], ac_cv_mysqlpp_devel,
 	#
 	AC_ARG_WITH(mysqlpp,
 		[  --with-mysqlpp=<path>     path containing MySQL++ header and library subdirs],
-		[MYSQLPP_lib_check="$with_mysqlpp/lib $with_mysqlpp/lib/mysql++"
+		[MYSQLPP_lib_check="$with_mysqlpp/lib64 $with_mysqlpp/lib $with_mysqlpp/lib64/mysql++ $with_mysqlpp/lib/mysql++"
 		  MYSQLPP_inc_check="$with_mysqlpp/include $with_mysqlpp/include/mysql++"],
-		[MYSQLPP_lib_check="/usr/local/mysql++/lib /usr/local/lib/mysql++ /opt/mysql++/lib /usr/lib/mysql++ /usr/local/lib /usr/lib"
+		[MYSQLPP_lib_check="/usr/local/mysql++/lib64 /usr/local/mysql++/lib /usr/local/lib64/mysql++ /usr/local/lib/mysql++ /opt/mysql++/lib64 /opt/mysql++/lib /usr/lib64/mysql++ /usr/lib/mysql++ /usr/local/lib64 /usr/local/lib /usr/lib64 /usr/lib"
 		  MYSQLPP_inc_check="/usr/local/mysql++/include /usr/local/include/mysql++ /opt/mysql++/include /usr/local/include/mysql++ /usr/local/include /usr/include/mysql++ /usr/include"])
 	AC_ARG_WITH(mysqlpp-lib,
 		[  --with-mysqlpp-lib=<path> directory path of MySQL++ library],
-		[MYSQLPP_lib_check="$with_mysqlpp_lib $with_mysqlpp_lib/lib $with_mysqlpp_lib/lib/mysql"])
+		[MYSQLPP_lib_check="$with_mysqlpp_lib $with_mysqlpp_lib/lib64 $with_mysqlpp_lib/lib $with_mysqlpp_lib/lib64/mysql $with_mysqlpp_lib/lib/mysql"])
 	AC_ARG_WITH(mysqlpp-include,
 		[  --with-mysqlpp-include=<path> directory path of MySQL++ headers],
 		[MYSQLPP_inc_check="$with_mysqlpp_include $with_mysqlpp_include/include $with_mysqlpp_include/include/mysql"])
