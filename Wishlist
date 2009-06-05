@@ -21,6 +21,14 @@ Any Version
 
     o Add -lmysqlclient for Xcode case
 
+    o Possibly bogus code in DBDriver::connect():
+
+          set_option_default(new ReadDefaultFileOption("my"));
+
+      Doesn't this a) read from "./my" not "./my.cnf" and b) even if
+      it did the latter, isn't that the default already?  Test it,
+      and remove it if it isn't helpful.
+
 
 v3.1 Tentative Plan
 -------------------
