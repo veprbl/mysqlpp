@@ -191,6 +191,9 @@ v3.1 Tentative Plan
         because it removes all the dynamic typing advantages we got with
         the change to field name indices in v3.0.
 
+      - Add backticks around names in generated SQL to avoid problems
+        with use of SQL reserved words as table and column names.
+
     o Try to add Query::storein(container, ssqls), which generates
       SELECT * from {ssqls.table()} and stores the result.  May not be
       possible due to existing overloads, but try.  If it works, use
