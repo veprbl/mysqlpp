@@ -138,7 +138,7 @@ class MYSQLPP_EXPORT NoTransaction
 {
 public:
 	/// \brief Constructor
-	NoTransaction(Connection& conn, bool consistent = false)
+	NoTransaction(Connection&, bool = false)
 	{
 	}
 

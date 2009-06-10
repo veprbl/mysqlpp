@@ -81,7 +81,7 @@ public:
 	/// \retval true if the object is allowed to be added to the
 	/// INSERT statement
 	template <class RowT>
-	bool can_add(int size, const RowT& object)
+	bool can_add(int, const RowT&)
 	{
 		if (++cur_rows_ > max_rows_) {
 			cur_rows_ = 0;
@@ -194,7 +194,7 @@ public:
 			// item pushes it over the line.
 			SQLStream s(conn_);
 			s << ",(" << object.value_list() << ")";
-			return (size_ - size) >= (int)s.str().size();
+			return (size_ - size) >= static_cast<int>(s.str().size());
 		}
 		else {
 			// Already too much in query buffer!
