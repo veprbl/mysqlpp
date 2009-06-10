@@ -29,6 +29,10 @@ Any Version
       it did the latter, isn't that the default already?  Test it,
       and remove it if it isn't helpful.
 
+    o Can we fix "if (!query)" without changing the ABI?
+
+      http://lists.mysql.com/plusplus/8594
+
 
 v3.1 Tentative Plan
 -------------------
