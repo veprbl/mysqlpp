@@ -195,9 +195,6 @@ v3.1 Tentative Plan
         because it removes all the dynamic typing advantages we got with
         the change to field name indices in v3.0.
 
-      - Add backticks around names in generated SQL to avoid problems
-        with use of SQL reserved words as table and column names.
-
     o Try to add Query::storein(container, ssqls), which generates
       SELECT * from {ssqls.table()} and stores the result.  May not be
       possible due to existing overloads, but try.  If it works, use
@@ -278,14 +275,9 @@ v3.2 Tentative Plan
       and another for storing a larger set of bits in a more flexible
       way, perhaps as a BLOB.
 
-    o field_list should use backticks to quote its items to handle
-      spaces and other special characters.  Probably also remove all
-      the manipulator stuff associated with these: no reason to make
-      it user-settable, as there's only one right way to do it.  See:
-
-         http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
-
-    o Add a general-purpose backtick manipulator as well.
+    o Create a backtick manipulator for use by field_list() in row.h
+      and ssqls.h.  These currently use do_nothing0, but that prevents
+      use of SQL reserved words as identifiers.
 
     o Has experience with new thread awareness changed our mind on
       atomic inc/dec of reference counts in RefCounted*?

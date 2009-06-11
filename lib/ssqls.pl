@@ -327,7 +327,7 @@ foreach my $i (1..$max_data_members) {
 		$enums .= "    NAME##_##I$j";
 		$enums .= ",\n" unless $j == $i;
 
-		$field_list .= "    s << obj.manip << obj.obj->names[".($j-1)."]";
+		$field_list .= "    s << obj.manip << '`' << obj.obj->names[".($j-1)."] << '`'";
 		$field_list .= " << obj.delim;\n" unless $j == $i;
 
 		$value_list .= "    s << obj.manip << obj.obj->I$j";
@@ -346,18 +346,18 @@ foreach my $i (1..$max_data_members) {
 
 		$cus_field_list .= "    if ((*obj.include)[".($j-1)."]) { \n";
 		$cus_field_list .= "      if (before) s << obj.delim;\n" unless $j == 1;
-		$cus_field_list .= "      s << obj.manip << obj.obj->names[".($j-1)."];\n";
+		$cus_field_list .= "      s << obj.manip << '`' << obj.obj->names[".($j-1)."] << '`';\n";
 		$cus_field_list .= "      before = true; \n" unless $j == $i;
 		$cus_field_list .= "     } \n";
 
 		$cus_equal_list .= "    if ((*obj.include)[".($j-1)."]) { \n";
 		$cus_equal_list .= "      if (before) s << obj.delim;\n" unless $j == 1;
-		$cus_equal_list .= "      s << obj.obj->names[".($j-1)."] << obj.comp";
+		$cus_equal_list .= "      s << '`' << obj.obj->names[".($j-1)."] << '`' << obj.comp";
 		$cus_equal_list .=        " << obj.manip << obj.obj->I$j;\n";
 		$cus_equal_list .= "      before = true; \n" unless $j == $i;
 		$cus_equal_list .= "     } \n";
 
-		$equal_list .= "    s << obj.obj->names[".($j-1)."] << obj.comp";
+		$equal_list .= "    s << '`' << obj.obj->names[".($j-1)."] << '`' << obj.comp";
 		$equal_list .= " << obj.manip << obj.obj->I$j";
 		$equal_list .= " << obj.delim;\n" unless $j == $i;
 

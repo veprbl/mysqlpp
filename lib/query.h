@@ -556,8 +556,9 @@ public:
 	template <class SSQLS, typename Function>
 	Function for_each(const SSQLS& ssqls, Function fn)
 	{	
-		std::string query("select * from ");
+		std::string query("select * from `");
 		query += ssqls.table();
+      query += '`';
 		mysqlpp::UseQueryResult res = use(query);
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
@@ -618,8 +619,9 @@ public:
 	template <class Sequence, class SSQLS, typename Function>
 	Function store_if(Sequence& con, const SSQLS& ssqls, Function fn)
 	{	
-		std::string query("select * from ");
+		std::string query("select * from `");
 		query += ssqls.table();
+      query += '`';
 		mysqlpp::UseQueryResult res = use(query);
 		if (res) {
 			mysqlpp::NoExceptions ne(res);
@@ -947,7 +949,7 @@ public:
 		// lookup logic.  For an explanation of the problem, see:
 		// http://groups-beta.google.com/group/microsoft.public.vc.stl/browse_thread/thread/9a68d84644e64f15
 		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
-				"UPDATE " << o.table() << " SET " << n.equal_list() <<
+				"UPDATE `" << o.table() << "` SET " << n.equal_list() <<
 				" WHERE " << o.equal_list(" AND ", sql_use_compare);
 		return *this;
 	}
@@ -966,7 +968,7 @@ public:
 		reset();
 
 		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
-				"INSERT INTO " << v.table() << " (" <<
+				"INSERT INTO `" << v.table() << "` (" <<
 				v.field_list() << ") VALUES (" <<
 				v.value_list() << ')';
 		return *this;
@@ -994,7 +996,7 @@ public:
 		}
 		
 		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
-				"INSERT INTO " << first->table() << " (" <<
+				"INSERT INTO `" << first->table() << "` (" <<
 				first->field_list() << ") VALUES (" <<
 				first->value_list() << ')';
 
@@ -1037,7 +1039,7 @@ public:
 			if (policy.can_add(tellp(), *it)) {
 				if (empty) {
 					MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
-						"INSERT INTO " << it->table() << " (" <<
+						"INSERT INTO `" << it->table() << "` (" <<
 						it->field_list() << ") VALUES (";
 				} 
 				else {
@@ -1062,7 +1064,7 @@ public:
 				// If we _still_ can't add, the policy is too strict
 				if (policy.can_add(tellp(), *it)) {
 					MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
-						"INSERT INTO " << it->table() << " (" <<
+						"INSERT INTO `" << it->table() << "` (" <<
 						it->field_list() << ") VALUES (" <<
 						it->value_list() << ')';
 
@@ -1110,7 +1112,7 @@ public:
 		reset();
 
 		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
-				"REPLACE INTO " << v.table() << " (" <<
+				"REPLACE INTO `" << v.table() << "` (" <<
 				v.field_list() << ") VALUES (" << v.value_list() << ')';
 		return *this;
 	}
