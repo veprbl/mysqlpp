@@ -26,6 +26,7 @@
 
 #include <mysql++.h>
 
+#include <climits>
 #include <iostream>
 
 static const unsigned char nonzero = 4;

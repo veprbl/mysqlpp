@@ -1,7 +1,7 @@
 /***********************************************************************
  dbdriver.cpp - Implements the DBDriver class.
 
- Copyright (c) 2005-2007 by Educational Technology Resources, Inc.
+ Copyright (c) 2005-2009 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS.txt file in the top directory of the distribution for details.
 
@@ -28,8 +28,9 @@
 
 #include "exceptions.h"
 
-#include <sstream>
+#include <cstring>
 #include <memory>
+#include <sstream>
 
 // An argument was added to mysql_shutdown() in MySQL 4.1.3 and 5.0.1.
 #if ((MYSQL_VERSION_ID >= 40103) && (MYSQL_VERSION_ID <= 49999)) || (MYSQL_VERSION_ID >= 50001)
