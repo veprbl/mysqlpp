@@ -314,13 +314,14 @@ Connection::server_version() const
 bool
 Connection::set_option(Option* o)
 {
+	const std::type_info& oti = typeid(*o);
 	error_message_ = driver_->set_option(o);
 	if (error_message_.empty()) {
 		return true;
 	}
 	else {
 		if (throw_exceptions()) {
-			throw BadOption(error_message_, typeid(*o));
+			throw BadOption(error_message_, oti);
 		}
 		return false;
 	}
