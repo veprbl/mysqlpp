@@ -16,7 +16,6 @@
 # Standard autotools stuff
 AC_INIT(mysql++, 3.1.0, plusplus@lists.mysql.com, mysql++)
 AC_CONFIG_HEADER(config.h)
-AC_DISABLE_STATIC
 AC_CANONICAL_SYSTEM
 
 
