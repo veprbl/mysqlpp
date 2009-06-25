@@ -4,9 +4,10 @@
 	primary one is SSQLSv2 language files (*.ssqls) to C++ source code,
 	but there are others.  Run "ssqlsxlat -?" to get a complete list.
 
- Copyright (c) 2009 by Educational Technology Resources, Inc.
- Others may also hold copyrights on code in this file.  See the
- CREDITS.txt file in the top directory of the distribution for details.
+ Copyright (c) 2009 by Educational Technology Resources, Inc., and
+ (c) 2009 by Warren Young.  Others may also hold copyrights on code
+ in this file.  See the CREDITS.txt file in the top directory of the
+ distribution for details.
 
  This file is part of MySQL++.
 
@@ -26,11 +27,45 @@
  USA
 ***********************************************************************/
 
+#include "parsev2.h"
+
 #include <cmdline.h>
 
 #include <iostream>
 
 using namespace std;
+using namespace mysqlpp::ssqlsxlat;
+
+
+//// parse_ssqls2 //////////////////////////////////////////////////////
+// We were given the name of a putative SSQLS v2 source file; try to
+// parse it.
+
+static int
+parse_ssqls2(const char* file_name)
+{
+	try {
+		ParseV2 p(file_name);
+		cout << file_name << " parsed successfully, " <<
+				(p.end() - p.begin()) << " interesting lines." << endl;
+		return 0;
+	}
+	catch (const ParseV2::FileException& e) {
+		cerr << file_name << ":0" << 
+				": file I/O error in SSQLS v2 parse: " <<
+				e.what() << endl;
+	}
+	catch (const ParseV2::ParseException& e) {
+		cerr << e.file_name() << ':' << e.line() << ':' <<
+				e.what() << endl;
+	}
+	catch (const std::exception& e) {
+		cerr << file_name << ":0" << 
+				": critical error in SSQLS v2 parse: " <<
+				e.what() << endl;
+	}
+	return 3;
+}
 
 
 //// main //////////////////////////////////////////////////////////////
@@ -39,9 +74,18 @@ int
 main(int argc, char* argv[])
 {
 	// Parse the command line
-	mysqlpp::ssqlsxlat::CommandLine cmdline(argc, argv);
+	CommandLine cmdline(argc, argv);
 	if (cmdline) {
-		return 0;
+		switch (cmdline.input_source()) {
+			case CommandLine::is_ssqls2:
+				return parse_ssqls2(cmdline.input());
+
+			default:
+				cerr << "Sorry, I don't yet know what to do with input "
+						"source type " << int(cmdline.input_source()) <<
+						'!' << endl;
+				return 2;
+		}
 	}
 	else {
 		return 1;

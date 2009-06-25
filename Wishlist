@@ -50,51 +50,24 @@ v3.1 Tentative Plan
 
     o SSQLS v2 (http://lists.mysql.com/plusplus/6929):
 
-      - SSQLSv2 DSL parser:
-
-        stock.ssqls:
-
-            include common.ssqls
-
-            table stock alias SQLStock filebase ssqls_stock
-                field item type bigint alias id is autoinc is key
-                field num type bigint
-                field weight type double
-                field price type double
-                field sdate type date
-                field description type mediumtext is null
-
-        common.ssqls:
-
-            option implementation_extension cc
-            option header_extension hh
-            option use_accessors getX 
-            option exception_on_schema_mismatch true
-
-        That is, a simple line-based verb/noun pair system, with
-        potentially multiple pairs per line depending on the initial
-        verb.  Indent level controls whether certain verbs are allowed,
-        and if so, which higher-level verb they apply to.  Includes are
-        just recursion: parse the included file immediately using
-        the same parser, then at EOF resume parsing the includer.
+      - Add #warning SSQLS v1 is deprecated to ssqls.h
 
       - SSQLSv2 DSL generator: walk data structure created by previous,
         writing back out valid SSQLSv2.
         
-      - Write test1.ssqls and test2.ssqls; former includes latter.
-        Add to dtest:
+      - Add to dtest:
         
-            ssqlsxlat -i ssqlsxlat/test1.ssqls -o /tmp/dtest1.ssqls
+            ssqlsxlat -i test/test1.ssqls -o /tmp/dtest1.ssqls
             cat /tmp/dtest1.ssqls
             ssqlsxlat -i /tmp/dtest1.ssqls -o /tmp/dtest2.ssqls
-            die if ! diff -q /tmp/dtest[12].ssqls
+            die if ! diff -wq /tmp/dtest[12].ssqls
         
         Checks that parse results don't change, and that reparsing
         -o output doesn't give different -o output.
 
       - C++ code generator, from walking DSL parse tree:
 
-        Above stock.ssqls gives ssqls_stock.hh containing:
+        examples/stock.ssqls gives ssqls_stock.hh containing:
 
             class SQLStock : public mysqlpp::SsqlsBase
             {

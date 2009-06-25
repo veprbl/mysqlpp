@@ -93,6 +93,7 @@ AC_OUTPUT([\
 	install.hta \
 	lib/Doxyfile \
 	lib/mysql++.h \
+	ssx/Doxyfile \
 	mysql++.spec \
 	Makefile \
 ])

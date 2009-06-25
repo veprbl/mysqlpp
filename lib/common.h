@@ -5,10 +5,11 @@
 /// This file mostly takes care of platform differences.
 
 /***********************************************************************
- Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
- also hold copyrights on code in this file.  See the CREDITS.txt file
- in the top directory of the distribution for details.
+ Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB,
+ (c) 2004-2009 by Educational Technology Resources, Inc., and
+ (c) 2009 by Warren Young.  Others may also hold copyrights on code
+ in this file.  See the CREDITS.txt file in the top directory of the
+ distribution for details.
 
  This file is part of MySQL++.
 
@@ -48,7 +49,6 @@
 // Work out major platform-specific stuff here.
 #if defined(__WIN32__) || defined(_WIN32)
 #	define MYSQLPP_PLATFORM_WINDOWS
-
 	// Windows compiler support.  Tested with Microsoft Visual C++,
 	// Borland C++ Builder, and MinGW GCC.
 #	include <winsock.h>
@@ -105,6 +105,9 @@
 		// Not making a DLL at all, so no-op these declspecs
 		#define MYSQLPP_EXPORT
 	#endif
+
+	// We need to use the DOS/Windows path separator here
+	#define MYSQLPP_PATH_SEPARATOR '\\'
 #else
 	// If not Windows, we assume some sort of Unixy build environment,
 	// where autotools is used.  (This includes Cygwin!)  #include the
@@ -116,6 +119,9 @@
 
 	// Make DLL stuff a no-op on this platform.
 	#define MYSQLPP_EXPORT
+
+	// Assume POSIX path separator
+	#define MYSQLPP_PATH_SEPARATOR '/'
 #endif
 
 #if defined(MYSQLPP_MYSQL_HEADERS_BURIED)
