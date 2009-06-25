@@ -389,6 +389,20 @@
       </command>
     </modify-target>
 
+    <action id="Makefile">
+      <depends-on-file>configure.ac</depends-on-file>
+      <depends-on-file>install.hta.in</depends-on-file>
+      <depends-on-file>mysql++.bkl</depends-on-file>
+      <depends-on-file>mysql++.spec.in</depends-on-file>
+      <depends-on-file>doc/userman/userman.dbx.in</depends-on-file>
+      <depends-on-file>lib/Doxyfile.in</depends-on-file>
+      <depends-on-file>lib/mysql++.h.in</depends-on-file>
+      <depends-on-file>ssx/Doxyfile.in</depends-on-file>
+      <command>bakefile_gen</command>
+      <command>autoreconf</command>
+      <command>./config.status</command>
+    </action>
+
     <action id="lib/ssqls.h">
       <command>cd lib ; ./ssqls.pl</command>
       <depends-on-file>lib/ssqls.pl</depends-on-file>
