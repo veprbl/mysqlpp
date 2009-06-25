@@ -81,6 +81,7 @@
         lib/transaction.cpp
         lib/type_info.cpp
         lib/uds_connection.cpp
+        lib/utility.cpp
         lib/vallist.cpp
         lib/wnp_connection.cpp
       </sources>

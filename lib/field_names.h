@@ -31,8 +31,6 @@
 #include <string>
 #include <vector>
 
-#include <ctype.h>
-
 namespace mysqlpp {
 
 #if !defined(DOXYGEN_IGNORE)
@@ -100,13 +98,6 @@ public:
 
 private:
 	void init(const ResultBase* res);
-	void str_to_lwr(std::string& s) const
-	{
-		std::string::iterator it;
-		for (it = s.begin(); it != s.end(); ++it) {
-			*it = tolower(*it);
-		}
-	}
 };
 
 } // end namespace mysqlpp
