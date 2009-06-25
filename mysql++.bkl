@@ -386,8 +386,7 @@
 
     <action id="tags">
       <is-phony/>
-      <command>ctags `pwd`/{examples,lib}/*.{cpp,h}</command>
-      <command>for d in examples lib ; do cd $(DDD) ; ln -sf ../tags . ; cd .. ; done</command>
+      <command>ctags --recurse=yes .</command>
     </action>
     <action id="ctags"><depends>tags</depends></action>
 
