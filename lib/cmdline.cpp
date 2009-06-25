@@ -154,7 +154,7 @@ CommandLineBase::option_argument() const
 
 //// CommandLineBase::option_index /////////////////////////////////////
 // Accessor for optind, so caller doesn't have to know about this
-// getopt() style interface.  Particualy helpful on non-POSIX systems.
+// getopt() style interface.  Particuarly helpful on non-POSIX systems.
 
 int
 CommandLineBase::option_index() const
@@ -203,7 +203,7 @@ const char* db_name = "mysql_cpp_data";
 
 CommandLine::CommandLine(int argc, char* const argv[],
 		const char* user, const char* pass, const char* usage_extra) :
-CommandLineBase(argc, argv, "m:p:s:u:D"),
+CommandLineBase(argc, argv, "hm:p:s:u:D?"),
 dtest_mode_(false),
 run_mode_(0),
 server_(0),
@@ -263,13 +263,13 @@ namespace ssqlsxlat {
 //// ssqlsxlat::CommandLine ctor ////////////////////////////////////////
 
 CommandLine::CommandLine(int argc, char* const argv[]) :
-CommandLineBase(argc, argv, "i:o:p:s:t:u:1:"),
+CommandLineBase(argc, argv, "hi:o:p:s:t:u:1:?"),
 input_(0),
 output_(0),
 pass_(""),
 server_(0),
 user_(0),
-input_source_(input_unknown)
+input_source_(is_unknown)
 {
 	// Parse the command line
 	int ch;
@@ -289,9 +289,9 @@ input_source_(input_unknown)
 				}
 				input_ = option_argument();
 				input_source_ =
-						(ch == '1' ? input_ssqlsv1 :
-						 ch == 'i' ? input_ssqlsv2 :
-						             input_table);
+						(ch == '1' ? is_ssqls1 :
+						 ch == 'i' ? is_ssqls2 :
+						             is_table);
 				break;
 
 			default:
@@ -303,10 +303,10 @@ input_source_(input_unknown)
 	// Figure out whether command line makes sense, and if not, tell
 	// user about it.
 	if (successful()) {
-		if (input_source_ == input_unknown) {
+		if (input_source_ == is_unknown) {
 			parse_error("No input source given!  Need -i, -t or -1.");
 		}
-		else if ((input_source_ != input_ssqlsv2) && !output_) {
+		else if ((input_source_ != is_ssqls2) && !output_) {
 			parse_error("Need -o if you give -t or -1!");
 		}
 	}
@@ -322,18 +322,20 @@ CommandLine::print_usage() const
 {
 	std::cerr << "usage: " << program_name() <<
         	" [ -i input.ssqls ] [ -1 input-ssqlsv1.cpp ]\n"
-			"\t[ -u user ] [ -p password ] [ -s server ] [ -t table ]\n"
-			"\t[ -o parsedump.ssqls ]\n";
+			"        [ -u user ] [ -p password ] [ -s server ] [ -t table ]\n"
+			"        [ -o parsedump.ssqls ]\n";
 	std::cerr << std::endl;
 	std::cerr <<
-			"\t-i: parse SSQLSv2 DSL, generating C++ output at minimum\n"
-			"\t-1: find SSQLSv1 declarations in C++ code, and try to\n"
-			"\t    interpret as equivalent SSQLSv2; requires -o\n"
-			"\t-u, -p, -s and -t: log into server, get schema details\n"
-			"\t    for a table, and generate output as if parsed from\n"
-			"\t    SSQLSv2 DSL; requires -o\n"
-			"\t-o: write out .ssqls file containing info found by\n"
-			"\t    processing -i, -t or -1\n";
+			"        -i: parse SSQLSv2 DSL, generating C++ output at minimum\n"
+			"        -o: write out .ssqls file containing info found by\n"
+			"            processing -i, -t or -1\n"
+			"  -u,p,s,t: log into server with given creds, get schema details\n"
+			"            for a table, and generate output as if parsed from\n"
+			"            SSQLSv2 DSL; requires -o\n"
+			"        -1: find SSQLSv1 declarations in C++ code, and try to\n"
+			"            interpret as equivalent SSQLSv2; requires -o\n"
+			"      -?,h: write out .ssqls file containing info found by\n"
+			"            processing -i, -t or -1\n";
 	std::cerr << std::endl;
 }
 
