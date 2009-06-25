@@ -34,6 +34,8 @@
 
 namespace mysqlpp {
 
+namespace internal { extern void str_to_lwr(std::string& s); }
+
 void
 FieldNames::init(const ResultBase* res)
 {
@@ -42,7 +44,7 @@ FieldNames::init(const ResultBase* res)
 
 	for (int i = 0; i < num; i++) {
 		std::string p(res->fields().at(i).name());
-		str_to_lwr(p);
+		internal::str_to_lwr(p);
 		push_back(p);
 	}
 }
@@ -52,7 +54,7 @@ unsigned int
 FieldNames::operator [](const std::string& s) const
 {
 	std::string temp(s);
-	str_to_lwr(temp);
+	internal::str_to_lwr(temp);
 	return static_cast<unsigned int>(std::find(begin(), end(), temp) - begin());
 }
 
