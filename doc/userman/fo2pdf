@@ -1,6 +1,6 @@
 #!/bin/sh
 AHCMD=/usr/XSLFormatterV42/run.sh
-FOPCMD=/usr/local/fop/fop
+FOPCMD=`which /usr/local/fop/fop /usr/bin/fop | head -1 2> /dev/null`
 XEPCMD=/usr/local/xep/xep
 
 FOFILE=$1
@@ -17,7 +17,7 @@ then
 		$AHCMD -silent -d $FOFILE -o $PDFFILE
 	elif [ -x "$FOPCMD" ]
 	then
-		echo Rendering $FOFILE to $PDFFILE with Apache FOP...
+		echo "Rendering $FOFILE to $PDFFILE with Apache FOP ($FOPCMD)..."
 		$FOPCMD -q -fo $FOFILE $PDFFILE
 	else
 		echo 'Cannot find a working XSL-FO processor on your system!  See'
