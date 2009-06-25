@@ -32,6 +32,10 @@ Any Version
     o Can we fix "if (!query)" without changing the ABI?
 
       http://lists.mysql.com/plusplus/8594
+    
+    o Fix pedantic warning:
+
+      lib/null.h:55: warning: type qualifiers ignored on function return type
 
 
 v3.1 Tentative Plan
