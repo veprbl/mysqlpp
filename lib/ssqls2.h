@@ -27,6 +27,8 @@
 #if !defined(MYSQLPP_SSQLS2_H)
 #define MYSQLPP_SSQLS2_H
 
+#include "common.h"
+
 #include <iostream>
 
 namespace mysqlpp {
@@ -34,6 +36,7 @@ namespace mysqlpp {
 #if !defined(DOXYGEN_IGNORE)
 // Make Doxygen ignore this
 class MYSQLPP_EXPORT Connection;
+class MYSQLPP_EXPORT Row;
 #endif
 
 /// \brief Base class for all SSQLSv2 classes
@@ -49,7 +52,7 @@ public:
 		fs_all,			///< all fields
 		fs_key,			///< fields with "is key" attribute
 		fs_set,			///< fields that have been given a value
-		fs_not_autoinc,	///< fields without "is autoinc" attribute
+		fs_not_autoinc	///< fields without "is autoinc" attribute
 	};
 
 	/// \brief Create table in database matching subclass schema
@@ -213,8 +216,8 @@ protected:
 	/// particular call.
 	SsqlsBase(Connection* conn = 0) :
 	output_mode_(om_value_list),
-	instance_table_name_(0),
-	conn_(conn)
+	conn_(conn),
+	instance_table_name_(0)
 	{
 	}
 
@@ -224,11 +227,13 @@ protected:
 	/// \param conn pointer to connection we should use for Active
 	/// Record methods' queries, if no connection is passed for that
 	/// particular call.
+	/// \todo do something with row parameter
 	SsqlsBase(const Row& row, Connection* conn = 0) :
 	output_mode_(om_value_list),
-	instance_table_name_(0),
-	conn_(conn)
+	conn_(conn),
+	instance_table_name_(0)
 	{
+		(void)row;
 	}
 
 	/// \brief Destructor
@@ -238,7 +243,7 @@ protected:
 	mutable enum {
 		om_equal_list,
 		om_name_list,
-		om_value_list,
+		om_value_list
 	} output_mode_;
 
 	/// \brief Connection object we were initialized from, if any
@@ -270,8 +275,10 @@ private:
 /// reset to give value lists again on completion of the insert operation.
 /// For example:
 ///
-/// \code stock s = ...;	// initialize an SSQLSv2 object of 'stock' class
-/// \code cout << "Set field names: " << s.name_list() << endl;
+/// \code
+/// stock s = ...;	// initialize an SSQLSv2 object of 'stock' class
+/// cout << "Set field names: " << s.name_list() << endl;
+/// \endcode
 ///
 /// The \c s.name_list() call sets the output mode to "names", then passes
 /// \c cout and \c *this to this operator, which then calls the version

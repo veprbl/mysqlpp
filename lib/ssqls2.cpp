@@ -32,49 +32,60 @@
 
 using namespace std;
 
-namespace mysqlpp {
-
 // All of the Active Record calls below follow a common pattern, which
 // we can only express as a macro.  They just wrap similar calls in
 // Query, varying only in minor per-call specific details.
 #define QUERY_ACTIVE_RECORD_WRAPPER(action, conn, fs) \
 	if (conn) conn_ = conn; \
 	if (conn_) { \
-		if (conn_.connected()) { \
-			if (populated(fs)) return conn_.query().action(*this).execute(); \
-			else if (conn_.throw_exceptions()) throw BadQuery( \
+		if (conn_->connected()) { \
+			if (populated(fs)) return conn_->query().action(*this).execute(); \
+			else if (conn_->throw_exceptions()) throw BadQuery( \
 					"Cannot " #action " insufficiently populated SSQLS"); \
 			else return false; \
 		} \
-		else if (conn_.throw_exceptions()) throw ConnectionFailed(
+		else if (conn_->throw_exceptions()) throw ConnectionFailed( \
 				"Cannot " #action " SSQLS without established connection"); \
 		else return false; \
 	} \
-	else throw ObjectNotInitialized(typeid(*this).name()); \
+	else throw ObjectNotInitialized(typeid(*this).name());
 
+namespace mysqlpp {
 
 bool
 SsqlsBase::create(Connection* conn) const
 {
-	QUERY_ACTIVE_RECORD_WRAPPER(insert, conn, fs_not_autoinc);
+	(void)conn;
+	//TODO define Query::insert(SsqlsBase&)
+	//QUERY_ACTIVE_RECORD_WRAPPER(insert, conn, fs_not_autoinc);
+	return false;
 }
 
 bool
 SsqlsBase::load(Connection* conn) const
 {
-	QUERY_ACTIVE_RECORD_WRAPPER(select, conn, fs_key);
+	(void)conn;
+	//TODO define Query::select(SsqlsBase&)
+	//QUERY_ACTIVE_RECORD_WRAPPER(select, conn, fs_key);
+	return false;
 }
 
 bool
 SsqlsBase::remove(Connection* conn) const
 {
-	QUERY_ACTIVE_RECORD_WRAPPER(remove, conn, fs_key);
+	(void)conn;
+	//TODO define Query::remove(SsqlsBase&)
+	//QUERY_ACTIVE_RECORD_WRAPPER(remove, conn, fs_key);
+	return false;
 }
 
 bool
 SsqlsBase::save(Connection* conn) const
 {
-	QUERY_ACTIVE_RECORD_WRAPPER(update, conn, fs_all);
+	(void)conn;
+	//TODO define Query::update(SsqlsBase&)
+	//QUERY_ACTIVE_RECORD_WRAPPER(update, conn, fs_all);
+	return false;
 }
 
 } // end namespace mysqlpp
