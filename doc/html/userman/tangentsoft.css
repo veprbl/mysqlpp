@@ -28,7 +28,7 @@ a:active {
   color: #DA7417;
 }
 
-H1, H2, H3, H4, H5, H6 {
+H1, H2, H3, H4, H5, H6, DIV.navheader > TABLE > TBODY > TR > TH {
   color: #501000;
   font-family:
   	"Verdana",
