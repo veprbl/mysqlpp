@@ -15,12 +15,13 @@
   that uses MySQL++. In modules that use <link
   linkend="ssqls">SSQLS v1</link>, you also need to include
   <filename>ssqls.h</filename>.<footnote><para>MySQL++ has many header
-  files, but the only one that isn&rsquo;t intertwined with the rest
-  is <filename>ssqls.h</filename>. <filename>mysql++.h</filename>
-  includes all of the others in the correct order. Some disregard
-  this advice, thinking they can speed their build times by finding
-  a subset of MySQL++ headers to include. This isn&rsquo;t likely,
-  due to MySQL++&rsquo;s monolithic nature.</para></footnote></para>
+  files, but the only one that isn&rsquo;t intertwined with the rest is
+  <filename>ssqls.h</filename>. <filename>mysql++.h</filename> brings
+  in all of the others in the correct order. Some have tried to speed
+  their build times by finding a subset of MySQL++ headers to include,
+  but <filename>mysql++.h</filename> already does as much of this as
+  is practical. MySQL++&rsquo;s monolithic nature rules out finding
+  a true subset of the library headers.</para></footnote></para>
 
   <para>At this point, your project probably still won&rsquo;t compile,
   and it certainly won&rsquo;t link. The remaining steps are dependent
