@@ -66,9 +66,8 @@ Building the Library and Example Programs
     run resetdb and simple1.
 
     Once you're satisfied that the library is working correctly, you can
-    run the install.bat file at the project root to automatically
-    install the library files and headers in subdirectories under
-    c:\mysql++.
+    run install.hta to automatically install the library files and
+	headers in subdirectories under c:\mysql++.
 
 
 Cygwin and MinGW Coexistence
