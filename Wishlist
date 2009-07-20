@@ -113,8 +113,10 @@ v3.1 Tentative Plan
                         { class_table_name_ = name; }
 
                 std::ostream& equal_list(std::ostream& os) const;
+                std::ostream& json(std::ostream& os) const;
                 std::ostream& name_list(std::ostream& os) const;
                 std::ostream& value_list(std::ostream& os) const;
+                std::ostream& xml(std::ostream& os) const;
 
                 mysqlpp::sql_bigint getId() const;
                 mysqlpp::sql_bigint getNum() const;
@@ -148,19 +150,28 @@ v3.1 Tentative Plan
 
         ...and ssqls_stock.cc, containing implementation for same.
 
-	  - If using accessors, generate "std::bitset<num_fields> is_set_",
-	    and set the appropriate bit when calling each setFoo() so we can
-		intuit which fields were set.  Probably also need an enum:
+      - If using accessors, generate "std::bitset<num_fields> is_set_",
+        and set the appropriate bit when calling each setFoo() so we can
+        intuit which fields were set.  Probably also need an enum:
 
-			enum FieldIndices {
-				id_field_index_,
-				num_field_index_,
-				...
-			};
+            enum FieldIndices {
+                id_field_index_,
+                num_field_index_,
+                ...
+            };
 
-		This will allow Query::select(), for instance, to figure out
-		that we want it to select by a non-key field, returning all
-		matches.
+        This will allow Query::select(), for instance, to figure out
+        that we want it to select by a non-key field, returning all
+        matches.
+
+      - Define operator<< for SSQLS and a set of manipulators which
+        govern whether the operator calls equal_list(), json(),
+        name_list(), value_list(), or xml() to do the actual insertion.
+
+      - Define operator>> for SSQLS, taking XML as input, in the form
+        emitted via xml().  expat uses the new BSD license, so maybe
+        we can just drop it in the tree, with an option to use the
+        platform expat on autoconf systems.
 
       - MySQL table metadata to SSQLSv2 data structure translator.
         (-s, -u, -p and -t flag support.)  Add this to dtest,
