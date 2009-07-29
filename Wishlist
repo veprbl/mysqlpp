@@ -37,6 +37,10 @@ Any Version
 
       lib/null.h:55: warning: type qualifiers ignored on function return type
 
+    o Need to link statically to connect to MySQL Embedded?
+
+      http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
+
 
 v3.1 Tentative Plan
 -------------------
@@ -438,3 +442,8 @@ v4.0 or Later
       it part of the public API causes people to try calling it, and
       discovering that it's not a very elegant interface, compared to
       the ones taking SQLStrings.
+
+	o SQL time type allows +/- 839 hours of range.  v3.0 code doesn't
+	  cope with negative times, and if we change it to use signed
+	  integers, we'll still only get +/-127 hours instead of +255.
+	  Need to switch the hour field to a short to get the full range.
