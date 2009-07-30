@@ -443,7 +443,14 @@ v4.0 or Later
       discovering that it's not a very elegant interface, compared to
       the ones taking SQLStrings.
 
-	o SQL time type allows +/- 839 hours of range.  v3.0 code doesn't
-	  cope with negative times, and if we change it to use signed
-	  integers, we'll still only get +/-127 hours instead of +255.
-	  Need to switch the hour field to a short to get the full range.
+    o SQL time type allows +/- 839 hours of range.  v3.0 code doesn't
+      cope with negative times, and if we change it to use signed
+      integers, we'll still only get +/-127 hours instead of +255.
+      Need to switch the hour field to a short to get the full range.
+
+    o Create a thread-safe message queue for separating DB access and
+      data use into multiple threads.  Something like ConnectionPool,
+      optional and with no ties to the internals of MySQL++.  There
+      could be an adapter between one end of the queue and a Connection
+      object, which creates Queries to handle standardized messages,
+      delivering the results back to the queue.
