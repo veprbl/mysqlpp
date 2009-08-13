@@ -92,10 +92,10 @@ show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
 		separator(cout, query.str());
 		mysqlpp::StoreQueryResult res = query.store();
 
-		unsigned int columns = res.num_fields();
-		vector<int> widths;
-		for (unsigned int i = 0; i < columns; ++i) {
-			string s = res.field_name(i);
+		size_t columns = res.num_fields();
+		vector<size_t> widths;
+		for (size_t i = 0; i < columns; ++i) {
+			string s = res.field_name(int(i));
 			if (s.compare("field") == 0) {
 				widths.push_back(22);
 			}
@@ -116,7 +116,8 @@ show_table_info(mysqlpp::Connection& con, const vector<string>& tables)
 			}
 
 			if (widths[i]) {
-				cout << '|' << setw(widths[i]) << res.field_name(i) << '|';
+				cout << '|' << setw(widths[i]) << 
+						res.field_name(int(i)) << '|';
 			}
 		}
 		cout << endl;

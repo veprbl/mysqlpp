@@ -42,7 +42,7 @@ using namespace std;
 using namespace mysqlpp;
 
 
-typedef vector<int> IntVectorType;
+typedef vector<size_t> IntVectorType;
 
 
 static void
@@ -50,7 +50,7 @@ print_header(IntVectorType& widths, StoreQueryResult& res)
 {
 	cout << "  |" << setfill(' ');
 	for (size_t i = 0; i < res.field_names()->size(); i++) {
-		cout << " " << setw(widths.at(i)) << res.field_name(i) << " |";
+		cout << " " << setw(widths.at(i)) << res.field_name(int(i)) << " |";
 	}
 	cout << endl;
 }
@@ -61,7 +61,7 @@ print_row(IntVectorType& widths, Row& row)
 {
 	cout << "  |" << setfill(' ');
 	for (size_t i = 0; i < row.size(); ++i) {
-		cout << " " << setw(widths.at(i)) << row[i] << " |";
+		cout << " " << setw(widths.at(i)) << row[int(i)] << " |";
 	}
 	cout << endl;
 }
@@ -94,7 +94,7 @@ print_result(StoreQueryResult& res, int index)
 
 	// Figure out the widths of the result set's columns
 	IntVectorType widths;
-	int size = res.num_fields();
+	size_t size = res.num_fields();
 	for (int i = 0; i < size; i++) {
 		widths.push_back(max(
 				res.field(i).max_length(),

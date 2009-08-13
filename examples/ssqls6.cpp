@@ -36,7 +36,7 @@ using namespace std;
 
 // Breaks a given text line of tab-separated fields up into a list of
 // strings.
-static int
+static size_t
 tokenize_line(const string& line, vector<mysqlpp::String>& strings)
 {
 	string field;

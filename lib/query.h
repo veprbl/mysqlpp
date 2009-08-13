@@ -1036,7 +1036,7 @@ public:
 		typename InsertPolicy::access_controller ac(*conn_);
 		
 		for (Iter it = first; it != last; ++it) {
-			if (policy.can_add(tellp(), *it)) {
+			if (policy.can_add(int(tellp()), *it)) {
 				if (empty) {
 					MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 						"INSERT INTO `" << it->table() << "` (" <<
@@ -1062,7 +1062,7 @@ public:
 				}
 
 				// If we _still_ can't add, the policy is too strict
-				if (policy.can_add(tellp(), *it)) {
+				if (policy.can_add(int(tellp()), *it)) {
 					MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
 						"INSERT INTO `" << it->table() << "` (" <<
 						it->field_list() << ") VALUES (" <<

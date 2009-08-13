@@ -67,11 +67,11 @@ main(int argc, char *argv[])
 		for (size_t i = 0; i < res.field_names()->size(); i++) {
 			// Suppress C++ type name outputs when run under dtest,
 			// as they're system-specific.
-			const char* cname = res.field_type(i).name();
-			mysqlpp::FieldTypes::value_type ft = res.field_type(i);
+			const char* cname = res.field_type(int(i)).name();
+			mysqlpp::FieldTypes::value_type ft = res.field_type(int(i));
 			ostringstream os;
 			os << ft.sql_name() << " (" << ft.id() << ')';
-			cout << setw(widths[0]) << res.field_name(i).c_str() <<
+			cout << setw(widths[0]) << res.field_name(int(i)).c_str() <<
 					setw(widths[1]) << os.str() <<
 					setw(widths[2]) << cname <<
 					endl;

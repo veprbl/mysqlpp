@@ -37,7 +37,7 @@ using namespace std;
 // Display a header suitable for use with print_stock_rows().
 
 void
-print_stock_header(int rows)
+print_stock_header(size_t rows)
 {
 	cout << "Records found: " << rows << endl << endl;
 	cout.setf(ios::left);

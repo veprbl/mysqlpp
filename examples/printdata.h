@@ -30,7 +30,7 @@
 
 #include <mysql++.h>
 
-void print_stock_header(int rows);
+void print_stock_header(size_t rows);
 void print_stock_row(const mysqlpp::Row& r);
 void print_stock_row(const mysqlpp::sql_char& item,
 		mysqlpp::sql_bigint num, mysqlpp::sql_double weight,
