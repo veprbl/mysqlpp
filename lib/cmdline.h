@@ -120,7 +120,7 @@ namespace mysqlpp {
 	/// \brief Stuff related to MySQL++ examples specifically
 	namespace examples {
 		/// \brief Name of examples' DB
-		extern const char* db_name;
+		extern MYSQLPP_EXPORT const char* db_name;
 
 		/// \brief Command line parsing mechanism for ../examples/*.cpp
 		class MYSQLPP_EXPORT CommandLine : public CommandLineBase

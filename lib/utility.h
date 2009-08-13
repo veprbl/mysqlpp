@@ -31,6 +31,8 @@
 #if !defined(MYSQLPP_UTILITY_H)
 #define MYSQLPP_UTILITY_H
 
+#include "common.h"
+
 #include <cctype>
 #include <cstring>
 #include <string>
@@ -39,11 +41,11 @@ namespace mysqlpp {
 	/// \brief Namespace for holding things used only within MySQL++
 	namespace internal {
 		/// \brief Lowercase a C++ string in place
-		void str_to_lwr(std::string& s);
+		void MYSQLPP_EXPORT str_to_lwr(std::string& s);
 
 		/// \brief Copy a C string into a C++ string, lowercasing
 		/// it along the way
-		void str_to_lwr(std::string& ls, const char* mcs);
+		void MYSQLPP_EXPORT str_to_lwr(std::string& ls, const char* mcs);
 	} // end namespace mysqlpp::internal
 } // end namespace mysqlpp
 

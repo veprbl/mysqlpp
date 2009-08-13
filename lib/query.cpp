@@ -32,6 +32,12 @@
 
 namespace mysqlpp {
 
+// Force insertfrom() policy template instantiation.  Required to make 
+// VC++ happy.
+Query::RowCountInsertPolicy<Transaction> RowCountInsertPolicyI(0);
+Query::SizeThresholdInsertPolicy<Transaction> SizeThresholdInsertPolicyI(0);
+Query::MaxPacketInsertPolicy<Transaction> MaxPacketInsertPolicyI(0);
+
 Query::Query(Connection* c, bool te, const char* qstr) :
 #if defined(MYSQLPP_HAVE_STD__NOINIT)
 // prevents a double-init memory leak in native VC++ RTL (not STLport!)
