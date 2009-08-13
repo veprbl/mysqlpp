@@ -48,9 +48,6 @@ main(int argc, char *argv[])
 	mysqlpp::Connection conn(false);
 	if (conn.connect(mysqlpp::examples::db_name, cmdline.server(),
 			cmdline.user(), cmdline.pass())) {
-		conn.disconnect();
-		conn.connect(mysqlpp::examples::db_name, cmdline.server(),
-				cmdline.user(), cmdline.pass());
 		// Retrieve a subset of the sample stock table set up by resetdb
 		// and display it.
 		mysqlpp::Query query = conn.query("select item from stock");
