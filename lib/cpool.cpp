@@ -212,7 +212,9 @@ ConnectionPool::safe_grab()
 	Connection* pc;
 	while (!(pc = grab())->ping()) {
 		remove(pc);
+		pc = 0;
 	}
+	return pc;
 }
 
 
