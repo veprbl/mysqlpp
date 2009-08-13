@@ -98,14 +98,21 @@ Building MySQL++ for 64-Bit
     - Pull the same list box down, say Edit..., and remove the Win32
       build, unless you actually need both versions.
 
-    It should then build, except that you may have to re-run the
-    build a couple of times, due to errors about the build log being
-    unwritable or locked.  Just re-run the build until you get all of
-    the projects to build.  If re-running the build doesn't reduce
-    the number of failures, you have something else wrong, perhaps
-    due to not following the instructions above carefully.  It might
-    be simplest to just blow away the MySQL++ tree and try again.
-    (I did once, while formulating these instructions...sigh.)
+    It should then build.  If you get PRJ2009 errors, complaining
+    about BuildLog.htm, this is a bug in Visual Studio 2008's
+    new parallel build feature, which seems to affect x64 builds
+    more than x86.  Sometimes you can get around it by just saying
+    "build" repeatedly, each time getting a few more modules built.
+    Or, you can disable the feature by going to Tools > Options... >
+    Projects and Solutions > Build and Run > # of parallel processes
+    and setting the value to 1.
+
+    If you don't follow the instructions above carefully, you can
+    end up with a completely unbuildable solution.  (It happened
+    to me once when preparing these instructions!)  If you simply
+    cannot seem to make it work, it's often simplest to just blow
+    away the MySQL++ source tree, unpack a fresh copy and try again,
+    paying more attention to the details.
 
 
 Building the Library and Example Programs
