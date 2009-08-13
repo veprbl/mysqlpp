@@ -195,7 +195,10 @@ public:
 	///
 	/// \sa escape_string_no_conn(char*, const char*, size_t)
 	size_t escape_string(char* to, const char* from, size_t length)
-			{ return mysql_real_escape_string(&mysql_, to, from, length); }
+	{
+		return mysql_real_escape_string(&mysql_, to, from, 
+				(unsigned long)length);
+	}
 
 	/// \brief Return a SQL-escaped version of a character buffer
 	///
@@ -247,7 +250,9 @@ public:
 	/// \sa escape_string(char*, const char*, size_t)
 	static size_t escape_string_no_conn(char* to, const char* from,
 			size_t length)
-			{ return mysql_escape_string(to, from, length); }
+	{
+		return mysql_escape_string(to, from, (unsigned long)length);
+	}
 
 	/// \brief SQL-escapes the given string without reference to the 
 	/// character set of a database server.
@@ -261,7 +266,9 @@ public:
 	///
 	/// Wraps \c mysql_real_query() in the MySQL C API.
 	bool execute(const char* qstr, size_t length)
-			{ return !mysql_real_query(&mysql_, qstr, length); }
+	{
+		return !mysql_real_query(&mysql_, qstr, (unsigned long)length);
+	}
 
 	/// \brief Returns the next raw C API row structure from the given
 	/// result set.
@@ -296,14 +303,14 @@ public:
 	MYSQL_FIELD* fetch_field(MYSQL_RES* res, size_t i = UINT_MAX) const
 	{
 		return i == UINT_MAX ? mysql_fetch_field(res) :
-				mysql_fetch_field_direct(res, i);
+				mysql_fetch_field_direct(res, (unsigned int)i);
 	}
 
 	/// \brief Jumps to the given field within the result set
 	///
 	/// Wraps \c mysql_field_seek() in MySQL C API.
 	void field_seek(MYSQL_RES* res, size_t field) const
-			{ mysql_field_seek(res, field); }
+			{ mysql_field_seek(res, MYSQL_FIELD_OFFSET(field)); }
 
 	/// \brief Releases memory used by a result set
 	///

@@ -39,7 +39,7 @@ namespace internal { extern void str_to_lwr(std::string& s); }
 void
 FieldNames::init(const ResultBase* res)
 {
-	int num = res->num_fields();
+	size_t num = res->num_fields();
 	reserve(num);
 
 	for (int i = 0; i < num; i++) {
