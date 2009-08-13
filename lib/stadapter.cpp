@@ -259,10 +259,10 @@ is_processed_(false)
 SQLTypeAdapter::SQLTypeAdapter(float f) :
 is_processed_(false)
 {
-	numeric_limits<float> nlf;
-	if ((nlf.has_infinity && (f == nlf.infinity())) ||
-			(nlf.has_quiet_NaN && (f == nlf.quiet_NaN())) ||
-			(nlf.has_signaling_NaN && (f == nlf.signaling_NaN()))) {
+	typedef numeric_limits<float> nlf;
+	if ((nlf::has_infinity && (f == nlf::infinity())) ||
+			(nlf::has_quiet_NaN && (f == nlf::quiet_NaN())) ||
+			(nlf::has_signaling_NaN && (f == nlf::signaling_NaN()))) {
 		// f isn't null-able, but it's infinite or NaN, so store it
 		// as a 0.  This at least prevents syntactically-invalid SQL.
 		buffer_ = new SQLBuffer("0", typeid(f), true);
@@ -279,11 +279,11 @@ is_processed_(false)
 SQLTypeAdapter::SQLTypeAdapter(Null<float> f) :
 is_processed_(false)
 {
-	numeric_limits<float> nlf;
+	typedef numeric_limits<float> nlf;
 	if (f.is_null ||
-			(nlf.has_infinity && (f.data == nlf.infinity())) ||
-			(nlf.has_quiet_NaN && (f.data == nlf.quiet_NaN())) ||
-			(nlf.has_signaling_NaN && (f.data == nlf.signaling_NaN()))) {
+			(nlf::has_infinity && (f.data == nlf::infinity())) ||
+			(nlf::has_quiet_NaN && (f.data == nlf::quiet_NaN())) ||
+			(nlf::has_signaling_NaN && (f.data == nlf::signaling_NaN()))) {
 		// MySQL wants infinite and NaN FP values stored as SQL NULL
 		buffer_ = new SQLBuffer(null_str, typeid(void), true);
 	}
@@ -299,10 +299,10 @@ is_processed_(false)
 SQLTypeAdapter::SQLTypeAdapter(double f) :
 is_processed_(false)
 {
-	numeric_limits<double> nld;
-	if ((nld.has_infinity && (f == nld.infinity())) ||
-			(nld.has_quiet_NaN && (f == nld.quiet_NaN())) ||
-			(nld.has_signaling_NaN && (f == nld.signaling_NaN()))) {
+	typedef numeric_limits<double> nld;
+	if ((nld::has_infinity && (f == nld::infinity())) ||
+			(nld::has_quiet_NaN && (f == nld::quiet_NaN())) ||
+			(nld::has_signaling_NaN && (f == nld::signaling_NaN()))) {
 		// f isn't null-able, but it's infinite or NaN, so store it
 		// as a 0.  This at least prevents syntactically-invalid SQL.
 		buffer_ = new SQLBuffer("0", typeid(f), true);
@@ -319,11 +319,11 @@ is_processed_(false)
 SQLTypeAdapter::SQLTypeAdapter(Null<double> f) :
 is_processed_(false)
 {
-	numeric_limits<double> nld;
+	typedef numeric_limits<double> nld;
 	if (f.is_null ||
-			(nld.has_infinity && (f.data == nld.infinity())) ||
-			(nld.has_quiet_NaN && (f.data == nld.quiet_NaN())) ||
-			(nld.has_signaling_NaN && (f.data == nld.signaling_NaN()))) {
+			(nld::has_infinity && (f.data == nld::infinity())) ||
+			(nld::has_quiet_NaN && (f.data == nld::quiet_NaN())) ||
+			(nld::has_signaling_NaN && (f.data == nld::signaling_NaN()))) {
 		// MySQL wants infinite and NaN FP values stored as SQL NULL
 		buffer_ = new SQLBuffer(null_str, typeid(void), true);
 	}
