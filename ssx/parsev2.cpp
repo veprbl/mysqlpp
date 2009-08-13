@@ -54,7 +54,6 @@ file_(file_name)
 {
 	// For each line in the file, read it in and try to make sense of it
 	// based on the indent level and the leading verb.
-	size_t count = 0;
 	string line;
 	bool subdirective;
 	while (file_.read_line(line, subdirective)) {
@@ -134,6 +133,7 @@ ParseV2::AccessorStyleOption::parse_type(const std::string& style,
 		ostringstream o;
 		o << "unknown accessor style '" << style << '\'';
 		file.parse_error(o);
+		return unknown;
 	}
 }
 
@@ -479,6 +479,7 @@ ParseV2::Option::parse(const StringList& tl, bool subdirective,
 		ostringstream o;
 		o << "unknown option '" << name << '\'';
 		file.parse_error(o);
+		return 0;
 	}
 }
 

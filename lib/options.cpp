@@ -1,9 +1,9 @@
 /***********************************************************************
  options.cpp - Implements the Option class hierarchy.
 
- Copyright (c) 2007 by Educational Technology Resources, Inc.  Others
- may also hold copyrights on code in this file.  See the CREDITS
- file in the top directory of the distribution for details.
+ Copyright (c) 2007-2009 by Educational Technology Resources, Inc.
+ Others may also hold copyrights on code in this file.  See the
+ CREDITS file in the top directory of the distribution for details.
 
  This file is part of MySQL++.
 
@@ -326,6 +326,7 @@ SslOption::set(DBDriver* dbd)
 				cipher_.size() ? cipher_.c_str() : 0) ?
 				Option::err_NONE : Option::err_api_reject;
 #else
+	(void)dbd;
 	return Option::err_api_limit;
 #endif
 }

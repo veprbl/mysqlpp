@@ -3,7 +3,7 @@
 
 /***********************************************************************
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2008 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS.txt file
  in the top directory of the distribution for details.
 
@@ -197,7 +197,7 @@ public:
 	size_t escape_string(char* to, const char* from, size_t length)
 	{
 		return mysql_real_escape_string(&mysql_, to, from, 
-				(unsigned long)length);
+				static_cast<unsigned long>(length));
 	}
 
 	/// \brief Return a SQL-escaped version of a character buffer
@@ -251,7 +251,8 @@ public:
 	static size_t escape_string_no_conn(char* to, const char* from,
 			size_t length)
 	{
-		return mysql_escape_string(to, from, (unsigned long)length);
+		return mysql_escape_string(to, from,
+				static_cast<unsigned long>(length));
 	}
 
 	/// \brief SQL-escapes the given string without reference to the 
@@ -267,7 +268,8 @@ public:
 	/// Wraps \c mysql_real_query() in the MySQL C API.
 	bool execute(const char* qstr, size_t length)
 	{
-		return !mysql_real_query(&mysql_, qstr, (unsigned long)length);
+		return !mysql_real_query(&mysql_, qstr,
+				static_cast<unsigned long>(length));
 	}
 
 	/// \brief Returns the next raw C API row structure from the given
@@ -303,7 +305,8 @@ public:
 	MYSQL_FIELD* fetch_field(MYSQL_RES* res, size_t i = UINT_MAX) const
 	{
 		return i == UINT_MAX ? mysql_fetch_field(res) :
-				mysql_fetch_field_direct(res, (unsigned int)i);
+				mysql_fetch_field_direct(res,
+				static_cast<unsigned int>(i));
 	}
 
 	/// \brief Jumps to the given field within the result set

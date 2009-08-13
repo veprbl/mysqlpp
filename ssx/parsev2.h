@@ -395,6 +395,7 @@ public:
 		/// each implemented as a subclass, but that's seems excessively
 		/// OO-dogmatic.
 		enum Type {
+			unknown,			///< bad style value found in .ssqls file
 			camel_case_lower,	///< generate accessors like \c getX()
 			camel_case_upper,	///< generate accessors like \c GetX()
 			stroustrup			///< generate accessors like \c get_x()

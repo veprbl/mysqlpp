@@ -140,6 +140,11 @@ DBDriver::enable_ssl(const char* key, const char* cert,
 #if defined(HAVE_MYSQL_SSL_SET)
 	return mysql_ssl_set(&mysql_, key, cert, ca, capath, cipher) == 0;
 #else
+	(void)key;
+	(void)cert;
+	(void)ca;
+	(void)capath;
+	(void)cipher;
 	return false;
 #endif
 }
@@ -280,6 +285,10 @@ DBDriver::set_option(Option* o)
 
 		case Option::err_connected:
 			os << "Option can only be set before connection is established";
+			break;
+
+		case Option::err_disconnected:
+			os << "Option can only be set while the connection is established";
 			break;
 	}
 
