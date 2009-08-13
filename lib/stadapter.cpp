@@ -399,7 +399,7 @@ SQLTypeAdapter&
 SQLTypeAdapter::assign(const char* pc, int len)
 {
 	if (len < 0) {
-		len = strlen(pc);
+		len = int(strlen(pc));
 	}
 
 	buffer_ = new SQLBuffer(pc, len, mysql_type_info::string_type, false);
@@ -423,12 +423,12 @@ SQLTypeAdapter::at(size_type i) const throw(std::out_of_range)
 			return *(buffer_->data() + i);
 		}
 		else {
-			throw BadIndex("Not enough chars in SQLTypeAdapter", i,
-					length());
+			throw BadIndex("Not enough chars in SQLTypeAdapter", int(i),
+					int(length()));
 		}
 	}
 	else {
-		throw BadIndex("SQLTypeAdapter buffer not initialized", i, -1);
+		throw BadIndex("SQLTypeAdapter buffer not initialized", int(i), -1);
 	}
 }
 
