@@ -233,7 +233,12 @@ protected:
 	conn_(conn),
 	instance_table_name_(0)
 	{
-		(void)row;
+#if !defined(_MSC_VER)
+		// Unused parameter warning squisher.  VC++ can't cope without
+		// including row.h, which we don't want to do just to squish a
+		// warning.  It doesn't warn anyway, so...
+		(void)row;	
+#endif
 	}
 
 	/// \brief Destructor
