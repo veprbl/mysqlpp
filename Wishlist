@@ -454,3 +454,12 @@ v4.0 or Later
       could be an adapter between one end of the queue and a Connection
       object, which creates Queries to handle standardized messages,
       delivering the results back to the queue.
+
+    o Get rid of two-step create in DBDriver, requiring a connection to
+      be established in ctor for object to be valid?  RAII.  The
+      DB-specific functions that don't require a connection can be
+      static methods.  Tricky bit: a failed Connection::connect() call
+      will likely be followed by an indirect call to DBDriver::err*().
+      Does Connection cache the error value and message?  If we can pull
+      this off, we can drop the DBDriver::is_connected_ flag and change
+      Connection::connected() to "return driver_ != 0".

@@ -46,7 +46,10 @@ namespace mysqlpp {
 DBDriver::DBDriver() :
 is_connected_(false)
 {
-	mysql_init(&mysql_);
+	// We won't allow calls to mysql_*() functions that take a MYSQL
+	// object until we get a connection up.  Such calls are nonsense.
+	// MySQL++ coped with them before, but this masks bugs.
+	memset(&mysql_, 0, sizeof(mysql_));
 }
 
 
@@ -75,16 +78,7 @@ DBDriver::connect(const char* host, const char* socket_name,
 		unsigned int port, const char* db, const char* user,
 		const char* password)
 {
-	// Drop previous connection, if any
-	if (connected()) {
-		disconnect();
-	}
-
-	// Set defaults for connection options.  User can override these
-	// by calling set_option() before connect().
-	set_option_default(new ReadDefaultFileOption("my"));
-
-	// Establish the connection
+	connect_prepare();
 	return is_connected_ =
 			mysql_real_connect(&mysql_, host, user, password, db,
 			port, socket_name, mysql_.client_flag);
@@ -94,20 +88,27 @@ DBDriver::connect(const char* host, const char* socket_name,
 bool
 DBDriver::connect(const MYSQL& other)
 {
-	// Drop previous connection, if any
-	if (connected()) {
-		disconnect();
-	}
-
-	// Set defaults for connection options.  User can override these
-	// by calling set_option() before connect().
-	set_option_default(new ReadDefaultFileOption("my"));
-
-	// Establish the connection
+	connect_prepare();
 	return is_connected_ =
 			mysql_real_connect(&mysql_, other.host, other.user,
 			other.passwd, other.db, other.port, other.unix_socket,
 			other.client_flag);
+}
+
+
+void
+DBDriver::connect_prepare()
+{
+	// Drop previous connection, if any, then prepare underlying C API
+	// library to establish a new connection.
+	if (connected()) {
+		disconnect();
+	}
+	mysql_init(&mysql_);
+
+	// Set defaults for connection options.  User can override these
+	// by calling set_option() before connect().
+	set_option_default(new ReadDefaultFileOption("my"));
 }
 
 
@@ -128,6 +129,7 @@ DBDriver::disconnect()
 {
 	if (is_connected_) {
 		mysql_close(&mysql_);
+		memset(&mysql_, 0, sizeof(mysql_));
 		is_connected_ = false;
 	}
 }

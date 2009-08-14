@@ -133,9 +133,9 @@ public:
 
 	/// \brief Drop the connection to the database server
 	///
-	/// This method is protected because it should only be used within
-	/// the library.  Unless you use the default constructor, this
-	/// object should always be connected.
+	/// This method should only be used by MySQL++ library internals.
+	/// Unless you use the default constructor, this object should
+	/// always be connected.
 	void disconnect();
 
 	/// \brief Drop a database
@@ -592,6 +592,11 @@ public:
 	///
 	/// Wraps \c mysql_use_result() in the MySQL C API.
 	MYSQL_RES* use_result() { return mysql_use_result(&mysql_); }
+
+protected:
+	/// \brief Does things common to both connect() overloads, before
+	/// each go and establish the connection in their different ways.
+	void connect_prepare();
 
 private:
 	/// \brief Data type of the list of applied connection options
