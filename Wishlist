@@ -345,6 +345,8 @@ v4.0 or Later
 -------------
     o Database independence:
 
+      - Use libdbi or similar?  http://libdbi.sf.net/
+
       - Make DBDriver class purely abstract; move its entire functional
         contents to new MysqlDriver.
 
