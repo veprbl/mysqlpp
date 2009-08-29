@@ -105,10 +105,6 @@ DBDriver::connect_prepare()
 		disconnect();
 	}
 	mysql_init(&mysql_);
-
-	// Set defaults for connection options.  User can override these
-	// by calling set_option() before connect().
-	set_option_default(new ReadDefaultFileOption("my"));
 }
 
 

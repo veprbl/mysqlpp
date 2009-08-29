@@ -15,19 +15,10 @@ Any Version
       link against the built MySQL++ instead of requiring it to be
       installed first.
 
-    o Xcode project needs .. in include path, to find config.h.  Or,
-      better, it needs to ignore config.h when not doing an autotools
-      build.
+    o Xcode project needs to ignore config.h when not doing an autotools
+      build.  Put conditions in lib/common.h.
 
     o Add -lmysqlclient for Xcode case
-
-    o Possibly bogus code in DBDriver::connect():
-
-          set_option_default(new ReadDefaultFileOption("my"));
-
-      Doesn't this a) read from "./my" not "./my.cnf" and b) even if
-      it did the latter, isn't that the default already?  Test it,
-      and remove it if it isn't helpful.
 
     o Can we fix "if (!query)" without changing the ABI?
 
