@@ -77,7 +77,7 @@ public:
 		/// \brief Read a line in from a file
 		///
 		/// We read the line from our internal file object, trimming any
-		/// trailing comment.  Does \i not trim whitespace; we depend on
+		/// trailing comment.  Does \e not trim whitespace; we depend on
 		/// ParseV2::tokenize() to cope with that.  Sets subdirective
 		/// flag if we see leading whitespace before we trim it away, as
 		/// indented lines are interpreted differently by File's users.
