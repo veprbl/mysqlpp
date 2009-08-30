@@ -41,11 +41,6 @@ v3.1 Tentative Plan
 
     o SSQLS v2 (http://lists.mysql.com/plusplus/6929):
 
-      - "naked" accessor style: field 'id' generates two functions id(),
-        one taking the value type, the other returning it.  Will require
-        internal renaming of the fields, as with a trailing underscore,
-        but that's probably a good idea anyway.
-
       - Add #warning SSQLS v1 is deprecated to ssqls.h
 
       - SSQLSv2 DSL generator: walk data structure created by previous,

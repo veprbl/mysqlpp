@@ -129,6 +129,9 @@ ParseV2::AccessorStyleOption::parse_type(const std::string& style,
 	else if (style.compare("get_x")) {
 		return stroustrup;
 	}
+	else if (style.compare("x")) {
+		return overloaded;
+	}
 	else {
 		ostringstream o;
 		o << "unknown accessor style '" << style << '\'';

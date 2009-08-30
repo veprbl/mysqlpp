@@ -398,7 +398,8 @@ public:
 			unknown,			///< bad style value found in .ssqls file
 			camel_case_lower,	///< generate accessors like \c getX()
 			camel_case_upper,	///< generate accessors like \c GetX()
-			stroustrup			///< generate accessors like \c get_x()
+			stroustrup,			///< generate accessors like \c get_x()
+			overloaded			///< same method name for setter and getter
 		};
 
 		/// \brief Given a raw accessor style value straight from the
