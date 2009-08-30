@@ -107,7 +107,20 @@ DBDriver::connect_prepare()
 
 	// Set up to call MySQL C API
 	mysql_init(&mysql_);
-	return true;
+
+    // Apply any pending options
+	error_message_.clear();
+	OptionListIt it = pending_options_.begin();
+	while (it != pending_options_.end() && set_option_impl(*it)) {
+		++it;
+	}
+	if (it == pending_options_.end()) {
+		pending_options_.clear();
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 
@@ -276,6 +289,7 @@ DBDriver::set_option(Option* o)
 	}
 	else {
 		error_message_.clear();
+        pending_options_.push_back(o);
 		return true;  // we won't know if it fails until ::connect()
 	}
 }

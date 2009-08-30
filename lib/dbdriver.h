@@ -697,6 +697,9 @@ private:
 	/// \brief Data type of the list of applied connection options
 	typedef std::deque<Option*> OptionList;
 
+	/// \brief Iterator into an OptionList
+	typedef OptionList::iterator OptionListIt;
+
 	/// \brief Hidden assignment operator; we don't want to be copied
 	/// that way.  What would it mean?
 	DBDriver& operator=(const DBDriver&);
@@ -704,6 +707,7 @@ private:
 	MYSQL mysql_;
 	bool is_connected_;
 	OptionList applied_options_;
+	OptionList pending_options_;
 	mutable std::string error_message_;
 };
 
