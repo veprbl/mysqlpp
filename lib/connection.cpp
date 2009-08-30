@@ -315,11 +315,12 @@ bool
 Connection::set_option(Option* o)
 {
 	const std::type_info& oti = typeid(*o);
-	error_message_ = driver_->set_option(o);
-	if (error_message_.empty()) {
+	if (driver_->set_option(o)) {
+		error_message_.clear();
 		return true;
 	}
 	else {
+		error_message_ = driver_->error();
 		if (throw_exceptions()) {
 			throw BadOption(error_message_, oti);
 		}

@@ -78,25 +78,25 @@ DBDriver::connect(const char* host, const char* socket_name,
 		unsigned int port, const char* db, const char* user,
 		const char* password)
 {
-	connect_prepare();
 	return is_connected_ =
+			connect_prepare() &&
 			mysql_real_connect(&mysql_, host, user, password, db,
-			port, socket_name, mysql_.client_flag);
+				port, socket_name, mysql_.client_flag);
 }
 
 
 bool
 DBDriver::connect(const MYSQL& other)
 {
-	connect_prepare();
 	return is_connected_ =
+			connect_prepare() &&
 			mysql_real_connect(&mysql_, other.host, other.user,
-			other.passwd, other.db, other.port, other.unix_socket,
-			other.client_flag);
+				other.passwd, other.db, other.port, other.unix_socket,
+				other.client_flag);
 }
 
 
-void
+bool
 DBDriver::connect_prepare()
 {
 	// Drop previous connection, if any, then prepare underlying C API
@@ -104,7 +104,10 @@ DBDriver::connect_prepare()
 	if (connected()) {
 		disconnect();
 	}
+
+	// Set up to call MySQL C API
 	mysql_init(&mysql_);
+	return true;
 }
 
 
@@ -127,6 +130,7 @@ DBDriver::disconnect()
 		mysql_close(&mysql_);
 		memset(&mysql_, 0, sizeof(mysql_));
 		is_connected_ = false;
+		error_message_.clear();
 	}
 }
 
@@ -135,6 +139,7 @@ bool
 DBDriver::enable_ssl(const char* key, const char* cert,
 		const char* ca, const char* capath, const char* cipher)
 {
+	error_message_.clear();
 #if defined(HAVE_MYSQL_SSL_SET)
 	return mysql_ssl_set(&mysql_, key, cert, ca, capath, cipher) == 0;
 #else
@@ -152,6 +157,8 @@ size_t
 DBDriver::escape_string(std::string* ps, const char* original,
 		size_t length)
 {
+	error_message_.clear();
+
 	if (ps == 0) {
 		// Can't do any real work!
 		return 0;
@@ -219,6 +226,7 @@ DBDriver::operator=(const DBDriver& rhs)
 string
 DBDriver::query_info()
 {
+	error_message_.clear();
 	const char* i = mysql_info(&mysql_);
 	return i ? string(i) : string();
 }
@@ -260,8 +268,21 @@ DBDriver::set_option(unsigned int o, bool arg)
 }
 
 
-std::string
+bool
 DBDriver::set_option(Option* o)
+{
+	if (connected()) {
+		return set_option_impl(o);
+	}
+	else {
+		error_message_.clear();
+		return true;  // we won't know if it fails until ::connect()
+	}
+}
+
+
+bool
+DBDriver::set_option_impl(Option* o)
 {
 	std::ostringstream os;
 	std::auto_ptr<Option> cleanup(o);
@@ -290,13 +311,15 @@ DBDriver::set_option(Option* o)
 			break;
 	}
 
-	return os.str();
+	error_message_ = os.str();
+	return error_message_.empty();
 }
 
 
 bool
 DBDriver::shutdown()
 {
+	error_message_.clear();
 	return mysql_shutdown(&mysql_ SHUTDOWN_ARG);
 }
 
