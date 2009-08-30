@@ -41,22 +41,21 @@ v3.1 Tentative Plan
 
     o SSQLS v2 (http://lists.mysql.com/plusplus/6929):
 
-      - SSQLSv2 DSL generator: walk data structure created by previous,
-        writing back out valid SSQLSv2.
+      - SSQLSv2 DSL generator: walk ssqlsxlat's parse tree, writing
+        back out SSQLSv2.  (-o flag.  Suppresses C++ output.)
         
-      - Add to dtest:
+      - In dtest, check that -o gives equivalent code to -i, modulo
+        whitespace:
         
-            ssqlsxlat -i test/test1.ssqls -o /tmp/dtest1.ssqls
-            cat /tmp/dtest1.ssqls
-            ssqlsxlat -i /tmp/dtest1.ssqls -o /tmp/dtest2.ssqls
-            die if ! diff -wq /tmp/dtest[12].ssqls
+            for f in test/*.ssqls
+            do
+                ssqlsxlat -i %f -o /tmp/dtest-$f
+                die if ! diff -wq %f /tmp/dtest-$f
+            done
         
-        Checks that parse results don't change, and that reparsing
-        -o output doesn't give different -o output.
-
       - C++ code generator, from walking DSL parse tree:
 
-        examples/stock.ssqls gives ssqls_stock.hh containing:
+        examples/stock.ssqls gives ssqls_stock.h containing:
 
             class SQLStock : public mysqlpp::SsqlsBase
             {
