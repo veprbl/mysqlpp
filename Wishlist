@@ -35,10 +35,6 @@ Any Version
 
 v3.1 Tentative Plan
 -------------------
-    o Stop generating PDF refman by default?  Not very useful
-      without the hyperlinks, it takes a long time to do it, and
-      it gives LaTeX pain on my Ubuntu Hardy box.
-
     o Check that it works with Connector/C and MySQL 5.1
 
     o Document sql_*_null in userman

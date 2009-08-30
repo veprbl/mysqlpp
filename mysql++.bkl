@@ -424,10 +424,7 @@
       <depends-on-file>lib/*.cpp</depends-on-file>
       <depends-on-file>lib/*.h</depends-on-file>
       <command>
-        mkdir -p doc/latex ; cd lib ; doxygen > /dev/null
-      </command>
-      <command>
-        mkdir -p doc/pdf ; cd doc/latex ; make ; cp refman.pdf ../pdf
+        cd lib ; doxygen > /dev/null
       </command>
     </action>
 
