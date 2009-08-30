@@ -41,8 +41,6 @@ v3.1 Tentative Plan
 
     o SSQLS v2 (http://lists.mysql.com/plusplus/6929):
 
-      - Add #warning SSQLS v1 is deprecated to ssqls.h
-
       - SSQLSv2 DSL generator: walk data structure created by previous,
         writing back out valid SSQLSv2.
         
@@ -191,6 +189,11 @@ v3.1 Tentative Plan
         bother if it gives a speed advantage we can actually see,
         because it removes all the dynamic typing advantages we got with
         the change to field name indices in v3.0.
+
+      - Convert SSQLS v1 examples to v2
+
+      - Remove MYSQLPP_ALLOW_SSQLS_V1 warning suppressor from examples.
+        (Leave test programs alone until we drop v1 support.)
 
     o Try to add Query::storein(container, ssqls), which generates
       SELECT * from {ssqls.table()} and stores the result.  May not be

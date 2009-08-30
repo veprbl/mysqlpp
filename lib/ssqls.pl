@@ -66,6 +66,10 @@ print OUT << "---";
 #	error Your compiler is not compatible with the SSQLS feature!
 #endif
 
+#if !defined(MYSQLPP_ALLOW_SSQLS_V1)
+#	warning SSQLS v1 is deprecated, and will probably be removed in MySQL++ v4.
+#endif
+
 #include <string>
 
 #include <math.h>
