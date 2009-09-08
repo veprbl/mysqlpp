@@ -186,11 +186,11 @@ namespace mysqlpp {
 		public:
 			//// Public types
 			/// \brief Types of inputs that ssqlsxlat will accept
-			enum InputSource {
-				is_unknown,	///< no known input type given yet
-				is_ssqls1,	///< a C++ file containing an SSQLS v1 declaration
-				is_ssqls2,	///< an SSQLS v2 file
-				is_table	///< an existing DB table schema
+			enum SourceSink {
+				ss_unknown,	///< no known input type given yet
+				ss_ssqls1,	///< a C++ file containing an SSQLS v1 declaration
+				ss_ssqls2,	///< an SSQLS v2 file
+				ss_table	///< an existing DB table schema
 			};
 
 			//// Public interface
@@ -207,7 +207,10 @@ namespace mysqlpp {
 			const char* input() const { return input_; }
 
 			/// \brief The input source type
-			InputSource input_source() const { return input_source_; }
+			SourceSink input_source() const { return input_source_; }
+
+			/// \brief The output sink (destination) type
+			SourceSink output_sink() const { return output_sink_; }
 
 			/// \brief The base name of the output file
 			const char* output() const { return output_; }
@@ -228,7 +231,8 @@ namespace mysqlpp {
 			const char* pass_;
 			const char* server_;
 			const char* user_;
-			InputSource input_source_;
+			SourceSink input_source_;
+			SourceSink output_sink_;
 		};
 	} // end namespace mysqlpp::ssqlsxlat
 } // end namespace mysqlpp

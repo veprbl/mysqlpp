@@ -27,6 +27,7 @@
  USA
 ***********************************************************************/
 
+#include "genv2.h"
 #include "parsev2.h"
 
 #include <cmdline.h>
@@ -41,14 +42,16 @@ using namespace mysqlpp::ssqlsxlat;
 // We were given the name of a putative SSQLS v2 source file; try to
 // parse it.
 
-static int
+static ParseV2*
 parse_ssqls2(const char* file_name)
 {
 	try {
-		ParseV2 p(file_name);
+		cout << "Parsing SSQLS v2 file " << file_name << "..." << endl;
+		ParseV2* pt = new ParseV2(file_name);
 		cout << file_name << " parsed successfully, " <<
-				(p.end() - p.begin()) << " interesting lines." << endl;
-		return 0;
+				(pt->end() - pt->begin()) << " interesting lines." <<
+				endl;
+		return pt;
 	}
 	catch (const ParseV2::FileException& e) {
 		cerr << file_name << ":0" << 
@@ -64,7 +67,7 @@ parse_ssqls2(const char* file_name)
 				": critical error in SSQLS v2 parse: " <<
 				e.what() << endl;
 	}
-	return 3;
+	return 0;
 }
 
 
@@ -76,15 +79,36 @@ main(int argc, char* argv[])
 	// Parse the command line
 	CommandLine cmdline(argc, argv);
 	if (cmdline) {
+		ParseV2* ptree = 0;
+
 		switch (cmdline.input_source()) {
-			case CommandLine::is_ssqls2:
-				return parse_ssqls2(cmdline.input());
+			case CommandLine::ss_ssqls2:
+				ptree = parse_ssqls2(cmdline.input());
+				break;
 
 			default:
 				cerr << "Sorry, I don't yet know what to do with input "
 						"source type " << int(cmdline.input_source()) <<
 						'!' << endl;
 				return 2;
+		}
+
+		if (ptree && (cmdline.output_sink() != CommandLine::ss_unknown)) {
+			switch (cmdline.output_sink()) {
+				case CommandLine::ss_ssqls2:
+					return generate_ssqls2(cmdline.output(), ptree);
+
+				default:
+					cerr << "Sorry, I don't yet know what to do with "
+							"sink type " << int(cmdline.output_sink()) <<
+							'!' << endl;
+					return 2;
+			}
+		}
+		else {
+			cerr << "Sorry, I don't know how to write C++ output yet." <<
+					endl;
+			return 2;
 		}
 	}
 	else {

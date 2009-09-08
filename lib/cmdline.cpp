@@ -269,16 +269,13 @@ output_(0),
 pass_(""),
 server_(0),
 user_(0),
-input_source_(is_unknown)
+input_source_(ss_unknown),
+output_sink_(ss_unknown)
 {
 	// Parse the command line
 	int ch;
 	while (successful() && ((ch = parse_next()) != EOF)) {
 		switch (ch) {
-			case 'o': output_ = option_argument(); break;
-			case 'p': pass_ = option_argument();   break;
-			case 's': server_ = option_argument(); break;
-			case 'u': user_ = option_argument();   break;
 			case 'i':
 			case 't':
 			case '1':
@@ -289,9 +286,26 @@ input_source_(is_unknown)
 				}
 				input_ = option_argument();
 				input_source_ =
-						(ch == '1' ? is_ssqls1 :
-						 ch == 'i' ? is_ssqls2 :
-						             is_table);
+						(ch == '1' ? ss_ssqls1 :
+						 ch == 'i' ? ss_ssqls2 :
+						             ss_table);
+				break;
+
+			case 'o':
+				output_ = option_argument();
+				output_sink_ = ss_ssqls2;
+				break;
+
+			case 'p':
+				pass_ = option_argument();
+				break;
+
+			case 's':
+				server_ = option_argument();
+				break;
+
+			case 'u':
+				user_ = option_argument();
 				break;
 
 			default:
@@ -303,10 +317,10 @@ input_source_(is_unknown)
 	// Figure out whether command line makes sense, and if not, tell
 	// user about it.
 	if (successful()) {
-		if (input_source_ == is_unknown) {
+		if (input_source_ == ss_unknown) {
 			parse_error("No input source given!  Need -i, -t or -1.");
 		}
-		else if ((input_source_ != is_ssqls2) && !output_) {
+		else if ((input_source_ != ss_ssqls2) && !output_) {
 			parse_error("Need -o if you give -t or -1!");
 		}
 	}

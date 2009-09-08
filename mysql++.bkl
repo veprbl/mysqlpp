@@ -206,6 +206,7 @@
 
   <!-- Build rules for ssqlsxlat tool -->
   <exe id="ssqlsxlat" template="programs">
+    <sources>ssx/genv2.cpp</sources>
     <sources>ssx/main.cpp</sources>
     <depends>ssqls2parse</depends>
     <sys-lib>mysqlpp_ssqls2parse</sys-lib>
