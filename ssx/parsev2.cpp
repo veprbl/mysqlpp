@@ -54,6 +54,7 @@ file_(file_name)
 {
 	// For each line in the file, read it in and try to make sense of it
 	// based on the indent level and the leading verb.
+	//cout << "TRACE: parsing SSQLS v2 file " << file_name << '.' << endl;
 	string line;
 	bool subdirective;
 	while (file_.read_line(line, subdirective)) {
@@ -100,19 +101,20 @@ ParseV2::tokenize(StringList& tokens, const std::string& line) const
 	// spaces.
 	while (current != line.end()) {
 		string::const_iterator word_start = current;
-		while (current != line.end() && !isspace(*current++)) /* */;
+		while (current != line.end() && !isspace(*current)) ++current;
 		tokens.push_back(string(word_start, current));
-		while (current != line.end() && isspace(*current)) {
-			++current;
-		}
+		while (current != line.end() && isspace(*current)) ++current;
 	}
-
-	cout << tokens.size() << " tokens in line: '" << line << '\'' << endl;
+#if 0
+	cout << "TRACE: " << tokens.size() << " tokens in line '" << line <<
+			"':" << endl;
 	cout << "\t";
-	for (StringListIt it = tokens.begin(); it != tokens.end(); ++it) {
-		cout << *it << ' ';
+	for (StringListIt it = tokens.begin(); it != tokens.end(); /* */) {
+		cout << '\'' << *it++ << '\'';
+		if (it != tokens.end()) cout << ',';
 	}
 	cout << endl;
+#endif
 }
 
 
@@ -120,6 +122,7 @@ ParseV2::AccessorStyleOption::Type
 ParseV2::AccessorStyleOption::parse_type(const std::string& style,
 		const File& file)
 {
+	//cout << "TRACE: found accessor style " << style << endl;
 	if (style.compare("getX")) {
 		return camel_case_lower;
 	}
@@ -156,6 +159,7 @@ ParseV2::Field::parse(const StringList& tl, bool subdirective,
 	// Get field name
 	StringListIt it = ++tl.begin();	// skip over 'field'
 	string name(*it++);
+	//cout << "TRACE: found field " << name << endl;
 
 	// Scan rest of token list, interpreting the name/value pairs.
 	string type, alias;
@@ -215,6 +219,7 @@ value_(ft_string)
 	// Force s to lowercase as ls, for easier comparisons below
 	string ls(s);
 	mysqlpp::internal::str_to_lwr(ls);
+	//cout << "TRACE: field type " << s << endl;
 
 	// Suss out appropriate field type in piecewise fashion.  This
 	// parser isn't terribly robust, but it should do sane things in the
@@ -266,6 +271,7 @@ file_name_(file_name),
 line_number_(1)
 {
 	// Try to open the named file for reading
+	//cout << "TRACE: opening file " << file_name << endl;
 	StringListIt it = search_path_.begin();
 	string path(file_name_);
 	while (true) {
@@ -297,6 +303,8 @@ line_number_(1)
 void
 ParseV2::File::add_directory_to_search_path(const char* filepath)
 {
+	//cout << "TRACE: adding directory part of " << filepath << 
+	//		" to search path." << endl;
 	StringList parts;
 	split_path(parts, filepath);
 	if (parts.size() > 1) {
@@ -316,6 +324,8 @@ ParseV2::File::add_directory_to_search_path(const char* filepath)
 			if (find(search_path_.begin(), search_path_.end(), path) ==
 					search_path_.end()) {
 				search_path_.push_back(path);
+				//cout << "TRACE: added new directory " << path << 
+				//		" to search path." << endl;
 			}
 		}
 	}
@@ -363,22 +373,22 @@ ParseV2::File::read_line(std::string& line, bool& subdirective)
 void
 ParseV2::File::split_path(StringList& parts, const std::string& path) const
 {
+	//cout << "TRACE: splitting path '" << path << "'..." << endl;
 	const char sep = MYSQLPP_PATH_SEPARATOR;
-	for (string::const_iterator it = path.begin(); it != path.end(); ++it) {
+	for (string::const_iterator it = path.begin(); it < path.end(); /* */) {
 		string::const_iterator part_start = it;
-		while (it != path.end() && (*it++ != sep)) /* */;
+		while (it != path.end() && (*it != sep)) ++it;
 		parts.push_back(string(part_start, it));
-		while (it != path.end() && (*it == sep)) {
-			++it;
-		}
+		while (it != path.end() && (*it == sep)) ++it;
 	}
-
-	cout << parts.size() << " parts in path: '" << path << '\'' << endl;
-	cout << "\t";
-	for (StringListIt it = parts.begin(); it != parts.end(); ++it) {
-		cout << *it << sep;
+#if 0
+	cout << "TRACE: " << parts.size() << " parts in path '" << path << "': ";
+	for (StringListIt it = parts.begin(); it != parts.end(); /* */) {
+		cout << *it++;
+		if (it != parts.end()) cout << sep;
 	}
 	cout << endl;
+#endif
 }
 
 
@@ -396,6 +406,7 @@ ParseV2::Include::parse(const StringList& tl, bool subdirective,
 
 	// Above ensures that there is only one argument, so create Include
 	// object from it, assuming it's a file name.
+	//cout << "TRACE: including " << tl[0] << "..." << endl;
 	return new Include((++tl.begin())->c_str());
 }
 
@@ -413,6 +424,7 @@ ParseV2::Line::parse(const StringList& tl, bool subdirective,
 
 	// First, recognize directives that expect subdirectives.
 	mysqlpp::internal::str_to_lwr(directive);
+	//cout << "TRACE: found " << directive << " line." << endl;
 	if (directive.compare("table") == 0) {
 		if (!subdirective) last_tld_was_table = true;
 		return ParseV2::Table::parse(tl, subdirective, file);
@@ -466,6 +478,8 @@ ParseV2::Option::parse(const StringList& tl, bool subdirective,
 	// the option name.
 	string name(tl[1]);
 	string value(tl[2]);
+	//cout << "TRACE: found " << name << " = '" << value <<
+	//		"' option." << endl;
 	if (name.compare("accessor_style") == 0) {
 		return new AccessorStyleOption(value, file);
 	}
@@ -532,6 +546,7 @@ ParseV2::Table::parse(const StringList& tl, bool subdirective,
 	// Get table name
 	StringListIt it = ++tl.begin();	// skip over 'table'
 	string name(*it++);
+	//cout << "TRACE: found '" << name << "' table." << endl;
 
 	// Scan rest of token list, interpreting the name/value pairs.
 	string alias, filebase;
