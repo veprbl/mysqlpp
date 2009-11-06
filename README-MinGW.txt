@@ -103,11 +103,46 @@ Cygwin and MinGW Coexistence
 
 Building on Linux
 ~~~~~~~~~~~~~~~~~
-    The best way to do this is to run MinGW under either Wine or some
-    sort of virtual machine running an actual copy of Windows.
+    You might need to build Windows executables while not actually
+    running Windows.  You might think to use MinGW, since it uses GCC,
+    as does almost every non-Windows OS these days.
 
-    While it's possible to make a MinGW cross-compiler for, say,
-    Linux, this doesn't currently work:
+    The best way to do this is to run MinGW under either Wine or
+    some sort of virtual machine running an actual copy of Windows.
+    Leonti Bielski provided these instructions for the Wine mthod:
+
+        1. Install MinGW through Wine:
+
+           $ wine MinGW-5.1.6.exe
+
+        2. Add the MinGW directory to Wine's PATH with Wine regedit:
+
+           http://winehq.org/site/docs/wineusr-guide/environment-variables
+
+        3. Install MySQL under Wine, or at least unpack the Windows
+           ZIP file version of MySQL in a place where Wine can find it.
+           You don't need to run a Windows MySQL server under Wine.
+           We're only doing this to get the MySQL C API library and
+           its headers, which MySQL++ builds against.  The resulting
+           MinGW build of MySQL++ can talk to a native MySQL server
+           out in Wine's host environment or on some other machine.
+
+        4. Modify Makefile.gcc to match the install location for
+           the MySQL C API files.  Notice that we're *not* using
+           Makefile.mingw here.  This is to avoid having to add a
+           cmd.exe clone to your Wine install.
+
+        5. Create libmysqlclient.a as described above, except with
+           minor differences for running under Wine:
+
+           $ wine mingw32-dlltool -k -d /native/path/libmysqlclient.def...
+
+        6. Build MySQL++ with:
+        
+           $ wine mingw32-make -f Makefile.gcc
+
+    You might think it would be simpler to just use a MinGW
+    cross-compiler.  Unfortunately, this doesn't currently work:
 
         $ ./configure --target=mingw32
         $ make
