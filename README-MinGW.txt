@@ -127,10 +127,8 @@ Building on Linux
            MinGW build of MySQL++ can talk to a native MySQL server
            out in Wine's host environment or on some other machine.
 
-        4. Modify Makefile.gcc to match the install location for
-           the MySQL C API files.  Notice that we're *not* using
-           Makefile.mingw here.  This is to avoid having to add a
-           cmd.exe clone to your Wine install.
+        4. Modify Makefile.mingw to match the install location for
+           the MySQL C API files.
 
         5. Create libmysqlclient.a as described above, except with
            minor differences for running under Wine:
@@ -139,7 +137,7 @@ Building on Linux
 
         6. Build MySQL++ with:
         
-           $ wine mingw32-make -f Makefile.gcc
+           $ wine mingw32-make -f Makefile.mingw
 
     You might think it would be simpler to just use a MinGW
     cross-compiler.  Unfortunately, this doesn't currently work:
