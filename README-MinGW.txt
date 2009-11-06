@@ -67,7 +67,7 @@ Building the Library and Example Programs
 
     Once you're satisfied that the library is working correctly, you can
     run install.hta to automatically install the library files and
-	headers in subdirectories under c:\mysql++.
+    headers in subdirectories under c:\mysql++.
 
 
 Cygwin and MinGW Coexistence
@@ -99,3 +99,27 @@ Cygwin and MinGW Coexistence
     override those Cygwin also provides, we don't need to worry about
     having both in the PATH.  Besides, having the alias is nice for
     those who have 'make' committed to muscle memory.
+
+
+Building on Linux
+~~~~~~~~~~~~~~~~~
+    The best way to do this is to run MinGW under either Wine or some
+    sort of virtual machine running an actual copy of Windows.
+
+    While it's possible to make a MinGW cross-compiler for, say,
+    Linux, this doesn't currently work:
+
+        $ ./configure --target=mingw32
+        $ make
+
+    The reason is that our autoconf build system assumes a
+    typical POSIX type target, which MinGW is not.  We made this
+    assumption because we have a perfectly good MinGW build option,
+    Makefile.mingw.  But, that also won't work on a POSIX system
+    because that Makefile assumes external commands run under cmd.exe,
+    not some Unixy shell.  Thus the advice to build with Makefile.mingw
+    under Windows or something sufficiently close to it.
+
+    If you really wanted to, you could extend the autoconf build system
+    to make it realize when it's being used to cross-compile for MinGW.
+    Patches thoughtfully considered; see HACKERS.txt.
