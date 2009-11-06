@@ -103,13 +103,14 @@ Cygwin and MinGW Coexistence
 
 Building on Linux
 ~~~~~~~~~~~~~~~~~
-    You might need to build Windows executables while not actually
-    running Windows.  You might think to use MinGW, since it uses GCC,
-    as does almost every non-Windows OS these days.
+    You might wish to build MySQL++ with MinGW because you're
+    not actually running Windows, but need Windows executables.
+    The thought being that this lets you use GCC, the same compiler
+    you're probably using to make native executables.  There are
+    indeed ways to make this work.
 
-    The best way to do this is to run MinGW under either Wine or
-    some sort of virtual machine running an actual copy of Windows.
-    Leonti Bielski provided these instructions for the Wine mthod:
+    The most "native" way to do this is to run MinGW under Wine.
+    Leonti Bielski provided these instructions:
 
         1. Install MinGW through Wine:
 
@@ -139,11 +140,17 @@ Building on Linux
         
            $ wine mingw32-make -f Makefile.mingw
 
-    You might think it would be simpler to just use a MinGW
-    cross-compiler.  Unfortunately, this doesn't currently work:
+    Another way is to build a Windows virtual machine, such as with
+    VMware or VirtualBox.  In that case, you'd use the regular build
+    instructions at the top of this document.
+
+    You might think to avoid the need for Wine or Windows by use of a
+    MinGW cross-compiler:
 
         $ ./configure --target=mingw32
         $ make
+
+    Unfortunately, that currently doesn't work.
 
     The reason is that our autoconf build system assumes a
     typical POSIX type target, which MinGW is not.  We made this
