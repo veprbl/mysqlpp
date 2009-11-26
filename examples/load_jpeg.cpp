@@ -35,6 +35,8 @@ using namespace std;
 using namespace mysqlpp;
 
 
+// This is just an implementation detail for the example.  Skip down to
+// main() for the concept this example is trying to demonstrate.
 static bool
 is_jpeg(const char* img_data)
 {
@@ -43,6 +45,62 @@ is_jpeg(const char* img_data)
 	return (idp[0] == 0xFF) && (idp[1] == 0xD8) &&
 			((memcmp(idp + 6, "JFIF", 4) == 0) ||
 			 (memcmp(idp + 6, "Exif", 4) == 0));
+}
+
+
+// Another implementation detail.  Skip to main().
+static bool
+load_jpeg_file(const mysqlpp::examples::CommandLine& cmdline,
+		images& img, string& img_name)
+{
+	if (cmdline.extra_args().size() == 0) {
+		// Nothing for us to do here.  Caller will insert NULL BLOB.
+		return true;
+	}
+
+	// Got a file's name on the command line, so open it.
+	img_name = cmdline.extra_args()[0];
+	ifstream img_file(img_name.c_str(), ios::ate | ios::binary);
+	if (img_file) {
+		// File opened, so try to slurp its contents into RAM.  The key
+		// thing to get from this function is that we're storing the
+		// binary data in a mysqlpp::sql_blob value, which we assign from
+		// a C++ string (stringstream::str()), thus not truncating the
+		// string at the first embedded null character.
+		stringstream sstr;
+		sstr << img_file.rdbuf();
+		img.data.data = sstr.str();
+
+		// Check JPEG data for sanity
+		if (img.data.data.size() > 10) {
+			// The following triple 'data' sure does look foolish,
+			// doesn't it?  Sorry, we're not trying to be obscure here,
+			// it's just a coincidence of naming.  Right-to-left, what
+			// we have here is:
+			//
+			// 1. A call to mysqlpp::sql_blob::data() (mirroring C++'s
+			//    std::string:data() interface) to get the raw C data
+			//    pointer without null-terminating it first.
+			// 2. Access to the mysqlpp::sql_blob object through its
+			//    mysqlpp::Null<> wrapper, which lets us have a "NULL
+			//    JPEG" in the DB when the file doesn't exist.
+			// 3. Access to the JPEG BLOB column, images.data.
+			if (is_jpeg(img.data.data.data())) {
+				return true;
+			}
+			else {
+				cerr << '"' << img_file <<
+						"\" isn't a JPEG!" << endl;
+				cmdline.print_usage("[jpeg_file]");
+				return false;
+			}
+		}
+		else {
+			cerr << "File is too short to be a JPEG!" << endl;
+			cmdline.print_usage("[jpeg_file]");
+			return false;
+		}
+	}
 }
 
 
@@ -60,58 +118,27 @@ main(int argc, char *argv[])
 		mysqlpp::Connection con(mysqlpp::examples::db_name,
 				cmdline.server(), cmdline.user(), cmdline.pass());
 
-		// Try to create a new item in the images table, based on what
-		// we got on the command line.
+		// Load the file named on the command line
 		images img(mysqlpp::null, mysqlpp::null);
-		string img_name = "NULL";
-		if (cmdline.extra_args().size()) {
-			// We received at least one non-option argument on the
-			// command line, so treat it as a file name 
-			img_name = cmdline.extra_args()[0];
-			ifstream img_file(img_name.c_str(), ios::ate | ios::binary);
-			if (img_file) {
-				size_t img_size = img_file.tellg();
-				if (img_size > 10) {
-					img_file.seekg(0, ios::beg);
-					char* img_buffer = new char[img_size];
-					img_file.read(img_buffer, img_size);
-					if (is_jpeg(img_buffer)) {
-						img.data = mysqlpp::sql_blob(img_buffer, img_size);
-					}
-					else {
-						cerr << '"' << img_file <<
-								"\" isn't a JPEG!" << endl;
-					}
-					delete[] img_buffer;
-				}
-				else {
-					cerr << "File is too short to be a JPEG!" << endl;
-				}
-			}
+		string img_name("NULL");
+		if (load_jpeg_file(cmdline, img, img_name)) {
+			// Insert image data or SQL NULL into the images.data BLOB
+			// column.  The key here is that we're holding the raw
+			// binary data in a mysqlpp::sql_blob, which avoids data
+			// conversion problems that can lead to treating BLOB data
+			// as C strings, thus causing null-truncation.  The fact
+			// that we're using SSQLS here is a side issue, simply
+			// demonstrating that mysqlpp::Null<mysqlpp::sql_blob> is
+			// now legal in SSQLS, as of MySQL++ 3.0.7.
+			Query query = con.query();
+			query.insert(img);
+			SimpleResult res = query.execute();
 
-			if (img.data.data.empty()) {
-				// File name was bad, or file contents aren't JPEG.  
-				cmdline.print_usage("[jpeg_file]");
-				return 1;
-			}
+			// Report successful insertion
+			cout << "Inserted \"" << img_name <<
+					"\" into images table, " << img.data.data.size() <<
+					" bytes, ID " << res.insert_id() << endl;
 		}
-		// else, no image given on command line, so insert SQL NULL
-		// instead of image data.  NULL BLOB columns in SSQLS is
-		// legal as of MySQL++ v3.0.7.
-
-		// Insert image data or SQL NULL into the images.data BLOB
-		// column.  By inserting it as an SSQLS with a mysqlpp::sql_blob
-		// member, we avoid truncating it at the first embedded C null
-		// character ('\0'), as would happen if we used the raw
-		// character buffer we allocated above.
-		Query query = con.query();
-		query.insert(img);
-		SimpleResult res = query.execute();
-
-		// Report successful insertion
-		cout << "Inserted \"" << img_name <<
-				"\" into images table, " << img.data.data.size() <<
-				" bytes, ID " << res.insert_id() << endl;
 	}
 	catch (const BadQuery& er) {
 		// Handle any query errors
