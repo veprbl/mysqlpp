@@ -91,16 +91,15 @@ load_jpeg_file(const mysqlpp::examples::CommandLine& cmdline,
 			else {
 				cerr << '"' << img_file <<
 						"\" isn't a JPEG!" << endl;
-				cmdline.print_usage("[jpeg_file]");
-				return false;
 			}
 		}
 		else {
 			cerr << "File is too short to be a JPEG!" << endl;
-			cmdline.print_usage("[jpeg_file]");
-			return false;
 		}
 	}
+
+	cmdline.print_usage("[jpeg_file]");
+	return false;
 }
 
 
