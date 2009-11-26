@@ -89,8 +89,7 @@ load_jpeg_file(const mysqlpp::examples::CommandLine& cmdline,
 				return true;
 			}
 			else {
-				cerr << '"' << img_file <<
-						"\" isn't a JPEG!" << endl;
+				cerr << '"' << img_file << "\" isn't a JPEG!" << endl;
 			}
 		}
 		else {
