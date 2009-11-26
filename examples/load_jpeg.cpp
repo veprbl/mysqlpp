@@ -84,7 +84,7 @@ load_jpeg_file(const mysqlpp::examples::CommandLine& cmdline,
 		//    "NULL JPEG" in the DB when the file doesn't exist.
 		// 3. Finally, we need to pass a raw, unterminated char buffer
 		//    pointer to is_jpeg(), which mysqlpp::sql_blob::data()
-		//    returns, mirroring the C++'s std::string interface.
+		//    returns, mirroring C++ std::string interface.
 		if ((img.data.data.size() > 10) &&
 				is_jpeg(img.data.data.data())) {
 			return true;
