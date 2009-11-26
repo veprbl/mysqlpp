@@ -71,29 +71,26 @@ load_jpeg_file(const mysqlpp::examples::CommandLine& cmdline,
 		sstr << img_file.rdbuf();
 		img.data.data = sstr.str();
 
-		// Check JPEG data for sanity
-		if (img.data.data.size() > 10) {
-			// The following triple 'data' sure does look foolish,
-			// doesn't it?  Sorry, we're not trying to be obscure here,
-			// it's just a coincidence of naming.  Right-to-left, what
-			// we have here is:
-			//
-			// 1. A call to mysqlpp::sql_blob::data() (mirroring C++'s
-			//    std::string:data() interface) to get the raw C data
-			//    pointer without null-terminating it first.
-			// 2. Access to the mysqlpp::sql_blob object through its
-			//    mysqlpp::Null<> wrapper, which lets us have a "NULL
-			//    JPEG" in the DB when the file doesn't exist.
-			// 3. Access to the JPEG BLOB column, images.data.
-			if (is_jpeg(img.data.data.data())) {
-				return true;
-			}
-			else {
-				cerr << '"' << img_file << "\" isn't a JPEG!" << endl;
-			}
+		// Check JPEG data for sanity.
+		//
+		// All these 'data's sure do look foolish, don't they?  Sorry,
+		// we're not trying to be obscure here, it's just a coincidence
+		// of naming.  The triple 'data' in the is_jpeg() call breaks
+		// down like this:
+		//
+		// 1. We're accessing to the JPEG BLOB column, images.data.
+		// 2. We then dig down to the mysqlpp::sql_blob object through
+		//    its mysqlpp::Null<> wrapper, which we need to allow a
+		//    "NULL JPEG" in the DB when the file doesn't exist.
+		// 3. Finally, we need to pass a raw, unterminated char buffer
+		//    pointer to is_jpeg(), which mysqlpp::sql_blob::data()
+		//    returns, mirroring the C++'s std::string interface.
+		if ((img.data.data.size() > 10) &&
+				is_jpeg(img.data.data.data())) {
+			return true;
 		}
 		else {
-			cerr << "File is too short to be a JPEG!" << endl;
+			cerr << '"' << img_file << "\" isn't a JPEG file!" << endl;
 		}
 	}
 
