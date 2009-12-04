@@ -116,6 +116,19 @@ Stuff we have a lot of in stock:
 	Pickle Relish
 ================ END tquery3 OUTPUT ================
 
+---------------- BEGIN tquery4 OUTPUT ----------------
+Query: update stock set num = 70 where num < 70
+Query: select * from stock
+Records found: 4
+
+Item                           Num       Weight    Price     Date
+
+Nuerenberger Bratwurst         97        1.5       8.79      2005-03-10
+Pickle Relish                  87        1.5       1.75      1998-09-04
+Hot Mustard                    73        0.95      0.97      1998-05-25
+Hotdog Buns                    70        1.1       1.1       1998-04-23
+================ END tquery4 OUTPUT ================
+
 ---------------- BEGIN resetdb OUTPUT ----------------
 Connecting to database server...
 Dropping existing sample data tables...
