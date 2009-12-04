@@ -32,6 +32,13 @@ Any Version
 
       http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
 
+    o Got a report that tqueries no longer support repeated
+      placeholders in v3.  Can you say "stuff %0 morestuff %0" still?
+
+    o Look for better way to handle single string parameter for
+      tqueries, which allows that to be disambiguated relative to the
+      raw query string case.
+
 
 v3.1 Tentative Plan
 -------------------
@@ -133,8 +140,8 @@ v3.1 Tentative Plan
 
         ...and ssqls_stock.cc, containing implementation for same.
 
-	  - SQL table updater/builder, -T option, taking .ssqls and
-	    creating or updating the DB table to match.
+      - SQL table updater/builder, -T option, taking .ssqls and
+        creating or updating the DB table to match.
 
       - If using accessors, generate "std::bitset<num_fields> is_set_",
         and set the appropriate bit when calling each setFoo() so we can
