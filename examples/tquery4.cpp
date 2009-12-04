@@ -1,7 +1,8 @@
 /***********************************************************************
  tquery4.cpp - Tests other details about template queries, like unquoted
-	parameters and multiple parameters.  This exists more for code
-	coverage than to demonstrate the library.
+	parameters, multiple parameters, and preventing problems with LIKE
+	patterns.  This exists more for code coverage than to demonstrate
+	the library.
 
  Copyright (c) 2009 by Martin Gallwey and (c) 2009 by Educational
  Technology Resources, Inc.  Others may also hold copyrights on code
@@ -57,6 +58,19 @@ main(int argc, char *argv[])
 
 		// Print the new table contents.
 		print_stock_table(query);
+
+		// Now let's check multiple dissimilar parameter types, and show
+		// how to avoid conflicts between '%' as used in tqueries vs in
+		// LIKE patterns.
+		query.reset();
+		query << "select * from stock where weight > %0q or "
+				"description like '%%%1%%'";
+		query.parse();
+		cout << "\nQuery: " << query.str(1.2, "Mustard") << endl; 
+		mysqlpp::StoreQueryResult res = query.store(1.2, "Mustard"); 
+
+		// Show what second tquery found
+		print_stock_rows(res);
 	}
 	catch (const mysqlpp::BadQuery& er) {
 		// Handle any query errors
