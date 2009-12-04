@@ -362,6 +362,9 @@
     <exe id="tquery3" template="libexcommon-user,programs">
       <sources>examples/tquery3.cpp</sources>
     </exe>
+    <exe id="tquery4" template="libexcommon-user,programs">
+      <sources>examples/tquery4.cpp</sources>
+    </exe>
     <if cond="FORMAT!='msvs2003prj'">
       <!-- VC++ 2003 can't compile current SSQLS code -->
       <exe id="transaction" template="libexcommon-user,programs">

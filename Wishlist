@@ -32,13 +32,6 @@ Any Version
 
       http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
 
-    o Got a report that tqueries no longer support repeated
-      placeholders in v3.  Can you say "stuff %0 morestuff %0" still?
-
-    o Look for better way to handle single string parameter for
-      tqueries, which allows that to be disambiguated relative to the
-      raw query string case.
-
 
 v3.1 Tentative Plan
 -------------------

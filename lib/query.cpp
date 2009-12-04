@@ -160,6 +160,14 @@ Query::exec(const std::string& str)
 }
 
 
+SimpleResult 
+Query::execute() 
+{ 
+	AutoFlag<> af(template_defaults.processing_);
+	return execute(str(template_defaults)); 
+}
+
+
 SimpleResult
 Query::execute(SQLQueryParms& p)
 {
@@ -171,7 +179,7 @@ Query::execute(SQLQueryParms& p)
 SimpleResult
 Query::execute(const SQLTypeAdapter& s)
 {
-	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
+	if (!parse_elems_.empty() && !template_defaults.processing_) {
 		// We're a template query and this isn't a recursive call, so
 		// take s to be a lone parameter for the query.  We will come
 		// back in here with a completed query, but the processing_
@@ -189,6 +197,14 @@ Query::execute(const SQLTypeAdapter& s)
 SimpleResult
 Query::execute(const char* str, size_t len)
 {
+	if (!parse_elems_.empty() && !template_defaults.processing_) {
+		// We're a template query and this isn't a recursive call, so
+		// take s to be a lone parameter for the query.  We will come
+		// back in here with a completed query, but the processing_
+		// flag will be set, allowing us to avoid an infinite loop.
+		AutoFlag<> af(template_defaults.processing_);
+		return execute(SQLQueryParms() << str << len );
+	}
 	if ((copacetic_ = conn_->driver()->execute(str, len)) == true) {
 		if (parse_elems_.size() == 0) {
 			// Not a template query, so auto-reset
@@ -456,6 +472,14 @@ Query::reset()
 }
 
 
+StoreQueryResult 
+Query::store() 
+{ 
+	AutoFlag<> af(template_defaults.processing_);
+	return store(str(template_defaults)); 
+}
+
+
 StoreQueryResult
 Query::store(SQLQueryParms& p)
 {
@@ -467,7 +491,7 @@ Query::store(SQLQueryParms& p)
 StoreQueryResult
 Query::store(const SQLTypeAdapter& s)
 {
-	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
+	if (!parse_elems_.empty() && !template_defaults.processing_) {
 		// We're a template query and this isn't a recursive call, so
 		// take s to be a lone parameter for the query.  We will come
 		// back in here with a completed query, but the processing_
@@ -485,6 +509,14 @@ Query::store(const SQLTypeAdapter& s)
 StoreQueryResult
 Query::store(const char* str, size_t len)
 {
+	if (!parse_elems_.empty() && !template_defaults.processing_) {
+		// We're a template query and this isn't a recursive call, so
+		// take s to be a lone parameter for the query.  We will come
+		// back in here with a completed query, but the processing_
+		// flag will be set, allowing us to avoid an infinite loop.
+		AutoFlag<> af(template_defaults.processing_);
+		return store(SQLQueryParms() << str << len );
+	}
 	MYSQL_RES* res = 0;
 	if ((copacetic_ = conn_->driver()->execute(str, len)) == true) {
 		res = conn_->driver()->store_result();
@@ -577,6 +609,14 @@ Query::str(SQLQueryParms& p)
 }
 
 
+UseQueryResult 
+Query::use() 
+{ 
+	AutoFlag<> af(template_defaults.processing_);
+	return use(str(template_defaults)); 
+}
+
+
 UseQueryResult
 Query::use(SQLQueryParms& p)
 {
@@ -588,7 +628,7 @@ Query::use(SQLQueryParms& p)
 UseQueryResult
 Query::use(const SQLTypeAdapter& s)
 {
-	if ((parse_elems_.size() == 2) && !template_defaults.processing_) {
+	if (!parse_elems_.empty()  && !template_defaults.processing_) {
 		// We're a template query and this isn't a recursive call, so
 		// take s to be a lone parameter for the query.  We will come
 		// back in here with a completed query, but the processing_
@@ -606,6 +646,14 @@ Query::use(const SQLTypeAdapter& s)
 UseQueryResult
 Query::use(const char* str, size_t len)
 {
+	if (!parse_elems_.empty() && !template_defaults.processing_) {
+		// We're a template query and this isn't a recursive call, so
+		// take s to be a lone parameter for the query.  We will come
+		// back in here with a completed query, but the processing_
+		// flag will be set, allowing us to avoid an infinite loop.
+		AutoFlag<> af(template_defaults.processing_);
+		return use(SQLQueryParms() << str << len );
+	}
 	MYSQL_RES* res = 0;
 	if ((copacetic_ = conn_->driver()->execute(str, len)) == true) {
 		res = conn_->driver()->use_result();

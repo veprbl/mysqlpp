@@ -331,7 +331,7 @@ public:
 	/// \return SimpleResult status information about the query
 	///
 	/// \sa exec(), store(), storein(), and use()
-	SimpleResult execute() { return execute(str(template_defaults)); }
+	SimpleResult execute(); 
 
 	/// \brief Execute template query using given parameters.
 	///
@@ -392,7 +392,7 @@ public:
 	/// \return UseQueryResult object that can walk through result set serially
 	///
 	/// \sa exec(), execute(), store() and storein()
-	UseQueryResult use() { return use(str(template_defaults)); }
+	UseQueryResult use();
 
 	/// \brief Execute a template query that can return rows, with
 	/// access to the rows in sequence
@@ -456,7 +456,7 @@ public:
 	/// \return StoreQueryResult object containing entire result set
 	///
 	/// \sa exec(), execute(), storein(), and use()
-	StoreQueryResult store() { return store(str(template_defaults)); }
+	StoreQueryResult store();
 
 	/// \brief Store results from a template query using given parameters.
 	///
