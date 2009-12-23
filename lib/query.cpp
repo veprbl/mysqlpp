@@ -84,6 +84,9 @@ copacetic_(q.copacetic_)
 
 	// See above for reason we override locale for Query streams.
 	imbue(std::locale::classic());
+
+	// Copy the other query as best we can
+	*this << q.sbuffer_.str();
 }
 
 
@@ -249,6 +252,7 @@ Query::operator=(const Query& rhs)
 	template_defaults = rhs.template_defaults;
 	conn_ = rhs.conn_;
 	copacetic_ = rhs.copacetic_;
+	*this << rhs.sbuffer_.str();
 
 	return *this;
 }

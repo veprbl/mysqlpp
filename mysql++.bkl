@@ -238,6 +238,9 @@
         <sources>test/null_comparison.cpp</sources>
       </exe>
     </if>
+    <exe id="test_query_copy" template="programs">
+      <sources>test/query_copy.cpp</sources>
+    </exe>
     <if cond="FORMAT!='msvs2003prj'">
       <!-- VC++ 2003 can't compile this -->
       <exe id="test_qssqls" template="programs">
