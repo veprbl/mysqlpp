@@ -43,7 +43,7 @@ using namespace std;
 // the parse result only if we were given sane parameters.
 
 static bool
-generate_ssqls2(ofstream& ofs, const ParseV2* pparse)
+generate_ssqls2(ofstream&, const ParseV2* pparse)
 {
 	for (ParseV2::LineListIt it = pparse->begin(); 
 			it != pparse->end(); ++it) {

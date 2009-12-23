@@ -542,7 +542,8 @@ Query::store(const char* str, size_t len)
 		// DELETE, CREATE, ALTER...) we need to figure out which case
 		// this is.  (You might use store() instead of execute() for
 		// such queries when the query strings come from "outside".)
-		if (copacetic_ = (conn_->errnum() == 0)) {
+		copacetic_ = (conn_->errnum() == 0);
+		if (copacetic_) {
 			if (parse_elems_.size() == 0) {
 				// Not a template query, so auto-reset
 				reset();
@@ -675,7 +676,8 @@ Query::use(const char* str, size_t len)
 	else {
 		// See comments in store() above for why we distinguish between
 		// empty result sets and actual error returns here.
-		if (copacetic_ = (conn_->errnum() == 0)) {
+		copacetic_ = (conn_->errnum() == 0);
+		if (copacetic_) {
 			if (parse_elems_.size() == 0) {
 				// Not a template query, so auto-reset
 				reset();
