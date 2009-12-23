@@ -74,9 +74,7 @@ std::ostream(0),
 #endif
 OptionalExceptions(q.throw_exceptions())
 {
-	// We don't copy stream buffer or template query stuff from the other
-	// Query on purpose.  This isn't a copy ctor so much as a way to
-	// ensure that "Query q(conn.query());" works correctly.
+	// Set up our internal IOStreams string buffer
 	init(&sbuffer_);
 
 	// See above for reason we override locale for Query streams.
