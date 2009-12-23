@@ -72,10 +72,7 @@ std::ostream(std::_Noinit),
 #else
 std::ostream(0),
 #endif
-OptionalExceptions(q.throw_exceptions()),
-template_defaults(q.template_defaults),
-conn_(q.conn_),
-copacetic_(q.copacetic_)
+OptionalExceptions(q.throw_exceptions())
 {
 	// We don't copy stream buffer or template query stuff from the other
 	// Query on purpose.  This isn't a copy ctor so much as a way to
@@ -86,7 +83,7 @@ copacetic_(q.copacetic_)
 	imbue(std::locale::classic());
 
 	// Copy the other query as best we can
-	*this << q.sbuffer_.str();
+	operator =(q);
 }
 
 
@@ -252,7 +249,12 @@ Query::operator=(const Query& rhs)
 	template_defaults = rhs.template_defaults;
 	conn_ = rhs.conn_;
 	copacetic_ = rhs.copacetic_;
+
 	*this << rhs.sbuffer_.str();
+
+	parse_elems_  = rhs.parse_elems_;
+	parsed_names_ = rhs.parsed_names_;
+	parsed_nums_  = rhs.parsed_nums_;
 
 	return *this;
 }
