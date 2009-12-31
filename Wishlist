@@ -61,6 +61,7 @@ v3.1 Tentative Plan
             {
             public:
                 SQLStock(Connection* conn = 0); // default ctor
+                SQLStock(const SQLStock& other);
                 SQLStock(const mysqlpp::Row& row,
                         Connection* conn = 0); // full init from query
                 SQLStock(mysqlpp::sql_bigint key1); // exemplar creation
@@ -116,6 +117,7 @@ v3.1 Tentative Plan
                 void setDescripion(const mysqlpp::sql_mediumtext& value);
  
                 bool operator<(const SQLStock& rhs) const;
+                SQLStock& operator=(const SQLStock& rhs);
 
             protected:
                 mysqlpp::sql_bigint id_;
