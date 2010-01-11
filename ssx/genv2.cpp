@@ -5,9 +5,10 @@
 	also something like the preprocessor mode of a C++ compiler,
 	emitting a digested version of its input.
 
- Copyright (c) 2009 by Warren Young.  Others may also hold copyrights
- on code in this file.  See the CREDITS.txt file in the top directory
- of the distribution for details.
+ Copyright (c) 2009 by Warren Young and (c) 2009-2010 by Educational
+ Technology Resources, Inc.  Others may also hold copyrights on code
+ in this file.  See the CREDITS.txt file in the top directory of the
+ distribution for details.
 
  This file is part of MySQL++.
 
@@ -43,11 +44,11 @@ using namespace std;
 // the parse result only if we were given sane parameters.
 
 static bool
-generate_ssqls2(ofstream&, const ParseV2* pparse)
+generate_ssqls2(ostream& os, const ParseV2* pparse)
 {
-	for (ParseV2::LineListIt it = pparse->begin(); 
-			it != pparse->end(); ++it) {
-		cout << "TRACE: write " << typeid(*it).name() << " line." << endl;
+	ParseV2::LineListIt it;
+	for (it = pparse->begin(); it != pparse->end(); ++it) {
+		os << *it << endl;
 	}
 
 	return true;
@@ -57,17 +58,22 @@ bool
 generate_ssqls2(const char* file_name, const ParseV2* pparse)
 {
 	if (pparse) {
-		ofstream ofs(file_name);
-		if (ofs) {
-			cout << "TRACE: Generating SSQLS v2 file " << file_name <<
-					" from " << (pparse->end() - pparse->begin()) <<
-					" line parse result." << endl;
-			return generate_ssqls2(ofs, pparse);
+		if (strcmp(file_name, "-") == 0) {
+			return generate_ssqls2(cout, pparse);
 		}
 		else {
-			cerr << "Failed to open " << file_name << \
-					" for writing for -o!" << endl;
-			return false;
+			ofstream ofs(file_name);
+			if (ofs) {
+				cout << "TRACE: Generating SSQLS v2 file " << file_name <<
+						" from " << (pparse->end() - pparse->begin()) <<
+						" line parse result." << endl;
+				return generate_ssqls2(ofs, pparse);
+			}
+			else {
+				cerr << "Failed to open " << file_name << \
+						" for writing for -o!" << endl;
+				return false;
+			}
 		}
 	}
 	else {
