@@ -1,9 +1,10 @@
 /***********************************************************************
  ssx/parsev2.h - Declares the SSQLS v2 language parsing related classes.
 
- Copyright (c) 2009 by Warren Young.  Others may also hold copyrights
- on code in this file.  See the CREDITS.txt file in the top directory
- of the distribution for details.
+ Copyright (c) 2009 by Warren Young and (c) 2009-2010 by Educational
+ Technology Resources, Inc.  Others may also hold copyrights on code
+ in this file.  See the CREDITS.txt file in the top directory of the
+ distribution for details.
 
  This file is part of MySQL++.
 
@@ -28,6 +29,7 @@
 
 #include <exceptions.h>
 
+#include <cassert>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -65,6 +67,9 @@ public:
 		/// \sa error(const std::string&)
 		void error(const std::ostringstream& msg) const
 				{ error(msg.str()); }
+
+		/// \brief Return the file's name
+		const char* name() const { return file_name_.c_str(); }
 
 		/// \brief Throw a ParseException containing the given message
 		/// and our stored info about the file name and current line
@@ -147,6 +152,10 @@ public:
 		static Line* parse(const StringList& tl, bool subdirective,
 				const File& file);
 
+		/// \brief Print line's contents out to a stream in SSQLS v2
+		/// form.
+		virtual void print(std::ostream& os) const = 0;
+
 	protected:
 		/// \brief Protected ctor, to prevent instantiation
 		Line() { }
@@ -204,6 +213,10 @@ public:
 		static Field* parse(const StringList& tl, bool subdirective,
 				const File& file);
 
+		/// \brief Print field description out to a stream in SSQLS v2
+		/// form.
+		void print(std::ostream& os) const;
+
 		/// \brief A smart enum for converting SQL type strings to one
 		/// of a relatively few types we directly support.
 		///
@@ -258,6 +271,10 @@ public:
 			{
 			}
 
+			/// \brief Print type description out to a stream in
+			/// SSQLS v2 form.
+			void print(std::ostream& os) const;
+
 			/// \brief Enum value accessor
 			operator Value() const { return value_; }
 
@@ -272,10 +289,10 @@ public:
 	private:
 		std::string name_; 	///< the field's SQL name
 		Type type_; 		///< the field's SQL type
-		bool is_unsigned_;	///< true if field has unsigned integer type
-		bool is_null_;		///< true if field's value is nullable
 		bool is_autoinc_;	///< true if DB autoincrements this column if left out of INSERT
 		bool is_key_;		///< true if field is part of the primary key
+		bool is_null_;		///< true if field's value is nullable
+		bool is_unsigned_;	///< true if field has unsigned integer type
 		std::string alias_;	///< the field's C++ name
 	};
 
@@ -315,6 +332,12 @@ public:
 				const File& file);
 
 	private:
+		// Never called.  Include directives don't appear in the parse
+		// list; the included file's contents appear in its place
+		// instead.  Since this method only exists to test parsing
+		// behavior, we can't be called.
+		void print(std::ostream&) const { assert(0); }
+
 		/// \brief pointer to the object holding parse details for
 		/// the other file we were constructed with
 		ParseV2* pp2_;
@@ -387,6 +410,10 @@ public:
 		{
 		}
 
+		/// \brief Print the option description out to a stream in
+		/// SSQLS v2 form.
+		void print(std::ostream& os) const;
+
 	private:
 		/// \brief Known accessor styles
 		///
@@ -427,6 +454,10 @@ public:
 		/// throw an exception on schema mismatches
 		operator bool() const { return throw_; }
 
+		/// \brief Print the option description out to a stream in
+		/// SSQLS v2 form.
+		void print(std::ostream& os) const;
+
 	private:
 		bool throw_;	///< parsed version of parent's value
 	};
@@ -443,6 +474,10 @@ public:
 
 		/// \brief Return the extension used for C++ headers we emit
 		const char* extension() const { return value(); }
+
+		/// \brief Print the option description out to a stream in
+		/// SSQLS v2 form.
+		void print(std::ostream& os) const;
 	};
 
 	/// \brief 'option implementation_extension' directive line
@@ -458,6 +493,10 @@ public:
 		/// \brief Return the extension used for C++ implementation
 		/// files we emit
 		const char* extension() const { return value(); }
+
+		/// \brief Print the option description out to a stream in
+		/// SSQLS v2 form.
+		void print(std::ostream& os) const;
 	};
 
 	/// \brief 'table' directive line
@@ -482,6 +521,10 @@ public:
 		/// ctor.
 		static Table* parse(const StringList& tl, bool subdirective,
 				const File& file);
+
+		/// \brief Print the table description out to a stream in
+		/// SSQLS v2 form.
+		void print(std::ostream& os) const;
 
 	private:
 		std::string name_, alias_, filebase_;
@@ -583,5 +626,12 @@ private:
 	/// so the code doing the traversal doesn't have to worry about it.
 	LineList lines_;
 };
+
+/// \brief Write a Line out to a stream in SSQLS v2 form.
+///
+/// \internal This is implemented in terms of ParseV2::Line::print()
+/// because operator<< needs to be a global function.  This trick lets
+/// us get polymorphic behavior when writing Line objects out.
+std::ostream& operator<<(std::ostream& os, const ParseV2::Line& line);
 
 #endif // !defined(MYSQLPP_SSX_PARSEV2_H)

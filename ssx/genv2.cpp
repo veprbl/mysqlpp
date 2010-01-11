@@ -48,7 +48,7 @@ generate_ssqls2(ostream& os, const ParseV2* pparse)
 {
 	ParseV2::LineListIt it;
 	for (it = pparse->begin(); it != pparse->end(); ++it) {
-		os << *it << endl;
+		os << **it << endl;
 	}
 
 	return true;

@@ -118,21 +118,34 @@ ParseV2::tokenize(StringList& tokens, const std::string& line) const
 }
 
 
+void
+ParseV2::AccessorStyleOption::print(std::ostream& os) const
+{
+	os << "option accessor_style ";
+	switch (type_) {
+		case camel_case_lower:	os << "getX"; break;
+		case camel_case_upper:	os << "GetX"; break;
+		case stroustrup:		os << "get_x"; break;
+		case overloaded:		os << "x"; break;
+	}
+}
+
+
 ParseV2::AccessorStyleOption::Type
 ParseV2::AccessorStyleOption::parse_type(const std::string& style,
 		const File& file)
 {
 	//cout << "TRACE: found accessor style " << style << endl;
-	if (style.compare("getX")) {
+	if (style.compare("getX") == 0) {
 		return camel_case_lower;
 	}
-	else if (style.compare("GetX")) {
+	else if (style.compare("GetX") == 0) {
 		return camel_case_upper;
 	}
-	else if (style.compare("get_x")) {
+	else if (style.compare("get_x") == 0) {
 		return stroustrup;
 	}
-	else if (style.compare("x")) {
+	else if (style.compare("x") == 0) {
 		return overloaded;
 	}
 	else {
@@ -141,6 +154,14 @@ ParseV2::AccessorStyleOption::parse_type(const std::string& style,
 		file.parse_error(o);
 		return unknown;
 	}
+}
+
+
+void
+ParseV2::ExceptionOnSchemaMismatchOption::print(std::ostream& os) const
+{
+	os << "option exception_on_schema_mismatch " <<
+			(throw_ ? "true" : "false");
 }
 
 
@@ -213,6 +234,19 @@ ParseV2::Field::parse(const StringList& tl, bool subdirective,
 }
 
 
+void
+ParseV2::Field::print(std::ostream& os) const
+{
+	os << "field " << name_ << ' ';
+	type_.print(os);
+	if (is_autoinc_)	os << " is autoinc";
+	if (is_key_)		os << " is key";
+	if (is_null_)		os << " is null";
+	if (is_unsigned_)	os << " is unsigned";
+	if (alias_.size())	os << " alias " << alias_;
+}
+
+
 ParseV2::Field::Type::Type(const std::string& s) :
 value_(ft_string)
 {
@@ -262,6 +296,27 @@ value_(ft_string)
 	else if (ls.find("time") == 0) {
 		if (ls.compare("timestamp") == 0) value_ = ft_datetime;
 		else value_ = ft_time;
+	}
+}
+
+
+void
+ParseV2::Field::Type::print(std::ostream& os) const
+{
+	os << "type ";
+	switch (value_) {
+		case ft_bigint:		os << "bigint";		break;
+		case ft_blob:		os << "blob";		break;
+		case ft_date:		os << "date";		break;
+		case ft_datetime:	os << "datetime";	break;
+		case ft_double:		os << "double";		break;
+		case ft_float:		os << "float";		break;
+		case ft_mediumint:	os << "mediumint";	break;
+		case ft_set:		os << "set";		break;
+		case ft_smallint:	os << "smallint";	break;
+		case ft_string:		os << "string";		break;
+		case ft_time:		os << "time";		break;
+		case ft_tinyint:	os << "tinyint";	break;
 	}
 }
 
@@ -389,6 +444,20 @@ ParseV2::File::split_path(StringList& parts, const std::string& path) const
 	}
 	cout << endl;
 #endif
+}
+
+
+void
+ParseV2::HeaderExtensionOption::print(std::ostream& os) const
+{
+	os << "option header_extension " << value();
+}
+
+
+void
+ParseV2::ImplementationExtensionOption::print(std::ostream& os) const
+{
+	os << "option implementation_extension " << value();
 }
 
 
@@ -568,5 +637,22 @@ ParseV2::Table::parse(const StringList& tl, bool subdirective,
 
 	// No attribute errors, so create the Table object.  
 	return new Table(name, alias, filebase);
+}
+
+
+void
+ParseV2::Table::print(std::ostream& os) const
+{
+	os << "table " << name_;
+	if (alias_.size())		os << " alias " << alias_;
+	if (filebase_.size())	os << " filebase " << filebase_;
+}
+
+
+ostream&
+operator<<(ostream& os, const ParseV2::Line& line)
+{
+	line.print(os);
+	return os;
 }
 

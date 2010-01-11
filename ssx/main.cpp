@@ -4,8 +4,8 @@
 	primary one is SSQLSv2 language files (*.ssqls) to C++ source code,
 	but there are others.  Run "ssqlsxlat -?" to get a complete list.
 
- Copyright (c) 2009 by Educational Technology Resources, Inc., and
- (c) 2009 by Warren Young.  Others may also hold copyrights on code
+ Copyright (c) 2009 by Warren Young and (c) 2009-2010 by Educational
+ Technology Resources, Inc.  Others may also hold copyrights on code
  in this file.  See the CREDITS.txt file in the top directory of the
  distribution for details.
 
@@ -96,7 +96,7 @@ main(int argc, char* argv[])
 		if (ptree && (cmdline.output_sink() != CommandLine::ss_unknown)) {
 			switch (cmdline.output_sink()) {
 				case CommandLine::ss_ssqls2:
-					return generate_ssqls2(cmdline.output(), ptree);
+					return generate_ssqls2(cmdline.output(), ptree) ? 0 : 2;
 
 				default:
 					cerr << "Sorry, I don't yet know what to do with "
