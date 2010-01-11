@@ -55,7 +55,9 @@ public:
 	/// \internal Note that there is no default ctor on purpose.  RAII.
 	///
 	/// \param pool The ConnectionPool to use.
-	explicit ScopedConnection(ConnectionPool& pool);
+	/// \param safe By default, we get the connection from the pool with
+	/// ConnectionPool::grab(), but we can call safe_grab() instead.
+	explicit ScopedConnection(ConnectionPool& pool, bool safe = false);
 
 	/// \brief Destructor
 	///
