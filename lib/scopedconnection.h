@@ -61,10 +61,10 @@ public:
     ~ScopedConnection();
 
     /// \brief Access the Connection pointer
-    Connection* operator->() const;
+    Connection* operator->() const { return connection_; }
 
     /// \brief Dereference
-    Connection& operator*() const;
+    Connection& operator*() const { return *connection_; }
 
 private:
     // ScopedConnection objects must not be default-constructed.  RAII.

@@ -40,16 +40,4 @@ ScopedConnection::~ScopedConnection()
     pool_.release(connection_);
 }
 
-Connection*
-ScopedConnection::operator->() const
-{
-    return connection_;
-}
-
-Connection&
-ScopedConnection::operator*() const
-{
-    return *connection_;
-}
-
 } // end namespace mysqlpp
