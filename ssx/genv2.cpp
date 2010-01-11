@@ -48,6 +48,15 @@ generate_ssqls2(ostream& os, const ParseV2* pparse)
 {
 	ParseV2::LineListIt it;
 	for (it = pparse->begin(); it != pparse->end(); ++it) {
+		if (dynamic_cast<ParseV2::Field*>(*it)) {
+			// 'field' directives must be indented under the preceding
+			// 'table'.  We don't want to hard-code this in
+			// ParseV2::Field::print() in case we later start calling
+			// those routines for other reasons, such as to construct
+			// error messages.  It's really a special case of -o, not
+			// really something that print() routine should know.
+			os << '\t';
+		}
 		os << **it << endl;
 	}
 
