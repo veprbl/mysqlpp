@@ -74,6 +74,7 @@
         lib/query.cpp
         lib/result.cpp
         lib/row.cpp
+        lib/scopedconnection.cpp
         lib/sql_buffer.cpp
         lib/sqlstream.cpp
         lib/ssqls2.cpp
