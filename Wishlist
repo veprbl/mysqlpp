@@ -65,13 +65,13 @@ v3.1 Tentative Plan
       - Above test implies that test/*.ssqls must be written so the
         line elements are in the same order Line::print() and its
         overrides use.  We also have to use canonical forms in other
-        areas, too, like boolean flag values.  If we don't restrict
-        ourselves to the canonical syntax, we won't be able to detect
-        a new line type or line element added to one of these files,
-        because the first pass will eat them.  So, add a second test
-        on examples/*.ssqls, written with different line element
-        ordering which doesn't check for new element types but does
-        check that we're not sensitive to element ordering:
+        areas, too, like boolean flag values and type names.  If we
+        don't restrict ourselves to the canonical syntax, we won't be
+        able to detect a new line type or line element added to one
+        of these files, because the first pass will eat them.  So,
+        add a second test on examples/*.ssqls, written with different
+        line element ordering which doesn't check for new element types
+        but does check that we're not sensitive to element ordering:
 
             for f in examples/*.ssqls
             do
