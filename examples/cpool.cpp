@@ -3,7 +3,7 @@
 	threads and POSIX threads.  Shows how to create and use a concrete
 	ConnectionPool derivative.
 
- Copyright (c) 2008-2009 by Educational Technology Resources, Inc.
+ Copyright (c) 2008-2010 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the
  CREDITS.txt file in the top directory of the distribution for details.
 
@@ -142,8 +142,10 @@ worker_thread(thread_arg_t running_flag)
 	// connection we use each time.
 	for (size_t i = 0; i < 6; ++i) {
 		// Go get a free connection from the pool, or create a new one
-		// if there are no free conns yet.
-		mysqlpp::Connection* cp = poolptr->safe_grab();
+		// if there are no free conns yet.  Uses safe_grab() to get a
+		// connection from the pool that will be automatically returned
+		// to the pool when this loop iteration finishes.
+		mysqlpp::ScopedConnection cp(*poolptr, true);
 		if (!cp) {
 			cerr << "Failed to get a connection from the pool!" << endl;
 			break;
@@ -156,10 +158,6 @@ worker_thread(thread_arg_t running_flag)
 		for (size_t j = 0; j < res.num_rows(); ++j) {
 			cout.put('.');
 		}
-
-		// Immediately release the connection once we're done using it.
-		// If we don't, the pool can't detect idle connections reliably.
-		poolptr->release(cp);
 
 		// Delay 1-4 seconds before doing it again.  Because this can
 		// delay longer than the idle timeout, we'll occasionally force
@@ -198,13 +196,12 @@ main(int argc, char *argv[])
 	// awareness turned on.  See README-*.txt for your platform.
 	poolptr = new SimpleConnectionPool(cmdline);
 	try {
-		mysqlpp::Connection* cp = poolptr->safe_grab();
+		mysqlpp::ScopedConnection cp(*poolptr, true);
 		if (!cp->thread_aware()) {
 			cerr << "MySQL++ wasn't built with thread awareness!  " <<
 					argv[0] << " can't run without it." << endl;
 			return 1;
 		}
-		poolptr->release(cp);
 	}
 	catch (mysqlpp::Exception& e) {
 		cerr << "Failed to set up initial pooled connection: " <<
