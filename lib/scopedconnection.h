@@ -48,36 +48,35 @@ class MYSQLPP_EXPORT ConnectionPool;
 class MYSQLPP_EXPORT ScopedConnection
 {
 public:
-    /// \brief Standard constructor
-    ///
-    /// Grabs a Connection from the specified pool.
-    ///
-    /// \param pool The ConnectionPool to use.
-    explicit ScopedConnection(ConnectionPool& pool);
-   
-    /// \brief Destructor
-    ///
-    /// Releases the Connection back to the ConnectionPool.
-    ~ScopedConnection();
+	/// \brief Standard constructor
+	///
+	/// Grabs a Connection from the specified pool.
+	///
+	/// \internal Note that there is no default ctor on purpose.  RAII.
+	///
+	/// \param pool The ConnectionPool to use.
+	explicit ScopedConnection(ConnectionPool& pool);
 
-    /// \brief Access the Connection pointer
-    Connection* operator->() const { return connection_; }
+	/// \brief Destructor
+	///
+	/// Releases the Connection back to the ConnectionPool.
+	~ScopedConnection();
 
-    /// \brief Dereference
-    Connection& operator*() const { return *connection_; }
+	/// \brief Access the Connection pointer
+	Connection* operator->() const { return connection_; }
+
+	/// \brief Dereference
+	Connection& operator*() const { return *connection_; }
 
 private:
-    // ScopedConnection objects must not be default-constructed.  RAII.
-	ScopedConnection();
-
-    // ScopedConnection objects cannot be copied.  We want them to be
+	// ScopedConnection objects cannot be copied.  We want them to be
 	// tightly scoped to their use point, not put in containers or
 	// passed around promiscuously.
-    ScopedConnection(const ScopedConnection& no_copies);   
-    const ScopedConnection& operator=(const ScopedConnection& no_copies);
+	ScopedConnection(const ScopedConnection& no_copies);   
+	const ScopedConnection& operator=(const ScopedConnection& no_copies);
 
-    ConnectionPool& pool_;
-    Connection* const connection_;
+	ConnectionPool& pool_;
+	Connection* const connection_;
 };
 
 } // end namespace mysqlpp
