@@ -70,6 +70,9 @@ public:
 	/// \brief Dereference
 	Connection& operator*() const { return *connection_; }
 
+	/// \brief Truthiness operator
+	operator void*() const { return connection_; }
+
 private:
 	// ScopedConnection objects cannot be copied.  We want them to be
 	// tightly scoped to their use point, not put in containers or
