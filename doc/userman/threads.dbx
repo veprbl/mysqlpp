@@ -126,9 +126,14 @@
     low, the connection management overhead will be excessive. To avoid
     that, we created the <ulink url="ConnectionPool" type="classref"/>
     class. It manages a pool of <classname>Connection</classname>
-    objects like library books: a thread checks one out, uses it,
-    and then returns it to the pool as soon as it&rsquo;s done with
-    it. This keeps the number of active connections low.</para>
+    objects like library books: a thread checks one out, uses
+    it, and then returns it to the pool as soon as it&rsquo;s
+    done with it. This keeps the number of active connections
+    low. We suggest that you keep each connection&rsquo;s
+    use limited to a single variable scope for <ulink
+    url="http://en.wikipedia.org/wiki/RAII">RAII</ulink> reasons;
+    we created a little helper called <ulink url="ScopedConnection"
+    type="classref"/> to make that easy.</para>
 
     <para><classname>ConnectionPool</classname> has three
     methods that you need to override in a subclass to
@@ -155,8 +160,9 @@
     uses, it&rsquo;s not necessary to override this.</para>
 
     <para>In designing your <classname>ConnectionPool</classname>
-    derivative, you might consider making it a Singleton (see Gamma
-    et al.), since there should only be one pool in a program.</para>
+    derivative, you might consider making it a <ulink
+    url="http://en.wikipedia.org/wiki/Singleton_pattern">Singleton</ulink>,
+    since there should only be one pool in a program.</para>
 
     <para>Another thing you might consider doing is passing a
     <ulink url="ReconnectOption" type="classref"/> object to
