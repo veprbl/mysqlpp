@@ -41,24 +41,6 @@ v3.1 Tentative Plan
 
     o SSQLS v2 (http://lists.mysql.com/plusplus/6929):
 
-      - In dtest, check that -o gives equivalent code to -i:
-
-            for f in examples/*.ssqls
-            do
-                ssqlsxlat -i %f -o /tmp/dtest-ssxgv2-pass1-$f > /dev/null
-                diff -q /tmp/dtest-ssxgv2-pass?-$f > /dev/null
-                error=$?
-                rm /tmp/dtest-ssxgv2-pass?-$f
-                die if $error
-            done
-
-		We depend on not redirecting stderr to catch differences due to
-		directives and line elements we ignore.  The two-pass structure
-		is necessary to deal with comments, whitespace differences, line
-		element ordering, boolean value and type canonicalization, and
-		other niggly differences we really don't care about.  diff -w
-		isn't enough.
-
       - C++ code generator, from walking DSL parse tree:
 
         examples/stock.ssqls gives ssqls_stock.h containing:
