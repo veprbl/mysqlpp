@@ -93,17 +93,31 @@ main(int argc, char* argv[])
 				return 2;
 		}
 
-		if (ptree && (cmdline.output_sink() != CommandLine::ss_unknown)) {
-			switch (cmdline.output_sink()) {
-				case CommandLine::ss_ssqls2:
-					return generate_ssqls2(cmdline.output(), ptree) ? 0 : 2;
+		if (cmdline.output_sink() != CommandLine::ss_unknown) {
+			if (ptree) {
+				switch (cmdline.output_sink()) {
+					case CommandLine::ss_ssqls2:
+						if (generate_ssqls2(cmdline.output(), ptree)) {
+							return 0;
+						}
+						else {
+							return 2;
+						}
 
-				default:
-					cerr << "Sorry, I don't yet know what to do with "
-							"sink type " << int(cmdline.output_sink()) <<
-							'!' << endl;
-					return 2;
+					default:
+						cerr << "Sorry, I don't yet know what to do "
+								"with sink type " <<
+								int(cmdline.output_sink()) << '!' <<
+								endl;
+						return 2;
+				}
 			}
+			else {
+				// Depending on someone farther up the line to write
+				// the error message, explaining why we didn't get a
+				// parse tree.
+				return 2;
+			}	
 		}
 		else {
 			cerr << "Sorry, I don't know how to write C++ output yet." <<
