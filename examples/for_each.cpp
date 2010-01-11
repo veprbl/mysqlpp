@@ -3,9 +3,9 @@
 	an arbitrary action on each row in a result set.
 
  Copyright (c) 2005-2009 by Educational Technology Resources, Inc. and
- (c) 2007 by Joel Fielder.  Others may also hold copyrights on code
- in this file.  See the CREDITS.txt file in the top directory of the
- distribution for details.
+ (c) 2007 by Switchplane, Ltd.  Others may also hold copyrights on
+ code in this file.  See the CREDITS.txt file in the top directory
+ of the distribution for details.
 
  This file is part of MySQL++.
 

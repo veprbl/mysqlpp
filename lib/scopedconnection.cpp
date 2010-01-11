@@ -1,9 +1,9 @@
 /***********************************************************************
  scopedconnection.cpp - Implements the ScopedConnection class.
 
- Copyright (c) 2010 by Joel Fielder.  Others may also hold copyrights
- on code in this file.  See the CREDITS.txt file in the top directory
- of the distribution for details.
+ Copyright (c) 2010 by Switchplane, Ltd.  Others may also hold
+ copyrights on code in this file.  See the CREDITS.txt file in the
+ top directory of the distribution for details.
 
  This file is part of MySQL++.
 
