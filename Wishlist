@@ -43,7 +43,13 @@ v3.1 Tentative Plan
 
       - SSQLSv2 DSL generator: walk ssqlsxlat's parse tree, writing
         back out SSQLSv2.  (-o flag.  Suppresses C++ output.)
-        
+
+      - Add a flag to suppress include file contents inlining?
+        That is, add an Include object to the parse tree that gets
+        handled literally, rather than transparently showing the
+        included file's contents.  Else, we won't be able to test
+        that an include directive in -i appears in -o in next item.
+
       - In dtest, check that -o gives equivalent code to -i:
         
             for f in test/*.ssqls
