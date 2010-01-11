@@ -44,13 +44,34 @@ v3.1 Tentative Plan
       - SSQLSv2 DSL generator: walk ssqlsxlat's parse tree, writing
         back out SSQLSv2.  (-o flag.  Suppresses C++ output.)
         
-      - In dtest, check that -o gives equivalent code to -i, modulo
-        whitespace:
+      - In dtest, check that -o gives equivalent code to -i:
         
             for f in test/*.ssqls
             do
-                ssqlsxlat -i %f -o /tmp/dtest-$f
-                die if ! diff -wq %f /tmp/dtest-$f
+                ofile=/tmp/dtest-ssxgv2-$f
+                ssqlsxlat -i %f -o $ofile > /dev/null 2>&1
+                diff -wq $f $ofile > /dev/null 2>&1
+                error=$?
+                rm $ofile
+                die if $error
+            done
+
+      - Above test implies that test/*.ssqls must be written so the line
+        elements are in the same order Line::print() and its overrides
+        use.  If we don't restrict ourselves like that, we won't be able
+        to detect a new line type or line element added to one of these
+        files, because the first pass will eat them.  So, add a second
+        test on examples/*.ssqls, written with different line element
+        ordering which doesn't check for new element types but does
+        check that we're not sensitive to element ordering:
+
+            for f in examples/*.ssqls
+            do
+                ssqlsxlat -i %f -o /tmp/dtest-ssxgv2-pass1-$f > /dev/null 2>&1
+                diff -wq /tmp/dtest-ssxgv2-pass?-$f > /dev/null 2>&1
+                error=$?
+                rm /tmp/dtest-ssxgv2-pass?-$f
+                die if $error
             done
         
       - C++ code generator, from walking DSL parse tree:
