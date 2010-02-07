@@ -5,7 +5,7 @@
 #	functions and classes, varying only in trivial ways.
 #
 # Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
-# (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
+# (c) 2004-2010 by Educational Technology Resources, Inc.  Others may
 # also hold copyrights on code in this file.  See the CREDITS.txt file
 # in the top directory of the distribution for details.
 #
@@ -46,6 +46,11 @@ my $fp_min_delta = "0.00001";
 # No user-serviceable parts below.
 
 use strict;
+use Getopt::Std;
+
+our $opt_f;
+getopts('f:') or die "usage: $0 [-f fields]\n\n";
+$max_data_members = int($opt_f) if defined $opt_f;
 
 open (OUT, ">ssqls.h");
 

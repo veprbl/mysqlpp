@@ -6,7 +6,7 @@
 #	number limits the number of parameters a MySQL++ template query can
 #	accept.  This value can be changed from its default, below.
 #
-# Copyright (c) 2006-2009 by Educational Technology Resources, Inc.
+# Copyright (c) 2006-2010 by Educational Technology Resources, Inc.
 # Others may also hold copyrights on code in this file.  See the CREDITS
 # file in the top directory of the distribution for details.
 #
@@ -39,6 +39,11 @@ my $max_parameters = 25;
 # No user-serviceable parts below.
 
 use strict;
+use Getopt::Std;
+
+our $opt_f;
+getopts('f:') or die "usage: $0 [-f fields]\n\n";
+$max_parameters = int($opt_f) if defined $opt_f;
 
 open (OUT, ">querydef.h");
 
