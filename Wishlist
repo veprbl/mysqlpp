@@ -32,6 +32,11 @@ Any Version
 
       http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
 
+    o Result::field_num() should be doing case-insensitive matching.
+      Column names aren't case-sensitive in SQL.  At minimum, the
+      current implementation means SSQLSes won't populate correctly
+      if the SSQLS's definition uses a different case than the server.
+
 
 v3.1 Tentative Plan
 -------------------
@@ -124,6 +129,9 @@ v3.1 Tentative Plan
             };
 
         ...and ssqls_stock.cc, containing implementation for same.
+
+      - Ensure we're using case-insensitive SQL column to C++ field name
+        matching.  Column names aren't case-sensitive in SQL.
 
       - SQL table updater/builder, -T option, taking .ssqls and
         creating or updating the DB table to match.
