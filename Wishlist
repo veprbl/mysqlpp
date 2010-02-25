@@ -32,14 +32,18 @@ Any Version
 
       http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
 
-    o Result::field_num() should be doing case-insensitive matching.
-      Column names aren't case-sensitive in SQL.  At minimum, the
-      current implementation means SSQLSes won't populate correctly
-      if the SSQLS's definition uses a different case than the server.
-
 
 v3.1 Tentative Plan
 -------------------
+    o Result::field_num() should be case-insensitive; column names
+      aren't case-sensitive in SQL.  MySQL++ is currently trying to
+      do this by smashing field name case to lowercase in FieldNames,
+      calling str_to_lwr() on all received values.  This doesn't help
+      with SSQLS because it's not smashing field name case we get
+      as macro arguments in the SSQLS definition.  Probably better
+      all around to remove the case smashing and do case-insensitive
+      comparisons instead.
+
     o Ensure "make rpm" process doesn't override --with-field-limit
 
     o Check that it works with Connector/C and MySQL 5.1
