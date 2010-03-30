@@ -1117,6 +1117,42 @@ public:
 		return *this;
 	}
 
+	/// \brief Insert multiple new rows, or replace existing ones if
+	/// there are existing rows that match on key fields.
+	///
+	/// Builds a REPLACE SQL query using items from a range within an
+	/// STL container.  Insert the entire contents of the container by
+	/// using the begin() and end() iterators of the container as
+	/// parameters to this function.
+	///
+	/// \param first iterator pointing to first element in range to
+	///    insert/replace
+	/// \param last iterator pointing to one past the last element to
+	///    insert/replace
+	///
+	/// \sa insertfrom(), replace(), update()
+	template <class Iter>
+	Query& replace(Iter first, Iter last)
+	{
+		reset();
+		if (first == last) {
+			return *this;    // empty set!
+		}
+
+		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
+				"REPLACE INTO " << first->table() << " (" <<
+				first->field_list() << ") VALUES (" <<
+				first->value_list() << ')';
+
+		Iter it = first + 1;
+		while (it != last) {
+			MYSQLPP_QUERY_THISPTR << ",(" << it->value_list() << ')';
+			++it;
+		}
+
+		return *this;
+	}	
+
 #if !defined(DOXYGEN_IGNORE)
 	// Declare the remaining overloads.  These are hidden down here partly
 	// to keep the above code clear, but also so that we may hide them
