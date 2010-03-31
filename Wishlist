@@ -456,3 +456,8 @@ v4.0 or Later
       Does Connection cache the error value and message?  If we can pull
       this off, we can drop the DBDriver::is_connected_ flag and change
       Connection::connected() to "return driver_ != 0".
+
+    o Add STL-like custom Allocator template parameters to memory-hungry
+      classes like Row?  Useful in apps that process lots of data over
+      long periods, causing heap fragmentation with the default C++
+      allocator.
