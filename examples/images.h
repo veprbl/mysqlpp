@@ -24,7 +24,6 @@
 ***********************************************************************/
 
 #include <mysql++.h>
-#define MYSQLPP_ALLOW_SSQLS_V1	// suppress deprecation warning
 #include <ssqls.h>
 
 sql_create_2(images,
