@@ -33,7 +33,7 @@ Any Version
       http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
 
 
-v3.1 Tentative Plan
+v3.2 Tentative Plan
 -------------------
     o Result::field_num() should be case-insensitive; column names
       aren't case-sensitive in SQL.  MySQL++ is currently trying to
