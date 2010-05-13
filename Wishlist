@@ -10,16 +10,13 @@ Any Version
     o Suppress DOS line-ending related diffs from examples/cgi_jpeg
       output when running dtest on Windows.  Check for -D?
 
-    o Can we bring examples/vstudio into the top-level build system?
-      Would be nice to get MYSQL_WIN_DIR support, and to make it
-      link against the built MySQL++ instead of requiring it to be
-      installed first.
+    o Need to link statically to connect to MySQL Embedded?
 
-    o Xcode project needs to ignore config.h when not doing an autotools
-      build.  Put conditions in lib/common.h.
+      http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
 
-    o Add -lmysqlclient for Xcode case
 
+v3.1 Plan
+---------
     o Can we fix "if (!query)" without changing the ABI?
 
       http://lists.mysql.com/plusplus/8594
@@ -28,13 +25,16 @@ Any Version
 
       lib/null.h:55: warning: type qualifiers ignored on function return type
 
-    o Need to link statically to connect to MySQL Embedded?
+    o Can we bring examples/vstudio into the top-level build system?
+      Would be nice to get MYSQL_WIN_DIR support, and to make it
+      link against the built MySQL++ instead of requiring it to be
+      installed first.
 
-      http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
+    o Add -lmysqlclient for Xcode case
 
+    o Xcode project needs to ignore config.h when not doing an autotools
+      build.  Put conditions in lib/common.h.
 
-v3.2 Tentative Plan
--------------------
     o Result::field_num() should be case-insensitive; column names
       aren't case-sensitive in SQL.  MySQL++ is currently trying to
       do this by smashing field name case to lowercase in FieldNames,
@@ -44,177 +44,191 @@ v3.2 Tentative Plan
       all around to remove the case smashing and do case-insensitive
       comparisons instead.
 
-    o Ensure "make rpm" process doesn't override --with-field-limit
+    o Raise tquery and SSQLS field limits in RPM build process, since
+      the very fact that you're building an RPM means we know the
+      limits of the minimum supported platform.  It needs to be smart
+      enough to not override a value given when one hand-configures a
+      source tree, possibly by parsing it out of ssqls.h.  Otherwise,
+      use the known floor value.
 
     o Check that it works with Connector/C and MySQL 5.1
 
     o Document sql_*_null in userman
 
-    o SSQLS v2 (http://lists.mysql.com/plusplus/6929):
+    o Add to datetime.h: inline DateTime NOW() { return DateTime(); }
 
-      - C++ code generator, from walking DSL parse tree:
 
-        examples/stock.ssqls gives ssqls_stock.h containing:
+v3.2 Plan: Finish SSQLS v2
+--------------------------
+    See http://lists.mysql.com/plusplus/6929 for high-level plan.
 
-            class SQLStock : public mysqlpp::SsqlsBase
-            {
-            public:
-                SQLStock(Connection* conn = 0); // default ctor
-                SQLStock(const SQLStock& other);
-                SQLStock(const mysqlpp::Row& row,
-                        Connection* conn = 0); // full init from query
-                SQLStock(mysqlpp::sql_bigint key1); // exemplar creation
-                SQLStock(Connection* conn,
-                        mysqlpp::sql_bigint key1) // calls load();
-                SQLStock(
-                    mysqlpp::sql_bigint f1,
-                    mysqlpp::sql_bigint f2,
-                    mysqlpp::sql_double f3,
-                    mysqlpp::sql_double f4,
-                    const mysqlpp::sql_date& f5,
-                    const mysqlpp::sql_mediumtext& f6); // full init
-                SQLStock(Connection* conn,
-                    mysqlpp::sql_bigint f2,
-                    mysqlpp::sql_double f3,
-                    mysqlpp::sql_double f4,
-                    const mysqlpp::sql_date& f5,
-                    const mysqlpp::sql_mediumtext& f6); // calls create()
-                SQLStock(Connection* conn,
-                    mysqlpp::sql_bigint f1,
-                    mysqlpp::sql_bigint f2,
-                    mysqlpp::sql_double f3,
-                    mysqlpp::sql_double f4,
-                    const mysqlpp::sql_date& f5,
-                    const mysqlpp::sql_mediumtext& f6); // calls save()
+    o Goal: Restore VC++ 2003 compatibility with SSQLS, lost with v1
 
-                bool createTable(Connection* conn = 0) const;
-                const char* getTableName() const
-                        { return class_table_name_ || table(); }
-                void setTableName(const char* name)
-                        { instance_table(name); }
-                static void setTableName(const char* name)
-                        { class_table_name_ = name; }
+    o C++ code generator, from walking DSL parse tree:
 
-                std::ostream& equal_list(std::ostream& os) const;
-                std::ostream& json(std::ostream& os) const;
-                std::ostream& name_list(std::ostream& os) const;
-                std::ostream& value_list(std::ostream& os) const;
-                std::ostream& xml(std::ostream& os) const;
+      examples/stock.ssqls gives ssqls_stock.h containing:
 
-                mysqlpp::sql_bigint getId() const;
-                mysqlpp::sql_bigint getNum() const;
-                mysqlpp::sql_double getWeight() const;
-                mysqlpp::sql_double getPrice() const;
-                const mysqlpp::sql_date& getSdate() const;
-                const mysqlpp::sql_mediumtext& getDescription() const;
- 
-                void setId(mysqlpp::sql_bigint value);
-                void setNum(mysqlpp::sql_bigint value);
-                void setWeight(mysqlpp::sql_double value);
-                void setPrice(mysqlpp::sql_double value);
-                void setSdate(const mysqlpp::sql_date& value);
-                void setDescripion(const mysqlpp::sql_mediumtext& value);
- 
-                bool operator<(const SQLStock& rhs) const;
-                SQLStock& operator=(const SQLStock& rhs);
+          class SQLStock : public mysqlpp::SsqlsBase
+          {
+          public:
+              SQLStock(Connection* conn = 0); // default ctor
+              SQLStock(const SQLStock& other);
+              SQLStock(const mysqlpp::Row& row,
+                      Connection* conn = 0); // full init from query
+              SQLStock(mysqlpp::sql_bigint key1); // exemplar creation
+              SQLStock(Connection* conn,
+                      mysqlpp::sql_bigint key1) // calls load();
+              SQLStock(
+                  mysqlpp::sql_bigint f1,
+                  mysqlpp::sql_bigint f2,
+                  mysqlpp::sql_double f3,
+                  mysqlpp::sql_double f4,
+                  const mysqlpp::sql_date& f5,
+                  const mysqlpp::sql_mediumtext& f6); // full init
+              SQLStock(Connection* conn,
+                  mysqlpp::sql_bigint f2,
+                  mysqlpp::sql_double f3,
+                  mysqlpp::sql_double f4,
+                  const mysqlpp::sql_date& f5,
+                  const mysqlpp::sql_mediumtext& f6); // calls create()
+              SQLStock(Connection* conn,
+                  mysqlpp::sql_bigint f1,
+                  mysqlpp::sql_bigint f2,
+                  mysqlpp::sql_double f3,
+                  mysqlpp::sql_double f4,
+                  const mysqlpp::sql_date& f5,
+                  const mysqlpp::sql_mediumtext& f6); // calls save()
 
-            protected:
-                mysqlpp::sql_bigint id_;
-                mysqlpp::sql_bigint num_;
-                mysqlpp::sql_double weight_;
-                mysqlpp::sql_double price_;
-                mysqlpp::sql_date sdate_;
-                mysqlpp::sql_mediumtext description_;
+              bool createTable(Connection* conn = 0) const;
+              const char* getTableName() const
+                      { return class_table_name_ || table(); }
+              void setTableName(const char* name)
+                      { instance_table(name); }
+              static void setTableName(const char* name)
+                      { class_table_name_ = name; }
 
-                std::bitset<6> set_fields_;
+              std::ostream& equal_list(std::ostream& os) const;
+              std::ostream& json(std::ostream& os) const;
+              std::ostream& name_list(std::ostream& os) const;
+              std::ostream& value_list(std::ostream& os) const;
+              std::ostream& xml(std::ostream& os) const;
 
-            private:
-                static const char* class_table_name_;
-            };
+              mysqlpp::sql_bigint getId() const;
+              mysqlpp::sql_bigint getNum() const;
+              mysqlpp::sql_double getWeight() const;
+              mysqlpp::sql_double getPrice() const;
+              const mysqlpp::sql_date& getSdate() const;
+              const mysqlpp::sql_mediumtext& getDescription() const;
 
-        ...and ssqls_stock.cc, containing implementation for same.
+              void setId(mysqlpp::sql_bigint value);
+              void setNum(mysqlpp::sql_bigint value);
+              void setWeight(mysqlpp::sql_double value);
+              void setPrice(mysqlpp::sql_double value);
+              void setSdate(const mysqlpp::sql_date& value);
+              void setDescripion(const mysqlpp::sql_mediumtext& value);
 
-      - Ensure we're using case-insensitive SQL column to C++ field name
-        matching.  Column names aren't case-sensitive in SQL.
+              bool operator<(const SQLStock& rhs) const;
+              SQLStock& operator=(const SQLStock& rhs);
 
-      - SQL table updater/builder, -T option, taking .ssqls and
-        creating or updating the DB table to match.
+          protected:
+              mysqlpp::sql_bigint id_;
+              mysqlpp::sql_bigint num_;
+              mysqlpp::sql_double weight_;
+              mysqlpp::sql_double price_;
+              mysqlpp::sql_date sdate_;
+              mysqlpp::sql_mediumtext description_;
 
-      - If using accessors, generate "std::bitset<num_fields> is_set_",
-        and set the appropriate bit when calling each setFoo() so we can
-        intuit which fields were set.  Probably also need an enum:
+              std::bitset<6> set_fields_;
 
-            enum FieldIndices {
-                id_field_index_,
-                num_field_index_,
-                ...
-            };
+          private:
+              static const char* class_table_name_;
+          };
 
-        This will allow Query::select(), for instance, to figure out
-        that we want it to select by a non-key field, returning all
-        matches.
+      ...and ssqls_stock.cc, containing implementation for same.
 
-      - Define operator<< for SSQLS and a set of manipulators which
-        govern whether the operator calls equal_list(), json(),
-        name_list(), value_list(), or xml() to do the actual insertion.
+    o Ensure we're using case-insensitive SQL column to C++ field name
+      matching.  Column names aren't case-sensitive in SQL.
 
-      - Define operator>> for SSQLS, taking XML as input, in the form
-        emitted via xml().  expat uses the new BSD license, so maybe
-        we can just drop it in the tree, with an option to use the
-        platform expat on autoconf systems.
+    o SQL table updater/builder, -T option, taking .ssqls and
+      creating or updating the DB table to match.
 
-      - MySQL table metadata to SSQLSv2 data structure translator.
-        (-s, -u, -p and -t flag support.)  Add this to dtest,
-        extracting stock.ssqls definition from DB.
+    o If using accessors, generate "std::bitset<num_fields> is_set_",
+      and set the appropriate bit when calling each setFoo() so we
+      can intuit which fields were set.  Probably also need an enum:
 
-      - Replace Query's template methods taking SSQLSes with concrete
-        methods taking const SsqlsBase&.
+          enum FieldIndices {
+              id_field_index_,
+              num_field_index_,
+              ...
+          };
 
-      - Create Query::remove(const SsqlsBase&)
+      This will allow Query::select(), for instance, to figure out that
+      we want it to select by a non-key field, returning all matches.
 
-      - Try to restore VC++ 2003 compatibility
+    o Define operator<< for SSQLS and a set of manipulators which
+      govern whether the operator calls equal_list(), json(),
+      name_list(), value_list(), or xml() to do the actual insertion.
 
-      - Try to remove of 'explicit' from Date, DateTime and Time
-        ctors taking stringish types.  (Can't do it for real until v4,
-        but we can lay the ground work here.)
+    o Define operator<< for sequence_container<SsqlsBase> and similar
+      for associative containers.  Give mysql(1)-like ASCII grid or
+      some other table format.
 
-      - Auto-create() ctor: if there is an auto_increment field,
-        populate it on query success.
+    o Define operator>> for SSQLS, taking XML as input, in the form
+      emitted via xml().  expat uses the new BSD license, so maybe
+      we can just drop it in the tree, with an option to use the
+      platform expat on autoconf systems.
 
-      - Detect ctor conflicts corresponding to sql_create_N(N, N...)
-        in SSQLSv1.  ssqlsxlat can be smart enough to just not emit
-        duplicate ctors.
+    o MySQL table metadata to SSQLSv2 data structure translator.
+      (-s, -u, -p and -t flag support.)  Add this to dtest, extracting
+      stock.ssqls definition from DB.
 
-      - Special case of ctor suppression: if the number of key fields
-        equals the total number of fields, you get an auto-load()
-        ctor, not auto-update().
+    o Replace Query's template methods taking SSQLSes with concrete
+      methods taking const SsqlsBase&.
 
-      - Replace CREATE TABLE SQL in resetdb with create_table() calls.
+    o Create Query::remove(const SsqlsBase&)
 
-      - Option to use integer indices into Row when populating?  Only
-        bother if it gives a speed advantage we can actually see,
-        because it removes all the dynamic typing advantages we got with
-        the change to field name indices in v3.0.
+    o Try to remove of 'explicit' from Date, DateTime and Time
+      ctors taking stringish types.  (Can't do it for real until v4,
+      but we can lay the ground work here.)
 
-      - Convert SSQLS v1 examples to v2
+    o Auto-create() ctor: if there is an auto_increment field,
+      populate it on query success.
 
-      - Remove MYSQLPP_ALLOW_SSQLS_V1 warning suppressor from examples.
-        (Leave test programs alone until we drop v1 support.)
+    o Detect ctor conflicts corresponding to sql_create_N(N, N...)
+      in SSQLSv1.  ssqlsxlat can be smart enough to just not emit
+      duplicate ctors.
+
+    o Special case of ctor suppression: if the number of key fields
+      equals the total number of fields, you get an auto-load() ctor,
+      not auto-update().
+
+    o Replace CREATE TABLE SQL in resetdb with create_table() calls.
+
+    o Option to use integer indices into Row when populating?  Only
+      bother if it gives a speed advantage we can actually see,
+      because it removes all the dynamic typing advantages we got
+      with the change to field name indices in v3.0.
 
     o Try to add Query::storein(container, ssqls), which generates
       SELECT * from {ssqls.table()} and stores the result.  May not be
       possible due to existing overloads, but try.  If it works, use
       this form in the userman Overview section, saving one LOC.
 
+    o Convert SSQLS v1 examples to v2.  SSQLS v2 isn't done until
+      there's a straightformward conversion path for all examples.
+
+    o Add #warning to generated ssqls.h saying that you should now use
+      SSQLS v2.  Wrap it in a check for MYSQLPP_ALLOW_SSQLS_V1,
+      so people can disable the warning.
+
+
+v3.3 Tentative Plan
+-------------------
     o Add Query::storein<Container, T>(container), getting table
       name from container::value_type.table() instead.
 
     o Define operator<< for Fields, Row, StoreQueryResult, etc., giving
       CSV format.
-
-    o Define operator<< for sequence_container<SsqlsBase> and similar
-      for associative containers.  Give mysql(1)-like ASCII grid or
-      some other table format.
 
     o Remove libexcommon.  Between above and SSQLSv2, we should have
       everything we need to get equivalent output without special
@@ -234,15 +248,6 @@ v3.2 Tentative Plan
       information discovered by configure.  Also, write out a
       mysql++-config script, which either wraps pkg-config or
       reinvents it, poorly, for systems that don't have it.
-
-    o Would this be smart:
-
-        #define NOW() mysqlpp::DateTime()
-
-      ?  Useful with template queries, but risky in that it's a short
-      word at global scope.  This would be inefficient, but maybe okay:
-
-        inline DateTime NOW() { return DateTime(); }
 
     o Add String::operator==(const mysqlpp::null_type&).  Needed to
       allow comparison of row[x] returns to SQL null.  Change one of
@@ -266,9 +271,6 @@ v3.2 Tentative Plan
       - Move memory leak FAQ into userman, rewriting it to cover
         all this.
 
-
-v3.2 Tentative Plan
--------------------
     o mysqlpp::execute manipulator.  Immediately executes built
       query string.  Works best with exceptions, as that's the only way
       to detect failures.
