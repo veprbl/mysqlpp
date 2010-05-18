@@ -249,9 +249,9 @@ public:
 	///
 	/// This just returns the opposite of operator void*(), and is
 	/// required only because basic_ios defines it, so we have to
-	/// override it to get Query-specific behavior in code like
+	/// override it to get Query-specific behavior in code like this:
 	///
-	/// \code if (!query) ...
+	/// \code if (!query) ... \endcode
 	bool operator !() const { return !operator void*(); }
 
 	/// \brief Treat the contents of the query string as a template
