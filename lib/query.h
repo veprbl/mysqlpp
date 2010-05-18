@@ -245,6 +245,15 @@ public:
 	/// the last operation.
 	operator void*() const;
 
+	/// \brief Returns true if the query object is not in a bad state
+	///
+	/// This just returns the opposite of operator void*(), and is
+	/// required only because basic_ios defines it, so we have to
+	/// override it to get Query-specific behavior in code like
+	///
+	/// \code if (!query) ...
+	bool operator !() const { return !operator void*(); }
+
 	/// \brief Treat the contents of the query string as a template
 	/// query.
 	///
