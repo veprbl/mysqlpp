@@ -500,7 +500,7 @@
           cp -RL doc/README* doc/pdf doc/ssqls-pretty $(PKGNAME)/doc
         </command>
         <command>
-          for f in LICENSE.txt Makefile mktxt README.txt *.dbx *.in *.xsl ; \
+          for f in LICENSE.txt Makefile mktxt README.txt \*.dbx \*.in \*.xsl ; \
           do \
             cp doc/userman/$(DDF) $(PKGNAME)/doc/userman ; \
           done
