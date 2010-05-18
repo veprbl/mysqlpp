@@ -201,6 +201,11 @@ private:
 };
 
 
+/// \brief Returns a DateTime object that, when inserted into query
+/// will yield a SQL "NOW()" function call.
+inline DateTime NOW() { return DateTime(); }
+
+
 /// \brief Inserts a DateTime object into a C++ stream in a
 /// SQL-compatible format.
 ///

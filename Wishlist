@@ -24,8 +24,6 @@ v3.1 Plan
 
     o Check that it works with Connector/C and MySQL 5.1
 
-    o Add to datetime.h: inline DateTime NOW() { return DateTime(); }
-
 
 v3.2 Plan: Finish SSQLS v2
 --------------------------
