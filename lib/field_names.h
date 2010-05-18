@@ -93,6 +93,19 @@ public:
 		return at(i);
 	}
 
+	/// \brief Get the name of a field given its index.
+	std::string& operator [](size_type i)
+	{
+		return at(i);
+	}
+
+	/// \brief Get the name of a field given its index, in const
+	/// context.
+	const std::string& operator [](size_type i) const
+	{
+		return at(i);
+	}
+
 	/// \brief Get the index number of a field given its name
 	unsigned int operator [](const std::string& s) const;
 

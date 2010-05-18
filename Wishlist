@@ -22,15 +22,6 @@ v3.1 Plan
       link against the built MySQL++ instead of requiring it to be
       installed first.
 
-    o Result::field_num() should be case-insensitive; column names
-      aren't case-sensitive in SQL.  MySQL++ is currently trying to
-      do this by smashing field name case to lowercase in FieldNames,
-      calling str_to_lwr() on all received values.  This doesn't help
-      with SSQLS because it's not smashing field name case we get
-      as macro arguments in the SSQLS definition.  Probably better
-      all around to remove the case smashing and do case-insensitive
-      comparisons instead.
-
     o Raise tquery and SSQLS field limits in RPM build process, since
       the very fact that you're building an RPM means we know the
       limits of the minimum supported platform.  It needs to be smart
