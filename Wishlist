@@ -31,8 +31,6 @@ v3.1 Plan
 
     o Check that it works with Connector/C and MySQL 5.1
 
-    o Document sql_*_null in userman
-
     o Add to datetime.h: inline DateTime NOW() { return DateTime(); }
 
 

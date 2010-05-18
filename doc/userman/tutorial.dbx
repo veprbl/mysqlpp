@@ -354,12 +354,12 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote_only &lt;&lt; 
     Buns&rdquo; instead. The resulting query would be:</para>
 
     <programlisting>
-SELECT * FROM stock WHERE item = 'Frank&rsquo;s Brand Hotdog Buns' </programlisting>
+SELECT * FROM stock WHERE item = 'Frank's Brand Hotdog Buns' </programlisting>
 
     <para>That&rsquo;s not valid SQL syntax. The correct syntax is:</para>
 
     <programlisting>
-SELECT * FROM stock WHERE item = 'Frank'&rsquo;s Brand Hotdog Buns' </programlisting>
+SELECT * FROM stock WHERE item = 'Frank''s Brand Hotdog Buns' </programlisting>
 
     <para>As you might expect, MySQL++ provides that feature, too,
     through its <type>escape</type> manipulator. But here, we want both
@@ -488,11 +488,14 @@ query &lt;&lt; "SELECT * FROM stock WHERE item = " &lt;&lt; quote &lt;&lt; s; </
     <filename>lib/sql_types.h</filename> corresponding to your
     SQL schema. These typedefs begin with <type>sql_</type> and
     end with a lowercase version of the standard SQL type name,
-    with spaces replaced by underscores. For instance, the SQL
-    type <type>TINYINT UNSIGNED</type> is represented in MySQL++
-    by <classname>mysqlpp::sql_tinyint_unsigned</classname>. (See
-    the <link linkend="sql-null">next section</link> for extensions
-    to this feature for handling SQL nulls.)</para>
+    with spaces replaced by underscores. There are variants
+    ending in <type>_null</type> that wrap these base types
+    so they&rsquo;re <link linkend="sql-null">compatible with
+    SQL null</link>. For instance, the SQL type <type>TINYINT
+    UNSIGNED NOT NULL</type> is represented in MySQL++ by
+    <classname>mysqlpp::sql_tinyint_unsigned</classname>. If you drop
+    the <type>NOT NULL</type> part, the corresponding C++ type is
+    <classname>mysqlpp::sql_tinyint_unsigned_null</classname>.</para>
 
     <para>MySQL++ doesn&rsquo;t force you to use these typedefs. It
     tries to be flexible with regard to data conversions,
