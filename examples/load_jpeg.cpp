@@ -36,19 +36,37 @@ using namespace mysqlpp;
 
 
 // This is just an implementation detail for the example.  Skip down to
-// main() for the concept this example is trying to demonstrate.
+// main() for the concept this example is trying to demonstrate.  You
+// can simply assume that, given a BLOB containing a valid JPEG, it
+// returns true.
 static bool
-is_jpeg(const char* img_data)
+is_jpeg(const mysqlpp::sql_blob& img, const char** whynot)
 {
+	// See http://stackoverflow.com/questions/2253404/ for
+	// justification for the various tests.
 	const unsigned char* idp =
-			reinterpret_cast<const unsigned char*>(img_data);
-	return (idp[0] == 0xFF) && (idp[1] == 0xD8) &&
-			((memcmp(idp + 6, "JFIF", 4) == 0) ||
-			 (memcmp(idp + 6, "Exif", 4) == 0));
+			reinterpret_cast<const unsigned char*>(img.data());
+	if (img.size() < 125) {
+		*whynot = "a valid JPEG must be at least 125 bytes";
+	}
+	else if ((idp[0] != 0xFF) || (idp[1] != 0xD8)) {
+		*whynot = "file does not begin with JPEG sigil bytes";
+	}
+	else if ((memcmp(idp + 6, "JFIF", 4) != 0) &&
+			 (memcmp(idp + 6, "Exif", 4) != 0)) {
+		*whynot = "file does not contain JPEG type word";
+	}
+	else {
+		*whynot = 0;
+		return true;
+	}
+
+	return false;
 }
 
 
-// Another implementation detail.  Skip to main().
+// Skip to main() before studying this.  This is a little too
+// low-level to bother with on your first pass thru the code.
 static bool
 load_jpeg_file(const mysqlpp::examples::CommandLine& cmdline,
 		images& img, string& img_name)
@@ -62,35 +80,24 @@ load_jpeg_file(const mysqlpp::examples::CommandLine& cmdline,
 	img_name = cmdline.extra_args()[0];
 	ifstream img_file(img_name.c_str(), ios::ate | ios::binary);
 	if (img_file) {
-		// File opened, so try to slurp its contents into RAM.  The key
-		// thing to get from this function is that we're storing the
-		// binary data in a mysqlpp::sql_blob value, which we assign from
-		// a C++ string (stringstream::str()), thus not truncating the
-		// string at the first embedded null character.
-		stringstream sstr;
-		sstr << img_file.rdbuf();
-		img.data.data = sstr.str();
+		// File opened, so try to slurp its contents into RAM.  (See
+		// http://stackoverflow.com/questions/116038/) for explanation.)
+		//
+		// The key thing to get from this function is that we're storing
+		// the binary data in a mysqlpp::sql_blob value, which we assign
+		// from a C++ string (stringstream::str()), thus not truncating
+		// the string at the first embedded null character.
+		img.data.data = static_cast<const stringstream*>(
+				&(stringstream() << img_file.rdbuf()))->str();
 
 		// Check JPEG data for sanity.
-		//
-		// All these 'data's sure do look foolish, don't they?  Sorry,
-		// we're not trying to be obscure here, it's just a coincidence
-		// of naming.  The triple 'data' in the is_jpeg() call breaks
-		// down like this:
-		//
-		// 1. We're accessing to the JPEG BLOB column, images.data.
-		// 2. We then dig down to the mysqlpp::sql_blob object through
-		//    its mysqlpp::Null<> wrapper, which we need to allow a
-		//    "NULL JPEG" in the DB when the file doesn't exist.
-		// 3. Finally, we need to pass a raw, unterminated char buffer
-		//    pointer to is_jpeg(), which mysqlpp::sql_blob::data()
-		//    returns, mirroring C++ std::string interface.
-		if ((img.data.data.size() > 10) &&
-				is_jpeg(img.data.data.data())) {
+		const char* error;
+		if (is_jpeg(img.data.data, &error)) {
 			return true;
 		}
 		else {
-			cerr << '"' << img_file << "\" isn't a JPEG file!" << endl;
+			cerr << '"' << img_name << "\" isn't a JPEG: " <<
+					error << '!' << endl;
 		}
 	}
 
