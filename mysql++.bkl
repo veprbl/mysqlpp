@@ -24,7 +24,7 @@
   </option>
 
   <set var="MYSQL_WIN_DIR">
-    C:\Program Files (x86)\MySQL\MySQL Server 5.1
+    C:\Program Files\MySQL\MySQL Server 5.1
   </set>
 
   <set var="DEBUGINFO">
