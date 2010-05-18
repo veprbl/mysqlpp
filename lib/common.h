@@ -109,11 +109,12 @@
 	// We need to use the DOS/Windows path separator here
 	#define MYSQLPP_PATH_SEPARATOR '\\'
 #else
-	// If not Windows, we assume some sort of Unixy build environment,
-	// where autotools is used.  (This includes Cygwin!)  #include the
-	// config.h file only if this file was included from a non-header
-	// file, because headers must not be dependent on config.h.
-#	if defined(MYSQLPP_NOT_HEADER)
+	// If not VC++, MinGW, or Xcode, we assume we're on a system using
+	// autoconf, so bring in the config.h file it wrote containing the
+	// config test results.  Only do this during the library build, and
+	// even then, not if included from a MySQL++ header file, since
+	// config.h cannot be safely installed with the other headers.
+#	if defined(MYSQLPP_NOT_HEADER) && !defined(MYSQLPP_XCODE)
 #		include "config.h"
 #	endif
 

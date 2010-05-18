@@ -22,11 +22,6 @@ v3.1 Plan
       link against the built MySQL++ instead of requiring it to be
       installed first.
 
-    o Add -lmysqlclient for Xcode case
-
-    o Xcode project needs to ignore config.h when not doing an autotools
-      build.  Put conditions in lib/common.h.
-
     o Result::field_num() should be case-insensitive; column names
       aren't case-sensitive in SQL.  MySQL++ is currently trying to
       do this by smashing field name case to lowercase in FieldNames,

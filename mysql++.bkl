@@ -153,6 +153,11 @@
       <include>../lib</include>
     </if>
 
+    <if cond="FORMAT=='xcode2'">
+      <cxxflags>-DMYSQLPP_XCODE</cxxflags>
+      <ldflags>-l@MYSQL_C_LIB_NAME@</ldflags>
+    </if>
+
     <if cond="PLATFORM_WINDOWS_NATIVE=='yes'">
       <define>UNICODE</define>
       <define>_UNICODE</define>
