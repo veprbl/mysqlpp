@@ -563,7 +563,7 @@ s.instance_table("AlternateTable");</programlisting>
     very many modules, this works nicely:</para>
 
     <programlisting>
-// File foo.cpp, which just uses the SSQLS, but doesn't "own" it:
+// File foo.cpp, which just uses the SSQLS, but doesn&rsquo;t "own" it:
 #define MYSQLPP_SSQLS_NO_STATICS
 #include "my_ssqls.h"</programlisting>
 
@@ -649,9 +649,9 @@ cout &lt;&lt; "Equal list: " &lt;&lt; s.equal_list() &lt;&lt; endl;</programlist
     <para>That would produce something like:</para>
 
     <programlisting>
-Value list: 'Dinner Rolls',75,0.95,0.97,'1998-05-25'   
+Value list: 'Dinner Rolls&rsquo;,75,0.95,0.97,'1998-05-25'   
 Field list: item,num,weight,price,sdate  
-Equal list: item = 'Dinner Rolls',num = 75,weight = 0.95, price = 0.97,sdate = '1998-05-25'</programlisting>
+Equal list: item = 'Dinner Rolls&rsquo;,num = 75,weight = 0.95, price = 0.97,sdate = '1998-05-25'</programlisting>
 
     <para>That is, a &ldquo;value list&rdquo; is a list of data member
     values within a particular SSQLS instance, a &ldquo;field
@@ -740,6 +740,14 @@ sql_create_complete_5(stock, 1, 5,
     mysqlpp::sql_double, m_fWeight, "weight",
     mysqlpp::sql_decimal, m_fPrice, "price",
     mysqlpp::sql_date, m_Date, "sdate")</programlisting>
+
+    <para>Note that you don&rsquo;t have to use this mechanism
+    if the only difference in your SQL and C++ field names is
+    case. SSQLS is already case-sensitive. You can see this in
+    the examples: some parts of the code deliberately refer to
+    the <classname>stock.sdate</classname> sample table field as
+    <classname>stock.sDate</classname> to exercise this feature. (Note:
+    This feature was inadvertently broken before MySQL++ 3.1.)</para>
   </sect2>
 
 
