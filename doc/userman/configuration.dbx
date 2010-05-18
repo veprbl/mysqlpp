@@ -34,14 +34,14 @@
 
     <para>No other platform allows this sort of auto-discovery,
     so the build files for these platforms simply hard-code the
-    default installation location for the current Generally
-    Available version of MySQL. For example, the Visual C++
-    project files currently assume MySQL is in <filename>c:\Program
-    Files\MySQL\MySQL Server 5.0</filename>. If you&rsquo;re using
-    some other release of MySQL or you installed it in a nonstandard
-    location, you will have to modify the build files.  How you do
-    this, exactly, varies based on platform and what tools you have
-    on hand. See <filename>README-Visual-C++.txt</filename>,
+    default installation location for whatever version of MySQL is
+    in GA state at the time that version of MySQL++ was released. For
+    example, the Visual C++ project files currently assume MySQL is in
+    <filename>c:\Program Files\MySQL\MySQL Server 5.1</filename>. If
+    you&rsquo;re using some other release of MySQL or you installed it
+    somewhere else, you will have to modify the build files.  How you
+    do this, exactly, varies based on platform and what tools you
+    have on hand. See <filename>README-Visual-C++.txt</filename>,
     <filename>README-MinGW.txt</filename>, or
     <filename>README-Mac-OS-X.txt</filename>, as appropriate.</para>
   </sect2>
