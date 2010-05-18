@@ -741,13 +741,12 @@ sql_create_complete_5(stock, 1, 5,
     mysqlpp::sql_decimal, m_fPrice, "price",
     mysqlpp::sql_date, m_Date, "sdate")</programlisting>
 
-    <para>Note that you don&rsquo;t have to use this mechanism
-    if the only difference in your SQL and C++ field names is
-    case. SSQLS is already case-sensitive. You can see this in
-    the examples: some parts of the code deliberately refer to
-    the <classname>stock.sdate</classname> sample table field as
-    <classname>stock.sDate</classname> to exercise this feature. (Note:
-    This feature was inadvertently broken before MySQL++ 3.1.)</para>
+    <para>Note that you don&rsquo;t have to use this mechanism if the
+    only difference in your SQL and C++ field names is case. SSQLS
+    field name lookups are case-insensitive as of MySQL++ 3.1. You can
+    see this in the examples: some parts of the code deliberately refer
+    to the <classname>stock.sdate</classname> sample table field as
+    <classname>stock.sDate</classname> to exercise this feature.</para>
   </sect2>
 
 
