@@ -2,7 +2,7 @@
  stock.h - Declares the stock SSQLS used by several of the examples.
 
  Copyright (c) 1998 by Kevin Atkinson, (c) 1999-2001 by MySQL AB, and
- (c) 2004-2009 by Educational Technology Resources, Inc.  Others may
+ (c) 2004-2010 by Educational Technology Resources, Inc.  Others may
  also hold copyrights on code in this file.  See the CREDITS.txt file
  in the top directory of the distribution for details.
 
@@ -42,6 +42,6 @@ sql_create_6(stock,
 	mysqlpp::sql_bigint, num,
 	mysqlpp::sql_double, weight,
 	mysqlpp::sql_double_null, price,
-	mysqlpp::sql_date, sdate,
+	mysqlpp::sql_date, sDate,			// SSQLS isn't case-sensitive!
 	mysqlpp::sql_mediumtext_null, description)
 

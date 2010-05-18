@@ -4,7 +4,7 @@
 	to be useful, only to show how you can do result set filtering that
 	outstrips the power of SQL.
 
- Copyright (c) 2005-2009 by Educational Technology Resources, Inc.
+ Copyright (c) 2005-2010 by Educational Technology Resources, Inc.
  Others may also hold copyrights on code in this file.  See the CREDITS
  file in the top directory of the distribution for details.
 
@@ -86,7 +86,7 @@ main(int argc, char *argv[])
 		std::vector<stock>::const_iterator it;
 		for (it = results.begin(); it != results.end(); ++it) {
 			print_stock_row(it->item.c_str(), it->num, it->weight,
-					it->price, it->sdate);
+					it->price, it->sDate);
 		}
 	}
 	catch (const mysqlpp::BadQuery& e) {
