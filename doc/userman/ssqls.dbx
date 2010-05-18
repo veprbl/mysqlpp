@@ -794,14 +794,22 @@ doc/ssqls-pretty &lt; myprog.cpp |less</programlisting>
 
     <para>The first configurable value sets the maximum number of
     data members allowed in an SSQLS. It&rsquo;s 25 out of the box,
-    set by the <varname>$max_data_members</varname> variable at
-    the top of <filename>ssqls.pl</filename>. Beware, making this
-    value larger increases the size of <filename>ssqls.h</filename>
-    exponentially; this will increase compile time, and can even make
-    the file uncompilable due to compiler limits. Before you increase
-    this value, take a good, hard look at your database schema and ask
-    if it&rsquo;s really the best design.  Almost always, having so
-    many columns is a sign that you need to refactor the table.</para>
+    set by the <varname>$max_data_members</varname> variable at the
+    top of <filename>ssqls.pl</filename>. Beware, making this value
+    larger increases the size of <filename>ssqls.h</filename>
+    quadratically<footnote>
+      <para>
+        If you&rsquo;re curious:
+        <phrase role="math">
+          LOC = 18.5x<superscript>2</superscript> + 454.5x + 196.4
+        </phrase>
+      </para>
+    </footnote>; this will increase compile time, and can even
+    make the file uncompilable due to compiler limits. Before you
+    increase this value, take a good, hard look at your database schema
+    and ask if it&rsquo;s really the best design.  Almost always,
+    having so many columns is a sign that you need to refactor the
+    table.</para>
 
     <para>The second configurable is the default floating point
     precision used for comparison. As described above (<xref
