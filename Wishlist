@@ -22,8 +22,6 @@ v3.1 Plan
       link against the built MySQL++ instead of requiring it to be
       installed first.
 
-    o Check that it works with Connector/C and MySQL 5.1
-
 
 v3.2 Plan: Finish SSQLS v2
 --------------------------
