@@ -187,6 +187,7 @@ public:
 	/// "data" member is left uninitialized by this ctor, because we
 	/// don't know what to initialize it to.
 	Null() :
+	data(),
 	is_null(false)
 	{
 	}
@@ -213,6 +214,7 @@ public:
 	/// \endcode
 	/// ...to get a null \c int.
 	Null(const null_type&) :
+	data(),
 	is_null(true)
 	{
 	}

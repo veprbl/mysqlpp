@@ -195,10 +195,10 @@ public:
 				const std::string& alias = 0) :
 		name_(name),
 		type_(type),
-		is_unsigned_(is_unsigned),
-		is_null_(is_null),
 		is_autoinc_(is_autoinc),
 		is_key_(is_key),
+		is_null_(is_null),
+		is_unsigned_(is_unsigned),
 		alias_(alias)
 		{
 		}

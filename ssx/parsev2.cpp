@@ -125,8 +125,9 @@ ParseV2::AccessorStyleOption::print(std::ostream& os) const
 	switch (type_) {
 		case camel_case_lower:	os << "getX"; break;
 		case camel_case_upper:	os << "GetX"; break;
-		case stroustrup:		os << "get_x"; break;
 		case overloaded:		os << "x"; break;
+		case stroustrup:		os << "get_x"; break;
+		case unknown:			os << "UNKNOWN"; break;
 	}
 }
 
