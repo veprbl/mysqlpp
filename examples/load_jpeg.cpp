@@ -80,13 +80,12 @@ load_jpeg_file(const mysqlpp::examples::CommandLine& cmdline,
 	img_name = cmdline.extra_args()[0];
 	ifstream img_file(img_name.c_str(), ios::binary);
 	if (img_file) {
-		// File opened, so try to slurp its contents into RAM.  (See
-		// http://stackoverflow.com/questions/116038/) for explanation.)
+		// Slurp file contents into RAM with minimum copying.  (Idiom
+		// explained here: http://stackoverflow.com/questions/116038/)
 		//
-		// The key thing to get from this function is that we're storing
-		// the binary data in a mysqlpp::sql_blob value, which we assign
-		// from a C++ string (stringstream::str()), thus not truncating
-		// the string at the first embedded null character.
+		// By loading the file into a C++ string (stringstream::str())
+		// and assigning that directly to a mysqlpp::sql_blob, we avoid
+		// truncating the binary data at the first null character.
 		img.data.data = static_cast<const stringstream*>(
 				&(stringstream() << img_file.rdbuf()))->str();
 
