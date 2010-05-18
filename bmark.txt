@@ -247,11 +247,11 @@ Content-type: text/plain
 No image content!
 ================ END cgi_jpeg OUTPUT ================
 
---- BEGIN ssqlsxlat -i test/test1.ssqls -o ERROR OUTPUT ---
-==== END ssqlsxlat -i test/test1.ssqls -o ERROR OUTPUT ====
---- BEGIN ssqlsxlat -i test/test2.ssqls -o ERROR OUTPUT ---
-==== END ssqlsxlat -i test/test2.ssqls -o ERROR OUTPUT ====
 --- BEGIN ssqlsxlat -i examples/common.ssqls -o ERROR OUTPUT ---
 ==== END ssqlsxlat -i examples/common.ssqls -o ERROR OUTPUT ====
 --- BEGIN ssqlsxlat -i examples/stock.ssqls -o ERROR OUTPUT ---
 ==== END ssqlsxlat -i examples/stock.ssqls -o ERROR OUTPUT ====
+--- BEGIN ssqlsxlat -i test/test1.ssqls -o ERROR OUTPUT ---
+==== END ssqlsxlat -i test/test1.ssqls -o ERROR OUTPUT ====
+--- BEGIN ssqlsxlat -i test/test2.ssqls -o ERROR OUTPUT ---
+==== END ssqlsxlat -i test/test2.ssqls -o ERROR OUTPUT ====
