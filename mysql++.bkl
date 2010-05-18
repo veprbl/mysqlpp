@@ -468,7 +468,7 @@
       <!-- Set up package directory -->
       <command>
         for d in config doc/html/refman doc/html/userman \
-            doc/refman doc/userman examples lib test ; \
+            doc/refman doc/userman examples lib ssx test ; \
         do \
           mkdir -p $(PKGNAME)/$(DDD) ; \
         done
@@ -545,6 +545,11 @@
       <!-- test subdir -->
       <command>
         cp test/*.cpp $(PKGNAME)/test
+      </command>
+
+      <!-- ssx subdir -->
+      <command>
+        cp ssx/*.cpp ssx/*.h ssx/*.in $(PKGNAME)/ssx
       </command>
 
       <!-- re-bootstrap it to get a standard configuration -->
