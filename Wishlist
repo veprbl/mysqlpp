@@ -22,13 +22,6 @@ v3.1 Plan
       link against the built MySQL++ instead of requiring it to be
       installed first.
 
-    o Raise tquery and SSQLS field limits in RPM build process, since
-      the very fact that you're building an RPM means we know the
-      limits of the minimum supported platform.  It needs to be smart
-      enough to not override a value given when one hand-configures a
-      source tree, possibly by parsing it out of ssqls.h.  Otherwise,
-      use the known floor value.
-
     o Check that it works with Connector/C and MySQL 5.1
 
     o Add to datetime.h: inline DateTime NOW() { return DateTime(); }
