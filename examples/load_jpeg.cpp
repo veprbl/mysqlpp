@@ -78,7 +78,7 @@ load_jpeg_file(const mysqlpp::examples::CommandLine& cmdline,
 
 	// Got a file's name on the command line, so open it.
 	img_name = cmdline.extra_args()[0];
-	ifstream img_file(img_name.c_str(), ios::ate | ios::binary);
+	ifstream img_file(img_name.c_str(), ios::binary);
 	if (img_file) {
 		// File opened, so try to slurp its contents into RAM.  (See
 		// http://stackoverflow.com/questions/116038/) for explanation.)
