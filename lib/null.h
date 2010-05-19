@@ -250,7 +250,7 @@ public:
 	///
 	/// This just sets the is_null flag; the data member is not
 	/// affected until you call the Type() operator on it.
-	Null& operator =(const null_type& n)
+	Null& operator =(const null_type&)
 	{
 		is_null = true;
 		return *this;
