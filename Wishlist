@@ -14,13 +14,13 @@ Any Version
 
       http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
 
-
-v3.1 Plan
----------
-    o Can we bring examples/vstudio into the top-level build system?
-      Would be nice to get MYSQL_WIN_DIR support, and to make it
-      link against the built MySQL++ instead of requiring it to be
-      installed first.
+    o When Bakefile allows, bring examples/vstudio/* into the top-level
+      build system.  This will let us generate separate project
+      files for each VC++ version we support, let us use MYSQL_WIN_DIR
+      variable instead of hard-coded paths, and build against the local
+      version of MySQL++ instead of requiring it to be installed first.
+      Should probably drop the MFC example project, to avoid requiring
+      Visual C++ Professional.
 
 
 v3.2 Plan: Finish SSQLS v2
