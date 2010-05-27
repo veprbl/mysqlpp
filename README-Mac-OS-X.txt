@@ -39,21 +39,28 @@ Prerequisite: Install the MySQL Development Files
 
 Dealing with the 64-Bit Transition in Snow Leopard
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    By default, the command-line compiler that comes with Xcode for Snow
-    Leopard wants to build 64-bit binaries, even if your system is booted
-    into 32-bit mode.  This can cause various problems, such as a
-    failure in the "configure" step when it's trying to find the MySQL
-    C API library, if it was built as a 32-bit library only.
+    Xcode for Snow Leopard installs two independent versions of the GNU
+    Compiler Collection.  The default is GCC 4.2, and it is set up to
+    build 64-bit executables by default, even if your system is booted
+    into 32-bit mode.  You also get GCC 4.0, which builds 32-bit
+    executables by default.  On top of that, you have the confusion
+    added by Apple's decision to make all 64-bit capable machines boot
+    into 32-bit mode by default, except for the Xserves.
 
-    There are many ways to skin this cat.  Here are the ones I prefer:
+    The first symptom most people run into as a result of this mess is
+    that the "configure" script fails, yelling something about being
+    unable to link to libmysqlclient, the MySQL C API client library.
+    It's because the library was probably built as a 32-bit executable
+    and you're using the default compiler which tries to build a 64-bit
+    test executable against this library and fails.
 
-    First, you can force the default compiler to build 32-bit binaries:
+    There are many ways out of this tarpit.  Here are the ones I prefer:
 
-        ./configure CFLAGS=-m32 CXXFLAGS=-m32 --other-flags-here
+    First, you can force GCC 4.2 to build 32-bit binaries:
 
-    Second, instead of using the GCC 4.2 compilers which default to
-    64-bit, you can configure the build system to use the GCC 4.0
-    compilers instead, which default to 32-bit:
+        ./configure CFLAGS=-m32 CXXFLAGS=-m32 LDFLAGS=-m32 --other-flags-here
+
+    Second, you can make the MySQL++ build system use GCC 4.0 instead:
 
         ./configure CC=gcc-4.0 CXX=g++-4.0 --other-flags-here
 
@@ -63,7 +70,8 @@ Dealing with the 64-Bit Transition in Snow Leopard
 
         http://macperformanceguide.com/SnowLeopard-64bit.html
 
-
+    I'm aware of other solutions to the problem, but I expect one among
+    these will work for you.
 
 
 Making Universal Binaries
