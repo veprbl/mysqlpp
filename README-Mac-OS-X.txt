@@ -37,6 +37,35 @@ Prerequisite: Install the MySQL Development Files
       to the mailing list so I can update this document.
 
 
+Dealing with the 64-Bit Transition in Snow Leopard
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    By default, the command-line compiler that comes with Xcode for Snow
+    Leopard wants to build 64-bit binaries, even if your system is booted
+    into 32-bit mode.  This can cause various problems, such as a
+    failure in the "configure" step when it's trying to find the MySQL
+    C API library, if it was built as a 32-bit library only.
+
+    There are many ways to skin this cat.  Here are the ones I prefer:
+
+    First, you can force the default compiler to build 32-bit binaries:
+
+        ./configure CFLAGS=-m32 CXXFLAGS=-m32 --other-flags-here
+
+    Second, instead of using the GCC 4.2 compilers which default to
+    64-bit, you can configure the build system to use the GCC 4.0
+    compilers instead, which default to 32-bit:
+
+        ./configure CC=gcc-4.0 CXX=g++-4.0 --other-flags-here
+
+    Last, you could just take Apple's implied advice and start booting
+    your Mac into 64-bit mode, if it will support it.  Here's an article
+    that goes into all the details:
+
+        http://macperformanceguide.com/SnowLeopard-64bit.html
+
+
+
+
 Making Universal Binaries
 ~~~~~~~~~~~~~~~~~~~~~~~~~
     By default, the command line build system will generate libraries
