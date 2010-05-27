@@ -126,6 +126,16 @@
         <include>.</include>
         <ldflags>-l@MYSQL_C_LIB_NAME@ @PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
       </if>
+
+      <if cond="FORMAT=='xcode2'">
+        <define>HAVE_POSIX_GETOPT</define>
+        <define>MYSQLPP_XCODE</define>
+	    <include>/usr/local/mysql/include</include>
+        <ldflags>-lmysqlclient</ldflags>
+		<!-- Assume C API files came from MySQL.com DMGs, not source
+		     tarball, Fink, etc., inferring preference from use of Xcode. -->
+        <lib-path>/usr/local/mysql/lib</lib-path>
+      </if>
     </dll>
 
     <data-files>
@@ -154,8 +164,11 @@
     </if>
 
     <if cond="FORMAT=='xcode2'">
-      <cxxflags>-DMYSQLPP_XCODE</cxxflags>
-      <ldflags>-l@MYSQL_C_LIB_NAME@</ldflags>
+      <define>HAVE_POSIX_GETOPT</define>
+      <define>MYSQLPP_XCODE</define>
+	  <include>/usr/local/mysql/include</include>
+      <ldflags>-lmysqlclient</ldflags>
+      <lib-path>/usr/local/mysql/lib</lib-path>
     </if>
 
     <if cond="PLATFORM_WINDOWS_NATIVE=='yes'">
