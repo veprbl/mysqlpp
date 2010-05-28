@@ -8,14 +8,23 @@ Prerequisite: Install the MySQL Development Files
     to build, it needs at least that library and its header files
     installed.  You don't need the server itself installed on your
     development machine, though it's often helpful anyway, for testing.
-    You can get MySQL in at least three different ways for OS X:
+    There are many suitable sources:
 
-    - From Fink: http://finkproject.org/  I mention this first
-      because it's the method I use to test MySQL++ in development.
-      If you ask about OS X on the mailing list, you'll get the most
-      help if you're also using the Fink version of MySQL.  Once you
-      have Fink installed, install the MySQL C API development
-      files with:
+    - The simplest option is to download the MySQL server DMG from
+      mysql.com.  In addition to the C API files you absolultely must
+      have, this gives you a nice Mac-like installation procedure and a
+      preference pane for bringing the server up and down and setting it
+      to start on system boot.
+
+    - If you really only want the C API development files, MySQL offers
+      them separately as Connector/C.  As of this writing, you get the
+      files as a tarball, and you have to copy its contents to some
+      suitable location on your hard drive.  If you're using Xcode to
+      build MySQL++, you'll want to put them under /usr/local/mysql.
+      MySQL++'s command line build system is far more tolerant, looking
+      there and in many other typical locations.
+
+    - If you use Fink, you can install the C API files with:
 
       $ fink install mysql15-dev
       
@@ -23,14 +32,6 @@ Prerequisite: Install the MySQL Development Files
 
       $ fink install mysql mysql15-dev
     
-    - From MySQL.com.  I've not tried the official binaries, but
-      they're known to work with MySQL++.  As I understand it, they
-      install from a typical Mac GUI installer.  I don't know if it
-      lets you install the development files separately from the server
-      itself, so be sure to check.  The official Windows installers,
-      for instance, have in the past installed the server by default
-      but not the development files.
-
     - From MacPorts, http://macports.org.  I have zero information on
       this other than that it's theoretically possible for it to work.
       If you figure out how to make it work, please post the method
