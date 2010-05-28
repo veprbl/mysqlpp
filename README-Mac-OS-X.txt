@@ -1,5 +1,30 @@
-OS X is Unix under the hood, so README-Unix.txt covers the generic
-bits.  I'll just cover a few of the issues specific to OS X here.
+Building MySQL++
+~~~~~~~~~~~~~~~~
+    There are two major ways to build MySQL++: from the command line, or
+    from within the Xcode IDE.
+
+    MySQL++ has its roots in Unix and Linux, like MySQL itself.  As a
+    result, the most well-supported way to build MySQL++ is from the
+    command line, or Terminal as Apple likes to call it.  See
+    README-Unix.txt for the generic instructions.  Further Mac-specific
+    details are given elsewhere in this file.
+
+    The option to build MySQL++ from within Xcode is new.  We added
+    experimental support for it in 3.0.0, but it didn't actually get
+    tested and debugged until 3.1.0.  It may still be buggy, and over
+    time it's more likely to break again than the command line method,
+    simply because it receives less testing during development.  Even
+    fully functional, it is less flexible than building from the command
+    line; Xcode's project system cannot match the power available within
+    the autotools build system.
+
+    If you try the Xcode method and find that it doesn't work, the
+    easiest way around that roadblock is to build from the command line
+    instead.  If you're the adventurous sort and want to contribute to
+    the development of MySQL++, see the file HACKERS.txt for more info
+    on fixing the source file used as input in the project file
+    generation process.  We don't want fixed project files, we want a
+    process that lets us consistently generate correct project files.
 
 
 Prerequisite: Install the MySQL Development Files
@@ -107,20 +132,3 @@ Making Universal Binaries
     module multiple times, which confuses the logic that tries to tell
     when a given module needs rebuiding based on its dependencies on
     other files.
-
-
-Xcode
-~~~~~
-    Until very recently, there's been no official support in MySQL++
-    for building on OS X using Xcode.  People have gotten it to work
-    before on their own, but it's not something we felt we could
-    support directly.
-
-    As of MySQL++ v3.0, we're including Xcode project files.  So far,
-    they're completely untested, but being part of the official
-    tarball, it obligates us to at least try to support them. :)
-    If they don't work, see HACKERS.txt for more info on fixing
-    the source files that generate these project files.  We're not
-    terribly interested in receiving updated project files.  They can
-    be useful for comparison, but ultimately what we care about is
-    being able to generate them correctly.
