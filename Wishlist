@@ -22,6 +22,27 @@ Any Version
       Should probably drop the MFC example project, to avoid requiring
       Visual C++ Professional.
 
+    o Query::storein(slist<T>&) is unusable.  As a template method, it
+      must be defined in a header file; we cannot #include config.h from
+      a header, thus the proper HAVE macro that would let us define this
+      template method is never defined.
+
+      One solution is to create lib/slist.h.in, parameterized by the
+      detected slist type name and the header file defining it.  This
+      will #include the proper header file, define SList<T>::Type (a
+      template typdedef: http://www.gotw.ca/gotw/079.htm), and #define
+      MYSQLPP_HAVE_SLIST.  Then Query::storein() can be wrapped by an
+      ifdef checking for MYSQLPP_HAVE_SLIST, only defined when the
+      configure script found a suitable slist type.
+
+      Also create a default lib/slist.h file, checked into svn as
+      lib/slistdef.h and copied to slist.h on tarball creation.  Remove
+      this file early in configure script run, so we're forced to
+      overwrite its contents with detected values.  Default version
+      contains ifdefs for non-autoconf platforms where we know what
+      slist definition is available on that platform.  Xcode, for
+      instance, will let us use <ext/slist>.
+
 
 v3.2 Plan: Finish SSQLS v2
 --------------------------
