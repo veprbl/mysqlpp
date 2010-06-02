@@ -1,4 +1,4 @@
-3.1.0, 2010.05.13 (r2632)
+3.1.0, 2010.06.01 (r2667)
 
     o Default MySQL version now 5.1, having entered GA since 3.0.9.
 
@@ -55,8 +55,22 @@
       lots of changes by me.  Using it instead of explicit safe_grab()
       and release() calls on the pool in examples/cpool.cpp.
 
+    o Added FieldNames::operator[](size_type) overloads.  This is
+      necessary to correctly overload the base class versions inherited
+      from std::vector.
+
+    o FieldNames wasn't doing field-by-name matches case insentitively,
+      most likely since 3.0.0 when we changed it to derive from
+      std::vector.  This caused SSQLS (at least) to be case sensitive.
+      Fixed this and renamed the stock.sdate field in the SSQLS
+      examples to stock.sDate to test this.
+
     o Added Query::replace(iter, iter), on the model of existing
       insert(iter, iter).  Thanks for this patch go to David Walthour.
+
+    o Added Query::operator!(), overriding basic_ios version so that
+      "if (!query)" does the right thing.  Fixes problem report in
+      thread http://lists.mysql.com/plusplus/8594
 
     o Query copy ctor and assignment operator now perform deeper
       copies, so you can pass Query objects around in certain ways
@@ -84,6 +98,11 @@
       code paths exercised by dtest.  There are some others remaining,
       particularly things like Row::field_list().  Thanks for this
       patch go to Adrian Cornish.
+
+    o Added mysqlpp::NOW() which returns a value that, when inserted
+      into a SQL query, results in a call to SQL's NOW() function.
+      DateTime::now() -- added in 3.0.0 -- does the same thing,
+      but this is shorter and matches the SQL syntax.
 
     o Calling DBDriver::disconnect() twice no longer calls
       mysql_close() twice.
@@ -172,6 +191,8 @@
       conflict with Boost if you used its Comparable class and hoist
       them both into the global namespace.  Thanks for this patch go
       to Michael Radzewitz.
+
+    o Fixed all the known problems with the Xcode project files.
 
     o Skeletal support for SSQLS v2.  Doesn't do anything useful
       yet, it just got caught up in the need to release 3.1 as-is.
