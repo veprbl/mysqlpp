@@ -8,7 +8,7 @@
   <xsl:param name="section.autolabel.max.depth" select="2"/>
   <xsl:param name="toc.section.depth" select="2"/>
 
-  <!-- Hack to let us get <mathphrase>-like behavior in DB 4.3 -->
+  <!-- Hack to let us get <mathphrase>-like behavior in DB 4.2 -->
   <!-- From: http://www.sagehill.net/docbookxsl/Math.html -->
   <xsl:template match="phrase[@role = 'math']">
     <xsl:call-template name="inline.italicseq"/>
