@@ -51,8 +51,8 @@ $(PDFFILE): *.dbx *.in $(FO_SS) $(COMMON_SS)
 	mkdir -p ../pdf && cp $(PDFFILE) ../pdf
 
 $(HTML_DIR)/index.html: *.dbx *.in $(EX_TXT) $(HTML_SS) $(COMMON_SS)
-	@xmllint --xinclude --postvalid --noent --noout $(DOCFILE)
-	xsltproc --xinclude -o $(HTML_DIR)/ $(HTML_SS) $(DOCFILE)
+	@xmllint --xinclude --nonet --postvalid --noent --noout $(DOCFILE)
+	xsltproc --xinclude --nonet -o $(HTML_DIR)/ $(HTML_SS) $(DOCFILE)
 
 
 ## ------------------------
