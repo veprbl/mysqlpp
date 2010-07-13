@@ -79,6 +79,10 @@ Using Nonstandard MySQL Installations
 
 Building MySQL++ for 64-Bit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORTANT: The following works correctly only in Visual C++ 2008 and
+    older.  It is known to fail with Visual C++ 2010.  If you find out
+    why, please send a message to the MySQL++ mailing list.
+
     The MySQL++ Visual Studio project files ship with the assumption
     that you're building for 32-bit Windows.  While the utility
     of running the MySQL server on a 64-bit system is clear, that
