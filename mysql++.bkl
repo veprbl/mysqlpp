@@ -130,10 +130,10 @@
       <if cond="FORMAT=='xcode2'">
         <define>HAVE_POSIX_GETOPT</define>
         <define>MYSQLPP_XCODE</define>
-	    <include>/usr/local/mysql/include</include>
+        <include>/usr/local/mysql/include</include>
         <ldflags>-lmysqlclient</ldflags>
-		<!-- Assume C API files came from MySQL.com DMGs, not source
-		     tarball, Fink, etc., inferring preference from use of Xcode. -->
+        <!-- Assume C API files came from MySQL.com DMGs, not source
+             tarball, Fink, etc., inferring preference from use of Xcode. -->
         <lib-path>/usr/local/mysql/lib</lib-path>
       </if>
     </dll>
@@ -166,7 +166,7 @@
     <if cond="FORMAT=='xcode2'">
       <define>HAVE_POSIX_GETOPT</define>
       <define>MYSQLPP_XCODE</define>
-	  <include>/usr/local/mysql/include</include>
+      <include>/usr/local/mysql/include</include>
       <ldflags>-lmysqlclient</ldflags>
       <lib-path>/usr/local/mysql/lib</lib-path>
     </if>
