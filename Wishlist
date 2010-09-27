@@ -43,6 +43,10 @@ Any Version
       slist definition is available on that platform.  Xcode, for
       instance, will let us use <ext/slist>.
 
+    o Add ctor and assignment operator that takes mysqlpp::null.  You
+      now have to call a 4-argument version of either the ctor or
+      assign() to get a NULL SQL string.
+
 
 v3.2 Plan: Finish SSQLS v2
 --------------------------
