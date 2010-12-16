@@ -108,6 +108,7 @@ AC_OUTPUT([\
 	lib/Doxyfile \
 	lib/mysql++.h \
 	ssx/Doxyfile \
+	mysql++.bkl \
 	mysql++.spec \
 	Makefile \
 ])

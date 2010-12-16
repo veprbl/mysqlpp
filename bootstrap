@@ -47,51 +47,45 @@ do
 	esac
 done
 
+# Find location of Bakefile's stock M4 autoconf macros
+for d in /usr /usr/local
+do
+	BAKEFILE_M4=$d/share/aclocal
+	if [ -e $BAKEFILE_M4/bakefile.m4 ] ; then break ; fi
+done
+if [ ! -e $BAKEFILE_M4/bakefile.m4 ]
+then
+	echo
+	echo "Failed to find bakefile.m4.  Add the directory containing"
+	echo "this to the bootstrap script."
+	echo
+	exit 1
+fi
+
+# Do the autotools stuff
+success=
 rm -f config.cache
-
-# Do Bakefile stuff first
+mv autoconf_inc.m4 config > /dev/null 2>&1	# don't care if it fails
 set -x &&
-	for d in 3 5 8 ; do mkdir -p vc200$d ; done &&
-	bakefilize &&
-	bakefile_gen $BF_OPTIONS &&
-	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&
+	aclocal -I config -I $BAKEFILE_M4 &&
+	autoheader &&
+	autoconf &&
+	./configure $MAINT_FLAGS $* &&
+	make lib/querydef.h lib/ssqls.h &&
 	set +x &&
-	success=shonuff
+	success=awyeah
 
-# Get rid of INSTALL symlink added by bakefilize.  We already have
-# INSTALL.txt.
-rm -f INSTALL
-
-# If that succeeded, move on to autotools stuff, etc.
-set +x
+# Do Bakefile stuff *after* autoconf, since configure gens mysql++.bkl
 if [ -n "$success" ]
 then
-	mv autoconf_inc.m4 config > /dev/null 2>&1	# don't care if it fails
-
-	# Find location of Bakefile's stock M4 autoconf macros
-	for d in /usr /usr/local
-	do
-		BAKEFILE_M4=$d/share/aclocal
-		if [ -e $BAKEFILE_M4/bakefile.m4 ] ; then break ; fi
-	done
-	if [ ! -e $BAKEFILE_M4/bakefile.m4 ]
-	then
-		echo
-		echo "Failed to find bakefile.m4.  Add the directory containing"
-		echo "this to the bootstrap script."
-		echo
-		exit 1
-	fi
-
-	success=
 	set -x &&
-		aclocal -I config -I $BAKEFILE_M4 &&
-		autoheader &&
-		autoconf &&
-		./configure $MAINT_FLAGS $* &&
-		make lib/querydef.h lib/ssqls.h &&
+		for d in 3 5 8 ; do mkdir -p vc200$d ; done &&
+		bakefilize &&
+		rm -f INSTALL &&
+		bakefile_gen $BF_OPTIONS &&
+		bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&
 		set +x &&
-		success=awyeah
+		success=shonuff
 fi
 
 # Detect failure in any part of above
