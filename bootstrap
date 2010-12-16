@@ -62,30 +62,31 @@ then
 	exit 1
 fi
 
-# Do the autotools stuff
+# Do Bakefile stuff first.  Autoconf can't succeed without
+# autoconf_in.m4, which Bakefile creates.
 success=
-rm -f config.cache
-mv autoconf_inc.m4 config > /dev/null 2>&1	# don't care if it fails
 set -x &&
-	aclocal -I config -I $BAKEFILE_M4 &&
-	autoheader &&
-	autoconf &&
-	./configure $MAINT_FLAGS $* &&
-	make lib/querydef.h lib/ssqls.h &&
+	for d in 3 5 8 ; do mkdir -p vc200$d ; done &&
+	bakefilize &&
+	rm -f INSTALL &&
+	bakefile_gen $BF_OPTIONS &&
+	bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&
 	set +x &&
-	success=awyeah
+	success=shonuff
 
-# Do Bakefile stuff *after* autoconf, since configure gens mysql++.bkl
+# Do the autotools stuff if Bakefile steps succeeded
 if [ -n "$success" ]
 then
+	rm -f config.cache
+	mv autoconf_inc.m4 config > /dev/null 2>&1	# don't care if it fails
 	set -x &&
-		for d in 3 5 8 ; do mkdir -p vc200$d ; done &&
-		bakefilize &&
-		rm -f INSTALL &&
-		bakefile_gen $BF_OPTIONS &&
-		bakefile -f gnu -o Makefile.simple -DBUILDLIBRARY=no mysql++.bkl &&
+		aclocal -I config -I $BAKEFILE_M4 &&
+		autoheader &&
+		autoconf &&
+		./configure $MAINT_FLAGS $* &&
+		make lib/querydef.h lib/ssqls.h &&
 		set +x &&
-		success=shonuff
+		success=awyeah
 fi
 
 # Detect failure in any part of above

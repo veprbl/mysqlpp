@@ -58,7 +58,7 @@
     <dll id="mysqlpp">
       <dllname>mysqlpp$(DEBUG_SUFFIX)</dllname>
       <libname>mysqlpp$(DEBUG_SUFFIX)</libname>
-      <so_version>@PACKAGE_VERSION@</so_version>
+      <so_version>3.1.0</so_version>
 
       <sources>
         lib/beemutex.cpp
