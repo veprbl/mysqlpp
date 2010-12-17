@@ -225,6 +225,7 @@
 
   <!-- SSQLS v2 parser convenience library -->
   <lib id="ssqls2parse" template="programs">
+    <depends>mysqlpp</depends>
     <libname>mysqlpp_ssqls2parse</libname>
     <sources>ssx/parsev2.cpp</sources>
     <include>.</include>
