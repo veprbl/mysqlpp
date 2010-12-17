@@ -89,30 +89,23 @@ Configure Options
 
 Building a Static Library
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-    As shipped, MySQL++ only builds a shared library.  It's possible
-    to change things so you get a static library instead, but we don't
-    ship it like that because of MySQL++'s LGPL license.  The LGPL
-    requires that if you distribute a program in binary form, its
-    recipients have the freedom to replace the LGPL parts themselves.
-    There are a couple of ways to do that, but the easiest is to
-    dynamically link to the LGPL parts.
+    As shipped, MySQL++ only builds a shared library.  It's possible to
+    change things so you get a static library instead.
 
-    This means that if you build MySQL++ as a static library, you
-    can't legally distribute binaries linked against it.  Unlike with
-    the MySQL Connector/C and Connector/C++ libraries, there is no
-    commercial exception available for MySQL++ because there is not
-    a single copyright holder on MySQL++.  So, this option is suited
-    only for those building programs that won't be distributed, such
-    as one building internal programs for a corporation, which are
-    not distributed outside the corporation.
+    Before we get to "how," beware that liking statically to MySQL++ has
+    legal consequences that may matter to you, due to the library's
+    license, the GNU LGPL.  Familiarize yourself with the license, and
+    consider getting legal counsel before proceeding.  Also, see the
+    MySQL++ FAQ: http://tangentsoft.net/mysql++/#faq  There is more on
+    this topic there.
 
     The necessary changes are all in mysql++.bkl:
 
-    - Change the <dll> tag to <lib>.  (Remember the closing tag!)
+        - Change the <dll> tag to <lib>.  (Remember the closing tag!)
 
-    - Remove the <dllname> tag
+        - Remove the <dllname> tag
 
-    - Remove the <so_version> tag
+        - Remove the <so_version> tag
 
-    Then, re-bootstrap the library.  See HACKERS.txt if you've never
-    done that before.
+    Then, re-bootstrap the library.  See HACKERS.txt if you need further
+    instruction on doing that.
