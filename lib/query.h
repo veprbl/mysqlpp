@@ -1000,19 +1000,22 @@ public:
 	Query& insert(Iter first, Iter last)
 	{
 		reset();
-		if (first == last) {
-			return *this;	// empty set!
-		}
-		
-		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
-				"INSERT INTO `" << first->table() << "` (" <<
-				first->field_list() << ") VALUES (" <<
-				first->value_list() << ')';
 
-		Iter it = first + 1;
-		while (it != last) {
-			MYSQLPP_QUERY_THISPTR << ",(" << it->value_list() << ')';
-			++it;
+		if (first != last) {
+			// Build SQL for first item in the container.  It's special
+			// because we need the table name and field list.
+			MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
+					"INSERT INTO `" << first->table() << "` (" <<
+					first->field_list() << ") VALUES (" <<
+					first->value_list() << ')';
+
+			// Now insert any remaining container elements.  Be careful
+			// hacking on the iterator use here: we want it to work
+			// with containers providing only a forward iterator.
+			Iter it = first;
+			while (++it != last) {
+				MYSQLPP_QUERY_THISPTR << ",(" << it->value_list() << ')';
+			}
 		}
 
 		return *this;
@@ -1144,19 +1147,21 @@ public:
 	Query& replace(Iter first, Iter last)
 	{
 		reset();
-		if (first == last) {
-			return *this;    // empty set!
-		}
+		if (first != last) {
+			// Build SQL for first item in the container.  It's special
+			// because we need the table name and field list.
+			MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
+					"REPLACE INTO " << first->table() << " (" <<
+					first->field_list() << ") VALUES (" <<
+					first->value_list() << ')';
 
-		MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
-				"REPLACE INTO " << first->table() << " (" <<
-				first->field_list() << ") VALUES (" <<
-				first->value_list() << ')';
-
-		Iter it = first + 1;
-		while (it != last) {
-			MYSQLPP_QUERY_THISPTR << ",(" << it->value_list() << ')';
-			++it;
+			// Now insert any remaining container elements.  Be careful
+			// hacking on the iterator use here: we want it to work
+			// with containers providing only a forward iterator.
+			Iter it = first;
+			while (++it != last) {
+				MYSQLPP_QUERY_THISPTR << ",(" << it->value_list() << ')';
+			}
 		}
 
 		return *this;
