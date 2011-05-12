@@ -47,6 +47,9 @@ Any Version
       now have to call a 4-argument version of either the ctor or
       assign() to get a NULL SQL string.
 
+    o The escape_q() functions aren't returning the right value when
+      dealing with Null<T> wrapped types, such as sql_blob_null.
+
 
 v3.2 Plan: Finish SSQLS v2
 --------------------------
