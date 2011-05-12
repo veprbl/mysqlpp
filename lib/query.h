@@ -274,6 +274,11 @@ public:
 	/// or the stream interface.)
 	void reset();
 
+	/// \brief Returns true if the most recent result set was empty
+	///
+	/// Wraps DBDriver::result_empty()
+	bool result_empty();
+
 	/// \brief Get built query as a C++ string
 	std::string str() { return str(template_defaults); }
 
@@ -748,17 +753,30 @@ public:
 	template <class Sequence>
 	void storein_sequence(Sequence& con, const SQLTypeAdapter& s)
 	{
-		UseQueryResult result = use(s);
-		while (1) {
-			MYSQL_ROW d = result.fetch_raw_row();
-			if (!d)
-				break;
-			Row row(d, &result, result.fetch_lengths(),
-					throw_exceptions());
-			if (!row)
-				break;
-			con.push_back(typename Sequence::value_type(row));
+		if (UseQueryResult result = use(s)) {
+			while (1) {
+				MYSQL_ROW d = result.fetch_raw_row();
+				if (!d) break;
+				Row row(d, &result, result.fetch_lengths(),
+						throw_exceptions());
+				if (!row) break;
+				con.push_back(typename Sequence::value_type(row));
+			}
 		}
+		else if (!result_empty()) {
+			// Underlying MySQL C API returned an empty result for this
+			// query, but it also says it should have returned
+			// something.  Reasons it can do that are given here:
+			// http://dev.mysql.com/doc/refman/5.5/en/null-mysql-store-result.html
+			// Regardless, it means the C library barfed, so we can't
+			// just return an empty result set.
+			copacetic_ = false;
+			if (throw_exceptions()) {
+				throw UseQueryError("Bogus empty result");
+			}
+		}
+		// else, it was *supposed* to return nothing, because query was
+		// an INSERT, CREATE, etc. sort.  So, leave con untouched.
 	}
 
 	/// \brief Execute template query using given parameters, storing
@@ -806,17 +824,30 @@ public:
 	template <class Set>
 	void storein_set(Set& con, const SQLTypeAdapter& s)
 	{
-		UseQueryResult result = use(s);
-		while (1) {
-			MYSQL_ROW d = result.fetch_raw_row();
-			if (!d)
-				return;
-			Row row(d, &result, result.fetch_lengths(),
-					throw_exceptions());
-			if (!row)
-				break;
-			con.insert(typename Set::value_type(row));
+		if (UseQueryResult result = use(s)) {
+			while (1) {
+				MYSQL_ROW d = result.fetch_raw_row();
+				if (!d) break;
+				Row row(d, &result, result.fetch_lengths(),
+						throw_exceptions());
+				if (!row) break;
+				con.insert(typename Set::value_type(row));
+			}
 		}
+		else if (!result_empty()) {
+			// Underlying MySQL C API returned an empty result for this
+			// query, but it also says it should have returned
+			// something.  Reasons it can do that are given here:
+			// http://dev.mysql.com/doc/refman/5.5/en/null-mysql-store-result.html
+			// Regardless, it means the C library barfed, so we can't
+			// just return an empty result set.
+			copacetic_ = false;
+			if (throw_exceptions()) {
+				throw UseQueryError("Bogus empty result");
+			}
+		}
+		// else, it was *supposed* to return nothing, because query was
+		// an INSERT, CREATE, etc. sort.  So, leave con untouched.
 	}
 
 	/// \brief Execute template query using given parameters, storing

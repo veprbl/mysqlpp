@@ -476,6 +476,13 @@ Query::reset()
 }
 
 
+bool
+Query::result_empty()
+{
+	return conn_->driver()->result_empty();
+}
+
+
 StoreQueryResult 
 Query::store() 
 { 
