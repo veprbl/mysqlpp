@@ -37,7 +37,7 @@ do
 			;;
 
 		pedantic)
-			export CXXFLAGS="-g -O2 -ansi -pedantic -Wall -W -Wold-style-cast -Wfloat-equal -Wwrite-strings -Wno-overloaded-virtual -Wno-long-long -Wno-variadic-macros -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
+			export CXXFLAGS="-g -O2 -ansi -pedantic -Wall -Wextra -W -Wold-style-cast -Wfloat-equal -Wwrite-strings -Wno-overloaded-virtual -Wno-long-long -Wno-variadic-macros -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 			shift
 			;;
 
