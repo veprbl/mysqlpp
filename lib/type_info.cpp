@@ -252,7 +252,7 @@ bool mysql_type_info::quote_q() const
 
 bool mysql_type_info::escape_q() const
 {
-	const type_info& ti = c_type();
+	const type_info& ti = base_type().c_type();
 	return ti == typeid(string) ||
 			ti == typeid(sql_enum) ||
 			ti == typeid(sql_blob) ||
