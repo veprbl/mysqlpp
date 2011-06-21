@@ -80,8 +80,14 @@ const mysql_type_info::sql_type_info mysql_type_info::types[] = {
 			mysql_ti_sql_type_info::tf_unsigned),
 	sql_type_info("FLOAT NOT NULL", typeid(sql_float),
 			MYSQL_TYPE_FLOAT, mysql_ti_sql_type_info::tf_default),
+	sql_type_info("FLOAT UNSIGNED NOT NULL", typeid(sql_float),
+			MYSQL_TYPE_FLOAT, mysql_ti_sql_type_info::tf_default |
+			mysql_ti_sql_type_info::tf_unsigned),
 	sql_type_info("DOUBLE NOT NULL", typeid(sql_double),
 			MYSQL_TYPE_DOUBLE, mysql_ti_sql_type_info::tf_default),
+	sql_type_info("DOUBLE UNSIGNED NOT NULL", typeid(sql_double),
+			MYSQL_TYPE_DOUBLE, mysql_ti_sql_type_info::tf_default |
+			mysql_ti_sql_type_info::tf_unsigned),
 	sql_type_info("NULL NOT NULL", typeid(void),
 			MYSQL_TYPE_NULL, mysql_ti_sql_type_info::tf_default),
 	sql_type_info("TIMESTAMP NOT NULL", typeid(sql_timestamp),
@@ -149,9 +155,17 @@ const mysql_type_info::sql_type_info mysql_type_info::types[] = {
 	sql_type_info("FLOAT NULL", typeid(Null<sql_float>),
 			MYSQL_TYPE_FLOAT, mysql_ti_sql_type_info::tf_default |
 			mysql_ti_sql_type_info::tf_null),
+	sql_type_info("FLOAT UNSIGNED NULL", typeid(Null<sql_float>),
+			MYSQL_TYPE_FLOAT, mysql_ti_sql_type_info::tf_default |
+			mysql_ti_sql_type_info::tf_null |
+			mysql_ti_sql_type_info::tf_unsigned),
 	sql_type_info("DOUBLE NULL", typeid(Null<sql_double>),
 			MYSQL_TYPE_DOUBLE, mysql_ti_sql_type_info::tf_default |
 			mysql_ti_sql_type_info::tf_null),
+	sql_type_info("DOUBLE UNSIGNED NULL", typeid(Null<sql_double>),
+			MYSQL_TYPE_DOUBLE, mysql_ti_sql_type_info::tf_default |
+			mysql_ti_sql_type_info::tf_null |
+			mysql_ti_sql_type_info::tf_unsigned),
 	sql_type_info("NULL NULL", typeid(Null<void>),
 			MYSQL_TYPE_NULL, mysql_ti_sql_type_info::tf_null),
 	sql_type_info("TIMESTAMP NULL", typeid(Null<sql_timestamp>),
