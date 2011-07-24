@@ -223,21 +223,23 @@
     </if>
   </template>
 
-  <!-- SSQLS v2 parser convenience library -->
-  <lib id="ssqls2parse" template="programs">
-    <depends>mysqlpp</depends>
-    <libname>mysqlpp_ssqls2parse</libname>
-    <sources>ssx/parsev2.cpp</sources>
-    <include>.</include>
-  </lib>
+  <if cond="BUILDLIBRARY=='yes'">
+    <!-- SSQLS v2 parser convenience library -->
+    <lib id="ssqls2parse" template="programs">
+      <depends>mysqlpp</depends>
+      <libname>mysqlpp_ssqls2parse</libname>
+      <sources>ssx/parsev2.cpp</sources>
+      <include>.</include>
+    </lib>
 
-  <!-- Build rules for ssqlsxlat tool -->
-  <exe id="ssqlsxlat" template="programs">
-    <sources>ssx/genv2.cpp</sources>
-    <sources>ssx/main.cpp</sources>
-    <depends>ssqls2parse</depends>
-    <sys-lib>mysqlpp_ssqls2parse</sys-lib>
-  </exe>
+    <!-- Build rules for ssqlsxlat tool -->
+    <exe id="ssqlsxlat" template="programs">
+      <sources>ssx/genv2.cpp</sources>
+      <sources>ssx/main.cpp</sources>
+      <depends>ssqls2parse</depends>
+      <sys-lib>mysqlpp_ssqls2parse</sys-lib>
+    </exe>
+  </if>
 
   <!-- Define library testing programs' output targets, if enabled -->
   <if cond="BUILDTEST=='yes'">
@@ -280,11 +282,13 @@
     <exe id="test_sqlstream" template="programs">
       <sources>test/sqlstream.cpp</sources>
     </exe>
-    <exe id="test_ssqls2" template="programs">
-      <sources>test/ssqls2.cpp</sources>
-      <depends>ssqls2parse</depends>
-      <sys-lib>mysqlpp_ssqls2parse</sys-lib>
-    </exe>
+    <if cond="BUILDLIBRARY=='yes'">
+      <exe id="test_ssqls2" template="programs">
+        <sources>test/ssqls2.cpp</sources>
+        <depends>ssqls2parse</depends>
+        <sys-lib>mysqlpp_ssqls2parse</sys-lib>
+      </exe>
+    </if>
     <if cond="FORMAT!='msvs2003prj'">
       <!-- VC++ 2003 can't compile this -->
       <exe id="test_string" template="programs">
