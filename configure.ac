@@ -14,7 +14,7 @@
 # USA
 
 # Standard autotools stuff
-AC_INIT(mysql++, 3.1.0, plusplus@lists.mysql.com, mysql++)
+AC_INIT(mysql++, 3.1.1, plusplus@lists.mysql.com, mysql++)
 AC_CONFIG_HEADER(config.h)
 AC_CANONICAL_SYSTEM
 
@@ -108,7 +108,10 @@ AC_OUTPUT([\
 	lib/Doxyfile \
 	lib/mysql++.h \
 	ssx/Doxyfile \
+	abi.xml \
 	mysql++.spec \
 	Makefile \
+	version
 ])
+chmod +x version
 
