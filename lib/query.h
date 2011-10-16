@@ -1140,6 +1140,94 @@ public:
 		return *this;
 	}
 
+	/// \brief Replace multiple new rows using an insert policy to
+	/// control how the REPLACE statements are created using
+	/// items from an STL container.
+	///
+	/// \param first iterator pointing to first element in range to
+	///    replace
+	/// \param last iterator pointing to one past the last element to
+	///    replace
+	/// \param policy insert policy object, see insertpolicy.h for
+	/// details
+	///
+	/// \sa insert()
+	template <class Iter, class InsertPolicy>
+	Query& replacefrom(Iter first, Iter last, InsertPolicy& policy)
+	{
+		bool success = true;
+		bool empty = true;
+
+		reset();
+
+		if (first == last) {
+			return *this;   // empty set!
+		}
+
+		typename InsertPolicy::access_controller ac(*conn_);
+
+		for (Iter it = first; it != last; ++it) {
+			if (policy.can_add(int(tellp()), *it)) {
+				if (empty) {
+					MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
+						"REPLACE INTO `" << it->table() << "` (" <<
+						it->field_list() << ") VALUES (";
+				}
+				else {
+					MYSQLPP_QUERY_THISPTR << ",(";
+				}
+
+				MYSQLPP_QUERY_THISPTR << it->value_list() << ')';
+
+				empty = false;
+			}
+			else {
+				// Execute what we've built up already, if there is anything
+				if (!empty) {
+					if (!exec()) {
+						success = false;
+						break;
+					}
+
+					empty = true;
+				}
+
+				// If we _still_ can't add, the policy is too strict
+				if (policy.can_add(int(tellp()), *it)) {
+					MYSQLPP_QUERY_THISPTR << std::setprecision(16) <<
+						"REPLACE INTO `" << it->table() << "` (" <<
+						it->field_list() << ") VALUES (" <<
+						it->value_list() << ')';
+
+					empty = false;
+				}
+				else {
+					// At this point all we can do is give up
+					if (throw_exceptions()) {
+						throw BadInsertPolicy("Insert policy is too strict");
+					}
+
+					success = false;
+					break;
+				}
+			}
+		}
+
+		// We might need to execute the last query here.
+		if (success && !empty && !exec()) {
+			success = false;
+		}
+
+		if (success) {
+			ac.commit();
+		}
+		else {
+			ac.rollback();
+		}
+
+		return *this;
+	}
+
 	/// \brief Insert new row unless there is an existing row that
 	/// matches on a unique index, in which case we replace it.
 	///
