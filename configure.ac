@@ -21,7 +21,7 @@ AC_CANONICAL_SYSTEM
 
 
 # Enable libtool to decide shared library compile flags (ie -fPIC)
-LT_INIT([disable-static])
+AC_PROG_LIBTOOL
 AC_SUBST([LIBTOOL_DEPS])
 
 

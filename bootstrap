@@ -80,7 +80,10 @@ then
 	rm -f config.cache
 	mv autoconf_inc.m4 config > /dev/null 2>&1	# don't care if it fails
 	set -x &&
-		autoreconf --install -I config -I $BAKEFILE_M4 &&
+		aclocal -I config -I $BAKEFILE_M4 &&
+		libtoolize &&
+		autoheader &&
+		autoconf &&
 		./configure $MAINT_FLAGS $* &&
 		make lib/querydef.h lib/ssqls.h &&
 		set +x &&
