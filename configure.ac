@@ -16,7 +16,13 @@
 # Standard autotools stuff
 AC_INIT(mysql++, 3.1.1, plusplus@lists.mysql.com, mysql++)
 AC_CONFIG_HEADER(config.h)
+AC_CONFIG_MACRO_DIR([config])
 AC_CANONICAL_SYSTEM
+
+
+# Enable libtool to decide shared library compile flags (ie -fPIC)
+LT_INIT([disable-static])
+AC_SUBST([LIBTOOL_DEPS])
 
 
 # Break package version up into major, minor and bugfix components.
