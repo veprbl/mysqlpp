@@ -52,7 +52,7 @@ Other contributors of note since 1.7.10:
     They're now simpler and safer.  He also created the numeric
     conversion logic in lib/mystring.h introduced in v3.0.
 
-    Adrian Cornish <mysql@bluedreamer.com>  Several fixes and^M
+    Adrian Cornish <mysql@bluedreamer.com>  Several fixes and
     additions.
 
     Rick Gutleber <rgutleber@above.net> contributed the 
