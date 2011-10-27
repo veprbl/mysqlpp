@@ -28,10 +28,6 @@ MYSQLPP_VERSION_BUGFIX=`echo $PACKAGE_VERSION | cut -f3 -d.`
 AC_SUBST(MYSQLPP_VERSION_BUGFIX)
 
 
-# Include Bakefile macros
-AC_BAKEFILE([m4_include(config/autoconf_inc.m4)])
-
-
 # Check for Standard C support
 AC_PROG_CC
 AC_HEADER_STDC
@@ -97,6 +93,10 @@ esac
 AC_PROG_CXX
 AC_LANG_CPLUSPLUS
 STL_SLIST_EXTENSION
+
+
+# Include Bakefile macros
+AC_BAKEFILE([m4_include(config/autoconf_inc.m4)])
 
 
 #
