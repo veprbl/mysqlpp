@@ -588,11 +588,11 @@
 
     <action id="abicheck">
       <command>
-				<![CDATA[
-					sed -e s/`sh version`/$(STABLEABI)/ < abi.xml > ../$(STABLEABI)/abi.xml
-					~/src/abi-compliance-checker/head/abi-compliance-checker.pl \
-							-lib mysqlpp -d1 ../$(STABLEABI)/abi.xml -d2 abi.xml
-				]]>
+        <![CDATA[
+          sed -e s/`sh version`/$(STABLEABI)/ < abi.xml > ../$(STABLEABI)/abi.xml
+          ~/src/abi-compliance-checker/head/abi-compliance-checker.pl \
+              -lib mysqlpp -d1 ../$(STABLEABI)/abi.xml -d2 abi.xml
+        ]]>
       </command>
     </action>
 
