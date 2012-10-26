@@ -48,12 +48,13 @@ do
 done
 
 # Find location of Bakefile's stock M4 autoconf macros
-for d in /usr /usr/local
+for d in /usr/share/aclocal /usr/local/share/aclocal \
+	'/c/Program Files (x86)/Bakefile/autoconf'
 do
-	BAKEFILE_M4=$d/share/aclocal
-	if [ -e $BAKEFILE_M4/bakefile.m4 ] ; then break ; fi
+	BAKEFILE_M4="$d"
+	if [ -e "$BAKEFILE_M4/bakefile.m4" ] ; then break ; fi
 done
-if [ ! -e $BAKEFILE_M4/bakefile.m4 ]
+if [ ! -e "$BAKEFILE_M4/bakefile.m4" ]
 then
 	echo
 	echo "Failed to find bakefile.m4.  Add the directory containing"
@@ -80,7 +81,7 @@ then
 	rm -f config.cache
 	mv autoconf_inc.m4 config > /dev/null 2>&1	# don't care if it fails
 	set -x &&
-		aclocal -I config -I $BAKEFILE_M4 &&
+		aclocal -I config -I "$BAKEFILE_M4" &&
 		libtoolize &&
 		autoheader &&
 		autoconf &&
