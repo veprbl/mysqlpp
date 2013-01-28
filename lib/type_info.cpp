@@ -31,7 +31,11 @@
 #include "myset.h"
 #include "sql_types.h"
 
-#include <mysql.h>
+#if defined(MYSQLPP_MYSQL_HEADERS_BURIED)
+#	include <mysql/mysql.h>
+#else
+#	include <mysql.h>
+#endif
 
 #include <string>
 
