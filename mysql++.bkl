@@ -121,8 +121,9 @@
         <define>MYSQLPP_NO_DLL</define>
         <define>HAVE_MYSQL_SSL_SET</define>
         <include>"$(MYSQL_WIN_DIR)\include"</include>
+				<ldflags>--enable-stdcall-fixup</ldflags>
         <lib-path>"$(MYSQL_WIN_DIR)\lib\opt"</lib-path>
-        <sys-lib>mysqlclient</sys-lib>
+        <sys-lib>mysql</sys-lib>
       </if>
 
       <if cond="FORMAT=='autoconf'">

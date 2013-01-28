@@ -34,17 +34,6 @@ Prerequisite: MySQL C Development Files
         bakefile_gen -f mingw
 
 
-Prerequisite: MySQL C API DLL Import Library
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Before you can build MySQL++ with MinGW, you will need to create
-    a MinGW-compatible import library for MySQL's C API library.
-    Using the current default install path for MySQL and assuming
-    MySQL++ is in c:\mysql++, the commands to do this are:
-
-        cd C:\Program Files\MySQL\MySQL Server 5.0\lib\opt
-        dlltool -k -d c:\mysql++\libmysqlclient.def -l libmysqlclient.a
-
-
 Building the Library and Example Programs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     With the prerequisites above taken care of, you can build MySQL++
@@ -131,12 +120,7 @@ Building on Linux
         4. Modify Makefile.mingw to match the install location for
            the MySQL C API files.
 
-        5. Create libmysqlclient.a as described above, except with
-           minor differences for running under Wine:
-
-           $ wine mingw32-dlltool -k -d /native/path/libmysqlclient.def...
-
-        6. Build MySQL++ with:
+        5. Build MySQL++ with:
         
            $ wine mingw32-make -f Makefile.mingw
 
