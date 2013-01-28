@@ -1,58 +1,46 @@
-Visual C++ Version Compatibility
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MySQL++ is fully functional with Visual C++ 2005 and 2008.
-
-    It should be possible to get it to build with newer versions
-    of Visual C++, but support for it doesn't come out of the box,
-    due to the change to MSBuild.  You should start by opening
-    the Visual C++ 2008 solution file and letting it automatically
-    convert that and all the project files.
-
-    MySQL++ also works with VC++ 2003 (a.k.a. VC++ 7.1), with the
-    exception of the SSQLS feature.  There was partial support for
-    SSQLS with VC++ 2003 in MySQL++ v2, but a feature we added in
-    MySQL++ v3.0 crashes the VC++ 2003 compiler when you try to use
-    even simple SSQLS, so we had to remove support for this entirely
-    for that platform.  (See the v3.0 section in the Breakages chapter
-    of the user manual for details.)
-
-    Older versions of Visual C++ are basically hopeless when it
-    comes to building current versions of MySQL++.  They have too
-    many weaknesses in their Standard C++ implementation to build a
-    modern library like MySQL++.  If you cannot upgrade your compiler,
-    my advice is that you're best off programming straight to the
-    MySQL C API rather than try to make MySQL++ build.
-
-
-Where Are the Project Files, and Why So Many Versions?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    There are three sets of .sln and .vcproj files shipped with
-    MySQL++, in the vc2003, vc2005 and vc2008 subdirectories.
-    Other than the SSQLS issue brought up above, there no functional
-    difference between these versions.  We ship separate project
-    files for each version of Visual Studio partly to save you from
-    having to walk through the project conversion wizard, and partly
-    so you can build the library with multiple versions of Visual C++
-    without conflicts among the object files.
-
-
 Prerequisites
 ~~~~~~~~~~~~~
-    You need to have the Windows version of the MySQL server installed
-    on your development system, even if you always access a MySQL
-    server on a different machine.  This is because in addition to
-    installing the server itself, the official MySQL Windows binaries
-    also install the client-side development files that MySQL++
-    needs in order to communicate with a MySQL server.  We call this
-    the MySQL C API; MySQL++ is a C++ wrapper for this C API.
+    You need to have the MySQL C API development files on your system,
+    since MySQL++ is built on top of it.
 
-    You have to do a Custom install to enable installation of these
-    development files.  If you get an error about mysql-version.h or
-    mysql.h when building MySQL++, go back and reinstall the MySQL
-    server, paying careful attention to the options.
+    The easiest way to get it is to download Connector/C from
+    mysql.com.
 
-    If you've installed the development files and are still getting
-    build errors, read on.
+    If you need the MySQL server on your development system anyway,
+    you you can choose to install the development files along with
+    the server.  Some versions of the MySQL Server installer for
+    Windows have installed the development files by default, while
+    others have made it an optional install.
+
+
+Project Files
+~~~~~~~~~~~~~
+    The distribution comes with three sets of .sln and .vcproj files
+    in the vc2003, vc2005 and vc2008 subdirectories.
+
+    We do this for several reasons:
+
+      1. It lets you build MySQL++ with multiple versions of Visual
+         C++ without the build products conflicting.
+
+      2. For Visual C++ 2003, we had to disable the SSQLS feature
+         because changes made in MySQL++ 3.0 now cause the compiler
+         to crash while building.  See the Breakages chapter in the
+         user manual for workarounds, if you must still use VC++ 2003.
+
+      3. The VC++ 2005 and 2008 project files get built with both 32-
+         and 64-bit targets enabled.  VC++ 2003 didn't have 64-bit
+         compilers, so the project files for it have to be different
+         for that reason alone.
+         
+         If you need only one CPU type, by the way, you can change
+         this in Build > Configuration Manager.
+
+    The Visual C++ 2008 project files should convert without problems
+    in newer versions of Visual Studio.  The reason we don't ship such
+    project files is simply that the tool we use to create them hasn't
+    yet been updated to understand the new MSBuild based build system
+    that Microsoft moved to with Visual Studio 2010.
 
 
 Using Nonstandard MySQL Installations
@@ -71,10 +59,12 @@ Using Nonstandard MySQL Installations
     files to reference the C API development files in that other
     location.  There are two ways to do this.
 
-    The hard way is to make 4 different changes each to 39 separate
-    project files.  If you're a talented Visual Studio driver, you
-    can do this in as little as about 5 or 6 steps.  You might even
-    get it right the first time.
+    The hard way is to make 16 different changes each to 44 separate
+    project files.  If you're a talented Visual Studio driver,
+    you can do this in as little as about 5 or 6 steps.  You might
+    even get it right the first time.  If you are not so talented,
+    you have to make all ~700 changes one at a time, and you almost
+    certainly will *not* get it right the first time.
 
     The somewhat easier way is to open all these files in a text
     editor that lets you make a global search and replace on all
@@ -85,48 +75,6 @@ Using Nonstandard MySQL Installations
     mysql++.bkl in the top level of the MySQL++ source tree, and run
     rebake.bat.  This will rebuild all of the project files for you,
     using the new MySQL path in all the many places it's needed.
-
-
-Building MySQL++ for 64-Bit
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORTANT: The following works correctly only in Visual C++ 2008 and
-    older.  It is known to fail with Visual C++ 2010.  If you find out
-    why, please send a message to the MySQL++ mailing list.
-
-    The MySQL++ Visual Studio project files ship with the assumption
-    that you're building for 32-bit Windows.  While the utility
-    of running the MySQL server on a 64-bit system is clear, that
-    doesn't mandate running its client programs in 64-bit mode, too.
-    As a result, we haven't yet bothered to come up with an easy way
-    to change this.  Here's the hard way:
-
-    - Follow the steps above to change the MySQL install location,
-      if necessary.
-
-    - Open the solution file, then say Build > Configuration Manager
-
-    - Pull down the "Active solution platform" list box, say New...,
-      and add "x64", copying settings from the Win32 build, and
-      allowing it to create new project platforms.
-
-    - Pull the same list box down, say Edit..., and remove the Win32
-      build, unless you actually need both versions.
-
-    It should then build.  If you get PRJ2009 errors, complaining
-    about BuildLog.htm, this is a bug in Visual Studio 2008's
-    new parallel build feature, which seems to affect x64 builds
-    more than x86.  Sometimes you can get around it by just saying
-    "build" repeatedly, each time getting a few more modules built.
-    Or, you can disable the feature by going to Tools > Options... >
-    Projects and Solutions > Build and Run > # of parallel processes
-    and setting the value to 1.
-
-    If you don't follow the instructions above carefully, you can
-    end up with a completely unbuildable solution.  (It happened
-    to me once when preparing these instructions!)  If you simply
-    cannot seem to make it work, it's often simplest to just blow
-    away the MySQL++ source tree, unpack a fresh copy and try again,
-    paying more attention to the details.
 
 
 Building the Library and Example Programs
