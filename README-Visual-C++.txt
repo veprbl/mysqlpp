@@ -2,6 +2,12 @@ Visual C++ Version Compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     MySQL++ is fully functional with Visual C++ 2005 and 2008.
 
+    It should be possible to get it to build with newer versions
+    of Visual C++, but support for it doesn't come out of the box,
+    due to the change to MSBuild.  You should start by opening
+    the Visual C++ 2008 solution file and letting it automatically
+    convert that and all the project files.
+
     MySQL++ also works with VC++ 2003 (a.k.a. VC++ 7.1), with the
     exception of the SSQLS feature.  There was partial support for
     SSQLS with VC++ 2003 in MySQL++ v2, but a feature we added in
@@ -53,22 +59,26 @@ Using Nonstandard MySQL Installations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     The Visual Studio project files that come with MySQL++ have
     everything set up correctly for the common case.  The biggest
-    assumption in the settings is that you're using MySQL 5.0
-    (the newest version considered suitable for production use
-    at the time of this writing) and that you installed it in
-    the default location:
+    assumption in the settings is that you're building against the
+    current stable version of Connector/C, which gets installed here
+    at the time of this writing:
 
-        C:\Program Files\MySQL\MySQL Server 5.0\
+        C:\Program Files\MySQL\MySQL Connector C 6.0.2\
 
     If you installed a different version, or it's in a different
-    directory, you need to change the project file settings to
-    reference the C API development files in that other location.
-    There are two ways to do this.
+    directory, or you've installed the development files as part of
+    MySQL Server on the same machine, you need to change the project
+    files to reference the C API development files in that other
+    location.  There are two ways to do this.
 
-    The hard way is to make 4 different changes to 39 separate
+    The hard way is to make 4 different changes each to 39 separate
     project files.  If you're a talented Visual Studio driver, you
     can do this in as little as about 5 or 6 steps.  You might even
     get it right the first time.
+
+    The somewhat easier way is to open all these files in a text
+    editor that lets you make a global search and replace on all
+    open files.
 
     The easy way is to install Bakefile (http://bakefile.org/),
     change the value of the MYSQL_WIN_DIR variable near the top of
