@@ -601,7 +601,6 @@
     <action id="dist">
       <depends>doc</depends>
       <depends>$(PKGNAME)</depends>
-      <command>./checkvc8</command>
       <command>tar czf $(PKGNAME).tar.gz $(PKGNAME)</command>
       <command>rm -rf $(PKGNAME)</command>
     </action>
