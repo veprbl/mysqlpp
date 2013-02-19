@@ -26,21 +26,42 @@ Project Files
       2. For Visual C++ 2003, we had to disable the SSQLS feature
          because changes made in MySQL++ 3.0 now cause the compiler
          to crash while building.  See the Breakages chapter in the
-         user manual for workarounds, if you must still use VC++ 2003.
+         user manual for workarounds if you must still use VC++ 2003.
 
-      3. The VC++ 2005 and 2008 project files get built with both 32-
-         and 64-bit targets enabled.  VC++ 2003 didn't have 64-bit
-         compilers, so the project files for it have to be different
-         for that reason alone.
-         
-         If you need only one CPU type, by the way, you can change
-         this in Build > Configuration Manager.
+      3. The VC++ 2008 project files get built for 64-bit output, while
+         the other two build 32-bit executables.
 
-    The Visual C++ 2008 project files should convert without problems
-    in newer versions of Visual Studio.  The reason we don't ship such
-    project files is simply that the tool we use to create them hasn't
-    yet been updated to understand the new MSBuild based build system
-    that Microsoft moved to with Visual Studio 2010.
+         With VC++ 2003, we have no choice about this, since it only
+         supports 32-bit targets.
+
+         VC++ 2005 did have experimental 64-bit compilers available,
+         but their beta nature was only one reason we chose not to
+         use them.  The real reason is that the current MySQL++ build
+         system isn't currently set up to make it easy to build both
+         32- and 64-bit libraries and executables at the same time
+         within the same solution.  Bakefile allows it, but it would
+         require forking many of the build rules in mysql++.bkl so
+         we can do things like have separate MYSQL_WIN_DIR values
+         for each bitness.  (See below for more on this variable.)
+
+         For that same reason, the VC++ 2008 project files are set
+         up to build 64-bit libraries and executables *only*.
+
+    It is possible to upgrade these project files to work with newer
+    versions of Visual C++, but beware that the upgrade feature tends
+    to be problematic.
+
+    When converting the VC++ 2008 project files to VC++ 2012,
+    I found that it will screw up the output file names for the
+    libraries, so that none of the executables will link properly.
+    This problem is detected by the migration process, so that even
+    though the tool doesn't know how to fix it itself, you can fix
+    it up manually afterward.
+
+    There were also problems in VC++ 2010 when you had converted 32-bit
+    VC++ 2008 projects and then were trying to switch them to 64-bit.
+    It ended up being simpler in this case to just start over from
+    scratch and build your own project files.
 
 
 Using Nonstandard MySQL Installations
