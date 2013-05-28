@@ -3,6 +3,10 @@ file for instructions on sending patches.
 
 Any Version
 -----------
+    o The DateTime family's time_t conversion operators should detect
+      DATETIME("0") type values and return time_t(0) rather than
+      attempt to stuff an out-of-range value into a smaller box.
+
     o Any time you must hand-roll some SQL code in your program,
       consider whether it could be generalized to a widely-useful
       API feature.
