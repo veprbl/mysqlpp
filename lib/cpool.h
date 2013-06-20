@@ -159,7 +159,7 @@ public:
 	/// from under your application.
 	///
 	/// \retval a pointer to the connection
-	virtual Connection* safe_grab();
+	Connection* safe_grab();
 
 	/// \brief Remove all unused connections from the pool
 	void shrink() { clear(false); }
