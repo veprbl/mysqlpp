@@ -103,7 +103,7 @@ public:
 	///
 	/// \retval a pointer to a different Connection object; not
 	/// guaranteed to still be connected!
-	Connection* exchange(const Connection* pc);
+	virtual Connection* exchange(const Connection* pc);
 
 	/// \brief Grab a free connection from the pool.
 	///
@@ -159,7 +159,7 @@ public:
 	/// from under your application.
 	///
 	/// \retval a pointer to the connection
-	Connection* safe_grab();
+	virtual Connection* safe_grab();
 
 	/// \brief Remove all unused connections from the pool
 	void shrink() { clear(false); }
