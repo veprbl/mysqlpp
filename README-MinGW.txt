@@ -15,7 +15,7 @@ Prerequisite: MySQL C Development Files
     which you can download from mysql.com.  The distribution assumes
     these files are in:
 
-        C:\Program Files\MySQL\MySQL Connector C 6.0.2\
+        C:\Program Files\MySQL\MySQL Connector C 6.1\
 
     There are a number of reasons why that path may not work for you:
 
@@ -25,14 +25,14 @@ Prerequisite: MySQL C Development Files
         Connector/C and MinGW installed and wish to build a 32-bit
         binary.  In that case, the path will look like this instead:
 
-          C:\Program Files (x86)\MySQL\MySQL Connector C 6.0.2\
+          C:\Program Files (x86)\MySQL\MySQL Connector C 6.1\
 
       - You may have the MySQL Server on your system and installed the
         development files along with it, and therefore don't want to
         install Connector/C separately.  In that case, the path will
         look like this instead:
 
-          C:\Program Files\MySQL\MySQL Server 5.5\
+          C:\Program Files\MySQL\MySQL Server 5.6\
     
     Regardless of the reason you have for changing this path, there are
     two ways that work:

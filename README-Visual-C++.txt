@@ -72,7 +72,7 @@ Using Nonstandard MySQL Installations
     current stable version of Connector/C, which gets installed here
     at the time of this writing:
 
-        C:\Program Files\MySQL\MySQL Connector C 6.0.2\
+        C:\Program Files\MySQL\MySQL Connector C 6.1\
 
     If you installed a different version, or it's in a different
     directory, or you've installed the development files as part of
