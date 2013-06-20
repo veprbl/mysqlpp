@@ -615,8 +615,8 @@
         <depends>doc</depends>
       </if>
       <depends>dist</depends>
-      <command>cp $(PKGNAME).tar.gz /usr/src/redhat/SOURCES</command>
-      <command>cd /usr/src/redhat/SPECS</command>
+      <command>cp $(PKGNAME).tar.gz ~/rpmbuild/SOURCES</command>
+      <command>cd ~/rpmbuild/SPECS</command>
       <command>rpmbuild -ba mysql++.spec</command>
     </action>
 
