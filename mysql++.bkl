@@ -6,7 +6,10 @@
 
   <set var="DDD">$(DOLLAR)$(DOLLAR)d</set>
   <set var="DDF">$(DOLLAR)$(DOLLAR)f</set>
-  <set var="STABLEABI">3.0.9</set>
+
+  <set var="STABLEABI">3.1.0</set>
+  <set var="OLDABIDIR">../$(STABLEABI)/abi_dumps/mysqlpp</set>
+  <set var="NEWABIDIR">./abi_dumps/mysqlpp</set>
 
   <set var="PLATFORM_WINDOWS_NATIVE">no</set>
   <set var="THREAD_TYPE">single</set>
@@ -59,7 +62,7 @@
     <dll id="mysqlpp">
       <dllname>mysqlpp$(DEBUG_SUFFIX)</dllname>
       <libname>mysqlpp$(DEBUG_SUFFIX)</libname>
-      <so_version>3.1.0</so_version>
+      <so_version>3.2.0</so_version>
 
       <sources>
         lib/beemutex.cpp
@@ -590,8 +593,12 @@
     <action id="abicheck">
       <command>
         <![CDATA[
-          sed -e s/`sh version`/$(STABLEABI)/ < abi.xml > ../$(STABLEABI)/abi.xml
-          abi-compliance-checker -lib mysqlpp -d1 ../$(STABLEABI)/abi.xml -d2 abi.xml
+          abi-compliance-checker -lib mysqlpp -dump abi.xml
+          abi-compliance-checker -lib mysqlpp \
+              -old $(OLDABIDIR)/mysqlpp_$(STABLEABI).abi.tar.gz \
+              -new $(NEWABIDIR)/mysqlpp_@PACKAGE_VERSION@.abi.tar.gz
+          mv compat_reports/mysqlpp/*/compat_report.html ~/Desktop
+          find compat_reports -empty -delete
         ]]>
       </command>
     </action>
