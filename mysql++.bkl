@@ -508,8 +508,8 @@
       <!-- Copy files into package directory -->
       <!-- top directory -->
       <command>
-        cp -RL *.bat *.txt Bakefiles.bkgen bootstrap ChangeLog cleanmf \
-          config.guess config.h.in config.sub configure* dtest exrun \
+        cp -RL *.bat *.in *.txt Bakefiles.bkgen bootstrap ChangeLog \
+          cleanmf config.guess config.sub configure* dtest exrun \
           install* Makefile.* mysql++.* osver Wishlist $(PKGNAME)
       </command>
 
