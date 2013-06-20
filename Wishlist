@@ -16,7 +16,7 @@ Any Version
 
     o Need to link statically to connect to MySQL Embedded?
 
-      http://stackoverflow.com/questions/672451/howto-communicate-with-mysql-embedded-server-from-mysql-dll
+      http://stackoverflow.com/questions/672451/
 
     o When Bakefile allows, bring examples/vstudio/* into the top-level
       build system.  This will let us generate separate project
@@ -55,7 +55,7 @@ Any Version
       dealing with Null<T> wrapped types, such as sql_blob_null.
 
 
-v3.2 Plan: Finish SSQLS v2
+v3.3 Plan: Finish SSQLS v2
 --------------------------
     See http://lists.mysql.com/plusplus/6929 for high-level plan.
 
@@ -219,7 +219,7 @@ v3.2 Plan: Finish SSQLS v2
       so people can disable the warning.
 
 
-v3.3 Tentative Plan
+v3.4 Tentative Plan
 -------------------
     o Add Query::storein<Container, T>(container), getting table
       name from container::value_type.table() instead.
