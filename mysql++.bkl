@@ -441,7 +441,6 @@
       <depends-on-file>lib/mysql++.h.in</depends-on-file>
       <depends-on-file>ssx/Doxyfile.in</depends-on-file>
       <command>bakefile_gen</command>
-      <command>autoreconf</command>
       <command>./config.status</command>
     </action>
 
