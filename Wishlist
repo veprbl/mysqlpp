@@ -460,3 +460,7 @@ v4.0 or Later
       classes like Row?  Useful in apps that process lots of data over
       long periods, causing heap fragmentation with the default C++
       allocator.
+
+    o Audit library for non-virtual methods that could be profitably
+      made virtual.  Many are non-overridable now purely because
+      changing them would break the ABI, so now's the time to fix that.
