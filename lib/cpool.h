@@ -103,7 +103,7 @@ public:
 	///
 	/// \retval a pointer to a different Connection object; not
 	/// guaranteed to still be connected!
-	virtual Connection* exchange(const Connection* pc);
+	Connection* exchange(const Connection* pc);
 
 	/// \brief Grab a free connection from the pool.
 	///
