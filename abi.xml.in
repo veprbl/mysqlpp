@@ -3,8 +3,7 @@
 </version>
 <headers>
     lib
-    @MYSQL_C_INC_DIR@
 </headers>
 <libs>
-    @MYSQL_C_LIB_DIR@
+    .
 </libs>
