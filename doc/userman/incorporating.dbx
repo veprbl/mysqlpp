@@ -189,7 +189,7 @@
     <para>&#x201C;Hello, world!&#x201D; for MySQL++ might look something
     like this:</para>
 
-    <programlisting><xi:include href="hello.cpp" parse="text"
+    <programlisting><xi:include href="hello.txt" parse="text"
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
     <para>Here&#x2019;s a <filename>Makefile</filename> for building
