@@ -198,36 +198,47 @@
     <programlisting><xi:include href="Makefile.hello.posix" parse="text"
     xmlns:xi="http://www.w3.org/2001/XInclude"/></programlisting>
 
-    <para>The first three lines are where all of the assumptions
-    about file and path names are laid out. Probably at least one of
-    these assumptions isn&#x2019;t true for your system, and so will
-    require changing.</para>
+    <para>The <varname>*FLAGS</varname> lines are where all of the
+    assumptions about file and path names are laid out. Probably at
+    least one of these assumptions isn&#x2019;t true for your system,
+    and so will require changing.</para>
 
-    <para>The trickiest line is the third one. MySQL++ programs
-    need to get built against both the MySQL and MySQL++
-    libraries, because MySQL++ is built on top of the MySQL C
-    API library. If you&#x2019;re building a threaded program,
+    <para>The trickiest line is the <varname>LDLIBS</varname>
+    one. MySQL++ programs need to get built against both the MySQL and
+    MySQL++ libraries, because MySQL++ is built on top of the MySQL
+    C API library. If you&#x2019;re building a threaded program,
     use <filename>-lmysqlclient_r</filename> instead. (See <xref
     linkend="threads"/> for more details on building thread-aware
     programs.)</para>
 
     <para>On some systems, the order of libraries in the
-    <varname>LDFLAGS</varname> line is important: these linkers collect
+    <varname>LDLIBS</varname> line is important: these linkers collect
     symbols from right to left, so the rightmost library needs to
     be the most generic. In this example, MySQL++ depends on MySQL,
     so the MySQL C API library is rightmost.</para>
 
     <para>You might need to add more libraries to the
-    <varname>LDFLAGS</varname> line.  <filename>-lnsl</filename>,
+    <varname>LDLIBS</varname> line. <filename>-lnsl</filename>,
     <filename>-lz</filename> and <filename>-lm</filename> are
     common. If you study how MySQL++ itself gets built on your system,
     you can see what it uses, and emulate that.</para>
 
+    <para>You may be wondering why we have used both
+    <varname>LDLIBS</varname> and <varname>LDFLAGS</varname>
+    here. Some <filename>Makefiles</filename> you have seen probably
+    try to collect both types of flags in a single variable. Whether
+    that works or not depends on where on the command line those
+    flags appear. Since we&rsquo;re depending on the standard
+    <filename>make</filename> rules here, we know have to separate
+    the <option>-l</option> and <option>-L</option> flags due to the
+    place they&rsquo;re inserted into the link command. If you were
+    writing your own compilation rules, you could write them in such
+    a way that you didn&rsquo;t have to do this.</para>
+
     <para>Beyond that, we have a pretty vanilla
-    <filename>Makefile</filename>. We don&#x2019;t have any special
-    dependency or build rules, because the default rules should work
-    fine, particularly if you&#x2019;re using GNU make, which is just
-    about universal these days.</para>
+    <filename>Makefile</filename>, thanks in large part to the fact
+    that the default <filename>make</filename> rules are fine for
+    such a simple program.</para>
   </sect2>
 
 
