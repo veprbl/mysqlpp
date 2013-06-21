@@ -65,12 +65,14 @@
 
     <para>All of the program arguments are optional.</para>
 
-    <para>If you don&#x2019;t give <option>-s</option>, the underlying
-    MySQL C API assumes the server is on the local machine. It chooses
+    <para>If you don&#x2019;t give <option>-s</option>,
+    the underlying MySQL C API (a.k.a. <ulink
+    url="https://dev.mysql.com/downloads/connector/c/">Connector/C</ulink>)
+    assumes the server is on the local machine. It chooses
     one of several different IPC options based on the platform
-    configuration. There are many different forms you can give as
-    <varname>server_addr</varname> with <option>-s</option> to override
-    this default behavior:</para>
+    configuration. There are many different forms you can give
+    as <varname>server_addr</varname> with <option>-s</option> to
+    override this default behavior:</para>
 
     <itemizedlist>
       <listitem>

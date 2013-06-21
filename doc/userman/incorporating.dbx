@@ -204,10 +204,15 @@
     and so will require changing.</para>
 
     <para>The trickiest line is the <varname>LDLIBS</varname>
-    one. MySQL++ programs need to get built against both the MySQL and
-    MySQL++ libraries, because MySQL++ is built on top of the MySQL
-    C API library. If you&#x2019;re building a threaded program,
-    use <filename>-lmysqlclient_r</filename> instead. (See <xref
+    one. MySQL++ programs need to get built against both the MySQL
+    and MySQL++ libraries, because MySQL++ is built on top of the
+    MySQL C API library<footnote><para>The MySQL C API library
+    is most commonly called <filename>libmysqlclient</filename>
+    on Unixy systems, though it is also known as <ulink
+    url="https://dev.mysql.com/downloads/connector/c/">Connector/C</ulink>.</para></footnote>
+    If you&#x2019;re building a threaded program, use
+    <filename>-lmysqlclient_r</filename> instead of
+    <filename>-lmysqlclient</filename> here. (See <xref
     linkend="threads"/> for more details on building thread-aware
     programs.)</para>
 
