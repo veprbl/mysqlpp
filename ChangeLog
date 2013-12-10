@@ -1,4 +1,4 @@
-3.2.1, 2013.12.10 (r2754)
+3.2.1, 2013.12.10 (r2756)
 
     o Connection copy ctor wasn't copying the "throw exceptions"
       flag.  The copy always had exceptions enabled.
@@ -9,6 +9,9 @@
 
     o Previous release tarball was missing a few text files present in
       the source repository.
+
+    o Updated build paths for VC++ and MinGW to track a file layout
+      change in Connector/C 6.1.2.
 
 
 3.2.0, 2013.06.20 (r2747)
