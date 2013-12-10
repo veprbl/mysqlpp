@@ -1,3 +1,16 @@
+3.2.1, 2013.12.10 (r2754)
+
+    o Connection copy ctor wasn't copying the "throw exceptions"
+      flag.  The copy always had exceptions enabled.
+
+    o Fixed resetdb's first output message when you run it without
+      arguments.  It was giving a misleading message that could
+      confuse someone.
+
+    o Previous release tarball was missing a few text files present in
+      the source repository.
+
+
 3.2.0, 2013.06.20 (r2747)
 
     o References to MySQL 5.1 have been replaced with 5.6, that

@@ -62,7 +62,7 @@
     <dll id="mysqlpp">
       <dllname>mysqlpp$(DEBUG_SUFFIX)</dllname>
       <libname>mysqlpp$(DEBUG_SUFFIX)</libname>
-      <so_version>3.2.0</so_version>
+      <so_version>3.2.1</so_version>
 
       <sources>
         lib/beemutex.cpp
@@ -557,7 +557,7 @@
 
       <!-- examples subdir -->
       <command>
-        cp examples/*.cpp examples/*.h examples/*.jpg $(PKGNAME)/examples
+        cp examples/*.{cpp,h,jpg,txt} $(PKGNAME)/examples
       </command>
       <command>
         for d in mfc wforms ; \
