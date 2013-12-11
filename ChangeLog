@@ -3,9 +3,9 @@
     o Connection copy ctor wasn't copying the "throw exceptions"
       flag.  The copy always had exceptions enabled.
 
-    o Fixed resetdb's first output message when you run it without
-      arguments.  It was giving a misleading message that could
-      confuse someone.
+    o The resetdb example would print a bogus message about logging in
+      as '1'@'1' instead of showing the actual values passed on the
+      command line.  This did not affect how it actually logged in.
 
     o Previous release tarball was missing a few text files present in
       the source repository.
