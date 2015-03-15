@@ -67,7 +67,7 @@
           C:\mysql++\lib</filename></para>
 
           <para>Connector/C does include debug libraries, but you
-          will probably not need to use them.</p>
+          will probably not need to use them.</para>
         </listitem>
 
         <listitem>

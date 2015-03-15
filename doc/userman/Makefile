@@ -21,9 +21,9 @@ EX_TXT=cgi_jpeg.txt cpool.txt deadlock.txt fieldinf.txt for_each.txt \
 ## Major output rules
 ## ------------------------
 
-html: $(HTML_DIR)/index.html
+html: $(EX_TXT) $(HTML_DIR)/index.html
 
-pdf: $(PDFFILE)
+pdf: $(EX_TXT) $(PDFFILE)
 
 
 ## ------------------------
