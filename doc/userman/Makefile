@@ -5,7 +5,7 @@
 HTML_DIR=../html/userman
 BASENAME=userman
 DOCFILE=$(BASENAME).dbx
-PDFFILE=$(BASENAME).pdf
+PDFFILE=../pdf/$(BASENAME).pdf
 FOFILE=$(BASENAME).fo
 COMMON_SS=common.xsl
 FO_SS=fo.xsl
@@ -47,8 +47,8 @@ clean:
 
 $(PDFFILE): *.dbx *.in $(FO_SS) $(COMMON_SS)
 	xsltproc --xinclude $(FO_SS) $(DOCFILE) > $(FOFILE)
+	mkdir -p ../pdf
 	./fo2pdf $(FOFILE) $(PDFFILE)
-	mkdir -p ../pdf && cp $(PDFFILE) ../pdf
 
 $(HTML_DIR)/index.html: *.dbx *.in *.mod *.txt *.xsl
 	@xmllint --xinclude --nonet --postvalid --noent --noout $(DOCFILE)
