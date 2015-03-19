@@ -1,4 +1,4 @@
-3.2.2, 2015.03.18 (r2776)
+3.2.2, 2015.03.18 (r2779)
 
     o The DBDriver::operator= would leak a live connection if you
       assigned a disconnected DBDriver to it.  Patch by Quentin Armitage.
