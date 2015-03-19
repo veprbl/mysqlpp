@@ -607,14 +607,23 @@
       <command>rm -rf $(PKGNAME)</command>
     </action>
 
-    <action id="rpm">
+    <action id="rpm-prep">
       <if cond="BUILDDOCS=='yes'">
         <depends>doc</depends>
       </if>
       <depends>dist</depends>
       <command>cp $(PKGNAME).tar.gz ~/rpmbuild/SOURCES</command>
       <command>cd ~/rpmbuild/SPECS</command>
+    </action>
+
+    <action id="rpm">
+			<depends>rpm-prep</depends>
       <command>rpmbuild -ba mysql++.spec</command>
+    </action>
+
+    <action id="srpm">
+			<depends>rpm-prep</depends>
+      <command>rpmbuild -bs mysql++.spec</command>
     </action>
 
     <action id="ebuild">
