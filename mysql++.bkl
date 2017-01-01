@@ -135,6 +135,8 @@
 
         <cxxflags>@PTHREAD_CFLAGS@</cxxflags>
         <include>.</include>
+				<include>@MYSQL_C_INC_DIR@</include>
+        <ldflags>-L@MYSQL_C_LIB_DIR@</ldflags>
         <ldflags>-l@MYSQL_C_LIB_NAME@ @PTHREAD_LIBS@ @MYSQLPP_EXTRA_LIBS@</ldflags>
       </if>
 
@@ -169,6 +171,8 @@
 
     <if cond="FORMAT in ['autoconf', 'gnu', 'mingw', 'xcode2']">
       <include>lib</include>
+			<include>@MYSQL_C_INC_DIR@</include>
+			<lib-path>@MYSQL_C_LIB_DIR@</lib-path>
       <lib-path>.</lib-path>
     </if>
     <if cond="FORMAT in ['msvs2003prj', 'msvs2005prj', 'msvs2008prj']">

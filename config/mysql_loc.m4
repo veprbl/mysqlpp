@@ -10,7 +10,7 @@ dnl         suffixes on like /lib and /include.
 dnl		--with-mysql-lib: Same as --with-mysql, but for library only.
 dnl		--with-mysql-include: Same as --with-mysql, but for headers only.
 dnl
-dnl @version 1.5, 2016/12/29
+dnl @version 1.5, 2016/12/31
 dnl @author Warren Young <mysqlpp@etr-usa.com>
 AC_DEFUN([MYSQL_C_API_LOCATION],
 [
@@ -68,17 +68,19 @@ AC_DEFUN([MYSQL_C_API_LOCATION],
 
 	AC_MSG_RESULT([$MYSQL_C_INC_DIR])
 
-	CPPFLAGS="$CPPFLAGS -I${MYSQL_C_INC_DIR}"
-
 
 	#
 	# Look for MySQL C API library
 	#
 	AC_MSG_CHECKING([for MySQL C API library directory])
+	save_CPPFLAGS=$CPPFLAGS
 	save_LIBS=$LIBS
+	save_LDFLAGS=$LDFLAGS
+	CPPFLAGS="$CPPFLAGS -I$MYSQL_C_INC_DIR"
 	MYSQL_C_LIB_DIR=
 	for m in $MYSQL_lib_check
 	do
+		LDFLAGS="$save_LDFLAGS -L$m"
 		LIBS="$save_LIBS -l$MYSQL_C_LIB_NAME"
 		AC_TRY_LINK(
 			[ #include <mysql.h> ],
@@ -87,10 +89,7 @@ AC_DEFUN([MYSQL_C_API_LOCATION],
 			  MYSQL_C_LIB_DIR=$m
 			  break
 			],
-			[ AC_CHECK_HEADERS(zlib.h, AC_CHECK_LIB(z, gzread, [],
-				  [ AC_MSG_ERROR([zlib not found]) ]))
-			  AC_MSG_CHECKING([whether adding -lz will let the link succeed])
-			  LIBS="$save_LIBS -l$MYSQL_C_LIB_NAME -lz"
+			[ LIBS="$save_LIBS -l$MYSQL_C_LIB_NAME -lz"
 			  AC_TRY_LINK(
 				  [ #include <mysql.h> ],
 				  [ mysql_store_result(0); ],
@@ -103,7 +102,9 @@ AC_DEFUN([MYSQL_C_API_LOCATION],
 			  )
 			])
 	done
+	CPPFLAGS=$save_CPPFLAGS
 	LIBS=$save_LIBS
+	LDFLAGS=$save_LDFLAGS
 
 	if test -z "$MYSQL_C_LIB_DIR"
 	then
@@ -116,14 +117,12 @@ AC_DEFUN([MYSQL_C_API_LOCATION],
 		* )  AC_MSG_ERROR([The MySQL library directory ($MYSQL_C_LIB_DIR) must be an absolute path.]) ;;
 	esac
 
-	case "$MYSQL_C_LIB_DIR" in
-	  /usr/lib)
+	if [	"$MYSQL_C_LIB_DIR" = "/usr/lib" -o \
+			"$MYSQL_C_LIB_DIR" = "/usr/lib64" ]
+	then
+		# Remove redundant lib paths
 		MYSQL_C_LIB_DIR=
-	  	;;
-	  *)
-	  	LDFLAGS="$LDFLAGS -L${MYSQL_C_LIB_DIR}"
-		;;
-	esac
+	fi
 
 	AC_SUBST(MYSQL_C_INC_DIR)
 	AC_SUBST(MYSQL_C_LIB_DIR)
