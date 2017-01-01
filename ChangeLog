@@ -1,4 +1,4 @@
-3.2.3, 2016.12.29 (r2786)
+3.2.3, 2016.12.29 (r2790)
 
     o Now using snprintf() instead of _snprintf() on Visual C++ 2015.
 
