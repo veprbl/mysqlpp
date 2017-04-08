@@ -101,7 +101,12 @@ public:
 	counted_(c),
 	refs_(0)
 	{
-		std::auto_ptr<T> exception_guard(counted_);
+#if __cplusplus >= 201103L
+		std::unique_ptr<T>
+#else
+		std::auto_ptr<T>
+#endif
+                  exception_guard(counted_);
 		if (counted_) {
 			refs_ = new size_t(1);
 		}
